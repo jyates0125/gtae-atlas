@@ -7,12 +7,19 @@
     try{const dest=new URL(anchor.href,location.href);if(dest.origin===location.origin&&dest.pathname===location.pathname)anchor.setAttribute('aria-current','page')}
     catch{}
   }
-  if(classic||mapWorlds.has(path))return;
+  if(mapWorlds.has(path)){
+    const nav=document.querySelector('header nav');
+    if(nav && !nav.querySelector('.jura83-hq-nav')){const a=document.createElement('a');a.className='jura83-hq-nav';a.href='./atlas81-hq.html';a.textContent='⌂ Atlas HQ';nav.prepend(a)}
+    const css=document.createElement('link');css.rel='stylesheet';css.href='./atlas83-map.css?v=83';document.head.append(css);
+    const js=document.createElement('script');js.src='./atlas83-map.js?v=83';js.defer=true;document.head.append(js);
+    return;
+  }
+  if(classic)return;
   if(!document.querySelector('header'))return;
   if(document.querySelector('.studio-quickbar'))return;
   const bar=document.createElement('nav');
   bar.className='studio-quickbar';bar.setAttribute('aria-label','Site-wide quick navigation');
-  const pages=[['Home','index.html'],['Map explorer','atlas.html'],['Leonida HQ','leonida-hq.html'],['One Last Ride','one-last-ride.html'],['Sources & credits','atlas-credits.html']];
+  const pages=[['Atlas HQ','atlas81-hq.html'],['Map explorer','atlas.html'],['Leonida HQ','leonida-hq.html'],['One Last Ride','one-last-ride.html'],['Sources & credits','atlas-credits.html']];
   pages.forEach(([label,target])=>{const a=document.createElement('a');a.href='./'+target;a.textContent=label;if(path===target)a.setAttribute('aria-current','page');bar.append(a)});
   const header=document.querySelector('body > header');
   if(header)header.insertAdjacentElement('afterend',bar);
