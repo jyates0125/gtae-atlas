@@ -435,7 +435,7 @@ function switchGame(g){if(!['5','6','online'].includes(g))return;chooseRouteStar
 }
 // Atlas 6.2: use the same map service as the upstream map; fall back to the
 // published CC BY 4.0 repository mirror on network, CORS, or host failure.
-const TILE_HOSTS=['https://maps.gtadb.org/tiles/',UPSTREAM+'maps/tiles/'];
+const TILE_HOSTS=[UPSTREAM+'maps/tiles/']; // Read from GTADB's licensed GitHub mirror, not its live media server.
 function sourceUrl(g,style,z,tx,ty,host=0){return `${TILE_HOSTS[host]}${g}/${style}/${z}/${z},${ty},${tx}.jpg`+(host?'?atlas_tiles=62':'');}
 function tileHealth(){const el=$('tileHealth');if(!el)return;const current=styles[game],all=[...tileStore.values()].filter(t=>t.game===game);const valid=new Set([mapView(current,game).base,...sourceTileStyles(current,0,1,1,game)]);const group=all.filter(t=>valid.has(t.path));const good=group.filter(t=>t.state==='ok').length,loading=group.filter(t=>t.state==='loading').length,bad=group.filter(t=>t.state==='error').length;
  el.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`:bad?'Map artwork unavailable · retry a different layer or connection':'Preparing artwork…';
@@ -639,13 +639,15 @@ async function loadDataset(g,refresh=false){
  if(!refresh){try{const r=await fetch(localUrl);if(r.ok){const v=normalize(await r.json(),g);if(v.length&&datasets[g].length<v.length){datasets[g]=v;dataOrigins[g]='Offline starter';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length+' starter locations · checking licensed database…')}}}}catch{}
  const cached=await getCachedData(g);if(cached){const v=normalize(cached,g);if(v.length>datasets[g].length){datasets[g]=v;dataOrigins[g]='Cached licensed GTADB database';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' cached locations')}}}
  }
- // GTA VI uses the daily repository snapshot; GTA V stays a long-lived legacy snapshot.
- if(g==='6'){
-  try{const r=await fetch('./data/gtadb-6.json'+(refresh?'?update='+Date.now():''),{cache:refresh?'reload':'no-cache'});
-   if(r.ok){const data=await r.json();if(data?.game!=='6'||data?.license!=='CC BY 4.0'||!(Array.isArray(data.records)||(data.records&&typeof data.records==='object'&&!Array.isArray(data.records))))throw Error('Invalid VI snapshot');
-    const v=normalize(data.records,g);if(v.length<500)throw Error('Snapshot has too few records');
-    if(v.length>=datasets[g].length||refresh){datasets[g]=v;dataOrigins[g]='Repository GTADB VI snapshot '+String(data.sourceUpdated||'').slice(0,10);await cacheData(g,data.records);if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' GTADB VI locations · '+String(data.sourceUpdated||'').slice(0,10));}}return;}
-  }catch(e){/* Older GitHub Pages deployments may not yet have a populated snapshot. */}
+ // Prefer our same-origin, rights-attributed GitHub-mirrored landmark datasets.
+ // These are landmark research, not certified item spawns or live session state.
+ // GTA Online shares V's basemap, but its own collection/progress scope remains distinct.
+ if(g==='5'||g==='6'){
+  try{const r=await fetch('./data/gtadb-'+g+'.json'+(refresh?'?update='+Date.now():''),{cache:refresh?'reload':'no-cache'});
+   if(r.ok){const data=await r.json();if(data?.game!==g||data?.license!=='CC BY 4.0'||!data.records||typeof data.records!=='object')throw Error('Invalid attributed snapshot');
+    const v=normalize(data.records,g);if(v.length<500)throw Error('Snapshot has too few mapped landmarks');
+    if(v.length>=datasets[g].length||refresh){datasets[g]=v;dataOrigins[g]='Local GTADB '+(g==='6'?'VI research':'GTA V landmark')+' snapshot '+String(data.sourceUpdated||'').slice(0,10);await cacheData(g,data.records);if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' attributed '+(g==='6'?'provisional':'GTA V')+' landmarks · '+String(data.sourceUpdated||'').slice(0,10));}}return;}
+  }catch(e){/* Keep starter/cached/remote repository fallbacks if a snapshot is absent. */}
  }
  const checked=Number(loadStore('jura58-gtadb-check-'+g,0))||0;
  const age=g==='5'?90*24*60*60*1000:24*60*60*1000;
@@ -746,7 +748,7 @@ function init(){if(!ctx){$('mapStatus').textContent='This browser does not suppo
  if(q)$('search').value=q.slice(0,100);
  if(cat&&CATEGORIES[cat]){active[filterScope()]=new Set([cat]);showTab('Services')}
  if(q||cat)render();readPacks();renderSources();loadDataset('5');loadDataset('6');loadSources();
- if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=621',{scope:'./'}).catch(()=>{});
+ if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=98c',{scope:'./'}).catch(()=>{});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

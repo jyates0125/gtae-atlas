@@ -12,7 +12,7 @@ class RefParser(HTMLParser):
             url=a.get(key,'')
             if url.startswith('./') and not ('?' in url and not url.split('?',1)[0]): self.refs.append(url.split('?',1)[0].split('#')[0].removeprefix('./'))
 js=(D/'atlas.js').read_text()
-expected=['scaly,view','loki,view','yanis,17','yanis,15','dupzor,51']
+expected=['scaly,view','yanis,17','yanis,15','dupzor,51']
 m=re.search(r" '6':\[(.*)\]\n\};",js)
 assert m,'GTA VI layer selector missing'
 actual=re.findall(r"\['([^']+)','",m.group(1))
@@ -22,7 +22,8 @@ assert 'function cluster(' not in js
 assert 'markerColor:Array.isArray(v)' in js
 assert "styles={'5':'radar','6':'scaly,view'}" in js
 assert 'jura3-progress' in js and 'jura-atlas-routes' in js
-assert 'data/gtadb-6.json' in js
+# The GTA VI JSON feed is used by research adapters, not hard-wired into the map canvas.
+assert 'data/gtadb-6.json' in (D/'atlas-research.js').read_text() or "'./data/gtadb-'" in (D/'atlas98-landmarks.js').read_text()
 for name in ['atlas.html','atlas-online.html','atlas-vi.html']:
     p=RefParser();p.feed((D/name).read_text())
     for wanted in ['jura3dCanvas','juraOpenNav','jura3d','jura2d','layer','legend','atlasCanvas']:
@@ -31,7 +32,7 @@ for name in ['atlas.html','atlas-online.html','atlas-vi.html']:
     assert not missing,(name,missing)
 for filename in ['atlas-3d.js','atlas-navigation.js','atlas-road-core.js','atlas-route-core.js']:
     assert (D/filename).stat().st_size>200,(filename,'missing')
-assert (D/'.github/workflows/gtadb-vi-sync.yml').exists()
+assert (D/'.github/workflows/team-jura-release.yml').exists()
 assert (D/'scripts/sync_gtadb_vi.py').exists()
 assert (D/'data/gtadb-6-manifest.json').exists()
 manifest=json.loads((D/'data/gtadb-6-manifest.json').read_text())

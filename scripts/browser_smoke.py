@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""Cloudflare-oriented real-browser smoke tests for the fully assembled Atlas site.
+Run after `pip install playwright` and `python -m playwright install chromium`.
+Uses local HTTP so canvas fetch, video, and navigation share a genuine origin.
+No live Rockstar/GTADB feed or external network request is considered verified.
+"""
+from __future__ import annotations
+import asyncio, functools, http.server, json, os, socketserver, threading
+from pathlib import Path
+from playwright.async_api import async_playwright
+PROJECT=Path(__file__).resolve().parents[1]
+ROOT=Path(os.getenv('ATLAS_SERVE_ROOT', str(PROJECT/'public'))).resolve()
+if not (ROOT/'index.html').is_file():
+    raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
+PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
+URL=f'http://127.0.0.1:{PORT}'
+PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-cayo.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','atlas98-style-lab.html']
+
+class Server(http.server.SimpleHTTPRequestHandler):
+    def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
+    def log_message(self,*args):pass
+
+async def smoke():
+    results=[]
+    with socketserver.TCPServer(('127.0.0.1',PORT),Server) as http:
+        thread=threading.Thread(target=http.serve_forever,daemon=True);thread.start()
+        try:
+            async with async_playwright() as pw:
+                browser_mode=os.getenv('ATLAS_BROWSER','chromium').lower()
+                opts={'headless':True,'args':['--no-sandbox']}
+                if browser_mode=='msedge':opts['channel']='msedge'
+                elif browser_mode not in ('chromium','msedge'):raise RuntimeError('Unsupported ATLAS_BROWSER: '+browser_mode)
+                browser=await pw.chromium.launch(**opts)
+                try:
+                    for width,height in [(1440,900),(390,844)]:
+                        ctx=await browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
+                        for path in PAGES:
+                            pg=await ctx.new_page()
+                            errors=[];missing=[]
+                            pg.on('pageerror',lambda err:errors.append(str(err)[:300]))
+                            pg.on('response',lambda r:missing.append(r.url) if r.status>=400 and r.url.startswith(URL+'/') else None)
+                            response=await pg.goto(URL+'/'+path,wait_until='domcontentloaded',timeout=25000)
+                            await pg.wait_for_timeout(800)
+                            info=await pg.evaluate('''() => ({title:document.title, h1:document.querySelector('h1')?.textContent?.trim(),scroll:document.documentElement.scrollWidth, width:window.innerWidth})''')
+                            failures=[]
+                            if not response or response.status!=200:failures.append('HTTP page response not 200')
+                            if not info.get('title') or not info.get('h1'):failures.append('Missing page title or heading')
+                            if errors:failures.extend('JS: '+e for e in errors)
+                            if missing:failures.extend('Missing local response: '+e for e in missing)
+                            if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
+                            if not failures and path=='index.html':
+                                if await pg.locator('#featuredGrid a').count()<4:failures.append('Fewer than four flagship world cards')
+                                if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
+                            if not failures and path=='maps.html':
+                                if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()<13:failures.append('Fewer than 13 world links')
+                            if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
+                                if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
+                                if await pg.locator('#layer option').count()<2:failures.append('Map layer options missing')
+                                if await pg.locator('#search').count()==0:failures.append('Location search missing')
+                            if not failures and path=='one-last-ride.html':
+                                if await pg.locator('video source[src*="one-last-ride-motion-preview.mp4"]').count()==0:failures.append('Film preview source missing')
+                            results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures})
+                            await pg.close()
+                        await ctx.close()
+                    ctx=await browser.new_context(viewport={'width':1366,'height':850})
+                    pg=await ctx.new_page()
+                    await pg.goto(URL+'/atlas98-data-lab.html',wait_until='domcontentloaded')
+                    csv=b'name,category,x,y\nHawick,landmark,100,200\nVespucci,landmark,-150,300\n'
+                    await pg.locator('#sourceFile').set_input_files({'name':'sample.csv','mimeType':'text/csv','buffer':csv})
+                    await pg.locator('#sourceName').fill('Original functional smoke data')
+                    await pg.locator('#license').select_option('original')
+                    await pg.locator('#coordinateSystem').select_option('gta-world-xy')
+                    await pg.locator('#review').click()
+                    records=(await pg.locator('#total').inner_text()).strip()
+                    ready=await pg.locator('#mapPack').is_enabled()
+                    results.append({'page':'Data Lab interactive CSV/pack export','viewport':1366,'ok':records=='2' and ready,'issues':[] if records=='2' and ready else [f'Unexpected validated total {records}, map pack enabled {ready}']})
+                    await ctx.close()
+                finally:await browser.close()
+        finally:http.shutdown()
+    report={'passed':sum(x['ok'] for x in results),'total':len(results),'results':results}
+    (PROJECT/'docs').mkdir(exist_ok=True)
+    (PROJECT/'docs'/('RELEASE-98C-'+os.getenv('ATLAS_BROWSER','chromium').upper()+'-BROWSER-SMOKE.json')).write_text(json.dumps(report,indent=2)+'\n')
+    print(json.dumps(report,indent=2));return 0 if report['passed']==report['total'] else 1
+
+if __name__=='__main__':raise SystemExit(asyncio.run(smoke()))

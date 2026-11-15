@@ -1,6 +1,20 @@
-# Team Jura Atlas Preview — Elario Studios
+# Team Jura Atlas 9.8C — integrated release
 
-New futuristic homepage and creative studio showcase. See [START-HERE-PREVIEW.md](START-HERE-PREVIEW.md) for setup and truthful feature status.
+**Current deploy candidate:** One complete Elario Studios / Team Jura Atlas website with the approved forward-looking designed brand, GTA worlds, research, collectibles, garage, heists, and One Last Ride. Development is the release branch. Legacy `main` remains untouched.
+
+**Cloudflare Pages (Git integration):** Framework `None`; build command `node scripts/build-cloudflare.cjs`; output directory `public`; root `.`. Confirm the production branch setting in Cloudflare. **Do not use `.` as the output directory for this source repository.**
+
+Read [README-RELEASE-98C.md](README-RELEASE-98C.md) for Windows one-push installation, Microsoft Edge tests, sources, safe workflows, and the acceptance checklist. The site is not considered live-verified until Edge/Chromium quality checks and Cloudflare preview acceptance pass.
+
+---
+
+# Team Jura Atlas — 9.8C Full Website Release (15 November 2026)
+
+**Elario Studios → Team Jura → Atlas**. Latest integrated Designed Brand website built from the complete full-site/film archive plus the 8.1–9.8B cumulative upgrades and safe 9.8C fixes. **This ZIP is the entire site**, not an overlay. Development deployment is pending; read [README-RELEASE-98C.md](README-RELEASE-98C.md) and [docs/RELEASE-98C-STATIC-REPORT.json](docs/RELEASE-98C-STATIC-REPORT.json). Do not consider live map tiles or Rockstar icon clearance verified without testing/permission.
+
+Key destinations: [Home](index.html) · [All Maps](maps.html) · [GTA V](atlas.html) · [GTA Online](atlas-online.html) · [Leonida](atlas-vi.html) · [Data Lab](atlas98-data-lab.html) · [Source Registry](atlas-source-registry.html) · [One Last Ride](one-last-ride.html).
+
+The connected GitHub `development` branch contains more current work than the old `main`; this package is designed for `development` only. The release validation workflow never auto-commits. **All older notes below are retained for historical context, not current deployment instructions.**
 
 ---
 

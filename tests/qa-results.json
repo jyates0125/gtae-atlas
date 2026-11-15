@@ -1,0 +1,98 @@
+{
+  "passed": 17,
+  "total": 18,
+  "blocked": 1,
+  "tests": [
+    {
+      "test": "JS parse",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "20 source-labelled collection sets",
+      "passed": true,
+      "details": "20"
+    },
+    {
+      "test": "Unique set IDs",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Correct collection modes",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Evidence IDs valid",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Evidence slot bounds",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Direct source links are HTTPS",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "No repeated HTML IDs",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Interactive component IDs present",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Image crop exists",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Approved reference present",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Approved crop readable",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Local assets valid",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Local styles resolve",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "No placeholder target links",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Keyboard focus and navigation",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Existing repository navigation paths",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Live browser interaction / screenshot comparison",
+      "passed": false,
+      "status": "BLOCKED",
+      "details": "Chromium returned ERR_BLOCKED_BY_ADMINISTRATOR for local file and localhost; manual Cloudflare acceptance required. Not counted as a product code failure."
+    }
+  ]
+}

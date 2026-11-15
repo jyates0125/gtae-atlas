@@ -1,0 +1,622 @@
+{
+  "type": "static-repository-inventory",
+  "timestampUTC": "2026-11-15T16:26:16.325430+00:00",
+  "root": "/mnt/data/team-jura-fullsite-work/site",
+  "pageCount": 65,
+  "pages": [
+    {
+      "page": "atlas-activities.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Game Activities",
+      "localRefs": 24,
+      "externalRefs": 2,
+      "missing": 0
+    },
+    {
+      "page": "atlas-calibration.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Data Sources and Coordinate Calibration",
+      "localRefs": 19,
+      "externalRefs": 10,
+      "missing": 0
+    },
+    {
+      "page": "atlas-catalog.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Vehicles and Locations Catalog",
+      "localRefs": 25,
+      "externalRefs": 2,
+      "missing": 0
+    },
+    {
+      "page": "atlas-cayo.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Cayo Perico Heist Planner",
+      "localRefs": 22,
+      "externalRefs": 3,
+      "missing": 0
+    },
+    {
+      "page": "atlas-checklist.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Collectibles Checklist",
+      "localRefs": 28,
+      "externalRefs": 1,
+      "missing": 0
+    },
+    {
+      "page": "atlas-completion.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Collectibles Map and Completion",
+      "localRefs": 19,
+      "externalRefs": 1,
+      "missing": 0
+    },
+    {
+      "page": "atlas-coverage.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Marker Coverage",
+      "localRefs": 18,
+      "externalRefs": 3,
+      "missing": 0
+    },
+    {
+      "page": "atlas-credits.html",
+      "title": "Team Jura Atlas 7.4 Studio | Credits and Licenses",
+      "localRefs": 19,
+      "externalRefs": 21,
+      "missing": 0
+    },
+    {
+      "page": "atlas-feature-audit.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Feature Audit and Roadmap",
+      "localRefs": 22,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "atlas-iv.html",
+      "title": "GTA IV · Liberty City | Team Jura Atlas",
+      "localRefs": 25,
+      "externalRefs": 4,
+      "missing": 0
+    },
+    {
+      "page": "atlas-online.html",
+      "title": "Team Jura Atlas 9.3 Explorer | GTA Online Map",
+      "localRefs": 56,
+      "externalRefs": 2,
+      "missing": 0
+    },
+    {
+      "page": "atlas-pack-format.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Data Pack Format",
+      "localRefs": 12,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "atlas-passport.html",
+      "title": "Atlas Passport · Team Jura Atlas 7.4",
+      "localRefs": 36,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "atlas-research.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | GTA VI Research Desk",
+      "localRefs": 27,
+      "externalRefs": 2,
+      "missing": 0
+    },
+    {
+      "page": "atlas-sa.html",
+      "title": "San Andreas | Team Jura Atlas — Elario Studios",
+      "localRefs": 22,
+      "externalRefs": 3,
+      "missing": 0
+    },
+    {
+      "page": "atlas-source-registry.html",
+      "title": "Source Registry | Team Jura Atlas",
+      "localRefs": 6,
+      "externalRefs": 10,
+      "missing": 0
+    },
+    {
+      "page": "atlas-test-center.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Test Center",
+      "localRefs": 17,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "atlas-toolkit.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | GTA Online Toolkit",
+      "localRefs": 23,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "atlas-verification.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Data Verification",
+      "localRefs": 27,
+      "externalRefs": 6,
+      "missing": 0
+    },
+    {
+      "page": "atlas-vi.html",
+      "title": "Team Jura Atlas 9.3 Explorer | GTA VI Leonida Research Map",
+      "localRefs": 55,
+      "externalRefs": 2,
+      "missing": 0
+    },
+    {
+      "page": "atlas.html",
+      "title": "Team Jura Atlas 9.3 Explorer | GTA V Story Map",
+      "localRefs": 51,
+      "externalRefs": 2,
+      "missing": 0
+    },
+    {
+      "page": "atlas81-hq.html",
+      "title": "Atlas 8.1 · Team Jura Command Center",
+      "localRefs": 57,
+      "externalRefs": 1,
+      "missing": 0
+    },
+    {
+      "page": "atlas87-daily.html",
+      "title": "GTA Online Daily Intelligence | Team Jura Atlas",
+      "localRefs": 23,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "atlas90-vehicles5.html",
+      "title": "Team Jura Atlas · Collection Catalog",
+      "localRefs": 18,
+      "externalRefs": 4,
+      "missing": 0
+    },
+    {
+      "page": "atlas90-vehicles6.html",
+      "title": "Team Jura Atlas · Collection Catalog",
+      "localRefs": 17,
+      "externalRefs": 4,
+      "missing": 0
+    },
+    {
+      "page": "atlas90-weapons.html",
+      "title": "Team Jura Atlas · Collection Catalog",
+      "localRefs": 17,
+      "externalRefs": 4,
+      "missing": 0
+    },
+    {
+      "page": "atlas93-dispatch.html",
+      "title": "Atlas Dispatch | Team Jura Atlas",
+      "localRefs": 19,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "atlas93-garage.html",
+      "title": "My Garage | Team Jura Atlas 9.3",
+      "localRefs": 20,
+      "externalRefs": 2,
+      "missing": 0
+    },
+    {
+      "page": "atlas97-journey.html",
+      "title": "Start Here · Team Jura Atlas · Elario Studios",
+      "localRefs": 38,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "atlas98-data-lab.html",
+      "title": "Data Lab | Elario Studios · Team Jura Atlas",
+      "localRefs": 12,
+      "externalRefs": 3,
+      "missing": 0
+    },
+    {
+      "page": "atlas98-landmarks.html",
+      "title": "Landmark Library · Team Jura Atlas",
+      "localRefs": 17,
+      "externalRefs": 2,
+      "missing": 0
+    },
+    {
+      "page": "atlas98-style-lab.html",
+      "title": "Team Jura Style Lab | Character Wardrobe Concepts",
+      "localRefs": 18,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "atlas98b-test.html",
+      "title": "Launch QA · Team Jura Atlas · Elario Studios",
+      "localRefs": 17,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "command-center.html",
+      "title": "Map Command Center | Team Jura Atlas",
+      "localRefs": 23,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "directory.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Discovery Directory",
+      "localRefs": 14,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "discovery.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Discovery Deck",
+      "localRefs": 11,
+      "externalRefs": 4,
+      "missing": 0
+    },
+    {
+      "page": "elario.html",
+      "title": "Elario Studios | Team Jura Atlas 7.4",
+      "localRefs": 37,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "explorer.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Legacy Discovery Workspace",
+      "localRefs": 11,
+      "externalRefs": 4,
+      "missing": 0
+    },
+    {
+      "page": "guides.html",
+      "title": "Guides & References | Team Jura Atlas 7.4",
+      "localRefs": 41,
+      "externalRefs": 11,
+      "missing": 0
+    },
+    {
+      "page": "heist-agency-vip.html",
+      "title": "The Contract — Dr. Dre | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-auto-shop.html",
+      "title": "Auto Shop Contracts | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-cayo-perico.html",
+      "title": "The Cayo Perico Heist | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-cluckin-bell.html",
+      "title": "The Cluckin’ Bell Farm Raid | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-diamond-casino.html",
+      "title": "The Diamond Casino Heist | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-doomsday-act-1.html",
+      "title": "Doomsday — Act I | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-doomsday-act-2.html",
+      "title": "Doomsday — Act II | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-doomsday-act-3.html",
+      "title": "Doomsday — Act III | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-fleeca.html",
+      "title": "The Fleeca Job | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-humane-labs.html",
+      "title": "The Humane Labs Raid | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-kortz-center.html",
+      "title": "Kortz Center — Community Research | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-pacific-standard.html",
+      "title": "The Pacific Standard Job | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-prison-break.html",
+      "title": "Prison Break | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-salvage-yard.html",
+      "title": "Salvage Yard Robberies | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heist-series-a.html",
+      "title": "Series A Funding | Team Jura Atlas",
+      "localRefs": 28,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "heists.html",
+      "title": "Heist HQ | Team Jura Atlas",
+      "localRefs": 34,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "hunt-hq.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Legacy Hunt HQ",
+      "localRefs": 9,
+      "externalRefs": 1,
+      "missing": 0
+    },
+    {
+      "page": "index.html",
+      "title": "Team Jura Atlas | Elario Studios · Start Here",
+      "localRefs": 55,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "legacy-explorer.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Legacy Leonida Explorer",
+      "localRefs": 10,
+      "externalRefs": 5,
+      "missing": 0
+    },
+    {
+      "page": "leonida-hq.html",
+      "title": "Leonida Launch HQ · Team Jura Atlas 7.4",
+      "localRefs": 48,
+      "externalRefs": 4,
+      "missing": 0
+    },
+    {
+      "page": "map-hub.html",
+      "title": "Classic Worlds | Team Jura Atlas",
+      "localRefs": 30,
+      "externalRefs": 2,
+      "missing": 0
+    },
+    {
+      "page": "maps.html",
+      "title": "All 13 GTA Maps | Team Jura Atlas · Elario Studios",
+      "localRefs": 23,
+      "externalRefs": 0,
+      "missing": 0
+    },
+    {
+      "page": "one-last-ride.html",
+      "title": "One Last Ride · Elario Studios × Team Jura Atlas",
+      "localRefs": 45,
+      "externalRefs": 1,
+      "missing": 0
+    },
+    {
+      "page": "online-explorer.html",
+      "title": "Team Jura ATLAS 9.3 · Community Preview | Legacy Online Explorer",
+      "localRefs": 10,
+      "externalRefs": 5,
+      "missing": 0
+    },
+    {
+      "page": "project.html",
+      "title": "Project Showcase | Team Jura Atlas 7.4",
+      "localRefs": 41,
+      "externalRefs": 1,
+      "missing": 0
+    },
+    {
+      "page": "team-jura.html",
+      "title": "Loki, Scaly Man & the Crew | Team Jura Atlas",
+      "localRefs": 25,
+      "externalRefs": 0,
+      "missing": 0
+    }
+  ],
+  "missingByPage": [],
+  "warnings": [
+    {
+      "page": "atlas-activities.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Game Activities"
+    },
+    {
+      "page": "atlas-calibration.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Data Sources and Coordinate Calibration"
+    },
+    {
+      "page": "atlas-catalog.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Vehicles and Locations Catalog"
+    },
+    {
+      "page": "atlas-cayo.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Cayo Perico Heist Planner"
+    },
+    {
+      "page": "atlas-checklist.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Collectibles Checklist"
+    },
+    {
+      "page": "atlas-completion.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Collectibles Map and Completion"
+    },
+    {
+      "page": "atlas-coverage.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Marker Coverage"
+    },
+    {
+      "page": "atlas-credits.html",
+      "issue": "stale-title",
+      "value": "Team Jura Atlas 7.4 Studio | Credits and Licenses"
+    },
+    {
+      "page": "atlas-feature-audit.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Feature Audit and Roadmap"
+    },
+    {
+      "page": "atlas-online.html",
+      "issue": "stale-title",
+      "value": "Team Jura Atlas 9.3 Explorer | GTA Online Map"
+    },
+    {
+      "page": "atlas-pack-format.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Data Pack Format"
+    },
+    {
+      "page": "atlas-passport.html",
+      "issue": "stale-title",
+      "value": "Atlas Passport · Team Jura Atlas 7.4"
+    },
+    {
+      "page": "atlas-research.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | GTA VI Research Desk"
+    },
+    {
+      "page": "atlas-test-center.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Test Center"
+    },
+    {
+      "page": "atlas-toolkit.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | GTA Online Toolkit"
+    },
+    {
+      "page": "atlas-verification.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Data Verification"
+    },
+    {
+      "page": "atlas-vi.html",
+      "issue": "stale-title",
+      "value": "Team Jura Atlas 9.3 Explorer | GTA VI Leonida Research Map"
+    },
+    {
+      "page": "atlas.html",
+      "issue": "stale-title",
+      "value": "Team Jura Atlas 9.3 Explorer | GTA V Story Map"
+    },
+    {
+      "page": "atlas81-hq.html",
+      "issue": "stale-title",
+      "value": "Atlas 8.1 · Team Jura Command Center"
+    },
+    {
+      "page": "atlas93-garage.html",
+      "issue": "stale-title",
+      "value": "My Garage | Team Jura Atlas 9.3"
+    },
+    {
+      "page": "directory.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Discovery Directory"
+    },
+    {
+      "page": "discovery.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Discovery Deck"
+    },
+    {
+      "page": "elario.html",
+      "issue": "stale-title",
+      "value": "Elario Studios | Team Jura Atlas 7.4"
+    },
+    {
+      "page": "explorer.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Legacy Discovery Workspace"
+    },
+    {
+      "page": "guides.html",
+      "issue": "stale-title",
+      "value": "Guides & References | Team Jura Atlas 7.4"
+    },
+    {
+      "page": "hunt-hq.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Legacy Hunt HQ"
+    },
+    {
+      "page": "legacy-explorer.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Legacy Leonida Explorer"
+    },
+    {
+      "page": "leonida-hq.html",
+      "issue": "stale-title",
+      "value": "Leonida Launch HQ · Team Jura Atlas 7.4"
+    },
+    {
+      "page": "online-explorer.html",
+      "issue": "stale-title",
+      "value": "Team Jura ATLAS 9.3 · Community Preview | Legacy Online Explorer"
+    },
+    {
+      "page": "project.html",
+      "issue": "stale-title",
+      "value": "Project Showcase | Team Jura Atlas 7.4"
+    }
+  ],
+  "limitations": [
+    "Does not execute JavaScript, map engines, fetch requests, localStorage or click handlers",
+    "Dynamic JS-created image/link paths require hosted browser QA",
+    "External source hosts and map tiles not checked"
+  ],
+  "newPackagePages": 4
+}
