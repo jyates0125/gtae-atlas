@@ -1,3 +1,4 @@
+/* ATLAS85 DESIGNED BRAND MAP ENGINE */
 /* Team Jura Atlas 5.8 Explorer & Smart Routes Edition. Original user interface, map controls and licensed source overlays.
  * GTADB landmark data and tiles © GTADB.org and contributors, CC BY 4.0.
  * GTADB repo: https://github.com/rolux/gtadb.org
@@ -355,7 +356,34 @@ function autoRouteVisible(){const origin=currentRouteStart()||(selected?.game===
 
 function routeRecords(){const by=new Map(records().map(r=>[r.id,r]));return routeIds().map(id=>by.get(id)).filter(Boolean)}
 function toggleRoute(r){routes[routeScope()]=routeIds().includes(r.id)?routeIds().filter(id=>id!==r.id):[...routeIds(),r.id];persist();render();updateSelected()}
-function toggleFound(r){progress[doneKey(r)]=!progress[doneKey(r)];if(progress[doneKey(r)])routes[routeScope()]=routeIds().filter(id=>id!==r.id);syncedChecklist(r,progress[doneKey(r)]);persist();render();updateSelected()}
+function toggleFound(r){
+ const done=!progress[doneKey(r)], oldRoute=routeIds().slice();progress[doneKey(r)]=done;
+ if(done){
+  const lookup=new Map(records().map(p=>[p.id,p]));
+  const unfinished=oldRoute.filter(id=>id!==r.id).map(id=>lookup.get(id)).filter(p=>p&&!progress[doneKey(p)]);
+  if(unfinished.length>1&&window.JuraRoutePlanner){
+   const origin=currentRouteStart()||r;
+   routes[routeScope()]=window.JuraRoutePlanner.plan(origin,unfinished).stops.map(p=>p.id);
+  }else routes[routeScope()]=unfinished.map(p=>p.id);
+  // Invalidate an old road/line overlay: the old plan includes completed stops.
+  navPlan=null;navPlanScope=null;
+  if(onlyUnfound&&selected?.id===r.id)selected=null;
+  // Guide a hunt to the next remaining routed target.
+  if(routeIds().length&&onlyUnfound){selected=lookup.get(routeIds()[0])||null;}
+ }
+ syncedChecklist(r,done);
+ // Keep the 8.1 HQ state synchronized for individually mapped Story records.
+ if(r.sourceId==='story'&&mode==='story'&&Number.isInteger(r.collectionSlot)){
+  const collection=CHECKSET[r.collectionType];if(collection){try{
+   const key='team-jura-atlas81-hq-v1',saved=loadStore(key,{schema:1,items:{}}),slot=collection+':'+r.collectionSlot;
+   saved.items=saved.items||{};saved.items[slot]={...saved.items[slot],done,queue:done?false:!!saved.items[slot]?.queue};
+   saved.updated=new Date().toISOString();store(key,saved)
+  }catch{}}
+ }
+ persist();render();updateSelected();
+ document.dispatchEvent(new CustomEvent('jura:progress-updated',{detail:{id:r.id,done,remaining:routeIds().length}}));
+ if(done&&oldRoute.includes(r.id))toast('Collected · hunt rerouted: '+routeIds().length+' unfinished stops. Straight-line preview unless a validated road graph is loaded.');
+}
 function card(r){const d=document.createElement('article');d.className='result'+(selected?.id===r.id?' selected':'');
  const head=document.createElement('div');head.className='result-head';
  const marker=document.createElement('span');marker.className='atlas-list-marker';marker.style.background=conditionPinColor(r);marker.setAttribute('aria-hidden','true');
@@ -487,8 +515,15 @@ function drawRoute(){
  for(const [i,r] of list.entries()){const p=toScreen(r.x,r.y);if(p.x<0||p.x>width||p.y<0||p.y>height)continue;ctx.beginPath();ctx.fillStyle='#ffe09c';ctx.strokeStyle='#1b3441';ctx.lineWidth=2;ctx.arc(p.x,p.y,11,0,2*Math.PI);ctx.fill();ctx.stroke();ctx.fillStyle='#172936';ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillText(String(i+1),p.x,p.y+4)}
  if(origin){const p=toScreen(origin.x,origin.y);if(p.x>=-15&&p.x<=width+15&&p.y>=-15&&p.y<=height+15){ctx.beginPath();ctx.arc(p.x,p.y,13,0,Math.PI*2);ctx.fillStyle='#7ee6bc';ctx.strokeStyle='#193643';ctx.lineWidth=3;ctx.fill();ctx.stroke();ctx.fillStyle='#193643';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText('S',p.x,p.y+4)}}ctx.restore()}
 
-function pin(x,y,color,highlight=false,number=null,category='landmark',plain=false){ctx.save();const r=highlight?13:plain?7.5:11;ctx.shadowColor='#000b';ctx.shadowBlur=7;ctx.shadowOffsetY=2;ctx.beginPath();ctx.moveTo(x,y+(plain?10:15));ctx.bezierCurveTo(x-r*1.03,y+2,x-r,y-r,x,y-r);ctx.bezierCurveTo(x+r,y-r,x+r*1.03,y+2,x,y+(plain?10:15));ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5c0':plain?'#f3f6fa':'#112736';ctx.lineWidth=highlight?2.8:plain?1.2:1.6;ctx.stroke();
- if(plain&&!highlight){ctx.restore();return;}ctx.fillStyle='#17303d';ctx.font=(highlight?'bold 16px':'bold 13px')+' "Segoe UI Symbol",system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(number!==null?String(number):CATEGORY_SYMBOLS[category]||'✦',x,y-3);ctx.restore()}
+function atlas85CollectibleIcon(r){
+ if(!r)return null;
+ const name=String(r.collectionType||r.name||'').toLowerCase();
+ const symbols=[[/spaceship|ufo/, '🛸'],[/letter scrap/, '✉'],[/nuclear waste/, '☢'],[/submarine piece/, '⚓'],[/monkey mosaic/, '🐒'],[/peyote/, '🌵'],[/epsilon/, '📜'],[/hidden package/, '🎁'],[/stunt jump/, '🏍'],[/under the bridge/, '🌉'],[/knife flight/, '✈'],[/playing card/, '🃏'],[/action figure/, '🤖'],[/signal jammer/, '📡'],[/ld organics/, '🍃'],[/movie prop/, '🎬'],[/media stick/, '💿'],[/snowm/, '☃'],[/jack.o.lantern|pumpkin/, '🎃'],[/ls tag|graffiti|spray tag/, '🎨'],[/snapshot/, '📷'],[/horseshoe/, '🧲'],[/oyster/, '🦪']];
+ if(r.category!=='collectible'&&r.sourceId!=='story')return null;
+ return symbols.find(([re])=>re.test(name))?.[1]||'◆';
+}
+function pin(x,y,color,highlight=false,number=null,category='landmark',plain=false,atlas85Icon=null){ctx.save();const r=highlight?13:plain?7.5:11;ctx.shadowColor='#000b';ctx.shadowBlur=7;ctx.shadowOffsetY=2;ctx.beginPath();ctx.moveTo(x,y+(plain?10:15));ctx.bezierCurveTo(x-r*1.03,y+2,x-r,y-r,x,y-r);ctx.bezierCurveTo(x+r,y-r,x+r*1.03,y+2,x,y+(plain?10:15));ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5c0':plain?'#f3f6fa':'#112736';ctx.lineWidth=highlight?2.8:plain?1.2:1.6;ctx.stroke();
+ if(plain&&!highlight&&!atlas85Icon){ctx.restore();return;}ctx.fillStyle='#17303d';ctx.font=(highlight?'bold 16px':'bold 13px')+' "Segoe UI Symbol",system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';if(atlas85Icon){ctx.font=(highlight?'17px':'14px')+' "Segoe UI Emoji","Apple Color Emoji",sans-serif';ctx.fillText(atlas85Icon,x,y-3)}else ctx.fillText(number!==null?String(number):CATEGORY_SYMBOLS[category]||'✦',x,y-3);ctx.restore()}
 
 function conditionForRecord(r,storeCache){
  const engine=window.JuraConditions;if(!engine||!r.activityId)return null;
@@ -507,10 +542,10 @@ function drawMarkers(){hitRegions=[];if(!showPins&&!selected)return;
  for(const r of visible){const p=toScreen(r.x,r.y);if(p.x<-20||p.x>width+20||p.y<-20||p.y>height+20)continue;
   if(drawn>=20000)break;drawn++;
   const color=conditionPinColor(r,conditionCache);
-  pin(p.x,p.y,color,false,null,r.category,!!r.markerColor&&!r.activityId);
+  pin(p.x,p.y,color,false,null,r.category,!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r));
   hitRegions.push({x:p.x,y:p.y,r:12,record:r});
  }
- if(selected?.game===game){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false);hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
+ if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected));hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
 }
 function drawCoordinateTarget(){if(!coordinateTarget||coordinateTarget.game!==game)return;const p=toScreen(coordinateTarget.x,coordinateTarget.y);if(p.x<-40||p.x>width+40||p.y<-40||p.y>height+40)return;
  ctx.save();ctx.strokeStyle='#fff9d2';ctx.lineWidth=3;ctx.shadowBlur=7;ctx.shadowColor='#000';ctx.beginPath();ctx.arc(p.x,p.y,16,0,Math.PI*2);ctx.moveTo(p.x-26,p.y);ctx.lineTo(p.x+26,p.y);ctx.moveTo(p.x,p.y-26);ctx.lineTo(p.x,p.y+26);ctx.stroke();ctx.restore();}
@@ -654,6 +689,17 @@ window.JuraDualLegendAPI=Object.freeze({
  addRouteStop:id=>{const place=records().find(r=>r.id===id);if(place)window.teamJuraNav?.setRoutePoint(place)},
  openNavigation:()=>window.teamJuraNav?.open(),
  setQuery:q=>{const el=$('search');if(!el)return;el.value=q;page=0;render()}
+});
+
+
+window.JuraAtlas85=Object.freeze({
+  state:()=>({game,mode,hideFound:onlyUnfound,route:routeIds().slice()}),
+  mappedCollections:()=>records().filter(r=>r.sourceId==='story'&&Number.isInteger(r.collectionSlot)).map(r=>({id:r.id,collectionType:r.collectionType,collectionSlot:r.collectionSlot,found:!!progress[doneKey(r)]})),
+  mark:(id,done)=>{const r=records().find(p=>p.id===id);if(!r)return false;
+    if(Boolean(progress[doneKey(r)])!==Boolean(done))toggleFound(r);return true},
+  showOnly:(type)=>{const q=$('search');q.value=String(type||'');q.dispatchEvent(new Event('input',{bubbles:true}))},
+  startRouteForVisible:()=>autoRouteVisible(),
+  hideCompleted:(on)=>{const el=$('hideFound');el.checked=Boolean(on);el.dispatchEvent(new Event('change',{bubbles:true}))}
 });
 
 function init(){if(!ctx){$('mapStatus').textContent='This browser does not support the HTML canvas map.';return}

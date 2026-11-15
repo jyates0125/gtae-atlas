@@ -4,6 +4,7 @@ const path=(location.pathname.split('/').pop()||'').toLowerCase();
 if(!['atlas.html','atlas-online.html','atlas-vi.html'].includes(path))return;
 const mode=path==='atlas-online.html'?'online':path==='atlas-vi.html'?'vi':'story';
 const $=id=>document.getElementById(id), SKEY='team-jura-checklist-v54',HQKEY='team-jura-atlas81-hq-v1',MPKEY='jura3-progress';
+function atlas85SetIcon(t){const name=String(t||'').toLowerCase();const options=[['spaceship','🛸'],['letter scrap','✉'],['nuclear waste','☢'],['submarine','⚓'],['monkey mosaic','🐒'],['peyote','🌵'],['epsilon','📜'],['hidden package','🎁'],['stunt jump','🏍'],['under the bridge','🌉'],['knife flight','✈'],['playing card','🃏'],['action figure','🤖'],['signal jammer','📡'],['ld organics','🍃'],['movie prop','🎬'],['media stick','💿'],['snowm','☃'],['jack','🎃'],['ls tag','🎨']];return options.find(([k])=>name.includes(k))?.[1]||'◆'}
 const names={'Spaceship Part':'story-spaceship-parts','Letter Scrap':'story-letter-scraps','Nuclear Waste':'story-nuclear-waste','Stunt Jump':'story-stunt-jumps','Under the Bridge':'story-under-bridges','Knife Flight':'story-knife-flights','Epsilon Tract':'story-epsilon-tracts'};
 let sets=[],mapped=new Map(),setId='',onlyPending=false,search='',loading=false;
 function read(k,f){try{return JSON.parse(localStorage.getItem(k)||'null')||f}catch{return f}}
@@ -19,9 +20,10 @@ const h=read(HQKEY,{schema:1,items:{}});h.schema=1;h.items=h.items||{};h.items[k
 const a=save(SKEY,legacy),b=save(HQKEY,h);
 if(rec){const p=read(MPKEY,{});p[rec.id]=done;save(MPKEY,p)}
 if(!(a&&b))feedback('Cannot store progress on this device; export a backup from Atlas HQ.');
-// The existing map engine owns its canvas and reads progress at startup. Reload to
-// keep pins and list honest instead of painting a fake marker state on top of it.
-if(rec){sessionStorage.setItem('j83-selection',s.id);location.reload()}else render();}
+// ATLAS85 SIDEBAR SYNC: update the canvas and route immediately, no page reload.
+if(rec&&window.JuraAtlas85){window.JuraAtlas85.mark(rec.id,done);render()}
+else if(rec){sessionStorage.setItem('j83-selection',s.id);location.reload()}
+else render();}
 function openRecord(rec){if(!rec)return;location.href='./atlas.html?world=5&place='+encodeURIComponent(rec.id)}
 function percent(s){let n=0;for(let i=1;i<=s.total;i++)if(rawStatus(s,i).done)n++;return n}
 function render(){const select=$('j83-set');if(!select)return;const list=$('j83-items');list.replaceChildren();const s=current();if(!s)return;
@@ -54,7 +56,7 @@ function showSetOnMap(){
  feedback('Filtering map to '+s.name+'. Click a pin to mark it found or add it to a route.');
 }
 function clearSetOnMap(){const q=$('search');if(q){q.value='';q.dispatchEvent(new Event('input',{bubbles:true}))}feedback('Map collection filter cleared.');}
-function setOptions(){const sel=$('j83-set');sel.replaceChildren();for(const s of sets){const o=new Option(s.name+' · '+s.total,s.id);sel.add(o)}if(sets.some(s=>s.id===setId))sel.value=setId;else setId=sel.value;render()}
+function setOptions(){const sel=$('j83-set');sel.replaceChildren();for(const s of sets){const o=new Option(atlas85SetIcon(s.name)+' '+s.name+' · '+s.total,s.id);sel.add(o)}if(sets.some(s=>s.id===setId))sel.value=setId;else setId=sel.value;render()}
 function install(){const drawer=$('atlasFilterDrawer'),side=$('sidebar');if(!drawer||!side)return;
  document.body.classList.add('jura83-map','jura83-'+mode);
  const b=elt('section','j83-panel');b.id='jura83-panel';b.setAttribute('aria-label','Map collectible legend and progress');
@@ -62,7 +64,7 @@ function install(){const drawer=$('atlasFilterDrawer'),side=$('sidebar');if(!dra
  <div class="j83-heading"><h2>Collectibles · map legend</h2><a href="./atlas81-hq.html#collections">Full tracker ↗</a></div>
  <p class="j83-caption" id="j83-summary">Loading collection sets…</p>
  <label class="j83-label" for="j83-set">Collection</label><select id="j83-set"></select>
- <div class="j83-progress" id="j83-count">Loading…</div><div class="j83-mapbuttons"><button id="j83-showset" type="button">Show set pins on map</button><button id="j83-clearset" type="button">Clear map filter</button></div>
+ <div class="j83-progress" id="j83-count">Loading…</div><div class="j83-mapbuttons"><button id="j83-showset" type="button">Show set pins on map</button><button id="j85-route" type="button">▶ Start guided hunt</button><button id="j83-clearset" type="button">Clear map filter</button></div>
  <label class="j83-label" for="j83-search">Search item or note</label><input id="j83-search" type="search" placeholder="Find collection item…">
  <div class="j83-actions"><label><input type="checkbox" id="j83-unfinished"> List unfinished only</label><label><input type="checkbox" id="j83-hide"> Hide collected pins</label></div>
  <div class="j83-list" id="j83-items"></div><p class="j83-caption" id="j83-message" aria-live="polite"></p>
@@ -72,7 +74,7 @@ function install(){const drawer=$('atlasFilterDrawer'),side=$('sidebar');if(!dra
  for(const [name,target,k] of [['GTA V Story','atlas.html','story'],['GTA Online','atlas-online.html','online'],['Leonida Research','atlas-vi.html','vi']]){
  const a=elt('a',k===mode?'current':'',name);a.href='./'+target;if(k===mode)a.setAttribute('aria-current','page');banner.append(a)}
  const top=side.querySelector('.worlds');if(top)top.insertAdjacentElement('afterend',banner);else side.prepend(banner);
- $('j83-set').onchange=e=>{setId=e.target.value;render()};$('j83-showset').onclick=showSetOnMap;$('j83-clearset').onclick=clearSetOnMap;$('j83-search').oninput=e=>{search=e.target.value.trim().toLowerCase();render()};
+ $('j83-set').onchange=e=>{setId=e.target.value;render()};$('j83-showset').onclick=showSetOnMap;$('j85-route').onclick=()=>{showSetOnMap();if(window.JuraAtlas85)window.JuraAtlas85.startRouteForVisible();else feedback('Refresh the map to activate the Atlas 8.5 route engine.');};$('j83-clearset').onclick=clearSetOnMap;$('j83-search').oninput=e=>{search=e.target.value.trim().toLowerCase();render()};
  $('j83-unfinished').onchange=e=>{onlyPending=e.target.checked;render()};$('j83-hide').onchange=e=>{const native=$('hideFound');if(native){native.checked=e.target.checked;native.dispatchEvent(new Event('change',{bubbles:true}))}else feedback('Native map Hide collected control was not found.')};
  $('j83-set').add(new Option('Loading…',''));
  if(mode==='vi'){$('j83-set').replaceChildren();$('j83-summary').textContent='GTA VI collectible positions cannot be confirmed; use the research map and provenance tools.';$('j83-count').textContent='No confirmed GTA VI collectible sets';$('j83-hide').disabled=true;$('j83-showset').disabled=true;return;}
