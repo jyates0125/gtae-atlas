@@ -2,7 +2,7 @@
 (()=>{'use strict';
 const path=(location.pathname.split('/').pop()||'index.html').toLowerCase();
 if(document.querySelector('#j89-shell'))return;
-const destinations=[['⌂ Atlas HQ','atlas81-hq.html'],['▦ All Maps','maps.html'],['◷ Online Dailies','atlas87-daily.html'],['🛸 Collectible Hunt','atlas81-hq.html#collections'],['♜ Heists','heists.html'],['✦ Elario Studios','elario.html']];
+const destinations=[['⌂ Atlas HQ','atlas81-hq.html'],['▦ All Maps','maps.html'],['◷ Online Dailies','atlas87-daily.html'],['🛸 Collectible Hunt','atlas81-hq.html#collections'],['⚔ Weapons Gallery','atlas90-weapons.html'],['◆ GTA V Vehicles','atlas90-vehicles5.html'],['◇ GTA VI Vehicles','atlas90-vehicles6.html'],['♜ Heists','heists.html'],['✦ Elario Studios','elario.html']];
 function create(tag,cls,txt){const el=document.createElement(tag);if(cls)el.className=cls;if(txt!==undefined)el.textContent=txt;return el}
 function init(){if(document.querySelector('#j89-shell'))return;
 const dock=create('nav','j89-dock');dock.id='j89-shell';dock.setAttribute('aria-label','Team Jura universal navigation');

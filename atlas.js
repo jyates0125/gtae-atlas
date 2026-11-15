@@ -30,7 +30,7 @@ const BOUNDS={
 };
 const LAYERS={
  '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid'],['uv','UV · illustrated blueprint (Team Jura)'],['uv2','UV II · illustrated paper (Team Jura)']],
- '6':[['scaly,view','Scaly · YANIS V17'],['loki,view','Loki · DUPZOR V51'],['yanis,17','YANIS V17 · Original'],['yanis,15','YANIS V15 · Archive'],['dupzor,51','DUPZOR V51 · Original']]
+ '6':[['scaly,view','Scaly · YANIS V17'],['yanis,17','YANIS V17 · Original'],['yanis,15','YANIS V15 · Archive'],['dupzor,51','DUPZOR V51 · Original']]
 };
 // Add Team Jura UV artwork views without changing the verified six-source baseline.
 const VI_UV_OPTIONS=[['uv2','UV II · Leonida illustration (Team Jura)']];
@@ -516,6 +516,9 @@ function drawRoute(){
  if(origin){const p=toScreen(origin.x,origin.y);if(p.x>=-15&&p.x<=width+15&&p.y>=-15&&p.y<=height+15){ctx.beginPath();ctx.arc(p.x,p.y,13,0,Math.PI*2);ctx.fillStyle='#7ee6bc';ctx.strokeStyle='#193643';ctx.lineWidth=3;ctx.fill();ctx.stroke();ctx.fillStyle='#193643';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText('S',p.x,p.y+4)}}ctx.restore()}
 
 function atlas85CollectibleIcon(r){
+ const eventIcon=window.TeamJuraEventIcon88?.forRecord(r);if(eventIcon)return eventIcon;
+ const unified=window.TeamJuraIcon86?.forRecord(r);
+ if(unified)return unified;
  if(!r)return null;
  const name=String(r.collectionType||r.name||'').toLowerCase();
  const symbols=[[/spaceship|ufo/, '🛸'],[/letter scrap/, '✉'],[/nuclear waste/, '☢'],[/submarine piece/, '⚓'],[/monkey mosaic/, '🐒'],[/peyote/, '🌵'],[/epsilon/, '📜'],[/hidden package/, '🎁'],[/stunt jump/, '🏍'],[/under the bridge/, '🌉'],[/knife flight/, '✈'],[/playing card/, '🃏'],[/action figure/, '🤖'],[/signal jammer/, '📡'],[/ld organics/, '🍃'],[/movie prop/, '🎬'],[/media stick/, '💿'],[/snowm/, '☃'],[/jack.o.lantern|pumpkin/, '🎃'],[/ls tag|graffiti|spray tag/, '🎨'],[/snapshot/, '📷'],[/horseshoe/, '🧲'],[/oyster/, '🦪']];
@@ -534,7 +537,7 @@ function conditionForRecord(r,storeCache){
  const storedHour=storeCache?.hour??loadStore('jura68-online-hour',null);const gameHour=storedHour===null||storedHour===''?NaN:Number(storedHour);
  return engine.evaluate(r.activityId,{mode:required,state:save,snapshot:feed,markerId:r.rotationMarkerId,hour:gameHour,now:Date.now()});
 }
-function conditionPinColor(r,storeCache){const c=conditionForRecord(r,storeCache);return c?window.JuraConditions.markerColor(c.status):r.markerColor||CATEGORIES[r.category]?.[1]||'#f7c97b';}
+function conditionPinColor(r,storeCache){const c=conditionForRecord(r,storeCache);if(c&&/^ghost-/i.test(r.activityId||'')&&['closed','unknown','possible'].includes(c.status))return '#f8fafc';return c?window.JuraConditions.markerColor(c.status):r.markerColor||CATEGORIES[r.category]?.[1]||'#f7c97b';}
 function drawMarkers(){hitRegions=[];if(!showPins&&!selected)return;
  // One physical pin per visible record: GTADB-style ungrouped locations.
  // Cap only at extremely large source-object loads to prevent phone freezes.
