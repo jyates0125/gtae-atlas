@@ -1,0 +1,60 @@
+name: Apply Atlas 8.5 Designed Brand integration
+on:
+  push:
+    branches: [development]
+    paths:
+      - "atlas85-*.js"
+      - "atlas85-*.css"
+      - "atlas-sa.html"
+      - "tools/apply_atlas85.py"
+      - ".github/workflows/atlas85-apply.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  integrate:
+    if: github.ref == 'refs/heads/development'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: development
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate uploaded runtime assets
+        run: |
+          test -s atlas85-enhance.js
+          test -s atlas85-sa.js
+          test -s atlas85-brand.css
+          test -s atlas85-sa.css
+          test -s atlas-sa.html
+          test -s tools/apply_atlas85.py
+          node --check atlas85-enhance.js
+          node --check atlas85-sa.js
+          python -m py_compile tools/apply_atlas85.py
+      - name: Upgrade existing Atlas map engine and pages
+        run: python tools/apply_atlas85.py
+      - name: Validate patched scripts and links
+        run: |
+          node --check atlas.js
+          node --check atlas83-map.js
+          python - <<'PY'
+          from pathlib import Path
+          for f in ('atlas.html','atlas-online.html','atlas-vi.html'):
+              t=Path(f).read_text()
+              assert t.count('atlas85-enhance.js')==1,(f,'JS reference')
+              assert t.count('atlas85-brand.css')==1,(f,'CSS reference')
+          assert 'atlas-sa.html' in Path('atlas81-hq.html').read_text()
+          print('PASS: page references')
+          PY
+      - name: Commit integrated changes to development
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add atlas.js atlas83-map.js atlas.html atlas-online.html atlas-vi.html atlas81-hq.html
+          if git diff --cached --quiet; then echo 'Already integrated'; else git commit -m 'feat: integrate Atlas 8.5 collectible icons and guided routing'; git push origin HEAD:development; fi
