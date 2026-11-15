@@ -1,64 +1,130 @@
 #!/usr/bin/env python3
-"""Team Jura: reproducible GTA VI landmark snapshot sync from GTADB's CC BY 4.0 GitHub data.
-No copyrighted third-party scraping, no arbitrary code execution, no game-road claims.
-Run in GitHub Actions or locally: python scripts/sync_gtadb_vi.py
+"""Team Jura Atlas 9.5: reproducible GTA VI community-research snapshot.
+Source: rolux/gtadb.org, data CC BY 4.0 (code MIT); no gtadb.org live API scraping.
+Keeps coordinate-less records searchable on Research. Never promotes VI pins to verified.
 """
+from __future__ import annotations
+import argparse
+import datetime as dt
+import hashlib
+import json
 from pathlib import Path
 from urllib.request import Request, urlopen
-import json, hashlib, datetime, os, sys
-UPSTREAM="https://raw.githubusercontent.com/rolux/gtadb.org/main/map/data/6/landmarks.json"
-LICENSE_URL="https://creativecommons.org/licenses/by/4.0/"
-OUTPUT=Path(__file__).resolve().parents[1]/"data"/"gtadb-6.json"
-MANIFEST=OUTPUT.with_name("gtadb-6-manifest.json")
-MAX_BYTES=8_000_000
 
-def fetch():
-    req=Request(UPSTREAM,headers={"User-Agent":"Team-Jura-Atlas-Sync/6.1 (+https://github.com/jyates0125/leonida-explorer)","Accept":"application/json"})
-    with urlopen(req,timeout=30) as response:
-        if response.status!=200:raise RuntimeError("GTADB raw GitHub fetch failed")
-        content=response.read(MAX_BYTES+1)
-    if len(content)>MAX_BYTES:raise ValueError("Source exceeds limit")
-    return json.loads(content)
+ROOT = Path(__file__).resolve().parents[1]
+UPSTREAM = 'https://raw.githubusercontent.com/rolux/gtadb.org/main/map/data/6/landmarks.json'
+SOURCE_URL = 'https://github.com/rolux/gtadb.org/tree/main/map/data/6'
+OUTPUT = ROOT / 'data' / 'gtadb-6.json'
+MANIFEST = ROOT / 'data' / 'gtadb-6-manifest.json'
+MAX_BYTES = 8_000_000
 
-def validate(data):
-    if not isinstance(data,dict):raise ValueError("Expected GTADB landmark dictionary")
-    if len(data)<500 or len(data)>25000:raise ValueError("Unexpected landmark count: "+str(len(data)))
-    valid={};rejected=0;colors=0;coords=0
-    for key,values in data.items():
-        if not isinstance(key,str) or len(key)>48 or not key.startswith('L') or not key[1:].isdigit():rejected+=1;continue
-        if not isinstance(values,list) or len(values)<7:rejected+=1;continue
-        name,where=values[0],values[1]
-        if not isinstance(name,str) or len(name)>200 or not isinstance(where,list) or len(where)<2:rejected+=1;continue
-        x,y=where[:2]
-        if not (isinstance(x,(int,float)) and isinstance(y,(int,float)) and abs(x)<=16384 and abs(y)<=16384):rejected+=1;continue
-        if len(values)>7 and isinstance(values[7],str) and len(values[7])==6:colors+=1
-        if len(values)>4 and isinstance(values[4],list) and len(values[4])==2:coords+=1
-        valid[key]=values
-    if len(valid)<500:raise ValueError("Too few valid coordinates")
-    return valid,rejected,colors,coords
+
+def fetch_source():
+    req = Request(UPSTREAM, headers={'User-Agent':'Team-Jura-Atlas/9.5 (repository source snapshot; contact via GitHub)', 'Accept':'application/json'})
+    with urlopen(req, timeout=40) as response:
+        if response.status != 200:
+            raise RuntimeError('Upstream HTTP ' + str(response.status))
+        blob = response.read(MAX_BYTES + 1)
+    if len(blob) > MAX_BYTES:
+        raise ValueError('Upstream exceeds 8 MB')
+    return json.loads(blob.decode('utf-8'))
+
+
+def validate(raw):
+    if not isinstance(raw, dict) or not 500 <= len(raw) <= 25_000:
+        raise ValueError('Expected 500–25,000 keyed source landmarks')
+    cleaned = {}
+    mapped = 0
+    search_only = 0
+    rejected = 0
+    for key, value in raw.items():
+        if not isinstance(key, str) or len(key) > 48 or not (key.startswith('L') and key[1:].isdigit()):
+            rejected += 1
+            continue
+        if not isinstance(value, list) or len(value) < 7 or not isinstance(value[0], str) or not value[0].strip() or len(value[0]) > 220:
+            rejected += 1
+            continue
+        point = value[1] if len(value) > 1 else None
+        valid_point = (isinstance(point, list) and len(point) >= 2
+                       and all(isinstance(n, (int, float)) and not isinstance(n, bool)
+                               and n == n and abs(n) <= 16_384 for n in point[:2]))
+        if valid_point:
+            mapped += 1
+        elif point is None or (isinstance(point, list) and len(point) == 0):
+            search_only += 1
+        else:
+            # Invalid or implausible positions are not silently pinned. Preserve the descriptive record for search.
+            value = list(value)
+            value[1] = []
+            search_only += 1
+        cleaned[key] = value
+    if mapped < 500:
+        raise ValueError(f'Too few valid source coordinates: {mapped}')
+    return cleaned, mapped, search_only, rejected
+
+
+def build_snapshot(raw, now=None):
+    rows, mapped, search_only, rejected = validate(raw)
+    checked_at = now or dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
+    digest = hashlib.sha256(json.dumps(rows, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode('utf-8')).hexdigest()
+    snapshot = {
+        'schema':2, 'game':'6', 'status':'community-provisional',
+        'source':'GTADB.ORG and contributors', 'sourceUrl':SOURCE_URL,
+        'license':'CC BY 4.0', 'licenseUrl':'https://creativecommons.org/licenses/by/4.0/',
+        'changes':'Original GTADB.org landmarks mirrored for Team Jura community research; coordinates unverified in gameplay.',
+        'sourceUpdated':checked_at, 'sourceHash':digest,
+        'count':len(rows), 'mappedCount':mapped, 'searchOnlyCount':search_only,
+        'records':rows,
+    }
+    return snapshot, rejected
+
+
+def write_snapshot(snapshot, rejected):
+    old = {}
+    if OUTPUT.is_file():
+        try:
+            old = json.loads(OUTPUT.read_text(encoding='utf-8'))
+        except (ValueError, UnicodeDecodeError):
+            old = {}
+    if old.get('sourceHash') == snapshot['sourceHash'] and old.get('schema') == snapshot['schema']:
+        print(f'No source changes: {snapshot["mappedCount"]} mapped, {snapshot["searchOnlyCount"]} search-only; no commit needed')
+        return False
+    prior = old.get('records') or {}
+    if not isinstance(prior, dict):
+        prior = {}
+    current = snapshot['records']
+    added = sorted(set(current) - set(prior))
+    removed = sorted(set(prior) - set(current))
+    changed = sorted(k for k in set(prior) & set(current) if prior[k] != current[k])
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        'schema':2, 'game':'6', 'status':'community-provisional / unverified',
+        'sourceUrl':SOURCE_URL, 'license':'CC BY 4.0',
+        'lastChecked':snapshot['sourceUpdated'], 'sourceHash':snapshot['sourceHash'],
+        'count':snapshot['count'], 'mappedCount':snapshot['mappedCount'],
+        'searchOnlyCount':snapshot['searchOnlyCount'],
+        'added':len(added), 'changed':len(changed), 'removed':len(removed), 'rejected':rejected,
+        'sampleAddedIds':added[:20], 'sampleChangedIds':changed[:20],
+        'note':'All GTA VI positions are community-research coordinates, not verified gameplay. Unknown positions remain search-only.',
+    }
+    OUTPUT.write_text(json.dumps(snapshot, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+    MANIFEST.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+    print(f'Wrote {snapshot["count"]} records ({snapshot["mappedCount"]} mapped / {snapshot["searchOnlyCount"]} search-only), +{len(added)} / ~{len(changed)} / -{len(removed)}; rejected={rejected}')
+    return True
+
 
 def main():
-    raw=fetch();valid,rejected,colors,coords=validate(raw)
-    OUT=OUTPUT;OUT.parent.mkdir(parents=True,exist_ok=True)
-    previous={}
-    if OUT.exists():
-        try:
-            old=json.loads(OUT.read_text())
-            if isinstance(old.get('records'),dict):previous=old['records']
-        except (ValueError,KeyError):pass
-    additions=sorted(set(valid)-set(previous));removed=sorted(set(previous)-set(valid));modified=sorted(k for k in set(previous)&set(valid) if previous[k]!=valid[k]);rawsha=hashlib.sha256(json.dumps(valid,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
-    # No meaningless daily commits when nothing changed.
-    if previous and not(additions or removed or modified):
-        print('GTADB VI source unchanged, records='+str(len(valid))+'; no commit needed')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input-json', type=Path, help='Test/airgapped input in GTADB.org source format. Omit to fetch the canonical GitHub source.')
+    parser.add_argument('--dry-run', action='store_true')
+    args = parser.parse_args()
+    source = json.loads(args.input_json.read_text(encoding='utf-8')) if args.input_json else fetch_source()
+    snapshot, rejected = build_snapshot(source)
+    if args.dry_run:
+        print(f'PASS schema={snapshot["schema"]} count={snapshot["count"]} mapped={snapshot["mappedCount"]} searchOnly={snapshot["searchOnlyCount"]} rejected={rejected}')
         return
-    now=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
-    snapshot={"schema":1,"game":"6","status":"community-provisional","source":"GTADB.ORG and contributors","sourceUrl":"https://github.com/rolux/gtadb.org/tree/main/map/data/6","license":"CC BY 4.0","licenseUrl":LICENSE_URL,"changes":"Imported/normalized for Team Jura Atlas; no alterations to source records","sourceUpdated":now,"count":len(valid),"sourceHash":rawsha,"records":valid}
-    manifest={"game":"6","status":"provisional / unverified GTA VI coordinates","lastChecked":now,"count":len(valid),"newCount":len(additions),"changedCount":len(modified),"removedCount":len(removed),"sampleNewIds":additions[:30],"sampleChangedIds":modified[:30],"sourceHash":rawsha,"sourceUrl":snapshot['sourceUrl'],"license":"CC BY 4.0"}
-    OUT.write_text(json.dumps(snapshot,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
-    MANIFEST.write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
-    print('Updated GTA VI snapshot: '+str(len(valid))+' records; added '+str(len(additions))+', changed '+str(len(modified))+', removed '+str(len(removed))+'; '+str(colors)+' source colors, '+str(coords)+' real-world references, rejected '+str(rejected))
+    write_snapshot(snapshot, rejected)
 
-if __name__=='__main__':
-    try:main()
-    except Exception as error:
-        print('SYNC ERROR: '+str(error),file=sys.stderr);sys.exit(1)
+
+if __name__ == '__main__':
+    main()

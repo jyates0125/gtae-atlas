@@ -1,0 +1,39 @@
+TEAM JURA ATLAS 9.6 · CUMULATIVE RELEASE QA · NOVEMBER 15, 2026
+
+PASS — 6 Python unittest regression checks:
+  - guarded research API integration, coordinate-mode filtering, CORS fallback, repeat safety
+  - Research group-circle drawing, marker click zoom, keyboard event patch
+  - GTA V catalog direct-to-garage vehicle model link
+  - repeated HTML injection and branded audit panel
+  - licensed community-source schema with 600 mapped + 2 search-only test records
+  - required package source files
+
+PASS — JavaScript syntax: atlas94-ui.js, atlas95-ui.js, atlas96-cluster-core.js,
+       atlas96-garage.js. Python bytecode compiled for tools/apply_atlas95.py,
+       tools/apply_atlas96.py, tools/audit_atlas96.py, tools/test_atlas96.py,
+       scripts/sync_gtadb_vi.py.
+
+PASS — Cluster core Node test with 3,307 synthetic map positions: group count preserved,
+       clustered display buckets fewer than source records, close-up returns
+       individual pins, no source-coordinate mutation.
+
+PASS — Cumulative installer synthetic real-anchor fixture:
+       preflight 9.5 3 files / 9.6 5 files; applied; repeat installed again
+       0 files changed; JS syntax checked after patch; new catalog style injection
+       also repeat-safe.
+
+PASS — Chromium isolated garage DOM fixture (script guard bypass in about:blank only):
+       3 vehicle model options from mock catalog, two `buffalo` instances in
+       Main Garage at bay A1 + A2, unique individual records saved, count
+       2 instances / 1 model, edit control functional, 0 page exceptions.
+
+NOT RUN — Live hosted Atlas site / Cloudflare preview (network navigation returned
+          net::ERR_BLOCKED_BY_ADMINISTRATOR). Browser QA fixture is not the full site.
+NOT RUN — Reference screenshot pixel diffs against approved Designed Brand master.
+NOT RUN — Live GTA VI source sync in GitHub Actions; repository upload/permissions needed.
+NOT RUN — Mobile real-device gesture tests / WebGL shader texture availability.
+NOT RUN — Comparison of all 59 pages in live browser. Static repo-wide scanner is
+          shipped to run after upload.
+
+GIT STATUS: No files were pushed to GitHub (connector write permission denied 403).
+RELEASE GATE: Keep production `main` unchanged until the development preview passes.
