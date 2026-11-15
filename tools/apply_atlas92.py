@@ -32,7 +32,12 @@ def run(check=False):
         tags=[STYLE,UI]
         if name=='atlas87-daily.html':tags.append(DAILY)
         if name in HEISTS:tags.append(HEIST)
-        if '</head>' not in before.lower():             print('SKIP non-document HTML without </head>:', name)             continue         after=inject(before,tags)
+        if '</head>' not in before.lower():
+            print('SKIP non-document HTML without </head>:', name)
+            continue
+            after=inject(before,tags)
+            if before!=after:
+                touched.append(name)
         if before!=after:
             touched.append(name)
             if not check:path.write_text(after,encoding='utf-8')
