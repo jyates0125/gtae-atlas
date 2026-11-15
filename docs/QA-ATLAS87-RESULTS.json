@@ -1,0 +1,9 @@
+{
+  "js_syntax": true,
+  "map_worlds": true,
+  "search_filter": true,
+  "interactive_filter": true,
+  "all_maps_no_js_errors": true,
+  "daily_no_fake_live": true,
+  "no_js_errors": true
+}
