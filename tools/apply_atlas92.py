@@ -13,7 +13,8 @@ DAILY='<script defer src="./atlas92-daily.js?v=92"></script>'
 HEIST='<script defer src="./atlas92-heists.js?v=92"></script>'
 
 def inject(text, tags):
-    if '</head>' not in text.lower():raise ValueError('Missing </head>')
+    if '</head>' not in text.lower():
+        raise ValueError('Missing </head>')
     for tag in tags:
         if tag not in text:
             index=text.lower().rindex('</head>')
@@ -21,26 +22,29 @@ def inject(text, tags):
     return text
 
 def run(check=False):
-    if not (ROOT/'atlas92-ui.js').exists():raise FileNotFoundError('Upload files into repository root first')
+    if not (ROOT/'atlas92-ui.js').exists():
+        raise FileNotFoundError('Upload files into repository root first')
     touched=[]
     for name in PAGES+HEISTS:
         path=ROOT/name
         if not path.exists():
-            if name in PAGES:print('Optional page absent:',name)
+            if name in PAGES:
+                print('Optional page absent:',name)
             continue
         before=path.read_text(encoding='utf-8')
         tags=[STYLE,UI]
-        if name=='atlas87-daily.html':tags.append(DAILY)
-        if name in HEISTS:tags.append(HEIST)
+        if name=='atlas87-daily.html':
+            tags.append(DAILY)
+        if name in HEISTS:
+            tags.append(HEIST)
         if '</head>' not in before.lower():
             print('SKIP non-document HTML without </head>:', name)
             continue
-            after=inject(before,tags)
-            if before!=after:
-                touched.append(name)
+        after=inject(before,tags)
         if before!=after:
             touched.append(name)
-            if not check:path.write_text(after,encoding='utf-8')
+            if not check:
+                path.write_text(after,encoding='utf-8')
     print(('Would update' if check else 'Updated'),len(touched),'pages:',', '.join(touched) or '(already current)')
     return touched
 if __name__=='__main__':run('--check' in sys.argv)
