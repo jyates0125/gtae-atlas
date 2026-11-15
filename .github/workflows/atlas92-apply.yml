@@ -1,0 +1,53 @@
+name: Apply Atlas 9.2 forward-only UX upgrade
+on:
+  workflow_dispatch:
+    inputs:
+      branch_acknowledgment:
+        description: 'Enter development to confirm this is a preview-only integration'
+        required: true
+        default: development
+permissions:
+  contents: write
+jobs:
+  integrate:
+    if: github.ref == 'refs/heads/development' && inputs.branch_acknowledgment == 'development'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: development
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate source assets before touching existing pages
+        run: |
+          set -euo pipefail
+          test -s atlas92-ui.js
+          test -s atlas92-daily.js
+          test -s atlas92-heists.js
+          test -s atlas92-style.css
+          test -s art/atlas92-map-directory.webp
+          node --check atlas92-ui.js
+          node --check atlas92-daily.js
+          node --check atlas92-heists.js
+          python3 tools/apply_atlas92.py --check
+      - name: Apply additive integration
+        run: python3 tools/apply_atlas92.py
+      - name: Validate and test repeat-install behavior
+        run: |
+          set -euo pipefail
+          python3 tools/test_atlas92.py
+          python3 tools/apply_atlas92.py --check | tee /tmp/atlas92-repeat.txt
+          grep 'Would update 0 pages' /tmp/atlas92-repeat.txt
+      - name: Commit changed HTML onto development only
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat: apply Atlas 9.2 non-destructive visual and planning upgrades'
+            git pull --rebase origin development
+            git push origin HEAD:development
+          fi

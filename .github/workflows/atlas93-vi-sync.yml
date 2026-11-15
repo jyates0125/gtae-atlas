@@ -1,0 +1,35 @@
+name: Atlas 9.3 research-only GTADB VI licensed snapshot refresh
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: atlas93-vi-snapshot-refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    if: github.ref_name == 'development'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: development
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Refresh licensed GTADB.org research snapshot
+        run: python scripts/sync_gtadb_vi.py
+      - name: Validate new snapshot schema
+        run: python scripts/test_sync_gtadb_vi.py
+      - name: Commit source-attributed data only to development
+        run: |
+          git config user.name 'Team Jura Atlas updater'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/gtadb-6.json data/gtadb-6-manifest.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: refresh GTA VI CC BY 4.0 landmark snapshot'
+            git pull --rebase origin development
+            git push origin HEAD:development
+          fi
