@@ -1,5 +1,6 @@
 import importlib.util
 from pathlib import Path
+import math
 p=Path(__file__).with_name('sync_gtadb_vi.py');s=importlib.util.spec_from_file_location('gta_sync',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
 records={f'L{i}':[f'Example #{i}',[i/10.,-i/10.],[], '',[],[],[], 'abcd12'] for i in range(1,801)}
 valid,invalid,colors,coords=m.validate(records)
@@ -11,3 +12,17 @@ records['malicious']=[]
 valid,invalid,_,_=m.validate(records)
 assert len(valid)==800 and invalid==1
 print('GTADB VI snapshot validation tests PASS')
+
+# Invalid numeric values must never reach the map.
+for bad in (float('nan'), float('inf'), -float('inf'), True, None, '120'):
+    malformed=records.copy()
+    malformed['L1']=['Invalid',[bad,12],[], '',[],[],[], 'abcd12']
+    good,rejected,_,_=m.validate(malformed)
+    assert 'L1' not in good and rejected==2, f'Invalid coordinate accepted: {bad}'
+
+# A major upstream schema break should stop automated updates.
+broken={f'L{i}': [] for i in range(1,501)}
+broken.update({f'L{i}': records[f'L{i}'] for i in range(501,801)})
+try: m.validate(broken)
+except ValueError: pass
+else: raise AssertionError('Major malformed upstream data accepted')
