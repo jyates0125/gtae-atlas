@@ -62,6 +62,7 @@ async def smoke():
                                 if await pg.locator('#layer option[value="uv"],#layer option[value="uv2"]').count():failures.append('Retired UV pseudo-views still offered')
                                 if await pg.locator('#search').count()==0:failures.append('Location search missing')
                             if not failures and path=='atlas93-garage.html':
+                                await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')
                                 if await buttons.count()>0:
                                     await buttons.first.click()
