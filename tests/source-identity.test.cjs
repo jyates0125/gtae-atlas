@@ -6,9 +6,9 @@ const engine=fs.readFileSync(require('node:path').resolve(__dirname,'../atlas.js
 const f=engine.match(/function uniqueSourceIds\(rows\)\{[\s\S]*?\n\}/);
 assert.ok(f,'Actual Atlas identity helper must be present');
 const unique=vm.runInNewContext('('+f[0]+')');
-test('same source ID is shown once and later authorized source wins',()=>{
+test('same source ID is shown once and canonical licensed source wins',()=>{
  const rows=[{id:'gtadb-5-L25',name:'old'},{id:'new-event',name:'Other'},{id:'gtadb-5-L25',name:'updated'}];
- const data=unique(rows);assert.deepEqual(Array.from(data,r=>r.name),['Other','updated']);
+ const data=unique(rows);assert.deepEqual(Array.from(data,r=>r.name),['old','Other']);
 });
 test('different IDs at the same coordinates stay distinct',()=>{
  const data=unique([{id:'gtadb-5-L2',x:1,y:2},{id:'online-event-7',x:1,y:2}]);
