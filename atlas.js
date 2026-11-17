@@ -150,14 +150,28 @@ function storyPermitted(r){
  if(typeof r.activityId==='string'&&window.JuraConditions?.BY_ID?.[r.activityId]?.mode!=='story')return false;
  return !ONLINE_ONLY_CONTENT.test([r.name,r.collectionType||'',...(r.tags||[])].join(' '));
 }
+// Keep a single visible record per stable source ID, without treating distinct
+// activities or buildings sharing an address/coordinate as duplicates.
+// Scope first: Story and Online are independent contexts even if IDs coincide.
+function uniqueSourceIds(rows){
+ const seen=new Set(),out=[];
+ for(let i=rows.length-1;i>=0;i--){
+  const row=rows[i],id=typeof row?.id==='string'?row.id.trim():'';
+  if(id&&seen.has(id))continue;
+  if(id)seen.add(id);
+  if(row)out.push(row);
+ }
+ return out.reverse();
+}
 function records(){
  const custom=personal.filter(p=>p.game===game&&(game==='6'||(p.scope||'story')===mode));
  const packed=packRecords.filter(p=>p.game===game&&(game==='6'||p.scope==='both'||p.scope===mode));
  const permitted=Object.entries(sourceRecords).filter(([id])=>sourceEnabled[id]&&window.JuraSources?.SOURCES[id]?.game===game&&(game==='6'||mode==='story'||window.JuraSources.SOURCES[id].scope==='both')).flatMap(([,rows])=>rows);
  const combined=[...(researchOn()?datasets[game]:[]),...permitted,...packed,...custom];
- if(game==='5'&&mode==='story')return combined.filter(storyPermitted);
- if(game==='5'&&mode==='online')return combined.filter(r=>r.scope!=='story');
- return combined.filter(r=>r.scope!=='online'&&(!r.activityId||!window.JuraConditions?.BY_ID?.[r.activityId]||window.JuraConditions.BY_ID[r.activityId].mode==='vi'));
+ const scoped=game==='5'&&mode==='story'?combined.filter(storyPermitted):
+  game==='5'&&mode==='online'?combined.filter(r=>r.scope!=='story'):
+  combined.filter(r=>r.scope!=='online'&&(!r.activityId||!window.JuraConditions?.BY_ID?.[r.activityId]||window.JuraConditions.BY_ID[r.activityId].mode==='vi'));
+ return uniqueSourceIds(scoped);
 }
 function specialized(kind){return records().filter(p=>kind==='collections'?p.category==='collectible':kind==='vehicles'?p.category==='vehicle':kind==='properties'?p.category==='property':false)}
 const filterScope=()=>game==='6'?'6':mode==='online'?'5-online':'5-story';
