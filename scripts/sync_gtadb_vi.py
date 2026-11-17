@@ -5,7 +5,7 @@ Run in GitHub Actions or locally: python scripts/sync_gtadb_vi.py
 """
 from pathlib import Path
 from urllib.request import Request, urlopen
-import json, hashlib, datetime, os, sys
+import json, hashlib, datetime, math, sys
 UPSTREAM="https://raw.githubusercontent.com/rolux/gtadb.org/main/map/data/6/landmarks.json"
 LICENSE_URL="https://creativecommons.org/licenses/by/4.0/"
 OUTPUT=Path(__file__).resolve().parents[1]/"data"/"gtadb-6.json"
@@ -30,11 +30,13 @@ def validate(data):
         name,where=values[0],values[1]
         if not isinstance(name,str) or len(name)>200 or not isinstance(where,list) or len(where)<2:rejected+=1;continue
         x,y=where[:2]
-        if not (isinstance(x,(int,float)) and isinstance(y,(int,float)) and abs(x)<=16384 and abs(y)<=16384):rejected+=1;continue
+        if not (type(x) in (int,float) and type(y) in (int,float) and math.isfinite(x) and math.isfinite(y) and abs(x)<=16384 and abs(y)<=16384):rejected+=1;continue
         if len(values)>7 and isinstance(values[7],str) and len(values[7])==6:colors+=1
         if len(values)>4 and isinstance(values[4],list) and len(values[4])==2:coords+=1
         valid[key]=values
     if len(valid)<500:raise ValueError("Too few valid coordinates")
+    if rejected > max(20, int(len(data)*0.05)):
+        raise ValueError(f"Too many rejected source records: {rejected}/{len(data)}")
     return valid,rejected,colors,coords
 
 def main():
@@ -47,6 +49,9 @@ def main():
             if isinstance(old.get('records'),dict):previous=old['records']
         except (ValueError,KeyError):pass
     additions=sorted(set(valid)-set(previous));removed=sorted(set(previous)-set(valid));modified=sorted(k for k in set(previous)&set(valid) if previous[k]!=valid[k]);rawsha=hashlib.sha256(json.dumps(valid,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+    # Fail closed when an upstream change would unexpectedly erase much of our data.
+    if previous and len(removed) > max(25, int(len(previous)*0.15)):
+        raise ValueError(f"Suspicious upstream removal: {len(removed)}/{len(previous)} records")
     # No meaningless daily commits when nothing changed.
     if previous and not(additions or removed or modified):
         print('GTADB VI source unchanged, records='+str(len(valid))+'; no commit needed')
