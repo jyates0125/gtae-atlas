@@ -16,7 +16,7 @@ function setupVi(){
  const link=make('a','j95-brand-link','◈ Research desk · source filters, pins and tracking');link.href='./atlas-research.html';
  const status=make('small','j95-dataset-health','Checking mapped community records…');status.setAttribute('role','status');
  section.append(top,label,desc,link,status);
- const anchor=aside.querySelector('.named-layer-section')||$('atlasFilterDrawer');
+ const anchor=$('atlasFilterDrawer')||aside.querySelector('.named-layer-section');
  if(anchor)anchor.insertAdjacentElement('beforebegin',section);else aside.prepend(section);
  const nativeStatus=$('dataStatus');
  const update=()=>{
