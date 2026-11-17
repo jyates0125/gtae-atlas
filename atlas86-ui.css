@@ -59,3 +59,8 @@
 .jura86-leonida .j86-crew{position:sticky;top:0;z-index:7;box-shadow:0 8px 20px #0c061b99}
 .jura86-leonida .j86-crew-tile img{height:94px;object-position:center 28%}
 @media(max-width:700px){.jura86-leonida .j86-crew-tile img{height:76px}}
+
+/* Decorative brand portraits belong after the functional legend and cannot
+   steal taps from a mobile map category, including while scrolling. */
+.jura86-leonida #sidebar #atlasFilterDrawer{position:relative;z-index:3}
+.jura86-leonida #sidebar .j86-crew{position:relative;z-index:0;pointer-events:none}
