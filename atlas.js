@@ -155,13 +155,13 @@ function storyPermitted(r){
 // Scope first: Story and Online are independent contexts even if IDs coincide.
 function uniqueSourceIds(rows){
  const seen=new Set(),out=[];
- for(let i=rows.length-1;i>=0;i--){
-  const row=rows[i],id=typeof row?.id==='string'?row.id.trim():'';
+ for(const row of rows){
+  const id=typeof row?.id==='string'?row.id.trim():'';
   if(id&&seen.has(id))continue;
   if(id)seen.add(id);
   if(row)out.push(row);
  }
- return out.reverse();
+ return out;
 }
 function records(){
  const custom=personal.filter(p=>p.game===game&&(game==='6'||(p.scope||'story')===mode));
