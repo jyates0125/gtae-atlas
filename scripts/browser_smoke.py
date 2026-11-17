@@ -58,9 +58,33 @@ async def smoke():
                                 if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()<13:failures.append('Fewer than 13 world links')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
-                                if await pg.locator('#layer option').count()<2:failures.append('Map layer options missing')
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#layer')?.options.length >= 2",timeout=6500)
+                                except Exception:
+                                    failures.append('Map layer options missing after 6.5 seconds')
+                                if await pg.locator('#juraMapLegend,#juraTrailerLegend').count():
+                                    failures.append('Duplicate or trailer floating legend still in DOM')
                                 if await pg.locator('#layer option[value="uv"],#layer option[value="uv2"]').count():failures.append('Retired UV pseudo-views still offered')
                                 if await pg.locator('#search').count()==0:failures.append('Location search missing')
+                                if await pg.locator('#atlasFilterDrawer').count()!=1:
+                                    failures.append('Left legend missing')
+                                else:
+                                    try:
+                                        first=pg.locator('#legend button.legend-choice').first
+                                        await first.wait_for(state='visible',timeout=6500)
+                                        if await first.get_attribute('aria-pressed')!='false':
+                                            failures.append('New visitor sees active marker categories by default')
+                                        else:
+                                            await first.click(timeout=5000)
+                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='true':
+                                                failures.append('One-click category on did not change button state')
+                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
+                                                failures.append('One-click category on did not activate map pins')
+                                            await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
+                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='false':
+                                                failures.append('One-click category off did not disable pins')
+                                    except Exception as exc:
+                                        failures.append('Map legend could not be toggled: '+str(exc)[:180])
                                 toggle=pg.locator('#juraToggle3d')
                                 three=pg.locator('#jura3d')
                                 two=pg.locator('#jura2d')
@@ -70,13 +94,13 @@ async def smoke():
                                     failures.append('Map 2D/3D dimension controls hidden')
                                 else:
                                     try:
-                                        await three.click(timeout=2500)
+                                        await three.click(timeout=6500)
                                         await pg.wait_for_timeout(150)
                                         if await toggle.get_attribute('aria-pressed')!='true':
                                             failures.append('3D dimension did not activate')
                                         if not await pg.locator('body').evaluate("(el)=>el.classList.contains('jura-in-3d')"):
                                             failures.append('3D map view did not activate')
-                                        await two.click(timeout=2500)
+                                        await two.click(timeout=6500)
                                         if await toggle.get_attribute('aria-pressed')!='false':
                                             failures.append('3D button did not return to 2D')
                                         if await pg.locator('body').evaluate("(el)=>el.classList.contains('jura-in-3d')"):
@@ -94,7 +118,8 @@ async def smoke():
                                 else:failures.append('Garage vehicle catalogue did not load')
                             if not failures and path=='atlas-research.html':
                                 if await pg.locator('#map').count()==0:failures.append('Research canvas missing')
-                                if await pg.locator('#showResearchPins:checked').count()!=1:failures.append('Community pins are not visible by default')
+                                if await pg.locator('#showResearchPins:checked').count()!=0:failures.append('Research pins should start hidden')
+                                if await pg.locator('.j94-view-deck').count():failures.append('Legacy duplicate research map legend remains')
                                 if 'GTADB.org' not in await pg.locator('#researchSourceStatus').inner_text():failures.append('Licensed VI research records did not load')
                             if not failures and path=='atlas-iv.html':
                                 if await pg.locator('#classicCanvas').count()==0:failures.append('GTA IV canvas missing')
