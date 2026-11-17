@@ -56,6 +56,8 @@ async def smoke():
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
                             if not failures and path=='maps.html':
                                 if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()<13:failures.append('Fewer than 13 world links')
+                                failed_art=await pg.locator('#directoryFeatured img,#directoryAdditional img').evaluate_all("(imgs)=>imgs.filter(x=>x.complete && x.naturalWidth===0).map(x=>x.currentSrc)")
+                                if failed_art:failures.append('Map card artwork missing: '+', '.join(failed_art[:5]))
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
                                 try:
