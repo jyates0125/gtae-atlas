@@ -100,8 +100,11 @@ async def smoke():
                                 two=pg.locator('#jura2d')
                                 if await three.count()!=1 or await two.count()!=1:
                                     failures.append('Map 2D/3D dimension controls missing')
+                                elif path!='atlas-vi.html':
+                                    if await three.is_visible() or await toggle.is_visible():
+                                        failures.append('Legacy map exposed unfinished 3D instead of primary illustrated 2D')
                                 elif not await three.is_visible() or not await two.is_visible():
-                                    failures.append('Map 2D/3D dimension controls hidden')
+                                    failures.append('GTA VI research 3D controls hidden')
                                 else:
                                     try:
                                         await three.click(timeout=6500)
@@ -147,24 +150,8 @@ async def smoke():
                                 if await pg.locator('#classicCanvas').count()==0:failures.append('GTA IV canvas missing')
                                 if await pg.locator('#classicLayer option').count()<2:failures.append('GTA IV layers missing')
                                 if 'source landmarks' not in await pg.locator('#recordStatus').inner_text():failures.append('Local GTA IV landmark snapshot did not load') 
-                                if await pg.locator('#classic3dToggle').count()!=1:
-                                    failures.append('GTA IV same-page 3D map toggle missing')
-                                else:
-                                    await pg.locator('#classic3dToggle').click()
-                                    if await pg.locator('#j100-3d-panel').is_visible():
-                                        if await pg.locator('#map3dFlatScene').count()!=1:
-                                            failures.append('GTADB 3D WebGL scene missing after activation')
-                                        else:
-                                            bounds=await pg.locator('#map3dFlatScene').evaluate('(el)=>({w:el.width,h:el.height})')
-                                            if bounds['w']<100 or bounds['h']<100:
-                                                failures.append('3D canvas failed to size to viewport')
-                                        await pg.locator('.j100-back').click()
-                                        if await pg.locator('#j100-3d-panel').is_visible():
-                                            failures.append('Returning to native 2D map failed')
-                                    else:
-                                        fallback=await pg.locator('#j100-3d-note').inner_text()
-                                        if 'unavailable' not in fallback.lower() and 'renderer' not in fallback.lower():
-                                            failures.append('3D did not activate or report an accessible fallback')
+                                if await pg.locator('#classic3dToggle').count():
+                                    failures.append('Older map incorrectly includes deferred 3D viewer')
                             if not failures and path=='atlas98-landmarks.html':
                                 if 'sourced landmarks shown' not in await pg.locator('#landmarkStatus').inner_text():failures.append('Bundled VI landmark library did not load')
                             if not failures and path=='one-last-ride.html':
