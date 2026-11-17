@@ -24,7 +24,13 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  const time=mk('label','j88-time','In-game hour (ghosts)');const hour=mk('select');hour.setAttribute('aria-label','GTA Online in-game hour');hour.add(new Option('Select in-game time',''));for(let h=0;h<24;h++)hour.add(new Option(String(h).padStart(2,'0')+':00',String(h)));let local=read('jura68-online-hour',null);hour.value=local===null?'':String(local);time.append(hour);
  const filter=mk('label','j88-event-toggle');const checkbox=mk('input');checkbox.type='checkbox';checkbox.checked=!!C.safeState(read('jura68-conditions-online',{})).events.halloween;filter.append(checkbox,mk('span','','Halloween event active in my session'));
  const note=mk('p','j88-note','This is a manual session setting, not automatic Rockstar detection. With this toggle off, ghost markers are treated as inactive in this tracker; official event availability is separate.');
- const results=mk('div','j88-results');panel.append(title,intro,row,guide,time,filter,note,results);
+ const utc=mk('p','j88-note','');utc.setAttribute('role','status');utc.setAttribute('aria-label','Automatic real-world UTC reset clock');
+ function updateUtc(){
+  const now=new Date();const display=new Intl.DateTimeFormat('en-GB',{timeZone:'UTC',hour:'2-digit',minute:'2-digit',hour12:false}).format(now);
+  const until=hour=>{const next=new Date(now);next.setUTCHours(hour,0,0,0);if(next<=now)next.setUTCDate(next.getUTCDate()+1);const minutes=Math.ceil((next-now)/60000);return Math.floor(minutes/60)+'h '+String(minutes%60).padStart(2,'0')+'m'};
+  utc.textContent='UTC '+display+' · Most daily reset 06:00 UTC ('+until(6)+') · Street Dealers 07:00 UTC ('+until(7)+'). Source confirmation required for active locations.';
+ }
+ const results=mk('div','j88-results');panel.append(title,intro,utc,row,guide,time,filter,note,results);updateUtc();setInterval(updateUtc,60000);
  if(mapPage){const anchor=$('j87-daily-panel')||$('jura83-panel');if(anchor)anchor.insertAdjacentElement('afterend',panel);else home.prepend(panel)}else home.append(panel);
  let category='all';const tabs=mk('div','j88-tabs');for(const [id,label] of [['all','All'],['ghost','👻 Ghosts'],['daily','◷ Daily'],['other','★ Other']]){const b=mk('button','',''+label);b.type='button';b.dataset.type=id;b.setAttribute('aria-pressed',String(id===category));b.onclick=()=>{category=id;for(const x of tabs.children)x.setAttribute('aria-pressed',String(x===b));render()};tabs.append(b)}panel.insertBefore(tabs,guide);
  const focused=mk('p','j88-note','');focused.setAttribute('role','status');panel.insertBefore(focused,results);
