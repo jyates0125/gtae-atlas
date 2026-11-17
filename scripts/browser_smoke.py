@@ -37,7 +37,7 @@ async def smoke():
                         for path in PAGES:
                             pg=await ctx.new_page()
                             errors=[];missing=[]
-                            pg.on('pageerror',lambda err:errors.append(str(err)[:300]))
+                            pg.on('pageerror',lambda err:errors.append((getattr(err,'stack',None) or str(err))[:700]))
                             pg.on('response',lambda r:missing.append(r.url) if r.status>=400 and r.url.startswith(URL+'/') else None)
                             response=await pg.goto(URL+'/'+path,wait_until='domcontentloaded',timeout=25000)
                             await pg.wait_for_timeout(800)
