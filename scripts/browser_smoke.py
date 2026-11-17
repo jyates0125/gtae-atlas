@@ -77,7 +77,25 @@ async def smoke():
                             if not failures and path=='atlas-iv.html':
                                 if await pg.locator('#classicCanvas').count()==0:failures.append('GTA IV canvas missing')
                                 if await pg.locator('#classicLayer option').count()<2:failures.append('GTA IV layers missing')
-                                if 'source landmarks' not in await pg.locator('#recordStatus').inner_text():failures.append('Local GTA IV landmark snapshot did not load')
+                                if 'source landmarks' not in await pg.locator('#recordStatus').inner_text():failures.append('Local GTA IV landmark snapshot did not load') 
+                                if await pg.locator('#classic3dToggle').count()!=1:
+                                    failures.append('GTA IV same-page 3D map toggle missing')
+                                else:
+                                    await pg.locator('#classic3dToggle').click()
+                                    if await pg.locator('#j100-3d-panel').is_visible():
+                                        if await pg.locator('#map3dFlatScene').count()!=1:
+                                            failures.append('GTADB 3D WebGL scene missing after activation')
+                                        else:
+                                            bounds=await pg.locator('#map3dFlatScene').evaluate('(el)=>({w:el.width,h:el.height})')
+                                            if bounds['w']<100 or bounds['h']<100:
+                                                failures.append('3D canvas failed to size to viewport')
+                                        await pg.locator('.j100-back').click()
+                                        if await pg.locator('#j100-3d-panel').is_visible():
+                                            failures.append('Returning to native 2D map failed')
+                                    else:
+                                        fallback=await pg.locator('#j100-3d-note').inner_text()
+                                        if 'unavailable' not in fallback.lower() and 'renderer' not in fallback.lower():
+                                            failures.append('3D did not activate or report an accessible fallback')
                             if not failures and path=='atlas98-landmarks.html':
                                 if 'sourced landmarks shown' not in await pg.locator('#landmarkStatus').inner_text():failures.append('Bundled VI landmark library did not load')
                             if not failures and path=='one-last-ride.html':
