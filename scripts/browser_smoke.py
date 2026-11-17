@@ -62,17 +62,21 @@ async def smoke():
                                 if await pg.locator('#layer option[value="uv"],#layer option[value="uv2"]').count():failures.append('Retired UV pseudo-views still offered')
                                 if await pg.locator('#search').count()==0:failures.append('Location search missing')
                                 toggle=pg.locator('#juraToggle3d')
-                                if await toggle.count()!=1:failures.append('Map 3D control missing')
-                                elif not await toggle.is_visible():failures.append('Map 3D control hidden')
+                                three=pg.locator('#jura3d')
+                                two=pg.locator('#jura2d')
+                                if await three.count()!=1 or await two.count()!=1:
+                                    failures.append('Map 2D/3D dimension controls missing')
+                                elif not await three.is_visible() or not await two.is_visible():
+                                    failures.append('Map 2D/3D dimension controls hidden')
                                 else:
                                     try:
-                                        await toggle.click(timeout=2500)
+                                        await three.click(timeout=2500)
                                         await pg.wait_for_timeout(150)
                                         if await toggle.get_attribute('aria-pressed')!='true':
-                                            failures.append('3D button did not activate')
+                                            failures.append('3D dimension did not activate')
                                         if not await pg.locator('body').evaluate("(el)=>el.classList.contains('jura-in-3d')"):
                                             failures.append('3D map view did not activate')
-                                        await toggle.click(timeout=2500)
+                                        await two.click(timeout=2500)
                                         if await toggle.get_attribute('aria-pressed')!='false':
                                             failures.append('3D button did not return to 2D')
                                         if await pg.locator('body').evaluate("(el)=>el.classList.contains('jura-in-3d')"):
