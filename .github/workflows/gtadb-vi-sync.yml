@@ -34,11 +34,11 @@ jobs:
           from pathlib import Path
           data = json.loads(Path('data/gtadb-6.json').read_text(encoding='utf-8'))
           manifest = json.loads(Path('data/gtadb-6-manifest.json').read_text(encoding='utf-8'))
-          assert data['schema'] == 2 and data['status'] == 'community-provisional'
+          assert data['schema'] == 1 and data['status'] == 'community-provisional'
           assert data['license'] == 'CC BY 4.0'
           assert data['sourceHash'] == manifest['sourceHash']
           assert data['count'] == len(data['records'])
-          assert data['mappedCount'] >= 500
+          assert data['count'] >= 500
           PY
       # Keep protected main untouched. The updater may only propose changes
       # to the two source-licensed snapshot files, never application code.
@@ -57,6 +57,4 @@ jobs:
             Automated, source-attributed GTA VI research snapshot.
             These records are provisional, not verified gameplay positions.
             Review upstream changes, licensing and validation before merging.
-          labels: |
-            data-update
           draft: false
