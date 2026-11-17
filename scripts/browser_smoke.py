@@ -61,6 +61,24 @@ async def smoke():
                                 if await pg.locator('#layer option').count()<2:failures.append('Map layer options missing')
                                 if await pg.locator('#layer option[value="uv"],#layer option[value="uv2"]').count():failures.append('Retired UV pseudo-views still offered')
                                 if await pg.locator('#search').count()==0:failures.append('Location search missing')
+                                toggle=pg.locator('#juraToggle3d')
+                                if await toggle.count()!=1:failures.append('Map 3D control missing')
+                                elif not await toggle.is_visible():failures.append('Map 3D control hidden')
+                                else:
+                                    try:
+                                        await toggle.click(timeout=2500)
+                                        await pg.wait_for_timeout(150)
+                                        if await toggle.get_attribute('aria-pressed')!='true':
+                                            failures.append('3D button did not activate')
+                                        if not await pg.locator('body').evaluate("(el)=>el.classList.contains('jura-in-3d')"):
+                                            failures.append('3D map view did not activate')
+                                        await toggle.click(timeout=2500)
+                                        if await toggle.get_attribute('aria-pressed')!='false':
+                                            failures.append('3D button did not return to 2D')
+                                        if await pg.locator('body').evaluate("(el)=>el.classList.contains('jura-in-3d')"):
+                                            failures.append('Native 2D map did not recover after 3D')
+                                    except Exception as exc:
+                                        failures.append('3D map control could not be used: '+str(exc)[:150])
                             if not failures and path=='atlas93-garage.html':
                                 await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')
