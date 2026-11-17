@@ -15,9 +15,9 @@
  }
  function makeWorld(w,short){const a=E('a',short?'rail-world':'world-card');a.href='./'+w.href;a.dataset.id=w.id;
    if(short){const emblem=E('span','rail-emblem',({'story':'V','online':'◉','vi':'VI','cayo':'☀','iv':'IV','sa':'SA'}[w.id]||'◆'));const label=E('span','rail-label',w.name);const detail=E('small','',w.short);label.append(detail);a.append(emblem,label);return a}
-   const im=E('img');im.src='./art/'+w.art;im.loading='lazy';im.alt='Original Team Jura illustration for '+w.name;
+   const im=E('img');im.src='./art/'+w.art;im.loading=w.group==='featured'?'eager':'lazy';im.decoding='async';im.alt='Original Team Jura illustration for '+w.name;
    const body=E('span','world-copy');body.append(E('small','',w.grade),E('strong','',w.name),E('em','',w.short),E('b','','OPEN '+(w.kind==='gateway'?'REFERENCE':'MAP')+' ›'));
-   a.append(im,body);a.title=w.note;return a;
+   const artChip=E('span','world-art-chip',w.game+' · '+(w.kind==='research'?'PROVISIONAL RESEARCH':w.kind==='gateway'?'REFERENCE':'ATLAS'));a.append(im,artChip,body);a.title=w.note;return a;
  }
  function homepage(){const featured=worlds.filter(w=>w.group==='featured'),more=worlds.filter(w=>w.group!=='featured');const rail=$('#featuredRail'),classic=$('#classicRail'),grid=$('#featuredGrid');
    featured.forEach(w=>{if(rail)rail.append(makeWorld(w,true));if(grid)grid.append(makeWorld(w,false))});more.forEach(w=>{if(classic)classic.append(makeWorld(w,true))});

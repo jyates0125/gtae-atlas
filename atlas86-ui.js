@@ -96,7 +96,9 @@ function sidePanelArt(){
  const grid=created('div','j86-crew-grid');
  for(const [who,src,caption] of [['Scaly','./art/atlas86-scaly-approved.webp','Illustrated original'],['Loki','./art/atlas86-loki-approved.webp','Illustrated original']]){
  const tile=created('div','j86-crew-tile');const im=created('img');im.src=src;im.alt=who+' from the Team Jura original approved artwork';im.loading='lazy';const text=created('span','',who);const small=created('small','',caption);tile.append(im,text,small);grid.append(tile)}wrapper.append(grid);
- const loc=$('jura83-panel');if(loc)loc.insertAdjacentElement('beforebegin',wrapper);else aside.prepend(wrapper);
+ // Crew images remain in the approved design, but informational artwork comes
+ // AFTER real map filters so the legend stays the first usable mobile control.
+ wrapper.setAttribute('role','group');aside.append(wrapper);
 }
 function moveLegends(){
  const left=$('juraMapLegend'),right=$('juraTrailerLegend'),aside=$('sidebar');if(!left||!right||!aside)return;

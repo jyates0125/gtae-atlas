@@ -32,5 +32,16 @@ function reset(){transform={scale:1,x:0,y:0};updateTransform()}
 function zoom(f){transform.scale=Math.min(5,Math.max(.6,transform.scale*f));updateTransform()}
 function init(){render();$('hideComplete').onchange=render;$('onlyMapped').onchange=render;$('search').oninput=renderItems;$('showAll').onclick=()=>{$('hideComplete').checked=false;$('onlyMapped').checked=false;render()};$('export').onclick=()=>exportFile({...state,game:'san-andreas',exportedAt:new Date().toISOString()},'team-jura-san-andreas-progress.json');$('restore').onchange=e=>{restore(e.target.files[0]);e.target.value=''};$('locationFile').onchange=e=>{importLocations(e.target.files[0]);e.target.value=''};$('mapFile').onchange=e=>{importMapFile(e.target.files[0]);e.target.value=''};$('zoomIn').onclick=()=>zoom(1.3);$('zoomOut').onclick=()=>zoom(1/1.3);$('resetView').onclick=reset;
  const area=$('mapContainer');area.addEventListener('pointerdown',e=>{if(e.target.closest('.pin'))return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:transform.x,startY:transform.y};area.setPointerCapture(e.pointerId)});area.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;transform.x=drag.startX+e.clientX-drag.x;transform.y=drag.startY+e.clientY-drag.y;updateTransform()});area.addEventListener('pointerup',()=>drag=null);area.addEventListener('pointercancel',()=>drag=null);area.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?1.12:1/1.12)},{passive:false});area.addEventListener('keydown',e=>{if(e.key==='+')zoom(1.2);else if(e.key==='-')zoom(.8);else if(e.key==='ArrowUp')transform.y+=25;else if(e.key==='ArrowDown')transform.y-=25;else if(e.key==='ArrowLeft')transform.x+=25;else if(e.key==='ArrowRight')transform.x-=25;else return;updateTransform();e.preventDefault()});}
+// The licensed built-in illustration is a real 2D map surface. Imported pixel
+// markers are displayed only when their image dimensions match this artwork.
+window.TeamJuraSAArtwork=Object.freeze({
+ attach:(width,height,source)=>{
+  if(!Number.isFinite(width)||!Number.isFinite(height)||width<128||height<128)return false;
+  if(map&&positions.length&&(map.width!==width||map.height!==height)){
+   mapHasArtwork=false;message('Reference artwork loaded, but existing marker coordinates were created for a different image size; markers hidden until the matching map is chosen.');render();return false;
+  }
+  map={width,height,source};mapHasArtwork=true;render();return true;
+ }
+});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

@@ -13,3 +13,10 @@
 .topbar>.j99-start-link:hover,.topbar>.j99-start-link:focus-visible{background:#ffe2ac;outline:2px solid #ffe0aa;outline-offset:2px}
 @media(max-width:900px){.topbar>.j99-start-link{margin-left:auto}.topbar>.menu-toggle{margin-left:0}}
 @media(max-width:470px){.topbar>.j99-start-link{width:100%;order:2;margin:0}.topbar>.menu-toggle{order:1;margin-left:auto}.topbar>.primary-nav{order:3}}
+
+/* Atlas 10.1: surface the original per-world illustration and its scope on all 13 cards. */
+.world-card{position:relative!important}
+.world-card .world-art-chip{pointer-events:none;position:absolute;top:10px;left:10px;max-width:calc(100% - 20px);z-index:2;padding:5px 8px;border:1px solid #ffc17dba;border-radius:7px;background:linear-gradient(95deg,#190d2dda,#43204cde);color:#ffe1ad;font:850 10px/1.25 system-ui,sans-serif;letter-spacing:.07em;text-transform:uppercase;box-shadow:0 3px 11px #0008}
+.directory-grid .world-card img{background:#21102f;object-position:center center}
+.directory-grid .world-card .world-copy{position:relative;border-top:1px solid #d895665c;background:linear-gradient(145deg,#241237,#140b27);min-height:118px}
+@media(max-width:650px){.world-card .world-art-chip{font-size:9px;padding:4px 6px}}

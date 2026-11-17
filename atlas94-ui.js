@@ -35,12 +35,10 @@ function leonida(){
 function research(){
  const rail=document.getElementById('rail');if(!rail)return;
  document.body.classList.add('j94-research');
- const panel=make('details','j94-view-deck');panel.open=true;panel.append(make('summary','','▧ Map display & layers'));
- panel.append(make('p','j94-sub','2D research uses the Yanis community illustration. Source-family and landmark-category switches below control the actual pins.'));
- const actions=make('div','j94-view-actions');const active=make('button','','▧ 2D · research');active.disabled=true;active.type='button';active.setAttribute('aria-current','true');
- const perspective=make('a','','▨ Open 3D explorer');perspective.href='./atlas-vi.html?game=6';perspective.title='Opens the existing WebGL terrain engine; elevation may be unavailable';actions.append(active,perspective);panel.append(actions);
- panel.append(make('p','j94-sub','The 3D engine is currently a separate map workspace. It is not a native 3D toggle inside this research canvas; integration remains a release gate.'));
- const anchor=rail.querySelector('.toolbar');if(anchor)anchor.insertAdjacentElement('afterend',panel);else rail.prepend(panel);
+ // The original research sidebar already owns source and category toggles.
+ // Remove the old second "Map display & layers" panel entirely, keeping
+ // progression tools below the same real legend and filters.
+ const anchor=rail.querySelector('.toolbar');
  // Reuse the existing source-backed result list; it already owns the current
  // filters, visit state, selected pin and map camera. No duplicate data model.
  const progress=make('details','j94-progress');progress.append(make('summary','','✓ Research progress & backup'));
@@ -51,7 +49,7 @@ function research(){
  const importInput=make('input');importInput.type='file';importInput.accept='.json,application/json';importInput.setAttribute('aria-label','Import Team Jura research progress');importLabel.append(importInput);
  const status=make('p','j94-sub','Progress stays in this browser until exported. Only matching Team Jura research progress files are accepted.');status.setAttribute('role','status');
  bar.append(next,exportButton,importLabel);progress.append(bar,status);
- panel.insertAdjacentElement('afterend',progress);
+ if(anchor)anchor.insertAdjacentElement('afterend',progress);else rail.prepend(progress);
  let lastName='';
  next.onclick=()=>{const list=document.getElementById('resultList'),more=document.getElementById('more');if(!list)return;
  let buttons=[...list.querySelectorAll('button.result')];const find=()=>buttons.filter(b=>!b.querySelector('small')?.textContent.includes('✓ Visited'));
@@ -69,7 +67,7 @@ function research(){
  for(const [suffix,data] of [['-visited',obj.visited],['-fav',obj.favorites]])localStorage.setItem(STORE+suffix,JSON.stringify({...parse(suffix),...data}));
  status.textContent='Backup merged. Refresh the research page to update markers and progress.';
  }catch(err){status.textContent='Import rejected: '+err.message}finally{importInput.value='';}};
- const version=document.querySelector('header .brand span');if(version&&/ATLAS 7/i.test(version.textContent||''))version.textContent='ATLAS 9.4 · COMMUNITY RESEARCH';
+ const version=document.querySelector('header .brand span');if(version&&/ATLAS 7/i.test(version.textContent||''))version.textContent='ATLAS · COMMUNITY RESEARCH';
 }
 function init(){if(page==='atlas-vi.html')leonida();if(page==='atlas-research.html')research();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();

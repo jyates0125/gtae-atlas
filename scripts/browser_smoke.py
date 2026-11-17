@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','atlas98-style-lab.html']
+PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -56,11 +56,82 @@ async def smoke():
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
                             if not failures and path=='maps.html':
                                 if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()<13:failures.append('Fewer than 13 world links')
+                                failed_art=await pg.locator('#directoryFeatured img,#directoryAdditional img').evaluate_all("(imgs)=>imgs.filter(x=>x.complete && x.naturalWidth===0).map(x=>x.currentSrc)")
+                                if failed_art:failures.append('Map card artwork missing: '+', '.join(failed_art[:5]))
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
-                                if await pg.locator('#layer option').count()<2:failures.append('Map layer options missing')
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#layer')?.options.length >= 2",timeout=6500)
+                                except Exception:
+                                    failures.append('Map layer options missing after 6.5 seconds')
+                                if await pg.locator('#juraMapLegend,#juraTrailerLegend').count():
+                                    failures.append('Duplicate or trailer floating legend still in DOM')
                                 if await pg.locator('#layer option[value="uv"],#layer option[value="uv2"]').count():failures.append('Retired UV pseudo-views still offered')
                                 if await pg.locator('#search').count()==0:failures.append('Location search missing')
+                                if await pg.locator('#atlasFilterDrawer').count()!=1:
+                                    failures.append('Left legend missing')
+                                else:
+                                    try:
+                                        drawer=pg.locator('#atlasFilterDrawer')
+                                        if width<=700:
+                                            side=pg.locator('#sidebar')
+                                            if await side.evaluate("(el)=>el.classList.contains('mobile-collapsed')"):
+                                                await pg.locator('#mobileTools').click()
+                                            await drawer.scroll_into_view_if_needed(timeout=6000)
+                                        await drawer.evaluate('(el)=>{el.open=true}')
+                                        first=pg.locator('#legend button.legend-choice').first
+                                        await first.wait_for(state='visible',timeout=6500)
+                                        await first.scroll_into_view_if_needed(timeout=6500)
+                                        if await first.get_attribute('aria-pressed')!='false':
+                                            failures.append('New visitor sees active marker categories by default')
+                                        else:
+                                            await first.click(timeout=5000)
+                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='true':
+                                                failures.append('One-click category on did not change button state')
+                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
+                                                failures.append('One-click category on did not activate map pins')
+                                            await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
+                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='false':
+                                                failures.append('One-click category off did not disable pins')
+                                    except Exception as exc:
+                                        failures.append('Map legend could not be toggled: '+str(exc)[:700])
+                                toggle=pg.locator('#juraToggle3d')
+                                three=pg.locator('#jura3d')
+                                two=pg.locator('#jura2d')
+                                if await three.count()!=1 or await two.count()!=1:
+                                    failures.append('Map 2D/3D dimension controls missing')
+                                elif path!='atlas-vi.html':
+                                    if await three.is_visible() or await toggle.is_visible():
+                                        failures.append('Legacy map exposed unfinished 3D instead of primary illustrated 2D')
+                                elif not await three.is_visible() or not await two.is_visible():
+                                    failures.append('GTA VI research 3D controls hidden')
+                                else:
+                                    try:
+                                        await three.click(timeout=6500)
+                                        await pg.wait_for_timeout(150)
+                                        if await toggle.get_attribute('aria-pressed')!='true':
+                                            failures.append('3D dimension did not activate')
+                                        if not await pg.locator('body').evaluate("(el)=>el.classList.contains('jura-in-3d')"):
+                                            failures.append('3D map view did not activate')
+                                        await two.click(timeout=6500)
+                                        if await toggle.get_attribute('aria-pressed')!='false':
+                                            failures.append('3D button did not return to 2D')
+                                        if await pg.locator('body').evaluate("(el)=>el.classList.contains('jura-in-3d')"):
+                                            failures.append('Native 2D map did not recover after 3D')
+                                    except Exception as exc:
+                                        failures.append('3D map control could not be used: '+str(exc)[:150])
+                            if not failures and path in ('heist-fleeca.html','heist-cayo-perico.html'):
+                                scene=pg.locator('.mapbox > img')
+                                if await scene.count()!=1:failures.append('Heist illustration missing')
+                                else:
+                                    image_src=await scene.get_attribute('src')
+                                    if not image_src or 'atlas93-heist-' not in image_src:
+                                        failures.append('Specific original heist art not selected')
+                                    await scene.evaluate("(el)=>el.loading='eager'")
+                                    try:
+                                        await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=6000)
+                                    except Exception:
+                                        failures.append('Original heist illustration did not load')
                             if not failures and path=='atlas93-garage.html':
                                 await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')
@@ -72,30 +143,25 @@ async def smoke():
                                 else:failures.append('Garage vehicle catalogue did not load')
                             if not failures and path=='atlas-research.html':
                                 if await pg.locator('#map').count()==0:failures.append('Research canvas missing')
-                                if await pg.locator('#showResearchPins:checked').count()!=1:failures.append('Community pins are not visible by default')
+                                if await pg.locator('#showResearchPins:checked').count()!=0:failures.append('Research pins should start hidden')
+                                if await pg.locator('.j94-view-deck').count():failures.append('Legacy duplicate research map legend remains')
                                 if 'GTADB.org' not in await pg.locator('#researchSourceStatus').inner_text():failures.append('Licensed VI research records did not load')
+                            if not failures and path=='atlas-sa.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#mapBackground .j86-san-map')?.naturalWidth > 200",timeout=9000)
+                                    source=await pg.locator('#mapBackground .j86-san-map').get_attribute('src')
+                                    if 'atlas-sa-vector.svg' not in source:
+                                        failures.append('Bundled licensed San Andreas 2D map did not render as the primary artwork')
+                                    if not await pg.locator('.j86-sa-credit a').count():
+                                        failures.append('San Andreas vector license attribution missing')
+                                except Exception as exc:
+                                    failures.append('San Andreas local base artwork could not load: '+str(exc)[:240])
                             if not failures and path=='atlas-iv.html':
                                 if await pg.locator('#classicCanvas').count()==0:failures.append('GTA IV canvas missing')
                                 if await pg.locator('#classicLayer option').count()<2:failures.append('GTA IV layers missing')
                                 if 'source landmarks' not in await pg.locator('#recordStatus').inner_text():failures.append('Local GTA IV landmark snapshot did not load') 
-                                if await pg.locator('#classic3dToggle').count()!=1:
-                                    failures.append('GTA IV same-page 3D map toggle missing')
-                                else:
-                                    await pg.locator('#classic3dToggle').click()
-                                    if await pg.locator('#j100-3d-panel').is_visible():
-                                        if await pg.locator('#map3dFlatScene').count()!=1:
-                                            failures.append('GTADB 3D WebGL scene missing after activation')
-                                        else:
-                                            bounds=await pg.locator('#map3dFlatScene').evaluate('(el)=>({w:el.width,h:el.height})')
-                                            if bounds['w']<100 or bounds['h']<100:
-                                                failures.append('3D canvas failed to size to viewport')
-                                        await pg.locator('.j100-back').click()
-                                        if await pg.locator('#j100-3d-panel').is_visible():
-                                            failures.append('Returning to native 2D map failed')
-                                    else:
-                                        fallback=await pg.locator('#j100-3d-note').inner_text()
-                                        if 'unavailable' not in fallback.lower() and 'renderer' not in fallback.lower():
-                                            failures.append('3D did not activate or report an accessible fallback')
+                                if await pg.locator('#classic3dToggle').count():
+                                    failures.append('Older map incorrectly includes deferred 3D viewer')
                             if not failures and path=='atlas98-landmarks.html':
                                 if 'sourced landmarks shown' not in await pg.locator('#landmarkStatus').inner_text():failures.append('Bundled VI landmark library did not load')
                             if not failures and path=='one-last-ride.html':

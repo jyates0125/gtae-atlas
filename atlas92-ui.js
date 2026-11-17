@@ -24,7 +24,7 @@ function init(){
   if(page==='atlas-vi.html'){
     const mapViews=document.querySelector('.j86-mapviews');
     if(mapViews&&aside&&!aside.contains(mapViews)){
-      const anchor=named||drawer||aside.firstElementChild;
+      const anchor=drawer||named||aside.firstElementChild;
       anchor?.insertAdjacentElement('beforebegin',mapViews);
     }
     const hint=el('p','j92-confidence','LEONIDA RESEARCH · map coordinates and collectible candidates remain provisional. No positions are invented.');

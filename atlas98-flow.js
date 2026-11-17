@@ -2,13 +2,23 @@
    Does not manipulate canvas, map coordinates, local storage, filters, or page event handlers. */
 (()=>{'use strict';
  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
- const skip=new Set(['index.html','maps.html','map-hub.html','atlas98-style-lab.html']);if(skip.has(file))return;
+ const skip=new Set(['index.html','maps.html','atlas98-style-lab.html']);if(skip.has(file))return;
  const TITLES={'atlas.html':'GTA V Story','atlas-online.html':'GTA Online','atlas-vi.html':'GTA VI Leonida','atlas-research.html':'VI Research','atlas-cayo.html':'Cayo Perico','atlas-iv.html':'GTA IV','atlas-sa.html':'San Andreas','atlas81-hq.html':'Collection HQ','heists.html':'Heist HQ','one-last-ride.html':'One Last Ride'};
  const get=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt)n.textContent=txt;return n};
  function init(){if(document.getElementById('j98-flow'))return;const dock=get('nav','j98-flow');dock.id='j98-flow';dock.setAttribute('aria-label','Team Jura quick navigation');
   const start=get('a','','✦ Start Here');start.href='./atlas97-journey.html';const all=get('a','','◈ 13 Maps');all.href='./maps.html';dock.append(start,all);
-  const details=get('details','j98-flow-worlds');const summary=get('summary','','Choose world');details.append(summary);
-  const sub=get('div','j98-flow-sub');for(const [label,href] of [['GTA V','atlas.html'],['Online','atlas-online.html'],['GTA VI','atlas-vi.html'],['Cayo','atlas-cayo.html'],['GTA IV','atlas-iv.html'],['San Andreas','atlas-sa.html']]){const a=get('a','',label);a.href='./'+href;if(href===file)a.setAttribute('aria-current','page');sub.append(a)}details.append(sub);dock.append(details);
+  const details=get('details','j98-flow-worlds');const summary=get('summary','','Choose 13 worlds');details.append(summary);
+  const sub=get('div','j98-flow-sub');for(const [label,href] of [
+  ['GTA V Story','atlas.html'],['GTA Online','atlas-online.html'],
+  ['GTA VI','atlas-vi.html'],['Cayo Perico','atlas-cayo.html'],
+  ['GTA IV','atlas-iv.html'],['San Andreas','atlas-sa.html'],
+  ['Vice City','map-hub.html?game=vc'],['GTA III','map-hub.html?game=iii'],
+  ['Vice City Stories','map-hub.html?game=vcs'],
+  ['Liberty City Stories','map-hub.html?game=lcs'],
+  ['Chinatown Wars','map-hub.html?game=ctw'],
+  ['Lost and Damned','map-hub.html?game=tlad'],
+  ['Ballad of Gay Tony','map-hub.html?game=tbogt']
+ ]){const a=get('a','',label);a.href='./'+href;if(href===(file+location.search))a.setAttribute('aria-current','page');else if(href===file)a.setAttribute('aria-current','page');sub.append(a)}details.append(sub);dock.append(details);
   const NEXT={
   'atlas.html':['Collectibles','atlas81-hq.html#collections'],
   'atlas-online.html':['Today’s Events','atlas87-daily.html'],
