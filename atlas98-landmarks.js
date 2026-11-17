@@ -28,6 +28,6 @@
  $('#landmarkPrev').disabled=page===0;$('#landmarkNext').disabled=page>=ptotal-1;$('#landmarkPage').textContent='Page '+(page+1)+' / '+ptotal;
  status(shown.length.toLocaleString()+' of '+rows.length.toLocaleString()+' sourced landmarks shown.'+(current==='6'?' GTA VI points remain community-provisional.':'')+' CC BY 4.0 · GTADB.ORG.');
  }
- function init(){$('#landmarkGame').addEventListener('change',e=>load(e.target.value));$('#landmarkSearch').addEventListener('input',render);$('#landmarkCategory').addEventListener('change',render);$('#landmarkPrev').addEventListener('click',()=>{page--;paint()});$('#landmarkNext').addEventListener('click',()=>{page++;paint()});load('6')}
+ function init(){const initial=new URLSearchParams(location.search).get('game');const initialGame=['4','5','6'].includes(initial)?initial:'6';$('#landmarkGame').value=initialGame;$('#landmarkGame').addEventListener('change',e=>load(e.target.value));$('#landmarkSearch').addEventListener('input',render);$('#landmarkCategory').addEventListener('change',render);$('#landmarkPrev').addEventListener('click',()=>{page--;paint()});$('#landmarkNext').addEventListener('click',()=>{page++;paint()});load(initialGame)}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
