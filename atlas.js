@@ -85,7 +85,22 @@ let researchOverlays=loadStore('jura99-research-overlays',{'5-story':true,'5-onl
 if(!researchOverlays||typeof researchOverlays!=='object'||Array.isArray(researchOverlays))researchOverlays={'5-story':true,'5-online':true,'6':true};
 const researchOn=()=>researchOverlays[filterScope()]!==false;
 let eventFocusIds=null;
-let listOrder='name';let mode='story',game='5',showUnverified=true,datasets={'5':[],'6':[]},dataOrigins={'5':'Loading…','6':'Loading…'},active={'5':null,'6':null},styles={'5':'radar','6':'scaly,view'},page=0,tab='Find',onlyUnfound=false,onlyFavorites=false,showPins=true,selected=null,addPinMode=false;
+// Newly visiting players see the illustrated basemap with NO location pins.
+// Preferences are scoped per world and saved only when controls change.
+const PIN_PREF_KEY='jura101-visible-map-categories-v1';
+const pinPrefs=loadStore(PIN_PREF_KEY,{});
+function restoredCategories(scope){
+ const value=pinPrefs&&typeof pinPrefs==='object'&&!Array.isArray(pinPrefs)?pinPrefs[scope]:undefined;
+ if(value==='all')return null;
+ return new Set(Array.isArray(value)?value.filter(key=>Object.prototype.hasOwnProperty.call(CATEGORIES,key)):[]);
+}
+function savedCategoryMode(){
+ const next={};
+ for(const scope of ['5-story','5-online','6'])next[scope]=active[scope]===null?'all':[...(active[scope]||[])];
+ const serial=JSON.stringify(next);
+ if(serial!==savedCategoryMode.previous){savedCategoryMode.previous=serial;store(PIN_PREF_KEY,next)}
+}
+let listOrder='name';let mode='story',game='5',showUnverified=true,datasets={'5':[],'6':[]},dataOrigins={'5':'Loading…','6':'Loading…'},active={'5-story':restoredCategories('5-story'),'5-online':restoredCategories('5-online'),'6':restoredCategories('6')},styles={'5':'radar','6':'scaly,view'},page=0,tab='Find',onlyUnfound=false,onlyFavorites=false,showPins=true,selected=null,addPinMode=false;
 // Atlas 5.5 source feeds: only source-published JSON; source scopes keep Story/Online separate.
 let sourceRecords={},sourceStates={},sourceEnabled=loadStore('jura55-source-visible',{story:true,vi:true,atms:false,pumps:false,buses:false,towers:false});
 if(!sourceEnabled||typeof sourceEnabled!=='object'||Array.isArray(sourceEnabled))sourceEnabled={story:true,vi:true};
@@ -260,6 +275,7 @@ function passesNamedLayers(r,hidden=namedHidden()){if(!hidden.size)return true;i
  return !NAMED_LAYERS.some(([id,,predicate])=>hidden.has(id)&&predicate(r))}
 function updateNamedLayerVisibility(ids,show){const hidden=namedHidden();const rows=records();
  if(show){
+  showPins=true;
   // A switched-on layer must ACTUALLY display pins, including after All off.
   const chosen=layersForRows(rows).filter(l=>ids.includes(l.id));
   const parents=active[filterScope()];
@@ -284,7 +300,7 @@ const LEGEND_GROUPS=[
  ['Explore world',['landmark','nature','transport','government','industry','utility','other']],
  ['Game-related places · verify use',['gunstore','modshop','dealer','fuel','safehouse','marina','garage_site','business_site']],
  ['Buildings & activities',['hotel','shop','food','office','leisure','property','activity']],
- ['Special locations',['collectible','vehicle','weapon','user']]
+ ['Mapped gameplay locations',['collectible','vehicle','weapon','user']]
 ];
 function renderServices(){
  const items=records().filter(r=>window.JuraLandmarks?.isService(r) && (showUnverified||!r.uncertain));
@@ -309,10 +325,10 @@ function renderLegend(){
    const toggle=btn(`${title} · ${counts[cat].toLocaleString()}`,()=>{
     if(!active[filterScope()])active[filterScope()]=new Set(Object.keys(CATEGORIES));
     if(active[filterScope()].has(cat))active[filterScope()].delete(cat);else active[filterScope()].add(cat);
-    page=0;render();announce(`${title} ${active[filterScope()].has(cat)?'shown':'hidden'} on map`);
+    showPins=true;page=0;render();announce(`${title} ${active[filterScope()].has(cat)?'shown':'hidden'} on map`);
    });toggle.className='legend-choice';toggle.setAttribute('aria-pressed',String(on));toggle.title=`${on?'Hide':'Show'} ${title} pins`;
    const dot=document.createElement('i');dot.className='legend-symbol';dot.style.background=color;dot.textContent=LEGEND_EMOJIS[cat]||'📍';toggle.prepend(dot);
-   const only=btn('Only',()=>{active[filterScope()]=new Set([cat]);page=0;render();announce('Showing only '+title+' on map');},'legend-only');
+   const only=btn('Only',()=>{active[filterScope()]=new Set([cat]);showPins=true;page=0;render();announce('Showing only '+title+' on map');},'legend-only');
    row.append(toggle,only);group.append(row);
   }root.append(group);
  }
@@ -427,7 +443,7 @@ function importPackObject(pack){
 }
 function readPacks(){const packs=loadStore('jura-atlas-v5-packs',{});packRecords=Object.values(packs).flatMap(v=>Array.isArray(v.records)?v.records:[]);if($('packCount'))$('packCount').textContent=packRecords.length.toLocaleString()+' imported locations';render()}
 async function readPack(file){if(!file)return;try{if(file.size>2500000)throw Error('Maximum pack size is 2.5 MB');const payload=JSON.parse(await file.text());const n=importPackObject(payload);toast(`${n} source-attributed records imported. Check the locations on their correct game maps.`)}catch(e){toast('Could not import locations: '+e.message)}finally{$('packFile').value=''}}
-function render(){renderLegend();renderViRegions();renderServices();renderFind();renderRoute();renderPins();renderSpecial('Collections');renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
+function render(){savedCategoryMode();const pinButton=$('togglePins');if(pinButton){const visible=showPins&&enabled().size>0;pinButton.textContent=visible?'📍 Pins on':'📍 Pins off';pinButton.setAttribute('aria-pressed',String(visible));}renderLegend();renderViRegions();renderServices();renderFind();renderRoute();renderPins();renderSpecial('Collections');renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
 function switchGame(g){if(!['5','6','online'].includes(g))return;eventFocusIds=null;chooseRouteStartMode=false;mode=g==='online'?'online':'story';game=g==='6'?'6':'5';const activeLink=$('activityModeLink');if(activeLink){const which=g==='6'?'vi':g==='online'?'online':'story';activeLink.href='./atlas-activities.html?mode='+which;activeLink.textContent=which==='vi'?'◷ Leonida · Research & verification':which==='online'?'◷ Online events · timers & spawns':'◷ Story Mode challenges · no Online events';}selected=null;coordinateTarget=null;addPinMode=false;$('game5').classList.toggle('active',g==='5');$('game6').classList.toggle('active',g==='6');$('gameOnline').classList.toggle('active',g==='online');$('game5').setAttribute('aria-pressed',String(g==='5'));$('game6').setAttribute('aria-pressed',String(g==='6'));$('gameOnline').setAttribute('aria-pressed',String(g==='online'));$('mapTitle').textContent=g==='6'?'GTA VI · Leonida':g==='online'?'GTA Online · Los Santos':'GTA V · Los Santos';$('mapSubtitle').textContent=g==='6'?'GTADB VI · provisional landmarks, NOT confirmed game locations':g==='online'?'Shared GTA V terrain · separate Online markers and progress':'GTADB GTA V · Story map landmarks';
  $('layer').replaceChildren();for(const [key,label] of LAYERS[game])$('layer').add(new Option(label,key));if(!$('layer').querySelector('option[value="'+styles[game]+'"]'))styles[game]=game==='6'?'scaly,view':'radar';$('layer').value=styles[game];$('search').value='';if($('namedLayerSearch'))$('namedLayerSearch').value='';onlyUnfound=false;onlyFavorites=false;showUnverified=true;$('showUnverified').checked=true;if($('showCommunityResearch'))$('showCommunityResearch').checked=researchOn();$('hideFound').checked=false;$('favoritesOnly').checked=false;page=0;fitGame();render();renderSources();dataNotice(datasets[game].length?datasets[game].length.toLocaleString()+' landmarks · '+dataOrigins[game]:'Getting GTA '+game+' locations…');tileHealth();
  navPlan=null;navPlanScope=null;if(window.teamJuraNav)window.teamJuraNav.gameChanged();
@@ -730,9 +746,9 @@ window.JuraDualLegendAPI=Object.freeze({
  toggleLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(l)updateNamedLayerVisibility([id],namedHidden().has(id))},
  onlyLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(!l)return;active[filterScope()]=null;hiddenNamed[namedScope()]=layersForRows(records()).filter(v=>v.id!==id).map(v=>v.id);store('jura62-named-layers',hiddenNamed);page=0;render()},
  trailerRecords:()=>game==='6'?records().filter(r=>/\btrailer\b|\bfootage\b|\bscene\b/i.test([r.name,r.district||'',r.collectionType||'',r.source||'',r.evidence||'',...(r.tags||[])].join(' '))).slice(0,750):[],
- toggleCategory:id=>{if(!CATEGORIES[id])return;const chosen=new Set(enabled());if(chosen.has(id))chosen.delete(id);else chosen.add(id);active[filterScope()]=chosen;page=0;render()},
- onlyCategory:id=>{if(!CATEGORIES[id])return;active[filterScope()]=new Set([id]);page=0;render()},
- allCategories:on=>{active[filterScope()]=on?null:new Set();page=0;render()},
+ toggleCategory:id=>{if(!CATEGORIES[id])return;showPins=true;const chosen=new Set(enabled());if(chosen.has(id))chosen.delete(id);else chosen.add(id);active[filterScope()]=chosen;page=0;render()},
+ onlyCategory:id=>{if(!CATEGORIES[id])return;showPins=true;active[filterScope()]=new Set([id]);page=0;render()},
+ allCategories:on=>{if(on)showPins=true;active[filterScope()]=on?null:new Set();page=0;render()},
  selectPlace:id=>{const place=records().find(r=>r.id===id);if(place)choosePlace(place)},
  addRouteStop:id=>{const place=records().find(r=>r.id===id);if(place)window.teamJuraNav?.setRoutePoint(place)},
  openNavigation:()=>window.teamJuraNav?.open(),
@@ -754,7 +770,7 @@ function init(){if(!ctx){$('mapStatus').textContent='This browser does not suppo
  const photo=$('selectedPhoto'),figure=$('selectedPhotoFigure');if(photo&&figure){photo.onload=()=>{figure.hidden=false};photo.onerror=()=>{figure.hidden=true}};
 
  $('districtFilter').oninput=()=>{page=0;render()};$('findNearby').onclick=()=>{nearbyActive=true;renderNearby()};$('nearbyToRoute').onclick=addNearbyToRoute;$('nearbyRadius').onchange=()=>{if(nearbyActive)renderNearby()};$('nearbyOrigin').onchange=()=>{if(nearbyActive)renderNearby()};$('shareCoords').onclick=shareCoordinateLocation;$('useMapCenter').onclick=centerToCoordinates;
- $('game5').onclick=()=>switchGame('5');$('game6').onclick=()=>switchGame('6');$('gameOnline').onclick=()=>switchGame('online');$('search').oninput=()=>{eventFocusIds=null;page=0;render()};$('allOn').onclick=()=>{eventFocusIds=null;active[filterScope()]=null;hiddenNamed[namedScope()]=[];store('jura62-named-layers',hiddenNamed);page=0;render();toast('All available categories and named layers on.')};$('allOff').onclick=()=>{eventFocusIds=null;active[filterScope()]=new Set();page=0;render();toast('All categories off. Select one to show it.')};
+ $('game5').onclick=()=>switchGame('5');$('game6').onclick=()=>switchGame('6');$('gameOnline').onclick=()=>switchGame('online');$('search').oninput=()=>{eventFocusIds=null;page=0;render()};$('allOn').onclick=()=>{eventFocusIds=null;showPins=true;active[filterScope()]=null;hiddenNamed[namedScope()]=[];store('jura62-named-layers',hiddenNamed);page=0;render();toast('All available categories and named layers on.')};$('allOff').onclick=()=>{eventFocusIds=null;active[filterScope()]=new Set();page=0;render();toast('All categories off. Select one to show it.')};
  if($('namedLayerSearch'))$('namedLayerSearch').oninput=renderNamedLayers;
  if($('namedLayerShowAll'))$('namedLayerShowAll').onclick=()=>updateNamedLayerVisibility(layersForRows(records()).map(l=>l.id),true);
  if($('namedLayerHideAll'))$('namedLayerHideAll').onclick=()=>updateNamedLayerVisibility(layersForRows(records()).map(l=>l.id),false);
