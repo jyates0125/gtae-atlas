@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-cayo.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','atlas98-style-lab.html']
+PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-cayo.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -37,7 +37,7 @@ async def smoke():
                         for path in PAGES:
                             pg=await ctx.new_page()
                             errors=[];missing=[]
-                            pg.on('pageerror',lambda err:errors.append(str(err)[:300]))
+                            pg.on('pageerror',lambda err:errors.append((getattr(err,'stack',None) or str(err))[:700]))
                             pg.on('response',lambda r:missing.append(r.url) if r.status>=400 and r.url.startswith(URL+'/') else None)
                             response=await pg.goto(URL+'/'+path,wait_until='domcontentloaded',timeout=25000)
                             await pg.wait_for_timeout(800)
@@ -57,6 +57,16 @@ async def smoke():
                                 if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
                                 if await pg.locator('#layer option').count()<2:failures.append('Map layer options missing')
                                 if await pg.locator('#search').count()==0:failures.append('Location search missing')
+                            if not failures and path=='atlas-research.html':
+                                if await pg.locator('#map').count()==0:failures.append('Research canvas missing')
+                                if await pg.locator('#showResearchPins:checked').count()!=1:failures.append('Community pins are not visible by default')
+                                if 'GTADB.org' not in await pg.locator('#researchSourceStatus').inner_text():failures.append('Licensed VI research records did not load')
+                            if not failures and path=='atlas-iv.html':
+                                if await pg.locator('#classicCanvas').count()==0:failures.append('GTA IV canvas missing')
+                                if await pg.locator('#classicLayer option').count()<2:failures.append('GTA IV layers missing')
+                                if 'source landmarks' not in await pg.locator('#recordStatus').inner_text():failures.append('Local GTA IV landmark snapshot did not load')
+                            if not failures and path=='atlas98-landmarks.html':
+                                if 'sourced landmarks shown' not in await pg.locator('#landmarkStatus').inner_text():failures.append('Bundled VI landmark library did not load')
                             if not failures and path=='one-last-ride.html':
                                 if await pg.locator('video source[src*="one-last-ride-motion-preview.mp4"]').count()==0:failures.append('Film preview source missing')
                             results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures})

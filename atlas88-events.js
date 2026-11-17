@@ -24,10 +24,26 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  const time=mk('label','j88-time','In-game hour (ghosts)');const hour=mk('select');hour.setAttribute('aria-label','GTA Online in-game hour');hour.add(new Option('Select in-game time',''));for(let h=0;h<24;h++)hour.add(new Option(String(h).padStart(2,'0')+':00',String(h)));let local=read('jura68-online-hour',null);hour.value=local===null?'':String(local);time.append(hour);
  const filter=mk('label','j88-event-toggle');const checkbox=mk('input');checkbox.type='checkbox';checkbox.checked=!!C.safeState(read('jura68-conditions-online',{})).events.halloween;filter.append(checkbox,mk('span','','Halloween event active in my session'));
  const note=mk('p','j88-note','This is a manual session setting, not automatic Rockstar detection. With this toggle off, ghost markers are treated as inactive in this tracker; official event availability is separate.');
- const results=mk('div','j88-results');panel.append(title,intro,row,guide,time,filter,note,results);
+ const utc=mk('p','j88-note','');utc.setAttribute('role','status');utc.setAttribute('aria-label','Automatic real-world UTC reset clock');
+ function updateUtc(){
+  const now=new Date();const display=new Intl.DateTimeFormat('en-GB',{timeZone:'UTC',hour:'2-digit',minute:'2-digit',hour12:false}).format(now);
+  const until=hour=>{const next=new Date(now);next.setUTCHours(hour,0,0,0);if(next<=now)next.setUTCDate(next.getUTCDate()+1);const minutes=Math.ceil((next-now)/60000);return Math.floor(minutes/60)+'h '+String(minutes%60).padStart(2,'0')+'m'};
+  utc.textContent='UTC '+display+' · Most daily reset 06:00 UTC ('+until(6)+') · Street Dealers 07:00 UTC ('+until(7)+'). Source confirmation required for active locations.';
+ }
+ const results=mk('div','j88-results');panel.append(title,intro,utc,row,guide,time,filter,note,results);updateUtc();setInterval(updateUtc,60000);
  if(mapPage){const anchor=$('j87-daily-panel')||$('jura83-panel');if(anchor)anchor.insertAdjacentElement('afterend',panel);else home.prepend(panel)}else home.append(panel);
  let category='all';const tabs=mk('div','j88-tabs');for(const [id,label] of [['all','All'],['ghost','👻 Ghosts'],['daily','◷ Daily'],['other','★ Other']]){const b=mk('button','',''+label);b.type='button';b.dataset.type=id;b.setAttribute('aria-pressed',String(id===category));b.onclick=()=>{category=id;for(const x of tabs.children)x.setAttribute('aria-pressed',String(x===b));render()};tabs.append(b)}panel.insertBefore(tabs,guide);
- function locate(r){if(mapPage){const query=$('search');if(query){query.value=r.id.startsWith('ghost-')?'Ghost':r.name;query.dispatchEvent(new Event('input',{bubbles:true}));const all=$('allOn');if(all)all.click();const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true;}else window.location.href='./atlas-online.html';}else window.location.href='./atlas-online.html';}
+ const focused=mk('p','j88-note','');focused.setAttribute('role','status');panel.insertBefore(focused,results);
+ const clear=mk('button','','Clear event focus');clear.type='button';clear.hidden=true;clear.onclick=()=>{window.JuraAtlasEventLocations?.clear();focused.textContent='Event map filter cleared.';clear.hidden=true};panel.insertBefore(clear,results);
+ function locate(r){
+  if(!mapPage){window.location.href='./atlas-online.html';return}
+  const bridge=window.JuraAtlasEventLocations;
+  if(!bridge){focused.textContent='The map is still loading its sources. Use the map search or try again.';return}
+  const result=bridge.focus(r);
+  if(result.count){focused.textContent=`Showing ${result.count} sourced research marker${result.count===1?'':'s'} for ${r.name}. A mapped possibility does not prove it is active today.`;clear.hidden=false;const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true}
+  else{focused.textContent=`No reusable mapped positions for ${r.name} are currently loaded. The event rule and source reference remain available, but we will not invent pins.`;clear.hidden=true}
+ }
+
  function render(){results.replaceChildren();let num=0;for(const r of groups()){
   const matchType=category==='all'||category==='ghost'&&/ghost/i.test(r.name)||category==='daily'&&r.kind==='rotation'||category==='other'&&r.kind!=='rotation'&&!/ghost/i.test(r.name);if(!matchType)continue;
   if(search.value&&![r.name,r.group,r.detail].join(' ').toLowerCase().includes(search.value.toLowerCase()))continue;

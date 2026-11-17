@@ -34,6 +34,7 @@ jobs:
           node test-route-58.cjs
           node test-layer-deck-621.cjs
           python -m unittest discover -s tests -p 'test_atlas98b_sync.py'
+          python -m unittest discover -s tests -p 'test_atlas99_map_data.py'
       - name: Safe Data Lab import and map pack tests
         run: node --test tests/data-lab.test.cjs
       - name: Build only public, approved static files (no live imports)
