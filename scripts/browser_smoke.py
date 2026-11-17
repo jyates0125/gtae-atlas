@@ -72,8 +72,16 @@ async def smoke():
                                     failures.append('Left legend missing')
                                 else:
                                     try:
+                                        drawer=pg.locator('#atlasFilterDrawer')
+                                        if width<=700:
+                                            side=pg.locator('#sidebar')
+                                            if await side.evaluate("(el)=>el.classList.contains('mobile-collapsed')"):
+                                                await pg.locator('#mobileTools').click()
+                                            await drawer.scroll_into_view_if_needed(timeout=6000)
+                                        await drawer.evaluate('(el)=>{el.open=true}')
                                         first=pg.locator('#legend button.legend-choice').first
                                         await first.wait_for(state='visible',timeout=6500)
+                                        await first.scroll_into_view_if_needed(timeout=6500)
                                         if await first.get_attribute('aria-pressed')!='false':
                                             failures.append('New visitor sees active marker categories by default')
                                         else:
@@ -86,7 +94,7 @@ async def smoke():
                                             if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='false':
                                                 failures.append('One-click category off did not disable pins')
                                     except Exception as exc:
-                                        failures.append('Map legend could not be toggled: '+str(exc)[:180])
+                                        failures.append('Map legend could not be toggled: '+str(exc)[:700])
                                 toggle=pg.locator('#juraToggle3d')
                                 three=pg.locator('#jura3d')
                                 two=pg.locator('#jura2d')
