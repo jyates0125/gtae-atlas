@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','atlas98-style-lab.html']
+PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -109,6 +109,18 @@ async def smoke():
                                             failures.append('Native 2D map did not recover after 3D')
                                     except Exception as exc:
                                         failures.append('3D map control could not be used: '+str(exc)[:150])
+                            if not failures and path in ('heist-fleeca.html','heist-cayo-perico.html'):
+                                scene=pg.locator('.mapbox > img')
+                                if await scene.count()!=1:failures.append('Heist illustration missing')
+                                else:
+                                    image_src=await scene.get_attribute('src')
+                                    if not image_src or 'atlas93-heist-' not in image_src:
+                                        failures.append('Specific original heist art not selected')
+                                    await scene.evaluate("(el)=>el.loading='eager'")
+                                    try:
+                                        await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=6000)
+                                    except Exception:
+                                        failures.append('Original heist illustration did not load')
                             if not failures and path=='atlas93-garage.html':
                                 await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')
