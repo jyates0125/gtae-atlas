@@ -29,11 +29,9 @@ const BOUNDS={
  'yanis,17':[[0,0,3,3],[1,1,6,6],[2,2,12,12],[5,5,25,24],[10,10,51,49],[21,21,103,99]]
 };
 const LAYERS={
- '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid'],['uv','UV · illustrated blueprint (Team Jura)'],['uv2','UV II · illustrated paper (Team Jura)']],
+ '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid']],
  '6':[['scaly,view','Scaly · YANIS V17'],['yanis,17','YANIS V17 · Original'],['yanis,15','YANIS V15 · Archive'],['dupzor,51','DUPZOR V51 · Original']]
 };
-// Add Team Jura UV artwork views without changing the verified six-source baseline.
-const VI_UV_OPTIONS=[['uv2','UV II · Leonida illustration (Team Jura)']];
 /* Base views and published GTADB community add-on tiles.
  * The additional tile folders are *patches*, not complete independent worlds.
  * Rebuild the display by choosing the combined edge tiles, the interior patch
@@ -45,20 +43,11 @@ const GTADB_TILE_PATCHES={
  'rickrick,3':[[1,1,2,2],[3,3,4,4],[6,6,9,9],[12,13,18,19],[24,26,36,39],[48,52,73,79]]
 };
 const PATCH_SET='aiwe,1,martipk,5,rickrick,3';
-const MAP_FILTERS={
- uv:'grayscale(1) sepia(1) hue-rotate(176deg) saturate(2.4) brightness(1.12) contrast(1.28)',
- uv2:'grayscale(0.86) sepia(0.78) hue-rotate(-12deg) saturate(.7) brightness(1.22) contrast(1.10)',
- cyber:'hue-rotate(155deg) saturate(1.6) contrast(1.15)'
-};
 function mapView(style,g=game){
  if(g==='6'&&style==='scaly,view')return{base:'yanis,17',overlay:false,filter:'saturate(1.15) contrast(1.06)'};
  if(g==='6'&&style==='loki,view')return{base:'dupzor,51',overlay:false,filter:'saturate(.88) contrast(1.13) brightness(.96)'};
  // Research is a content mode over the licensed YANIS V17 illustration, not a new GTADB tile source.
  if(g==='6'&&style==='research,view')return{base:'yanis,17',overlay:false,filter:'none'};
- // UV is our OWN presentation of licensed illustrations. GTA VI has no
- // confirmed official UV map; never label these as GTAWeb UV or in-game UV.
- if(style==='uv')return{base:g==='6'?'yanis,17':'radar',overlay:false,filter:MAP_FILTERS.uv};
- if(style==='uv2')return{base:g==='6'?'dupzor,51':'roadmap',overlay:false,filter:MAP_FILTERS.uv2};
  // The previous CYBER selection is retired: no cyber tiles are requested.
  return{base:style,overlay:false};
 }
@@ -77,13 +66,6 @@ function sourceTileStyles(style,z,x,y,g=game){
  const candidate=v.legacy||(v.overlay&&g==='6'?overlayTileStyle(v.base,z,x,y):v.base);
  const list=[candidate];
  if(v.legacy||candidate!==v.base)list.push(v.base);
- // The UV artwork is the licensed *illustrated GTA map* recolored by our
- // original blueprint treatment. If radar art is unavailable, substitute
- // another licensed, georeferenced illustration rather than bare blue tiles.
- if(g==='5'&&style==='uv')list.push('roadmap','satellite');
- if(g==='5'&&style==='uv2')list.push('radar','satellite');
- if(g==='6'&&style==='uv')list.push('yanis,15','dupzor,51');
- if(g==='6'&&style==='uv2')list.push('yanis,17','yanis,15');
  return [...new Set(list)];
 }
 const loadStore=(key,fallback)=>{try{let s=localStorage.getItem(key);return s?JSON.parse(s):fallback}catch{return fallback}};
@@ -433,7 +415,7 @@ function readPacks(){const packs=loadStore('jura-atlas-v5-packs',{});packRecords
 async function readPack(file){if(!file)return;try{if(file.size>2500000)throw Error('Maximum pack size is 2.5 MB');const payload=JSON.parse(await file.text());const n=importPackObject(payload);toast(`${n} source-attributed records imported. Check the locations on their correct game maps.`)}catch(e){toast('Could not import locations: '+e.message)}finally{$('packFile').value=''}}
 function render(){renderLegend();renderViRegions();renderServices();renderFind();renderRoute();renderPins();renderSpecial('Collections');renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
 function switchGame(g){if(!['5','6','online'].includes(g))return;eventFocusIds=null;chooseRouteStartMode=false;mode=g==='online'?'online':'story';game=g==='6'?'6':'5';const activeLink=$('activityModeLink');if(activeLink){const which=g==='6'?'vi':g==='online'?'online':'story';activeLink.href='./atlas-activities.html?mode='+which;activeLink.textContent=which==='vi'?'◷ Leonida · Research & verification':which==='online'?'◷ Online events · timers & spawns':'◷ Story Mode challenges · no Online events';}selected=null;coordinateTarget=null;addPinMode=false;$('game5').classList.toggle('active',g==='5');$('game6').classList.toggle('active',g==='6');$('gameOnline').classList.toggle('active',g==='online');$('game5').setAttribute('aria-pressed',String(g==='5'));$('game6').setAttribute('aria-pressed',String(g==='6'));$('gameOnline').setAttribute('aria-pressed',String(g==='online'));$('mapTitle').textContent=g==='6'?'GTA VI · Leonida':g==='online'?'GTA Online · Los Santos':'GTA V · Los Santos';$('mapSubtitle').textContent=g==='6'?'GTADB VI · provisional landmarks, NOT confirmed game locations':g==='online'?'Shared GTA V terrain · separate Online markers and progress':'GTADB GTA V · Story map landmarks';
- $('layer').replaceChildren();for(const [key,label] of [...LAYERS[game],...(game==='6'?VI_UV_OPTIONS:[])])$('layer').add(new Option(label,key));if(!$('layer').querySelector('option[value="'+styles[game]+'"]'))styles[game]=game==='6'?'scaly,view':'radar';$('layer').value=styles[game];$('search').value='';if($('namedLayerSearch'))$('namedLayerSearch').value='';onlyUnfound=false;onlyFavorites=false;showUnverified=true;$('showUnverified').checked=true;if($('showCommunityResearch'))$('showCommunityResearch').checked=researchOn();$('hideFound').checked=false;$('favoritesOnly').checked=false;page=0;fitGame();render();renderSources();dataNotice(datasets[game].length?datasets[game].length.toLocaleString()+' landmarks · '+dataOrigins[game]:'Getting GTA '+game+' locations…');tileHealth();
+ $('layer').replaceChildren();for(const [key,label] of LAYERS[game])$('layer').add(new Option(label,key));if(!$('layer').querySelector('option[value="'+styles[game]+'"]'))styles[game]=game==='6'?'scaly,view':'radar';$('layer').value=styles[game];$('search').value='';if($('namedLayerSearch'))$('namedLayerSearch').value='';onlyUnfound=false;onlyFavorites=false;showUnverified=true;$('showUnverified').checked=true;if($('showCommunityResearch'))$('showCommunityResearch').checked=researchOn();$('hideFound').checked=false;$('favoritesOnly').checked=false;page=0;fitGame();render();renderSources();dataNotice(datasets[game].length?datasets[game].length.toLocaleString()+' landmarks · '+dataOrigins[game]:'Getting GTA '+game+' locations…');tileHealth();
  navPlan=null;navPlanScope=null;if(window.teamJuraNav)window.teamJuraNav.gameChanged();
  try{const url=new URL(location.href);url.hash='#game'+g;history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}announce(g==='online'?'Online mode: GTA V base landmarks, with Online markers and progress kept separate.':'GTA '+game+' map and GTA '+game+' landmarks selected.');
 }
