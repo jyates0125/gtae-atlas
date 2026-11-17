@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-cayo.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','atlas98-style-lab.html']
+PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -48,6 +48,9 @@ async def smoke():
                             if errors:failures.extend('JS: '+e for e in errors)
                             if missing:failures.extend('Missing local response: '+e for e in missing)
                             if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
+                            if not failures and path in ('index.html','maps.html'):
+                                start=pg.locator('a.j99-start-link[href="./atlas97-journey.html"]')
+                                if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
                             if not failures and path=='index.html':
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Fewer than four flagship world cards')
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
@@ -56,7 +59,16 @@ async def smoke():
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
                                 if await pg.locator('#layer option').count()<2:failures.append('Map layer options missing')
+                                if await pg.locator('#layer option[value="uv"],#layer option[value="uv2"]').count():failures.append('Retired UV pseudo-views still offered')
                                 if await pg.locator('#search').count()==0:failures.append('Location search missing')
+                            if not failures and path=='atlas93-garage.html':
+                                buttons=pg.locator('#garageCards article.card button.primary')
+                                if await buttons.count()>0:
+                                    await buttons.first.click()
+                                    if await pg.locator('#garageDetails .j99-showroom canvas').count()!=1:failures.append('3D concept preview missing from selected Garage vehicle')
+                                    if await pg.locator('#garageDetails .j99-3d-controls button').count()!=3:failures.append('Showroom interaction controls missing')
+                                    if 'not a scanned or official model' not in (await pg.locator('#garageDetails .j99-showroom').inner_text()).lower():failures.append('3D concept rights disclaimer missing')
+                                else:failures.append('Garage vehicle catalogue did not load')
                             if not failures and path=='atlas-research.html':
                                 if await pg.locator('#map').count()==0:failures.append('Research canvas missing')
                                 if await pg.locator('#showResearchPins:checked').count()!=1:failures.append('Community pins are not visible by default')
