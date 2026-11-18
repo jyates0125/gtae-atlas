@@ -88,3 +88,6 @@ runpy.run_path(str(D / 'scripts/test_classic_flat_106.py'),run_name='__main__')
 
 # Current flagship Elario map/film identity, untouched source libraries and player controls.
 runpy.run_path(str(D / 'scripts/test_flagship_brand_117.py'),run_name='__main__')
+
+# Design-comparison screenshots stay isolated from generated public site assets.
+runpy.run_path(str(D / 'scripts/test_design_review_118.py'),run_name='__main__')

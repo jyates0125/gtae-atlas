@@ -51,6 +51,20 @@ jobs:
         env:
           ATLAS_BROWSER: chromium
         run: python scripts/browser_smoke.py
+      - name: Independently capture designed-brand screenshots (Chromium)
+        if: always()
+        continue-on-error: true
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/capture_design_review.py
+      - name: Save Elario designed-brand review screenshots (Chromium)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: team-jura-atlas-design-review-chromium
+          path: qa-evidence/chromium/
+          if-no-files-found: warn
+          retention-days: 14
   microsoft-edge:
     runs-on: windows-latest
     timeout-minutes: 30
@@ -74,6 +88,20 @@ jobs:
         env:
           ATLAS_BROWSER: msedge
         run: python scripts/browser_smoke.py
+      - name: Independently capture designed-brand screenshots (Edge)
+        if: always()
+        continue-on-error: true
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/capture_design_review.py
+      - name: Save Elario designed-brand review screenshots (Edge)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: team-jura-atlas-design-review-edge
+          path: qa-evidence/msedge/
+          if-no-files-found: warn
+          retention-days: 14
   validated-zip:
     needs: [chromium-and-static, microsoft-edge]
     runs-on: ubuntu-latest
