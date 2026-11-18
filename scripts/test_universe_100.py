@@ -49,8 +49,8 @@ for page, expected_kind in PAGES.items():
     assert 'u-category-paths' in html and 'u-world-buttons' in html
     assert './atlas93-garage.html' in html
 
-    assert "./atlas100-universe.js?v=126" in p.refs, (page, "shared JS")
-    assert "./atlas100-universe.css?v=104" in p.refs, (page, "shared CSS")
+    assert "./atlas100-universe.js?v=130" in p.refs, (page, "shared JS")
+    assert "./atlas100-universe.css?v=130" in p.refs, (page, "shared CSS")
     for ref in p.refs:
         if not ref.startswith("./"):
             continue
@@ -78,6 +78,7 @@ assert "const DEFAULT_KIND=MODE==='all'?'vehicle':MODE" in js, "Universe may not
 assert "const DEFAULT_GAME=MODE==='animal'?'vi':MODE==='character'||MODE==='collectible'?'story':'online'" in js
 assert "WORLD_CODES.has(args.get('game'))" in js, "World-specific URL not supported"
 assert "document.querySelectorAll('[data-world]')" in js, "World buttons are not wired"
+assert "elarioCharacterPortrait" in js and "Portrait source" in js and "img.referrerPolicy" in js
 assert "function scopeMatch(r)" in js
 assert "image:'',imageCredit:''" in js, "VI vehicle listing must not use GTA V archive images as VI representations"
 assert "return'Unclassified vehicle'" in js, "Never guess unknown model classes"
