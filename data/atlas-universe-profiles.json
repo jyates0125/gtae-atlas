@@ -342,7 +342,10 @@
       "region": "Liberty City",
       "summary": "Silent protagonist of GTA III",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://media.rockstargames.com/rockstargames/img/global/downloads/wallpapers/games/gta3-lithograph_claude_2560x1600.jpg",
+      "sourceUrl": "https://www.rockstargames.com/newswire/article/19261/grand-theft-auto-iii-10th-anniversary-artwork-now-available-as-d.html",
+      "imageCredit": "https://www.rockstargames.com/newswire/article/19261/grand-theft-auto-iii-10th-anniversary-artwork-now-available-as-d.html",
+      "imageRights": "Rockstar Games / Take-Two Interactive · original game image"
     },
     {
       "id": "character:lucia",
@@ -396,7 +399,10 @@
       "region": "Wetlands",
       "summary": "Community-tracked wildlife appearance; locations and gameplay presence remain unverified.",
       "verification": "Provisional / unverified research",
-      "image": null
+      "image": "https://cdn.mos.cms.futurecdn.net/bWQ38SWNkmACper38vdvb8.jpg",
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots",
+      "imageCredit": "https://www.rockstargames.com/VI/media/screenshots",
+      "imageRights": "Rockstar Games / Take-Two Interactive · original game image"
     },
     {
       "id": "animal:iguana",
@@ -480,7 +486,10 @@
       "region": "Woodlands",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://img.redbull.com/images/q_auto%2Cf_auto/redbullcom/2015/02/10/1331704357527_2/grand-theft-auto-v",
+      "sourceUrl": "https://www.redbull.com/int-en/the-weirdest-wildlife-clips-from-gta-v",
+      "imageCredit": "https://www.redbull.com/int-en/the-weirdest-wildlife-clips-from-gta-v",
+      "imageRights": "Rockstar Games / Take-Two Interactive · original game image"
     },
     {
       "id": "animal:boar",
@@ -588,7 +597,10 @@
       "region": "Urban",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://img6.gram.pl/120130916172316.jpg",
+      "sourceUrl": "https://www.rockstargames.com/V",
+      "imageCredit": "https://www.rockstargames.com/V",
+      "imageRights": "Rockstar Games / Take-Two Interactive · original game image"
     }
   ]
 }
