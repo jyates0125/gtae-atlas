@@ -1,0 +1,41 @@
+/* Atlas 11.5 · Elario Studios modern research and verification workspaces.
+   Source facts, license notes, map coordinates and saved progress are unmodified. */
+body.j115-research{--j115-gold:#ffcd82;--j115-edge:#9967a5;--j115-muted:#e4cfe5;background:radial-gradient(ellipse at 87% -6%,#522268,transparent 42rem),radial-gradient(ellipse at 3% 40%,#3b1a4c,transparent 35rem),#110a1f;color:#fff5fd;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body.j115-research :is(a,button,input,select,summary,textarea):focus-visible{outline:3px solid #ffe09b!important;outline-offset:3px}
+body.j115-research a{color:#ffdeaa}
+body.j115-research :is(header,.head){background:linear-gradient(100deg,#261037,#3b1849 65%,#241333);color:#fff5fa;border-bottom:2px solid #fca958;box-shadow:0 7px 24px #08040fac}
+body.j115-research :is(header,.head) :is(nav,.wide){display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+body.j115-research :is(header,.head) nav a,body.j115-research .links a,body.j115-research .toplinks a{padding:8px 11px;text-decoration:none;border-radius:9px;border:1px solid #815393;background:#2e1c42;color:#ffe5fa;font-size:12px;font-weight:750}
+body.j115-research :is(header,.head) nav a:hover,body.j115-research .links a:hover,body.j115-research .toplinks a:hover{border-color:#ffc27c;color:#ffd98d}
+body.j115-research .wordmark{display:flex;align-items:center;gap:7px;color:white;font-weight:950;text-decoration:none}
+body.j115-research .wordmark img{width:38px;height:38px;object-fit:contain}
+body.j115-research .wordmark small{display:block;font-size:10px;letter-spacing:.08em;color:#ffd29b}
+body.j115-research :is(main>h1,main>.audit>h1,.audit>h1,body>h1){font-weight:950;line-height:1.1;letter-spacing:-.035em;font-style:italic;color:#fff6fd;font-size:clamp(33px,4.6vw,59px);text-shadow:0 4px 15px #11061f}
+body.j115-research main>h1{margin-top:14px;margin-bottom:13px}
+body.j115-research :is(main>.eyebrow,main>.tag,.eyebrow,.tag){color:#ffd59c;font-weight:900;letter-spacing:.13em}
+body.j115-research :is(.card,.panel,.stat,.audit-card,.infobar>div,.summary>div,.item,.source-warning,.warn){background:linear-gradient(135deg,#2d1d3b,#1a172b);border-color:#925e9f;color:#fff3fb;border-radius:13px}
+body.j115-research :is(.card,.panel,.stat,.audit-card,.infobar>div):hover{border-color:#edac77}
+body.j115-research :is(.cards,.row,.infobar){gap:13px}
+body.j115-research :is(.card,.panel,.stat) strong{color:#ffcf8e}
+body.j115-research :is(.muted,.lead,.lede,.description,.note,.hint,small,footer){color:#e3cfe5}
+body.j115-research :is(input,select,textarea){background:#2e1f3d;border:1px solid #8f66a0;color:#fff6ff;border-radius:9px}
+body.j115-research :is(button,.button,.action){background:#3d254c;color:#fff4fa;border:1px solid #a377ab;border-radius:9px;cursor:pointer}
+body.j115-research :is(button,.button,.action):hover{border-color:#f5be7c;background:#5a3069}
+body.j115-research :is(pre,code){background:#1b1529;border:1px solid #76528b;color:#fbeaf7;border-radius:10px;overflow-wrap:anywhere}
+body.j115-research pre{overflow:auto;white-space:pre-wrap;padding:17px}
+body.j115-research table{border-collapse:separate;border-spacing:0;border:1px solid #87558e;border-radius:12px;overflow:auto}
+body.j115-research :is(th,td){border-color:#704876}
+body.j115-research th{background:#372443;color:#ffdda8}
+body.j115-research td{background:#1c172b;color:#f0ddec}
+body.j115-research tr:nth-child(even) td{background:#241b33}
+body.j115-research .j115-source-head{position:relative;overflow:hidden;border:2px solid #f7a958;border-radius:18px;padding:clamp(22px,4vw,44px);margin-bottom:17px;background:linear-gradient(90deg,#210d2ef5,#2a1139ed 50%,#23132969),url('./art/atlas98-approved-hero.webp') center 45%/cover;box-shadow:0 12px 28px #0a0415ae}
+body.j115-research .j115-source-head h1{margin:0 0 11px;font-size:clamp(30px,4.5vw,58px);font-style:italic;line-height:1.08;color:#fff6fd;text-shadow:0 5px 12px #12061b}
+body.j115-research .j115-source-head p{max-width:75ch;color:#f4e1ef;text-shadow:0 1px 7px #0b0414}
+body.j115-research .j115-source-head small{color:#ffe1a7;font-size:11px;font-weight:850;letter-spacing:.13em}
+body.j115-research .j115-support-nav{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 22px}
+body.j115-research .j115-support-nav a{display:inline-flex;padding:8px 12px;border:1px solid #9a69a5;border-radius:9px;background:#341f43;color:#ffdeab;text-decoration:none;font-size:12px;font-weight:800}
+body.j115-research .j115-support-nav a:hover{border-color:#f5bc74}
+body.j115-research .warn,body.j115-research .notice{border-left:4px solid #f6b567;color:#ead8e7;background:#3b2941}
+body.j115-research .highlight,body.j115-research .status{color:#ffcd86}
+body.j115-research .j115-original-crest{width:40px;height:40px;vertical-align:middle;object-fit:contain;margin-right:9px}
+@media(max-width:760px){body.j115-research :is(main,header,footer){padding-left:13px;padding-right:13px}body.j115-research .j115-source-head{padding:21px 15px}body.j115-research table{display:block;max-width:100%;overflow:auto}}
