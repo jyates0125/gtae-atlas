@@ -22,3 +22,11 @@
  border-color:#ac778d;background:#221227;color:#ffe2cb;
 }
 .classic-actions #classicClearMap:hover{background:#4b2434}
+
+/* Atlas 12.1 · actual source game-map imagery fits without distortion. */
+#classicViewport[data-map-image="source-game-map"]{background:#8fbdc6;border-color:#edba75}
+#classicViewport[data-map-image="source-game-map"] .classic-map-bg{background-position:center;background-size:100% 100%;background-repeat:no-repeat;background-color:#7fb9c6}
+#classicViewport[data-map-image="source-game-map"] .classic-map-surface{outline:1px solid #e2b275;box-shadow:0 10px 30px #0007}
+#classicViewport[data-map-image="source-game-map"] .classic-marker{filter:drop-shadow(0 2px 2px #171124)}
+.classic-stage-note{line-height:1.65;font-size:13px}
+.classic-hero img{object-position:center}
