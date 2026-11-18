@@ -29,6 +29,7 @@ jobs:
           python scripts/test_site_release_70.py
           python scripts/test_atlas_static.py
           python scripts/test_atlas125_media_cheats.py
+          python scripts/test_hubs_103.py
           node --check atlas103-hub.js
           node --check atlas98-portal.js
           node --check atlas98-worlds.js
