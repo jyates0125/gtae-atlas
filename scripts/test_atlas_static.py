@@ -74,6 +74,9 @@ runpy.run_path(str(D / 'scripts/test_credits_109.py'),run_name='__main__')
 # Original designed-brand alignment across primary and earlier-built public workspaces.
 runpy.run_path(str(D / 'scripts/test_visual_unification_112.py'), run_name='__main__')
 
+# Current project showcase, QA crest and collectables visual/version labels.
+runpy.run_path(str(D / 'scripts/test_showcase_116.py'), run_name='__main__')
+
 # Continue current Elario designed-brand parity to personally saved catalogs and reference tools.
 runpy.run_path(str(D / 'scripts/test_workspace_design_113.py'), run_name='__main__')
 
