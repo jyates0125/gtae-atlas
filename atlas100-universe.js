@@ -44,11 +44,27 @@ function index(profile,seed,catalog,sets){
  return [...uniq.values()].sort((a,b)=>a.name.localeCompare(b.name));
 }
 function badge(r){const id=r.id.split(':').pop().replace(/-vi|-v$/,'');if(r.kind==='animal')return WILDLIFE[id]||'✿';if(r.kind==='character')return r.name.split(' ').slice(0,2).map(x=>x[0]).join('');if(r.kind==='collectible')return /pumpkin/i.test(r.name)?'🎃':/snow/i.test(r.name)?'☃':/cards?/i.test(r.name)?'🃏':'◈';return SYMBOLS[r.kind]||'✦'}
+function elarioCharacterPortrait(r,area){
+ // Original CSS-only portrait, clearly not a game character likeness.
+ const portrait=make('div','u-character-portrait');
+ portrait.setAttribute('role','img');
+ portrait.setAttribute('aria-label','Original illustrative portrait fallback; not an accurate depiction of '+r.name);
+ let seed=0;for(const ch of r.name)seed=(seed*31+ch.charCodeAt(0))>>>0;
+ portrait.style.setProperty('--portrait-angle',String((seed%19)-9)+'deg');
+ portrait.style.setProperty('--portrait-hair',String(12+(seed%17))+'px');
+ portrait.style.setProperty('--portrait-skin',['#e1a781','#b9795d','#8e5d49','#c58b6d','#a77255'][seed%5]);
+ for(const cls of ['u-portrait-halo','u-portrait-shoulders','u-portrait-neck','u-portrait-face','u-portrait-hair','u-portrait-jacket']){const part=make('span',cls);part.setAttribute('aria-hidden','true');portrait.append(part)}
+ area.append(portrait);
+ area.dataset.artStatus='original-illustration';
+ const label=area.querySelector('.u-image-note');if(label)label.textContent='ELARIO ILLUSTRATION · NOT GAME ART';
+}
 function artwork(r){const area=make('div','u-image u-image-'+r.kind);let hue=0;for(const c of r.name)hue=(hue*7+c.charCodeAt(0))%360;area.style.setProperty('--art-hue',String(hue)+'deg');
- if(r.image){const img=make('img');img.src=r.image;img.alt='Reference artwork for '+r.name;img.loading='lazy';img.decoding='async';img.addEventListener('error',()=>{img.remove();area.append(make('span','u-symbol',badge(r)))},{once:true});area.append(img)}
+ if(r.image){const img=make('img');img.src=r.image;img.alt='Reference artwork for '+r.name;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.addEventListener('error',()=>{img.remove();if(r.kind==='character')elarioCharacterPortrait(r,area);else area.append(make('span','u-symbol',badge(r)))},{once:true});area.append(img)}
+ else if(r.kind==='character')elarioCharacterPortrait(r,area);
  else area.append(make('span','u-symbol',badge(r)));
  if(isUnverified(r))area.append(make('span','u-image-note','UNVERIFIED RESEARCH'));
  else if(r.image)area.append(make('span','u-image-note','REFERENCE ART'));
+ if(area.dataset.artStatus==='original-illustration')area.querySelector('.u-image-note')?.replaceChildren('ELARIO ILLUSTRATION · NOT GAME ART');
  return area}
 function own(){try{return JSON.parse(localStorage.getItem(STORE)||'{}')||{}}catch{return{}}}
 function toggleOwned(r,which){if(!r.key)return false;const data=own();data.schema=1;for(const key of ['owned','wishlist','note'])if(!data[key]||typeof data[key]!=='object')data[key]={};if(data[which][r.key])delete data[which][r.key];else{data[which][r.key]=true;delete data[which==='owned'?'wishlist':'owned'][r.key]}try{localStorage.setItem(STORE,JSON.stringify(data));return true}catch{return false}}
@@ -62,7 +78,7 @@ function card(r){const node=make('article','u-card');node.append(artwork(r));con
  const actions=make('div','u-card-actions');const b=make('button','u-action','View details');b.type='button';b.onclick=()=>details(r,true);actions.append(b);
  if(r.kind==='vehicle'&&r.model&&r.scope!=='vi')actions.append(link('▣ Garage','atlas93-garage.html?addModel='+encodeURIComponent(r.model)));
  if(r.kind==='vehicle'||r.kind==='weapon'){const cmp=make('button','u-action u-muted-action',compare.some(x=>x.id===r.id)?'✓ Selected':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.some(x=>x.id===r.id)));cmp.onclick=()=>selectCompare(r);actions.append(cmp)}
- body.append(actions);node.append(body);return node}
+ body.append(actions);if(r.kind==='character'&&r.imageCredit&&r.imageCredit.startsWith('https://')){const credit=link('Portrait source ↗',r.imageCredit);credit.className='u-portrait-source';body.append(credit)}node.append(body);return node}
 function syncURL(){const url=new URL(location.href);if(kind!==DEFAULT_KIND)url.searchParams.set('kind',kind);else url.searchParams.delete('kind');if(game!==DEFAULT_GAME)url.searchParams.set('game',game);else url.searchParams.delete('game');if(query)url.searchParams.set('q',query);else url.searchParams.delete('q');history.replaceState(null,'',url)}
 function draw(){document.body.dataset.activeWorld=game;document.body.dataset.activeKind=kind;filtered=match();syncURL();
  document.querySelectorAll('[data-world]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.world===game)));
