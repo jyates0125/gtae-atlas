@@ -290,7 +290,7 @@ function updateNamedLayerVisibility(ids,show){const hidden=namedHidden();const r
 function renderNamedLayers(){const root=$('namedLayers');if(!root)return;root.replaceChildren();const rows=records(),layers=layersForRows(rows),hidden=namedHidden();
  const q=($('namedLayerSearch')?.value||'').trim().toLowerCase();let rendered=0;
  for(const {id,title,count}of layers){if(q&&!title.toLowerCase().includes(q))continue;rendered++;
-  const b=btn(`${title} · ${count.toLocaleString()}`,()=>{updateNamedLayerVisibility([id],hidden.has(id));},'named-layer-choice');
+  const b=btn(`${title} · ${count.toLocaleString()}`,()=>{updateNamedLayerVisibility([id],!showPins||hidden.has(id));},'named-layer-choice');
   b.setAttribute('aria-pressed',String(showPins&&enabled().size>0&&!hidden.has(id)));b.setAttribute('aria-label',((!showPins||hidden.has(id))?'Show ':'Hide ')+title+' pins');root.append(b);
  }
  if(!rendered){const note=document.createElement('small');note.textContent=layers.length?'No matching layer names. Clear layer search.':'No named layers have mapped coordinates in this game yet.';root.append(note)}
@@ -743,7 +743,7 @@ window.JuraDualLegendAPI=Object.freeze({
  state:()=>({game,style:styles[game],mode}),
  categories:()=>Object.entries(CATEGORIES).map(([id,[label,color]])=>({id,label,color,enabled:showPins&&enabled().has(id),count:records().filter(r=>r.category===id).length})),
  namedLayers:()=>layersForRows(records()).map(l=>({id:l.id,label:l.title,count:l.count,enabled:showPins&&enabled().size>0&&!namedHidden().has(l.id)})),
- toggleLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(l)updateNamedLayerVisibility([id],namedHidden().has(id))},
+ toggleLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(l)updateNamedLayerVisibility([id],!showPins||namedHidden().has(id))},
  onlyLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(!l)return;active[filterScope()]=null;hiddenNamed[namedScope()]=layersForRows(records()).filter(v=>v.id!==id).map(v=>v.id);store('jura62-named-layers',hiddenNamed);page=0;render()},
  trailerRecords:()=>game==='6'?records().filter(r=>/\btrailer\b|\bfootage\b|\bscene\b/i.test([r.name,r.district||'',r.collectionType||'',r.source||'',r.evidence||'',...(r.tags||[])].join(' '))).slice(0,750):[],
  toggleCategory:id=>{if(!CATEGORIES[id])return;showPins=true;const chosen=new Set(enabled());if(chosen.has(id))chosen.delete(id);else chosen.add(id);active[filterScope()]=chosen;page=0;render()},
@@ -786,7 +786,7 @@ function init(){if(!ctx){$('mapStatus').textContent='This browser does not suppo
  if($('overlayOpacity')){$('overlayOpacity').value=String(overlayOpacity);$('opacityValue').textContent=overlayOpacity+'%';$('overlayOpacity').oninput=()=>{overlayOpacity=Number($('overlayOpacity').value);$('opacityValue').textContent=overlayOpacity+'%';store('jura60-overlay-opacity',overlayOpacity);schedulePaint()};}
  if($('atlasListSort'))$('atlasListSort').onchange=e=>{listOrder=e.target.value;page=0;renderFind();schedulePaint()};if($('atlasExportVisible'))$('atlasExportVisible').onclick=exportVisibleCSV;
  $('layer').onchange=()=>{styles[game]=$('layer').value;document.dispatchEvent(new Event('jura:legend-updated'));tilesErrors=0;tilesLoaded=0;tileHealth();schedulePaint();window.teamJuraNav?.terrain()?.rebase();announce('Loading GTA '+game+' '+$('layer').selectedOptions[0].textContent+' map view…')};$('resetView').onclick=()=>{fitGame();announce('Showing the whole GTA '+game+' map.')};$('zoomIn').onclick=()=>zoomBy(.5);$('zoomOut').onclick=()=>zoomBy(-.5);
- $('togglePins').onclick=()=>{showPins=!showPins;$('togglePins').textContent=showPins?'📍 Pins on':'📍 Pins off';$('togglePins').setAttribute('aria-pressed',String(showPins));schedulePaint()};$('mobileTools').onclick=()=>{$('sidebar').classList.toggle('mobile-collapsed');if(!$('sidebar').classList.contains('mobile-collapsed'))$('sidebar').scrollIntoView({behavior:'smooth',block:'start'})};$('original').onclick=()=>window.open('https://map.gtadb.org/','_blank','noopener,noreferrer');
+ $('togglePins').onclick=()=>{showPins=!showPins;if(showPins&&enabled().size===0)active[filterScope()]=null;render()};$('mobileTools').onclick=()=>{$('sidebar').classList.toggle('mobile-collapsed');if(!$('sidebar').classList.contains('mobile-collapsed'))$('sidebar').scrollIntoView({behavior:'smooth',block:'start'})};$('original').onclick=()=>window.open('https://map.gtadb.org/','_blank','noopener,noreferrer');
  $('selectedStart').onclick=()=>{if(selected){setRouteStart(selected);window.teamJuraNav?.setStart(selected);showTab('Route')}};if($('selectedNavigate'))$('selectedNavigate').onclick=()=>{if(selected)window.teamJuraNav?.setRoutePoint(selected)};$('closeSelected').onclick=()=>{selected=null;updateSelected();schedulePaint()};$('selectedFound').onclick=()=>{if(selected)toggleFound(selected)};$('selectedRoute').onclick=()=>{if(selected)toggleRoute(selected)};$('shareSelected').onclick=async()=>{
  if(!selected)return;
  if(!/^gtadb-[56]-L\d+$/.test(selected.id)&&!/^jura-(?:story-|vi-|[a-z]+-)/.test(selected.id)){announce('Custom pins stay on your device. Export a backup to move them.');return}
