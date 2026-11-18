@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -48,6 +48,39 @@ async def smoke():
                             if errors:failures.extend('JS: '+e for e in errors)
                             if missing:failures.extend('Missing local response: '+e for e in missing)
                             if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
+                            if not failures and path in ('atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'):
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#universeStatus')?.textContent?.startsWith('Indexed ')",timeout=8000)
+                                    cards=pg.locator('#recordGrid .u-card')
+                                    if await cards.count()==0:
+                                        failures.append('Universe catalog has no pictured/profile cards')
+                                    else:
+                                        await cards.first.locator('button.u-card-title').click()
+                                        if await pg.locator('#recordDialog[open]').count()!=1:
+                                            failures.append('Individual record detail dialog failed to open')
+                                        else:
+                                            await pg.locator('#recordDialog .u-close').click()
+                                    if path=='atlas-database.html':
+                                        await pg.locator('#filterKind').select_option('vehicle')
+                                        if await pg.locator('#recordGrid .u-card').count()<2:
+                                            failures.append('Vehicle catalog filtering removed all records')
+                                        else:
+                                            first=pg.locator('#recordGrid .u-card .u-card-actions button[aria-pressed="false"]').first
+                                            if await first.count():
+                                                await first.click()
+                                                second=pg.locator('#recordGrid .u-card .u-card-actions button[aria-pressed="false"]').first
+                                                if await second.count():await second.click()
+                                                if await pg.locator('#openCompare').is_enabled():
+                                                    await pg.locator('#openCompare').click()
+                                                    if await pg.locator('#compareDialog[open]').count()!=1:
+                                                        failures.append('Comparison panel failed to open')
+                                                    await pg.locator('#compareDialog .u-close').click()
+                                                else:failures.append('Comparison selection did not enable Compare')
+                                        await pg.locator('#universeSearch').fill('unlikely-jura-000000')
+                                        if await pg.locator('#recordGrid .u-card').count()!=0:
+                                            failures.append('Universe search did not filter results')
+                                except Exception as exc:
+                                    failures.append('Universe catalog browser interaction failed: '+str(exc)[:450])
                             if not failures and path in ('index.html','maps.html'):
                                 start=pg.locator('a.j99-start-link[href="./atlas97-journey.html"]')
                                 if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
