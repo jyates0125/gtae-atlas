@@ -15,9 +15,15 @@
  }
  function makeWorld(w,short){const a=E('a',short?'rail-world':'world-card');a.href='./'+w.href;a.dataset.id=w.id;
    if(short){const emblem=E('span','rail-emblem',({'story':'V','online':'◉','vi':'VI','cayo':'☀','iv':'IV','sa':'SA'}[w.id]||'◆'));const label=E('span','rail-label',w.name);const detail=E('small','',w.short);label.append(detail);a.append(emblem,label);return a}
-   const im=E('img');im.src=w.coverSrc||'./art/'+w.art;im.loading=w.group==='featured'?'eager':'lazy';im.decoding='async';im.alt=w.coverSrc?'Original game map for '+w.name:'Elario illustration for '+w.name;im.referrerPolicy='no-referrer';im.onerror=()=>{im.onerror=null;im.src='./art/'+w.art;im.alt='Elario game-specific artwork for '+w.name};
+   const frame=E('span','world-art-frame'),blur=E('img','world-art-blur'),im=E('img','world-art-main');
+   const sources=[w.coverSrc,w.coverFallback,'./art/'+w.art].filter(Boolean);let sourceIndex=0;
+   const setCover=()=>{const url=sources[sourceIndex];im.src=url;blur.src=url;im.alt=sourceIndex===sources.length-1?'Elario world-specific fallback illustration for '+w.name:sourceIndex===0?'Original Rockstar game artwork for '+w.name:'Original game-map imagery for '+w.name;frame.dataset.cover=sourceIndex===0?'official-art':sourceIndex===1?'game-map':'original-elario'};
+   for(const image of [blur,im]){image.loading=w.group==='featured'?'eager':'lazy';image.decoding='async';image.referrerPolicy='no-referrer'}
+   blur.alt='';blur.setAttribute('aria-hidden','true');
+   im.onerror=()=>{if(sourceIndex<sources.length-1){sourceIndex++;setCover()}else{im.onerror=null;frame.dataset.cover='unavailable'}};
+   frame.append(blur,im);setCover();
    const body=E('span','world-copy');body.append(E('small','',w.grade),E('strong','',w.name),E('em','',w.short),E('b','','OPEN '+(w.kind==='gateway'?'REFERENCE':'MAP')+' ›'));
-   const artChip=E('span','world-art-chip',w.game+' · '+(w.kind==='research'?'PROVISIONAL RESEARCH':w.kind==='gateway'?'REFERENCE':'ATLAS'));a.append(im,artChip,body);a.title=w.note;return a;
+   const artChip=E('span','world-art-chip',w.game+' · '+(w.kind==='research'?'PROVISIONAL RESEARCH':w.kind==='gateway'?'REFERENCE':'ATLAS'));a.append(frame,artChip,body);a.title=w.note;return a;
  }
  function homepage(){const featured=worlds.filter(w=>w.group==='featured'),more=worlds.filter(w=>w.group!=='featured');const rail=$('#featuredRail'),classic=$('#classicRail'),grid=$('#featuredGrid');
    featured.forEach(w=>{if(rail)rail.append(makeWorld(w,true));if(grid)grid.append(makeWorld(w,false))});more.forEach(w=>{if(classic)classic.append(makeWorld(w,true))});
