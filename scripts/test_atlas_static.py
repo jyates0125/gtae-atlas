@@ -91,3 +91,6 @@ runpy.run_path(str(D / 'scripts/test_flagship_brand_117.py'),run_name='__main__'
 
 # Design-comparison screenshots stay isolated from generated public site assets.
 runpy.run_path(str(D / 'scripts/test_design_review_118.py'),run_name='__main__')
+
+# GTA IV, source-aware research, heist HQ and Data Lab current Elario identity.
+runpy.run_path(str(D / 'scripts/test_workspace_brand_119.py'),run_name='__main__')
