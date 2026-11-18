@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -48,6 +48,23 @@ async def smoke():
                             if errors:failures.extend('JS: '+e for e in errors)
                             if missing:failures.extend('Missing local response: '+e for e in missing)
                             if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
+                            if not failures and path=='atlas-vehicle-configurator.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#modelSelect')?.options.length > 20",timeout=8500)
+                                    await pg.locator('#modelSelect').select_option('adder')
+                                    if await pg.locator('#concept3d canvas').count()!=1:
+                                        failures.append('Original 3D canvas missing')
+                                    await pg.locator('#paintColor').fill('#d84443')
+                                    await pg.locator('#buildName').fill('Team Jura test concept')
+                                    await pg.locator('#saveBuild').click()
+                                    saved=await pg.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas101-concept-presets-v1')||'{}')")
+                                    if saved.get('builds',{}).get('adder',{}).get('name')!='Team Jura test concept':
+                                        failures.append('Concept preset did not save into isolated local storage')
+                                    if 'addModel=adder' not in (await pg.locator('#addToGarage').get_attribute('href') or ''):
+                                        failures.append('Chosen model does not link to My Garage')
+                                    await pg.locator('#resetCamera').click()
+                                except Exception as exc:
+                                    failures.append('Original 3D configurator browser check failed: '+str(exc)[:450])
                             if not failures and path in ('atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'):
                                 try:
                                     await pg.wait_for_function("document.querySelector('#universeStatus')?.textContent?.startsWith('Indexed ')",timeout=8000)
