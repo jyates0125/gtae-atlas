@@ -18,7 +18,7 @@ for key in expected:
     entry = next((line for line in worlds.splitlines() if "{id:'" + key + "'" in line), None)
     assert entry is not None, key
     assert re.search(r"coverSrc:'https://[^']+',coverFallback:'[^']+'",entry), key
-    assert re.search(r"art:'[^']+\\.svg'",entry),key
+    assert re.search(r"art:'[^']+\.svg'",entry),key
 assert "world-art-frame" in portal and "world-art-main" in portal and "sourceIndex++" in portal
 assert ".world-card .world-art-frame" in css
 assert 'id="cover-art"' in credits and 'id="reuse"' in credits
