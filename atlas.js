@@ -26,11 +26,11 @@ const BOUNDS={
  'cyber,1':[[0,0,2,3],[1,1,4,6],[2,2,9,12],[5,5,19,24],[10,10,39,49],[21,21,79,99]],
  'dupzor,51':[[0,0,2,2],[0,1,4,5],[0,2,9,11],[0,4,19,23],[0,8,38,47],[0,17,77,94]],
  'yanis,15':[[0,0,2,2],[0,1,4,5],[0,2,9,11],[0,4,19,23],[0,8,38,47],[0,17,77,95]],
- 'yanis,17':[[0,0,3,3],[1,1,6,6],[2,2,12,12],[5,5,25,24],[10,10,51,49],[21,21,103,99]]
+ 'yanis,18':[[0,0,3,3],[1,1,6,6],[2,2,12,12],[5,5,25,24],[10,10,51,49],[21,21,103,99]]
 };
 const LAYERS={
  '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid']],
- '6':[['scaly,view','Scaly · YANIS V17'],['yanis,17','YANIS V17 · Original'],['yanis,15','YANIS V15 · Archive'],['dupzor,51','DUPZOR V51 · Original']]
+ '6':[['scaly,view','Scaly · YANIS V18'],['yanis,18','YANIS V18 · Current'],['yanis,15','YANIS V15 · Archive'],['dupzor,51','Loki · DUPZOR V51']]
 };
 /* Base views and published GTADB community add-on tiles.
  * The additional tile folders are *patches*, not complete independent worlds.
@@ -44,10 +44,10 @@ const GTADB_TILE_PATCHES={
 };
 const PATCH_SET='aiwe,1,martipk,5,rickrick,3';
 function mapView(style,g=game){
- if(g==='6'&&style==='scaly,view')return{base:'yanis,17',overlay:false,filter:'saturate(1.15) contrast(1.06)'};
+ if(g==='6'&&style==='scaly,view')return{base:'yanis,18',overlay:false,filter:'saturate(1.15) contrast(1.06)'};
  if(g==='6'&&style==='loki,view')return{base:'dupzor,51',overlay:false,filter:'saturate(.88) contrast(1.13) brightness(.96)'};
  // Research is a content mode over the licensed YANIS V17 illustration, not a new GTADB tile source.
- if(g==='6'&&style==='research,view')return{base:'yanis,17',overlay:false,filter:'none'};
+ if(g==='6'&&style==='research,view')return{base:'yanis,18',overlay:false,filter:'none'};
  // The previous CYBER selection is retired: no cyber tiles are requested.
  return{base:style,overlay:false};
 }
@@ -808,7 +808,7 @@ function init(){if(!ctx){$('mapStatus').textContent='This browser does not suppo
  if(q)$('search').value=q.slice(0,100);
  if(cat&&CATEGORIES[cat]){active[filterScope()]=new Set([cat]);showTab('Services')}
  if(q||cat)render();readPacks();renderSources();loadDataset('5');loadDataset('6');loadSources();
- if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=98c',{scope:'./'}).catch(()=>{});
+ if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=103-tiles',{scope:'./'}).catch(()=>{});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
