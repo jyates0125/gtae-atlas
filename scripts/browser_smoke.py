@@ -209,7 +209,10 @@ async def smoke():
                                 if not await pg.locator('#shareCaptionText').input_value():failures.append('Launch caption not hydrated')
                                 await pg.locator('#shareCaptionText').fill('My own Team Jura launch caption')
                                 await pg.locator('[data-j130-action="copy-text"][data-kind="custom"]').click()
-                                if not (await pg.locator('[data-j130-status]').first.inner_text()).strip():failures.append('Copy-caption interaction gave no feedback')
+                                try:
+                                    await pg.wait_for_function("!!document.querySelector('[data-j130-status]')?.textContent.trim()",timeout=3000)
+                                except Exception:
+                                    failures.append('Copy-caption interaction gave no feedback')
                             if not failures and path=='maps.html':
                                 if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()!=13:failures.append('Directory should show exactly 13 worlds')
                                 covers=pg.locator('#directoryFeatured img.world-art-main,#directoryAdditional img.world-art-main')
