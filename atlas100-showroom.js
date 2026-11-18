@@ -1,0 +1,19 @@
+/* Team Jura 10.0 — showroom lighting and connected navigation; no image recolor or gameplay fabrication. */
+(()=>{'use strict';
+if(!document.body.dataset.gallery)return;
+const make=(tag,cls,text)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el};
+function init(){
+ const tools=document.querySelector('.j90-tools'),main=document.querySelector('main');if(!tools||!main||document.querySelector('.j100-showroom'))return;
+ const panel=make('section','j100-showroom');panel.setAttribute('aria-label','Showroom presentation and connected catalog');
+ const about=make('div');about.append(make('h2','','Choose your showroom atmosphere'),make('p','','Distinctive original Team Jura lighting behind the community reference images. Lighting is presentation only: it does not change, recolor or prove the real in-game vehicle or weapon.'));
+ const spot=make('div','j100-spotlights');const lamps=[['Violet',272],['Sunset',28],['Neon',187],['Crimson',342]];let current='Violet';
+ try{const x=localStorage.getItem('team-jura-showroom-light-v1');if(lamps.some(l=>l[0]===x))current=x}catch{}
+ function choose(name){const lamp=lamps.find(l=>l[0]===name)||lamps[0];current=lamp[0];document.body.style.setProperty('--showroom-hue',String(lamp[1]));for(const button of spot.querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.lamp===current));try{localStorage.setItem('team-jura-showroom-light-v1',current)}catch{}}
+ for(const [name]of lamps){const button=make('button','',name);button.type='button';button.dataset.lamp=name;button.onclick=()=>choose(name);spot.append(button)}
+ const links=make('nav','j100-showroom-links');links.setAttribute('aria-label','Related Atlas database pages');
+ for(const [label,href]of[['◎ Universe database','atlas-database.html'],['◆ Vehicle comparison','atlas-database.html?kind=vehicle'],['⚔ Weapon details','atlas-database.html?kind=weapon'],['♟ Characters','atlas-characters.html'],['✿ Animals','atlas-animals.html'],['◈ Collectibles','atlas-collectibles.html'],['▣ My Garage & 3D','atlas93-garage.html']]){const a=make('a','',label);a.href='./'+href;links.append(a)}
+ panel.append(about,spot,links);tools.insertAdjacentElement('afterend',panel);
+ choose(current);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
