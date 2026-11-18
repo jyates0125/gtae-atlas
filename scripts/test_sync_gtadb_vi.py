@@ -24,7 +24,7 @@ with TemporaryDirectory() as directory:
     assert m.write_snapshot(initial,0) is True
     assert m.OUTPUT.is_file() and m.MANIFEST.is_file()
     original=m.OUTPUT.read_bytes()
-    reduced={k:v for k,v in records.items() if int(k[1:])<=500}
+    reduced={k:v for k,v in records.items() if k.startswith('L') and k[1:].isdigit() and int(k[1:])<=500}
     smaller,_=m.build_snapshot(reduced,now='2026-11-18T02:00:00Z')
     try:m.write_snapshot(smaller,0)
     except ValueError as exc:assert 'Suspicious upstream removal' in str(exc)
