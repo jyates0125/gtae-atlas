@@ -120,7 +120,7 @@ async function init(){
  if([...game.options].some(x=>x.value===p.get('game')))game.value=p.get('game');
  if(platform&&[...platform.options].some(x=>x.value===p.get('platform')))platform.value=p.get('platform');
  query.value=(p.get('q')||'').slice(0,120);
- const syncPlatform=()=>{if(!platform)return;const g=game.value,p=platform.value;if(g==='ctw'&&!['nds','psp','mobile'].includes(p))platform.value='nds';else if(['lcs','vcs'].includes(g)&&!['psp','ps2'].includes(p))platform.value='psp';else if(!['ctw','lcs','vcs'].includes(g)&&['nds','psp','mobile'].includes(p))platform.value='pc'};
+ const syncPlatform=()=>{if(!platform)return;const g=game.value,p=platform.value,valid={story:[...V_VERSIONS],sa:[...SA_VERSIONS],iii:['pc','ps2','ps3','ps4','ps5','xbox','xone','xsx'],vc:['pc','ps2','ps3','ps4','ps5','xbox','xone','xsx'],iv:['pc','ps3','x360','xone360','xsx'],tlad:['pc','ps3','x360','xone360','xsx'],tbogt:['pc','ps3','x360','xone360','xsx'],lcs:['psp','ps2'],vcs:['psp','ps2'],ctw:['nds','psp','mobile']};if(valid[g]&&!valid[g].includes(p))platform.value=g==='ctw'?'nds':['lcs','vcs'].includes(g)?'psp':'pc'};
  syncPlatform();game.addEventListener('change',()=>{syncPlatform();render()});query.addEventListener('input',render);
  if(platform)platform.addEventListener('change',render);
  $('resetHub').addEventListener('click',()=>{query.value='';render()});
