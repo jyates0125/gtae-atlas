@@ -18,12 +18,12 @@ expect={
 for game,path in expect.items():
     assert f"{game}:{{url:'https://gtamap.io/{path}'" in js, game
 assert "function flatReference()" in js and "flatReference();document.title=" in js
-assert "not embedded or licensed for redistribution" in js
+assert "does not copy custom GTAMap.io composite layers" in js
 for id in ('classicFlatReference','classicFlatTitle','classicFlatDescription','classicFlatLink','classicFlatCredit'):
     assert f'id="{id}"' in page,id
 assert 'src="./art/elario-crest.svg"' in page
 assert "atlas108-local-map.js?v=108" in page
-assert "atlas98-classic.js?v=108" in page and "atlas98-classic.css?v=108" in page
+assert "atlas98-classic.js?v=121" in page and "atlas98-classic.css?v=121" in page
 assert 'id="classicClearMap"' in page and 'id="classicImageFile"' in page
 assert "j106-flat-reference" in css
 assert "team-jura-atlas98-classic-" in js
