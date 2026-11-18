@@ -40,6 +40,9 @@ assert len(characters)==25
 assert all(r.get("image","").startswith("https://") for r in characters)
 assert all(r.get("imageCredit","").startswith("https://") for r in characters)
 assert "data/atlas-universe-profiles.json?v=126" in source("atlas100-universe.js")
+assert "elarioCharacterPortrait" in source("atlas100-universe.js")
+assert "Portrait source" in source("atlas100-universe.js")
+assert ".u-character-portrait" in source("atlas100-universe.css")
 animals=[r for r in profiles["records"] if r["kind"]=="animal"]
 assert len(animals)>=18
 assert len([a for a in animals if a.get("image")])>=3
