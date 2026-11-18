@@ -1,9 +1,9 @@
 name: Team Jura Atlas - validate production website
 on:
   push:
-    branches: [development]
+    branches: [development, main]
   pull_request:
-    branches: [development]
+    branches: [development, main]
   workflow_dispatch:
 permissions:
   contents: read

@@ -1,3 +1,13 @@
+# Elario Studios · Team Jura Atlas — active project guide (18 November 2026)
+
+**Current authority:** [Standing Project Charter](docs/TEAM-JURA-STANDING-CHARTER.md) · [Designed Brand Master](docs/ATLAS92-MASTER-SPEC.md) · [Site Completion Contract](docs/ATLAS-SITE-COMPLETION-CONTRACT.md) · [Credits & Notices](atlas-credits.html). The earlier release notes below are retained for historical context and **must not** override these current project rules.
+
+**Status:** Atlas 10.9 credits, source registry, original covers, garage, heists, map layers and local classic map imports exist on `development`; full feature parity remains a goal, not a claim. `main` is a protected release branch. The owner explicitly authorized one reviewed integration of the current site to `main` on Nov 18, 2026; **all subsequent main/live updates require fresh confirmation**. Do not force-push or silently run an old incompatible GTA VI data updater.
+
+**Next work:** Complete source-cleared, game-specific in-app 2D maps and accurate location categories, then refine remaining page-specific art/assets and full visual QA against approved references. Preserve browser-local progress and GTADB/other license notices.
+
+---
+
 # Team Jura Atlas 9.8C — integrated release
 
 **Current deploy candidate:** One complete Elario Studios / Team Jura Atlas website with the approved forward-looking designed brand, GTA worlds, research, collectibles, garage, heists, and One Last Ride. Development is the release branch. Legacy `main` remains untouched.
