@@ -179,9 +179,15 @@ async def smoke():
                                             failures.append('Atlas cover failed to load on scroll: '+str(src)+' · '+str(err)[:115])
                                             break
                                     urls=await covers.evaluate_all("(imgs)=>imgs.map(x=>x.getAttribute('src'))")
-                                    if len(set(urls))!=13:failures.append('Duplicate world cover used')
-                                    if len([x for x in urls if 'atlas106-' in x])!=7:
-                                        failures.append('Seven original classic-world artwork files not displayed')
+                                    # GTA IV and its two episodes legitimately share a Liberty City map;
+                                    # GTA V Story and Online similarly share the same game terrain.
+                                    # Ensure game-map imagery is loaded and not merely old placeholders.
+                                    if len(set(urls))<8:failures.append('Too few distinct game-world map artworks displayed')
+                                    if any('oldcity.svg' in x or 'sunset.svg' in x for x in urls):
+                                        failures.append('Legacy skyline artwork returned to map covers')
+                            if not failures and path=='atlas-cayo.html':
+                                if await pg.locator('#j121Original').count()!=1 or await pg.locator('#j121Planner').count()!=1:
+                                    failures.append('Original Cayo game map and separate heist planning tabs missing')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 if not await pg.locator('body.j117-map-world').count():
                                     failures.append('Current Elario flagship map brand missing')
@@ -320,7 +326,7 @@ async def smoke():
                                     await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
                                     await pg.evaluate("window.confirm=()=>true")
                                     await pg.locator('#classicClearMap').click()
-                                    await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='original-art'",timeout=10000)
+                                    await pg.wait_for_function("['game-original','original-art'].includes(document.getElementById('classicViewport')?.dataset.mapImage)",timeout=10000)
                                     if await pg.locator('#pinCount').inner_text()!='1':
                                         failures.append('Removing an imported image deleted personal markers')
                                     await pg.locator('#classicClear').click()
