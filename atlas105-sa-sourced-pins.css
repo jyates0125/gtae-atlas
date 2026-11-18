@@ -1,0 +1,8 @@
+/* Original Team Jura 10.5 — visual distinction for sourced but approximate SA markers. */
+.j105-evidence{border:1px solid #e0ab71;border-radius:9px;padding:11px;background:#382343;color:#ffe1b6;font-size:11px;line-height:1.6;margin:12px 0}
+.j105-source{padding:14px 16px;border:1px solid #d7a06d;border-radius:9px;background:#241a37;color:#f0dfdb;font-size:13px}
+.pin.j105-approx-pin{border:2px dashed #ffdc96!important;box-shadow:0 0 0 3px #251234cc,0 5px 12px #0009!important;background:linear-gradient(#9a3dbd,#4a1e67)!important}
+.pin.j105-approx-pin.done{opacity:.64;filter:saturate(.65)}
+.pin.j105-approx-pin:focus-visible{outline:3px solid white!important;outline-offset:3px!important}
+#mapStatus{font-size:12px;line-height:1.45}
+@media(max-width:600px){.j105-evidence{padding:8px;font-size:10px}}
