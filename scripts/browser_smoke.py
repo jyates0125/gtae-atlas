@@ -245,6 +245,15 @@ async def smoke():
                                                 failures.append('Cayo island planner not directly linked')
                                 except Exception as exc:
                                     failures.append('Heist-specific planning UI unavailable: '+str(exc)[:330])
+                            if not failures and path.startswith('map-hub.html?game='):
+                                await pg.wait_for_selector('#classicFlatLink',timeout=7000)
+                                href=await pg.locator('#classicFlatLink').get_attribute('href')
+                                if href!='https://gtamap.io/gta-vice-city-map/':
+                                    failures.append('Wrong 1986 Vice City actual map reference: '+str(href))
+                                if await pg.locator('#classicMapBackground').count()!=1:
+                                    failures.append('Existing personal map workbench missing')
+                                if await pg.locator('img[src="./art/elario-crest.svg"]').count()!=1:
+                                    failures.append('Original Elario crest missing on classic world')
                             if not failures and path=='atlas93-garage.html':
                                 await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')
