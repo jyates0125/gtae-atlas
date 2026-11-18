@@ -64,3 +64,6 @@ runpy.run_path(str(D / 'scripts/test_vehicle_intel_104.py'),run_name='__main__')
 
 # 150 licensed San Andreas collectible locations, existing saves intact.
 runpy.run_path(str(D / 'scripts/test_sa_pins_105.py'),run_name='__main__')
+
+# Game-specific authentic classic flat-map references; maintain local marker storage.
+runpy.run_path(str(D / 'scripts/test_classic_flat_106.py'),run_name='__main__')
