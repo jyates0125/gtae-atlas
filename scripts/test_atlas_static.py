@@ -97,3 +97,6 @@ runpy.run_path(str(D / 'scripts/test_workspace_brand_119.py'),run_name='__main__
 
 # Fifteen unique Elario mission artworks and original heist source/guide controls.
 runpy.run_path(str(D / 'scripts/test_heist_art_120.py'),run_name='__main__')
+
+# Original game-map imagery and source rights, player progress unchanged.
+runpy.run_path(str(D / 'scripts/test_game_art_121.py'), run_name='__main__')

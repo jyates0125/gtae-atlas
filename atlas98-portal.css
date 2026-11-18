@@ -23,3 +23,9 @@
 
 /* Original Elario shield takes the place of the old generic crown glyph. */
 .brand-crown[src="./art/elario-crest.svg"]{width:42px;height:42px;object-fit:contain;flex:none;filter:drop-shadow(0 0 9px #e7a77b88)}
+
+/* Atlas 12.1: game-specific map imagery instead of temporary skyline covers. */
+.directory-grid .world-card img,.world-grid .world-card img{object-fit:cover;object-position:center;filter:saturate(1.08) contrast(1.03)}
+.directory-grid .world-card{overflow:hidden;box-shadow:0 9px 28px #08041677}
+.directory-grid .world-card img{border-bottom:1px solid #f3b6699c}
+.directory-grid .world-card .world-art-chip{background:#190d2de9;backdrop-filter:blur(6px)}
