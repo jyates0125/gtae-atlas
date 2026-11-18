@@ -22,6 +22,18 @@
     "vc": [
       "https://totalgta.com/gta-vice-city/cheats/",
       "https://gtaside.com/tips/vice-city/cheat-codes/"
+    ],
+    "iv": [
+      "https://www.gtabase.com/grand-theft-auto-iv/gta-4-cheats-xbox-360-ps3-pc-full-list-of-cheat-codes",
+      "https://gtaside.com/tips/gta4/cheat-codes/"
+    ],
+    "tlad": [
+      "https://www.gtabase.com/grand-theft-auto-iv/gta-4-cheats-xbox-360-ps3-pc-full-list-of-cheat-codes",
+      "https://gtaside.com/tips/gta4/cheat-codes/"
+    ],
+    "tbogt": [
+      "https://www.gtabase.com/grand-theft-auto-iv/gta-4-cheats-xbox-360-ps3-pc-full-list-of-cheat-codes",
+      "https://gtaside.com/tips/gta4/cheat-codes/"
     ]
   },
   "cheats": [
@@ -1114,6 +1126,254 @@
       "code": "NUTTERTOOLS",
       "phone": null,
       "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Down"
+    },
+    {
+      "game": "iv",
+      "group": "Survival",
+      "name": "Max health and armor",
+      "code": "",
+      "phone": "362-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Survival",
+      "name": "Max health armor weapons",
+      "code": "",
+      "phone": "482-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Weapons",
+      "name": "Weapons tier 1",
+      "code": "",
+      "phone": "486-555-0150",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Weapons",
+      "name": "Weapons tier 2",
+      "code": "",
+      "phone": "486-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Police",
+      "name": "Clear wanted level",
+      "code": "",
+      "phone": "267-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Police",
+      "name": "Raise wanted level",
+      "code": "",
+      "phone": "267-555-0150",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Effects",
+      "name": "Cycle weather",
+      "code": "",
+      "phone": "468-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Cognoscenti",
+      "code": "",
+      "phone": "227-555-0142",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Comet",
+      "code": "",
+      "phone": "227-555-0175",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn FIB Buffalo",
+      "code": "",
+      "phone": "227-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Super GT",
+      "code": "",
+      "phone": "227-555-0168",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Turismo",
+      "code": "",
+      "phone": "227-555-0147",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn NRG-900",
+      "code": "",
+      "phone": "625-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Sanchez",
+      "code": "",
+      "phone": "625-555-0150",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Annihilator",
+      "code": "",
+      "phone": "359-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Jetmax boat",
+      "code": "",
+      "phone": "938-555-0100",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Double T Custom",
+      "code": "",
+      "phone": "245-555-0125",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Hakuchou Custom",
+      "code": "",
+      "phone": "245-555-0199",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Hexer",
+      "code": "",
+      "phone": "245-555-0150",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Innovation",
+      "code": "",
+      "phone": "245-555-0100",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Gang Burrito",
+      "code": "",
+      "phone": "826-555-0150",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Slamvan",
+      "code": "",
+      "phone": "826-555-0100",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Weapons",
+      "name": "Explosive sniper rounds",
+      "code": "",
+      "phone": "486-555-2526",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Weapons",
+      "name": "Super Punch",
+      "code": "",
+      "phone": "276-555-2666",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Equipment",
+      "name": "Parachute",
+      "code": "",
+      "phone": "359-555-7272",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn APC tank",
+      "code": "",
+      "phone": "272-555-8265",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Bullet GT",
+      "code": "",
+      "phone": "227-555-9666",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Akuma",
+      "code": "",
+      "phone": "625-555-0200",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Vader",
+      "code": "",
+      "phone": "625-555-3273",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Buzzard helicopter",
+      "code": "",
+      "phone": "359-555-2899",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Floater boat",
+      "code": "",
+      "phone": "938-555-0150",
+      "ps": null
     }
   ],
   "news": [
