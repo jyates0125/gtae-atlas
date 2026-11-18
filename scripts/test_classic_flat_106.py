@@ -42,7 +42,7 @@ expected_default_maps={
     'tbogt':'./art/atlas128-gta4-landmarks.jpg',
 }
 for world,image in expected_default_maps.items():
-    assert re.search(r"\\b"+world+r":\\{name:[^\\n]*map:'"+re.escape(image)+r"'",js), (world,image)
+    assert re.search(r"\b"+world+r":\{name:[^\n]*map:'"+re.escape(image)+r"'",js), (world,image)
 assert 'image.referrerPolicy' in js and 'loadOriginalWorldMap()' in js
 assert "image.onerror=next" in js
 assert "b.querySelector('span').hidden=true" in js
