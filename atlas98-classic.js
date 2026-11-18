@@ -6,10 +6,35 @@ const worlds={
  iii:{name:'GTA III · Liberty City',desc:'The original 3D-era Liberty City. Track personal map notes and collections.',art:'atlas106-gta3.svg',map:'./art/atlas128-gta3-radar.png',sets:['Hidden packages','Unique stunt jumps','Rampages','Missions','Safehouses']},
  vc:{name:'GTA Vice City',desc:'Ocean Beach, Downtown, Little Havana and the classic neon coastline.',art:'atlas106-vice-city.svg',map:'./art/atlas128-vice-city-radar.png',sets:['Hidden packages','Rampages','Stunt jumps','Properties','Missions']},
  vcs:{name:'Vice City Stories',desc:'Explore the earlier Vice City era with your personal research notes.',art:'atlas106-vcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/ViceCity-GTAVCS-map.png',sets:['Red balloons','Empire sites','Stunt jumps','Missions','Safehouses']},
- lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',map:'https://wikiassets.net/gta-vi-1c4e11/images/5019685d9fa05493b4cea714ca968bf1.webp',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
- ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'atlas106-chinatown-wars.svg',map:'https://wikiassets.net/gta-wiki-aef1ab/images/03205438369fb05f953c0fbfa4b1fd8d.webp',sets:['Security cameras','Collectibles','Missions','Safehouses','Drug dealer locations']},
+ lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-MapFull-ExceptUpstate.png',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
+ ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'atlas106-chinatown-wars.svg',map:'https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg',sets:['Security cameras','Collectibles','Missions','Safehouses','Drug dealer locations']},
  tlad:{name:'The Lost and Damned',desc:'Liberty City motorcycle-club episode; notes stay separate from GTA IV.',art:'atlas106-lost-damned.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Gang wars','Motorcycle missions','Races','Activities']},
  tbogt:{name:'The Ballad of Gay Tony',desc:'Liberty City nightlife episode; nightclub missions and activities.',art:'atlas106-gay-tony.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Drug wars','Base jumps','Nightclub missions','Activities']}
+};
+// One explicit source trail per image, not an inferred license for an entire fan site.
+// A failed third-party image must not silently become an unrelated city's map.
+const mapAlternates={
+ vcs:[
+  {url:'https://www.igrandtheftauto.com/content/images/1933-gtavcs-full-map.jpg',name:'Vice City Stories · independent fan archive',page:'https://www.igrandtheftauto.com/gtavcs/images/1933-gtavcs-full-map'},
+  {url:'https://www.igrandtheftauto.com/content/images/3630-gtavcs-vice-city-stories-map.jpg',name:'Vice City Stories · second archive image',page:'https://www.igrandtheftauto.com/gtavcs/images/3630-gtavcs-vice-city-stories-map'}
+ ],
+ lcs:[
+  {url:'https://www.igrandtheftauto.com/content/images/1932-gtalcs-full-map.jpg',name:'Liberty City Stories · independent fan archive',page:'https://www.igrandtheftauto.com/gtalcs/images/1932-gtalcs-full-map'},
+  {url:'https://wikiassets.net/gta-vi-1c4e11/images/5019685d9fa05493b4cea714ca968bf1.webp',name:'Liberty City Stories · wiki image reference',page:'https://gta.fandom.com/wiki/File:LibertyCity-GTALCS-MapFull-ExceptUpstate.png'}
+ ],
+ ctw:[
+  {url:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTACW-map.png',name:'Chinatown Wars · GTASeries map adapted from Rockstar GTA IV',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTACW-map.png'},
+  {url:'https://wikiassets.net/gta-wiki-aef1ab/images/03205438369fb05f953c0fbfa4b1fd8d.webp',name:'Chinatown Wars · wiki image reference',page:'https://www.igrandtheftauto.com/gtacw/setting'}
+ ]
+};
+const mapOrigins={
+ iii:{name:'GTA III radar · XiaoNiaoa/noiseXYZ (game art: Rockstar)',page:'https://github.com/XiaoNiaoa/vc_lc'},
+ vc:{name:'Vice City radar · XiaoNiaoa/noiseXYZ (game art: Rockstar)',page:'https://github.com/XiaoNiaoa/vc_lc'},
+ vcs:{name:'Vice City Stories · original game-map reference (Rockstar)',page:'https://www.grandtheftwiki.com/File:ViceCity-GTAVCS-map.png'},
+ lcs:{name:'Liberty City Stories · original game-map reference (Rockstar)',page:'https://gta.fandom.com/wiki/File:LibertyCity-GTALCS-MapFull-ExceptUpstate.png'},
+ ctw:{name:'Chinatown Wars · PDA map (game art: Rockstar)',page:'https://www.igrandtheftauto.com/gtacw/setting'},
+ tlad:{name:'GTA IV map · GTADB.ORG contributors, CC BY 4.0 (game world: Rockstar)',page:'https://github.com/rolux/gtadb.org/blob/main/LICENSE-DATA'},
+ tbogt:{name:'GTA IV map · GTADB.ORG contributors, CC BY 4.0 (game world: Rockstar)',page:'https://github.com/rolux/gtadb.org/blob/main/LICENSE-DATA'}
 };
 const publicFlatMaps={
  iii:{url:'https://gtamap.io/gta-3-map/',title:'GTA III · original Liberty City',desc:'Independent viewer of GTA III\'s actual radar map, Hidden Packages and source-attributed collectables.'},
@@ -29,7 +54,7 @@ const key='team-jura-atlas98-classic-'+id+'-v1';const blank=()=>({schema:'team-j
 function read(){try{const data=JSON.parse(localStorage.getItem(key)||'null');if(data&&data.schema==='team-jura-atlas98-classic-v1'&&data.world===id&&Array.isArray(data.markers))return data}catch{}return blank()}
 let state=read(),adding=false,editing=null,scale=1,dx=0,dy=0,pointer=null,dragged=false;
 let highResUrl=null,highResSize=null; // personal map raster is stored separately
-let originalMapReady=false,originalMapSize=null; // game map reference, not a world coordinate transform
+let originalMapReady=false,originalMapSize=null,activeMapUrl=null; // source-backed map image, not a world coordinate transform
 const status=message=>{if($('#classicMessage'))$('#classicMessage').textContent=message};
 function persist(){try{localStorage.setItem(key,JSON.stringify(state));window.dispatchEvent(new CustomEvent('team-jura:classic-change',{detail:{world:id}}));return true}catch(e){status('This browser could not save all records. Export a backup, or remove an oversized map image.');return false}}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
@@ -47,7 +72,7 @@ function fitClassicImage(){
 }
 function renderBackground(){
  const b=$('#classicMapBackground');if(!b)return;const own=highResUrl||state.background;
- const img=own||(originalMapReady?w.map:null);
+ const img=own||(originalMapReady?activeMapUrl:null);
  b.style.backgroundImage=img?'url('+JSON.stringify(img)+')':'linear-gradient(#1b10233d,#1b1126c9),url(./art/'+w.art+')';
  b.classList.toggle('has-image',!!img);
  b.querySelector('span').hidden=true;b.querySelector('small').hidden=true;
@@ -55,14 +80,40 @@ function renderBackground(){
  fitClassicImage();
 }
 function loadOriginalWorldMap(){
- // Locally bundled original-game radar or credited GTA IV map art displays by default. Player-imported maps override it.
- const image=new Image();image.referrerPolicy='no-referrer';
- image.onload=()=>{if(!image.naturalWidth||!image.naturalHeight)return;
-  originalMapReady=true;originalMapSize={width:image.naturalWidth,height:image.naturalHeight};
-  if(!highResUrl&&!state.background){renderBackground();status('Original '+w.name+' game map ready. Personal notes are not game coordinates.')}};
- image.onerror=()=>{if(!highResUrl&&!state.background)status('Map artwork could not be loaded; personal notes are safe. Open the game-map reference below.')};
- image.src=w.map;
+ // Keep the game/era unchanged across every fallback; don't redirect fans to generic city artwork.
+ const origins=mapOrigins[id],choices=[{url:w.map,...origins},...(mapAlternates[id]||[])];
+ const credit=$('#classicMapAttribution'),source=$('#classicMapSourceLink');
+ let index=0;
+ function showSource(item){
+  if(credit)credit.textContent='Map image: '+item.name+' · Rockstar / Take-Two retain game-art rights';
+  if(source){source.href=item.page;source.textContent='Image provenance ↗';}
+ }
+ function next(){
+  if(index>=choices.length){
+   originalMapReady=false;originalMapSize=null;renderBackground();
+   if(credit)credit.textContent='No map image source is currently reachable. Your personal data is unchanged.';
+   if(source){source.href=origins.page;source.textContent='Open original source ↗';}
+   if(!highResUrl&&!state.background)status('The map image sources could not be loaded. Use the original source link or your private image import; pins remain safe.');
+   return;
+  }
+  const current=choices[index++],image=new Image();
+  image.referrerPolicy='no-referrer';
+  image.onload=()=>{
+   if(!image.naturalWidth||!image.naturalHeight){next();return}
+   originalMapReady=true;originalMapSize={width:image.naturalWidth,height:image.naturalHeight};
+   activeMapUrl=current.url;
+   showSource(current);
+   if(!highResUrl&&!state.background){
+    renderBackground();
+    status(w.name+' game-map image ready · '+image.naturalWidth+' × '+image.naturalHeight+' px. Personal notes are not calibrated coordinates.');
+   }
+  };
+  image.onerror=next;
+  image.src=current.url;
+ }
+ next();
 }
+
 function activateLocalMap(blob,width,height){
  if(highResUrl)URL.revokeObjectURL(highResUrl);
  highResUrl=URL.createObjectURL(blob);highResSize={width,height};scale=1;dx=0;dy=0;applyTransform();renderBackground();
@@ -132,6 +183,6 @@ function bindMap(){const viewport=$('#classicViewport');viewport.addEventListene
  $('#classicImport').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2500000){status('Import too large; maximum 2.5 MB.');return}const rd=new FileReader();rd.onload=()=>{try{const obj=JSON.parse(rd.result);if(obj.schema!=='team-jura-atlas98-classic-v1'||obj.world!==id||!Array.isArray(obj.markers)||obj.markers.length>1000)throw Error('Invalid world schema');const clean=[];for(const m of obj.markers){if(typeof m.name!=='string'||!Number.isFinite(m.x)||!Number.isFinite(m.y)||m.x<0||m.x>100||m.y<0||m.y>100)throw Error('Invalid marker');clean.push({id:String(m.id).slice(0,80),name:m.name.slice(0,100),category:w.sets.includes(m.category)?m.category:w.sets[0],note:String(m.note||'').slice(0,300),x:m.x,y:m.y,source:'personal-image-percent'})}state={schema:'team-jura-atlas98-classic-v1',world:id,markers:clean,completed:Array.isArray(obj.completed)?obj.completed.filter(x=>w.sets.includes(x)):[],background:(typeof obj.background==='string'&&(/^data:image\/(png|jpeg|webp);base64,/.test(obj.background))&&obj.background.length<1700000)?obj.background:null};persist();closeEditor();draw();status('World-specific personal data restored.')}catch(err){status('Import refused: invalid file or different GTA world.')}};rd.onerror=()=>status('Could not read JSON.');rd.readAsText(f)});
  $('#classicClear').addEventListener('click',()=>{if(!window.confirm('Delete your personal markers for '+w.name+'? Export first if needed.'))return;state.markers=[];persist();closeEditor();draw();status('Personal markers cleared. Collection checkboxes and map illustration preserved.')});
 }
-function init(){flatReference();document.title=w.name+' | Team Jura Atlas';$('#classicTitle').textContent=w.name;$('#classicDescription').textContent=w.desc;$('#breadWorld').textContent=w.name;$('#classicWorldArt').src='./art/'+w.art;$('#classicWorldArt').alt='Original Elario illustration inspired by '+w.name+' (not a game screenshot)';$('#mapWorkspaceTitle').textContent=w.name+' · personal map';bindMap();draw();status('Loading original '+w.name+' game map…');loadOriginalWorldMap();restoreStoredMap();window.addEventListener('resize',fitClassicImage);}
+function init(){flatReference();$('#classicRetryMap')?.addEventListener('click',()=>{status('Trying the original game-map sources again…');loadOriginalWorldMap()});document.title=w.name+' | Team Jura Atlas';$('#classicTitle').textContent=w.name;$('#classicDescription').textContent=w.desc;$('#breadWorld').textContent=w.name;$('#classicWorldArt').src='./art/'+w.art;$('#classicWorldArt').alt='Original Elario illustration inspired by '+w.name+' (not a game screenshot)';$('#mapWorkspaceTitle').textContent=w.name+' · personal map';bindMap();draw();status('Loading original '+w.name+' game map…');loadOriginalWorldMap();restoreStoredMap();window.addEventListener('resize',fitClassicImage);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
