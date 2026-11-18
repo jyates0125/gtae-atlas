@@ -95,7 +95,7 @@ function render(){
  cards.replaceChildren();
  const cheatTitles={story:'GTA V Story Mode cheats',sa:'San Andreas cross-platform cheats',iii:'GTA III classic cheat codes',vc:'GTA Vice City cheats',iv:'GTA IV cellphone cheats',tlad:'The Lost and Damned cheats',tbogt:'The Ballad of Gay Tony cheats',online:'GTA Online: no Story cheats',vi:'GTA VI: no verified cheat codes'}; $('resultsTitle').textContent=news?(selected==='vi'?'GTA VI official posts':selected==='online'?'GTA Online official posts':'Official Rockstar updates'):(cheatTitles[selected]||'Single-player cheats');
  help(selected,platform);
- status(filtered.length+' '+(news?'sourced articles':'available cheat entries')+' · source review '+db.checkedAt);
+ status(filtered.length+' '+(news?'sourced articles':'available cheat entries')+' · snapshot '+db.checkedAt);
  if(!filtered.length){
   const empty=node('div','h-empty');
   empty.append(node('h3','',!news&&selected==='vi'?'No verified GTA VI cheat codes':!news&&selected==='online'?'GTA Online has no built-in Story cheats':'No entries for this selection'),node('p','',!news&&selected==='vi'?'This page does not invent or publish unverified cheats.':!news&&selected==='online'?'Use legitimate GTA Online activities and game updates.':'Try a supported console, choose another game, or clear the search.'));
