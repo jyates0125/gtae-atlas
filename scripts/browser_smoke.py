@@ -461,6 +461,16 @@ async def smoke():
                                         failures.append('Individual sourced completion tracking missing')
                                 except Exception as exc:
                                     failures.append('San Andreas local base artwork could not load: '+str(exc)[:240])
+                            if not failures and path in ('heists.html','atlas-iv.html','atlas-research.html','atlas98-data-lab.html'):
+                                expected={'heists.html':'j119-heists','atlas-iv.html':'j119-iv','atlas-research.html':'j119-research','atlas98-data-lab.html':'j119-lab'}[path]
+                                if await pg.locator('body.'+expected).count()!=1:
+                                    failures.append('Current Elario workspace skin missing: '+expected)
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count()!=1:
+                                    failures.append('Original Elario crest missing from workspace header')
+                                if path=='heists.html' and await pg.locator('.cards article.card').count()<10:
+                                    failures.append('Heist HQ has fewer than 10 dedicated job links')
+                                if path=='atlas-research.html' and await pg.locator('#showResearchPins').count()!=1:
+                                    failures.append('Research unverified marker toggle missing')
                             if not failures and path=='atlas-iv.html':
                                 if await pg.locator('#classicCanvas').count()==0:failures.append('GTA IV canvas missing')
                                 if await pg.locator('#classicLayer option').count()<2:failures.append('GTA IV layers missing')
