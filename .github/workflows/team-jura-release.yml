@@ -30,6 +30,8 @@ jobs:
           python scripts/test_atlas_static.py
           python scripts/test_atlas125_media_cheats.py
           python scripts/test_social_preview_129.py
+          python scripts/test_launch_130.py
+          node --check atlas130-share.js
           python scripts/test_catalog_design_127.py
           python scripts/test_hubs_103.py
           python scripts/test_game_art_121.py
