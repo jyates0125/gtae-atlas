@@ -96,6 +96,13 @@ def write_snapshot(snapshot, rejected):
     added = sorted(set(current) - set(prior))
     removed = sorted(set(prior) - set(current))
     changed = sorted(k for k in set(prior) & set(current) if prior[k] != current[k])
+    # Restore the protected-main safety rule without replacing the current
+    # schema-2 snapshot. A sudden upstream wipe must not delete research data.
+    if prior and len(removed) > max(25, int(len(prior) * 0.15)):
+        raise ValueError(
+            f'Suspicious upstream removal: {len(removed)}/{len(prior)} '
+            'records. Review original source before updating the Atlas snapshot.'
+        )
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     manifest = {
         'schema':2, 'game':'6', 'status':'community-provisional / unverified',
