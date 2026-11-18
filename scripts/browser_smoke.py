@@ -148,9 +148,19 @@ async def smoke():
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Fewer than four flagship world cards')
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
                             if not failures and path=='maps.html':
-                                if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()<13:failures.append('Fewer than 13 world links')
-                                failed_art=await pg.locator('#directoryFeatured img,#directoryAdditional img').evaluate_all("(imgs)=>imgs.filter(x=>x.complete && x.naturalWidth===0).map(x=>x.currentSrc)")
-                                if failed_art:failures.append('Map card artwork missing: '+', '.join(failed_art[:5]))
+                                if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()!=13:failures.append('Directory should show exactly 13 worlds')
+                                covers=pg.locator('#directoryFeatured img,#directoryAdditional img')
+                                if await covers.count()!=13:failures.append('Map directory must render 13 distinct covers')
+                                else:
+                                    await covers.evaluate_all("(imgs)=>imgs.forEach(x=>x.loading='eager')")
+                                    try:
+                                        await pg.wait_for_function("()=>[...document.querySelectorAll('#directoryFeatured img,#directoryAdditional img')].every(x=>x.complete&&x.naturalWidth>0)",timeout=14000)
+                                    except Exception:
+                                        failures.append('One or more Atlas cover assets did not decode on this device')
+                                    urls=await covers.evaluate_all("(imgs)=>imgs.map(x=>x.getAttribute('src'))")
+                                    if len(set(urls))!=13:failures.append('Duplicate world cover used')
+                                    if len([x for x in urls if 'atlas106-' in x])!=7:
+                                        failures.append('Seven original classic-world artwork files not displayed')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
                                 try:

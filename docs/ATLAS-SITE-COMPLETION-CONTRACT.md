@@ -72,15 +72,15 @@ Updated: November 17, 2026 · Scope: the user's approved designed-brand experien
 | 4 | Cayo | `atlas93-cayo.svg` | Official Cayo promo or original schematic |
 | 5 | IV | `atlas93-liberty.svg` | Official GTA IV art or original gritty skyline |
 | 6 | San Andreas | `atlas93-sa.svg` | Original early-1990s style / official art if permitted |
-| 7 | Vice City | `sunset.svg` | Original retro-neon waterfront |
-| 8 | GTA III | `oldcity.svg` | Original early-2000s Liberty |
-| 9 | Vice City Stories | `vice.svg` | Original 1984 Vice City |
-| 10 | Liberty City Stories | `liberty.svg` | Original 1998 Liberty |
-| 11 | Chinatown Wars | `chin.svg` | Original illustrated handheld-era |
-| 12 | The Lost and Damned | `biker.svg` | Original biker-episode |
-| 13 | The Ballad of Gay Tony | `nightlife.svg` | Original Liberty nightlife |
+| 7 | Vice City | `atlas106-vice-city.svg` | Original retro-neon waterfront |
+| 8 | GTA III | `atlas106-gta3.svg` | Original early-2000s Liberty |
+| 9 | Vice City Stories | `atlas106-vcs.svg` | Original 1984 Vice City |
+| 10 | Liberty City Stories | `atlas106-lcs.svg` | Original 1998 Liberty |
+| 11 | Chinatown Wars | `atlas106-chinatown-wars.svg` | Original illustrated handheld-era |
+| 12 | The Lost and Damned | `atlas106-lost-damned.svg` | Original biker-episode |
+| 13 | The Ballad of Gay Tony | `atlas106-gay-tony.svg` | Original Liberty nightlife |
 
-The existing 13 local images are already referenced by `atlas98-worlds.js`. Replace only after an actual media suitability and permission review; do not blank a working card while awaiting a new asset.
+All 13 map cards use local original Team Jura cover illustrations. The seven classic-world cards now use separately named, game-specific original SVGs from Atlas 10.6; previous originals remain in `art/` for rollback. These covers are illustrative scenery, **not flat-map basemaps, screenshot evidence, or gameplay locations**. The approved six featured covers were not overwritten; conduct a design-pack and visual review before final artwork approval.
 
 ## External references / policy checks
 - Official Rockstar GTA VI public gallery: https://www.rockstargames.com/VI
@@ -103,3 +103,10 @@ The existing 13 local images are already referenced by `atlas98-worlds.js`. Repl
 - Individual progress stays under `team-jura-sa-v1`, unchanged; user imports deliberately replace the **displayed** bundled pins only in the session, without altering saved completion states. A user-supplied image never silently inherits projected pins even when its dimensions match.
 - Required sources: https://github.com/Flentric/SA.MapCollectibles and https://github.com/Toliak/San-Andreas-vector-map. Original MIT license preserved verbatim in `docs/ATLAS-SA-COORDINATES-MIT-LICENSE.txt`.
 - Test: `python scripts/test_sa_pins_105.py` and full `scripts/browser_smoke.py` under desktop/mobile Chromium and Edge.
+
+## Atlas 10.6 creative cover review
+- Seven distinctly themed original classic-world illustrations: 1986 Vice City Ocean Drive; GTA III industrial Liberty; 1984 Vice City Stories; 1998 Liberty City Stories; Chinatown Wars city-grid concept; Lost & Damned motorcycle scene; Ballad of Gay Tony nightclub.
+- Each new 1600 × 900 SVG contains an original Elario E shield, no third-party image dependencies, and an explicit non-screenshot description. The originals are editable SVG source under `art/atlas106-*.svg`.
+- The working six prior world covers (four featured + GTA IV + San Andreas) remain unchanged.
+- Preserve all 13 map routes, labels and truthful coverage grades; changing only covers must never turn a schematic into a claimed calibrated map.
+- Source verifier: `python scripts/test_cover_art_106.py`; UI QA: all 13 cards displayed and decoded in desktop/mobile Edge and Chromium.
