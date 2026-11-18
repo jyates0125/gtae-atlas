@@ -49,7 +49,7 @@ for page, expected_kind in PAGES.items():
     assert 'u-category-paths' in html and 'u-world-buttons' in html
     assert './atlas93-garage.html' in html
 
-    assert "./atlas100-universe.js?v=104" in p.refs, (page, "shared JS")
+    assert "./atlas100-universe.js?v=126" in p.refs, (page, "shared JS")
     assert "./atlas100-universe.css?v=104" in p.refs, (page, "shared CSS")
     for ref in p.refs:
         if not ref.startswith("./"):
