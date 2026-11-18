@@ -133,6 +133,17 @@ async def smoke():
                                             failures.append('Individual record detail dialog failed to open')
                                         else:
                                             await pg.locator('#recordDialog .u-close').click()
+                                    if path=='atlas-characters.html':
+                                        portrait=pg.locator('#recordGrid .u-card').first
+                                        if await portrait.locator('a.u-portrait-source').count()!=1:
+                                            failures.append('Character image source credit not visible on its card')
+                                        art=portrait.locator('.u-image-character')
+                                        if await art.locator('img').count():
+                                            await art.locator('img').first.evaluate("(el)=>el.dispatchEvent(new Event('error'))")
+                                        if await art.locator('.u-character-portrait').count()!=1:
+                                            failures.append('Character broken-image fallback must be original portrait, not initials')
+                                        if 'NOT GAME ART' not in (await art.locator('.u-image-note').inner_text()):
+                                            failures.append('Original character fallback does not disclose illustrative artwork')
                                     if path=='atlas-database.html':
                                         await pg.locator('#filterKind').select_option('vehicle')
                                         if await pg.locator('#recordGrid .u-card').count()<2:
@@ -329,6 +340,10 @@ async def smoke():
                                     await pg.wait_for_function("['game-original','original-art'].includes(document.getElementById('classicViewport')?.dataset.mapImage)",timeout=10000)
                                     if await pg.locator('#pinCount').inner_text()!='1':
                                         failures.append('Removing an imported image deleted personal markers')
+                                    if await pg.locator('#classicMapSourceLink').count()!=1 or not await pg.locator('#classicMapSourceLink').get_attribute('href'):
+                                        failures.append('Classic game-map image provenance link missing')
+                                    await pg.locator('#classicRetryMap').click()
+                                    await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='game-original'",timeout=10000)
                                     await pg.locator('#classicClear').click()
                                 except Exception as exc:
                                     failures.append('Local classic high-resolution image regression: '+str(exc)[:300])
