@@ -82,3 +82,11 @@ body[data-page="classic"] .classic-controls button:hover{
 #classicViewport[data-map-image="game-original"] .classic-map-bg{background-color:#192535;background-size:100% 100%;background-position:center;background-repeat:no-repeat;filter:none}
 #classicViewport[data-map-image="game-original"] .classic-map-surface{outline:1px solid #e7b67e;box-shadow:0 10px 35px #03051590}
 #classicViewport[data-map-image="game-original"] .classic-marker-layer{isolation:isolate}
+
+/* Atlas 12.9: secondary provenance/retry actions beside existing map viewer. */
+.j106-flat-reference #classicMapAttribution{grid-column:1/-1;color:#f4d3a9;font-size:11px}
+.j106-flat-reference #classicMapSourceLink{grid-column:auto;background:transparent;border:1px solid #715a78;color:#eee0ef;font-weight:650;min-height:36px;min-width:0;max-width:none;padding:8px 12px;font-size:11px}
+.j106-flat-reference #classicMapSourceLink:hover{background:#482e55;color:#fff}
+.j106-flat-reference #classicRetryMap{grid-column:auto;min-height:36px;min-width:0;padding:7px 12px;border-radius:9px;border:1px solid #d0a66e;background:#21182e;color:#ffe2b4;font-size:11px;font-weight:750;cursor:pointer}
+.j106-flat-reference #classicRetryMap:hover{background:#4b2944}
+@media(max-width:690px){.j106-flat-reference #classicMapSourceLink,.j106-flat-reference #classicRetryMap{grid-column:1/-1;max-width:none}}
