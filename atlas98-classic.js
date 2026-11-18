@@ -6,8 +6,8 @@ const worlds={
  iii:{name:'GTA III · Liberty City',desc:'The original 3D-era Liberty City. Track personal map notes and collections.',art:'atlas106-gta3.svg',map:'./art/atlas128-gta3-radar.png',sets:['Hidden packages','Unique stunt jumps','Rampages','Missions','Safehouses']},
  vc:{name:'GTA Vice City',desc:'Ocean Beach, Downtown, Little Havana and the classic neon coastline.',art:'atlas106-vice-city.svg',map:'./art/atlas128-vice-city-radar.png',sets:['Hidden packages','Rampages','Stunt jumps','Properties','Missions']},
  vcs:{name:'Vice City Stories',desc:'Explore the earlier Vice City era with your personal research notes.',art:'atlas106-vcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/ViceCity-GTAVCS-map.png',sets:['Red balloons','Empire sites','Stunt jumps','Missions','Safehouses']},
- lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-MapFull-ExceptUpstate.png',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
- ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'atlas106-chinatown-wars.svg',map:'https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg',sets:['Security cameras','Collectibles','Missions','Safehouses','Drug dealer locations']},
+ lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-map.jpg',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
+ ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'atlas106-chinatown-wars.svg',map:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTACW-map.png',sets:['Security cameras','Collectibles','Missions','Safehouses','Drug dealer locations']},
  tlad:{name:'The Lost and Damned',desc:'Liberty City motorcycle-club episode; notes stay separate from GTA IV.',art:'atlas106-lost-damned.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Gang wars','Motorcycle missions','Races','Activities']},
  tbogt:{name:'The Ballad of Gay Tony',desc:'Liberty City nightlife episode; nightclub missions and activities.',art:'atlas106-gay-tony.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Drug wars','Base jumps','Nightclub missions','Activities']}
 };
@@ -23,7 +23,7 @@ const mapAlternates={
   {url:'https://wikiassets.net/gta-vi-1c4e11/images/5019685d9fa05493b4cea714ca968bf1.webp',name:'Liberty City Stories · wiki image reference',page:'https://gta.fandom.com/wiki/File:LibertyCity-GTALCS-MapFull-ExceptUpstate.png'}
  ],
  ctw:[
-  {url:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTACW-map.png',name:'Chinatown Wars · GTASeries map adapted from Rockstar GTA IV',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTACW-map.png'},
+  {url:'https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg',name:'Chinatown Wars · independent fan archive',page:'https://www.igrandtheftauto.com/gtacw/setting'}, 
   {url:'https://wikiassets.net/gta-wiki-aef1ab/images/03205438369fb05f953c0fbfa4b1fd8d.webp',name:'Chinatown Wars · wiki image reference',page:'https://www.igrandtheftauto.com/gtacw/setting'}
  ]
 };
@@ -31,8 +31,8 @@ const mapOrigins={
  iii:{name:'GTA III radar · XiaoNiaoa/noiseXYZ (game art: Rockstar)',page:'https://github.com/XiaoNiaoa/vc_lc'},
  vc:{name:'Vice City radar · XiaoNiaoa/noiseXYZ (game art: Rockstar)',page:'https://github.com/XiaoNiaoa/vc_lc'},
  vcs:{name:'Vice City Stories · original game-map reference (Rockstar)',page:'https://www.grandtheftwiki.com/File:ViceCity-GTAVCS-map.png'},
- lcs:{name:'Liberty City Stories · original game-map reference (Rockstar)',page:'https://gta.fandom.com/wiki/File:LibertyCity-GTALCS-MapFull-ExceptUpstate.png'},
- ctw:{name:'Chinatown Wars · PDA map (game art: Rockstar)',page:'https://www.igrandtheftauto.com/gtacw/setting'},
+ lcs:{name:'Liberty City Stories · game map (© Rockstar; Grand Theft Wiki archive)',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTALCS-map.jpg'}, 
+ ctw:{name:'Chinatown Wars · GTASeries.com neighborhood map, adapted from Rockstar GTA IV art (Grand Theft Wiki mirror)',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTACW-map.png'}, 
  tlad:{name:'GTA IV map · GTADB.ORG contributors, CC BY 4.0 (game world: Rockstar)',page:'https://github.com/rolux/gtadb.org/blob/main/LICENSE-DATA'},
  tbogt:{name:'GTA IV map · GTADB.ORG contributors, CC BY 4.0 (game world: Rockstar)',page:'https://github.com/rolux/gtadb.org/blob/main/LICENSE-DATA'}
 };
