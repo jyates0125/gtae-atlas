@@ -20,7 +20,7 @@ function init(){
   bg.classList.add('j86-map-loaded');
   const source=SOURCES[index];
   if(source.mapped){
-   window.TeamJuraSAArtwork?.attach(image.naturalWidth,image.naturalHeight,source.label);
+   const accepted=window.TeamJuraSAArtwork?.attach(image.naturalWidth,image.naturalHeight,source.label);if(accepted&&index===0)window.dispatchEvent(new Event('jura-sa-vector-ready'));
   }
   if(status)status.textContent=source.label+' · artwork loaded · collectible pins require a coordinate-matched, attributed source pack';
  });
