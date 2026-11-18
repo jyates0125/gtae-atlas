@@ -2,9 +2,9 @@
 
 **Current authority:** [Standing Project Charter](docs/TEAM-JURA-STANDING-CHARTER.md) · [Designed Brand Master](docs/ATLAS92-MASTER-SPEC.md) · [Site Completion Contract](docs/ATLAS-SITE-COMPLETION-CONTRACT.md) · [Credits & Notices](atlas-credits.html). The earlier release notes below are retained for historical context and **must not** override these current project rules.
 
-**Status:** Atlas 10.9 credits, source registry, original covers, garage, heists, map layers and local classic map imports exist on `development`; full feature parity remains a goal, not a claim. `main` is a protected release branch. The owner explicitly authorized one reviewed integration of the current site to `main` on Nov 18, 2026; **all subsequent main/live updates require fresh confirmation**. Do not force-push or silently run an old incompatible GTA VI data updater.
+**Branch and visual truth:** `development` is the active **Cloudflare Pages website** and is where source-checked, browser-tested improvements are intentionally merged. `main` is the protected reference/release branch; the one-time owner-approved main update happened November 18, 2026, and **all subsequent merges to `main` require fresh confirmation**. Keep the pre-release main backup. All visitor-facing pages should be brought into the **same current original Elario Designed Brand**, not labeled as an obsolete public legacy website. Existing map data, local player progress and source/MIT/CC BY/Apache notices must remain intact. Full feature parity remains a goal, never a claim.
 
-**Next work:** Complete source-cleared, game-specific in-app 2D maps and accurate location categories, then refine remaining page-specific art/assets and full visual QA against approved references. Preserve browser-local progress and GTADB/other license notices.
+**Next work:** Complete current-brand unification and visual QA; add source-cleared, game-specific in-app 2D flat maps and trustworthy game-mode coordinates; refine unique page-specific art and compare actual rendered pages against approved references. Preserve browser-local progress and GTADB/other license notices.
 
 ---
 
