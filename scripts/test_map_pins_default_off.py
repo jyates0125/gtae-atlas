@@ -21,6 +21,8 @@ extra = [
     ("hide all disables map pins", "showPins=false;active[filterScope()]=new Set();page=0;render()"),
     ("named only-layer enables pins", "showPins=true;active[filterScope()]=null;hiddenNamed[namedScope()]"),
     ("pinch zoom anchored", "anchor:fromScreen(mid.x,mid.y)"),
+    ("cached viewport markers refreshed by filters", "function render(){cachedVisibleMarkers=matches();"),
+    ("canvas marker draw reads cached results", "const visible=showPins?cachedVisibleMarkers:[]"),
     ("pinch does not trigger tap", "if(wasSingle&&!p.multi&&(p.travel||0)<7)tapMap(spot)"),
     ("source snapshot preferred even if smaller", "if(v.length>=datasets[g].length||refresh)" ),
 ]
