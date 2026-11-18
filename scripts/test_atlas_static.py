@@ -74,5 +74,8 @@ runpy.run_path(str(D / 'scripts/test_credits_109.py'),run_name='__main__')
 # Original designed-brand alignment across primary and earlier-built public workspaces.
 runpy.run_path(str(D / 'scripts/test_visual_unification_112.py'), run_name='__main__')
 
+# Source verification, pack formats and completion tools retain their current Elario UI.
+runpy.run_path(str(D / 'scripts/test_research_design_115.py'),run_name='__main__')
+
 # Game-specific authentic classic flat-map references; maintain local marker storage.
 runpy.run_path(str(D / 'scripts/test_classic_flat_106.py'),run_name='__main__')
