@@ -77,5 +77,8 @@ runpy.run_path(str(D / 'scripts/test_visual_unification_112.py'), run_name='__ma
 # Continue current Elario designed-brand parity to personally saved catalogs and reference tools.
 runpy.run_path(str(D / 'scripts/test_workspace_design_113.py'), run_name='__main__')
 
+# Verification, calibration, source-pack and quality assurance pages follow the same Elario design.
+runpy.run_path(str(D / 'scripts/test_research_design_115.py'),run_name='__main__')
+
 # Game-specific authentic classic flat-map references; maintain local marker storage.
 runpy.run_path(str(D / 'scripts/test_classic_flat_106.py'),run_name='__main__')
