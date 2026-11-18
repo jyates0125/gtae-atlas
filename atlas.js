@@ -100,7 +100,7 @@ function savedCategoryMode(){
  const serial=JSON.stringify(next);
  if(serial!==savedCategoryMode.previous){savedCategoryMode.previous=serial;store(PIN_PREF_KEY,next)}
 }
-let listOrder='name';let mode='story',game='5',showUnverified=true,datasets={'5':[],'6':[]},dataOrigins={'5':'Loading…','6':'Loading…'},active={'5-story':restoredCategories('5-story'),'5-online':restoredCategories('5-online'),'6':restoredCategories('6')},styles={'5':'radar','6':'scaly,view'},page=0,tab='Find',onlyUnfound=false,onlyFavorites=false,showPins=true,selected=null,addPinMode=false;
+let listOrder='name';let mode='story',game='5',showUnverified=true,datasets={'5':[],'6':[]},dataOrigins={'5':'Loading…','6':'Loading…'},active={'5-story':restoredCategories('5-story'),'5-online':restoredCategories('5-online'),'6':restoredCategories('6')},styles={'5':'radar','6':'scaly,view'},page=0,tab='Find',onlyUnfound=false,onlyFavorites=false,showPins=false,selected=null,addPinMode=false;
 // Atlas 5.5 source feeds: only source-published JSON; source scopes keep Story/Online separate.
 let sourceRecords={},sourceStates={},sourceEnabled=loadStore('jura55-source-visible',{story:true,vi:true,atms:false,pumps:false,buses:false,towers:false});
 if(!sourceEnabled||typeof sourceEnabled!=='object'||Array.isArray(sourceEnabled))sourceEnabled={story:true,vi:true};
@@ -291,10 +291,10 @@ function renderNamedLayers(){const root=$('namedLayers');if(!root)return;root.re
  const q=($('namedLayerSearch')?.value||'').trim().toLowerCase();let rendered=0;
  for(const {id,title,count}of layers){if(q&&!title.toLowerCase().includes(q))continue;rendered++;
   const b=btn(`${title} · ${count.toLocaleString()}`,()=>{updateNamedLayerVisibility([id],hidden.has(id));},'named-layer-choice');
-  b.setAttribute('aria-pressed',String(!hidden.has(id)));b.setAttribute('aria-label',(hidden.has(id)?'Show ':'Hide ')+title+' pins');root.append(b);
+  b.setAttribute('aria-pressed',String(showPins&&enabled().size>0&&!hidden.has(id)));b.setAttribute('aria-label',((!showPins||hidden.has(id))?'Show ':'Hide ')+title+' pins');root.append(b);
  }
  if(!rendered){const note=document.createElement('small');note.textContent=layers.length?'No matching layer names. Clear layer search.':'No named layers have mapped coordinates in this game yet.';root.append(note)}
- const count=$('namedLayerCount');if(count)count.textContent=`${layers.length} mapped layers · ${layers.filter(l=>!hidden.has(l.id)).length} enabled`;
+ const count=$('namedLayerCount');if(count)count.textContent=`${layers.length} mapped layers · ${showPins?layers.filter(l=>!hidden.has(l.id)).length:0} enabled`;
 }
 const LEGEND_GROUPS=[
  ['Explore world',['landmark','nature','transport','government','industry','utility','other']],
@@ -320,7 +320,7 @@ function renderLegend(){
  for(const [name,keys] of LEGEND_GROUPS){if(!keys.some(k=>counts[k]))continue;
   const group=document.createElement('details');group.className='legend-group';group.open=true;
   const summary=document.createElement('summary');summary.textContent=name;group.append(summary);
-  for(const cat of keys){if(!counts[cat])continue;const [title,color]=CATEGORIES[cat],on=chosen.has(cat);
+  for(const cat of keys){if(!counts[cat])continue;const [title,color]=CATEGORIES[cat],on=showPins&&chosen.has(cat);
    const row=document.createElement('div');row.className='legend-row';
    const toggle=btn(`${title} · ${counts[cat].toLocaleString()}`,()=>{
     if(!active[filterScope()])active[filterScope()]=new Set(Object.keys(CATEGORIES));
@@ -444,7 +444,7 @@ function importPackObject(pack){
 function readPacks(){const packs=loadStore('jura-atlas-v5-packs',{});packRecords=Object.values(packs).flatMap(v=>Array.isArray(v.records)?v.records:[]);if($('packCount'))$('packCount').textContent=packRecords.length.toLocaleString()+' imported locations';render()}
 async function readPack(file){if(!file)return;try{if(file.size>2500000)throw Error('Maximum pack size is 2.5 MB');const payload=JSON.parse(await file.text());const n=importPackObject(payload);toast(`${n} source-attributed records imported. Check the locations on their correct game maps.`)}catch(e){toast('Could not import locations: '+e.message)}finally{$('packFile').value=''}}
 function render(){savedCategoryMode();const pinButton=$('togglePins');if(pinButton){const visible=showPins&&enabled().size>0;pinButton.textContent=visible?'📍 Pins on':'📍 Pins off';pinButton.setAttribute('aria-pressed',String(visible));}renderLegend();renderViRegions();renderServices();renderFind();renderRoute();renderPins();renderSpecial('Collections');renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
-function switchGame(g){if(!['5','6','online'].includes(g))return;eventFocusIds=null;chooseRouteStartMode=false;mode=g==='online'?'online':'story';game=g==='6'?'6':'5';const activeLink=$('activityModeLink');if(activeLink){const which=g==='6'?'vi':g==='online'?'online':'story';activeLink.href='./atlas-activities.html?mode='+which;activeLink.textContent=which==='vi'?'◷ Leonida · Research & verification':which==='online'?'◷ Online events · timers & spawns':'◷ Story Mode challenges · no Online events';}selected=null;coordinateTarget=null;addPinMode=false;$('game5').classList.toggle('active',g==='5');$('game6').classList.toggle('active',g==='6');$('gameOnline').classList.toggle('active',g==='online');$('game5').setAttribute('aria-pressed',String(g==='5'));$('game6').setAttribute('aria-pressed',String(g==='6'));$('gameOnline').setAttribute('aria-pressed',String(g==='online'));$('mapTitle').textContent=g==='6'?'GTA VI · Leonida':g==='online'?'GTA Online · Los Santos':'GTA V · Los Santos';$('mapSubtitle').textContent=g==='6'?'GTADB VI · provisional landmarks, NOT confirmed game locations':g==='online'?'Shared GTA V terrain · separate Online markers and progress':'GTADB GTA V · Story map landmarks';
+function switchGame(g){if(!['5','6','online'].includes(g))return;showPins=false;eventFocusIds=null;chooseRouteStartMode=false;mode=g==='online'?'online':'story';game=g==='6'?'6':'5';const activeLink=$('activityModeLink');if(activeLink){const which=g==='6'?'vi':g==='online'?'online':'story';activeLink.href='./atlas-activities.html?mode='+which;activeLink.textContent=which==='vi'?'◷ Leonida · Research & verification':which==='online'?'◷ Online events · timers & spawns':'◷ Story Mode challenges · no Online events';}selected=null;coordinateTarget=null;addPinMode=false;$('game5').classList.toggle('active',g==='5');$('game6').classList.toggle('active',g==='6');$('gameOnline').classList.toggle('active',g==='online');$('game5').setAttribute('aria-pressed',String(g==='5'));$('game6').setAttribute('aria-pressed',String(g==='6'));$('gameOnline').setAttribute('aria-pressed',String(g==='online'));$('mapTitle').textContent=g==='6'?'GTA VI · Leonida':g==='online'?'GTA Online · Los Santos':'GTA V · Los Santos';$('mapSubtitle').textContent=g==='6'?'GTADB VI · provisional landmarks, NOT confirmed game locations':g==='online'?'Shared GTA V terrain · separate Online markers and progress':'GTADB GTA V · Story map landmarks';
  $('layer').replaceChildren();for(const [key,label] of LAYERS[game])$('layer').add(new Option(label,key));if(!$('layer').querySelector('option[value="'+styles[game]+'"]'))styles[game]=game==='6'?'scaly,view':'radar';$('layer').value=styles[game];$('search').value='';if($('namedLayerSearch'))$('namedLayerSearch').value='';onlyUnfound=false;onlyFavorites=false;showUnverified=true;$('showUnverified').checked=true;if($('showCommunityResearch'))$('showCommunityResearch').checked=researchOn();$('hideFound').checked=false;$('favoritesOnly').checked=false;page=0;fitGame();render();renderSources();dataNotice(datasets[game].length?datasets[game].length.toLocaleString()+' landmarks · '+dataOrigins[game]:'Getting GTA '+game+' locations…');tileHealth();
  navPlan=null;navPlanScope=null;if(window.teamJuraNav)window.teamJuraNav.gameChanged();
  try{const url=new URL(location.href);url.hash='#game'+g;history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}announce(g==='online'?'Online mode: GTA V base landmarks, with Online markers and progress kept separate.':'GTA '+game+' map and GTA '+game+' landmarks selected.');
@@ -741,8 +741,8 @@ window.JuraAtlasEventLocations=Object.freeze({
 
 window.JuraDualLegendAPI=Object.freeze({
  state:()=>({game,style:styles[game],mode}),
- categories:()=>Object.entries(CATEGORIES).map(([id,[label,color]])=>({id,label,color,enabled:enabled().has(id),count:records().filter(r=>r.category===id).length})),
- namedLayers:()=>layersForRows(records()).map(l=>({id:l.id,label:l.title,count:l.count,enabled:!namedHidden().has(l.id)})),
+ categories:()=>Object.entries(CATEGORIES).map(([id,[label,color]])=>({id,label,color,enabled:showPins&&enabled().has(id),count:records().filter(r=>r.category===id).length})),
+ namedLayers:()=>layersForRows(records()).map(l=>({id:l.id,label:l.title,count:l.count,enabled:showPins&&enabled().size>0&&!namedHidden().has(l.id)})),
  toggleLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(l)updateNamedLayerVisibility([id],namedHidden().has(id))},
  onlyLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(!l)return;active[filterScope()]=null;hiddenNamed[namedScope()]=layersForRows(records()).filter(v=>v.id!==id).map(v=>v.id);store('jura62-named-layers',hiddenNamed);page=0;render()},
  trailerRecords:()=>game==='6'?records().filter(r=>/\btrailer\b|\bfootage\b|\bscene\b/i.test([r.name,r.district||'',r.collectionType||'',r.source||'',r.evidence||'',...(r.tags||[])].join(' '))).slice(0,750):[],
