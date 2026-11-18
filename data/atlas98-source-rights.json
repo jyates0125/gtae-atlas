@@ -44,6 +44,20 @@
       "sourceLicense": "Game imagery, world, trademarks are rights-holder property",
       "reuse": "Unofficial fan-site labeling; source-checked game references; no claim of ownership or sponsorship",
       "implemented": "Fan-site notices and official launch link"
+    },
+    {
+      "name": "GTA Wiki Fandom legacy archive",
+      "url": "https://gta.fandom.com/wiki/GTA_Wiki:Copyright",
+      "sourceLicense": "Contributor text identified as CC BY-SA 3.0; file-level screenshot and Rockstar map artwork restrictions remain separate",
+      "reuse": "Cite original wiki articles, historic map file pages and individual file attribution; do not mirror screenshots or proprietary images solely from their public presence or Fandom's fair-use belief",
+      "implemented": "Research and classic map-file links on canonical credits page; no new Fandom-hosted media rehosted"
+    },
+    {
+      "name": "GTA Wiki independent site",
+      "url": "https://gta.wiki/",
+      "sourceLicense": "Contributor text identified as CC BY-NC-SA 3.0, with separate game-media rights",
+      "reuse": "Fact-check, link to specific article/source and review license compatibility before quoting/reusing text; link game screenshots unless separately cleared",
+      "implemented": "Research reference, category source links and canonical credits page"
     }
   ],
   "worlds": [
