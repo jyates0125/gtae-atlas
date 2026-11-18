@@ -3,13 +3,13 @@
    Offline data remains user-generated; proprietary basemaps or third-party coordinates are NOT redistributed. */
 (function(){'use strict';
 const worlds={
- iii:{name:'GTA III · Liberty City',desc:'The original 3D-era Liberty City. Track personal map notes and collections.',art:'oldcity.svg',sets:['Hidden packages','Unique stunt jumps','Rampages','Missions','Safehouses']},
- vc:{name:'GTA Vice City',desc:'Ocean Beach, Downtown, Little Havana and the classic neon coastline.',art:'sunset.svg',sets:['Hidden packages','Rampages','Stunt jumps','Properties','Missions']},
- vcs:{name:'Vice City Stories',desc:'Explore the earlier Vice City era with your personal research notes.',art:'vice.svg',sets:['Red balloons','Empire sites','Stunt jumps','Missions','Safehouses']},
- lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'liberty.svg',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
- ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'chin.svg',sets:['Security cameras','Collectibles','Missions','Safehouses','Drug dealer locations']},
- tlad:{name:'The Lost and Damned',desc:'Liberty City motorcycle-club episode; notes stay separate from GTA IV.',art:'biker.svg',sets:['Seagulls','Gang wars','Motorcycle missions','Races','Activities']},
- tbogt:{name:'The Ballad of Gay Tony',desc:'Liberty City nightlife episode; nightclub missions and activities.',art:'nightlife.svg',sets:['Seagulls','Drug wars','Base jumps','Nightclub missions','Activities']}
+ iii:{name:'GTA III · Liberty City',desc:'The original 3D-era Liberty City. Track personal map notes and collections.',art:'atlas106-gta3.svg',sets:['Hidden packages','Unique stunt jumps','Rampages','Missions','Safehouses']},
+ vc:{name:'GTA Vice City',desc:'Ocean Beach, Downtown, Little Havana and the classic neon coastline.',art:'atlas106-vice-city.svg',sets:['Hidden packages','Rampages','Stunt jumps','Properties','Missions']},
+ vcs:{name:'Vice City Stories',desc:'Explore the earlier Vice City era with your personal research notes.',art:'atlas106-vcs.svg',sets:['Red balloons','Empire sites','Stunt jumps','Missions','Safehouses']},
+ lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
+ ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'atlas106-chinatown-wars.svg',sets:['Security cameras','Collectibles','Missions','Safehouses','Drug dealer locations']},
+ tlad:{name:'The Lost and Damned',desc:'Liberty City motorcycle-club episode; notes stay separate from GTA IV.',art:'atlas106-lost-damned.svg',sets:['Seagulls','Gang wars','Motorcycle missions','Races','Activities']},
+ tbogt:{name:'The Ballad of Gay Tony',desc:'Liberty City nightlife episode; nightclub missions and activities.',art:'atlas106-gay-tony.svg',sets:['Seagulls','Drug wars','Base jumps','Nightclub missions','Activities']}
 };
 const publicFlatMaps={
  iii:{url:'https://gtamap.io/gta-3-map/',title:'GTA III · original Liberty City',desc:'Independent viewer of GTA III\'s actual radar map, Hidden Packages and source-attributed collectables.'},
@@ -47,7 +47,7 @@ function renderBackground(){
  const b=$('#classicMapBackground');if(!b)return;const img=highResUrl||state.background;
  b.style.backgroundImage=img?'linear-gradient(#210e2d22,#210e2d25),url('+JSON.stringify(img)+')':'linear-gradient(#1b10233d,#1b1126c9),url(./art/'+w.art+')';
  b.classList.toggle('has-image',!!img);
- b.querySelector('span').hidden=!!img;b.querySelector('small').hidden=!!img;
+ b.querySelector('span').hidden=true;b.querySelector('small').hidden=true;
  const viewport=$('#classicViewport');if(viewport)viewport.dataset.mapImage=highResUrl?'local-highres':state.background?'legacy-local':'original-art';
  fitClassicImage();
 }
@@ -120,6 +120,6 @@ function bindMap(){const viewport=$('#classicViewport');viewport.addEventListene
  $('#classicImport').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2500000){status('Import too large; maximum 2.5 MB.');return}const rd=new FileReader();rd.onload=()=>{try{const obj=JSON.parse(rd.result);if(obj.schema!=='team-jura-atlas98-classic-v1'||obj.world!==id||!Array.isArray(obj.markers)||obj.markers.length>1000)throw Error('Invalid world schema');const clean=[];for(const m of obj.markers){if(typeof m.name!=='string'||!Number.isFinite(m.x)||!Number.isFinite(m.y)||m.x<0||m.x>100||m.y<0||m.y>100)throw Error('Invalid marker');clean.push({id:String(m.id).slice(0,80),name:m.name.slice(0,100),category:w.sets.includes(m.category)?m.category:w.sets[0],note:String(m.note||'').slice(0,300),x:m.x,y:m.y,source:'personal-image-percent'})}state={schema:'team-jura-atlas98-classic-v1',world:id,markers:clean,completed:Array.isArray(obj.completed)?obj.completed.filter(x=>w.sets.includes(x)):[],background:(typeof obj.background==='string'&&(/^data:image\/(png|jpeg|webp);base64,/.test(obj.background))&&obj.background.length<1700000)?obj.background:null};persist();closeEditor();draw();status('World-specific personal data restored.')}catch(err){status('Import refused: invalid file or different GTA world.')}};rd.onerror=()=>status('Could not read JSON.');rd.readAsText(f)});
  $('#classicClear').addEventListener('click',()=>{if(!window.confirm('Delete your personal markers for '+w.name+'? Export first if needed.'))return;state.markers=[];persist();closeEditor();draw();status('Personal markers cleared. Collection checkboxes and map illustration preserved.')});
 }
-function init(){flatReference();document.title=w.name+' | Team Jura Atlas';$('#classicTitle').textContent=w.name;$('#classicDescription').textContent=w.desc;$('#breadWorld').textContent=w.name;$('#classicWorldArt').src='./art/'+w.art;$('#classicWorldArt').alt='Illustrative artwork for '+w.name;$('#mapWorkspaceTitle').textContent=w.name+' · personal map';bindMap();draw();status('Ready. '+state.markers.length+' personal markers in this world.');restoreStoredMap();window.addEventListener('resize',fitClassicImage);}
+function init(){flatReference();document.title=w.name+' | Team Jura Atlas';$('#classicTitle').textContent=w.name;$('#classicDescription').textContent=w.desc;$('#breadWorld').textContent=w.name;$('#classicWorldArt').src='./art/'+w.art;$('#classicWorldArt').alt='Original Elario illustration inspired by '+w.name+' (not a game screenshot)';$('#mapWorkspaceTitle').textContent=w.name+' · personal map';bindMap();draw();status('Ready. '+state.markers.length+' personal markers in this world.');restoreStoredMap();window.addEventListener('resize',fitClassicImage);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
