@@ -38,3 +38,6 @@ function init(){document.body.classList.add('jura93-designed-brand');
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
+
+/* Heist-only cinematic mission planner; kept outside global map engines and save keys. */
+(()=>{const page=location.pathname.split('/').pop()||'';if(page==='heists.html'||/^heist-[a-z0-9-]+\.html$/.test(page)){const script=document.createElement('script');script.src='./atlas104-heist-experience.js?v=104';script.defer=true;document.head.append(script)}})();
