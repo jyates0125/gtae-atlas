@@ -10,8 +10,8 @@ const entries={
  vcs:{name:'Vice City Stories',urls:['https://www.gtabase.com/igallery/maps/gta-vice-city-stories-map-1920.jpg',w+'ViceCity-GTAVCS-MapFull.png']},
  lcs:{name:'Liberty City Stories',urls:[w+'LibertyCity-GTALCS-MapFull-ExceptUpstate.png','https://cdn.mobygames.com/covers/1683327-grand-theft-auto-liberty-city-stories-map.jpg']},
  ctw:{name:'Chinatown Wars',urls:['https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg?etag=4aa78663',w+'LibertyCity-GTACW-FullMap.png']},
- tlad:{name:'The Lost and Damned',urls:['https://www.gtavision.com/images/content/iv_map/gtaiv_map_hq.jpg',w+'LibertyCity-GTAIV-MapwithStreetNames.jpg']},
- tbogt:{name:'The Ballad of Gay Tony',urls:['https://www.gtavision.com/images/content/iv_map/gtaiv_map_hq.jpg',w+'LibertyCity-GTAIV-MapwithStreetNames.jpg']}
+ tlad:{name:'The Lost and Damned',urls:['./art/maps/gta-iv-liberty-reference.jpg','https://www.gtavision.com/images/content/iv_map/gtaiv_map_hq.jpg',w+'LibertyCity-GTAIV-MapwithStreetNames.jpg']},
+ tbogt:{name:'The Ballad of Gay Tony',urls:['./art/maps/gta-iv-liberty-reference.jpg','https://www.gtavision.com/images/content/iv_map/gtaiv_map_hq.jpg',w+'LibertyCity-GTAIV-MapwithStreetNames.jpg']}
 };
 const cache=new Map();
 function load(id){
