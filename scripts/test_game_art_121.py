@@ -36,6 +36,6 @@ assert (ROOT/'atlas121-wildlife.css').is_file()
 assert 'id="atlas-122-wildlife"' in credits
 
 for name,world in [('gta-vice-city-original.png','vc'),('gta-iv-liberty-reference.jpg','iv'),('gta-iv-liberty-reference.jpg','tlad'),('gta-iv-liberty-reference.jpg','tbogt')]:
-    assert re.search(r"\\{id:'"+world+r"',[^\\n]*coverSrc:'\\./art/maps/"+name+r"'",directory),world
+    assert re.search(r"\{id:'"+world+r"',[^\n]*coverSrc:'\./art/maps/"+name+r"'",directory),world
 for id in ('vc','tlad','tbogt'):
-    assert re.search(r"\\b"+id+r":\\{name:[^\\n]*map:'\\./art/maps/[^']+'",classic),id
+    assert re.search(r"\b"+id+r":\{name:[^\n]*map:'\./art/maps/[^']+'",classic),id
