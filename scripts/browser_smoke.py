@@ -77,6 +77,34 @@ async def smoke():
                                         await pg.locator('#hubSearch').fill('')
                                         if await pg.locator('#hubCards .h-card').count()<6:
                                             failures.append('Classic San Andreas cheats missing')
+                                        # Every handheld world should load correct platform-specific codes.
+                                        await pg.locator('#hubGame').select_option('ctw')
+                                        if await pg.locator('#hubPlatform').input_value()!='nds':
+                                            failures.append('Chinatown Wars did not select Nintendo DS by default')
+                                        if await pg.locator('#hubCards .h-card').count()!=16:
+                                            failures.append('Chinatown Wars DS game-specific button codes missing')
+                                        ds_health=await pg.locator('#hubCards .h-card').filter(has_text='Restore health and armor').first.locator('code').inner_text()
+                                        if 'A' not in ds_health or 'B' not in ds_health:
+                                            failures.append('Chinatown Wars DS code uses wrong button alphabet')
+                                        await pg.locator('#hubPlatform').select_option('mobile')
+                                        if await pg.locator('#hubCards .h-card').count()!=15:
+                                            failures.append('Chinatown Wars mobile whiteboard codes missing')
+                                        if await pg.locator('#hubCards .h-card').filter(has_text='Restore health and armor').first.locator('code').inner_text()!='LIFEUP':
+                                            failures.append('Chinatown Wars whiteboard code mismatch')
+                                        await pg.locator('#hubGame').select_option('lcs')
+                                        if await pg.locator('#hubPlatform').input_value()!='psp':
+                                            failures.append('Liberty City Stories did not switch to PSP')
+                                        if await pg.locator('#hubCards .h-card').count()!=11:
+                                            failures.append('Liberty City Stories PSP codes missing')
+                                        await pg.locator('#hubGame').select_option('vcs')
+                                        if await pg.locator('#hubCards .h-card').count()!=11:
+                                            failures.append('Vice City Stories PSP codes missing')
+                                        await pg.locator('#hubPlatform').select_option('ps2')
+                                        if await pg.locator('#hubCards .h-card').count()!=11:
+                                            failures.append('Vice City Stories PS2 codes missing')
+                                        await pg.locator('#hubGame').select_option('story')
+                                        if await pg.locator('#hubPlatform').input_value()!='pc':
+                                            failures.append('Cheat platform did not reset from Stories to PC for GTA V')
                                     else:
                                         if await pg.locator('#hubCards .h-card').count()<3:
                                             failures.append('Official VI news sources not loaded')
