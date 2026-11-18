@@ -94,3 +94,6 @@ runpy.run_path(str(D / 'scripts/test_design_review_118.py'),run_name='__main__')
 
 # GTA IV, source-aware research, heist HQ and Data Lab current Elario identity.
 runpy.run_path(str(D / 'scripts/test_workspace_brand_119.py'),run_name='__main__')
+
+# Fifteen unique Elario mission artworks and original heist source/guide controls.
+runpy.run_path(str(D / 'scripts/test_heist_art_120.py'),run_name='__main__')

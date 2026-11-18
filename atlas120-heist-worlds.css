@@ -1,0 +1,34 @@
+/* Atlas 12.0 · fifteen distinct, original Elario heist illustrations.
+ * Deliberately does NOT claim to be a verified in-game raster map.
+ * Keep player checklist logic, source notices and route links unchanged. */
+body.j120-heist-page[data-heist="fleeca"]{--j120-hero-image:url('./art/atlas93-heist-fleeca.svg')}
+body.j120-heist-page[data-heist="prison-break"]{--j120-hero-image:url('./art/atlas93-heist-prison-break.svg')}
+body.j120-heist-page[data-heist="humane-labs"]{--j120-hero-image:url('./art/atlas93-heist-humane-labs.svg')}
+body.j120-heist-page[data-heist="series-a"]{--j120-hero-image:url('./art/atlas93-heist-series-a.svg')}
+body.j120-heist-page[data-heist="pacific-standard"]{--j120-hero-image:url('./art/atlas93-heist-pacific-standard.svg')}
+body.j120-heist-page[data-heist="doomsday-act-1"]{--j120-hero-image:url('./art/atlas93-heist-doomsday-act-1.svg')}
+body.j120-heist-page[data-heist="doomsday-act-2"]{--j120-hero-image:url('./art/atlas93-heist-doomsday-act-2.svg')}
+body.j120-heist-page[data-heist="doomsday-act-3"]{--j120-hero-image:url('./art/atlas93-heist-doomsday-act-3.svg')}
+body.j120-heist-page[data-heist="diamond-casino"]{--j120-hero-image:url('./art/atlas93-heist-diamond-casino.svg')}
+body.j120-heist-page[data-heist="cayo-perico"]{--j120-hero-image:url('./art/atlas93-heist-cayo-perico.svg')}
+body.j120-heist-page[data-heist="cluckin-bell"]{--j120-hero-image:url('./art/atlas93-heist-cluckin-bell.svg')}
+body.j120-heist-page[data-heist="salvage-yard"]{--j120-hero-image:url('./art/atlas93-heist-salvage-yard.svg')}
+body.j120-heist-page[data-heist="auto-shop"]{--j120-hero-image:url('./art/atlas93-heist-auto-shop.svg')}
+body.j120-heist-page[data-heist="agency-vip"]{--j120-hero-image:url('./art/atlas93-heist-agency-vip.svg')}
+body.j120-heist-page[data-heist="kortz-center"]{--j120-hero-image:url('./art/atlas93-heist-kortz-center.svg')}
+body.j120-heist-page{background:radial-gradient(ellipse at 84% -20%,#55205f 0,transparent 48rem),#120b1e;color:#fff4fa}
+body.j120-heist-page .hero{min-height:260px;background:linear-gradient(95deg,#210c2df0 0%,#32163fdf 45%,#2b173b88 78%),var(--j120-hero-image) center/cover;border-bottom:2px solid #eea65f;padding:clamp(26px,3.7vw,49px)}
+body.j120-heist-page .hero .tag{color:#ffe0a4;font-size:11px;letter-spacing:.12em;max-width:800px}
+body.j120-heist-page .hero h1{font-size:clamp(31px,4.7vw,57px);font-weight:950;font-style:italic;max-width:800px;text-shadow:0 3px 12px #110614}
+body.j120-heist-page .hero p{max-width:850px;color:#f6e4f1;text-shadow:0 1px 7px #1a0b23}
+body.j120-heist-page .mapbox{background:radial-gradient(ellipse at center,#3e285a,#1a152d 76%);border-color:#ad74ad}
+body.j120-heist-page .mapbox img{width:100%;max-height:330px;object-fit:contain;background:#1d112b;border:1px solid #815890;border-radius:12px;padding:4px}
+body.j120-heist-page .mapbox h2{color:#ffdda4}
+body.j120-heist-page .mapbox p,body.j120-heist-page .small{color:#e6d3e7}
+body.j120-heist-page .panel{background:linear-gradient(145deg,#2b1a37,#19142b);border-color:#855b94}
+body.j120-heist-page :is(input[type="search"],select){background:#281e3b;border:1px solid #91639c;color:#fff7fc}
+body.j120-heist-page .step{background:#241a31;border-color:#674a7d}
+body.j120-heist-page .step input{accent-color:#ffb85c}
+body.j120-heist-page .notice{background:#35263a;border-left-color:#f9b362;color:#fbe8ef}
+body.j120-heist-page :is(a,button,input,select):focus-visible{outline:3px solid #ffe09d;outline-offset:3px}
+@media(max-width:700px){body.j120-heist-page .hero{min-height:210px;background-position:center}body.j120-heist-page .hero h1{font-size:clamp(29px,9vw,44px)}}
