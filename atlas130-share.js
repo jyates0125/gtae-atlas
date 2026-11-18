@@ -14,6 +14,7 @@ const POST={
 };
 const display=(message)=>{document.querySelectorAll('[data-j130-status]').forEach(n=>{n.textContent=message})};
 async function copy(text){
+ display('Preparing your caption for copying…');
  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);display('Copied — ready to paste.');return true}}
  catch(_){}
  const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.left='-9999px';document.body.append(ta);ta.select();
