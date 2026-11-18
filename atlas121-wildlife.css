@@ -7,7 +7,7 @@ body[data-atlas-kind="animal"] .u-hero{
 }
 body[data-atlas-kind="animal"] .u-hero-art{
   min-height:285px;
-  background:linear-gradient(135deg,#0c3746aa,#21415755),url('./art/atlas93-leonida.svg') center/cover;
+  background:linear-gradient(135deg,#0c3746aa,#21415755),url('https://www.rockstargames.com/VI/_next/static/media/Grassrivers_07.0txitddjiq5o1.jpg?akim=1&imdensity=1&imwidth=3840') center/cover;
 }
 .j121-wildlife-photos{margin:14px 0 25px;padding:17px;background:linear-gradient(120deg,#1e1936,#173642 95%);border:1px solid #795d8c;border-radius:16px}
 .j121-wildlife-photos .j121-overline{font-size:11px;color:#ffcc7c;letter-spacing:.14em;font-weight:900}
