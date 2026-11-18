@@ -32,3 +32,12 @@ for label, fragment in extra:
     else:
         assert fragment in source, label
 print("Team Jura map startup and gesture regression PASS")
+
+# Map entry points must invalidate browser/CDN caches together.
+for page in ("atlas.html", "atlas-online.html", "atlas-vi.html"):
+    html = (Path(__file__).resolve().parents[1] / page).read_text(encoding="utf-8")
+    assert "./atlas.js?v=102-map-completion" in html, (page, "stale map script URL")
+sw = (Path(__file__).resolve().parents[1] / "atlas-sw.js").read_text(encoding="utf-8")
+assert "team-jura-atlas-v102-map-completion" in sw, "Service worker cache version mismatch"
+assert "./atlas-sw.js?v=102-map-completion" in source, "Service worker registration URL stale"
+print("Team Jura map release cache version contract PASS")
