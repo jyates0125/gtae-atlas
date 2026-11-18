@@ -34,7 +34,6 @@ assert 'data-j130-action="share-page"' in index
 assert index.count('<h1')==1
 assert 'id="featuredGrid"' in dash
 assert 'id="progressCollections"' in dash and 'id="progressVehicles"' in dash and 'id="progressGarage"' in dash
-assert 'team-jura' not in re.sub(r'(?i)team-jura-atlas', '', '')
 assert 'data-page="home"' in dash
 assert 'href="./atlas-dashboard.html"' in dash
 assert dash.count('<h1')==1
