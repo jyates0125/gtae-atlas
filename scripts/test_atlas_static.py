@@ -61,3 +61,6 @@ runpy.run_path(str(D / 'scripts/test_hubs_103.py'),run_name='__main__')
 
 # Source-checked craft facts and mission-specific heist command presentation.
 runpy.run_path(str(D / 'scripts/test_vehicle_intel_104.py'),run_name='__main__')
+
+# 150 licensed San Andreas collectible locations, existing saves intact.
+runpy.run_path(str(D / 'scripts/test_sa_pins_105.py'),run_name='__main__')
