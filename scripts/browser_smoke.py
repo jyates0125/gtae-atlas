@@ -162,8 +162,8 @@ async def smoke():
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
                             if not failures and path=='maps.html':
                                 if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()!=13:failures.append('Directory should show exactly 13 worlds')
-                                covers=pg.locator('#directoryFeatured img,#directoryAdditional img')
-                                if await covers.count()!=13:failures.append('Map directory must render 13 distinct covers')
+                                covers=pg.locator('#directoryFeatured img.world-art-main,#directoryAdditional img.world-art-main')
+                                if await covers.count()!=13:failures.append('Map directory must render 13 distinct primary cover images')
                                 else:
                                     # The site intentionally lazy-loads the nine
                                     # additional covers. Test real scroll-to-view
@@ -173,7 +173,7 @@ async def smoke():
                                         cover=covers.nth(index)
                                         try:
                                             await cover.scroll_into_view_if_needed(timeout=6500)
-                                            await pg.wait_for_function("(i)=>{const el=document.querySelectorAll('#directoryFeatured img,#directoryAdditional img')[i];return !!el&&el.complete&&el.naturalWidth>0}",arg=index,timeout=8500)
+                                            await pg.wait_for_function("(i)=>{const el=document.querySelectorAll('#directoryFeatured img.world-art-main,#directoryAdditional img.world-art-main')[i];return !!el&&el.complete&&el.naturalWidth>0}",arg=index,timeout=8500)
                                         except Exception as err:
                                             src=await cover.get_attribute('src')
                                             failures.append('Atlas cover failed to load on scroll: '+str(src)+' · '+str(err)[:115])
