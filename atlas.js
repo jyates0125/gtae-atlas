@@ -30,7 +30,7 @@ const BOUNDS={
 };
 const LAYERS={
  '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid']],
- '6':[['scaly,view','Scaly · YANIS V17'],['yanis,17','YANIS V17 · Original'],['yanis,15','YANIS V15 · Archive'],['dupzor,51','DUPZOR V51 · Original']]
+ '6':[['scaly,view','Scaly · YANIS V17'],['loki,view','Loki · DUPZOR V51'],['yanis,17','YANIS V17 · Original'],['yanis,15','YANIS V15 · Archive'],['dupzor,51','DUPZOR V51 · Original']]
 };
 /* Base views and published GTADB community add-on tiles.
  * The additional tile folders are *patches*, not complete independent worlds.
