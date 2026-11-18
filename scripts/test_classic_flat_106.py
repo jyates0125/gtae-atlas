@@ -18,7 +18,7 @@ expect={
 for game,path in expect.items():
     assert f"{game}:{{url:'https://gtamap.io/{path}'" in js, game
 assert "function flatReference()" in js and "flatReference();document.title=" in js
-assert "not embedded or licensed for redistribution" in js
+assert "The original game map appears above" in js
 for id in ('classicFlatReference','classicFlatTitle','classicFlatDescription','classicFlatLink','classicFlatCredit'):
     assert f'id="{id}"' in page,id
 assert 'src="./art/elario-crest.svg"' in page
