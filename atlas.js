@@ -819,17 +819,7 @@ function init(){
  $('exportData').onclick=exportBackup;$('importData').onclick=()=>$('importFile').click();$('importFile').onchange=e=>importBackup(e.target.files?.[0]);$('refresh').onclick=async()=>{dataNotice('Checking our GTA VI licensed data snapshot…');await loadDataset('6',true);render()};$('saveOffline').onclick=saveOffline;$('stopOffline').onclick=()=>{offlineStop=true;$('offlineStatus').textContent='Stopping after current tiles finish…'};
  document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||'')){e.preventDefault();$('search').focus()}if(e.key==='Escape'){selected=null;addPinMode=false;chooseRouteStartMode=false;updateSelected();schedulePaint()}});
  window.addEventListener('storage',e=>{if(e.key==='jura3-progress'){progress=loadStore('jura3-progress',{});render()}if(e.key==='jura-atlas-routes'){routes=loadStore('jura-atlas-routes',{'5':[],'6':[]});render()}});
- if(window.JuraNavigation){
-  try{window.teamJuraNav=window.JuraNavigation.create(juraBridge)}
-  catch(error){
-   // Map browsing, pins and game-mode selection must survive a temporarily
-   // missing optional route-core script. Navigation can be retried by reload.
-   window.teamJuraNav=null;
-   const routeStatus=$('juraNavStatus');
-   if(routeStatus)routeStatus.textContent='Route navigation temporarily unavailable. Map browsing and saved pins still work; refresh to retry directions.';
-   console.warn('Team Jura optional route engine unavailable; keeping Atlas maps active.',error);
-  }
- }
+ if(window.JuraNavigation)window.teamJuraNav=window.JuraNavigation.create(juraBridge);
  const observer=new ResizeObserver(resize);observer.observe(canvas);window.addEventListener('resize',resize);const start=document.body.dataset.startWorld||new URLSearchParams(location.search).get('world')|| (location.hash==='#game6'?'6':location.hash==='#gameonline'?'online':'5');switchGame(['5','6','online'].includes(start)?start:'5');
  const params=new URLSearchParams(location.search);const q=params.get('search'),cat=params.get('category');
  if(!params.has('place')&&params.has('x')&&params.has('y')){const x=Number(params.get('x')),y=Number(params.get('y')),z=Number(params.get('zoom'));if(Number.isFinite(x)&&Number.isFinite(y)&&Math.abs(x)<=16384&&Math.abs(y)<=16384){$('coordinateX').value=String(x);$('coordinateY').value=String(y);goToCoordinates();if(Number.isFinite(z)&&z>=MIN_Z&&z<=MAX_Z){camera.z=z;schedulePaint()}}}
