@@ -183,6 +183,12 @@ async def smoke():
                                     if len([x for x in urls if 'atlas106-' in x])!=7:
                                         failures.append('Seven original classic-world artwork files not displayed')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
+                                if not await pg.locator('body.j117-map-world').count():
+                                    failures.append('Current Elario flagship map brand missing')
+                                if await pg.locator('header.topbar img[src="./art/elario-crest.svg"]').count()!=1:
+                                    failures.append('Original Elario crest missing from active map')
+                                if 'ATLAS 9.3' in await pg.title():
+                                    failures.append('Retired map title presented as current Atlas')
                                 if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
                                 try:
                                     await pg.wait_for_function("document.querySelector('#layer')?.options.length >= 2",timeout=6500)
@@ -464,6 +470,10 @@ async def smoke():
                             if not failures and path=='atlas98-landmarks.html':
                                 if 'sourced landmarks shown' not in await pg.locator('#landmarkStatus').inner_text():failures.append('Bundled VI landmark library did not load')
                             if not failures and path=='one-last-ride.html':
+                                if not await pg.locator('body.j117-film').count():
+                                    failures.append('One Last Ride current film identity missing')
+                                if await pg.locator('header .portal-logo img[src="./art/elario-crest.svg"]').count()!=1:
+                                    failures.append('Film project Elario crest missing')
                                 if await pg.locator('video source[src*="one-last-ride-motion-preview.mp4"]').count()==0:failures.append('Film preview source missing')
                             results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures})
                             await pg.close()

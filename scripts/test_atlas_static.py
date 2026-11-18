@@ -85,3 +85,6 @@ runpy.run_path(str(D / 'scripts/test_research_design_115.py'),run_name='__main__
 
 # Game-specific authentic classic flat-map references; maintain local marker storage.
 runpy.run_path(str(D / 'scripts/test_classic_flat_106.py'),run_name='__main__')
+
+# Current flagship Elario map/film identity, untouched source libraries and player controls.
+runpy.run_path(str(D / 'scripts/test_flagship_brand_117.py'),run_name='__main__')
