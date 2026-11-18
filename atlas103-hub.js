@@ -16,7 +16,7 @@ function safeURL(url){try{const x=new URL(url);return x.protocol==='https:'?x.hr
 async function copyText(s){try{if(!navigator.clipboard)throw Error('clipboard unavailable');await navigator.clipboard.writeText(s);status('Copied '+s+' · single-player only')}catch{status('Copy unavailable. Select the visible code and copy manually.')}}
 function tokens(item,platform){
  if(!item.ps)return null;
- let raw=item.ps.split(/\\s+/).filter(Boolean),mapped;
+ let raw=item.ps.split(/\s+/).filter(Boolean),mapped;
  if(platform==='ps3hd'&&item.game==='sa')mapped=raw.map(t=>PS3_HD[t]||t);
  else if(['ps2','ps3','ps4','ps5'].includes(platform))mapped=raw;
  else if(platform==='xbox'&&item.game==='sa')mapped=raw.map(t=>PS_TO_ORIGINAL_XBOX[t]||t);
