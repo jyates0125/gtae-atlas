@@ -67,3 +67,6 @@ runpy.run_path(str(D / 'scripts/test_sa_pins_105.py'),run_name='__main__')
 
 # 7 original game-specific covers, 13 map directory, SVG safety and correct prior pin metadata.
 runpy.run_path(str(D / 'scripts/test_cover_art_106.py'),run_name='__main__')
+
+# Game-specific authentic classic flat-map references; maintain local marker storage.
+runpy.run_path(str(D / 'scripts/test_classic_flat_106.py'),run_name='__main__')
