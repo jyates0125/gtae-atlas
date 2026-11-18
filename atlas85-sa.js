@@ -17,7 +17,12 @@ function renderItems(){const list=$('items');list.replaceChildren();let shown=0;
  for(let i=1;i<=set.total;i++){const r=record(i),p=positions.find(p=>p.set===set.id&&p.slot===i);if(hide&&r.done)continue;if(only&&!p)continue;const label=p?.label||set.name+' '+String(i).padStart(3,'0');if(q&&!`${label} ${r.note||''} ${i}`.toLowerCase().includes(q))continue;
  const card=document.createElement('div');card.className='item';card.id='item-'+i;const line=document.createElement('label');line.className='itemTop';const box=document.createElement('input');box.type='checkbox';box.checked=!!r.done;box.setAttribute('aria-label','Collected '+label);box.onchange=()=>{state.items[id(i)]={...record(i),done:box.checked};persist();render()};const title=document.createElement('strong');title.textContent=set.icon+' '+label;line.append(box,title);card.append(line);
  const hint=document.createElement('small');hint.textContent=p?(builtIn?'Source-backed SA 1.0 US game position · 2D icon approximately projected; not an exact visual alignment.':('Imported coordinate pack · '+(p.source||'source not supplied'))):'Unmapped tracking slot. No location claimed.';card.append(hint);
- if(p){const show=document.createElement('button');show.className='showPin';show.textContent='◎ Locate on map';show.onclick=()=>{$('mapContainer').scrollIntoView({block:'center',behavior:'smooth'});document.querySelectorAll('.pin').forEach(b=>{if(b.title===label)b.focus()})};card.append(show)}
+ if(p){const show=document.createElement('button');show.className='showPin';show.textContent='◎ Locate on map';show.onclick=()=>{
+   const box=$('mapContainer');box.scrollIntoView({block:'center',behavior:'smooth'});
+   if(map&&mapHasArtwork){transform.scale=Math.max(2.2,transform.scale);transform.x=box.clientWidth*(.5-(p.x/map.width)*transform.scale);transform.y=box.clientHeight*(.5-(p.y/map.height)*transform.scale);updateTransform()}
+   const pin=[...document.querySelectorAll('.pin')].find(b=>b.title.startsWith(label));
+   if(pin)pin.focus({preventScroll:true});
+ };card.append(show)}
  const note=document.createElement('textarea');note.placeholder='Your landmark / clue…';note.value=r.note||'';note.maxLength=500;note.setAttribute('aria-label','Notes for '+label);note.onchange=()=>{state.items[id(i)]={...record(i),note:note.value.slice(0,500)};persist()};card.append(note);list.append(card);shown++}
  if(!shown){const p=document.createElement('p');p.textContent='No results. Change filters or search.';list.append(p)}
 }
