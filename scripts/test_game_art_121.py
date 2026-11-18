@@ -13,7 +13,7 @@ assert len(re.findall(r"\bcoverSrc:'", directory))==13
 for world in worlds:
  assert re.search(r"\{id:'"+world+r"',[^\n]*coverSrc:'[^']+'",directory),world
 for world in ['iii','vc','vcs','lcs','ctw','tlad','tbogt']:
- assert re.search(r"\b"+world+r":\{name:[^\n]*map:'https://[^']+'",classic),world
+ assert re.search(r"\b"+world+r":\{name:[^\n]*map:'(?:https://|\./art/maps/)[^']+'",classic),world
 assert 'originalMapReady' in classic and 'loadOriginalWorldMap()' in classic
 assert 'highResUrl||state.background' in classic
 assert 'w.coverSrc' in portal and 'im.onerror=' in portal
@@ -22,3 +22,7 @@ assert (ROOT/'atlas121-cayo-map.js').exists()
 assert (ROOT/'atlas121-cayo-map.css').exists()
 assert 'Rockstar\'s published fan-use and removal policy' in credits
 print('PASS Atlas 12.1 original world imagery, Cayo map controls and central rights register')
+
+for name in ('gta-vice-city-original.png','gta-iv-liberty-reference.jpg'):
+ image=ROOT/'art'/'maps'/name
+ assert image.is_file() and image.stat().st_size>100000, name
