@@ -3,13 +3,13 @@
    Offline data remains user-generated; proprietary basemaps or third-party coordinates are NOT redistributed. */
 (function(){'use strict';
 const worlds={
- iii:{name:'GTA III · Liberty City',desc:'The original 3D-era Liberty City. Track personal map notes and collections.',art:'atlas106-gta3.svg',map:'https://wikiassets.net/gta-wiki-aef1ab/images/7269e4244d57ae534117102974b7e960.webp',sets:['Hidden packages','Unique stunt jumps','Rampages','Missions','Safehouses']},
- vc:{name:'GTA Vice City',desc:'Ocean Beach, Downtown, Little Havana and the classic neon coastline.',art:'atlas106-vice-city.svg',map:'https://wikiassets.net/gta-wiki-aef1ab/images/a941d88056c4b2f225db89c0297b9cab.webp',sets:['Hidden packages','Rampages','Stunt jumps','Properties','Missions']},
+ iii:{name:'GTA III · Liberty City',desc:'The original 3D-era Liberty City. Track personal map notes and collections.',art:'atlas106-gta3.svg',map:'./art/atlas128-gta3-radar.png',sets:['Hidden packages','Unique stunt jumps','Rampages','Missions','Safehouses']},
+ vc:{name:'GTA Vice City',desc:'Ocean Beach, Downtown, Little Havana and the classic neon coastline.',art:'atlas106-vice-city.svg',map:'./art/atlas128-vice-city-radar.png',sets:['Hidden packages','Rampages','Stunt jumps','Properties','Missions']},
  vcs:{name:'Vice City Stories',desc:'Explore the earlier Vice City era with your personal research notes.',art:'atlas106-vcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/ViceCity-GTAVCS-map.png',sets:['Red balloons','Empire sites','Stunt jumps','Missions','Safehouses']},
  lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',map:'https://wikiassets.net/gta-vi-1c4e11/images/5019685d9fa05493b4cea714ca968bf1.webp',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
  ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'atlas106-chinatown-wars.svg',map:'https://wikiassets.net/gta-wiki-aef1ab/images/03205438369fb05f953c0fbfa4b1fd8d.webp',sets:['Security cameras','Collectibles','Missions','Safehouses','Drug dealer locations']},
- tlad:{name:'The Lost and Damned',desc:'Liberty City motorcycle-club episode; notes stay separate from GTA IV.',art:'atlas106-lost-damned.svg',map:'https://wikiassets.net/gta-wiki-aef1ab/images/e5d0975dd0e6848776ea9d902e5426f2.webp',sets:['Seagulls','Gang wars','Motorcycle missions','Races','Activities']},
- tbogt:{name:'The Ballad of Gay Tony',desc:'Liberty City nightlife episode; nightclub missions and activities.',art:'atlas106-gay-tony.svg',map:'https://wikiassets.net/gta-wiki-aef1ab/images/e5d0975dd0e6848776ea9d902e5426f2.webp',sets:['Seagulls','Drug wars','Base jumps','Nightclub missions','Activities']}
+ tlad:{name:'The Lost and Damned',desc:'Liberty City motorcycle-club episode; notes stay separate from GTA IV.',art:'atlas106-lost-damned.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Gang wars','Motorcycle missions','Races','Activities']},
+ tbogt:{name:'The Ballad of Gay Tony',desc:'Liberty City nightlife episode; nightclub missions and activities.',art:'atlas106-gay-tony.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Drug wars','Base jumps','Nightclub missions','Activities']}
 };
 const publicFlatMaps={
  iii:{url:'https://gtamap.io/gta-3-map/',title:'GTA III · original Liberty City',desc:'Independent viewer of GTA III\'s actual radar map, Hidden Packages and source-attributed collectables.'},
@@ -55,12 +55,12 @@ function renderBackground(){
  fitClassicImage();
 }
 function loadOriginalWorldMap(){
- // Source-hosted original GTA art displays by default; player local maps override it.
+ // Locally bundled original-game radar or credited GTA IV map art displays by default. Player-imported maps override it.
  const image=new Image();image.referrerPolicy='no-referrer';
  image.onload=()=>{if(!image.naturalWidth||!image.naturalHeight)return;
   originalMapReady=true;originalMapSize={width:image.naturalWidth,height:image.naturalHeight};
   if(!highResUrl&&!state.background){renderBackground();status('Original '+w.name+' game map ready. Personal notes are not game coordinates.')}};
- image.onerror=()=>{if(!highResUrl&&!state.background)status('Original map image could not be reached. Your notes are safe; use the source reference below.')};
+ image.onerror=()=>{if(!highResUrl&&!state.background)status('Map artwork could not be loaded; personal notes are safe. Open the game-map reference below.')};
  image.src=w.map;
 }
 function activateLocalMap(blob,width,height){

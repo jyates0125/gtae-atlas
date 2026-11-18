@@ -21,6 +21,13 @@ for key in expected:
     assert re.search(r"art:'[^']+\.svg'",entry),key
 assert "world-art-frame" in portal and "world-art-main" in portal and "sourceIndex++" in portal
 assert ".world-card .world-art-frame" in css
+for name in ('atlas128-gta3-radar.png','atlas128-vice-city-radar.png','atlas128-gta4-landmarks.jpg'):
+    path=ROOT/'art'/name
+    assert path.is_file() and path.stat().st_size>40000,name
+classic=source('atlas98-classic.js')
+for name in ('atlas128-gta3-radar.png','atlas128-vice-city-radar.png','atlas128-gta4-landmarks.jpg'):
+    assert name in classic,name
+assert 'noiseXYZ' in credits and 'images/map4.jpg' in credits
 assert 'id="cover-art"' in credits and 'id="reuse"' in credits
 for p in ("index.html","maps.html","map-hub.html","atlas98-style-lab.html"):
     html=source(p)
