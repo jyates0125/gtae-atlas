@@ -22,8 +22,10 @@ assert "not embedded or licensed for redistribution" in js
 for id in ('classicFlatReference','classicFlatTitle','classicFlatDescription','classicFlatLink','classicFlatCredit'):
     assert f'id="{id}"' in page,id
 assert 'src="./art/elario-crest.svg"' in page
-assert "atlas98-classic.js?v=106" in page and "atlas98-classic.css?v=106" in page
+assert "atlas108-local-map.js?v=108" in page
+assert "atlas98-classic.js?v=108" in page and "atlas98-classic.css?v=108" in page
+assert 'id="classicClearMap"' in page and 'id="classicImageFile"' in page
 assert "j106-flat-reference" in css
 assert "team-jura-atlas98-classic-" in js
 assert "state.background" in js and "state.markers" in js
-print('PASS Atlas 10.6: 7 legacy game-specific authentic flat map links, no copied tile assets or changed saved markers')
+print('PASS Atlas 10.8: seven accurate reference links plus browser-local 2D map image controls')
