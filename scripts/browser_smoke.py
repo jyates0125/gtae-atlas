@@ -262,8 +262,43 @@ async def smoke():
                                     failures.append('Wrong 1986 Vice City actual map reference: '+str(href))
                                 if await pg.locator('#classicMapBackground').count()!=1:
                                     failures.append('Existing personal map workbench missing')
+
                                 if await pg.locator('img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Original Elario crest missing on classic world')
+                                try:
+                                    # Use a generated original 16x8 image; never depend on a third-party map.
+                                    await pg.evaluate("""async () => {
+                                      const c=document.createElement('canvas');c.width=16;c.height=8;
+                                      const ctx=c.getContext('2d');ctx.fillStyle='#49a4b4';ctx.fillRect(0,0,16,8);
+                                      const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));
+                                      const dt=new DataTransfer();dt.items.add(new File([blob],'team-jura-local-test.png',{type:'image/png'}));
+                                      const input=document.getElementById('classicImageFile');
+                                      input.files=dt.files;input.dispatchEvent(new Event('change',{bubbles:true}));
+                                    }""")
+                                    await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='local-highres'",timeout=10000)
+                                    bounds=await pg.locator('#classicMapSurface').bounding_box()
+                                    if not bounds or abs(bounds['width']/bounds['height']-2)>.05:
+                                        failures.append('Imported classic map lost its native 2:1 aspect ratio')
+                                    await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
+                                    await pg.locator('#classicAddPin').click()
+                                    await pg.locator('#classicMapSurface').click(position={'x':bounds['width']/2,'y':bounds['height']/2})
+                                    await pg.locator('#markerName').fill('Local high-res marker test')
+                                    await pg.locator('#markerSave').click()
+                                    if await pg.locator('#pinCount').inner_text()!='1':
+                                        failures.append('Personal map marker was not placed')
+                                    await pg.reload(wait_until='domcontentloaded')
+                                    await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='local-highres'",timeout=10000)
+                                    if await pg.locator('#pinCount').inner_text()!='1':
+                                        failures.append('Markers were lost after restoring an offline high-res image')
+                                    await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
+                                    await pg.evaluate("window.confirm=()=>true")
+                                    await pg.locator('#classicClearMap').click()
+                                    await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='original-art'",timeout=10000)
+                                    if await pg.locator('#pinCount').inner_text()!='1':
+                                        failures.append('Removing an imported image deleted personal markers')
+                                    await pg.locator('#classicClear').click()
+                                except Exception as exc:
+                                    failures.append('Local classic high-resolution image regression: '+str(exc)[:300])
                             if not failures and path=='atlas93-garage.html':
                                 await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')

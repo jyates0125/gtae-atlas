@@ -28,11 +28,48 @@ const params=new URLSearchParams(location.search),raw=(params.get('game')||param
 const key='team-jura-atlas98-classic-'+id+'-v1';const blank=()=>({schema:'team-jura-atlas98-classic-v1',world:id,markers:[],completed:[],background:null});
 function read(){try{const data=JSON.parse(localStorage.getItem(key)||'null');if(data&&data.schema==='team-jura-atlas98-classic-v1'&&data.world===id&&Array.isArray(data.markers))return data}catch{}return blank()}
 let state=read(),adding=false,editing=null,scale=1,dx=0,dy=0,pointer=null,dragged=false;
+let highResUrl=null,highResSize=null; // map raster stored separately from personal marker JSON
 const status=message=>{if($('#classicMessage'))$('#classicMessage').textContent=message};
 function persist(){try{localStorage.setItem(key,JSON.stringify(state));window.dispatchEvent(new CustomEvent('team-jura:classic-change',{detail:{world:id}}));return true}catch(e){status('This browser could not save all records. Export a backup, or remove an oversized map image.');return false}}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function applyTransform(){const s=$('#classicMapSurface');if(s)s.style.transform=`translate(${dx}px,${dy}px) scale(${scale})`}
-function renderBackground(){const b=$('#classicMapBackground');if(!b)return;b.style.backgroundImage=state.background?`linear-gradient(#210e2d22,#210e2d25),url(${JSON.stringify(state.background)})`:`linear-gradient(#1b10233d,#1b1126c9),url(./art/${w.art})`;b.classList.toggle('has-image',!!state.background);if(state.background){b.querySelector('span').hidden=true;b.querySelector('small').hidden=true}else{b.querySelector('span').hidden=false;b.querySelector('small').hidden=false}}
+
+function fitClassicImage(){
+ const viewport=$('#classicViewport'),surface=$('#classicMapSurface');if(!viewport||!surface)return;
+ if(!highResSize){for(const prop of ['inset','width','height','left','top'])surface.style.removeProperty(prop);return}
+ const ratio=highResSize.width/highResSize.height,vw=viewport.clientWidth,vh=viewport.clientHeight;
+ if(!vw||!vh||!Number.isFinite(ratio)||ratio<=0)return;
+ const width=Math.min(vw,vh*ratio),height=width/ratio;
+ surface.style.inset='auto';surface.style.width=width+'px';surface.style.height=height+'px';
+ surface.style.left=(vw-width)/2+'px';surface.style.top=(vh-height)/2+'px';
+}
+function renderBackground(){
+ const b=$('#classicMapBackground');if(!b)return;const img=highResUrl||state.background;
+ b.style.backgroundImage=img?'linear-gradient(#210e2d22,#210e2d25),url('+JSON.stringify(img)+')':'linear-gradient(#1b10233d,#1b1126c9),url(./art/'+w.art+')';
+ b.classList.toggle('has-image',!!img);
+ b.querySelector('span').hidden=!!img;b.querySelector('small').hidden=!!img;
+ const viewport=$('#classicViewport');if(viewport)viewport.dataset.mapImage=highResUrl?'local-highres':state.background?'legacy-local':'original-art';
+ fitClassicImage();
+}
+function activateLocalMap(blob,width,height){
+ if(highResUrl)URL.revokeObjectURL(highResUrl);
+ highResUrl=URL.createObjectURL(blob);highResSize={width,height};scale=1;dx=0;dy=0;applyTransform();renderBackground();
+}
+function measureLegacyMap(){
+ if(highResUrl||!state.background)return;
+ const img=new Image();
+ img.onload=()=>{if(!highResUrl){highResSize={width:img.naturalWidth,height:img.naturalHeight};fitClassicImage()}};
+ img.onerror=()=>status('Earlier map image could not be decoded. You can remove it to restore the original art.');
+ img.src=state.background;
+}
+async function restoreStoredMap(){
+ measureLegacyMap();
+ if(!window.TeamJuraLocalMap)return;
+ try{
+  const record=await window.TeamJuraLocalMap.restore(id);
+  if(record){activateLocalMap(record.blob,record.width,record.height);status('High-resolution map restored locally · '+record.width+' × '+record.height+' px.')}
+ }catch(error){status('Local image storage unavailable. Personal markers and earlier map remain intact.')}
+}
 function categoryList(){const list=$('#classicCategories');list.replaceChildren();for(const name of w.sets){const row=E('div','classic-category');const count=window.TeamJuraClassicCollections?.[id]?.[name];if(count){
  const open=E('button','',name+' · '+count.count+' items');open.type='button';open.setAttribute('aria-label','Open individual '+name+' checklist');open.addEventListener('click',()=>{const panel=$('#j98b-progress');if(panel){panel.scrollIntoView?.({behavior:'smooth',block:'start'});const choice=$('#j98bSet');if(choice){choice.value=name;choice.dispatchEvent(new Event('change'))}}});row.append(open);const legacy=state.completed.includes(name)?' · prior whole-set flag preserved':'';row.append(E('small','',String(state.markers.filter(m=>m.category===name).length)+' personal notes'+legacy));
  }else{const label=E('label');const check=E('input');check.type='checkbox';check.checked=state.completed.includes(name);check.addEventListener('change',()=>{state.completed=check.checked?[...new Set([...state.completed,name])]:state.completed.filter(x=>x!==name);persist();status(name+(check.checked?' marked complete.':' marked in progress.'))});label.append(check,' '+name);row.append(label,E('small','',String(state.markers.filter(m=>m.category===name).length)+' personal notes'));}list.append(row)}}
@@ -49,7 +86,7 @@ function closeEditor(){$('#classicEditor').hidden=true;editing=null;adding=false
 function createOrEdit(){const name=$('#markerName').value.trim(),category=$('#markerCategory').value,note=$('#markerNote').value.trim();if(!name){status('Enter a marker title before saving.');$('#markerName').focus();return}const x=clamp(Number($('#classicEditor').dataset.x),0,100),y=clamp(Number($('#classicEditor').dataset.y),0,100);if(!Number.isFinite(x)||!Number.isFinite(y)){status('Invalid marker position.');return}
  const old=state.markers.find(x=>x.id===editing);if(old)Object.assign(old,{name:name.slice(0,100),category,note:note.slice(0,300)});else state.markers.push({id:globalThis.crypto?.randomUUID?.()||'p'+Date.now()+Math.random().toString(36).slice(2),name:name.slice(0,100),category,note:note.slice(0,300),x,y,source:'personal-image-percent'});
  if(state.markers.length>1000){state.markers.pop();status('Limit reached (1000 markers per world).');return}persist();closeEditor();draw();status('Saved personal marker to this browser.')}
-function coords(e){const s=$('#classicMapSurface').getBoundingClientRect();if(!s.width||!s.height)return null;return {x:clamp((e.clientX-s.left)/s.width*100,0,100),y:clamp((e.clientY-s.top)/s.height*100,0,100)}}
+function coords(e){const s=$('#classicMapSurface').getBoundingClientRect();if(!s.width||!s.height||e.clientX<s.left||e.clientX>s.right||e.clientY<s.top||e.clientY>s.bottom)return null;return {x:clamp((e.clientX-s.left)/s.width*100,0,100),y:clamp((e.clientY-s.top)/s.height*100,0,100)}}
 function bindMap(){const viewport=$('#classicViewport');viewport.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;pointer={id:e.pointerId,x:e.clientX,y:e.clientY,dx,dy};dragged=false;viewport.setPointerCapture?.(e.pointerId)});
  viewport.addEventListener('pointermove',e=>{if(!pointer||pointer.id!==e.pointerId||adding)return;const mx=e.clientX-pointer.x,my=e.clientY-pointer.y;if(Math.abs(mx)+Math.abs(my)>5)dragged=true;dx=clamp(pointer.dx+mx,-viewport.clientWidth*scale/1.8,viewport.clientWidth*scale/1.8);dy=clamp(pointer.dy+my,-viewport.clientHeight*scale/1.8,viewport.clientHeight*scale/1.8);applyTransform()});
  viewport.addEventListener('pointerup',e=>{if(!pointer||pointer.id!==e.pointerId)return;pointer=null;if(adding&&!dragged&&!e.target.closest('button')){const p=coords(e);if(p){adding=false;openEditor(null,p)}}});
@@ -58,11 +95,31 @@ function bindMap(){const viewport=$('#classicViewport');viewport.addEventListene
  $('#classicZoomIn').addEventListener('click',()=>{scale=clamp(scale+.25,1,4);applyTransform()});$('#classicZoomOut').addEventListener('click',()=>{scale=clamp(scale-.25,1,4);applyTransform()});$('#classicReset').addEventListener('click',()=>{scale=1;dx=0;dy=0;applyTransform();status('Map view reset.')});
  $('#classicAddPin').addEventListener('click',()=>{adding=!adding;$('#classicAddPin').setAttribute('aria-pressed',String(adding));viewport.classList.toggle('adding',adding);status(adding?'Tap the map to place a personal marker.':'Marker placement canceled.')});
  $('#classicSearch').addEventListener('input',renderMarkers);$('#markerSave').addEventListener('click',createOrEdit);$('#markerCancel').addEventListener('click',closeEditor);
- $('#classicImageFile').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(!/^image\/(jpeg|png|webp)$/.test(f.type)){status('Only PNG, JPEG or WebP images are supported.');return}if(f.size>1200000){status('For local storage, compress the image below 1.2 MB before importing.');return}const reader=new FileReader();reader.onload=()=>{state.background=reader.result;if(persist()){renderBackground();status('Personal map illustration loaded and saved to this browser.')}else{state.background=null;renderBackground()}};reader.onerror=()=>status('Could not read the image.');reader.readAsDataURL(f)});
- $('#classicExport').addEventListener('click',()=>{const copy={...state,exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(copy,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+id+'-my-map.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);status('World markers, checked categories and local image exported.')});
+ 
+ $('#classicImageFile').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];e.target.value='';if(!file)return;
+  if(!window.TeamJuraLocalMap){status('Offline image storage is unavailable; your markers are unchanged.');return}
+  try{
+   status('Checking your local map image…');
+   const dims=await window.TeamJuraLocalMap.inspect(file);
+   await window.TeamJuraLocalMap.save(id,file,dims);
+   state.background=null;persist();activateLocalMap(file,dims.width,dims.height);
+   status('Local map saved privately · '+dims.width+' × '+dims.height+' px. Marker positions have not been changed. Keep your original image for backups.');
+  }catch(error){status('Map unchanged: '+(error?.message||'Image storage failed')+'. Personal markers are safe.')}
+ });
+ $('#classicClearMap').addEventListener('click',async ()=>{
+  if(!window.confirm('Remove your personal map image from this browser? Your markers will remain, but they may no longer align with the new background.'))return;
+  try{
+   await window.TeamJuraLocalMap?.remove(id);state.background=null;
+   if(highResUrl)URL.revokeObjectURL(highResUrl);
+   highResUrl=null;highResSize=null;scale=1;dx=0;dy=0;persist();applyTransform();renderBackground();
+   status('Personal map image removed. Markers and collection progress remain saved.');
+  }catch(error){status('Could not remove local map: '+String(error?.message||error))}
+ });
+ $('#classicExport').addEventListener('click',()=>{const copy={...state,exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(copy,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+id+'-my-map.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);status(highResUrl?'Markers and progress exported. Your high-resolution map image is stored separately; keep the original PNG/JPEG/WebP file.':'World markers, checked categories and earlier embedded image exported.')});
  $('#classicImport').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2500000){status('Import too large; maximum 2.5 MB.');return}const rd=new FileReader();rd.onload=()=>{try{const obj=JSON.parse(rd.result);if(obj.schema!=='team-jura-atlas98-classic-v1'||obj.world!==id||!Array.isArray(obj.markers)||obj.markers.length>1000)throw Error('Invalid world schema');const clean=[];for(const m of obj.markers){if(typeof m.name!=='string'||!Number.isFinite(m.x)||!Number.isFinite(m.y)||m.x<0||m.x>100||m.y<0||m.y>100)throw Error('Invalid marker');clean.push({id:String(m.id).slice(0,80),name:m.name.slice(0,100),category:w.sets.includes(m.category)?m.category:w.sets[0],note:String(m.note||'').slice(0,300),x:m.x,y:m.y,source:'personal-image-percent'})}state={schema:'team-jura-atlas98-classic-v1',world:id,markers:clean,completed:Array.isArray(obj.completed)?obj.completed.filter(x=>w.sets.includes(x)):[],background:(typeof obj.background==='string'&&(/^data:image\/(png|jpeg|webp);base64,/.test(obj.background))&&obj.background.length<1700000)?obj.background:null};persist();closeEditor();draw();status('World-specific personal data restored.')}catch(err){status('Import refused: invalid file or different GTA world.')}};rd.onerror=()=>status('Could not read JSON.');rd.readAsText(f)});
  $('#classicClear').addEventListener('click',()=>{if(!window.confirm('Delete your personal markers for '+w.name+'? Export first if needed.'))return;state.markers=[];persist();closeEditor();draw();status('Personal markers cleared. Collection checkboxes and map illustration preserved.')});
 }
-function init(){flatReference();document.title=w.name+' | Team Jura Atlas';$('#classicTitle').textContent=w.name;$('#classicDescription').textContent=w.desc;$('#breadWorld').textContent=w.name;$('#classicWorldArt').src='./art/'+w.art;$('#classicWorldArt').alt='Illustrative artwork for '+w.name;$('#mapWorkspaceTitle').textContent=w.name+' · personal map';bindMap();draw();status('Ready. '+state.markers.length+' personal markers in this world.');}
+function init(){flatReference();document.title=w.name+' | Team Jura Atlas';$('#classicTitle').textContent=w.name;$('#classicDescription').textContent=w.desc;$('#breadWorld').textContent=w.name;$('#classicWorldArt').src='./art/'+w.art;$('#classicWorldArt').alt='Illustrative artwork for '+w.name;$('#mapWorkspaceTitle').textContent=w.name+' · personal map';bindMap();draw();status('Ready. '+state.markers.length+' personal markers in this world.');restoreStoredMap();window.addEventListener('resize',fitClassicImage);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
