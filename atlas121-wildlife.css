@@ -1,0 +1,25 @@
+/* Atlas 12.1 · GTA VI wildlife through official publicly displayed scenery.
+   Screenshots are Rockstar Games media, not custom animal spawn markers. */
+body[data-atlas-kind="animal"] .u-hero{
+  border:1px solid #c38d72;
+  box-shadow:0 16px 46px #09091f99;
+  background:linear-gradient(106deg,#150c23,#143c42 80%);
+}
+body[data-atlas-kind="animal"] .u-hero-art{
+  min-height:285px;
+  background:linear-gradient(135deg,#0c3746aa,#21415755),url('./art/atlas93-leonida.svg') center/cover;
+}
+.j121-wildlife-photos{margin:14px 0 25px;padding:17px;background:linear-gradient(120deg,#1e1936,#173642 95%);border:1px solid #795d8c;border-radius:16px}
+.j121-wildlife-photos .j121-overline{font-size:11px;color:#ffcc7c;letter-spacing:.14em;font-weight:900}
+.j121-wildlife-photos h2{font-size:clamp(20px,2.6vw,28px);margin:5px 0;color:#fff}
+.j121-wildlife-photos p{font-size:13px;color:#e6dbe3;max-width:900px}
+.j121-wildlife-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:16px}
+.j121-wildlife-grid figure{margin:0;border:1px solid #bd9475;border-radius:12px;overflow:hidden;background:#262541}
+.j121-wildlife-grid img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover;background:#315064}
+.j121-wildlife-grid figcaption{padding:12px 13px;font-weight:750;font-size:13px;color:#fff3ec}
+.j121-wildlife-grid figcaption small{display:block;font-size:11px;color:#ddcfdb;font-weight:400;margin-top:2px}
+.j121-wildlife-photos a{color:#ffd185}
+.j121-wildlife-photos a:focus-visible{outline:3px solid #ffe0a0;outline-offset:3px}
+@media(max-width:720px){.j121-wildlife-grid{grid-template-columns:1fr}.j121-wildlife-grid img{aspect-ratio:16/7}.j121-wildlife-photos{padding:12px}}
+
+.j121-wildlife-grid figure[hidden]{display:none}
