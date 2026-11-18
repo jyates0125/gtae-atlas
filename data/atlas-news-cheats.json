@@ -1,15 +1,19 @@
 {
   "schema": 1,
-  "checkedAt": "2026-11-17",
+  "checkedAt": "2026-11-18",
   "policy": "Manually curated public source references; not a live feed. GTA V/SA cheat codes are single-player only. No leaks, story spoilers or GTA Online exploit instructions.",
   "credits": {
     "story": [
       "https://www.pcgamer.com/gta-5-cheats/",
-      "https://gta.guide/gta-5/cheats"
+      "https://gta.guide/gta-5/cheats",
+      "https://www.gtabase.com/grand-theft-auto-v/gta-5-cheats-ps5-ps4-ps3-cheat-codes",
+      "https://gtamap.io/gta-5-cheats/"
     ],
     "sa": [
       "https://vandal.elespanol.com/en/grand-theft-auto-san-andreas/grand-theft-auto-san-andreas-pc-cheats.html",
-      "https://gtaside.com/tips/san-andreas/cheat-codes/pc/"
+      "https://gtaside.com/tips/san-andreas/cheat-codes/pc/",
+      "https://gtaside.com/tips/san-andreas/cheat-codes/playstation/",
+      "https://gtaside.com/tips/san-andreas/cheat-codes/xbox/"
     ]
   },
   "cheats": [
@@ -18,147 +22,430 @@
       "group": "Survival",
       "name": "Max health & armor",
       "code": "TURTLE",
-      "phone": "1-999-887-853"
+      "phone": "1-999-887-853",
+      "ps": "Circle L1 Triangle R2 Cross Square Circle Right Square L1 L1 L1"
     },
     {
       "game": "story",
       "group": "Survival",
-      "name": "Invincibility (temporary)",
+      "name": "Invincibility (5 minutes)",
       "code": "PAINKILLER",
-      "phone": "1-999-724-654-5537"
+      "phone": "1-999-724-654-5537",
+      "ps": "Right Cross Right Left Right R1 Right Left Cross Triangle"
     },
     {
       "game": "story",
       "group": "Weapons",
       "name": "Weapons & ammunition",
       "code": "TOOLUP",
-      "phone": "1-999-866-587"
+      "phone": "1-999-866-587",
+      "ps": "Triangle R2 Left L1 Cross Right Triangle Down Square L1 L1 L1"
     },
     {
       "game": "story",
       "group": "Police",
       "name": "Lower wanted level",
       "code": "LAWYERUP",
-      "phone": "1-999-5299-3787"
+      "phone": "1-999-5299-3787",
+      "ps": "R1 R1 Circle R2 Right Left Right Left Right Left"
     },
     {
       "game": "story",
       "group": "Police",
       "name": "Raise wanted level",
       "code": "FUGITIVE",
-      "phone": "1-999-3844-8483"
+      "phone": "1-999-3844-8483",
+      "ps": "R1 R1 Circle R2 Left Right Left Right Left Right"
     },
     {
       "game": "story",
       "group": "Movement",
       "name": "Super jump",
       "code": "HOPTOIT",
-      "phone": "1-999-467-8648"
+      "phone": "1-999-467-8648",
+      "ps": "Left Left Triangle Triangle Right Right Left Right Square R1 R2"
     },
     {
       "game": "story",
       "group": "Movement",
       "name": "Fast running",
       "code": "CATCHME",
-      "phone": "1-999-2288-463"
+      "phone": "1-999-228-2463",
+      "ps": "Triangle Left Right Right L2 L1 Square"
     },
     {
       "game": "story",
       "group": "Movement",
       "name": "Parachute",
       "code": "SKYDIVE",
-      "phone": "1-999-759-3483"
+      "phone": "1-999-759-3483",
+      "ps": "Left Right L1 L2 R1 R2 R2 Left Left Right L1"
     },
     {
       "game": "story",
-      "group": "Driving",
+      "group": "Vehicles",
       "name": "Comet sports car",
       "code": "COMET",
-      "phone": "1-999-266-38"
+      "phone": "1-999-266-38",
+      "ps": "R1 Circle R2 Right L1 L2 Cross Cross Square R1"
     },
     {
       "game": "story",
       "group": "Vehicles",
       "name": "Buzzard attack helicopter",
       "code": "BUZZOFF",
-      "phone": "1-999-289-9633"
+      "phone": "1-999-289-9633",
+      "ps": "Circle Circle L1 Circle Circle Circle L1 L2 R1 Triangle Circle Triangle"
     },
     {
       "game": "story",
       "group": "Effects",
       "name": "Slow motion",
       "code": "SLOWMO",
-      "phone": "1-999-756-966"
+      "phone": "1-999-756-966",
+      "ps": "Triangle Left Right Right Square R2 R1"
     },
     {
       "game": "story",
       "group": "Effects",
       "name": "Slippery tires",
       "code": "SNOWDAY",
-      "phone": "1-999-7669-329"
+      "phone": "1-999-766-9329",
+      "ps": "Triangle R1 R1 Left R1 L1 R2 L1"
     },
     {
       "game": "sa",
       "group": "Survival",
       "name": "Health, armor and $250,000",
       "code": "HESOYAM",
-      "phone": null
+      "phone": null,
+      "ps": "R1 R2 L1 Cross Left Down Right Up Left Down Right Up"
     },
     {
       "game": "sa",
       "group": "Survival",
       "name": "Near-infinite health",
       "code": "BAGUVIX",
-      "phone": null
+      "phone": null,
+      "ps": "Down Cross Right Left Right R1 Right Down Up Triangle",
+      "versions": "original-only"
     },
     {
       "game": "sa",
       "group": "Weapons",
       "name": "Weapon set 1",
       "code": "LXGIWYL",
-      "phone": null
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Right Up"
     },
     {
       "game": "sa",
       "group": "Weapons",
       "name": "Weapon set 2",
       "code": "KJKSZPJ",
-      "phone": null
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Left"
     },
     {
       "game": "sa",
       "group": "Weapons",
       "name": "Unlimited ammunition",
       "code": "FULLCLIP",
-      "phone": null
+      "phone": null,
+      "ps": "L1 R1 Square R1 Left R2 R1 Left Square Down L1 L1"
     },
     {
       "game": "sa",
       "group": "Police",
       "name": "Clear wanted level",
       "code": "ASNAEB",
-      "phone": null
+      "phone": null,
+      "ps": "R1 R1 Circle R2 Up Down Up Down Up Down"
     },
     {
       "game": "sa",
       "group": "Vehicles",
       "name": "Spawn Rhino",
       "code": "AIWPRTON",
-      "phone": null
+      "phone": null,
+      "ps": "Circle Circle L1 Circle Circle Circle L1 L2 R1 Triangle Circle Triangle"
     },
     {
       "game": "sa",
       "group": "Vehicles",
       "name": "Spawn Hydra",
       "code": "JUMPJET",
-      "phone": null
+      "phone": null,
+      "ps": "Triangle Triangle Square Circle Cross L1 L1 Down Up"
     },
     {
       "game": "sa",
       "group": "Equipment",
       "name": "Jetpack",
       "code": "ROCKETMAN",
-      "phone": null
+      "phone": null,
+      "ps": "L1 L2 R1 R2 Up Down Left Right L1 L2 R1 R2 Up Down Left Right"
+    },
+    {
+      "game": "story",
+      "group": "Survival",
+      "name": "Recharge special ability",
+      "code": "POWERUP",
+      "phone": "1-999-769-3787",
+      "ps": "Cross Cross Square R1 L1 Cross Right Left Cross"
+    },
+    {
+      "game": "story",
+      "group": "Movement",
+      "name": "Fast swimming",
+      "code": "GOTGILLS",
+      "phone": "1-999-4684-4557",
+      "ps": "Left Left L1 Right Right R2 Left L2 Right"
+    },
+    {
+      "game": "story",
+      "group": "Movement",
+      "name": "Skyfall",
+      "code": "SKYFALL",
+      "phone": "1-999-759-3255",
+      "ps": "L1 L2 R1 R2 Left Right Left Right L1 L2 R1 R2 Left Right Left Right"
+    },
+    {
+      "game": "story",
+      "group": "Effects",
+      "name": "Drunk mode",
+      "code": "LIQUOR",
+      "phone": "1-999-547-867",
+      "ps": "Triangle Right Right Left Right Square Circle Left"
+    },
+    {
+      "game": "story",
+      "group": "Weapons",
+      "name": "Explosive bullets",
+      "code": "HIGHEX",
+      "phone": "1-999-444-439",
+      "ps": "Right Square Cross Left R1 R2 Left Right Right L1 L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Weapons",
+      "name": "Flaming bullets",
+      "code": "INCENDIARY",
+      "phone": "1-999-462-363-4279",
+      "ps": "L1 R1 Square R1 Left R2 R1 Left Square Right L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Weapons",
+      "name": "Explosive melee",
+      "code": "HOTHANDS",
+      "phone": "1-999-4684-2637",
+      "ps": "Right Left Cross Triangle R1 Circle Circle Circle L2"
+    },
+    {
+      "game": "story",
+      "group": "Weapons",
+      "name": "Slow-motion aim",
+      "code": "DEADEYE",
+      "phone": "1-999-332-3393",
+      "ps": "Square L2 R1 Triangle Left Square L2 Right Cross"
+    },
+    {
+      "game": "story",
+      "group": "Effects",
+      "name": "Low gravity",
+      "code": "FLOATER",
+      "phone": "1-999-356-2837",
+      "ps": "Left Left L1 R1 L1 Right Left L1 Left"
+    },
+    {
+      "game": "story",
+      "group": "Effects",
+      "name": "Change weather",
+      "code": "MAKEITRAIN",
+      "phone": "1-999-625-348-7246",
+      "ps": "R2 Cross L1 L1 L2 L2 L2 Square"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Rapid GT",
+      "code": "RAPIDGT",
+      "phone": "1-999-727-4348",
+      "ps": "R2 L1 Circle Right L1 R1 Right Left Circle R2"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Stretch limousine",
+      "code": "VINEWOOD",
+      "phone": "1-999-8463-9663",
+      "ps": "R2 Right L2 Left Left R1 L1 Circle Right"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Trashmaster",
+      "code": "TRASHED",
+      "phone": "1-999-872-7433",
+      "ps": "Circle R1 Circle R1 Left Left R1 L1 Circle Right"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Caddy golf cart",
+      "code": "HOLEIN1",
+      "phone": "1-999-465-3461",
+      "ps": "Circle L1 Left R1 L2 Cross R1 L1 Circle Cross"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Sanchez dirt bike",
+      "code": "OFFROAD",
+      "phone": "1-999-633-7623",
+      "ps": "Circle Cross L1 Circle Circle L1 Circle R1 R2 L2 L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "PCJ-600 motorcycle",
+      "code": "ROCKET",
+      "phone": "1-999-762-538",
+      "ps": "R1 Right Left Right R2 Left Right Square Right L2 L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "BMX bicycle",
+      "code": "BANDIT",
+      "phone": "1-999-226-348",
+      "ps": "Left Left Right Right Left Right Square Circle Triangle R1 R2"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Mallard stunt plane",
+      "code": "BARNSTORM",
+      "phone": "1-999-227-678-676",
+      "ps": "Circle Right L1 L2 Left R1 L1 L1 Left Left Cross Triangle"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Duster crop plane",
+      "code": "FLYSPRAY",
+      "phone": "1-999-3597-7729",
+      "ps": "Right Left R1 R1 R1 Left Triangle Triangle Cross Circle L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Dodo seaplane",
+      "code": "EXTINCT",
+      "phone": "1-999-398-4628",
+      "ps": "Square R1 Square R1 Left Left R1 L1 Square Right",
+      "versions": "gen8plus"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Duke O'Death",
+      "code": "DEATHCAR",
+      "phone": "1-999-3328-4227",
+      "ps": "Triangle R1 Triangle R1 Right Left R1 L1 Triangle Right",
+      "versions": "gen8plus"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Kraken submarine",
+      "code": "BUBBLES",
+      "phone": "1-999-282-2537",
+      "ps": "R2 Left L2 Right Right R1 L1 Square Right",
+      "versions": "gen8plus"
+    },
+    {
+      "game": "story",
+      "group": "Phone-only",
+      "name": "Director mode",
+      "code": "",
+      "phone": "1-999-5782-5368",
+      "ps": null,
+      "versions": "gen8plus"
+    },
+    {
+      "game": "story",
+      "group": "Phone-only",
+      "name": "Black cellphone",
+      "code": "",
+      "phone": "1-999-367-3767",
+      "ps": null,
+      "versions": "gen8plus"
+    },
+    {
+      "game": "sa",
+      "group": "Weapons",
+      "name": "Weapon set 3",
+      "code": "UZUMYMW",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Down"
+    },
+    {
+      "game": "sa",
+      "group": "Police",
+      "name": "Lock wanted level",
+      "code": "AEZAKMI",
+      "phone": null,
+      "ps": "Circle Right Circle Right Left Square Triangle Up"
+    },
+    {
+      "game": "sa",
+      "group": "Police",
+      "name": "Raise wanted level",
+      "code": "OSRBLHH",
+      "phone": null,
+      "ps": "R1 R1 Circle R2 Left Right Left Right Left Right"
+    },
+    {
+      "game": "sa",
+      "group": "Police",
+      "name": "Six-star wanted level",
+      "code": "BRINGITON",
+      "phone": null,
+      "ps": "Circle Right Circle Right Left Square Cross Down"
+    },
+    {
+      "game": "sa",
+      "group": "Weapons",
+      "name": "Weapon set 2 (alternate PC code)",
+      "code": "PROFESSIONALSKIT",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Left"
+    },
+    {
+      "game": "sa",
+      "group": "Movement",
+      "name": "Super jump",
+      "code": "CJPHONEHOME",
+      "phone": null,
+      "ps": "Up Up Triangle Triangle Up Up Left Right Square R2 R2"
+    },
+    {
+      "game": "sa",
+      "group": "Equipment",
+      "name": "Parachute",
+      "code": "AIYPWZQP",
+      "phone": null,
+      "ps": "Left Right L1 L2 R1 R2 R2 Up Down Right L1"
+    },
+    {
+      "game": "sa",
+      "group": "Vehicles",
+      "name": "Hunter helicopter",
+      "code": "OHDUDE",
+      "phone": null,
+      "ps": "Circle Cross L1 Circle Circle L1 Circle R1 R2 L2 L1 L1"
     }
   ],
   "news": [
