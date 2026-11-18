@@ -36,6 +36,19 @@ async def smoke():
                         ctx=await browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
                         for path in PAGES:
                             pg=await ctx.new_page()
+                            if width==390 and path=='atlas.html':
+                                # Simulate a transient mobile Canvas allocation failure.
+                                # The real 2D engine must recover without a page reload.
+                                await pg.add_init_script("""(() => {
+                                  const original=HTMLCanvasElement.prototype.getContext;
+                                  let missed=2;
+                                  HTMLCanvasElement.prototype.getContext=function(kind,...args){
+                                    if(this.id==='atlasCanvas' && kind==='2d' && missed>0){
+                                      missed--;return null;
+                                    }
+                                    return original.call(this,kind,...args);
+                                  };
+                                })()""")
                             errors=[];missing=[]
                             pg.on('pageerror',lambda err:errors.append((getattr(err,'stack',None) or str(err))[:700]))
                             pg.on('response',lambda r:missing.append(r.url) if r.status>=400 and r.url.startswith(URL+'/') else None)
