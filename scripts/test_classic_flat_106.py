@@ -23,8 +23,13 @@ for id in ('classicFlatReference','classicFlatTitle','classicFlatDescription','c
     assert f'id="{id}"' in page,id
 assert 'src="./art/elario-crest.svg"' in page
 assert "atlas108-local-map.js?v=108" in page
-assert "atlas98-classic.js?v=128" in page and "atlas98-classic.css?v=108" in page
+assert "atlas98-classic.js?v=129" in page and "atlas98-classic.css?v=108" in page
 assert 'id="classicClearMap"' in page and 'id="classicImageFile"' in page
+for control in ('classicMapAttribution','classicMapSourceLink','classicRetryMap'):
+    assert f'id="{control}"' in page,control
+for image in ('ViceCity-GTAVCS-map.png','LibertyCity-GTALCS-MapFull-ExceptUpstate.png','1934-gtacw-full-map.jpg'):
+    assert image in js,image
+assert 'mapAlternates' in js and 'activeMapUrl' in js and 'image.onerror=next' in js
 assert "j106-flat-reference" in css
 assert "team-jura-atlas98-classic-" in js
 assert "state.background" in js and "state.markers" in js
