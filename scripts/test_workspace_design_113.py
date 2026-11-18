@@ -29,7 +29,7 @@ for name in PAGES:
  assert 'Elario Studios</title>' in content,(name,'title')
  assert '9.3 · Community Preview |' not in content,(name,'placeholder')
  assert all((ROOT/path).is_file() for path in p.local_links if path),(name,[u for u in p.local_links if u and not (ROOT/u).is_file()])
- assert '<main' in content,(name,'main region')
+ assert ('<div class="layout"' in content if name=='hunt-hq.html' else '<main' in content),(name,'main region')
 for name,wanted in {'atlas-catalog.html':('dbSearch','dbCards'), 'atlas-checklist.html':('setSearch','itemGrid'), 'atlas-toolkit.html':(), 'hunt-hq.html':('sidebar','search'), 'atlas-passport.html':()}.items():
  p=Scan();p.feed((ROOT/name).read_text(encoding='utf8'))
  for key in wanted:assert key in p.ids,(name,key)
