@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -48,6 +48,33 @@ async def smoke():
                             if errors:failures.extend('JS: '+e for e in errors)
                             if missing:failures.extend('Missing local response: '+e for e in missing)
                             if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
+                            if not failures and path in ('atlas-cheats.html','atlas-news.html'):
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#hubCount')?.textContent?.includes('snapshot ')",timeout=8000)
+                                    if path=='atlas-cheats.html':
+                                        if await pg.locator('#hubCards .h-card').count()<10:
+                                            failures.append('Story quick cheat reference missing')
+                                        await pg.locator('#hubSearch').fill('TURTLE')
+                                        if await pg.locator('#hubCards .h-card').count()!=1:
+                                            failures.append('Quick-code text search failed')
+                                        await pg.locator('#hubGame').select_option('vi')
+                                        if await pg.locator('#hubCards .h-card').count()!=0:
+                                            failures.append('Speculative VI cheat cards displayed')
+                                        await pg.locator('#hubGame').select_option('sa')
+                                        await pg.locator('#hubSearch').fill('')
+                                        if await pg.locator('#hubCards .h-card').count()<6:
+                                            failures.append('Classic San Andreas cheats missing')
+                                    else:
+                                        if await pg.locator('#hubCards .h-card').count()<3:
+                                            failures.append('Official VI news sources not loaded')
+                                        await pg.locator('#hubGame').select_option('online')
+                                        if await pg.locator('#hubCards .h-card').count()<1:
+                                            failures.append('GTA Online news filter empty')
+                                        urls=await pg.locator('#hubCards .h-card a').evaluate_all("(els)=>els.map(a=>a.href)")
+                                        if any(not ('rockstargames.com' in u) for u in urls):
+                                            failures.append('Unofficial news link in official-news hub')
+                                except Exception as exc:
+                                    failures.append('Cheats/Newsroom smoke test failed: '+str(exc)[:450])
                             if not failures and path=='atlas-vehicle-configurator.html':
                                 try:
                                     await pg.wait_for_function("document.querySelector('#modelSelect')?.options.length > 20",timeout=8500)
