@@ -13,7 +13,9 @@ assert len(re.findall(r"\bcoverSrc:'", directory))==13
 for world in worlds:
  assert re.search(r"\{id:'"+world+r"',[^\n]*coverSrc:'[^']+'",directory),world
 for world in ['iii','vc','vcs','lcs','ctw','tlad','tbogt']:
- assert re.search(r"\b"+world+r":\{name:[^\n]*map:'https://[^']+'",classic),world
+ assert re.search(r"\b"+world+r":\{name:[^\n]*map:'(?:https://|\\./art/)[^']+'",classic),world
+for name in ('atlas128-gta3-radar.png','atlas128-vice-city-radar.png','atlas128-gta4-landmarks.jpg'):
+ assert (ROOT/'art'/name).is_file(),name
 assert 'originalMapReady' in classic and 'loadOriginalWorldMap()' in classic
 assert 'highResUrl||state.background' in classic
 assert 'w.coverSrc' in portal and 'im.onerror=' in portal
