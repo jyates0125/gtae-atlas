@@ -17,7 +17,7 @@ expect={
 }
 for game,path in expect.items():
     assert f"{game}:{{url:'https://gtamap.io/{path}'" in js, game
-assert "function flatReference()" in js and "flatReference();document.title=" in js
+assert "function flatReference()" in js and "flatReference();" in js and "document.title=w.name+" in js
 assert "The original game map appears above" in js
 for id in ('classicFlatReference','classicFlatTitle','classicFlatDescription','classicFlatLink','classicFlatCredit'):
     assert f'id="{id}"' in page,id
