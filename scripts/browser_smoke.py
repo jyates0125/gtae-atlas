@@ -165,11 +165,19 @@ async def smoke():
                                 covers=pg.locator('#directoryFeatured img,#directoryAdditional img')
                                 if await covers.count()!=13:failures.append('Map directory must render 13 distinct covers')
                                 else:
-                                    await covers.evaluate_all("(imgs)=>imgs.forEach(x=>x.loading='eager')")
-                                    try:
-                                        await pg.wait_for_function("()=>[...document.querySelectorAll('#directoryFeatured img,#directoryAdditional img')].every(x=>x.complete&&x.naturalWidth>0)",timeout=14000)
-                                    except Exception:
-                                        failures.append('One or more Atlas cover assets did not decode on this device')
+                                    # The site intentionally lazy-loads the nine
+                                    # additional covers. Test real scroll-to-view
+                                    # decoding, not an artificial 13-image eager
+                                    # allocation spike that exhausts mobile Edge.
+                                    for index in range(13):
+                                        cover=covers.nth(index)
+                                        try:
+                                            await cover.scroll_into_view_if_needed(timeout=6500)
+                                            await pg.wait_for_function("(i)=>{const el=document.querySelectorAll('#directoryFeatured img,#directoryAdditional img')[i];return !!el&&el.complete&&el.naturalWidth>0}",arg=index,timeout=8500)
+                                        except Exception as err:
+                                            src=await cover.get_attribute('src')
+                                            failures.append('Atlas cover failed to load on scroll: '+str(src)+' · '+str(err)[:115])
+                                            break
                                     urls=await covers.evaluate_all("(imgs)=>imgs.map(x=>x.getAttribute('src'))")
                                     if len(set(urls))!=13:failures.append('Duplicate world cover used')
                                     if len([x for x in urls if 'atlas106-' in x])!=7:
