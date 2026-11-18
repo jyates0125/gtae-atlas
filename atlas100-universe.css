@@ -46,3 +46,23 @@
 .u-list .u-image img{height:180px}
 @media(max-width:650px){.u-detail-hero{grid-template-columns:1fr}.u-facts{grid-template-columns:1fr}.u-compare #compareContent{grid-template-columns:1fr 1fr}}
 @media(max-width:460px){.u-card-title{font-size:15px}.u-image{min-height:110px}.u-image img{height:117px}.u-symbol{font-size:54px}.u-card-desc{min-height:0}.u-card-actions .u-linkbutton,.u-card-actions button{font-size:10px}.u-image-note{font-size:8px;padding:2px 4px}}
+
+/* Atlas 10.2: game-first discovery strip and original category gateways. */
+.u-worlds{margin:17px 0 13px;border:1px solid #8d5a91;border-radius:15px;padding:19px;background:linear-gradient(120deg,#26163b,#181428 65%,#2c1d39)}
+.u-worlds-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.u-worlds-heading h2{font-size:clamp(19px,2.5vw,28px);margin:0;color:#fff}
+.u-worlds-heading>p{max-width:500px;color:#dccce4;font-size:12px;margin:0}
+.u-world-buttons{margin-top:17px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.u-world-buttons button{border:1px solid #886095;border-radius:10px;padding:11px 9px;background:#301e41;color:#fff;min-height:66px;display:flex;flex-direction:column;justify-content:center;text-align:left;font-weight:900;font-size:13px;line-height:1.25}
+.u-world-buttons button small{font-size:10px;font-weight:600;color:#ead6ec;margin-top:5px}
+.u-world-buttons button:hover{border-color:#ffc979;background:#523158}
+.u-world-buttons button[aria-pressed=true]{border-color:#ffbc77;background:linear-gradient(130deg,#9a55a5,#61335e);box-shadow:inset 0 0 0 1px #ffd39c99}
+.u-world-buttons button[aria-pressed=true] small{color:#fff4e1}
+.u-category-paths{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin:12px 0 26px}
+.u-category-paths a{min-width:0;display:grid;grid-template-rows:auto auto 1fr;gap:5px;padding:13px;border:1px solid #80548f;border-radius:12px;background:linear-gradient(150deg,#3b214c,#1b142c);text-decoration:none;color:#fff}
+.u-category-paths a:hover{border-color:#ffcf8d;background:linear-gradient(145deg,#633862,#27203f)}
+.u-category-paths a>span{font-size:26px;color:#ffd08c}
+.u-category-paths strong{font-size:14px}
+.u-category-paths small{font-size:10px;color:#e3ccdf;line-height:1.35}
+@media(max-width:1000px){.u-world-buttons{grid-template-columns:repeat(3,minmax(0,1fr))}.u-category-paths{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.u-worlds{padding:12px}.u-world-buttons{grid-template-columns:repeat(2,minmax(0,1fr))}.u-world-buttons button{min-height:64px}.u-category-paths{grid-template-columns:repeat(2,minmax(0,1fr))}.u-category-paths a{padding:10px}}
