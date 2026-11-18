@@ -27,6 +27,7 @@ for name in pages:
  assert '9.3 · Community Preview' not in s,(name,'legacy preview copy')
  assert all((ROOT/u).is_file() for u in o.files if u),(name,[u for u in o.files if u and not (ROOT/u).is_file()])
 assert '2,335 / 3,401' not in (ROOT/'atlas-calibration.html').read_text(),'Old stale VI snapshot count still displayed'
+assert '77 of 94' not in (ROOT/'atlas-calibration.html').read_text(),'Old 2026-11-11 provisional position count still displayed'
 assert 'Versioned repository snapshots' in (ROOT/'atlas-calibration.html').read_text()
 assert 'historical snapshot' in (ROOT/'atlas-feature-audit.html').read_text().lower(),'Older audit must not be presented as a current source certification'
 assert 'not individually verified in gameplay' in (ROOT/'atlas-completion.html').read_text().lower()
