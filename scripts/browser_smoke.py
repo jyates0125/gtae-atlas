@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -299,6 +299,26 @@ async def smoke():
                                     await pg.locator('#classicClear').click()
                                 except Exception as exc:
                                     failures.append('Local classic high-resolution image regression: '+str(exc)[:300])
+                            if not failures and path.startswith('atlas-activities.html'):
+                                if not await pg.locator('body.j112-activities').count():
+                                    failures.append('Elario Activity Intelligence design missing')
+                                if not await pg.locator('.j112-activity-hero h1#headline').is_visible():
+                                    failures.append('Game-specific activity hero/title missing')
+                                try:
+                                    await pg.wait_for_function("() => Number(document.getElementById('ruleCount')?.textContent) >= 0 && Number(document.getElementById('resultTotal')?.textContent?.split(' ')[0]) >= 0", timeout=8500)
+                                    if await pg.locator('.rule-list .rule').count() == 0 and 'mode=vi' not in path:
+                                        failures.append('Activity cards did not render')
+                                    if 'mode=story' in path and not await pg.locator('#storyControls').is_visible():
+                                        failures.append('Story-only prerequisites not exposed')
+                                    if 'mode=online' in path and not await pg.locator('#onlineControls').is_visible():
+                                        failures.append('Online-only event filters not exposed')
+                                    if 'mode=vi' in path and not await pg.locator('#viControls').is_visible():
+                                        failures.append('VI research controls not exposed')
+                                except Exception as exc:
+                                    failures.append('Activities failed game-mode initialization: '+str(exc)[:250])
+                            if not failures and path in ('directory.html','discovery.html','leonida-hq.html'):
+                                if not await pg.locator('body.j112-unified').count():
+                                    failures.append('Older destination was not upgraded to the current Elario theme')
                             if not failures and path=='atlas-credits.html':
                                 if await pg.locator('h1#pageTitle').count()!=1:
                                     failures.append('Canonical credits page title missing')

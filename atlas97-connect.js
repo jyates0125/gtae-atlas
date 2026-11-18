@@ -4,14 +4,14 @@
 const page=(location.pathname.split('/').pop()||'index.html').toLowerCase();
 const n=(tag,cls,content)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(content!==undefined)e.textContent=content;return e};
 const legacy={
- 'atlas8-preview.html':['an earlier Designed Brand preview','atlas97-journey.html'],
- 'directory.html':['the earlier discovery directory','atlas97-journey.html'],
- 'discovery.html':['an earlier discovery deck','atlas97-journey.html'],
- 'explorer.html':['a legacy map workspace','atlas.html'],
- 'online-explorer.html':['a legacy online map workspace','atlas-online.html'],
- 'legacy-explorer.html':['a legacy Leonida map workspace','atlas-research.html'],
- 'hunt-hq.html':['a legacy collection workspace','atlas81-hq.html'],
- 'leonida-hq.html':['an earlier Leonida landing page','atlas-research.html']
+ 'atlas8-preview.html':['Atlas Studio Dashboard','index.html'],
+ 'directory.html':['Discovery Directory','maps.html'],
+ 'discovery.html':['Discovery Deck','maps.html'],
+ 'explorer.html':['Research Explorer','atlas.html'],
+ 'online-explorer.html':['Community Map Explorer','atlas-online.html'],
+ 'legacy-explorer.html':['Leonida Community Map Explorer','atlas-vi.html'],
+ 'hunt-hq.html':['Hunt HQ','atlas81-hq.html'],
+ 'leonida-hq.html':['Leonida HQ','atlas-vi.html']
 };
 const resume={'atlas.html':1,'atlas-online.html':1,'atlas-vi.html':1,'atlas-research.html':1,'atlas-cayo.html':1,'atlas93-garage.html':1,'atlas81-hq.html':1,'heists.html':1,'atlas90-vehicles5.html':1,'atlas90-vehicles6.html':1,'atlas87-daily.html':1,'atlas93-dispatch.html':1};
 function addMenu(){const menu=document.getElementById('j89-menu');if(!menu||menu.querySelector('[data-j97-start]'))return;
@@ -26,8 +26,8 @@ function onHomepage(){if(!['index.html','atlas81-hq.html'].includes(page))return
  const hero=main.querySelector('.page-hero,.hero,.j81-hero');if(hero&&hero.parentElement===main)hero.insertAdjacentElement('afterend',box);else main.prepend(box);
 }
 function oldPage(){const hint=legacy[page];if(!hint||document.getElementById('j97-legacy-note'))return;
- const block=n('aside','j97-legacy-note');block.id='j97-legacy-note';block.setAttribute('aria-label','Current Atlas workspace');block.append(n('strong','','Earlier workspace preserved'),n('span','','You are viewing '+hint[0]+'. Its original tools remain available. The current Atlas experience is linked here.'));
- const link=n('a','','Open current Atlas workspace');link.href='./'+hint[1];block.append(link);
+ const block=n('aside','j97-legacy-note');block.id='j97-legacy-note';block.setAttribute('aria-label','Team Jura Atlas navigation');block.append(n('strong','','ELARIO STUDIOS · TEAM JURA ATLAS'),n('span','',''+hint[0]+' is part of the Atlas universe. Use its current tools here, or choose your main game map directly.'));
+ const link=n('a','','Open main game map');link.href='./'+hint[1];block.append(link);
  const target=document.querySelector('main')||document.querySelector('.shell')||document.body;
  target.prepend(block);
 }
