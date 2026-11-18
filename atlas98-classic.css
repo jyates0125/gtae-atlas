@@ -22,3 +22,57 @@
  border-color:#ac778d;background:#221227;color:#ffe2cb;
 }
 .classic-actions #classicClearMap:hover{background:#4b2434}
+
+/* Atlas 12.1 — modern, subject-specific classic-world artwork.
+   Game-specific original Elario illustrations; imported player maps
+   retain their own image proportions and original positioning. */
+body[data-page="classic"] .classic-hero{
+  min-height:205px;position:relative;isolation:isolate;overflow:hidden;
+  background:linear-gradient(115deg,#37164d,#160d2a);
+  box-shadow:0 16px 34px #07040f85;
+  border-color:#f3b86c;
+}
+body[data-page="classic"] .classic-hero::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at 85% 45%,#f4a7522c,transparent 60%);
+}
+body[data-page="classic"] .classic-hero>div{flex:1;max-width:750px;padding:14px 5px;z-index:1}
+body[data-page="classic"] .classic-hero h1{font-size:clamp(32px,4vw,58px);line-height:1.05;text-shadow:0 3px 10px #080312}
+body[data-page="classic"] .classic-hero p{font-size:clamp(13px,1.3vw,16px);max-width:580px}
+body[data-page="classic"] .classic-hero img{
+  width:min(43%,580px);height:230px;min-width:220px;object-fit:cover;
+  object-position:center;border:1px solid #f1b66c;border-radius:13px;
+  box-shadow:0 8px 28px #06020fa8;
+}
+body[data-page="classic"] .classic-map{
+  background:#1b102c;border-color:#e5ad71;
+  box-shadow:0 12px 32px #07020a91;
+}
+body[data-page="classic"] #classicViewport[data-map-image="original-art"] .classic-map-bg{
+  background-position:center;background-size:cover;
+}
+body[data-page="classic"] .classic-map-bg:not(.has-image){
+  text-shadow:0 2px 8px #10081b;
+}
+body[data-page="classic"] .classic-map-bg:not(.has-image)::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(0deg,#130b2055,transparent 27%,transparent 70%,#16082435);
+}
+body[data-page="classic"] .classic-stage-note{
+  border-left:3px solid #f1ad65;padding:7px 12px;background:#301b3c;
+  border-radius:0 8px 8px 0;line-height:1.5;
+}
+body[data-page="classic"] .classic-controls button:hover{
+  background:#754072;border-color:#ffd393;
+}
+@media(max-width:720px){
+  body[data-page="classic"] .classic-hero{min-height:160px;padding:13px}
+  body[data-page="classic"] .classic-hero img{min-width:0;width:35%;height:156px}
+  body[data-page="classic"] .classic-hero h1{font-size:clamp(27px,6vw,42px)}
+}
+@media(max-width:570px){
+  body[data-page="classic"] .classic-hero img{display:block;width:32%;height:135px}
+  body[data-page="classic"] .classic-hero>div{min-width:0}
+  body[data-page="classic"] .classic-hero p{font-size:12px}
+  body[data-page="classic"] .classic-map{height:min(62vh,550px);min-height:330px}
+}
