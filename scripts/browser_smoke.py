@@ -225,6 +225,26 @@ async def smoke():
                                         await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=6000)
                                     except Exception:
                                         failures.append('Original heist illustration did not load')
+                            if not failures and path in ('heists.html','heist-fleeca.html','heist-cayo-perico.html'):
+                                try:
+                                    await pg.wait_for_selector('.sitebar .j104-logo',timeout=6000)
+                                    if path=='heists.html':
+                                        if await pg.locator('.cards .card[data-theme]').count()<10:
+                                            failures.append('Heist HQ lacks operation-specific art classes')
+                                    else:
+                                        await pg.wait_for_selector('#missionBrief .j104-brief-visual img',timeout=7000)
+                                        if await pg.locator('#missionBrief .j104-mission-flow li').count()<1:
+                                            failures.append('Heist planning sequence missing')
+                                        if await pg.locator('.j104-heist-actions button').count()!=1:
+                                            failures.append('Heist-specific planning board action missing')
+                                        if path=='heist-fleeca.html':
+                                            if await pg.locator('.j104-optional-world summary').count()!=1:
+                                                failures.append('General map not demoted to optional reference')
+                                        if path=='heist-cayo-perico.html':
+                                            if await pg.locator('.j104-heist-actions a[href="./atlas-cayo.html"]').count()!=1:
+                                                failures.append('Cayo island planner not directly linked')
+                                except Exception as exc:
+                                    failures.append('Heist-specific planning UI unavailable: '+str(exc)[:330])
                             if not failures and path=='atlas93-garage.html':
                                 await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')
@@ -234,6 +254,20 @@ async def smoke():
                                     if await pg.locator('#garageDetails .j99-3d-controls button').count()!=3:failures.append('Showroom interaction controls missing')
                                     if 'not a scanned or official model' not in (await pg.locator('#garageDetails .j99-showroom').inner_text()).lower():failures.append('3D concept rights disclaimer missing')
                                 else:failures.append('Garage vehicle catalogue did not load')
+                                await pg.locator('#garageSearch').fill('squalo')
+                                await pg.locator('#garageClassFilter').select_option('Boats & Watercraft')
+                                boat=pg.locator('#garageCards article.card button.primary').first
+                                if await boat.count()!=1:
+                                    failures.append('Boat not found in class-correct catalog')
+                                else:
+                                    await boat.click()
+                                    intelligence=await pg.locator('#garageDetails .j104-intelligence').inner_text()
+                                    if 'Shitzu' not in intelligence or '65.75 mph' not in intelligence:
+                                        failures.append('Squalo boat facts did not load')
+                                    if await pg.locator('#garageDetails .j99-showroom canvas').count()!=0:
+                                        failures.append('Boat incorrectly represented as generic 3D car')
+                                await pg.locator('#garageClassFilter').select_option('all')
+                                await pg.locator('#garageSearch').fill('')
                             if not failures and path=='atlas-research.html':
                                 if await pg.locator('#map').count()==0:failures.append('Research canvas missing')
                                 if await pg.locator('#showResearchPins:checked').count()!=0:failures.append('Research pins should start hidden')

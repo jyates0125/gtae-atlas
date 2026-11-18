@@ -64,7 +64,7 @@ function card(r){const node=make('article','u-card');node.append(artwork(r));con
  if(r.kind==='vehicle'||r.kind==='weapon'){const cmp=make('button','u-action u-muted-action',compare.some(x=>x.id===r.id)?'✓ Selected':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.some(x=>x.id===r.id)));cmp.onclick=()=>selectCompare(r);actions.append(cmp)}
  body.append(actions);node.append(body);return node}
 function syncURL(){const url=new URL(location.href);if(kind!==DEFAULT_KIND)url.searchParams.set('kind',kind);else url.searchParams.delete('kind');if(game!==DEFAULT_GAME)url.searchParams.set('game',game);else url.searchParams.delete('game');if(query)url.searchParams.set('q',query);else url.searchParams.delete('q');history.replaceState(null,'',url)}
-function draw(){filtered=match();syncURL();
+function draw(){document.body.dataset.activeWorld=game;document.body.dataset.activeKind=kind;filtered=match();syncURL();
  document.querySelectorAll('[data-world]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.world===game)));
  const title=$('resultsTitle');if(title)title.textContent=(kind==='all'?'All types':LABELS[kind]||'References')+' · '+(game==='all'?'All worlds':world(game));page=Math.max(0,Math.min(page,Math.ceil(filtered.length/LIMIT)-1));$('totalRecords').textContent=String(all.length);$('visibleRecords').textContent=String(filtered.length);$('selectedCompare').textContent=String(compare.length);$('resultsCount').textContent=filtered.length.toLocaleString()+' matching records';
  $('pageStatus').textContent='Page '+(page+1)+' of '+Math.max(1,Math.ceil(filtered.length/LIMIT));$('prevRecords').disabled=page===0;$('nextRecords').disabled=(page+1)*LIMIT>=filtered.length;

@@ -58,3 +58,6 @@ runpy.run_path(str(D / 'scripts/test_configurator_101.py'),run_name='__main__')
 
 # Standalone sourced cheat and official-news hub validation.
 runpy.run_path(str(D / 'scripts/test_hubs_103.py'),run_name='__main__')
+
+# Source-checked craft facts and mission-specific heist command presentation.
+runpy.run_path(str(D / 'scripts/test_vehicle_intel_104.py'),run_name='__main__')
