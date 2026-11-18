@@ -279,6 +279,7 @@ async def smoke():
                                     bounds=await pg.locator('#classicMapSurface').bounding_box()
                                     if not bounds or abs(bounds['width']/bounds['height']-2)>.05:
                                         failures.append('Imported classic map lost its native 2:1 aspect ratio')
+                                    await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
                                     await pg.locator('#classicAddPin').click()
                                     await pg.locator('#classicMapSurface').click(position={'x':bounds['width']/2,'y':bounds['height']/2})
                                     await pg.locator('#markerName').fill('Local high-res marker test')
@@ -289,6 +290,7 @@ async def smoke():
                                     await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='local-highres'",timeout=10000)
                                     if await pg.locator('#pinCount').inner_text()!='1':
                                         failures.append('Markers were lost after restoring an offline high-res image')
+                                    await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
                                     await pg.evaluate("window.confirm=()=>true")
                                     await pg.locator('#classicClearMap').click()
                                     await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='original-art'",timeout=10000)
