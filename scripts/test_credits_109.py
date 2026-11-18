@@ -17,7 +17,10 @@ class Reader(HTMLParser):
 p=Reader();p.feed(html)
 required={'main','pageTitle','creators','licensed','reference','worlds','notices','corrections'}
 assert required.issubset(p.ids),required-p.ids
-assert p.cards>=16,p.cards
+assert p.cards>=17,p.cards
+assert '<h3>Fandom · legacy GTA Wiki</h3>' in html
+assert '<h3>GTA Wiki · independent gta.wiki</h3>' in html
+assert 'CC BY-NC-SA 3.0' in html and 'CC BY-SA 3.0' in html
 assert (ROOT/'atlas109-credits.css').is_file()
 assert './atlas109-credits.css?v=109' in html
 assert './art/elario-crest.svg' in p.img
@@ -38,8 +41,10 @@ for href,target,rel in p.links:
 manifest=json.loads((ROOT/'data/atlas98-source-rights.json').read_text(encoding='utf-8'))
 assert manifest['canonicalCreditsPage']=='atlas-credits.html'
 assert manifest['version']=='10.9'
+assert any(x['name']=='GTA Wiki Fandom legacy archive' for x in manifest['sources'])
+assert any(x['name']=='GTA Wiki independent site' for x in manifest['sources'])
 assert any(x['id']=='sa' and x['status'].startswith('Native licensed') for x in manifest['worlds'])
 assert 'href="./atlas-credits.html"' in (ROOT/'index.html').read_text(encoding='utf-8')
 assert 'href="./atlas-credits.html"' in (ROOT/'maps.html').read_text(encoding='utf-8')
 assert 'GTAMap.io' in (ROOT/'atlas-source-registry.html').read_text(encoding='utf-8')
-print('PASS Atlas 10.9: single branded credits page, 16 source cards, attributed upstream sources and preserved MIT notice')
+print('PASS Atlas 10.9: single branded credits page, 17 source cards, attributed upstream sources and preserved MIT notice')
