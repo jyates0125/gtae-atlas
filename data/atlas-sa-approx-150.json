@@ -1,0 +1,1370 @@
+{
+  "schema": 1,
+  "game": "san-andreas",
+  "basis": "image-pixels",
+  "width": 6000,
+  "height": 6000,
+  "source": "Flentric/SA.MapCollectibles (MIT) GTA SA 1.0 US script pickup coordinates; display transform on Toliak Apache-2.0 6000×6000 flat map",
+  "license": "MIT by Flentric for table transcription; Toliak map tracing Apache-2.0; Rockstar game IP acknowledged",
+  "sourceUrl": "https://github.com/Flentric/SA.MapCollectibles/blob/main/source/CollectibleCoords.h",
+  "mapArt": "art/atlas-sa-vector.svg",
+  "mapSourceUrl": "https://github.com/Toliak/San-Andreas-vector-map",
+  "mapAlignment": "Approximate game-world-to-6000px projection X=worldX+3000, Y=3000-worldY. Verify visually; not calibrated placement or actual pinpoint evidence.",
+  "verifiedSetCounts": {
+    "snapshots": 50,
+    "horseshoes": 50,
+    "oysters": 50
+  },
+  "records": [
+    {
+      "set": "snapshots",
+      "slot": 1,
+      "x": 488.72,
+      "y": 3672.99,
+      "z": 195.75,
+      "label": "Snapshot 01",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 2,
+      "x": 276.37,
+      "y": 3314.72,
+      "z": 55.79,
+      "label": "Snapshot 02",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 3,
+      "x": 1262.29,
+      "y": 3579.55,
+      "z": 26.19,
+      "label": "Snapshot 03",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 4,
+      "x": 1513.92,
+      "y": 2079.96,
+      "z": 41.37,
+      "label": "Snapshot 04",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 5,
+      "x": 1730.18,
+      "y": 2036.37,
+      "z": 130.37,
+      "label": "Snapshot 05",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 6,
+      "x": 1349.99,
+      "y": 2578,
+      "z": 21.17,
+      "label": "Snapshot 06",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 7,
+      "x": 1148.28,
+      "y": 3096.73,
+      "z": 24.37,
+      "label": "Snapshot 07",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 8,
+      "x": 268,
+      "y": 3244,
+      "z": 19,
+      "label": "Snapshot 08",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 9,
+      "x": 197.25,
+      "y": 2624.53,
+      "z": 36.59,
+      "label": "Snapshot 09",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 10,
+      "x": 226.96,
+      "y": 2216.55,
+      "z": 67.66,
+      "label": "Snapshot 10",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 11,
+      "x": 319.93,
+      "y": 1409.2,
+      "z": 143.53,
+      "label": "Snapshot 11",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 12,
+      "x": 523.25,
+      "y": 1456.56,
+      "z": 49.26,
+      "label": "Snapshot 12",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 13,
+      "x": 1120.96,
+      "y": 1543.48,
+      "z": 9.34,
+      "label": "Snapshot 13",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 14,
+      "x": 1438.45,
+      "y": 2344.81,
+      "z": 56.52,
+      "label": "Snapshot 14",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 15,
+      "x": 1674.85,
+      "y": 2505.81,
+      "z": 26.83,
+      "label": "Snapshot 15",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 16,
+      "x": 1058.59,
+      "y": 2862.28,
+      "z": 37.83,
+      "label": "Snapshot 16",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 17,
+      "x": 846.77,
+      "y": 2537.75,
+      "z": 103.27,
+      "label": "Snapshot 17",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 18,
+      "x": 756.04,
+      "y": 2422.24,
+      "z": 49,
+      "label": "Snapshot 18",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 19,
+      "x": 949,
+      "y": 2544,
+      "z": 167,
+      "label": "Snapshot 19",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 20,
+      "x": 1049,
+      "y": 2341,
+      "z": 81,
+      "label": "Snapshot 20",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 21,
+      "x": 936,
+      "y": 2074,
+      "z": 63,
+      "label": "Snapshot 21",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 22,
+      "x": 642.67,
+      "y": 1982.99,
+      "z": 59.76,
+      "label": "Snapshot 22",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 23,
+      "x": 928,
+      "y": 1934,
+      "z": 74,
+      "label": "Snapshot 23",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 24,
+      "x": 1256,
+      "y": 2027.54,
+      "z": 156.89,
+      "label": "Snapshot 24",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 25,
+      "x": 1059,
+      "y": 2117,
+      "z": 68,
+      "label": "Snapshot 25",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 26,
+      "x": 1160.49,
+      "y": 1913.12,
+      "z": 101.29,
+      "label": "Snapshot 26",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 27,
+      "x": 1295.2,
+      "y": 1662,
+      "z": 14,
+      "label": "Snapshot 27",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 28,
+      "x": 653.38,
+      "y": 2463.15,
+      "z": 86.02,
+      "label": "Snapshot 28",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 29,
+      "x": 557,
+      "y": 2245,
+      "z": 49,
+      "label": "Snapshot 29",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 30,
+      "x": 235,
+      "y": 2625,
+      "z": 15,
+      "label": "Snapshot 30",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 31,
+      "x": 119.69,
+      "y": 3935.83,
+      "z": 40.82,
+      "label": "Snapshot 31",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 32,
+      "x": 917,
+      "y": 3808,
+      "z": 69,
+      "label": "Snapshot 32",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 33,
+      "x": 1046,
+      "y": 3760,
+      "z": 53,
+      "label": "Snapshot 33",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 34,
+      "x": 2035.47,
+      "y": 3331.59,
+      "z": 47.16,
+      "label": "Snapshot 34",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 35,
+      "x": 1311,
+      "y": 2949,
+      "z": 38,
+      "label": "Snapshot 35",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 36,
+      "x": 920,
+      "y": 2743.95,
+      "z": 107,
+      "label": "Snapshot 36",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 37,
+      "x": 587,
+      "y": 2669,
+      "z": 37,
+      "label": "Snapshot 37",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 38,
+      "x": 755.58,
+      "y": 2268.68,
+      "z": 61.88,
+      "label": "Snapshot 38",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 39,
+      "x": 538,
+      "y": 2631,
+      "z": 59,
+      "label": "Snapshot 39",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 40,
+      "x": 1875.56,
+      "y": 3153.15,
+      "z": 18.5,
+      "label": "Snapshot 40",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 41,
+      "x": 1724.22,
+      "y": 2946.32,
+      "z": 89.07,
+      "label": "Snapshot 41",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 42,
+      "x": 570,
+      "y": 2962,
+      "z": 51,
+      "label": "Snapshot 42",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 43,
+      "x": 409,
+      "y": 2838,
+      "z": 15,
+      "label": "Snapshot 43",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 44,
+      "x": 409,
+      "y": 3016,
+      "z": 17,
+      "label": "Snapshot 44",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 45,
+      "x": 352,
+      "y": 3005,
+      "z": 31,
+      "label": "Snapshot 45",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 46,
+      "x": 407,
+      "y": 2944,
+      "z": 16,
+      "label": "Snapshot 46",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 47,
+      "x": 1380.69,
+      "y": 1658.61,
+      "z": 11.3,
+      "label": "Snapshot 47",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 48,
+      "x": 693,
+      "y": 2793,
+      "z": 42,
+      "label": "Snapshot 48",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 49,
+      "x": 657,
+      "y": 3079,
+      "z": 38,
+      "label": "Snapshot 49",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "snapshots",
+      "slot": 50,
+      "x": 1093.34,
+      "y": 2481.42,
+      "z": 61.71,
+      "label": "Snapshot 50",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 1,
+      "x": 4224,
+      "y": 383,
+      "z": 11,
+      "label": "Horseshoe 01",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 2,
+      "x": 5323,
+      "y": 1716,
+      "z": 97,
+      "label": "Horseshoe 02",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 3,
+      "x": 5035,
+      "y": 695,
+      "z": 18,
+      "label": "Horseshoe 03",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 4,
+      "x": 5491,
+      "y": 737,
+      "z": 15,
+      "label": "Horseshoe 04",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 5,
+      "x": 4433,
+      "y": 204,
+      "z": 20,
+      "label": "Horseshoe 05",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 6,
+      "x": 5071,
+      "y": 2288,
+      "z": 11,
+      "label": "Horseshoe 06",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 7,
+      "x": 5239,
+      "y": 1161,
+      "z": 18,
+      "label": "Horseshoe 07",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 8,
+      "x": 5583,
+      "y": 613,
+      "z": 16,
+      "label": "Horseshoe 08",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 9,
+      "x": 5864,
+      "y": 2143,
+      "z": 13,
+      "label": "Horseshoe 09",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 10,
+      "x": 5612,
+      "y": 800,
+      "z": -1,
+      "label": "Horseshoe 10",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 11,
+      "x": 5274,
+      "y": 1493,
+      "z": 24,
+      "label": "Horseshoe 11",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 12,
+      "x": 5184,
+      "y": 471,
+      "z": 11,
+      "label": "Horseshoe 12",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 13,
+      "x": 4863,
+      "y": 686,
+      "z": 15,
+      "label": "Horseshoe 13",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 14,
+      "x": 5054,
+      "y": 566,
+      "z": 166,
+      "label": "Horseshoe 14",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 15,
+      "x": 4603,
+      "y": 1565,
+      "z": 11,
+      "label": "Horseshoe 15",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 16,
+      "x": 4362.92,
+      "y": 1984.76,
+      "z": 11,
+      "label": "Horseshoe 16",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 17,
+      "x": 5058.7,
+      "y": 840.9,
+      "z": 16,
+      "label": "Horseshoe 17",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 18,
+      "x": 5003,
+      "y": 1328,
+      "z": 12,
+      "label": "Horseshoe 18",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 19,
+      "x": 5238,
+      "y": 1865,
+      "z": 49,
+      "label": "Horseshoe 19",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 20,
+      "x": 4934.06,
+      "y": 2011.21,
+      "z": 22,
+      "label": "Horseshoe 20",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 21,
+      "x": 4768,
+      "y": 153,
+      "z": 9,
+      "label": "Horseshoe 21",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 22,
+      "x": 4084,
+      "y": 1924,
+      "z": 11,
+      "label": "Horseshoe 22",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 23,
+      "x": 5879,
+      "y": 478,
+      "z": 11,
+      "label": "Horseshoe 23",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 24,
+      "x": 5371,
+      "y": 991,
+      "z": 15,
+      "label": "Horseshoe 24",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 25,
+      "x": 4521,
+      "y": 1310,
+      "z": 10.6,
+      "label": "Horseshoe 25",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 26,
+      "x": 5417,
+      "y": 1719,
+      "z": 21,
+      "label": "Horseshoe 26",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 27,
+      "x": 4376,
+      "y": 696,
+      "z": 15,
+      "label": "Horseshoe 27",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 28,
+      "x": 4393,
+      "y": 1168,
+      "z": 12.34,
+      "label": "Horseshoe 28",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 29,
+      "x": 3984,
+      "y": 437,
+      "z": 12,
+      "label": "Horseshoe 29",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 30,
+      "x": 4767,
+      "y": 2399,
+      "z": 13,
+      "label": "Horseshoe 30",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 31,
+      "x": 5108,
+      "y": 1997,
+      "z": 46,
+      "label": "Horseshoe 31",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 32,
+      "x": 5705.98,
+      "y": 1137.48,
+      "z": 24.41,
+      "label": "Horseshoe 32",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 33,
+      "x": 5493,
+      "y": 2078,
+      "z": 16,
+      "label": "Horseshoe 33",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 34,
+      "x": 4881,
+      "y": 154,
+      "z": 11,
+      "label": "Horseshoe 34",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 35,
+      "x": 5020,
+      "y": 648,
+      "z": 11,
+      "label": "Horseshoe 35",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 36,
+      "x": 4680.3,
+      "y": 773.14,
+      "z": 16.11,
+      "label": "Horseshoe 36",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 37,
+      "x": 4462,
+      "y": 2064,
+      "z": 10,
+      "label": "Horseshoe 37",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 38,
+      "x": 5125.5,
+      "y": 2210.77,
+      "z": 11.45,
+      "label": "Horseshoe 38",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 39,
+      "x": 5588,
+      "y": 1098,
+      "z": 15,
+      "label": "Horseshoe 39",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 40,
+      "x": 3919,
+      "y": 930,
+      "z": 11,
+      "label": "Horseshoe 40",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 41,
+      "x": 5173,
+      "y": 535,
+      "z": 11,
+      "label": "Horseshoe 41",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 42,
+      "x": 5031.25,
+      "y": 792.67,
+      "z": 11,
+      "label": "Horseshoe 42",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 43,
+      "x": 5509,
+      "y": 1856,
+      "z": 19,
+      "label": "Horseshoe 43",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 44,
+      "x": 5215,
+      "y": 1032,
+      "z": 11,
+      "label": "Horseshoe 44",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 45,
+      "x": 5626,
+      "y": 159,
+      "z": 11,
+      "label": "Horseshoe 45",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 46,
+      "x": 5440.08,
+      "y": 838.93,
+      "z": 20,
+      "label": "Horseshoe 46",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 47,
+      "x": 4582,
+      "y": 599,
+      "z": 19,
+      "label": "Horseshoe 47",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 48,
+      "x": 5077,
+      "y": 1088,
+      "z": 14,
+      "label": "Horseshoe 48",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 49,
+      "x": 3970,
+      "y": 1213,
+      "z": 11,
+      "label": "Horseshoe 49",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "horseshoes",
+      "slot": 50,
+      "x": 4526.22,
+      "y": 2249,
+      "z": 29.04,
+      "label": "Horseshoe 50",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 1,
+      "x": 3979,
+      "y": 5210,
+      "z": -3,
+      "label": "Oyster 01",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 2,
+      "x": 5750,
+      "y": 5584,
+      "z": -5,
+      "label": "Oyster 02",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 3,
+      "x": 4279,
+      "y": 3806,
+      "z": 85,
+      "label": "Oyster 03",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 4,
+      "x": 5945.13,
+      "y": 5051.93,
+      "z": -3,
+      "label": "Oyster 04",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 5,
+      "x": 3067,
+      "y": 4018,
+      "z": -5,
+      "label": "Oyster 05",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 6,
+      "x": 5327,
+      "y": 5662,
+      "z": -5,
+      "label": "Oyster 06",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 7,
+      "x": 5621,
+      "y": 5506,
+      "z": -5,
+      "label": "Oyster 07",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 8,
+      "x": 4249,
+      "y": 5687,
+      "z": -1,
+      "label": "Oyster 08",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 9,
+      "x": 3725,
+      "y": 4849,
+      "z": -5,
+      "label": "Oyster 09",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 10,
+      "x": 3723,
+      "y": 4586,
+      "z": -3,
+      "label": "Oyster 10",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 11,
+      "x": 3155,
+      "y": 4975,
+      "z": -8,
+      "label": "Oyster 11",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 12,
+      "x": 4968,
+      "y": 4203,
+      "z": 17,
+      "label": "Oyster 12",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 13,
+      "x": 343,
+      "y": 1436,
+      "z": -6,
+      "label": "Oyster 13",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 14,
+      "x": 1748,
+      "y": 2499,
+      "z": -8,
+      "label": "Oyster 14",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 15,
+      "x": 1375,
+      "y": 2996,
+      "z": -10,
+      "label": "Oyster 15",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 16,
+      "x": 1516,
+      "y": 1511,
+      "z": -10,
+      "label": "Oyster 16",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 17,
+      "x": 494.59,
+      "y": 1456.28,
+      "z": -22.5553,
+      "label": "Oyster 17",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 18,
+      "x": 273,
+      "y": 3469,
+      "z": -5,
+      "label": "Oyster 18",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 19,
+      "x": 1734,
+      "y": 2034,
+      "z": -10,
+      "label": "Oyster 19",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 20,
+      "x": 1987,
+      "y": 2522,
+      "z": -7,
+      "label": "Oyster 20",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 21,
+      "x": 1636,
+      "y": 2610,
+      "z": -5,
+      "label": "Oyster 21",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 22,
+      "x": 5578,
+      "y": 618,
+      "z": 16,
+      "label": "Oyster 22",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 23,
+      "x": 5090,
+      "y": 1102,
+      "z": 8,
+      "label": "Oyster 23",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 24,
+      "x": 5130,
+      "y": 1848,
+      "z": 7,
+      "label": "Oyster 24",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 25,
+      "x": 5013,
+      "y": 1330,
+      "z": 7,
+      "label": "Oyster 25",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 26,
+      "x": 5531,
+      "y": 1431,
+      "z": 9,
+      "label": "Oyster 26",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 27,
+      "x": 5998,
+      "y": 2,
+      "z": -10,
+      "label": "Oyster 27",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 28,
+      "x": 2168,
+      "y": 2075,
+      "z": -2,
+      "label": "Oyster 28",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 29,
+      "x": 3486,
+      "y": 3253,
+      "z": -4,
+      "label": "Oyster 29",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 30,
+      "x": 2910,
+      "y": 3910,
+      "z": -5,
+      "label": "Oyster 30",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 31,
+      "x": 3026.43,
+      "y": 4320.94,
+      "z": -10.04,
+      "label": "Oyster 31",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 32,
+      "x": 2793,
+      "y": 4682,
+      "z": -8,
+      "label": "Oyster 32",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 33,
+      "x": 1328,
+      "y": 4641,
+      "z": -2,
+      "label": "Oyster 33",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 34,
+      "x": 1825,
+      "y": 5639,
+      "z": -2.5,
+      "label": "Oyster 34",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 35,
+      "x": 1903,
+      "y": 5858,
+      "z": -8,
+      "label": "Oyster 35",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 36,
+      "x": 111,
+      "y": 4042,
+      "z": -9,
+      "label": "Oyster 36",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 37,
+      "x": 2341,
+      "y": 2126,
+      "z": -2,
+      "label": "Oyster 37",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 38,
+      "x": 2045,
+      "y": 372,
+      "z": 35,
+      "label": "Oyster 38",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 39,
+      "x": 1934,
+      "y": 803,
+      "z": 32,
+      "label": "Oyster 39",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 40,
+      "x": 3040,
+      "y": 3531,
+      "z": -8,
+      "label": "Oyster 40",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 41,
+      "x": 2235,
+      "y": 2753,
+      "z": -8,
+      "label": "Oyster 41",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 42,
+      "x": 5098,
+      "y": 3108,
+      "z": -2,
+      "label": "Oyster 42",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 43,
+      "x": 5767,
+      "y": 2530,
+      "z": -8,
+      "label": "Oyster 43",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 44,
+      "x": 2217,
+      "y": 884,
+      "z": 35,
+      "label": "Oyster 44",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 45,
+      "x": 2179,
+      "y": 1626,
+      "z": -8,
+      "label": "Oyster 45",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 46,
+      "x": 889.5,
+      "y": 670.28,
+      "z": -7.5,
+      "label": "Oyster 46",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 47,
+      "x": 1462,
+      "y": 1292,
+      "z": -3.27,
+      "label": "Oyster 47",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 48,
+      "x": 315,
+      "y": 847,
+      "z": -5,
+      "label": "Oyster 48",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 49,
+      "x": 3796,
+      "y": 61,
+      "z": -5,
+      "label": "Oyster 49",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    },
+    {
+      "set": "oysters",
+      "slot": 50,
+      "x": 5179,
+      "y": 2765,
+      "z": -5,
+      "label": "Oyster 50",
+      "source": "Flentric SA.MapCollectibles, GTA SA 1.0 US script pickup coordinates; map placement approximate"
+    }
+  ]
+}
