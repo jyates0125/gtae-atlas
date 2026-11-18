@@ -450,6 +450,29 @@ async def smoke():
                     ready=await pg.locator('#mapPack').is_enabled()
                     results.append({'page':'Data Lab interactive CSV/pack export','viewport':1366,'ok':records=='2' and ready,'issues':[] if records=='2' and ready else [f'Unexpected validated total {records}, map pack enabled {ready}']})
                     await ctx.close()
+                    # Simulate a failed optional route-core script in the real
+                    # 390px game-map viewer; core map and legend must still boot.
+                    ctx=await browser.new_context(viewport={'width':390,'height':844},reduced_motion='reduce')
+                    pg=await ctx.new_page()
+                    nav_errors=[]
+                    pg.on('pageerror',lambda e:nav_errors.append(str(e)[:300]))
+                    async def block_road_core(route):await route.abort()
+                    await pg.route('**/atlas-road-core.js*',block_road_core)
+                    await pg.goto(URL+'/atlas.html',wait_until='domcontentloaded',timeout=25000)
+                    degraded=[]
+                    try:
+                        await pg.wait_for_function("() => document.querySelector('#layer')?.options.length >= 2 && document.querySelector('#legend')?.children.length > 0",timeout=11000)
+                        status=await pg.locator('#juraNavStatus').inner_text()
+                        if 'Route navigation temporarily unavailable' not in status:
+                            degraded.append('No degraded-route guidance when road-core is missing')
+                        if await pg.evaluate("Boolean(window.teamJuraNav)"):
+                            degraded.append('Router incorrectly initialized without its required road core')
+                        if nav_errors:
+                            degraded.extend('Unhandled JS error: '+e for e in nav_errors)
+                    except Exception as e:
+                        degraded.append('Game map did not survive missing optional road-core: '+str(e)[:350])
+                    results.append({'page':'GTA V mobile map with blocked optional road-core','viewport':390,'ok':not degraded,'issues':degraded})
+                    await ctx.close()
                 finally:await browser.close()
         finally:http.shutdown()
     report={'passed':sum(x['ok'] for x in results),'total':len(results),'results':results}
