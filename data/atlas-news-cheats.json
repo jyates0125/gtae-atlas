@@ -14,6 +14,14 @@
       "https://gtaside.com/tips/san-andreas/cheat-codes/pc/",
       "https://gtaside.com/tips/san-andreas/cheat-codes/playstation/",
       "https://gtaside.com/tips/san-andreas/cheat-codes/xbox/"
+    ],
+    "iii": [
+      "https://totalgta.com/gta-3/cheats/",
+      "https://gtaside.com/tips/gta3/cheat-codes/"
+    ],
+    "vc": [
+      "https://totalgta.com/gta-vice-city/cheats/",
+      "https://gtaside.com/tips/vice-city/cheat-codes/"
     ]
   },
   "cheats": [
@@ -446,6 +454,666 @@
       "code": "OHDUDE",
       "phone": null,
       "ps": "Circle Cross L1 Circle Circle L1 Circle R1 R2 L2 L1 L1"
+    },
+    {
+      "game": "iii",
+      "group": "Player",
+      "name": "$250,000 Cash",
+      "code": "IFIWEREARICHMAN",
+      "phone": null,
+      "ps": "R2 R2 L1 L1 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "iii",
+      "group": "Weapons",
+      "name": "All Weapons",
+      "code": "GUNSGUNSGUNS",
+      "phone": null,
+      "ps": "R2 R2 L1 R2 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Better Handling",
+      "code": "CORNERSLIKEMAD",
+      "phone": null,
+      "ps": "R1 L1 R2 L1 Left R1 R1 Triangle"
+    },
+    {
+      "game": "iii",
+      "group": "Effects",
+      "name": "Big Head Mode",
+      "code": "",
+      "phone": null,
+      "ps": "Up Up Down Down Left Right Left Right Circle Cross",
+      "versions": "definitive-only"
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Blow Up All Cars",
+      "code": "BANGBANGBANG",
+      "phone": null,
+      "ps": "L2 R2 L1 R1 L2 R2 Triangle Square Circle Triangle L2 L1"
+    },
+    {
+      "game": "iii",
+      "group": "Player",
+      "name": "Change Outfit",
+      "code": "ILIKEDRESSINGUP",
+      "phone": null,
+      "ps": "Right Down Left Up L1 L2 Up Left Down Right"
+    },
+    {
+      "game": "iii",
+      "group": "Police",
+      "name": "Clear Wanted Level",
+      "code": "NOPOLICEPLEASE",
+      "phone": null,
+      "ps": "R2 R2 L1 R2 Up Down Up Down Up Down"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Cloudy Weather",
+      "code": "ILIKESCOTLAND",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 R2 R1 L2 Square"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Fast Motion",
+      "code": "TIMEFLIESWHENYOU",
+      "phone": null,
+      "ps": "Triangle Up Right Down Square L1 L2"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Faster Clock",
+      "code": "MADWEATHER",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Flying Cars",
+      "code": "CHITTYCHITTYBB",
+      "phone": null,
+      "ps": "Right R2 Circle R1 L2 Down L1 R1"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Foggy Weather",
+      "code": "PEASOUP",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 R2 R1 L2 Cross"
+    },
+    {
+      "game": "iii",
+      "group": "Player",
+      "name": "Full Armor",
+      "code": "TORTOISE",
+      "phone": null,
+      "ps": "R2 R2 L1 L2 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "iii",
+      "group": "Player",
+      "name": "Full Health",
+      "code": "GESUNDHEIT",
+      "phone": null,
+      "ps": "R2 R2 L1 R1 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Invisible Cars",
+      "code": "ANICESETOFWHEELS",
+      "phone": null,
+      "ps": "L1 L1 Square R2 Triangle L1 Triangle",
+      "versions": "original-only"
+    },
+    {
+      "game": "iii",
+      "group": "Weapons",
+      "name": "More Gore",
+      "code": "NASTYLIMBSCHEAT",
+      "phone": null,
+      "ps": "Square L1 Circle Down L1 R1 Triangle Right L1 Cross"
+    },
+    {
+      "game": "iii",
+      "group": "Effects",
+      "name": "Pedestrian Riot",
+      "code": "ITSALLGOINGMAAAD",
+      "phone": null,
+      "ps": "Down Up Left Up Cross R1 R2 L2 L1"
+    },
+    {
+      "game": "iii",
+      "group": "Effects",
+      "name": "Pedestrians Attack You",
+      "code": "NOBODYLIKESME",
+      "phone": null,
+      "ps": "Down Up Left Up Cross R1 R2 L1 L2"
+    },
+    {
+      "game": "iii",
+      "group": "Weapons",
+      "name": "Pedestrians Have Weapons",
+      "code": "WEAPONSFORALL",
+      "phone": null,
+      "ps": "R2 R1 Triangle Cross L2 L1 Up Down"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Rainy Weather",
+      "code": "ILOVESCOTLAND",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 R2 R1 L2 Circle"
+    },
+    {
+      "game": "iii",
+      "group": "Police",
+      "name": "Raise Wanted Level",
+      "code": "MOREPOLICEPLEASE",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Slow Motion",
+      "code": "BOOOOORING",
+      "phone": null,
+      "ps": "Triangle Up Right Down Square R1 R2"
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Spawn Rhino Tank",
+      "code": "GIVEUSATANK",
+      "phone": null,
+      "ps": "Circle Circle Circle Circle Circle Circle R1 L2 L1 Triangle Circle Triangle"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Sunny Weather",
+      "code": "SKINCANCERFORME",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 R2 R1 L2 Triangle"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Aggressive Traffic",
+      "code": "MIAMITRAFFIC",
+      "phone": null,
+      "ps": "R2 Circle R1 L2 Left R1 L1 R2 L2"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "All Green Lights",
+      "code": "GREENLIGHT",
+      "phone": null,
+      "ps": "Right R1 Up L2 L2 Left R1 L1 R1 R1"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Armed Female Pedestrians",
+      "code": "CHICKSWITHGUNS",
+      "phone": null,
+      "ps": "Right L1 Circle L2 Left Cross R1 L1 L1 Cross"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Big Head Mode",
+      "code": "",
+      "phone": null,
+      "ps": "Up Up Down Down Left Right Left Right Circle Cross",
+      "versions": "definitive-only"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Big Wheels",
+      "code": "LOADSOFLITTLETHINGS",
+      "phone": null,
+      "ps": "R1 Cross Triangle Right R2 Square Up Down Square"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Black Traffic",
+      "code": "IWANTITPAINTEDBLACK",
+      "phone": null,
+      "ps": "Circle L2 Up R1 Left Cross R1 L1 Left Circle"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Blow Up All Cars",
+      "code": "BIGBANG",
+      "phone": null,
+      "ps": "R2 L2 R1 L1 L2 R2 Square Triangle Circle Triangle L2 L1"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Cars Drive on Water",
+      "code": "SEAWAYS",
+      "phone": null,
+      "ps": "Right R2 Circle R1 L2 Square R1 R2"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Change Outfit",
+      "code": "STILLLIKEDRESSINGUP",
+      "phone": null,
+      "ps": "Right Right Left Up L1 L2 Left Up Down Right"
+    },
+    {
+      "game": "vc",
+      "group": "Police",
+      "name": "Clear Wanted Level",
+      "code": "LEAVEMEALONE",
+      "phone": null,
+      "ps": "R1 R1 Circle R2 Up Down Up Down Up Down"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Fast Motion",
+      "code": "ONSPEED",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Faster Clock",
+      "code": "LIFEISPASSINGMEBY",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Flying Boats",
+      "code": "AIRSHIP",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Flying Cars",
+      "code": "COMEFLYWITHME",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Foggy Weather",
+      "code": "CANTSEEATHING",
+      "phone": null,
+      "ps": "R2 Cross L1 L1 L2 L2 L2 Cross"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Full Armor",
+      "code": "PRECIOUSPROTECTION",
+      "phone": null,
+      "ps": "R1 R2 L1 Cross Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Full Health",
+      "code": "ASPIRINE",
+      "phone": null,
+      "ps": "R1 R2 L1 Circle Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Invisible Cars",
+      "code": "WHEELSAREALLINEED",
+      "phone": null,
+      "ps": "Triangle L1 Triangle R2 Square L1 L1",
+      "versions": "original-only"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Ladies Man",
+      "code": "FANNYMAGNET",
+      "phone": null,
+      "ps": "Circle Cross L1 L1 R2 Cross Cross Circle Triangle"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Light Clouds Weather",
+      "code": "APLEASANTDAY",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Overcast Weather",
+      "code": "ABITDRIEG",
+      "phone": null,
+      "ps": "R2 Cross L1 L1 L2 L2 L2 Square"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Pedestrians Attack You",
+      "code": "NOBODYLIKESME",
+      "phone": null,
+      "ps": "Down Up Up Up Cross R2 R1 L2 L2"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Pedestrians Get In Your Car",
+      "code": "HOPINGIRL",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Weapons",
+      "name": "Pedestrians Have Weapons",
+      "code": "OURGODGIVENRIGHTTOBEARARMS",
+      "phone": null,
+      "ps": "R2 R1 Cross Triangle Cross Triangle Up Down"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Perfect Handling",
+      "code": "GRIPISEVERYTHING",
+      "phone": null,
+      "ps": "Triangle R1 R1 Left R1 L1 R2 L1"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Pink Traffic",
+      "code": "AHAIRDRESSERSCAR",
+      "phone": null,
+      "ps": "Circle L1 Down L2 Left Cross R1 L1 Right Circle"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Candy Suxxx",
+      "code": "IWANTBIGTITS",
+      "phone": null,
+      "ps": "Circle R2 Down R1 Left Right R1 L1 Cross L2"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Dick Love Fist",
+      "code": "WELOVEOURDICK",
+      "phone": null,
+      "ps": "R1 L2 R2 L1 Right R2 Left Cross Square L1"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Hilary King",
+      "code": "ILOOKLIKEHILARY",
+      "phone": null,
+      "ps": "R1 Circle R2 L1 Right R1 L1 Cross R2"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Jezz Torrent",
+      "code": "ROCKANDROLLMAN",
+      "phone": null,
+      "ps": "Down L1 Down L2 Left Cross R1 L1 Cross Cross"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Ken Rosenberg",
+      "code": "MYSONISALAWYER",
+      "phone": null,
+      "ps": "Right L1 Up L2 L1 Right R1 L1 Cross R1"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Lance Vance",
+      "code": "LOOKLIKELANCE",
+      "phone": null,
+      "ps": "Circle L2 Left Cross R1 L1 Cross L1"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Mercedes",
+      "code": "FOXYLITTLETHING",
+      "phone": null,
+      "ps": "R2 L1 Up L1 Right R1 Right Up Circle Triangle"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Phil Cassidy",
+      "code": "ONEARMEDBANDIT",
+      "phone": null,
+      "ps": "Right R1 Up R2 L1 Right R1 L1 Right Circle"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Ricardo Diaz",
+      "code": "CHEATSHAVEBEENCRACKED",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 Down L1 R2 L2"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Sonny Forelli",
+      "code": "IDONTHAVETHEMONEYSONNY",
+      "phone": null,
+      "ps": "Circle L1 Circle L2 Left Cross R1 L1 Cross Cross"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Rainy Weather",
+      "code": "CATSANDDOGS",
+      "phone": null,
+      "ps": "R2 Cross L1 L1 L2 L2 L2 Circle"
+    },
+    {
+      "game": "vc",
+      "group": "Police",
+      "name": "Raise Wanted Level",
+      "code": "YOUWONTTAKEMEALIVE",
+      "phone": null,
+      "ps": "R1 R1 Circle R2 Left Right Left Right Left Right"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Riot Mode",
+      "code": "FIGHTFIGHTFIGHT",
+      "phone": null,
+      "ps": "Down Left Up Left Cross R2 R1 L2 L1"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Slow Motion",
+      "code": "BOOOOOORING",
+      "phone": null,
+      "ps": "Triangle Up Right Down Square R2 R1"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Smoke a Cigarette",
+      "code": "CERTAINDEATH",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Bloodring Banger Variant 1",
+      "code": "",
+      "phone": null,
+      "ps": "Up Right Right L1 Right Up Square L2"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Bloodring Banger Variant 2",
+      "code": "",
+      "phone": null,
+      "ps": "Down R1 Circle L2 L2 Cross R1 L1 Left Left"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Caddy",
+      "code": "BETTERTHANWALKING",
+      "phone": null,
+      "ps": "Circle L1 Up R1 L2 Cross R1 L1 Circle Cross"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Hotring Racer Variant 1",
+      "code": "",
+      "phone": null,
+      "ps": "R1 Circle R2 Right L1 L2 Cross Cross Square R1"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Hotring Racer Variant 2",
+      "code": "",
+      "phone": null,
+      "ps": "R2 L1 Circle Right L1 R1 Right Up Circle R2"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Love Fist Limo",
+      "code": "ROCKANDROLLCAR",
+      "phone": null,
+      "ps": "R2 Up L2 Left Left R1 L1 Circle Right"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Rhino Tank",
+      "code": "PANZER",
+      "phone": null,
+      "ps": "Circle Circle L1 Circle Circle Circle L1 L2 R1 Triangle Circle Triangle"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Romero Hearse",
+      "code": "THELASTRIDE",
+      "phone": null,
+      "ps": "Down R2 Down R1 L2 Left R1 L1 Left Right"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Sabre Turbo",
+      "code": "GETTHEREFAST",
+      "phone": null,
+      "ps": "Right L2 Down L2 L2 Cross R1 L1 Circle Left"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Trashmaster",
+      "code": "RUBBISHCAR",
+      "phone": null,
+      "ps": "Circle R1 Circle R1 Left Left R1 L1 Circle Right"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Suicide",
+      "code": "ICANTTAKEITANYMORE",
+      "phone": null,
+      "ps": "Right L2 Down R1 Left Left R1 L1 L2 L1"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Sunny Weather",
+      "code": "ALOVELYDAY",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Thick Arms and Legs",
+      "code": "DEEPFRIEDMARSBARS",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Thin Arms and Legs",
+      "code": "PROGRAMMER",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Weapons",
+      "name": "Weapon Set 1",
+      "code": "THUGSTOOLS",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "vc",
+      "group": "Weapons",
+      "name": "Weapon Set 2",
+      "code": "PROFESSIONALTOOLS",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Left"
+    },
+    {
+      "game": "vc",
+      "group": "Weapons",
+      "name": "Weapon Set 3",
+      "code": "NUTTERTOOLS",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Down"
     }
   ],
   "news": [
