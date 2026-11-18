@@ -42,6 +42,8 @@ assert data["schema"]==1 and data["checkedAt"]>="2026-11-18"
 story=[c for c in data["cheats"] if c["game"]=="story"]
 sa=[c for c in data["cheats"] if c["game"]=="sa"]
 assert len(story)==36 and len(sa)>=17
+for game,count in [('iii',24),('vc',58),('iv',16),('tlad',6),('tbogt',9)]:
+    assert len([x for x in data['cheats'] if x['game']==game])==count,game
 assert all(r.get("ps") and r.get("code") and r.get("phone") for r in story if r.get("code"))
 assert next(r for r in sa if r["code"]=="KANGAROO")["ps"]=="Up Up Triangle Triangle Up Up Left Right Square R2 R2"
 assert not any(r["game"]=="sa" and r["code"]=="CJPHONEHOME" and "jump" in r["name"].lower() for r in data["cheats"])
@@ -56,8 +58,10 @@ class Doc(HTMLParser):
         if tag=="script":self.scripts.append(p.get("src",""))
 page=Doc();page.feed(source("atlas-cheats.html"))
 assert {"hubGame","hubSearch","hubPlatform","hubCards","cheatPlatformHelp"}.issubset(page.ids)
-assert "./atlas103-hub.js?v=124" in page.scripts
+assert "./atlas103-hub.js?v=127" in page.scripts
+for game in ('story','sa','iii','vc','iv','tlad','tbogt','vi','online'):
+    assert 'value="' + game + '"' in source("atlas-cheats.html"),game
 hub=source("atlas103-hub.js")
 for needle in ("PS_TO_XBOX","PS3_HD","X360_SWAP","MODERN_PHONE","function tokens","function available"):
     assert needle in hub,needle
-print("PASS Atlas 12.6 artwork-first 13 covers, 25 sourced character portraits and cross-platform cheats")
+print("PASS Atlas 12.7 artwork-first maps, character portraits and seven-game-platform cheats")
