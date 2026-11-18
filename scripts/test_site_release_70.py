@@ -31,7 +31,7 @@ for file in PAGES:
     if re.search(r'\b(?:Atlas|Team Jura Atlas)\s+[56]\.\d',p.meta,re.I):errors.append(f'{file.name}: legacy version in description')
     for link in p.links:
         if not (ROOT/link).is_file():errors.append(f'{file.name}: broken local link \u2192 {link}')
-for needed in ['README.md','SECURITY.md','.github/dependabot.yml','.github/workflows/atlas-checks.yml','project.html','atlas.js','atlas-sw.js']:
+for needed in ['README.md','SECURITY.md','.github/dependabot.yml','.github/workflows/team-jura-release.yml','project.html','atlas.js','atlas-sw.js']:
     if not (ROOT/needed).is_file():errors.append(f'Missing required file: {needed}')
 for private in ['private-lab','atlas-lab-private','research-private']:
     if (ROOT/private).exists():errors.append(f'Private directory present in public release: {private}')

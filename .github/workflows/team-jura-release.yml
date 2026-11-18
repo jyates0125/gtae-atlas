@@ -1,0 +1,99 @@
+name: Team Jura Atlas - validate production website
+on:
+  push:
+    branches: [development, main]
+  pull_request:
+    branches: [development, main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: jura-qa-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  chromium-and-static:
+   runs-on: ubuntu-24.04 
+   timeout-minutes: 30
+   steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit the entire source tree
+        run: python scripts/audit_release.py
+      - name: Existing Atlas map and routing regressions
+        run: |
+          python scripts/test_site_release_70.py
+          python scripts/test_atlas_static.py
+          python scripts/test_sync_gtadb_vi.py
+          python tools/test_atlas96.py
+          python tools/test_atlas97.py
+          node test-route-58.cjs
+          node test-layer-deck-621.cjs
+          python -m unittest discover -s tests -p 'test_atlas98b_sync.py'
+          python -m unittest discover -s tests -p 'test_atlas99_map_data.py'
+      - name: Safe Data Lab import and map pack tests
+        run: |
+          node --test tests/data-lab.test.cjs
+          node --test tests/source-identity.test.cjs
+      - name: Build only public, approved static files (no live imports)
+        run: node scripts/build-cloudflare.cjs
+      - name: Verify the actual Cloudflare deployment payload
+        run: python scripts/audit_published.py
+      - name: Install Playwright Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install --with-deps chromium
+      - name: Desktop and mobile browser QA on served production files
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/browser_smoke.py
+  microsoft-edge:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build production site
+        run: node scripts/build-cloudflare.cjs
+      - name: Audit production output
+        run: python scripts/audit_published.py
+      - name: Install Playwright and Microsoft Edge
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install msedge
+      - name: Microsoft Edge desktop/mobile functional smoke tests
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/browser_smoke.py
+  validated-zip:
+    needs: [chromium-and-static, microsoft-edge]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Rebuild validated production files
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: team-jura-atlas-cloudflare-validated-after-chromium-and-edge
+          path: public/
+          if-no-files-found: error
+          retention-days: 21

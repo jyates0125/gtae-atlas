@@ -1,0 +1,136 @@
+{
+  "version": "10.9",
+  "reviewedAt": "2026-11-18",
+  "policy": "Use exact-source license or direct permission before distributing third-party assets; source links and original alternatives otherwise. Credit never transfers Rockstar-owned game rights. Explicit no-reuse restrictions are a stop signal.",
+  "sources": [
+    {
+      "name": "GTADB.ORG landmarks GTA IV/V/VI",
+      "url": "https://github.com/rolux/gtadb.org",
+      "sourceLicense": "MIT for code and CC BY 4.0 for GTADB contributor data/photos/tiles where documented; Rockstar underlying rights separate",
+      "reuse": "Use repository-published snapshots with original contributor credit, CC BY 4.0 link and changes summary; avoid repeated production-server fetches",
+      "implemented": "Existing VI snapshot; GTA IV/V network-enabled source mirror script provided"
+    },
+    {
+      "name": "GTADB.net",
+      "url": "https://gtadb.net/",
+      "sourceLicense": "Independent publisher; no blanket redistribution license verified",
+      "reuse": "Link and compare features, not copy full original database or screenshots",
+      "implemented": "Links and parity research only"
+    },
+    {
+      "name": "GTAWeb.eu",
+      "url": "https://gtaweb.eu/",
+      "sourceLicense": "No blanket redistribution license verified",
+      "reuse": "Functional design reference and external links, not source code/tiles/content copied",
+      "implemented": "Feature parity analysis and comparison"
+    },
+    {
+      "name": "GTAMI",
+      "url": "https://gtami.com/en/terms/",
+      "sourceLicense": "Third-party/community datasets under licenses shown in context, site-original content not broadly licensed",
+      "reuse": "Original pages not assumed reusable; trace each underlying credited license",
+      "implemented": "Reference only"
+    },
+    {
+      "name": "GTAMap.io",
+      "url": "https://gtamap.io/disclaimer/",
+      "sourceLicense": "CC BY 4.0 for GTADB.org reused assets, many Rockstar game images remain copyrighted",
+      "reuse": "Research source lineage and game-specific external links only; never rehost its original renders, tiles, paths or descriptions absent a separate grant",
+      "implemented": "Seven classic external game map links; one consolidated attribution page"
+    },
+    {
+      "name": "Rockstar Games / Take-Two",
+      "url": "https://www.rockstargames.com/VI",
+      "sourceLicense": "Game imagery, world, trademarks are rights-holder property",
+      "reuse": "Unofficial fan-site labeling; source-checked game references; no claim of ownership or sponsorship",
+      "implemented": "Fan-site notices and official launch link"
+    },
+    {
+      "name": "GTA Wiki Fandom legacy archive",
+      "url": "https://gta.fandom.com/wiki/GTA_Wiki:Copyright",
+      "sourceLicense": "Contributor text identified as CC BY-SA 3.0; file-level screenshot and Rockstar map artwork restrictions remain separate",
+      "reuse": "Cite original wiki articles, historic map file pages and individual file attribution; do not mirror screenshots or proprietary images solely from their public presence or Fandom's fair-use belief",
+      "implemented": "Research and classic map-file links on canonical credits page; no new Fandom-hosted media rehosted"
+    },
+    {
+      "name": "GTA Wiki independent site",
+      "url": "https://gta.wiki/",
+      "sourceLicense": "Contributor text identified as CC BY-NC-SA 3.0, with separate game-media rights",
+      "reuse": "Fact-check, link to specific article/source and review license compatibility before quoting/reusing text; link game screenshots unless separately cleared",
+      "implemented": "Research reference, category source links and canonical credits page"
+    }
+  ],
+  "worlds": [
+    {
+      "id": "story",
+      "status": "native interactive map",
+      "data": "Existing Atlas game engine and source data; individual collectible coverage still incomplete"
+    },
+    {
+      "id": "online",
+      "status": "native interactive map",
+      "data": "Existing Atlas game engine; source-dated rotation coverage incomplete"
+    },
+    {
+      "id": "vi",
+      "status": "native research map",
+      "data": "3425 GTADB.ORG community records in current development snapshot, 3334 with coordinates, 91 search only; not in-game verified"
+    },
+    {
+      "id": "cayo",
+      "status": "interactive schematic planner",
+      "data": "Approximate/island schematic coordinates, not official calibrated tiles"
+    },
+    {
+      "id": "iv",
+      "status": "partial native explorer",
+      "data": "Existing Atlas source data, optional CC BY 4.0 research sync"
+    },
+    {
+      "id": "sa",
+      "status": "Native licensed vector flat map with 150 sourced approximate collectibles",
+      "data": "50 Snapshots, 50 Horseshoes and 50 Oysters sourced from Flentric script coordinates and projected onto Toliak map; accuracy not independently pixel calibrated"
+    },
+    {
+      "id": "vc",
+      "status": "Original Elario cover and browser-local 2D personal notebook, linked to correct external flat game map",
+      "data": "No shipped licensed native raster or verified imported marker coordinates. User images are stored on device with separate raster backup requirement."
+    },
+    {
+      "id": "iii",
+      "status": "Original Elario cover and browser-local 2D personal notebook, linked to correct external flat game map",
+      "data": "No shipped licensed native raster or verified imported marker coordinates. User images are stored on device with separate raster backup requirement."
+    },
+    {
+      "id": "vcs",
+      "status": "Original Elario cover and browser-local 2D personal notebook, linked to correct external flat game map",
+      "data": "No shipped licensed native raster or verified imported marker coordinates. User images are stored on device with separate raster backup requirement."
+    },
+    {
+      "id": "lcs",
+      "status": "Original Elario cover and browser-local 2D personal notebook, linked to correct external flat game map",
+      "data": "No shipped licensed native raster or verified imported marker coordinates. User images are stored on device with separate raster backup requirement."
+    },
+    {
+      "id": "ctw",
+      "status": "Original Elario cover and browser-local 2D personal notebook, linked to correct external flat game map",
+      "data": "No shipped licensed native raster or verified imported marker coordinates. User images are stored on device with separate raster backup requirement."
+    },
+    {
+      "id": "tlad",
+      "status": "Original Elario cover and browser-local 2D personal notebook, linked to correct external flat game map",
+      "data": "No shipped licensed native raster or verified imported marker coordinates. User images are stored on device with separate raster backup requirement."
+    },
+    {
+      "id": "tbogt",
+      "status": "Original Elario cover and browser-local 2D personal notebook, linked to correct external flat game map",
+      "data": "No shipped licensed native raster or verified imported marker coordinates. User images are stored on device with separate raster backup requirement."
+    }
+  ],
+  "canonicalCreditsPage": "atlas-credits.html",
+  "usageStatuses": {
+    "bundled": "Original or individually documented reuse terms",
+    "linked": "External-only references; do not mirror",
+    "review": "File-specific media rights or Rockstar game art require further clearance"
+  }
+}

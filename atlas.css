@@ -168,3 +168,13 @@
 .jura-floating-scroll{max-height:27vh}
 @media(max-width:850px){.jura-floating-legend{top:70px;width:min(210px,43%);max-height:48vh}.jura-floating-body{max-height:calc(48vh - 42px)}.jura-floating-scroll{max-height:20vh}}
 @media(max-width:520px){.jura-floating-legend{top:67px;width:43%;max-height:38vh}.jura-floating-legend:not([open]){width:auto;max-width:45%}.jura-floating-body{max-height:calc(38vh - 40px)}.jura-floating-scroll{max-height:17vh}.jura-floating-legend>summary{padding:8px 7px;font-size:10px}}
+
+/* Stabilization: keep classic worlds and GTA V/Online 2D-first until the
+   original basemaps and source-backed collectible filters are complete.
+   GTA VI research retains the original 3D map navigation. */
+body.jura-2d-only :is(#jura3d,#jura2d,#juraToggle3d,#threeDReference){display:none!important}
+@media(max-width:700px){
+  #sidebar .atlas-filter-drawer{scroll-margin-top:18px}
+  #sidebar .legend-group>summary,#sidebar .legend-choice{min-height:42px}
+  #sidebar .legend-row{position:relative}
+}

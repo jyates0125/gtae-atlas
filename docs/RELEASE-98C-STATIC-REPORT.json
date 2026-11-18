@@ -1,0 +1,18 @@
+{
+  "build": "Team Jura Atlas 9.8C full-site integration",
+  "checks": {
+    "html": 65,
+    "css": 48,
+    "js": 75,
+    "json": 35,
+    "assets": 467
+  },
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "limitations": [
+    "Third-party tile hosts, Cloudflare Pages deployment and end-user browsers cannot be certified by static analysis",
+    "GTA V/Online full per-item coordinates and GTA VI official mapping remain incomplete",
+    "No unauthorized Rockstar icon or game artwork package is included"
+  ]
+}

@@ -1,0 +1,62 @@
+/* Team Jura Atlas 9.5. Reference: docs/APPROVED-DESIGNED-BRAND-MASTER.png.
+   Respect approved Scaly/Loki art, native map imagery and Elario→Jura→Atlas hierarchy. */
+:root{--j95-violet:#bb4aff;--j95-amber:#ffc36c;--j95-deep:#1a1028}
+.j95-vi .j95-vi-evidence{margin:10px 6px 12px;padding:13px;border-radius:12px;border:1px solid #ac66c8;background:linear-gradient(140deg,#4b225e,#1b142d 80%);color:#f3ecf7;box-shadow:inset 0 1px #ffe1a51f}
+.j95-vi .j95-eyebrow,.j95-research .j95-eyebrow{font:800 10px/1.3 system-ui,sans-serif;letter-spacing:.14em;color:var(--j95-amber);text-transform:uppercase}
+.j95-vi .j95-vi-evidence strong{display:block;margin:7px 0;color:#ffe5ac;line-height:1.35;font-size:13px}
+.j95-vi .j95-vi-evidence p{font-size:12px;color:#e8d7ea;margin:6px 0 9px;line-height:1.55}
+.j95-vi .j95-dataset-health{display:block;color:#d4bce4;margin-top:7px;overflow-wrap:anywhere}
+.j95-vi .j95-brand-link{display:inline-flex;align-items:center;text-decoration:none;border:1px solid #ffbc68;border-radius:7px;padding:8px;color:#24112e;background:linear-gradient(120deg,#ffd47e,#f3a85b);font:800 12px system-ui,sans-serif}
+.j95-vi #juraMapLegend{display:none!important}
+.j95-research{--j95-sidebar:#231831;--j95-gold:#ffc577}
+.j95-research .top{background:linear-gradient(100deg,#31183b,#1b2033);border-bottom-color:#9c57b7}
+.j95-research .top .brand{color:#ffcd7f}
+.j95-research .rail{background:linear-gradient(160deg,#291a39,#191c30 85%);border-right-color:#985cbb}
+.j95-research .j95-identity{padding:11px;border:1px solid #925ca8;border-radius:12px;background:linear-gradient(120deg,#4f205a,#24243d);margin-bottom:12px}
+.j95-research .j95-identity h2{font:900 14px/1.25 system-ui,sans-serif;letter-spacing:.03em;color:#ffe0a0;margin:8px 0 4px}
+.j95-research .j95-identity p{font-size:11px;line-height:1.5;color:#f0deef;margin:4px 0 9px}
+.j95-research .j95-crew{display:flex;gap:8px;overflow:hidden;max-height:81px}
+.j95-research .j95-crew img{width:49%;height:78px;object-fit:cover;object-position:top center;border:1px solid #d88c62;border-radius:8px}
+.j95-research .j95-map-confidence{position:absolute;z-index:2;right:15px;bottom:40px;max-width:min(470px,calc(100% - 40px));pointer-events:none;border-radius:7px;border:1px solid #e9a75b;background:#301537e8;color:#ffda9b;font:800 10px/1.35 system-ui,sans-serif;letter-spacing:.08em;text-align:center;padding:8px 12px;box-shadow:0 6px 23px #0008}
+.j95-research .j95-status{margin:10px 0;padding:11px;border:1px solid #935eb0;border-radius:10px;background:#281937;color:#f4e8f7}
+.j95-research .j95-status .j95-stats{font-weight:800;color:#ffdb8e;font-size:12px;line-height:1.5}
+.j95-research .j95-status small{display:block;font-size:11px;margin:6px 0;color:#cbbdd9}
+.j95-research .j95-position-choice{font-size:12px;display:grid;gap:4px;margin-top:8px}
+.j95-research .j95-position-choice select{width:100%}
+.j95-research .j95-muted{font-size:11px;color:#cbbcd5;margin:8px 0 0;line-height:1.5}
+.j95-research .j95-vi-place-link{display:inline-block;font-weight:700;font-size:12px;color:#ffe2a9;margin-top:10px}
+.j95-research .j95-vi-place-link[hidden]{display:none}
+.j95-research .j94-view-deck{border-color:#b86fce;background:linear-gradient(145deg,#391d45,#1e2338)}
+.j95-research .j94-view-actions button{font-weight:800;border-color:#c77fa6;min-width:105px}
+.j95-research .j94-view-actions button[aria-pressed=true]{background:linear-gradient(110deg,#ffc77c,#eaa5ac);color:#321529}
+.j95-research .j95-explorer-link{display:inline-flex;margin-top:7px;color:#ffdeaa;font-size:11px}
+.j95-research .j95-terrain-help{font-size:11px;color:#ead4ec;line-height:1.5;margin:10px 0}
+.j95-research .j95-heightfield-import{font-size:11px;color:#d6c6df;display:grid;gap:6px;margin:9px 0}
+.j95-research .j95-heightfield-import input{font-size:10px;max-width:100%}
+.j95-research #j95Terrain{display:block;position:absolute;inset:0;width:100%;height:100%;z-index:1;background:#21445b;touch-action:none}
+.j95-research #j95Terrain[hidden]{display:none!important}
+.j95-research #j95TerrainPins{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.j95-research #j95TerrainPins[hidden]{display:none!important}
+.j95-research #j95TerrainPins .jura-3d-pin{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;border:2px solid #fff3;border-radius:50% 50% 50% 5%;width:17px;height:19px;min-width:0;min-height:0;padding:0;box-shadow:0 2px 8px #000a;color:#160d22;font-size:9px;cursor:pointer}
+.j95-research #j95TerrainPins .jura-3d-pin:focus-visible{outline:3px solid #ffc36c;outline-offset:2px}
+.j95-research #j95TerrainPins .jura-3d-route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.j95-research .j95-terrain-controls{display:none;position:absolute;right:10px;top:64px;z-index:4;flex-direction:column;max-width:210px;gap:5px;padding:8px;background:#291833e6;border:1px solid #b76cc9;border-radius:12px;box-shadow:0 8px 20px #0007}
+.j95-research .j95-terrain-controls button{min-width:40px;border:1px solid #dda267;color:#ffe3af;background:#50305b;font-weight:800}
+.j95-research .j95-terrain-controls span{max-width:176px;font-size:10px;line-height:1.4;color:#ffe2ac;overflow-wrap:anywhere}
+.j95-research.j95-3d-on .j95-terrain-controls{display:flex}
+.j95-research.j95-3d-on #map{visibility:hidden}
+.j95-research.j95-3d-on .maptop{z-index:2;max-width:calc(100% - 100px)}
+.j95-research .place{z-index:5;border-color:#a276b5;background:#271b36f5}
+.j95-research .place .eyebrow{color:#ffc978}
+.j95-research .mapcredit{z-index:4}
+.j95-research .controls{z-index:3}
+.j95-research .mobileFilter{z-index:6}
+.j95-research .j95-map-confidence{z-index:4}
+@media(max-width:760px){
+ .j95-research .j95-map-confidence{right:8px;bottom:38px;font-size:9px;max-width:250px}
+ .j95-research .j95-terrain-controls{top:107px;right:6px;max-width:125px}
+ .j95-research .j95-terrain-controls span{max-width:106px}
+ .j95-research .j95-identity .j95-crew img{height:65px}
+ .j95-research.j95-3d-on .maptop{max-width:calc(100% - 15px)}
+}
+@media(prefers-reduced-motion:reduce){.j95-research .rail,.j95-research .j95-terrain-controls{transition:none!important}}
