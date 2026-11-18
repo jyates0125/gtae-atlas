@@ -68,6 +68,22 @@ async def smoke():
                             if not failures and path in ('atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'):
                                 try:
                                     await pg.wait_for_function("document.querySelector('#universeStatus')?.textContent?.startsWith('Indexed ')",timeout=8000)
+                                    expected_world={'atlas-database.html':'online','atlas-characters.html':'story','atlas-animals.html':'vi','atlas-collectibles.html':'story'}[path]
+                                    expected_kind={'atlas-database.html':'vehicle','atlas-characters.html':'character','atlas-animals.html':'animal','atlas-collectibles.html':'collectible'}[path]
+                                    if await pg.locator('#filterGame').input_value()!=expected_world:
+                                        failures.append('Unexpected default game scope on '+path)
+                                    if await pg.locator('#filterKind').input_value()!=expected_kind:
+                                        failures.append('Unexpected default record category on '+path)
+                                    if await pg.locator(f'[data-world="{expected_world}"]').get_attribute('aria-pressed')!='true':
+                                        failures.append('World selector does not reflect default state on '+path)
+                                    await pg.locator('[data-world="vi"]').click()
+                                    if await pg.locator('#filterGame').input_value()!='vi':
+                                        failures.append('VI world button failed on '+path)
+                                    if await pg.locator('[data-world="vi"]').get_attribute('aria-pressed')!='true':
+                                        failures.append('VI selector not marked active on '+path)
+                                    await pg.locator(f'[data-world="{expected_world}"]').click()
+                                    if await pg.locator('#filterGame').input_value()!=expected_world:
+                                        failures.append('Could not restore initial world on '+path)
                                     cards=pg.locator('#recordGrid .u-card')
                                     if await cards.count()==0:
                                         failures.append('Universe catalog has no pictured/profile cards')
