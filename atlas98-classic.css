@@ -76,3 +76,9 @@ body[data-page="classic"] .classic-controls button:hover{
   body[data-page="classic"] .classic-hero p{font-size:12px}
   body[data-page="classic"] .classic-map{height:min(62vh,550px);min-height:330px}
 }
+
+/* Atlas 12.1: authentic original in-game maps in proportionally-fitted personal workspace. */
+#classicViewport[data-map-image="game-original"]{background:#182237}
+#classicViewport[data-map-image="game-original"] .classic-map-bg{background-color:#192535;background-size:100% 100%;background-position:center;background-repeat:no-repeat;filter:none}
+#classicViewport[data-map-image="game-original"] .classic-map-surface{outline:1px solid #e7b67e;box-shadow:0 10px 35px #03051590}
+#classicViewport[data-map-image="game-original"] .classic-marker-layer{isolation:isolate}
