@@ -26,3 +26,11 @@ print('PASS Atlas 12.1 original world imagery, Cayo map controls and central rig
 for name in ('gta-vice-city-original.png','gta-iv-liberty-reference.jpg'):
  image=ROOT/'art'/'maps'/name
  assert image.is_file() and image.stat().st_size>100000, name
+
+# Source-hosted wildlife screenshots; never classify landscape photos as verified spawns.
+animals=(ROOT/'atlas-animals.html').read_text(encoding='utf-8')
+assert 'j121-wildlife-photos' in animals and 'Grassrivers_07' in animals
+assert 'Leonida_Keys_07' in animals
+assert 'Official Rockstar' in animals
+assert (ROOT/'atlas121-wildlife.css').is_file()
+assert 'id="atlas-122-wildlife"' in credits
