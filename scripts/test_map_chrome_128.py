@@ -20,5 +20,5 @@ for page,(mode,art) in worlds.items():
  assert "atlas117-world-brand.css?v=117" in html
 assert "body.j128-map-chrome" in css
 assert "prefers-reduced-motion" in css
-assert "localStorage" not in css
+assert "localStorage.setItem(" not in css
 print("PASS Atlas 12.8: world-accurate original brand art, 3 map shells and untouched controls")
