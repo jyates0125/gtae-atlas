@@ -1,0 +1,27 @@
+# Elario Studios — Team Jura Atlas Standing Project Charter
+**Effective:** November 18, 2026 · **Authority:** Owner-approved original designed brand, decisions, and tested repository history
+**Project:** Team Jura Atlas · **Parent:** Elario Studios · **Motto:** Many Crews. One Vision.
+
+## Design authority and creative license
+1. Treat `docs/ATLAS92-MASTER-SPEC.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md`, `docs/ATLAS98-LAUNCH-PARITY-AND-BRAND.md`, `docs/APPROVED-DESIGNED-BRAND-MASTER.png`, and later specifically approved reference art as the authoritative design and requirements material.
+2. Preserve the future-facing Elario violet / amber / gold visual identity, original E crest, accessibility, four featured destinations and all thirteen game maps.
+3. Use **context-appropriate original concept art** for each world, vehicle class, heist, place, wildlife category, activity, and game database page. Loki and Scaly are prominent where their story belongs; do not paste their portraits into every unrelated page. One Last Ride is a tribute to the wider community, not an assertion that every player belongs to one crew.
+4. Official Rockstar screenshots, promotional media, icons or maps may be used only where the particular use is defensible under the published fan-content policy or other specific rights basis; when not cleared use permitted upstream work or newly made Elario artwork. Do not silently download others' unique site artwork or inferred rights from public availability.
+5. Original concepts must be honestly marked as fan-made, illustrative, or *not an exact in-game representation*. Images must load in the rendered site before approval.
+
+## Functional, data and source discipline
+1. Keep **GTA V Story**, **GTA Online**, **GTA VI Research**, **GTA IV**, **San Andreas** and classic GTA worlds distinct. Each route opens that world's own map or planning workspace; no heist should masquerade as a general GTA V map.
+2. Never make up coordinates, vehicle specifications, online rotation events, verified launch content or official imagery. Label GTA VI community reconstructions and leak-derived claims **unverified**, with provenance and approximate-location notices. Preserve search-only entries that lack positioned points.
+3. Use original GitHub repositories or explicit published licensed datasets and source snapshots. Retain appropriate **GTADB MIT code notices** and CC BY 4.0 contributor attribution, Toliak Apache-2.0 and Flentric MIT notices, plus source-specific license text and changed-fields explanations. Keep one human-readable center: `atlas-credits.html`.
+4. Preserve existing route planner, category toggles, map views, markers, progress, user-own garage, local backups, personalization, accessibility, and static deployment architecture. Visitor customization must never edit official site content. Never add HTTP sign-in or ship credentials.
+5. Prioritize **source-cleared in-app authentic 2D maps**, deeper accurate collectible datasets, per-item vehicle/boat/aircraft facts with provenance, game-specific covers and detail art, heist objective research, then 3D only where genuine licensed geometry exists.
+
+## Forward-only development + release safety
+1. Build incremental changes on a branch starting from `development`; audit actual repository files before edits, preserve the approved assets, write source tests and regression checks, and use a PR. Avoid replacing the map engine simply to restyle it.
+2. Run the existing `team-jura-release.yml` gates: full source/static audit, both **Chromium and Edge desktop/mobile**, published Cloudflare artifact audit and a **validated ZIP**. Inspect visual previews and record any unresolved differences against the designed brand.
+3. Release to `development` after passing tests. **One-time explicit authorization (November 18, 2026)** permits a reviewed merge of the currently tested Atlas 10.9 website into protected `main` after reconciling its divergent GTA VI snapshot automation. Keep a pre-release main backup ref. **No further main/production deployments without fresh owner confirmation**, except urgent repair strictly needed to restore availability or prevent a security/data-loss incident.
+4. Never force-push `main`, never purge another branch's source data without review, never enable auto-merge for production. Prefer reversible merge commits/PRs, not rewriting history.
+5. Distinguish source/tests passed, preview deployed, production branch updated, and human visual acceptance. Do not call the entire site finished until remaining work and any unverified features are documented.
+
+## A reusable instruction for any later chat
+"Continue Team Jura Atlas under the Standing Project Charter and the Approved Designed Brand. Read current GitHub `development` state and master specification, audit unfinished items, build the next highest-priority source-cleared improvement, test both browsers, and prepare a reviewed PR. Preserve original artwork, map functionality, credits, and player progress. Use diverse, context-specific Elario concepts and official media only as rights allow. **Do not merge a new main/live deployment until I approve it.** Tell me exactly what shipped, what failed, what remains, and where to preview."

@@ -1,0 +1,11 @@
+{
+  "release": "9.8",
+  "testsPassed": 175,
+  "failed": [],
+  "warnings": [
+    "Baseline assets and original map pages are references to existing development repository, not bundled replacements.",
+    "Live Cloudflare map tile hosts, browser saved progress, and third-party data freshness are NOT certified by static tests."
+  ],
+  "sourceBranch": "development",
+  "baseCommit": "5689876565af2a248b1e230c77fbdaedb43bd85b"
+}

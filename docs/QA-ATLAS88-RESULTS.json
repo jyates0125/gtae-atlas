@@ -1,0 +1,15 @@
+{
+  "syntax_atlas88-events.js": true,
+  "syntax_atlas87-daily.js": true,
+  "syntax_atlas87-all-maps.js": true,
+  "syntax_atlas86-ui.js": true,
+  "integration_repeat_safe": true,
+  "no_duplicate_libraries": true,
+  "ghost_icon_patch": true,
+  "ghost_white_possible_patch": true,
+  "two_event_cards": true,
+  "ghost_off_when_event_off": true,
+  "ghost_active_when_enabled_and_hour_matches": true,
+  "gunvan_not_falsely_active": true,
+  "ghost_filter": true
+}

@@ -1,0 +1,11 @@
+/* The existing universal menu remains the only sitewide menu owner. */
+#j89-menu [data-j97-start]{background:linear-gradient(100deg,#62316b,#442253);color:#ffd695!important;border:1px solid #ffbd74!important;font-weight:850!important}
+.j97-entry{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:18px auto;max-width:1550px;padding:20px 24px;border:1px solid #ebaa64;border-radius:15px;background:linear-gradient(120deg,#492353,#251632);color:#ffe9ec;box-shadow:0 8px 22px #13071a35}
+.j97-entry small{font:800 10px/1.4 system-ui,sans-serif;color:#ffd18b;letter-spacing:.12em}
+.j97-entry h2{font-size:clamp(21px,3vw,29px);margin:2px 0 3px;color:#fff3ef}
+.j97-entry p{font:13px/1.5 system-ui,sans-serif;margin:0;color:#dfc9e0;max-width:580px}
+.j97-entry-action{display:inline-block;white-space:nowrap;padding:12px 18px;border-radius:9px;background:linear-gradient(110deg,#ffdc91,#f8a353);border:1px solid #ffdf9b;color:#28132a!important;font:850 13px system-ui,sans-serif;text-decoration:none}
+.j97-entry-action:focus-visible,.j97-catalog-bridge a:focus-visible,.j97-legacy-note a:focus-visible{outline:3px solid #ffcd80;outline-offset:3px}
+.j97-legacy-note{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:13px auto;max-width:1100px;padding:12px 16px;border-radius:11px;border:1px solid #b76ba4;background:#341b41;color:#f5e5ee;font:13px/1.4 system-ui,sans-serif}
+.j97-legacy-note strong{color:#ffd192}.j97-legacy-note a{color:#ffe1a1;font-weight:850}.j97-catalog-bridge{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 15px;margin:12px 0;border:1px solid #b87e8d;border-radius:10px;background:#302040;color:#ffeff7}.j97-catalog-bridge a{font-weight:800;color:#ffd18d}
+@media(max-width:700px){.j97-entry{display:block;margin:12px;padding:15px}.j97-entry-action{display:block;text-align:center;margin-top:13px;white-space:normal}}

@@ -1,0 +1,31 @@
+{
+  "schema":1,
+  "scope":"Selected item descriptions; NOT a complete verified coordinate database",
+  "notes":"Item numbering in source guides can differ. The source-specific reference numbers below should not be treated as universal or Rockstar item IDs. No exact map coordinates are claimed.",
+  "records":{
+    "online-playing-cards":{
+      "1":{"area":"Sonar Collections Dock","hint":"Card on a wooden railing at the dock.","source":"https://gta.fandom.com/wiki/Playing_Cards"},
+      "2":{"area":"Cable Car terminal","hint":"Look inside the terminal opening.","source":"https://gta.fandom.com/wiki/Playing_Cards"},
+      "3":{"area":"Paleto Bay","hint":"On an ATM beside the barber shop.","source":"https://gta.fandom.com/wiki/Playing_Cards"},
+      "4":{"area":"Beeker's Garage","hint":"Look on the desk inside the garage.","source":"https://gta.fandom.com/wiki/Playing_Cards"},
+      "5":{"area":"Procopio Truck Stop","hint":"On a table east of the truck stop.","source":"https://gta.fandom.com/wiki/Playing_Cards"},
+      "6":{"area":"Mount Gordo","hint":"Near a campfire along a trail.","source":"https://gta.fandom.com/wiki/Playing_Cards"}
+    },
+    "online-action-figures":{
+      "1":{"area":"LSIA · Devin Weston hangar","hint":"Inside a locker behind the hangar.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "2":{"area":"LSIA · Von Crastenburg Hotel","hint":"Behind the hotel sign.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "3":{"area":"Elysian Island · Pier 400","hint":"Small office building.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "4":{"area":"Elysian Island · Bugstars Warehouse","hint":"Inside the warehouse.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "5":{"area":"Los Santos Naval Port","hint":"Checkpoint booth at the port entrance.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "6":{"area":"Murrieta Oil Field","hint":"Bus wreck in the southern storage warehouse.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "7":{"area":"Murrieta Oil Field","hint":"At the rear of a warehouse.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "8":{"area":"Cypress Flats","hint":"East of Ammu-Nation near garage doors.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "9":{"area":"Rancho Towers","hint":"At the base of a tower.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "10":{"area":"Davis · LTD Gasoline","hint":"Inside the gas station office.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "11":{"area":"Strawberry · Lamar's house","hint":"In Chop's doghouse.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "12":{"area":"Rancho","hint":"Public restroom washbasin.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "13":{"area":"Strawberry","hint":"Homeless encampment under the freeway.","source":"https://gta.fandom.com/wiki/Action_Figures"},
+      "14":{"area":"Textile City · Simmet Alley","hint":"Among decorative objects in the alley.","source":"https://gta.fandom.com/wiki/Action_Figures"}
+    }
+  }
+}
