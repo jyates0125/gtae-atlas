@@ -66,3 +66,14 @@
 .u-category-paths small{font-size:10px;color:#e3ccdf;line-height:1.35}
 @media(max-width:1000px){.u-world-buttons{grid-template-columns:repeat(3,minmax(0,1fr))}.u-category-paths{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:600px){.u-worlds{padding:12px}.u-world-buttons{grid-template-columns:repeat(2,minmax(0,1fr))}.u-world-buttons button{min-height:64px}.u-category-paths{grid-template-columns:repeat(2,minmax(0,1fr))}.u-category-paths a{padding:10px}}
+
+/* Atlas 10.4 — artwork follows the selected game, not the Team Jura crew. Existing approved local covers. */
+body[data-active-world=vi] .u-hero-art{background:linear-gradient(90deg,#21163bc7,#11364125 50%,#14364b44),url('./art/atlas93-leonida.svg') center/cover}
+body[data-active-world=story] .u-hero-art{background:linear-gradient(90deg,#2a1537a0,#8a503b38 58%,#21112f33),url('./art/atlas93-los-santos.svg') center/cover}
+body[data-active-world=online] .u-hero-art{background:linear-gradient(90deg,#27203cc0,#172c4b22 60%,#18133242),url('./art/atlas93-gta-online.svg') center/cover}
+body[data-active-world=classic] .u-hero-art{background:linear-gradient(90deg,#231338d0,#dd8a4b33),url('./art/atlas93-sa.svg') center/cover}
+body[data-active-kind=weapon][data-active-world=online] .u-hero-art{background:linear-gradient(100deg,#2c143c85,#64283845),url('./art/atlas93-gta-online.svg') center/cover}
+body[data-active-kind=collectible][data-active-world=online] .u-hero-art{background:linear-gradient(105deg,#19263b88,#5b2b4a50),url('./art/atlas93-cayo.svg') center/cover}
+body[data-active-kind=character][data-active-world=classic] .u-hero-art{background:linear-gradient(100deg,#2b1c38bc,#672c3e55),url('./art/atlas93-liberty.svg') center/cover}
+body[data-active-world=all] .u-hero-art{background:linear-gradient(110deg,#36203bce,#25193430),url('./art/atlas98-approved-hero.webp') center/cover}
+.u-media-source{display:inline-flex;margin-top:8px;align-items:center;min-height:40px;border:1px solid #dcaa79;border-radius:8px;background:#3b2948;padding:8px 12px;color:#ffe4b1;text-decoration:none;font-size:12px;font-weight:850}.u-media-source:hover{border-color:#ffe1a9;background:#563057}
