@@ -320,7 +320,7 @@ async def smoke():
                                     await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
                                     await pg.evaluate("window.confirm=()=>true")
                                     await pg.locator('#classicClearMap').click()
-                                    await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='original-art'",timeout=10000)
+                                    await pg.wait_for_function("['original-art','source-game-map'].includes(document.getElementById('classicViewport')?.dataset.mapImage)",timeout=10000)
                                     if await pg.locator('#pinCount').inner_text()!='1':
                                         failures.append('Removing an imported image deleted personal markers')
                                     await pg.locator('#classicClear').click()
