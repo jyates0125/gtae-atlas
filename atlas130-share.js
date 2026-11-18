@@ -32,7 +32,7 @@ document.addEventListener('click',async(e)=>{
  const el=e.target.closest('[data-j130-action]');if(!el)return;
  const kind=el.getAttribute('data-j130-action');
  if(kind==='copy-url'){e.preventDefault();await copy(linkTo(el.dataset.platform||'site'));return}
- if(kind==='copy-text'){e.preventDefault();await copy(POST[el.dataset.kind]||POST.short);return}
+ if(kind==='copy-text'){e.preventDefault();await copy(el.dataset.kind==='custom'?(document.querySelector('[data-j130-copytext]')?.value||POST.facebook):(POST[el.dataset.kind]||POST.short));return}
  if(kind==='copy-page'){e.preventDefault();await copy(window.location.href);return}
  if(kind==='share-page'){
    e.preventDefault();const url=el.dataset.shareUrl?new URL(el.dataset.shareUrl,window.location.href).href:window.location.href;
