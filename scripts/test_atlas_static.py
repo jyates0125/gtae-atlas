@@ -37,4 +37,14 @@ assert (D/'scripts/sync_gtadb_vi.py').exists()
 assert (D/'data/gtadb-6-manifest.json').exists()
 manifest=json.loads((D/'data/gtadb-6-manifest.json').read_text())
 assert manifest['game']=='6' and manifest['license']=='CC BY 4.0'
+# GTADB moved the active licensed VI illustration from YANIS V17 to V18.
+research=(D/'atlas-research.js').read_text()
+assert "'yanis,18'" in js and "base:'yanis,18'" in js
+assert "yanis,17" not in js and "/yanis,17/" not in research, 'Retired tiles cause the grid fallback'
+assert "maps/tiles/6/yanis,18/" in research, 'Research primary imagery not migrated'
+assert "./atlas-sw.js?v=103-tiles" in js, 'Service worker refresh missing'
+assert "team-jura-atlas-v103-tiles" in (D/'atlas-sw.js').read_text()
+for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
+    assert "./atlas.js?v=103-tiles" in (D/page).read_text(), page
+assert "./atlas-research.js?v=103-tiles" in (D/'atlas-research.html').read_text()
 print('Atlas 6.7 static regression PASS: 5 unique VI views, navigation, legacy keys, links, sync plumbing')
