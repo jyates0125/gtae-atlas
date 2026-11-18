@@ -48,3 +48,7 @@ for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
     assert "./atlas.js?v=103-tiles" in (D/page).read_text(), page
 assert "./atlas-research.js?v=103-tiles" in (D/'atlas-research.html').read_text()
 print('Atlas 6.7 static regression PASS: 5 unique VI views, navigation, legacy keys, links, sync plumbing')
+
+# Universe database, showroom and gallery integration regression.
+import runpy
+runpy.run_path(str(D / 'scripts/test_universe_100.py'), run_name='__main__')
