@@ -5,13 +5,13 @@
 (function(root){'use strict';
 const w='https://gta.fandom.com/wiki/Special:FilePath/';
 const entries={
- iii:{name:'GTA III · Liberty City',urls:[w+'LibertyCity-GTAIII-MapFull-ExceptUpstate.png']},
+ iii:{name:'GTA III · Liberty City',urls:[w+'LibertyCity-GTAIII-MapFull-ExceptUpstate.png','https://steamuserimages-a.akamaihd.net/ugc/576744021337529637/BC8EE7AF9B0FEB82789BD6F4B5C16CFF358B5488/']},
  vc:{name:'GTA Vice City',urls:['https://raw.githubusercontent.com/denizariyan/GTA-Vice-City-Interactive-Map/master/gtavc-map/map.png',w+'ViceCity-GTAVC-MapHD.jpg']},
- vcs:{name:'Vice City Stories',urls:[w+'ViceCity-GTAVCS-MapFull.png']},
- lcs:{name:'Liberty City Stories',urls:[w+'LibertyCity-GTALCS-MapFull-ExceptUpstate.png']},
- ctw:{name:'Chinatown Wars',urls:[w+'LibertyCity-GTACW-FullMap.png']},
- tlad:{name:'The Lost and Damned',urls:[w+'LibertyCity-GTAIV-MapwithStreetNames.jpg']},
- tbogt:{name:'The Ballad of Gay Tony',urls:[w+'LibertyCity-GTAIV-MapwithStreetNames.jpg']}
+ vcs:{name:'Vice City Stories',urls:['https://www.gtabase.com/igallery/maps/gta-vice-city-stories-map-1920.jpg',w+'ViceCity-GTAVCS-MapFull.png']},
+ lcs:{name:'Liberty City Stories',urls:[w+'LibertyCity-GTALCS-MapFull-ExceptUpstate.png','https://cdn.mobygames.com/covers/1683327-grand-theft-auto-liberty-city-stories-map.jpg']},
+ ctw:{name:'Chinatown Wars',urls:['https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg?etag=4aa78663',w+'LibertyCity-GTACW-FullMap.png']},
+ tlad:{name:'The Lost and Damned',urls:['https://www.gtavision.com/images/content/iv_map/gtaiv_map_hq.jpg',w+'LibertyCity-GTAIV-MapwithStreetNames.jpg']},
+ tbogt:{name:'The Ballad of Gay Tony',urls:['https://www.gtavision.com/images/content/iv_map/gtaiv_map_hq.jpg',w+'LibertyCity-GTAIV-MapwithStreetNames.jpg']}
 };
 const cache=new Map();
 function load(id){
