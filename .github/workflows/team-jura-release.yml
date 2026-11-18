@@ -28,6 +28,11 @@ jobs:
         run: |
           python scripts/test_site_release_70.py
           python scripts/test_atlas_static.py
+          python scripts/test_atlas125_media_cheats.py
+          node --check atlas103-hub.js
+          node --check atlas98-portal.js
+          node --check atlas98-worlds.js
+          node --check atlas100-universe.js
           python scripts/test_sync_gtadb_vi.py
           python tools/test_atlas96.py
           python tools/test_atlas97.py
