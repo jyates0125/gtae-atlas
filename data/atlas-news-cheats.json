@@ -427,7 +427,7 @@
       "game": "sa",
       "group": "Movement",
       "name": "Super jump",
-      "code": "CJPHONEHOME",
+      "code": "KANGAROO",
       "phone": null,
       "ps": "Up Up Triangle Triangle Up Up Left Right Square R2 R2"
     },
