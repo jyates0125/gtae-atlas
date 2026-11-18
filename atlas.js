@@ -536,7 +536,7 @@ function atlas85CollectibleIcon(r){
  if(unified)return unified;
  if(!r)return null;
  const name=String(r.collectionType||r.name||'').toLowerCase();
- const symbols=[[/spaceship|ufo/, '🛸'],[/letter scrap/, '✉'],[/nuclear waste/, '☢'],[/submarine piece/, '⚓'],[/monkey mosaic/, '🐒'],[/peyote/, '🌵'],[/epsilon/, '📜'],[/hidden package/, '🎁'],[/stunt jump/, '🏍'],[/under the bridge/, '🌉'],[/knife flight/, '✈'],[/playing card/, '🃏'],[/action figure/, '🤖'],[/signal jammer/, '📡'],[/ld organics/, '🍃'],[/movie prop/, '🎬'],[/media stick/, '💿'],[/snowm/, '☃'],[/jack.o.lantern|pumpkin/, '🎃'],[/ls tag|graffiti|spray tag/, '🎨'],[/snapshot/, '📷'],[/horseshoe/, '🧲'],[/oyster/, '🦪']];
+ const symbols=[[/spaceship|ufo/, '🛸'],[/letter scrap/, '✉'],[/nuclear waste/, '☢'],[/submarine piece/, '⚓'],[/monkey mosaic/, '🐒'],[/peyote/, '🌵'],[/epsilon/, '📜'],[/hidden package/, '🎁'],[/stunt jump/, '🏍'],[/under the bridge/, '🌉'],[/knife flight/, '✈'],[/playing card/, '🃏'],[/action figure/, '🤖'],[/signal jammer/, '📡'],[/ld organics/, '🍃'],[/movie prop/, '🎬'],[/media stick/, '💿'],[/snowm/, '☃'],[/jack.o.lantern|pumpkin/, '🎃'],[/ls tag|graffiti|spray tag/, '🎨'],[/snapshot/, '📷'],[/horseshoe/, '🧲'],[/oyster/, '🦪'],[/clover|shamrock|lucky charm/, '☘️'],[/valentine|love heart|heart collectible/, '❤️'],[/ghosts? exposed|ghost sighting/, '👻'],[/slasher|serial killer/, '🔪'],[/junk energy|skydive/, '🪂'],[/shipwreck/, '⚓'],[/hidden cache/, '🗃️']];
  if(r.category!=='collectible'&&r.sourceId!=='story')return null;
  return symbols.find(([re])=>re.test(name))?.[1]||'◆';
 }
