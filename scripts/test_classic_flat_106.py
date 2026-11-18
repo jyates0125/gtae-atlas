@@ -37,7 +37,7 @@ expected_default_maps={
     'vc':'./art/atlas128-vice-city-radar.png',
     'vcs':'https://gtwfilesie.grandtheftwiki.com/ViceCity-GTAVCS-map.png',
     'lcs':'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-map.jpg',
-    'ctw':'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTACW-map.png',
+    'ctw':'https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg',
     'tlad':'./art/atlas128-gta4-landmarks.jpg',
     'tbogt':'./art/atlas128-gta4-landmarks.jpg',
 }
