@@ -20,3 +20,6 @@
 .directory-grid .world-card img{background:#21102f;object-position:center center}
 .directory-grid .world-card .world-copy{position:relative;border-top:1px solid #d895665c;background:linear-gradient(145deg,#241237,#140b27);min-height:118px}
 @media(max-width:650px){.world-card .world-art-chip{font-size:9px;padding:4px 6px}}
+
+/* Original Elario shield takes the place of the old generic crown glyph. */
+.brand-crown[src="./art/elario-crest.svg"]{width:42px;height:42px;object-fit:contain;flex:none;filter:drop-shadow(0 0 9px #e7a77b88)}
