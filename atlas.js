@@ -766,7 +766,25 @@ window.JuraAtlas85=Object.freeze({
   hideCompleted:(on)=>{const el=$('hideFound');el.checked=Boolean(on);el.dispatchEvent(new Event('change',{bubbles:true}))}
 });
 
-function init(){if(!ctx){$('mapStatus').textContent='This browser does not support the HTML canvas map.';return}
+let canvasBootRetries=0;
+function init(){
+ // Some mobile/Edge renderers temporarily refuse a 2D context during
+ // high memory pressure. Retry before deciding the browser lacks Canvas.
+ if(!ctx){
+  try{ctx=canvas?.getContext('2d')||null}catch{}
+  if(!ctx&&canvasBootRetries<6){
+   canvasBootRetries++;
+   const state=$('mapStatus');if(state)state.textContent='Preparing 2D map viewer…';
+   setTimeout(init,200+canvasBootRetries*125);
+   return;
+  }
+  if(!ctx){
+   const state=$('mapStatus');
+   if(state)state.textContent='The 2D map could not start on this device. Close other heavy tabs or refresh to retry.';
+   return;
+  }
+ }
+
  const photo=$('selectedPhoto'),figure=$('selectedPhotoFigure');if(photo&&figure){photo.onload=()=>{figure.hidden=false};photo.onerror=()=>{figure.hidden=true}};
 
  $('districtFilter').oninput=()=>{page=0;render()};$('findNearby').onclick=()=>{nearbyActive=true;renderNearby()};$('nearbyToRoute').onclick=addNearbyToRoute;$('nearbyRadius').onchange=()=>{if(nearbyActive)renderNearby()};$('nearbyOrigin').onchange=()=>{if(nearbyActive)renderNearby()};$('shareCoords').onclick=shareCoordinateLocation;$('useMapCenter').onclick=centerToCoordinates;
