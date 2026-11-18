@@ -36,10 +36,11 @@ for p in ("index.html","maps.html","map-hub.html","atlas98-style-lab.html"):
 
 profiles=json.loads(source("data/atlas-universe-profiles.json"))
 characters=[r for r in profiles["records"] if r["kind"]=="character"]
-assert len(characters)==25
+assert len(characters)==30
 assert all(r.get("image","").startswith("https://") for r in characters)
 assert all(r.get("imageCredit","").startswith("https://") for r in characters)
-assert "data/atlas-universe-profiles.json?v=126" in source("atlas100-universe.js")
+assert {"character:vic-vance","character:toni-cipriani","character:huang-lee","character:johnny-klebitz","character:luis-lopez"}.issubset({c["id"] for c in characters})
+assert "data/atlas-universe-profiles.json?v=130" in source("atlas100-universe.js")
 assert "elarioCharacterPortrait" in source("atlas100-universe.js")
 assert "Portrait source" in source("atlas100-universe.js")
 assert ".u-character-portrait" in source("atlas100-universe.css")
