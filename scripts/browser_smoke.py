@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -332,6 +332,20 @@ async def smoke():
                             if not failures and path in ('directory.html','discovery.html','leonida-hq.html'):
                                 if not await pg.locator('body.j112-unified').count():
                                     failures.append('Older destination was not upgraded to the current Elario theme')
+                            if not failures and path in ('atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html'):
+                                if not await pg.locator('body.j113-workspace').count():
+                                    failures.append('Atlas 11.3 current Elario workspace theme not present')
+                                if not await pg.locator('link[href^="./atlas113-workspaces.css"]').count():
+                                    failures.append('Modern workspace CSS link missing')
+                                if path=='atlas-catalog.html' and not await pg.locator('#dbSearch').count():
+                                    failures.append('Vehicle/location catalog search missing')
+                                if path=='atlas-checklist.html' and not await pg.locator('#setSearch').count():
+                                    failures.append('Game-scoped collectibles search missing')
+                                if path=='hunt-hq.html':
+                                    if not await pg.locator('#canvas').count():
+                                        failures.append('Research canvas missing after redesign')
+                                    if not await pg.locator('a[href="./atlas81-hq.html#collections"]').count():
+                                        failures.append('Canonical collection HQ link missing')
                             if not failures and path=='atlas-credits.html':
                                 if await pg.locator('h1#pageTitle').count()!=1:
                                     failures.append('Canonical credits page title missing')
