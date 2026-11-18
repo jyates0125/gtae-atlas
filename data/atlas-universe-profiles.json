@@ -474,7 +474,10 @@
       "region": "Desert",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://www.faxagate.com/resources/-/gaming/gta-5-director-mode/animals/9-4.webp",
+      "imageCredit": "https://www.faxagate.com/en/gaming/gta-5-director-mode-animals",
+      "sourceUrl": "https://www.faxagate.com/en/gaming/gta-5-director-mode-animals",
+      "imageRights": "In-game GTA V imagery © Rockstar Games / Take-Two Interactive"
     },
     {
       "id": "animal:deer",
@@ -501,7 +504,10 @@
       "region": "Woodlands",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://www.gtabase.com/igallery/4201-4300/GTA5_Animals_Boar_PeyotePlant-4288-1080.jpg",
+      "imageCredit": "https://www.gtabase.com/grand-theft-auto-v/animals/boar",
+      "sourceUrl": "https://www.gtabase.com/grand-theft-auto-v/animals/boar",
+      "imageRights": "In-game GTA V imagery © Rockstar Games / Take-Two Interactive"
     },
     {
       "id": "animal:cow",
@@ -513,7 +519,10 @@
       "region": "Farmland",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://images.steamusercontent.com/ugc/12380771599791969638/AA5D64DFF944687A18A018A6E454057F50132C26/?ima=fit&imcolor=%23000000&impolicy=Letterbox&imw=1024&letterbox=false",
+      "imageCredit": "https://steamcommunity.com/app/271590",
+      "sourceUrl": "https://steamcommunity.com/app/271590",
+      "imageRights": "In-game GTA V imagery © Rockstar Games / Take-Two Interactive"
     },
     {
       "id": "animal:pig",
@@ -549,7 +558,10 @@
       "region": "Sea",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://www.gtaboom.com/Gta-v-shark.jpg",
+      "imageCredit": "https://www.gtaboom.com/gta-online-shark-card-prices-might-drop-with-rdr2-release-3fbe",
+      "sourceUrl": "https://www.gtaboom.com/gta-online-shark-card-prices-might-drop-with-rdr2-release-3fbe",
+      "imageRights": "In-game GTA V imagery © Rockstar Games / Take-Two Interactive"
     },
     {
       "id": "animal:dolphin-v",
