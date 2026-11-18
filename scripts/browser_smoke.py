@@ -22,6 +22,13 @@ class Server(http.server.SimpleHTTPRequestHandler):
 
 async def smoke():
     results=[]
+    # Screenshots are CI-generated review evidence, not approval of image rights
+    # or proof that every map layer loaded. Fresh isolated browser contexts only.
+    capture_visuals=os.getenv('ATLAS_VISUAL_CAPTURE','')=='1'
+    capture_pages={'index.html','maps.html','atlas-activities.html?mode=online','atlas93-garage.html','project.html','atlas.html','atlas-vi.html','one-last-ride.html'}
+    browser_label=os.getenv('ATLAS_BROWSER','chromium').lower()
+    evidence_dir=PROJECT/'qa-evidence'/browser_label
+    evidence=[]
     with socketserver.TCPServer(('127.0.0.1',PORT),Server) as http:
         thread=threading.Thread(target=http.serve_forever,daemon=True);thread.start()
         try:
@@ -475,6 +482,17 @@ async def smoke():
                                 if await pg.locator('header .portal-logo img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Film project Elario crest missing')
                                 if await pg.locator('video source[src*="one-last-ride-motion-preview.mp4"]').count()==0:failures.append('Film preview source missing')
+                            if capture_visuals and path in capture_pages:
+                                slug=path.replace('.html','').replace('?','-').replace('=','-').replace('/','-')
+                                destination=evidence_dir/('desktop' if width>700 else 'mobile')/(slug+'.png')
+                                destination.parent.mkdir(parents=True,exist_ok=True)
+                                try:
+                                    await pg.screenshot(path=str(destination),full_page=False,animations='disabled',timeout=12000)
+                                    evidence.append({'page':path,'viewport':[width,height],'file':destination.relative_to(PROJECT).as_posix(),'captured':True})
+                                except Exception as exc:
+                                    # Image capture cannot obscure the independent functional QA result.
+                                    evidence.append({'page':path,'viewport':[width,height],'captured':False,'reason':str(exc)[:300]})
+                                    print('Visual evidence warning:',path,width,str(exc)[:160])
                             results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures})
                             await pg.close()
                         await ctx.close()
@@ -516,6 +534,14 @@ async def smoke():
                     await ctx.close()
                 finally:await browser.close()
         finally:http.shutdown()
+    if capture_visuals:
+        evidence_dir.mkdir(parents=True,exist_ok=True)
+        (evidence_dir/'manifest.json').write_text(json.dumps({
+            'browser':browser_label,
+            'purpose':'Manual designed-brand comparison, not automated visual approval',
+            'reference':'docs/APPROVED-DESIGNED-BRAND-MASTER.png',
+            'captures':evidence
+        },indent=2)+'\n',encoding='utf-8')
     report={'passed':sum(x['ok'] for x in results),'total':len(results),'results':results}
     (PROJECT/'docs').mkdir(exist_ok=True)
     (PROJECT/'docs'/('RELEASE-98C-'+os.getenv('ATLAS_BROWSER','chromium').upper()+'-BROWSER-SMOKE.json')).write_text(json.dumps(report,indent=2)+'\n')
