@@ -12,7 +12,7 @@ expect={
 }
 for page,(scope,art,links) in expect.items():
  html=(ROOT/page).read_text(encoding="utf-8")
- assert "j115-research "+scope in html,page
+ assert "j127-evidence-page "+scope in html,page
  assert './atlas127-research-identity.css?v=127' in html,page
  assert 'j127-page-links' in html,page
  assert 'class="j115-source-head"' in html,page
