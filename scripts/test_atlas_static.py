@@ -52,3 +52,6 @@ print('Atlas 6.7 static regression PASS: 5 unique VI views, navigation, legacy k
 # Universe database, showroom and gallery integration regression.
 import runpy
 runpy.run_path(str(D / 'scripts/test_universe_100.py'), run_name='__main__')
+
+# Original licensed-reference 3D concept builder contract.
+runpy.run_path(str(D / 'scripts/test_configurator_101.py'),run_name='__main__')
