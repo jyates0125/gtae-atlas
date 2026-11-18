@@ -420,7 +420,7 @@ async def smoke():
                                 if await pg.locator('a[href^="./atlas109-credits.css"]').count()>0:
                                     failures.append('Unexpected stylesheet link inside document anchor')
                                 try:
-                                    await pg.locator('details summary').first.click()
+                                    await pg.locator('details summary').filter(has_text='GTADB upstream MIT software notice').click()
                                     if not await pg.locator('details pre.license').first.is_visible():
                                         failures.append('GTADB MIT copyright notice cannot be expanded')
                                 except Exception as exc:
