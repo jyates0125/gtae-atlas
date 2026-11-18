@@ -16,7 +16,7 @@ expect={
 'tbogt':'gta-4-map/'
 }
 for game,path in expect.items():
-    assert re.search(rf'\\b{game}:\\{{url:\'https://gtamap.io/{re.escape(path)}\'',js),game
+    assert f"{game}:{{url:'https://gtamap.io/{path}'" in js, game
 assert "function flatReference()" in js and "flatReference();document.title=" in js
 assert "not embedded or licensed for redistribution" in js
 for id in ('classicFlatReference','classicFlatTitle','classicFlatDescription','classicFlatLink','classicFlatCredit'):
