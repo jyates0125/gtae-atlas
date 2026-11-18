@@ -26,11 +26,16 @@ function tokens(item,platform){
  return mapped.join(' · ');
 }
 function available(item,platform){
- if(item.game==='story'&&!V_VERSIONS.has(platform))return false;
- if(item.game==='sa'&&!SA_VERSIONS.has(platform))return false;
+ const game=item.game,iv=['iv','tlad','tbogt'].includes(game);
+ if(iv)return ['pc','ps3','x360','xone360','xsx'].includes(platform);
+ if(game==='story'&&!V_VERSIONS.has(platform))return false;
+ if(game==='sa'&&!SA_VERSIONS.has(platform))return false;
+ if(['iii','vc'].includes(game)&&!['pc','ps2','ps3','ps4','ps5','xbox','xone','xsx'].includes(platform))return false;
  if(item.versions==='gen8plus'&&['ps3','x360'].includes(platform))return false;
+ if(item.versions==='definitive-only'&&!['ps4','ps5','xone','xsx'].includes(platform))return false;
  if(item.versions==='original-only'&&['ps4','ps5','xone','xsx'].includes(platform))return false;
- if(!item.ps&&platform!=='pc'&&!MODERN_PHONE.has(platform))return false;
+ if(platform==='pc'&&!item.code&&!item.phone)return false;
+ if(platform!=='pc'&&!item.ps&&!(game==='story'&&MODERN_PHONE.has(platform)&&item.phone))return false;
  return true;
 }
 function addCopy(actions,label,value){
@@ -38,21 +43,22 @@ function addCopy(actions,label,value){
  b.addEventListener('click',()=>copyText(value));actions.append(b);
 }
 function cheatCard(item,platform){
- const card=node('article','h-card');
- card.append(node('p','h-mini',(item.game==='story'?'GTA V STORY':'SAN ANDREAS')+' / '+item.group),node('h3','',item.name));
- const code=platform==='pc'?item.code:tokens(item,platform);
- const phoneSupported=item.game==='story'&&MODERN_PHONE.has(platform)&&Boolean(item.phone);
- if(code){const label=platform==='pc'?'PC console code':'Controller sequence';
- card.append(node('span','h-code-label',label),node('code','h-controller-code',code))}
- if(!code&&phoneSupported){card.append(node('p','h-muted','Phone-only activation; no confirmed controller sequence for this edition.'))}
- if(phoneSupported){const p=node('p','h-phone','In-game phone: '+item.phone);card.append(p)}
- if(item.versions==='original-only')card.append(node('p','h-muted','Original San Andreas only; removed from the Definitive Edition.'));
- if(item.versions==='gen8plus')card.append(node('p','h-muted','Requires a newer GTA V edition and any applicable in-game vehicle unlock.'));
+ const card=node('article','h-card'),g=item.game;
+ const labels={story:'GTA V STORY',sa:'SAN ANDREAS',iii:'GTA III',vc:'VICE CITY',iv:'GTA IV',tlad:'THE LOST AND DAMNED',tbogt:'BALLAD OF GAY TONY'};
+ card.append(node('p','h-mini',(labels[g]||'CLASSIC GTA')+' / '+item.group),node('h3','',item.name));
+ const isIV=['iv','tlad','tbogt'].includes(g),code=platform==='pc'?item.code:tokens(item,platform);
+ const phoneSupported=Boolean(item.phone)&&(isIV||(g==='story'&&MODERN_PHONE.has(platform)));
+ if(code){const label=platform==='pc'?(g==='story'?'PC console code':'Type during gameplay'):'Controller sequence';
+  card.append(node('span','h-code-label',label),node('code','h-controller-code',code))}
+ if(!code&&phoneSupported&&g==='story')card.append(node('p','h-muted','Phone-only activation; no controller sequence for this edition.'));
+ if(phoneSupported){card.append(node('p','h-phone',isIV?'Dial on in-game cellphone: '+item.phone:'In-game phone: '+item.phone))}
+ if(item.versions==='original-only')card.append(node('p','h-muted','Classic release only; not offered for this game in Definitive Edition.'));
+ if(item.versions==='definitive-only')card.append(node('p','h-muted','Definitive Edition only.'));
+ if(item.versions==='gen8plus')card.append(node('p','h-muted','Requires a newer GTA V edition and any applicable vehicle unlock.'));
  const actions=node('div','h-card-actions');
  if(code)addCopy(actions,platform==='pc'?'Copy PC code':'Copy buttons',code);
  if(phoneSupported)addCopy(actions,'Copy phone',item.phone);
- card.append(actions);
- return card;
+ card.append(actions);return card;
 }
 function newsCard(item){
  const card=node('article','h-card');
@@ -61,17 +67,23 @@ function newsCard(item){
 }
 function help(game,platform){
  const h=$('cheatPlatformHelp');if(!h)return;
- if(game==='vi'){h.textContent='GTA VI: no cheat codes have been verified for publication here; do not treat leaked or invented lists as authentic.';return}
+ if(game==='vi'){h.textContent='GTA VI: no cheat codes have been independently verified for this guide; we will not display guesses.';return}
  if(game==='online'){h.textContent='GTA Online does not accept GTA V Story Mode cheat codes.';return}
+ if(['iv','tlad','tbogt'].includes(game)){
+  h.textContent=['pc','ps3','x360','xone360','xsx'].includes(platform)?'GTA IV / Episodes from Liberty City: press Up twice to access your in-game phone keypad and dial the number. On Xbox One or Series, use the Xbox 360 backwards-compatible game. The Episodes accept the GTA IV base codes plus their own extra cheats.':'GTA IV was released for PC, PS3, and Xbox 360; Xbox One and Series run the backwards-compatible Xbox 360 version. No official native PS4/PS5 release is included.';return;
+ }
+ if(['iii','vc'].includes(game)){
+  h.textContent=platform==='pc'?'Classic GTA: type the PC words during active gameplay, not into a GTA V-style tilde console. Some controller-only cheats have no PC code.':platform==='xbox'?'Original Xbox: BLACK/WHITE button labels refer to the 2003 Trilogy controller; select Xbox One/Series for Definitive Edition labels.':'Classic GTA: enter the button sequence during gameplay. Definitive Edition has some edition-only features and omits some older codes. Save a separate game slot first.';return;
+ }
  if(game==='story'){
-  if(!V_VERSIONS.has(platform)){h.textContent='This console/edition does not have a GTA V release in our verified list. Choose PS3, PS4, PS5, Xbox 360/One/Series, or PC.';return}
-  h.textContent=['ps3','x360'].includes(platform)?'GTA V original 2013 edition: use controller sequences during gameplay. In-game cheat phone numbers are NOT supported on PS3 or Xbox 360.':'GTA V Story: enter controller inputs during gameplay, PC codes with the ~ console, or phone numbers on supported newer editions. Cheats never work in GTA Online.';return;
+  if(!V_VERSIONS.has(platform)){h.textContent='This console or edition does not have GTA V in our supported platform list. Choose PS3/4/5, Xbox 360/One/Series or PC.';return}
+  h.textContent=['ps3','x360'].includes(platform)?'GTA V original 2013 edition: use controller buttons during gameplay; cheat phone numbers are unavailable on PS3 and Xbox 360.':'GTA V Story: use controller inputs in gameplay, PC codes in the ~ console, or dial phone numbers in supported newer editions. No Story cheats work in GTA Online.';return;
  }
  if(game==='sa'){
-  if(platform==='ps3hd')h.textContent='San Andreas PS3 HD (2015): L1↔L2 and R1↔R2 are swapped from the PS2 code. Converted inputs are displayed below.';
-  else if(platform==='x360'||platform==='xone360')h.textContent='San Andreas Xbox 360 edition (including Xbox One backwards compatibility): bumpers and triggers are swapped compared with the Definitive Edition. Converted inputs are displayed below.';
-  else if(['ps4','ps5','xone','xsx'].includes(platform))h.textContent='San Andreas Definitive Edition: original code inputs mostly carry over, but some older cheats were removed. Only entries not marked original-only are displayed.';
-  else h.textContent='San Andreas: input the sequence during live gameplay, or type the listed code on PC. PS2 and original Xbox are supported; the original Xbox uses BLACK and WHITE buttons.';
+  if(platform==='ps3hd')h.textContent='San Andreas PS3 HD (2015): L1↔L2 and R1↔R2 are swapped from PS2. The list translates them for you.';
+  else if(platform==='x360'||platform==='xone360')h.textContent='San Andreas Xbox 360 edition: bumper/trigger positions differ from the Definitive Edition. The list translates them.';
+  else if(['ps4','ps5','xone','xsx'].includes(platform))h.textContent='San Andreas Definitive Edition: most original cheats carry over but several were removed. This list hides entries marked original-only.';
+  else h.textContent='San Andreas: press the sequence during live gameplay or type the PC word. Original Xbox uses BLACK and WHITE buttons.';
  }
 }
 function render(){
@@ -79,9 +91,9 @@ function render(){
  const selected=$('hubGame').value,q=$('hubSearch').value.toLowerCase().trim(),cards=$('hubCards');
  const news=MODE==='news',platform=news?'pc':($('hubPlatform')?.value||'pc');
  const all=news?db.news:db.cheats;
- const filtered=all.filter(x=>(selected==='all'||x.game===selected)&&[x.name,x.code,x.phone,x.ps,x.group,x.title,x.summary].filter(Boolean).join(' ').toLowerCase().includes(q)&& (news||available(x,platform)));
+ const filtered=all.filter(x=>(selected==='all'||x.game===selected||(['tlad','tbogt'].includes(selected)&&x.game==='iv'))&&[x.name,x.code,x.phone,x.ps,x.group,x.title,x.summary].filter(Boolean).join(' ').toLowerCase().includes(q)&& (news||available(x,platform)));
  cards.replaceChildren();
- $('resultsTitle').textContent=news?(selected==='vi'?'GTA VI official posts':selected==='online'?'GTA Online official posts':'Official Rockstar updates'):(selected==='story'?'GTA V Story Mode cheats':selected==='sa'?'San Andreas cross-platform cheats':selected==='online'?'GTA Online: no Story cheats':'GTA VI: no verified cheat codes');
+ const cheatTitles={story:'GTA V Story Mode cheats',sa:'San Andreas cross-platform cheats',iii:'GTA III classic cheat codes',vc:'GTA Vice City cheats',iv:'GTA IV cellphone cheats',tlad:'The Lost and Damned cheats',tbogt:'The Ballad of Gay Tony cheats',online:'GTA Online: no Story cheats',vi:'GTA VI: no verified cheat codes'}; $('resultsTitle').textContent=news?(selected==='vi'?'GTA VI official posts':selected==='online'?'GTA Online official posts':'Official Rockstar updates'):(cheatTitles[selected]||'Single-player cheats');
  help(selected,platform);
  status(filtered.length+' '+(news?'sourced articles':'available cheat entries')+' · source review '+db.checkedAt);
  if(!filtered.length){
