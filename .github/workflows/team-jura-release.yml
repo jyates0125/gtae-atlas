@@ -29,6 +29,7 @@ jobs:
           python scripts/test_site_release_70.py
           python scripts/test_atlas_static.py
           python scripts/test_atlas125_media_cheats.py
+          python scripts/test_catalog_design_127.py
           python scripts/test_hubs_103.py
           python scripts/test_game_art_121.py
           python scripts/test_classic_flat_106.py
