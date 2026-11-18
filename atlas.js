@@ -748,7 +748,7 @@ window.JuraDualLegendAPI=Object.freeze({
  trailerRecords:()=>game==='6'?records().filter(r=>/\btrailer\b|\bfootage\b|\bscene\b/i.test([r.name,r.district||'',r.collectionType||'',r.source||'',r.evidence||'',...(r.tags||[])].join(' '))).slice(0,750):[],
  toggleCategory:id=>{if(!CATEGORIES[id])return;const chosen=showPins?new Set(enabled()):new Set();if(chosen.has(id))chosen.delete(id);else chosen.add(id);active[filterScope()]=chosen;showPins=true;page=0;render()},
  onlyCategory:id=>{if(!CATEGORIES[id])return;showPins=true;active[filterScope()]=new Set([id]);page=0;render()},
- allCategories:on=>{showPins=Boolean(on);active[filterScope()]=on?null:new Set();page=0;render()},
+ allCategories:on=>{showPins=Boolean(on);active[filterScope()]=on?null:new Set();if(on){hiddenNamed[namedScope()]=[];store('jura62-named-layers',hiddenNamed)}page=0;render()},
  selectPlace:id=>{const place=records().find(r=>r.id===id);if(place)choosePlace(place)},
  addRouteStop:id=>{const place=records().find(r=>r.id===id);if(place)window.teamJuraNav?.setRoutePoint(place)},
  openNavigation:()=>window.teamJuraNav?.open(),
