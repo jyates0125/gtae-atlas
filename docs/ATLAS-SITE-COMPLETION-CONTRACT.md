@@ -33,7 +33,7 @@ Updated: November 17, 2026 · Scope: the user's approved designed-brand experien
 | 9 | `atlas-vehicle-configurator.html` | Original non-exact WebGL prototype, preview, paint/zoom/save/export, separated from owned records | Existing; licensed model-specific meshes unavailable |
 | 10 | `atlas81-hq.html` | Clear collectible entry points and progress, not mixed with Story/Online incorrect scope | Existing; cross-page navigation audit |
 | 11 | `atlas.html` / `atlas-online.html` / `atlas-vi.html` | Preserve working 2D maps; sources and scope, no speculative pins marked verified | Hold: map rendering separately tested |
-| 12 | `atlas-sa.html` | Flat SA map, indexed collection slots, only separately verified or player-added pins | Existing; sourced location-pack research outstanding |
+| 12 | `atlas-sa.html` | Flat SA map, indexed collection slots, only separately verified or player-added pins | 150 MIT-source-backed approximate pins implemented (snapshots, horseshoes, oysters); 100 tags and 70 stunt-jump positions still need sourced coverage; final pixel alignment not established |
 | 13 | `atlas-iv.html` / `atlas-cayo.html` | Provenance and calibrated-vs-schematic overlays visibly labeled | Existing; source audit outstanding |
 | 14 | `map-hub.html` | VC/III/VCS/LCS/CTW/TLAD/TBOGT personal map notebook and clear scope | Existing reference gateways; standalone art review |
 | 15 | `maps.html` | All 13 accurate artwork covers, working links and type/coverage badges | Existing 13 references; cover audit pending |
@@ -95,3 +95,11 @@ The existing 13 local images are already referenced by `atlas98-worlds.js`. Repl
 3. Cloudflare preview verified. The CI deployment preview is **not** the live public deployment.
 4. Branch comparison confirms no map-engine changes on database PRs.
 5. Merge only to `development`, then check live URL. Record unfinished source/art issues instead of declaring completion.
+
+## Atlas 10.5 San Andreas sourced collectible pins
+- The bundled `art/atlas-sa-vector.svg` is the previously credited Toliak 6000 × 6000 San Andreas vector tracing (Apache-2.0); original Rockstar game-world IP remains with the rightsholder.
+- `data/atlas-sa-150-sourced-pins.json` contains only 150 published 3D spawn coordinates from `Flentric/SA.MapCollectibles/source/CollectibleCoords.h` (MIT). These were documented as extracted from GTA SA 1.0 US `main.scm`, and are projected into the vector's pixel square using x = worldX + 3000, y = 3000 - worldY. **The projection is approximate**, not manually calibrated pixel-by-pixel or verified across game editions.
+- Three of five categories are mapped: 50 San Fierro snapshots, 50 Las Venturas horseshoes, 50 statewide oysters. Graffiti tags (100) and optional unique stunt jumps (70) have no demonstrated, calibrated individual pin data and **are not invented**.
+- Individual progress stays under `team-jura-sa-v1`, unchanged; user imports deliberately replace the **displayed** bundled pins only in the session, without altering saved completion states. A user-supplied image never silently inherits projected pins even when its dimensions match.
+- Required sources: https://github.com/Flentric/SA.MapCollectibles and https://github.com/Toliak/San-Andreas-vector-map. Original MIT license preserved verbatim in `docs/ATLAS-SA-COORDINATES-MIT-LICENSE.txt`.
+- Test: `python scripts/test_sa_pins_105.py` and full `scripts/browser_smoke.py` under desktop/mobile Chromium and Edge.

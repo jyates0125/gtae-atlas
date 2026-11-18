@@ -1,6 +1,7 @@
 (()=>{'use strict';
 const sets=[{id:'tags',name:'Graffiti Tags',total:100,icon:'🎨',region:'Los Santos',required:true},{id:'snapshots',name:'Snapshots',total:50,icon:'📷',region:'San Fierro',required:true},{id:'horseshoes',name:'Horseshoes',total:50,icon:'🧲',region:'Las Venturas',required:true},{id:'oysters',name:'Oysters',total:50,icon:'🦪',region:'Statewide waters',required:true},{id:'jumps',name:'Unique Stunt Jumps',total:70,icon:'🏍️',region:'Statewide',required:false}];
 const $=id=>document.getElementById(id), KEY='team-jura-sa-v1';let set=sets[0],state={schema:1,items:{}},map=null,mapHasArtwork=false,positions=[],transform={scale:1,x:0,y:0},drag=null;
+let builtIn=false,customMap=false,customPack=false,activeMapLabel='';
 try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(old?.schema===1&&old.items&&typeof old.items==='object'&&!Array.isArray(old.items))state=old}catch{}
 function message(s){$('status').textContent=s}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch{message('Storage blocked. Export progress to keep a backup.')}}
@@ -10,21 +11,33 @@ function count(s){let n=0;for(let i=1;i<=s.total;i++)if(state.items[s.id+':'+i]?
 function exportFile(payload,name){const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
 function renderCats(){const target=$('categories');target.replaceChildren();for(const s of sets){const b=document.createElement('button');b.className='cat';b.type='button';b.setAttribute('aria-pressed',String(s.id===set.id));b.innerHTML='<span class="emoji"></span><span class="label"></span><span class="count"></span>';b.children[0].textContent=s.icon;b.children[1].textContent=s.name;b.children[2].textContent=count(s)+' / '+s.total;b.onclick=()=>{set=s;render()};target.append(b)}}
 function renderPins(){const layer=$('pinLayer');layer.replaceChildren();if(!map||!mapHasArtwork){$('mapped').textContent=positions.length;return}const hide=$('hideComplete').checked;const only=$('onlyMapped').checked;const visible=positions.filter(p=>p.set===set.id&&p.slot>=1&&p.slot<=set.total);$('mapped').textContent=positions.length;
- for(const p of visible){const done=!!record(p.slot).done;if(hide&&done)continue;const el=document.createElement('button');el.type='button';el.className='pin'+(done?' done':'');el.style.left=(p.x/map.width*100)+'%';el.style.top=(p.y/map.height*100)+'%';el.textContent=set.icon;el.title=p.label||set.name+' '+p.slot;el.setAttribute('aria-label',el.title+(done?' collected':''));el.onclick=()=>{const item=$('item-'+p.slot);if(item){item.scrollIntoView({block:'nearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')?.focus()}};layer.append(el)}
- $('mapStatus').textContent=positions.length?'Imported map pack: '+positions.length+' mapped records · '+(map.source||'user supplied'):'Map data not imported';}
+ for(const p of visible){const done=!!record(p.slot).done;if(hide&&done)continue;const el=document.createElement('button');el.type='button';el.className='pin'+(done?' done':'')+(builtIn?' pin-source-projected':'');el.style.left=(p.x/map.width*100)+'%';el.style.top=(p.y/map.height*100)+'%';el.textContent=set.icon;el.title=(p.label||set.name+' '+p.slot)+(builtIn?' · sourced world position / approximate 2D placement':'');el.setAttribute('aria-label',el.title+(done?' collected':''));el.onclick=()=>{const item=$('item-'+p.slot);if(item){item.scrollIntoView({block:'nearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')?.focus()}};layer.append(el)}
+ $('mapStatus').textContent=positions.length?(builtIn?'150 SOURCE-BACKED LOCATIONS · 2D placement approximate · verify on game map':'Imported location pack: '+positions.length+' records · check alignment with selected image'):'No sourced pins for this collection yet · custom map packs supported';}
 function renderItems(){const list=$('items');list.replaceChildren();let shown=0;const q=$('search').value.toLowerCase().trim();const hide=$('hideComplete').checked,only=$('onlyMapped').checked;
  for(let i=1;i<=set.total;i++){const r=record(i),p=positions.find(p=>p.set===set.id&&p.slot===i);if(hide&&r.done)continue;if(only&&!p)continue;const label=p?.label||set.name+' '+String(i).padStart(3,'0');if(q&&!`${label} ${r.note||''} ${i}`.toLowerCase().includes(q))continue;
  const card=document.createElement('div');card.className='item';card.id='item-'+i;const line=document.createElement('label');line.className='itemTop';const box=document.createElement('input');box.type='checkbox';box.checked=!!r.done;box.setAttribute('aria-label','Collected '+label);box.onchange=()=>{state.items[id(i)]={...record(i),done:box.checked};persist();render()};const title=document.createElement('strong');title.textContent=set.icon+' '+label;line.append(box,title);card.append(line);
- const hint=document.createElement('small');hint.textContent=p?('Mapped via '+(map.source||'imported source')+' · source '+(p.source||'unspecified')):'Unmapped tracking slot. No location claimed.';card.append(hint);
- if(p){const show=document.createElement('button');show.className='showPin';show.textContent='◎ Locate on map';show.onclick=()=>{$('mapContainer').scrollIntoView({block:'center',behavior:'smooth'});document.querySelectorAll('.pin').forEach(b=>{if(b.title===label)b.focus()})};card.append(show)}
+ const hint=document.createElement('small');hint.textContent=p?(builtIn?'Source-backed SA 1.0 US game position · 2D icon approximately projected; not an exact visual alignment.':('Imported coordinate pack · '+(p.source||'source not supplied'))):'Unmapped tracking slot. No location claimed.';card.append(hint);
+ if(p){const show=document.createElement('button');show.className='showPin';show.textContent='◎ Locate on map';show.onclick=()=>{
+   const box=$('mapContainer');box.scrollIntoView({block:'center',behavior:'smooth'});
+   if(map&&mapHasArtwork){transform.scale=Math.max(2.2,transform.scale);transform.x=box.clientWidth*(.5-(p.x/map.width)*transform.scale);transform.y=box.clientHeight*(.5-(p.y/map.height)*transform.scale);updateTransform()}
+   const pin=[...document.querySelectorAll('.pin')].find(b=>b.title.startsWith(label));
+   if(pin)pin.focus({preventScroll:true});
+ };card.append(show)}
  const note=document.createElement('textarea');note.placeholder='Your landmark / clue…';note.value=r.note||'';note.maxLength=500;note.setAttribute('aria-label','Notes for '+label);note.onchange=()=>{state.items[id(i)]={...record(i),note:note.value.slice(0,500)};persist()};card.append(note);list.append(card);shown++}
  if(!shown){const p=document.createElement('p');p.textContent='No results. Change filters or search.';list.append(p)}
 }
 function render(){renderCats();$('setTitle').textContent=set.icon+' '+set.name;$('setNote').textContent=set.region+' · '+(set.required?'Core 100% collection':'Optional challenge')+' · '+set.total+' entries';$('countLabel').textContent=count(set)+' / '+set.total+' collected';$('collected').textContent=sets.reduce((n,s)=>n+count(s),0);renderPins();renderItems()}
-function importMapFile(file){if(!file)return;if(file.size>25000000){message('Map image exceeds 25 MB limit');return}const url=URL.createObjectURL(file),im=new Image();im.onload=()=>{const bg=$('mapBackground');bg.replaceChildren(im);if(map&&positions.length&&(map.width!==im.naturalWidth||map.height!==im.naturalHeight)){message('Image dimensions do not match imported coordinates. Pins remain hidden until the correct image is chosen.');mapHasArtwork=false;return}map=map||{width:im.naturalWidth,height:im.naturalHeight,source:file.name};mapHasArtwork=true;message('Map image loaded locally. Location pack coordinates must use this exact image size.');render();};im.onerror=()=>message('Could not load this image.');im.src=url}
+function importMapFile(file){if(!file)return;if(file.size>25000000){message('Map image exceeds 25 MB limit');return}const url=URL.createObjectURL(file),im=new Image();im.onload=()=>{const bg=$('mapBackground');bg.replaceChildren(im);
+ customMap=true;const changedImage=!!positions.length;
+ // Do not silently overlay built-in pins on unrelated user images, even at matching dimensions.
+ positions=[];builtIn=false;customPack=false;
+ map={width:im.naturalWidth,height:im.naturalHeight,source:'Custom image · '+file.name};
+ mapHasArtwork=true;activeMapLabel='Custom user-supplied artwork';
+ message('Custom image loaded'+(changedImage?'; bundled pins were hidden because alignment is not guaranteed':'')+'. Import a location pack built for this image.');
+ render();};im.onerror=()=>message('Could not load this image.');im.src=url}
 async function importLocations(file){if(!file)return;try{if(file.size>4000000)throw Error('JSON over 4 MB');const data=JSON.parse(await file.text());if(data?.schema!==1||data.game!=='san-andreas'||data.basis!=='image-pixels'||!Number.isFinite(data.width)||!Number.isFinite(data.height)||data.width<128||data.width>30000||data.height<128||data.height>30000||!Array.isArray(data.records)||data.records.length>10000||typeof data.source!=='string'||!data.source.trim())throw Error('Invalid or uncredited location pack');
  const taken=new Set(),loc=[];for(const p of data.records){const s=sets.find(s=>s.id===p.set);if(!s||!Number.isInteger(p.slot)||p.slot<1||p.slot>s.total||!Number.isFinite(p.x)||!Number.isFinite(p.y)||p.x<0||p.y<0||p.x>data.width||p.y>data.height||taken.has(p.set+':'+p.slot))throw Error('Duplicate or invalid point '+p.set+'/'+p.slot);taken.add(p.set+':'+p.slot);loc.push({set:p.set,slot:p.slot,x:p.x,y:p.y,label:String(p.label||'').slice(0,130),source:String(p.source||data.source).slice(0,160)})}
- if(mapHasArtwork&&(map.width!==data.width||map.height!==data.height))throw Error('Coordinate dimensions do not match loaded image');map={...map,width:data.width,height:data.height,source:data.source};positions=loc;render();message(loc.length+' attributed positions imported. Verify alignment and source accuracy manually. This does not validate gameplay spawns.');
+ if(mapHasArtwork&&(map.width!==data.width||map.height!==data.height))throw Error('Coordinate dimensions do not match loaded image');map={...map,width:data.width,height:data.height,source:data.source};positions=loc;builtIn=false;customPack=true;render();message(loc.length+' attributed positions imported. Verify alignment and source accuracy manually. This does not validate gameplay spawns.');
 }catch(e){message('Import rejected: '+e.message)}}
 async function restore(file){if(!file)return;try{if(file.size>2000000)throw Error('Backup exceeds 2 MB');const data=JSON.parse(await file.text());if(data?.game!=='san-andreas'||data?.schema!==1||typeof data.items!=='object'||Array.isArray(data.items))throw Error('Wrong backup');if(!confirm('Merge imported San Andreas progress with current progress?'))return;let n=0;for(const [k,v] of Object.entries(data.items)){const [s,num]=k.split(':');const found=sets.find(p=>p.id===s);if(!found||!/^[0-9]+$/.test(num)||Number(num)<1||Number(num)>found.total||!v||typeof v!=='object')continue;state.items[k]={done:!!v.done,note:String(v.note||'').slice(0,500)};n++}persist();render();message('Merged '+n+' entries')}catch(e){message('Restore failed: '+e.message)}}
 function updateTransform(){const box=$('mapContents');box.style.transform=`translate(${transform.x}px,${transform.y}px) scale(${transform.scale})`}
@@ -34,13 +47,38 @@ function init(){render();$('hideComplete').onchange=render;$('onlyMapped').oncha
  const area=$('mapContainer');area.addEventListener('pointerdown',e=>{if(e.target.closest('.pin'))return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:transform.x,startY:transform.y};area.setPointerCapture(e.pointerId)});area.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;transform.x=drag.startX+e.clientX-drag.x;transform.y=drag.startY+e.clientY-drag.y;updateTransform()});area.addEventListener('pointerup',()=>drag=null);area.addEventListener('pointercancel',()=>drag=null);area.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?1.12:1/1.12)},{passive:false});area.addEventListener('keydown',e=>{if(e.key==='+')zoom(1.2);else if(e.key==='-')zoom(.8);else if(e.key==='ArrowUp')transform.y+=25;else if(e.key==='ArrowDown')transform.y-=25;else if(e.key==='ArrowLeft')transform.x+=25;else if(e.key==='ArrowRight')transform.x-=25;else return;updateTransform();e.preventDefault()});}
 // The licensed built-in illustration is a real 2D map surface. Imported pixel
 // markers are displayed only when their image dimensions match this artwork.
+async function loadAtlasSourcePins(){
+ if(customMap||customPack||!mapHasArtwork||map?.width!==6000||map?.height!==6000||!activeMapLabel.includes('Toliak'))return;
+ try{
+  const res=await fetch('./data/atlas-sa-150-sourced-pins.json',{cache:'force-cache'});
+  if(!res.ok)throw Error('HTTP '+res.status);
+  const data=await res.json();
+  if(data?.schema!==1||data.game!=='san-andreas'||data.width!==6000||data.height!==6000||data.basis!=='image-pixels'||data.records?.length!==150||!data.sourceUrl?.startsWith('https://github.com/Flentric/'))throw Error('Source pack schema mismatch');
+  const found=new Set(),verified=[];
+  for(const p of data.records){
+   const cat=sets.find(x=>x.id===p.set);
+   if(!cat||!['snapshots','horseshoes','oysters'].includes(p.set)||!Number.isInteger(p.slot)||p.slot<1||p.slot>50||!Number.isFinite(p.x)||p.x<0||p.x>6000||!Number.isFinite(p.y)||p.y<0||p.y>6000||found.has(p.set+':'+p.slot))throw Error('Bad or duplicate sourced point');
+   found.add(p.set+':'+p.slot);
+   verified.push({set:p.set,slot:p.slot,x:p.x,y:p.y,label:String(p.label||cat.name+' '+p.slot),source:String(p.source||data.source)});
+  }
+  if(['snapshots','horseshoes','oysters'].some(cat=>verified.filter(x=>x.set===cat).length!==50))throw Error('Collection incomplete');
+  if(customMap||customPack||!mapHasArtwork||!activeMapLabel.includes('Toliak'))return;
+  positions=verified;builtIn=true;
+  // Default to a sourced collection so the site does not appear to have an empty map.
+  if(set.id==='tags')set=sets[1];
+  render();message('150 sourced San Andreas pickups: 50 snapshots, 50 horseshoes, 50 oysters. Approximate SVG placement; sources and original 3D game coordinates available in credits.');
+ }catch(err){message('Bundled locations unavailable: '+err.message+'; manual source packs still work.')}
+}
 window.TeamJuraSAArtwork=Object.freeze({
  attach:(width,height,source)=>{
+  if(customMap)return false;
   if(!Number.isFinite(width)||!Number.isFinite(height)||width<128||height<128)return false;
   if(map&&positions.length&&(map.width!==width||map.height!==height)){
-   mapHasArtwork=false;message('Reference artwork loaded, but existing marker coordinates were created for a different image size; markers hidden until the matching map is chosen.');render();return false;
+   mapHasArtwork=false;message('The selected map artwork does not match the current location pack; pins hidden for accuracy.');render();return false;
   }
-  map={width,height,source};mapHasArtwork=true;render();return true;
+  map={width,height,source};activeMapLabel=source;mapHasArtwork=true;render();
+  if(width===6000&&height===6000&&source.includes('Toliak')&&!customPack)loadAtlasSourcePins();
+  return true;
  }
 });
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
