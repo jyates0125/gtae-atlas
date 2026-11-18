@@ -60,6 +60,16 @@ async def smoke():
                                 if failed_art:failures.append('Map card artwork missing: '+', '.join(failed_art[:5]))
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
+                                if await pg.locator('#togglePins').get_attribute('aria-pressed')!='false':
+                                    failures.append('Map pins must start hidden on every map world')
+                                if path=='atlas-vi.html':
+                                    if await pg.locator('#layer').input_value()!='scaly,view':
+                                        failures.append('GTA VI must start in the approved Scaly view')
+                                    await pg.locator('#layer').evaluate("(el)=>{el.value='loki,view';el.dispatchEvent(new Event('change',{bubbles:true}))}")
+                                    if await pg.locator('#togglePins').get_attribute('aria-pressed')!='false':
+                                        failures.append('Loki view unexpectedly enables markers')
+                                    await pg.locator('#layer').evaluate("(el)=>{el.value='scaly,view';el.dispatchEvent(new Event('change',{bubbles:true}))}")
+
                                 try:
                                     await pg.wait_for_function("document.querySelector('#layer')?.options.length >= 2",timeout=6500)
                                 except Exception:
@@ -93,6 +103,18 @@ async def smoke():
                                             await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
                                             if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='false':
                                                 failures.append('One-click category off did not disable pins')
+                                            await pg.locator('#allOn').evaluate('(el)=>el.click()')
+                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
+                                                failures.append('Show All did not enable map pins')
+                                            await pg.locator('#allOff').evaluate('(el)=>el.click()')
+                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='false':
+                                                failures.append('Hide All did not disable map pins')
+                                            await pg.locator('#togglePins').evaluate('(el)=>el.click()')
+                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
+                                                failures.append('Pins button failed to restore markers after Hide All')
+                                            await pg.locator('#togglePins').evaluate('(el)=>el.click()')
+                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='false':
+                                                failures.append('Pins button failed to hide markers again')
                                     except Exception as exc:
                                         failures.append('Map legend could not be toggled: '+str(exc)[:700])
                                 toggle=pg.locator('#juraToggle3d')
