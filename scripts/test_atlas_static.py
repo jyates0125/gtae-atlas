@@ -12,7 +12,7 @@ class RefParser(HTMLParser):
             url=a.get(key,'')
             if url.startswith('./') and not ('?' in url and not url.split('?',1)[0]): self.refs.append(url.split('?',1)[0].split('#')[0].removeprefix('./'))
 js=(D/'atlas.js').read_text()
-expected=['scaly,view','yanis,17','yanis,15','dupzor,51']
+expected=['scaly,view','loki,view','yanis,17','yanis,15','dupzor,51']
 m=re.search(r" '6':\[(.*)\]\n\};",js)
 assert m,'GTA VI layer selector missing'
 actual=re.findall(r"\['([^']+)','",m.group(1))
@@ -38,3 +38,7 @@ assert (D/'data/gtadb-6-manifest.json').exists()
 manifest=json.loads((D/'data/gtadb-6-manifest.json').read_text())
 assert manifest['game']=='6' and manifest['license']=='CC BY 4.0'
 print('Atlas 6.7 static regression PASS: 5 unique VI views, navigation, legacy keys, links, sync plumbing')
+
+# Modern pin visibility, gesture, and source priority regressions.
+import runpy
+runpy.run_path(str(D/'scripts/test_map_pins_default_off.py'),run_name='__main__')
