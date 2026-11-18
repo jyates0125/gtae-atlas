@@ -34,6 +34,18 @@
     "tbogt": [
       "https://www.gtabase.com/grand-theft-auto-iv/gta-4-cheats-xbox-360-ps3-pc-full-list-of-cheat-codes",
       "https://gtaside.com/tips/gta4/cheat-codes/"
+    ],
+    "lcs": [
+      "https://www.gtabase.com/articles/gta-liberty-city-stories-cheats-cheat-codes-for-psp-ps2",
+      "https://www.grandtheftwiki.com/Cheats_in_GTA_Liberty_City_Stories"
+    ],
+    "vcs": [
+      "https://www.gtabase.com/articles/gta-vice-city-stories-cheats-all-cheat-codes-for-psp-ps2",
+      "https://www.grandtheftwiki.com/Cheats_in_GTA_Vice_City_Stories"
+    ],
+    "ctw": [
+      "https://www.gtabase.com/articles/gta-chinatown-wars-cheats-cheat-codes-for-psp-ds-mobile",
+      "https://www.grandtheftwiki.com/Cheats_in_GTA_Chinatown_Wars"
     ]
   },
   "cheats": [
@@ -1374,6 +1386,290 @@
       "code": "",
       "phone": "938-555-0150",
       "ps": null
+    },
+    {
+      "game": "lcs",
+      "group": "Survival",
+      "name": "Restore health",
+      "ps": "L1 R1 Cross L1 R1 Square L1 R1"
+    },
+    {
+      "game": "lcs",
+      "group": "Survival",
+      "name": "Full armor",
+      "ps": "L1 R1 Circle L1 R1 Cross L1 R1"
+    },
+    {
+      "game": "lcs",
+      "group": "Money",
+      "name": "Add $250,000",
+      "ps": "L1 R1 Triangle L1 R1 Circle L1 R1"
+    },
+    {
+      "game": "lcs",
+      "group": "Weapons",
+      "name": "Weapon set 1",
+      "ps": "Up Square Square Down Left Square Square Right"
+    },
+    {
+      "game": "lcs",
+      "group": "Weapons",
+      "name": "Weapon set 2",
+      "ps": "Up Circle Circle Down Left Circle Circle Right"
+    },
+    {
+      "game": "lcs",
+      "group": "Weapons",
+      "name": "Weapon set 3",
+      "ps": "Up Cross Cross Down Left Cross Cross Right"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "Clear weather",
+      "ps": "Up Down Circle Up Down Square L1 R1"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "Speed up clock",
+      "ps": "L1 L1 Left L1 L1 Right Circle Cross"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "Faster gameplay",
+      "ps": "R1 R1 L1 R1 R1 L1 Down Cross"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "Change pedestrian outfit",
+      "ps": "L1 L1 Left L1 L1 Right Square Triangle"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "End player life",
+      "ps": "L1 Down Left R1 Cross Circle Up Triangle"
+    },
+    {
+      "game": "vcs",
+      "group": "Survival",
+      "name": "Restore health",
+      "ps": "Up Down Left Right Circle Circle L1 R1"
+    },
+    {
+      "game": "vcs",
+      "group": "Survival",
+      "name": "Full armor",
+      "ps": "Up Down Left Right Square Square L1 R1"
+    },
+    {
+      "game": "vcs",
+      "group": "Money",
+      "name": "Add $250,000",
+      "ps": "Up Down Left Right Cross Cross L1 R1"
+    },
+    {
+      "game": "vcs",
+      "group": "Weapons",
+      "name": "Weapon set 1",
+      "ps": "Left Right Cross Up Down Square Left Right"
+    },
+    {
+      "game": "vcs",
+      "group": "Weapons",
+      "name": "Weapon set 2",
+      "ps": "Left Right Square Up Down Triangle Left Right"
+    },
+    {
+      "game": "vcs",
+      "group": "Weapons",
+      "name": "Weapon set 3",
+      "ps": "Left Right Triangle Up Down Circle Left Right"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Clear weather",
+      "ps": "Left Down R1 L1 Right Up Left Cross"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Speed up clock",
+      "ps": "R1 L1 L1 Down Up Cross Down L1"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Faster gameplay",
+      "ps": "Left Left R1 R1 Up Triangle Down Cross"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Foggy weather",
+      "ps": "Left Down Triangle Cross Right Up Left L1"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Overcast weather",
+      "ps": "Left Down L1 R1 Right Up Left Square"
+    },
+    {
+      "game": "ctw",
+      "group": "Survival",
+      "name": "Restore health and armor",
+      "ps": "L1 L1 R1 Circle Circle Cross Cross R1",
+      "ds": "L L R A A B B R",
+      "mobile": "LIFEUP"
+    },
+    {
+      "game": "ctw",
+      "group": "Survival",
+      "name": "Full armor",
+      "ps": "L1 L1 R1 Cross Cross Circle Circle R1",
+      "ds": "L L R B B A A R",
+      "mobile": "SHELLY"
+    },
+    {
+      "game": "ctw",
+      "group": "Police",
+      "name": "Lower wanted level",
+      "ps": "R1 Triangle Triangle Square Square R1 L1 L1",
+      "ds": "R X X Y Y R L L",
+      "mobile": "COPOUT"
+    },
+    {
+      "game": "ctw",
+      "group": "Police",
+      "name": "Raise wanted level",
+      "ps": "L1 L1 R1 Square Square Triangle Triangle R1",
+      "ds": "L L R Y Y X X R",
+      "mobile": "COPIN"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Weapon set 1",
+      "ps": "R1 Up Cross Down Left R1 Cross Right",
+      "ds": "R Up B Down Left R B Right",
+      "mobile": "LOADOA"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Weapon set 2",
+      "ps": "R1 Up Circle Down Left R1 Circle Right",
+      "ds": "R Up A Down Left R A Right",
+      "mobile": "LOADOB"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Weapon set 3",
+      "ps": "R1 Up Square Down Left R1 Square Right",
+      "ds": "R Up Y Down Left R Y Right",
+      "mobile": "LOADOC"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Weapon set 4",
+      "ps": "R1 Up Triangle Down Left R1 Triangle Right",
+      "ds": "R Up X Down Left R X Right",
+      "mobile": "LOADOD"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Explosive Eagle",
+      "ps": "L1 R1 Triangle Square Circle Cross Up Down",
+      "ds": "L R X Y A B Up Down",
+      "mobile": "BOOMCAN"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Sunny weather",
+      "ps": "Up Down Left Right Circle Cross L1 R1",
+      "ds": "Up Down Left Right A B L R"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Extra sunny weather",
+      "ps": "Up Down Left Right Cross Triangle L1 R1",
+      "ds": "Up Down Left Right B X L R"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Cloudy weather",
+      "ps": "Up Down Left Right Triangle Square L1 R1",
+      "ds": "Up Down Left Right X Y L R"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Foggy weather",
+      "ps": "Up Down Left Right Square Cross R1 L1",
+      "ds": "Up Down Left Right Y B R L"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Rainy weather",
+      "ps": "Up Down Left Right Square Circle L1 R1",
+      "ds": "Up Down Left Right Y A L R"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Heavy rain",
+      "ps": "Up Down Left Right Circle Triangle R1 L1",
+      "ds": "Up Down Left Right A X R L"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Stormy weather",
+      "ps": "Up Down Left Right Cross Square R1 L1",
+      "ds": "Up Down Left Right B Y R L",
+      "mobile": "TEMPEST"
+    },
+    {
+      "game": "ctw",
+      "group": "Money",
+      "name": "Get $10,000",
+      "mobile": "CASHIN"
+    },
+    {
+      "game": "ctw",
+      "group": "Time",
+      "name": "Advance one day",
+      "mobile": "JUMPDAY"
+    },
+    {
+      "game": "ctw",
+      "group": "Time",
+      "name": "Advance one hour",
+      "mobile": "JUMPHR"
+    },
+    {
+      "game": "ctw",
+      "group": "Time",
+      "name": "Advance six hours",
+      "mobile": "JUMPHRS"
+    },
+    {
+      "game": "ctw",
+      "group": "Time",
+      "name": "Stop clock",
+      "mobile": "NOTIME"
     }
   ],
   "news": [

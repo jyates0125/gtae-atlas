@@ -1,4 +1,4 @@
-/* Team Jura Atlas 12.4 · edition-aware, sourced single-player cheats and Rockstar newsroom. */
+/* Team Jura Atlas 13.1 · multi-generation, edition-specific sourced codes and Rockstar newsroom. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id),MODE=document.body.dataset.hub;
 const node=(tag,cls,txt)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(txt!==undefined)el.textContent=String(txt);return el};
@@ -17,7 +17,8 @@ async function copyText(s){try{if(!navigator.clipboard)throw Error('clipboard un
 function tokens(item,platform){
  if(!item.ps)return null;
  let raw=item.ps.split(/\s+/).filter(Boolean),mapped;
- if(platform==='ps3hd'&&item.game==='sa')mapped=raw.map(t=>PS3_HD[t]||t);
+ if(platform==='psp'&&['lcs','vcs','ctw'].includes(item.game))mapped=raw.map(t=>({L1:'L',R1:'R'}[t]||t));
+ else if(platform==='ps3hd'&&item.game==='sa')mapped=raw.map(t=>PS3_HD[t]||t);
  else if(['ps2','ps3','ps4','ps5'].includes(platform))mapped=raw;
  else if(platform==='xbox'&&item.game==='sa')mapped=raw.map(t=>PS_TO_ORIGINAL_XBOX[t]||t);
  else if(['x360','xone360'].includes(platform)&&item.game==='sa')mapped=raw.map(t=>X360_SWAP[PS_TO_XBOX[t]]||PS_TO_XBOX[t]||t);
@@ -28,6 +29,8 @@ function tokens(item,platform){
 function available(item,platform){
  const game=item.game,iv=['iv','tlad','tbogt'].includes(game);
  if(iv)return ['pc','ps3','x360','xone360','xsx'].includes(platform);
+ if(['lcs','vcs'].includes(game))return ['psp','ps2'].includes(platform)&&Boolean(item.ps);
+ if(game==='ctw')return platform==='psp'?Boolean(item.ps):platform==='nds'?Boolean(item.ds):platform==='mobile'?Boolean(item.mobile):false;
  if(game==='story'&&!V_VERSIONS.has(platform))return false;
  if(game==='sa'&&!SA_VERSIONS.has(platform))return false;
  if(['iii','vc'].includes(game)&&!['pc','ps2','ps3','ps4','ps5','xbox','xone','xsx'].includes(platform))return false;
@@ -44,11 +47,11 @@ function addCopy(actions,label,value){
 }
 function cheatCard(item,platform){
  const card=node('article','h-card'),g=item.game;
- const labels={story:'GTA V STORY',sa:'SAN ANDREAS',iii:'GTA III',vc:'VICE CITY',iv:'GTA IV',tlad:'THE LOST AND DAMNED',tbogt:'BALLAD OF GAY TONY'};
+ const labels={story:'GTA V STORY',sa:'SAN ANDREAS',iii:'GTA III',vc:'VICE CITY',iv:'GTA IV',lcs:'LIBERTY CITY STORIES',vcs:'VICE CITY STORIES',ctw:'CHINATOWN WARS',tlad:'THE LOST AND DAMNED',tbogt:'BALLAD OF GAY TONY'};
  card.append(node('p','h-mini',(labels[g]||'CLASSIC GTA')+' / '+item.group),node('h3','',item.name));
- const isIV=['iv','tlad','tbogt'].includes(g),code=platform==='pc'?item.code:tokens(item,platform);
+ const isIV=['iv','tlad','tbogt'].includes(g),code=platform==='pc'?item.code:platform==='nds'?item.ds?.split(/\s+/).join(' · '):platform==='mobile'?item.mobile:tokens(item,platform);
  const phoneSupported=Boolean(item.phone)&&(isIV||(g==='story'&&MODERN_PHONE.has(platform)));
- if(code){const label=platform==='pc'?(g==='story'?'PC console code':'Type during gameplay'):'Controller sequence';
+ if(code){const label=platform==='mobile'?'Enter at safehouse whiteboard':platform==='pc'?(g==='story'?'PC console code':'Type during gameplay'):'Controller sequence';
   card.append(node('span','h-code-label',label),node('code','h-controller-code',code))}
  if(!code&&phoneSupported&&g==='story')card.append(node('p','h-muted','Phone-only activation; no controller sequence for this edition.'));
  if(phoneSupported){card.append(node('p','h-phone',isIV?'Dial on in-game cellphone: '+item.phone:'In-game phone: '+item.phone))}
@@ -56,7 +59,7 @@ function cheatCard(item,platform){
  if(item.versions==='definitive-only')card.append(node('p','h-muted','Definitive Edition only.'));
  if(item.versions==='gen8plus')card.append(node('p','h-muted','Requires a newer GTA V edition and any applicable vehicle unlock.'));
  const actions=node('div','h-card-actions');
- if(code)addCopy(actions,platform==='pc'?'Copy PC code':'Copy buttons',code);
+ if(code)addCopy(actions,platform==='mobile'?'Copy whiteboard code':platform==='pc'?'Copy PC code':'Copy buttons',code);
  if(phoneSupported)addCopy(actions,'Copy phone',item.phone);
  card.append(actions);return card;
 }
@@ -69,6 +72,8 @@ function help(game,platform){
  const h=$('cheatPlatformHelp');if(!h)return;
  if(game==='vi'){h.textContent='GTA VI: no cheat codes have been independently verified for this guide; we will not display guesses.';return}
  if(game==='online'){h.textContent='GTA Online does not accept GTA V Story Mode cheat codes.';return}
+ if(['lcs','vcs'].includes(game)){h.textContent=['psp','ps2'].includes(platform)?'Original PSP and PS2 releases: enter the sequence during gameplay. PSP L/R corresponds to PS2 L1/R1. Save before using cheats; some effects cannot be undone.':'For '+(game==='lcs'?'Liberty City Stories':'Vice City Stories')+' choose PSP or original PS2. This guide does not assume mobile or newer console controls are identical.';return}
+ if(game==='ctw'){h.textContent=platform==='mobile'?'Chinatown Wars for iOS/Android: enter these letter codes at the safehouse whiteboard. Console button sequences do not apply.':platform==='nds'?'Nintendo DS: enter the exact DS A/B/X/Y and L/R sequence during gameplay. Save first; cheats can disable autosave.':platform==='psp'?'PSP: enter the L/R and Circle/Cross/Square/Triangle sequence during gameplay. Save before testing cheats.':'Choose Nintendo DS, PSP, or mobile for Chinatown Wars; other GTA consoles do not share these codes.';return}
  if(['iv','tlad','tbogt'].includes(game)){
   h.textContent=['pc','ps3','x360','xone360','xsx'].includes(platform)?'GTA IV / Episodes from Liberty City: press Up twice to access your in-game phone keypad and dial the number. On Xbox One or Series, use the Xbox 360 backwards-compatible game. The Episodes accept the GTA IV base codes plus their own extra cheats.':'GTA IV was released for PC, PS3, and Xbox 360; Xbox One and Series run the backwards-compatible Xbox 360 version. No official native PS4/PS5 release is included.';return;
  }
@@ -91,9 +96,9 @@ function render(){
  const selected=$('hubGame').value,q=$('hubSearch').value.toLowerCase().trim(),cards=$('hubCards');
  const news=MODE==='news',platform=news?'pc':($('hubPlatform')?.value||'pc');
  const all=news?db.news:db.cheats;
- const filtered=all.filter(x=>(selected==='all'||x.game===selected||(['tlad','tbogt'].includes(selected)&&x.game==='iv'))&&[x.name,x.code,x.phone,x.ps,x.group,x.title,x.summary].filter(Boolean).join(' ').toLowerCase().includes(q)&& (news||available(x,platform)));
+ const filtered=all.filter(x=>(selected==='all'||x.game===selected||(['tlad','tbogt'].includes(selected)&&x.game==='iv'))&&[x.name,x.code,x.phone,x.ps,x.ds,x.mobile,x.group,x.title,x.summary].filter(Boolean).join(' ').toLowerCase().includes(q)&& (news||available(x,platform)));
  cards.replaceChildren();
- const cheatTitles={story:'GTA V Story Mode cheats',sa:'San Andreas cross-platform cheats',iii:'GTA III classic cheat codes',vc:'GTA Vice City cheats',iv:'GTA IV cellphone cheats',tlad:'The Lost and Damned cheats',tbogt:'The Ballad of Gay Tony cheats',online:'GTA Online: no Story cheats',vi:'GTA VI: no verified cheat codes'}; $('resultsTitle').textContent=news?(selected==='vi'?'GTA VI official posts':selected==='online'?'GTA Online official posts':'Official Rockstar updates'):(cheatTitles[selected]||'Single-player cheats');
+ const cheatTitles={story:'GTA V Story Mode cheats',sa:'San Andreas cross-platform cheats',iii:'GTA III classic cheat codes',vc:'GTA Vice City cheats',iv:'GTA IV cellphone cheats',lcs:'Liberty City Stories · PSP/PS2 cheats',vcs:'Vice City Stories · PSP/PS2 cheats',ctw:'Chinatown Wars · DS/PSP/mobile cheats',tlad:'The Lost and Damned cheats',tbogt:'The Ballad of Gay Tony cheats',online:'GTA Online: no Story cheats',vi:'GTA VI: no verified cheat codes'}; $('resultsTitle').textContent=news?(selected==='vi'?'GTA VI official posts':selected==='online'?'GTA Online official posts':'Official Rockstar updates'):(cheatTitles[selected]||'Single-player cheats');
  help(selected,platform);
  status(filtered.length+' '+(news?'sourced articles':'available cheat entries')+' · snapshot '+db.checkedAt);
  if(!filtered.length){
@@ -115,7 +120,8 @@ async function init(){
  if([...game.options].some(x=>x.value===p.get('game')))game.value=p.get('game');
  if(platform&&[...platform.options].some(x=>x.value===p.get('platform')))platform.value=p.get('platform');
  query.value=(p.get('q')||'').slice(0,120);
- game.addEventListener('change',render);query.addEventListener('input',render);
+ const syncPlatform=()=>{if(!platform)return;const g=game.value,p=platform.value;if(g==='ctw'&&!['nds','psp','mobile'].includes(p))platform.value='nds';else if(['lcs','vcs'].includes(g)&&!['psp','ps2'].includes(p))platform.value='psp';else if(!['ctw','lcs','vcs'].includes(g)&&['nds','psp','mobile'].includes(p))platform.value='pc'};
+ syncPlatform();game.addEventListener('change',()=>{syncPlatform();render()});query.addEventListener('input',render);
  if(platform)platform.addEventListener('change',render);
  $('resetHub').addEventListener('click',()=>{query.value='';render()});
  try{const r=await fetch('./data/atlas-news-cheats.json',{cache:'no-cache'});if(!r.ok)throw Error('HTTP '+r.status);
