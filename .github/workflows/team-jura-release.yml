@@ -50,8 +50,13 @@ jobs:
       - name: Desktop and mobile browser QA on served production files
         env:
           ATLAS_BROWSER: chromium
-          ATLAS_VISUAL_CAPTURE: '1'
         run: python scripts/browser_smoke.py
+      - name: Independently capture designed-brand screenshots (Chromium)
+        if: always()
+        continue-on-error: true
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Chromium)
         if: always()
         uses: actions/upload-artifact@v4
@@ -82,8 +87,13 @@ jobs:
       - name: Microsoft Edge desktop/mobile functional smoke tests
         env:
           ATLAS_BROWSER: msedge
-          ATLAS_VISUAL_CAPTURE: '1'
         run: python scripts/browser_smoke.py
+      - name: Independently capture designed-brand screenshots (Edge)
+        if: always()
+        continue-on-error: true
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Edge)
         if: always()
         uses: actions/upload-artifact@v4
