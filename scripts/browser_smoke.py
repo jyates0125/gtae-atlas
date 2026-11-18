@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -299,6 +299,27 @@ async def smoke():
                                     await pg.locator('#classicClear').click()
                                 except Exception as exc:
                                     failures.append('Local classic high-resolution image regression: '+str(exc)[:300])
+                            if not failures and path=='atlas-credits.html':
+                                if await pg.locator('h1#pageTitle').count()!=1:
+                                    failures.append('Canonical credits page title missing')
+                                if await pg.locator('.source-card').count()<16:
+                                    failures.append('Source credits list incomplete')
+                                if await pg.locator('a[href="https://gtamap.io/disclaimer/"]').count()!=1:
+                                    failures.append('GTAMap.io original source disclaimer not linked')
+                                if await pg.locator('a[href="https://github.com/rolux/gtadb.org"]').count()<1:
+                                    failures.append('GTADB source repository not credited')
+                                if await pg.locator('img[src="./art/elario-crest.svg"]').count()!=1:
+                                    failures.append('Original Elario crest missing on credits')
+                                if 'MANY CREWS' not in await pg.locator('header .brand').inner_text():
+                                    failures.append('Community branding changed')
+                                if await pg.locator('a[href^="./atlas109-credits.css"]').count()>0:
+                                    failures.append('Unexpected stylesheet link inside document anchor')
+                                try:
+                                    await pg.locator('details summary').first.click()
+                                    if not await pg.locator('details pre.license').first.is_visible():
+                                        failures.append('GTADB MIT copyright notice cannot be expanded')
+                                except Exception as exc:
+                                    failures.append('Credits MIT license UI did not work: '+str(exc)[:250])
                             if not failures and path=='atlas93-garage.html':
                                 await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')
