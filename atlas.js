@@ -288,14 +288,15 @@ function updateNamedLayerVisibility(ids,show){const hidden=namedHidden();const r
  }
  for(const id of ids){if(show)hidden.delete(id);else hidden.add(id)}
  hiddenNamed[namedScope()]=[...hidden];store('jura62-named-layers',hiddenNamed);page=0;render();announce(show?'Selected map layer pins shown.':'Selected map layer pins hidden.');}
-function renderNamedLayers(){const root=$('namedLayers');if(!root)return;root.replaceChildren();const rows=records(),layers=layersForRows(rows),hidden=namedHidden();
+function renderNamedLayers(){const root=$('namedLayers');if(!root)return;root.replaceChildren();const rows=records(),layers=layersForRows(rows),hidden=namedHidden(),chosenCategories=enabled();
+ const isEnabled=layer=>showPins&&!hidden.has(layer.id)&&rows.some(r=>layer.predicate(r)&&chosenCategories.has(r.category)&&passesNamedLayers(r,hidden));
  const q=($('namedLayerSearch')?.value||'').trim().toLowerCase();let rendered=0;
- for(const {id,title,count}of layers){if(q&&!title.toLowerCase().includes(q))continue;rendered++;
-  const b=btn(`${title} · ${count.toLocaleString()}`,()=>{updateNamedLayerVisibility([id],!showPins||hidden.has(id));},'named-layer-choice');
-  b.setAttribute('aria-pressed',String(showPins&&enabled().size>0&&!hidden.has(id)));b.setAttribute('aria-label',((!showPins||hidden.has(id))?'Show ':'Hide ')+title+' pins');root.append(b);
+ for(const layer of layers){const {id,title,count}=layer;if(q&&!title.toLowerCase().includes(q))continue;rendered++;
+  const on=isEnabled(layer);const b=btn(`${title} · ${count.toLocaleString()}`,()=>{updateNamedLayerVisibility([id],!on);},'named-layer-choice');
+  b.setAttribute('aria-pressed',String(on));b.setAttribute('aria-label',(on?'Hide ':'Show ')+title+' pins');root.append(b);
  }
  if(!rendered){const note=document.createElement('small');note.textContent=layers.length?'No matching layer names. Clear layer search.':'No named layers have mapped coordinates in this game yet.';root.append(note)}
- const count=$('namedLayerCount');if(count)count.textContent=`${layers.length} mapped layers · ${showPins?layers.filter(l=>!hidden.has(l.id)).length:0} enabled`;
+ const count=$('namedLayerCount');if(count)count.textContent=`${layers.length} mapped layers · ${layers.filter(isEnabled).length} enabled`;
 }
 const LEGEND_GROUPS=[
  ['Explore world',['landmark','nature','transport','government','industry','utility','other']],
