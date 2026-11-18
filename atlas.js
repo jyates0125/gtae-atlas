@@ -662,7 +662,7 @@ async function loadDataset(g,refresh=false){
   try{const r=await fetch('./data/gtadb-'+g+'.json'+(refresh?'?update='+Date.now():''),{cache:refresh?'reload':'no-cache'});
    if(r.ok){const data=await r.json();if(data?.game!==g||data?.license!=='CC BY 4.0'||!data.records||typeof data.records!=='object')throw Error('Invalid attributed snapshot');
     const v=normalize(data.records,g);if(v.length<500)throw Error('Snapshot has too few mapped landmarks');
-    {datasets[g]=v;dataOrigins[g]='Local GTADB '+(g==='6'?'VI research':'GTA V landmark')+' snapshot '+String(data.sourceUpdated||'').slice(0,10);await cacheData(g,data.records);if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' attributed '+(g==='6'?'provisional':'GTA V')+' landmarks · '+String(data.sourceUpdated||'').slice(0,10));}}return;}
+    datasets[g]=v;dataOrigins[g]='Local GTADB '+(g==='6'?'VI research':'GTA V landmark')+' snapshot '+String(data.sourceUpdated||'').slice(0,10);await cacheData(g,data.records);if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' attributed '+(g==='6'?'provisional':'GTA V')+' landmarks · '+String(data.sourceUpdated||'').slice(0,10));}return;}
   }catch(e){/* Keep starter/cached/remote repository fallbacks if a snapshot is absent. */}
  }
  const checked=Number(loadStore('jura58-gtadb-check-'+g,0))||0;
