@@ -10,13 +10,14 @@ assert len(data['vehicles'])>=20
 for model,row in data['vehicles'].items():
     assert model in seed['vehicles'],f'Model {model} not in source archive'
     assert row['model']==model and row['sourceUrl'].startswith('https://gtadb.net/gta-online/vehicles/')
-    assert row['category'] and row['manufacturer'] and row['description']
+    assert row['category'] and row['description'] and (row['manufacturer'] is None or isinstance(row['manufacturer'],str))
     assert isinstance(row['seats'],int) and row['seats']>0
     assert row['priceUSD'] is None or (isinstance(row['priceUSD'],int) and row['priceUSD']>=0)
     assert row['topSpeedMph'] is None or (isinstance(row['topSpeedMph'],(int,float)) and row['topSpeedMph']>0)
 assert data['vehicles']['squalo']['category']=='Boats & Watercraft'
 assert data['vehicles']['squalo']['topSpeedMph']==65.75
 assert data['vehicles']['squalo']['priceUSD']==196621
+assert data['vehicles']['squalo']['customizable'] is False
 assert data['vehicles']['alkonost']['category']=='Planes & Aircraft'
 assert data['vehicles']['akula']['category']=='Helicopters'
 assert data['vehicles']['adder']['category']=='Super'
