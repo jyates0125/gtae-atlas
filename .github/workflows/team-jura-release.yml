@@ -32,6 +32,7 @@ jobs:
           python scripts/test_catalog_design_127.py
           python scripts/test_hubs_103.py
           python scripts/test_game_art_121.py
+          python scripts/test_map_chrome_128.py
           python scripts/test_classic_flat_106.py
           node --check atlas103-hub.js
           node --check atlas98-portal.js
