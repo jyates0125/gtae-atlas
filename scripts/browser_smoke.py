@@ -178,10 +178,15 @@ async def smoke():
                                             src=await cover.get_attribute('src')
                                             failures.append('Atlas cover failed to load on scroll: '+str(src)+' · '+str(err)[:115])
                                             break
-                                    urls=await covers.evaluate_all("(imgs)=>imgs.map(x=>x.getAttribute('src'))")
-                                    if len(set(urls))!=13:failures.append('Duplicate world cover used')
-                                    if len([x for x in urls if 'atlas106-' in x])!=7:
-                                        failures.append('Seven original classic-world artwork files not displayed')
+                                    identities=await pg.locator('#directoryFeatured a[data-id],#directoryAdditional a[data-id]').evaluate_all("(cards)=>cards.map(c=>({id:c.dataset.id,src:c.querySelector('img')?.getAttribute('src'),sourced:c.classList.contains('has-game-map-art')}))")
+                                    if len(identities)!=13 or len({x['id'] for x in identities})!=13:
+                                        failures.append('Directory destination identities duplicated or missing')
+                                    classic_ids={'iii','vc','vcs','lcs','ctw','tlad','tbogt'}
+                                    for item in identities:
+                                        if item['id'] in classic_ids and not (item['sourced'] or 'atlas106-' in str(item['src'])):
+                                            failures.append('Classic cover lacks original game imagery or game-specific fallback: '+item['id'])
+                                    # TLAD and TBoGT intentionally share GTA IV Liberty City map imagery,
+                                    # while preserving independent episode workspaces and unique identities.
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 if not await pg.locator('body.j117-map-world').count():
                                     failures.append('Current Elario flagship map brand missing')
@@ -320,7 +325,7 @@ async def smoke():
                                     await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
                                     await pg.evaluate("window.confirm=()=>true")
                                     await pg.locator('#classicClearMap').click()
-                                    await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='original-art'",timeout=10000)
+                                    await pg.wait_for_function("['original-art','source-game-map'].includes(document.getElementById('classicViewport')?.dataset.mapImage)",timeout=10000)
                                     if await pg.locator('#pinCount').inner_text()!='1':
                                         failures.append('Removing an imported image deleted personal markers')
                                     await pg.locator('#classicClear').click()
@@ -388,7 +393,7 @@ async def smoke():
                                     failures.append('Canonical credits page title missing')
                                 if await pg.locator('.source-card').count()<16:
                                     failures.append('Source credits list incomplete')
-                                if await pg.locator('a[href="https://gtamap.io/disclaimer/"]').count()!=1:
+                                if await pg.locator('a[href="https://gtamap.io/disclaimer/"]').count()<1:
                                     failures.append('GTAMap.io original source disclaimer not linked')
                                 if await pg.locator('a[href="https://github.com/rolux/gtadb.org"]').count()<1:
                                     failures.append('GTADB source repository not credited')

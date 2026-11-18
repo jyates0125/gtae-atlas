@@ -16,6 +16,10 @@
  function makeWorld(w,short){const a=E('a',short?'rail-world':'world-card');a.href='./'+w.href;a.dataset.id=w.id;
    if(short){const emblem=E('span','rail-emblem',({'story':'V','online':'◉','vi':'VI','cayo':'☀','iv':'IV','sa':'SA'}[w.id]||'◆'));const label=E('span','rail-label',w.name);const detail=E('small','',w.short);label.append(detail);a.append(emblem,label);return a}
    const im=E('img');im.src='./art/'+w.art;im.loading=w.group==='featured'?'eager':'lazy';im.decoding='async';im.alt='Original Team Jura illustration for '+w.name;
+   const gameArt=window.TeamJuraGameMaps;
+   if(gameArt?.entries[w.id])gameArt.load(w.id).then(source=>{
+     if(source){im.src=source.url;im.alt='Original game-world map artwork for '+w.name+'; source details in Atlas Credits';a.classList.add('has-game-map-art')}
+   });
    const body=E('span','world-copy');body.append(E('small','',w.grade),E('strong','',w.name),E('em','',w.short),E('b','','OPEN '+(w.kind==='gateway'?'REFERENCE':'MAP')+' ›'));
    const artChip=E('span','world-art-chip',w.game+' · '+(w.kind==='research'?'PROVISIONAL RESEARCH':w.kind==='gateway'?'REFERENCE':'ATLAS'));a.append(im,artChip,body);a.title=w.note;return a;
  }

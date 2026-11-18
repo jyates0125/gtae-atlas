@@ -20,7 +20,7 @@ const publicFlatMaps={
  tlad:{url:'https://gtamap.io/gta-4-map/',title:'The Lost and Damned · Liberty City',desc:'Select The Lost and Damned layers in the external GTA IV viewer. The episode shares Liberty City geography with GTA IV.'},
  tbogt:{url:'https://gtamap.io/gta-4-map/',title:'The Ballad of Gay Tony · Liberty City',desc:'Select The Ballad of Gay Tony layers in the external GTA IV viewer. This is not a separate imaginary island.'}
 };
-function flatReference(){const ref=publicFlatMaps[id];if(!ref)return;const title=$('#classicFlatTitle'),desc=$('#classicFlatDescription'),a=$('#classicFlatLink'),credit=$('#classicFlatCredit');if(!title||!desc||!a||!credit)return;title.textContent=ref.title;desc.textContent=ref.desc+' Open the authentic game map separately; it is not embedded or licensed for redistribution in Atlas.';a.href=ref.url;a.textContent='View game-specific 2D map and verified map layers ↗';credit.textContent='External GTAMap.io reference · game artwork © Rockstar / Take-Two · own map notes stay on this device';}
+function flatReference(){const ref=publicFlatMaps[id];if(!ref)return;const title=$('#classicFlatTitle'),desc=$('#classicFlatDescription'),a=$('#classicFlatLink'),credit=$('#classicFlatCredit');if(!title||!desc||!a||!credit)return;title.textContent=ref.title;desc.textContent=ref.desc+' The Atlas viewer attempts to load original game-map imagery from its credited source, but it does not copy custom GTAMap.io composite layers.';a.href=ref.url;a.textContent='View game-specific 2D map and verified map layers ↗';credit.textContent='External GTAMap.io reference · game artwork © Rockstar / Take-Two · own map notes stay on this device';}
 
 const alias={'vice-city':'vc','gta-iii':'iii','vice-city-stories':'vcs','liberty-city-stories':'lcs','chinatown-wars':'ctw','lost-and-damned':'tlad','ballad-of-gay-tony':'tbogt'};
 const $=q=>document.querySelector(q),E=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
@@ -28,7 +28,7 @@ const params=new URLSearchParams(location.search),raw=(params.get('game')||param
 const key='team-jura-atlas98-classic-'+id+'-v1';const blank=()=>({schema:'team-jura-atlas98-classic-v1',world:id,markers:[],completed:[],background:null});
 function read(){try{const data=JSON.parse(localStorage.getItem(key)||'null');if(data&&data.schema==='team-jura-atlas98-classic-v1'&&data.world===id&&Array.isArray(data.markers))return data}catch{}return blank()}
 let state=read(),adding=false,editing=null,scale=1,dx=0,dy=0,pointer=null,dragged=false;
-let highResUrl=null,highResSize=null; // map raster stored separately from personal marker JSON
+let highResUrl=null,highResSize=null,sourceMapUrl=null,sourceMapSize=null; // private maps always take precedence
 const status=message=>{if($('#classicMessage'))$('#classicMessage').textContent=message};
 function persist(){try{localStorage.setItem(key,JSON.stringify(state));window.dispatchEvent(new CustomEvent('team-jura:classic-change',{detail:{world:id}}));return true}catch(e){status('This browser could not save all records. Export a backup, or remove an oversized map image.');return false}}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
@@ -36,19 +36,20 @@ function applyTransform(){const s=$('#classicMapSurface');if(s)s.style.transform
 
 function fitClassicImage(){
  const viewport=$('#classicViewport'),surface=$('#classicMapSurface');if(!viewport||!surface)return;
- if(!highResSize){for(const prop of ['inset','width','height','left','top'])surface.style.removeProperty(prop);return}
- const ratio=highResSize.width/highResSize.height,vw=viewport.clientWidth,vh=viewport.clientHeight;
+ const dims=highResSize||(!state.background?sourceMapSize:null);
+ if(!dims){for(const prop of ['inset','width','height','left','top'])surface.style.removeProperty(prop);return}
+ const ratio=dims.width/dims.height,vw=viewport.clientWidth,vh=viewport.clientHeight;
  if(!vw||!vh||!Number.isFinite(ratio)||ratio<=0)return;
  const width=Math.min(vw,vh*ratio),height=width/ratio;
  surface.style.inset='auto';surface.style.width=width+'px';surface.style.height=height+'px';
  surface.style.left=(vw-width)/2+'px';surface.style.top=(vh-height)/2+'px';
 }
 function renderBackground(){
- const b=$('#classicMapBackground');if(!b)return;const img=highResUrl||state.background;
- b.style.backgroundImage=img?'linear-gradient(#210e2d22,#210e2d25),url('+JSON.stringify(img)+')':'linear-gradient(#1b10233d,#1b1126c9),url(./art/'+w.art+')';
+ const b=$('#classicMapBackground');if(!b)return;const img=highResUrl||state.background||sourceMapUrl;
+ b.style.backgroundImage=img?'url('+JSON.stringify(img)+')':'linear-gradient(#1b10233d,#1b1126c9),url(./art/'+w.art+')';
  b.classList.toggle('has-image',!!img);
  b.querySelector('span').hidden=true;b.querySelector('small').hidden=true;
- const viewport=$('#classicViewport');if(viewport)viewport.dataset.mapImage=highResUrl?'local-highres':state.background?'legacy-local':'original-art';
+ const viewport=$('#classicViewport');if(viewport)viewport.dataset.mapImage=highResUrl?'local-highres':state.background?'legacy-local':sourceMapUrl?'source-game-map':'original-art';
  fitClassicImage();
 }
 function activateLocalMap(blob,width,height){
@@ -120,6 +121,23 @@ function bindMap(){const viewport=$('#classicViewport');viewport.addEventListene
  $('#classicImport').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2500000){status('Import too large; maximum 2.5 MB.');return}const rd=new FileReader();rd.onload=()=>{try{const obj=JSON.parse(rd.result);if(obj.schema!=='team-jura-atlas98-classic-v1'||obj.world!==id||!Array.isArray(obj.markers)||obj.markers.length>1000)throw Error('Invalid world schema');const clean=[];for(const m of obj.markers){if(typeof m.name!=='string'||!Number.isFinite(m.x)||!Number.isFinite(m.y)||m.x<0||m.x>100||m.y<0||m.y>100)throw Error('Invalid marker');clean.push({id:String(m.id).slice(0,80),name:m.name.slice(0,100),category:w.sets.includes(m.category)?m.category:w.sets[0],note:String(m.note||'').slice(0,300),x:m.x,y:m.y,source:'personal-image-percent'})}state={schema:'team-jura-atlas98-classic-v1',world:id,markers:clean,completed:Array.isArray(obj.completed)?obj.completed.filter(x=>w.sets.includes(x)):[],background:(typeof obj.background==='string'&&(/^data:image\/(png|jpeg|webp);base64,/.test(obj.background))&&obj.background.length<1700000)?obj.background:null};persist();closeEditor();draw();status('World-specific personal data restored.')}catch(err){status('Import refused: invalid file or different GTA world.')}};rd.onerror=()=>status('Could not read JSON.');rd.readAsText(f)});
  $('#classicClear').addEventListener('click',()=>{if(!window.confirm('Delete your personal markers for '+w.name+'? Export first if needed.'))return;state.markers=[];persist();closeEditor();draw();status('Personal markers cleared. Collection checkboxes and map illustration preserved.')});
 }
-function init(){flatReference();document.title=w.name+' | Team Jura Atlas';$('#classicTitle').textContent=w.name;$('#classicDescription').textContent=w.desc;$('#breadWorld').textContent=w.name;$('#classicWorldArt').src='./art/'+w.art;$('#classicWorldArt').alt='Original Elario illustration inspired by '+w.name+' (not a game screenshot)';$('#mapWorkspaceTitle').textContent=w.name+' · personal map';bindMap();draw();status('Ready. '+state.markers.length+' personal markers in this world.');restoreStoredMap();window.addEventListener('resize',fitClassicImage);}
+function loadPublishedGameMap(){
+ const library=window.TeamJuraGameMaps;
+ if(!library?.load)return;
+ library.load(id).then(asset=>{
+  if(!asset){
+   if(!highResUrl&&!state.background)status('Original game-map image was unavailable from its host. Open the source-linked map or import your own image; your notes are intact.');
+   return;
+  }
+  sourceMapUrl=asset.url;sourceMapSize={width:asset.width,height:asset.height};
+  if(!highResUrl&&!state.background){
+   scale=1;dx=0;dy=0;applyTransform();renderBackground();
+   const note=$('.classic-stage-note');
+   if(note)note.textContent='Original '+asset.name+' game-map artwork from an attributed reference. Personal markers are relative to the visible image, not verified game coordinates. Source records and credits are in Atlas Credits.';
+   status('Original '+asset.name+' map loaded · '+asset.width+' × '+asset.height+' px.');
+  }
+ }).catch(()=>{if(!highResUrl&&!state.background)status('Original map source unavailable. Personal markers are safe.')});
+}
+function init(){flatReference();document.title=w.name+' | Team Jura Atlas';$('#classicTitle').textContent=w.name;$('#classicDescription').textContent=w.desc;$('#breadWorld').textContent=w.name;$('#classicWorldArt').src='./art/'+w.art;$('#classicWorldArt').alt='Original Elario illustration inspired by '+w.name+' (not a game screenshot)';$('#mapWorkspaceTitle').textContent=w.name+' · personal map';bindMap();draw();status('Ready. '+state.markers.length+' personal markers in this world.');restoreStoredMap();loadPublishedGameMap();window.addEventListener('resize',fitClassicImage);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

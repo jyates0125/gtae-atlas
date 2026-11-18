@@ -23,3 +23,13 @@
 
 /* Original Elario shield takes the place of the old generic crown glyph. */
 .brand-crown[src="./art/elario-crest.svg"]{width:42px;height:42px;object-fit:contain;flex:none;filter:drop-shadow(0 0 9px #e7a77b88)}
+
+/* Atlas 12.1 · real game map preview when host delivers imagery. */
+.world-card.has-game-map-art{border-color:#ebbd78}
+.directory-grid .world-card.has-game-map-art img,.world-grid .world-card.has-game-map-art img{object-fit:contain;background:linear-gradient(125deg,#c7dee3,#e9e5d8);padding:7px}
+.world-card.has-game-map-art .world-art-chip{background:#1d1033e8;color:#ffe2ad}
+.directory-hero{background-image:linear-gradient(90deg,#180b29f5,#2f1746cc 54%,#2a173460),url('./art/atlas92-map-directory.webp');background-size:cover;background-position:center}
+.directory-grid{gap:16px}
+.directory-grid .world-card{overflow:hidden;border-radius:14px}
+.directory-grid .world-card .world-copy{min-height:142px}
+@media(max-width:650px){.directory-grid{gap:10px}.directory-hero{background-position:59% center}}
