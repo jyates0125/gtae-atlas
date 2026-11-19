@@ -305,6 +305,16 @@ async def smoke():
                                     await pg.evaluate("localStorage.setItem('team-jura-passport-v74',JSON.stringify({test:3}))")
                                     await pg.locator('#j131Export').click()
                                     await pg.wait_for_function("document.querySelector('#j131ProgressStatus')?.textContent.includes('Backup exported')",timeout=2500)
+                                    before_review=await pg.evaluate("localStorage.getItem('team-jura-passport-v74')")
+                                    await pg.locator('#j144Review').click()
+                                    await pg.wait_for_function("document.querySelectorAll('#j144Entries li').length === 9",timeout=3000)
+                                    if await pg.locator('#j144Entries .j144-present').count()<1:
+                                        failures.append('Device progress review did not find saved Passport')
+                                    if 'No data was uploaded' not in await pg.locator('#j144Summary').inner_text():
+                                        failures.append('Device progress review must explicitly report no upload')
+                                    after_review=await pg.evaluate("localStorage.getItem('team-jura-passport-v74')")
+                                    if before_review!=after_review:
+                                        failures.append('Read-only local progress review modified stored data')
                                 except Exception as exc:
                                     failures.append('Account backup export interaction failed: '+str(exc)[:300])
                             if not failures and path=='atlas-dashboard.html':
