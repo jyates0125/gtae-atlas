@@ -80,7 +80,7 @@ function makeVIButtons(){
  const root=created('div','j86-mapviews');root.setAttribute('role','group');root.setAttribute('aria-label','Leonida illustration styles');
  const label=created('div','j86-view-title','MAP ARTWORK · CHOOSE VIEW');root.append(label);
  const bar=created('div','j86-view-row');root.append(bar);
- const viewNames={'scaly,view':'Scaly · YANIS','yanis,17':'Original YANIS','dupzor,51':'Original DUPZOR','uv2':'Illustrated UV','yanis,15':'Archive'};
+ const viewNames={'scaly,view':'Scaly · YANIS V18','yanis,18':'YANIS V18 · Current','dupzor,51':'Loki · DUPZOR V51','research,view':'Community Research · V18','yanis,15':'YANIS V15 · Archive'};
  let observed='';
  function sync(){if(!select.options.length)return;const signature=[...select.options].map(o=>o.value).join('|');if(signature!==observed){observed=signature;bar.replaceChildren();for(const opt of select.options){const btn=created('button','j86-view-btn',viewNames[opt.value]||opt.textContent);btn.type='button';btn.dataset.view=opt.value;btn.onclick=()=>{select.value=opt.value;select.dispatchEvent(new Event('change',{bubbles:true}));sync()};bar.append(btn)}}
  for(const btn of bar.children){const active=btn.dataset.view===select.value;btn.setAttribute('aria-pressed',String(active))}
