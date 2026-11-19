@@ -15,7 +15,7 @@
 - Do not enable any account button until the auth provider and save APIs are verified on the deployed HTTPS origin.
 
 ## Database release gates (required before sign-in)
-1. Confirm exact Supabase Project URL from **Project Settings → API**, and match it to `elario-atlas-dev`.
+1. **Project reference confirmed by owner:** `dwqrmgeldssozgdtidla`. Derived Supabase URL: `https://dwqrmgeldssozgdtidla.supabase.co`. Reconfirm with the dashboard before deploying a live client.
 2. Create an owner-scoped `atlas_saves` table, with primary key (`user_id`, `namespace`) and `user_id uuid not null references auth.users(id) on delete cascade`.
 3. Enable RLS on the table and enforce `auth.uid() = user_id` for select/insert/update/delete **and** matching `WITH CHECK` for inserts/updates. Test using two separate authenticated users; anonymous traffic must not read/write.
 4. Limit permitted namespaces, input sizes, schema versions and update rates; design revision-based conflict handling before implementing overwrites.
