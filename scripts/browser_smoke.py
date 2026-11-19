@@ -213,6 +213,10 @@ async def smoke():
                                     if await pg.locator('#sidebar .j145-open-map').count()!=1:
                                         failures.append('Accessible jump to interactive Leonida map is missing')
                                     # Initial mobile scroll is asserted above, before map controls are interacted with.
+                                    if await pg.locator('.mapcontrols .j141-official-flat').count()!=0:
+                                        failures.append('Duplicate Rockstar flat-link still competing with the functional map viewer')
+                                    if await pg.locator('#sidebar a[href="https://www.rockstargames.com/VI/media"]').count()!=1:
+                                        failures.append('Official Rockstar printable-map source link missing from research sidebar')
                                     official=pg.locator('#j143-official-button')
                                     if await official.count()!=1:
                                         failures.append('Official Rockstar map is not selectable inside the Leonida map')
