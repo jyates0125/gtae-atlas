@@ -132,9 +132,19 @@ function mount(){
  const release=()=>{dragging=false;pointer=null};stage.addEventListener('pointerup',release);stage.addEventListener('pointercancel',release);
  stage.addEventListener('keydown',ev=>{if(!loaded)return;const steps={ArrowLeft:[-30,0],ArrowRight:[30,0],ArrowUp:[0,-30],ArrowDown:[0,30]};if(steps[ev.key]){ev.preventDefault();dx+=steps[ev.key][0];dy+=steps[ev.key][1];position()}});
  document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&!panel.hidden)closeView()});
- // If visitors switch between worlds inside the same map engine, never display VI poster over GTA V.
- const observer=new MutationObserver(()=>{if(!isSix()&&!panel.hidden)closeView()});
- observer.observe(document.body,{attributes:true,attributeFilter:['data-start-world']});
+ // The shared game switcher can move this page to GTA V or Online without navigation.
+ // Never show the official Leonida poster button over a different GTA game.
+ const worldSwitch=$('game6');
+ function syncWorld(){
+  const visible=!!worldSwitch&&worldSwitch.getAttribute('aria-pressed')==='true';
+  button.hidden=!visible;
+  if(!visible&&!panel.hidden)closeView();
+ }
+ if(worldSwitch){
+  const observer=new MutationObserver(syncWorld);
+  observer.observe(worldSwitch,{attributes:true,attributeFilter:['aria-pressed']});
+ }
+ syncWorld();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();
