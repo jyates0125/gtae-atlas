@@ -102,7 +102,24 @@ function details(r,updateURL){const dialog=$('recordDialog'),area=$('detailConte
  const actions=make('div','u-detail-actions');actionsFor(r,actions);area.append(actions);if(updateURL){const url=new URL(location.href);url.searchParams.set('item',r.id);history.replaceState(null,'',url)}if(dialog.showModal)dialog.showModal();}
 function selectCompare(r){const idx=compare.findIndex(x=>x.id===r.id);if(idx>=0)compare.splice(idx,1);else if(compare.length<3)compare.push(r);draw()}
 function showCompare(){if(compare.length<2)return;const area=$('compareContent');area.replaceChildren();for(const r of compare){const col=make('section','u-compare-col');col.append(artwork(r),make('h3','',r.name),make('p','',world(r.scope)));const dl=make('dl','u-facts');field(dl,'Type',LABELS[r.kind]);field(dl,'Category',r.group);field(dl,'Verification',r.verification);field(dl,'Price',r.attributes?.price??null);col.append(dl);area.append(col)}$('compareDialog').showModal()}
-async function loadJSON(url){try{const response=await fetch('./'+url,{cache:'no-cache'});if(!response.ok)throw Error('HTTP '+response.status);return await response.json()}catch{failed.push(url);return null}}
+async function loadJSON(url){
+ // The catalog is bundled on the same origin. Retry a short-lived local HTTP failure
+ // before declaring a source unavailable, particularly on slower mobile/Edge loads.
+ for(let attempt=0;attempt<3;attempt++){
+  try{
+   const response=await fetch('./'+url,{cache:'no-cache'});
+   if(!response.ok){
+    // A missing packaged file is a release defect, not a transient connection problem.
+    if(response.status===404)break;
+    throw Error('HTTP '+response.status);
+   }
+   return await response.json();
+  }catch{
+   if(attempt<2)await new Promise(resolve=>setTimeout(resolve,160*(attempt+1)));
+  }
+ }
+ failed.push(url);return null;
+}
 async function init(){const args=new URLSearchParams(location.search);kind=MODE==='all'?(args.get('kind')||DEFAULT_KIND):MODE;if(kind!=='all'&&!Object.keys(LABELS).includes(kind))kind=DEFAULT_KIND;game=WORLD_CODES.has(args.get('game'))?args.get('game'):DEFAULT_GAME;const paramsKind=$('filterKind');paramsKind.value=kind;$('filterGame').value=game;if(args.has('q')){query=(args.get('q')||'').slice(0,120);$('universeSearch').value=query;}
  document.querySelectorAll('[data-world]').forEach(b=>b.addEventListener('click',()=>{game=b.dataset.world;group='all';page=0;$('filterGame').value=game;updateGroups();draw()}));
  const [profile,seed,catalog,sets]=await Promise.all(['data/atlas-universe-profiles.json?v=130','atlas90-seed.json','atlas-catalog.json','atlas-collections.json'].map(loadJSON));all=index(profile,seed,catalog,sets);updateGroups();
