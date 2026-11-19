@@ -48,6 +48,27 @@ def main():
   if not f.is_file():continue
   if f.suffix in ('.py','.ps1','.yml','.yaml','.key','.pem','.zip') or any(x in f.parts for x in ('scripts','tests','.github','private-lab')):
    errors.append('Non-production file leaked to public: '+str(f.relative_to(ROOT)))
+ # Verify that Cloudflare's published security header configuration is present and
+ # retains its essential protections. This is a build-time check, not an HTTP probe.
+ headers=ROOT/'_headers'
+ if headers.is_file():
+  rules=headers.read_text(encoding='utf-8',errors='replace')
+  global_block=rules.split('/*',1)[1].split('\\n\\n',1)[0] if '/*' in rules else ''
+  required={
+   'x-content-type-options':'nosniff',
+   'x-frame-options':'deny',
+   'referrer-policy':'strict-origin-when-cross-origin',
+   'permissions-policy':'camera=()',
+   'strict-transport-security':'max-age=',
+  }
+  parsed={}
+  for line in global_block.splitlines():
+   if ':' in line:
+    key,value=line.strip().split(':',1)
+    parsed[key.strip().lower()]=value.strip().lower()
+  for key,value in required.items():
+   if value not in parsed.get(key,''):
+    errors.append('Missing or weakened global Cloudflare security header: '+key)
  for name in ('index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-cayo.html','one-last-ride.html','atlas98-data-lab.html','atlas-source-registry.html','_headers'):
   if not (ROOT/name).is_file():errors.append('Missing production-critical: '+name)
  status={'passed':not errors,'html_pages':len(list(ROOT.rglob('*.html'))),'files':len([x for x in ROOT.rglob('*') if x.is_file()]),'errors':errors}
