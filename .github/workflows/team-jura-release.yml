@@ -71,6 +71,8 @@ jobs:
           node --check atlas144-device-overview.js
           python scripts/test_atlas144_account_review.py
           python scripts/test_atlas145_map_ux.py
+          python scripts/test_atlas146_launch_truth.py
+          node --check leonida-hq.js
           node --check atlas145-leonida-map-ux.js
           node --check atlas145-mobile-map-entry.js
       - name: Confirm four evidence workspaces use original page-specific artwork
