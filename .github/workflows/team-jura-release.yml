@@ -33,6 +33,7 @@ jobs:
           python scripts/test_launch_130.py
           python scripts/test_atlas134_events.py
           python scripts/test_atlas135_feed.py
+          python scripts/test_atlas136_status.py
           python scripts/test_social_icons_131.py
           python scripts/test_account_131.py
           node --check atlas131-account.js
