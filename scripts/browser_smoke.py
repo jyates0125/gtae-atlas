@@ -193,6 +193,24 @@ async def smoke():
                                             failures.append('Universe search did not filter results')
                                 except Exception as exc:
                                     failures.append('Universe catalog browser interaction failed: '+str(exc)[:450])
+                            if not failures and path=='atlas-vi.html':
+                                try:
+                                    official=pg.locator('#j143-official-button')
+                                    if await official.count()!=1:
+                                        failures.append('Official Rockstar map is not selectable inside the Leonida map')
+                                    else:
+                                        await official.click()
+                                        if not await pg.locator('#j143-official-layer').is_visible():
+                                            failures.append('Official Rockstar map viewer failed to open')
+                                        if not await pg.locator('.j143-empty').is_visible():
+                                            failures.append('Official map viewer has no source-backed image loading affordance')
+                                        await pg.locator('#j143-official-layer [data-j143="close"]').click()
+                                        if await pg.locator('#j143-official-layer').is_visible():
+                                            failures.append('Official map viewer cannot return to interactive map')
+                                        if not await pg.locator('#atlasCanvas').is_visible():
+                                            failures.append('Interactive GTA VI canvas was removed by official view')
+                                except Exception as exc:
+                                    failures.append('Official Rockstar in-map view interaction failed: '+str(exc)[:350])
                             if not failures and path in ('index.html','atlas-dashboard.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas93-garage.html','atlas-share.html','one-last-ride.html'):
                                 icons=pg.locator('.j131-social-grid button[data-j131-platform]')
                                 try:
