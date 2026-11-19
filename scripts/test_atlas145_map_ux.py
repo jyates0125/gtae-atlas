@@ -21,6 +21,13 @@ assert "select.dispatchEvent(new Event('change'" in base
 assert 'function mapView(style,g=game)' in engine
 assert 'jura3-progress' in engine and 'jura-atlas-routes' in engine
 assert 'jura86-leonida' in base
+mobile=(root/'atlas145-mobile-map-entry.js').read_text(encoding='utf-8')
+assert "if(!['atlas.html','atlas-online.html','atlas-vi.html'].includes(page))return" in mobile
+assert "window.scrollTo({top:0" in mobile
+assert "sidebar.classList.add('mobile-collapsed')" in mobile
+for filename in ('atlas.html','atlas-online.html','atlas-vi.html'):
+ assert 'atlas145-mobile-map-entry.js?v=145' in (root/filename).read_text(encoding='utf-8'),filename
+ assert 'atlas145-mobile-map-entry.css?v=145' in (root/filename).read_text(encoding='utf-8'),filename
 assert "j145-docked-view" not in (root/'atlas.html').read_text()
 assert "j145-docked-view" not in (root/'atlas-online.html').read_text()
 print('Atlas 14.5 DOM-preserving Leonida sidebar view controls and map-first mobile gate PASS')
