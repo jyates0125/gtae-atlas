@@ -619,6 +619,15 @@ async def smoke():
                                 except Exception as exc:
                                     failures.append('Credits MIT license UI did not work: '+str(exc)[:250])
                             if not failures and path=='atlas93-garage.html':
+                                if width==390:
+                                    garage_nav=pg.locator('.mast nav')
+                                    if await garage_nav.locator('a').count()!=7:
+                                        failures.append('Mobile Garage navigation must preserve all seven destinations')
+                                    metrics=await garage_nav.evaluate('(el)=>({height:el.getBoundingClientRect().height, scroll:el.scrollWidth,client:el.clientWidth,wrap:getComputedStyle(el).flexWrap})')
+                                    if metrics['height']>65 or metrics['wrap']!='nowrap':
+                                        failures.append('Garage mobile header navigation wraps into multiple rows')
+                                    if metrics['scroll']<=metrics['client']+20:
+                                        failures.append('Garage mobile navigation lacks horizontal scrolling for all destinations')
                                 await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')
                                 if await buttons.count()>0:
