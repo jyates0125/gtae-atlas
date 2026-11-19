@@ -27,7 +27,9 @@ assert 'class="j98-home j130-home"' in index
 assert 'id="heroTitle"' in index and 'id="featuredGrid"' in index
 assert 'href="./atlas-dashboard.html"' in index
 assert 'href="./atlas-share.html"' in index
-assert '<a class="j99-start-link" href="./atlas97-journey.html">' in index
+assert '<a class="j99-start-link" href="./atlas-dashboard.html">' in index
+assert 'href="./atlas-account.html"' in index
+assert 'j132-poster-welcome' in index
 assert 'Many Crews. One Vision.' in index or 'MANY CREWS. ONE VISION.' in index
 assert 'Public development preview' in index and '13 destinations' in index
 assert 'data-j130-action="share-page"' in index
