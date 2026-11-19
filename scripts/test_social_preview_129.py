@@ -11,7 +11,7 @@ class Parser(HTMLParser):
   if tag=="meta" and ("property" in a or "name" in a):self.meta[a.get("property",a.get("name"))]=a.get("content")
   if tag=="link" and "rel" in a:self.links[a["rel"]]=a.get("href")
 p=Parser();p.feed(html)
-base="https://team-jura-atlas-preview.pages.dev/"
+base="https://gtae-online.pages.dev/"
 assert p.meta["og:type"]=="website"
 assert p.meta["og:url"]==base
 assert p.meta["og:image"]==base+"art/atlas98-approved-hero.webp"
