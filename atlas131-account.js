@@ -9,7 +9,8 @@ const EXACT=new Set([
 'jura3-progress','team-jura-passport-v74',
 'team-jura-atlas81-hq-v1','team-jura-checklist-v54',
 'team-jura-atlas90-collection-v1','team-jura-atlas96-parking-v1',
-'team-jura-atlas97-last-workspace-v1','team-jura-atlas98-style-bookmarks-v1'
+'team-jura-atlas97-last-workspace-v1','team-jura-atlas98-style-bookmarks-v1',
+'team-jura-world-profiles-v2'
 ]);
 const PREFIXES=['team-jura-atlas','team-jura-passport','team-jura-checklist','team-jura-garage','jura3-'];
 const BLOCK=/(?:auth|session|token|secret|password|credential|private|api[-_]?key|oauth|access[-_]?key|refresh)/i;
