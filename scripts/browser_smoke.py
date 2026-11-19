@@ -272,6 +272,10 @@ async def smoke():
                                     if actual!=['facebook','youtube','tiktok','instagram','discord','reddit','more']:failures.append('Social icon buttons use incorrect platform semantics')
                                     if not await icons.first.is_visible():failures.append('Share icons not visible')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html') and width==390:
+                                if await pg.locator('#sidebar .j145-open-map').count()!=1:
+                                    failures.append('Mobile explorer missing the visible Open interactive map shortcut')
+                                if await pg.evaluate('window.scrollY')>100:
+                                    failures.append('Mobile explorer opens scrolled into filters instead of showing the map')
                                 nav=pg.locator('#j132-nav-toggle')
                                 if await nav.count()!=1 or not await nav.is_visible():failures.append('Mobile map all-pages navigation missing')
                                 else:
