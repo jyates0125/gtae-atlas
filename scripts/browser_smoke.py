@@ -203,8 +203,13 @@ async def smoke():
                                         inner=await docked.bounding_box()
                                         if not outer or not inner or inner['x']<outer['x']-3 or inner['x']+inner['width']>outer['x']+outer['width']+3:
                                             failures.append('Leonida map view control panel is clipped outside the sidebar')
-                                        if await docked.locator('button[data-view]').count()<4:
+                                        if await docked.locator('button[data-view]').count()<5:
                                             failures.append('Moving Leonida map controls lost native view switches')
+                                        names=await docked.locator('button[data-view]').all_inner_texts()
+                                        if len(names)!=len(set(names)):
+                                            failures.append('Leonida map view buttons contain indistinguishable duplicate labels')
+                                        if not any('Loki' in n for n in names) or not any('DUPZOR' in n and 'Source' in n for n in names):
+                                            failures.append('Styled Loki and original DUPZOR views must be distinguishable')
                                     if await pg.locator('#sidebar .j145-open-map').count()!=1:
                                         failures.append('Accessible jump to interactive Leonida map is missing')
                                     # Initial mobile scroll is asserted above, before map controls are interacted with.
