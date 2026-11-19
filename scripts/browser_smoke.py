@@ -279,10 +279,12 @@ async def smoke():
                                 if await pg.locator('#sidebar .j145-open-map').count()!=1:
                                     failures.append('Mobile explorer missing the visible Open interactive map shortcut')
                                 else:
-                                    top=await pg.locator('#sidebar .worlds').bounding_box()
-                                    shortcut=await pg.locator('#sidebar .j145-open-map').bounding_box()
-                                    if not top or not shortcut or shortcut['y']>top['y']+top['height']+28:
-                                        failures.append('Mobile Open interactive map shortcut is buried below the search controls')
+                                    if not await pg.locator('#sidebar .j145-open-map').is_visible():
+                                        failures.append('Mobile Open interactive map shortcut is not visible')
+                                    adjacent=await pg.locator('#sidebar .worlds').evaluate(
+                                        "(el)=>el.nextElementSibling?.classList.contains('j145-open-map')===true")
+                                    if not adjacent:
+                                        failures.append('Mobile Open interactive map shortcut must follow game selector before search controls')
                                 if await pg.evaluate('window.scrollY')>100:
                                     failures.append('Mobile explorer opens scrolled into filters instead of showing the map')
                                 nav=pg.locator('#j132-nav-toggle')
