@@ -18,9 +18,16 @@ for name in ('atlas128-gta3-radar.png','atlas128-vice-city-radar.png','atlas128-
  assert (ROOT/'art'/name).is_file(),name
 assert 'originalMapReady' in classic and 'loadOriginalWorldMap()' in classic
 assert 'highResUrl||state.background' in classic
-assert 'w.coverSrc' in portal and 'im.onerror=' in portal
+# External coverSrc metadata may remain as research references, but public cards must
+# prefer validated original local artwork and cannot require a third-party CDN.
+assert "const sources=[featuredConcept,'./art/'+w.art].filter(Boolean)" in portal
+assert "w.coverSrc" not in portal and 'im.onerror=' in portal
+assert 'Original Team Jura fan illustration' in portal
+local_covers=re.findall(r"\bart:'([^']+)'",directory)
+assert len(local_covers)==13 and len(set(local_covers))==13
+assert all((ROOT/'art'/name).is_file() for name in local_covers)
 assert 'j121Original' in cayo and 'j121Planner' in cayo
 assert (ROOT/'atlas121-cayo-map.js').exists()
 assert (ROOT/'atlas121-cayo-map.css').exists()
 assert 'Rockstar\'s published fan-use and removal policy' in credits
-print('PASS Atlas 12.1 original world imagery, Cayo map controls and central rights register')
+print('PASS Atlas 12.1 local original world art and Cayo map controls with central rights register')
