@@ -281,10 +281,16 @@ async def smoke():
                                 else:
                                     if not await pg.locator('#sidebar .j145-open-map').is_visible():
                                         failures.append('Mobile Open interactive map shortcut is not visible')
-                                    adjacent=await pg.locator('#sidebar .worlds').evaluate(
-                                        "(el)=>el.nextElementSibling?.classList.contains('j145-open-map')===true")
-                                    if not adjacent:
-                                        failures.append('Mobile Open interactive map shortcut must follow game selector before search controls')
+                                    placed=await pg.locator('#sidebar .j145-open-map').evaluate(
+                                        """(link) => {
+                                            const heading=link.closest('#sidebar')?.querySelector('.atlas-explorer-head');
+                                            const games=link.closest('#sidebar')?.querySelector('.worlds');
+                                            return !!heading && !!games
+                                                && link.nextElementSibling===heading
+                                                && !!(games.compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING);
+                                        }""")
+                                    if not placed:
+                                        failures.append('Mobile Open interactive map shortcut must follow all game nav before explorer search')
                                 if await pg.evaluate('window.scrollY')>100:
                                     failures.append('Mobile explorer opens scrolled into filters instead of showing the map')
                                 nav=pg.locator('#j132-nav-toggle')
