@@ -195,6 +195,20 @@ async def smoke():
                                     failures.append('Universe catalog browser interaction failed: '+str(exc)[:450])
                             if not failures and path=='atlas-vi.html':
                                 try:
+                                    docked=pg.locator('#sidebar .j86-mapviews')
+                                    if await docked.count()!=1:
+                                        failures.append('Leonida view controls must be in the existing left map sidebar')
+                                    else:
+                                        outer=await pg.locator('#sidebar').bounding_box()
+                                        inner=await docked.bounding_box()
+                                        if not outer or not inner or inner['x']<outer['x']-3 or inner['x']+inner['width']>outer['x']+outer['width']+3:
+                                            failures.append('Leonida map view control panel is clipped outside the sidebar')
+                                        if await docked.locator('button[data-view]').count()<4:
+                                            failures.append('Moving Leonida map controls lost native view switches')
+                                    if await pg.locator('#sidebar .j145-open-map').count()!=1:
+                                        failures.append('Accessible jump to interactive Leonida map is missing')
+                                    if width==390 and await pg.evaluate('window.scrollY')>100:
+                                        failures.append('Mobile Leonida page opens scrolled away from its map')
                                     official=pg.locator('#j143-official-button')
                                     if await official.count()!=1:
                                         failures.append('Official Rockstar map is not selectable inside the Leonida map')
