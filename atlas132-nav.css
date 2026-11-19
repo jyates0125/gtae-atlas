@@ -17,3 +17,14 @@
 @media(min-width:1020px){.j132-nav{right:18px;top:84px;bottom:auto}#j132-nav-drawer{top:64px;bottom:auto;max-height:calc(100dvh - 166px)}}
 @media(max-width:460px){.j132-nav{right:10px;bottom:max(10px,env(safe-area-inset-bottom))}#j132-nav-toggle{min-height:47px;padding:10px 15px}#j132-nav-drawer{bottom:62px;right:0;padding:13px;max-height:calc(100dvh - 95px)}}
 @media(prefers-reduced-motion:reduce){.j132-nav *{scroll-behavior:auto!important;transition:none!important}}
+
+/* Atlas 13.7: Map-first mobile chrome. Keep the all-pages control away from
+   the Story world's floating All Maps shortcut and right-side map widgets. */
+@media(max-width:1019px){
+ .j132-nav.j132-map-nav{right:auto;left:max(10px,env(safe-area-inset-left));bottom:max(10px,env(safe-area-inset-bottom))}
+ .j132-nav.j132-map-nav #j132-nav-drawer{right:auto;left:0;bottom:62px;width:min(460px,calc(100vw - 24px))}
+}
+@media(max-width:460px){
+ .j132-nav.j132-map-nav #j132-nav-toggle{padding:10px 12px;font-size:11px}
+ .j132-nav.j132-map-nav #j132-nav-drawer{max-height:calc(100dvh - 92px);padding:13px}
+}

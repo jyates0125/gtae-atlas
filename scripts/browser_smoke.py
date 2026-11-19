@@ -204,6 +204,27 @@ async def smoke():
                                     actual=await icons.evaluate_all("(nodes)=>nodes.map(n=>n.getAttribute('data-j131-platform'))")
                                     if actual!=['facebook','youtube','tiktok','instagram','discord','reddit','more']:failures.append('Social icon buttons use incorrect platform semantics')
                                     if not await icons.first.is_visible():failures.append('Share icons not visible')
+                            if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html') and width==390:
+                                nav=pg.locator('#j132-nav-toggle')
+                                if await nav.count()!=1 or not await nav.is_visible():failures.append('Mobile map all-pages navigation missing')
+                                else:
+                                    area=await nav.bounding_box()
+                                    if not area or area['x']>95:failures.append('Mobile map all-pages button is not kept at the left edge')
+                                    if path=='atlas.html':
+                                        maps=pg.locator('[data-j87-maps-link]')
+                                        if await maps.count()==1 and await maps.is_visible():
+                                            rect=await maps.bounding_box()
+                                            if rect and area and not (area['x']+area['width']<=rect['x'] or rect['x']+rect['width']<=area['x'] or area['y']+area['height']<=rect['y'] or rect['y']+rect['height']<=area['y']):
+                                                failures.append('Mobile map navigation overlaps All Maps shortcut')
+                                    await nav.click()
+                                    if not await pg.locator('#j132-nav-drawer').is_visible():failures.append('Map all-pages drawer did not open')
+                                    else:
+                                        await pg.locator('#j132-search').focus()
+                                        await pg.keyboard.press('Shift+Tab')
+                                        focus=await pg.evaluate("document.activeElement?.classList.contains('j132-close')")
+                                        if not focus:failures.append('Drawer focus did not cycle to Close on shift-tab')
+                                        await pg.keyboard.press('Escape')
+                                        if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Escape did not close map page drawer')
                             if not failures and path in ('index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','one-last-ride.html'):
                                 global_nav=pg.locator('#j132-nav-toggle')
                                 if await global_nav.count()!=1:failures.append('Universal public page menu missing')
