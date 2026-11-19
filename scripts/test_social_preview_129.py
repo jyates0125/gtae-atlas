@@ -11,11 +11,11 @@ class Parser(HTMLParser):
   if tag=="meta" and ("property" in a or "name" in a):self.meta[a.get("property",a.get("name"))]=a.get("content")
   if tag=="link" and "rel" in a:self.links[a["rel"]]=a.get("href")
 p=Parser();p.feed(html)
-base="https://team-jura-atlas-preview.pages.dev/"
+base="https://gtae-online.pages.dev/"
 assert p.meta["og:type"]=="website"
 assert p.meta["og:url"]==base
 assert p.meta["og:image"]==base+"art/atlas98-approved-hero.webp"
-assert p.meta["og:site_name"].startswith("Elario Studios")
+assert p.meta["og:site_name"]=="GTAE · Elario Studios"
 assert "development preview" in p.meta["og:description"].lower()
 assert "13 GTA destinations" in p.meta["og:description"]
 assert p.meta["twitter:card"]=="summary_large_image"

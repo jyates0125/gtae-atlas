@@ -37,6 +37,7 @@ jobs:
           python scripts/test_atlas139_nav_focus.py
           python scripts/test_social_icons_131.py
           python scripts/test_account_131.py
+          python scripts/test_atlas138_supabase.py
           node --check atlas131-account.js
           node --check atlas131-social-icons.js
           node --check atlas130-share.js
