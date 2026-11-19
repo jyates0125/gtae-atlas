@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','atlas-dashboard.html','atlas-share.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -197,8 +197,22 @@ async def smoke():
                                 start=pg.locator('a.j99-start-link[href="./atlas97-journey.html"]')
                                 if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
                             if not failures and path=='index.html':
+                                if await pg.locator('a[href="./atlas-dashboard.html"]').count()==0:failures.append('Guest dashboard entry missing')
+                                if await pg.locator('[data-j130-action="share-page"]').count()==0:failures.append('Launch share action missing')
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Fewer than four flagship world cards')
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
+                            if not failures and path=='atlas-dashboard.html':
+                                if await pg.locator('#featuredGrid a').count()<4:failures.append('Preserved dashboard missing four featured game cards')
+                                if await pg.locator('#progressCollections').count()!=1:failures.append('Dashboard progress tracker missing')
+                            if not failures and path=='atlas-share.html':
+                                if await pg.locator('#facebook,#tiktok,#instagram,#discord').count()!=4:failures.append('Social launch platform cards missing')
+                                if not await pg.locator('#shareCaptionText').input_value():failures.append('Launch caption not hydrated')
+                                await pg.locator('#shareCaptionText').fill('My own Team Jura launch caption')
+                                await pg.locator('[data-j130-action="copy-text"][data-kind="custom"]').click()
+                                try:
+                                    await pg.wait_for_function("!!document.querySelector('[data-j130-status]')?.textContent.trim()",timeout=3000)
+                                except Exception:
+                                    failures.append('Copy-caption interaction gave no feedback')
                             if not failures and path=='maps.html':
                                 if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()!=13:failures.append('Directory should show exactly 13 worlds')
                                 covers=pg.locator('#directoryFeatured img.world-art-main,#directoryAdditional img.world-art-main')
@@ -534,6 +548,8 @@ async def smoke():
                                 if await pg.locator('header .portal-logo img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Film project Elario crest missing')
                                 if await pg.locator('video source[src*="one-last-ride-motion-preview.mp4"]').count()==0:failures.append('Film preview source missing')
+                                if await pg.locator('.olr-scene-btn').count()!=9:failures.append('One Last Ride nine film chapters missing')
+                                if await pg.locator('[data-j130-action="share-page"]').count()==0:failures.append('Film-specific share CTA missing')
                             results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures})
                             await pg.close()
                         await ctx.close()
