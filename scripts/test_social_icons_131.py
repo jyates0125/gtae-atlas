@@ -19,7 +19,7 @@ assert "https://www.youtube.com/" in js
 assert "https://www.tiktok.com/" in js
 assert "https://www.instagram.com/" in js
 assert "https://discord.com/app" in js
-assert "Sign in" in js and "Sharing is user-initiated" in js
+assert "Sign in" in js and "User-initiated sharing" in js
 assert "j133-universal-footer" in js and "document.body.append(footer)" in js
 assert 'data-j131-social-host' in (R/'index.html').read_text()
 assert (R/'index.html').read_text().count('data-j131-platform=')==7, 'Homepage social buttons must exist before JS loads'
