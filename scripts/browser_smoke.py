@@ -200,8 +200,19 @@ async def smoke():
                                     actual=await icons.evaluate_all("(nodes)=>nodes.map(n=>n.getAttribute('data-j131-platform'))")
                                     if actual!=['facebook','youtube','tiktok','instagram','discord','reddit','more']:failures.append('Social icon buttons use incorrect platform semantics')
                                     if not await icons.first.is_visible():failures.append('Share icons not visible')
+                            if not failures and path in ('index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','one-last-ride.html'):
+                                global_nav=pg.locator('#j132-nav-toggle')
+                                if await global_nav.count()!=1:failures.append('Universal public page menu missing')
+                                else:
+                                    await global_nav.click()
+                                    if not await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot open')
+                                    await pg.locator('#j132-search').fill('garage')
+                                    if await pg.locator('#j132-groups a[href="./atlas93-garage.html"]').count()==0:failures.append('Universal page search did not find garage')
+                                    await pg.locator('.j132-close').click()
+                                    if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot close')
                             if not failures and path in ('index.html','maps.html'):
-                                start=pg.locator('a.j99-start-link[href="./atlas97-journey.html"]')
+                                dest='./atlas-dashboard.html' if path=='index.html' else './atlas97-journey.html'
+                                start=pg.locator('a.j99-start-link[href="'+dest+'"]')
                                 if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
                             if not failures and path=='index.html':
                                 if await pg.locator('a[href="./atlas-dashboard.html"]').count()==0:failures.append('Guest dashboard entry missing')
