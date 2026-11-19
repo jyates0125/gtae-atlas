@@ -222,6 +222,12 @@ async def smoke():
                                             failures.append('Official map viewer cannot return to interactive map')
                                         if not await pg.locator('#atlasCanvas').is_visible():
                                             failures.append('Interactive GTA VI canvas was removed by official view')
+                                        await pg.evaluate("document.querySelector('#game5').click()")
+                                        if await official.is_visible():
+                                            failures.append('Official Leonida map button incorrectly shown in GTA V mode')
+                                        await pg.evaluate("document.querySelector('#game6').click()")
+                                        if not await official.is_visible():
+                                            failures.append('Official Leonida map button failed to return to GTA VI mode')
                                 except Exception as exc:
                                     failures.append('Official Rockstar in-map view interaction failed: '+str(exc)[:350])
                             if not failures and path in ('index.html','atlas-dashboard.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas93-garage.html','atlas-share.html','one-last-ride.html'):
