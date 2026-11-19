@@ -383,6 +383,8 @@ async def smoke():
                                             failures.append('Atlas cover failed to load on scroll: '+str(src)+' · '+str(err)[:115])
                                             break
                                     urls=await covers.evaluate_all("(imgs)=>imgs.map(x=>x.getAttribute('src'))")
+                                    if any(not u or not u.startswith('./art/') for u in urls):
+                                        failures.append('Map directory must load bundled source-cleared illustrations, not fragile third-party hotlinks')
                                     # GTA IV and its two episodes legitimately share a Liberty City map;
                                     # GTA V Story and Online similarly share the same game terrain.
                                     # Ensure game-map imagery is loaded and not merely old placeholders.
