@@ -13,6 +13,9 @@ for s in ['j143-official-button','j143-official-layer','j143-stage','j143-poster
           'pointerdown','pointermove','wheel','indexedDB','URL.createObjectURL','stored(\'put\'',
           'stored(\'get\'','stored(\'delete\'','https://www.rockstargames.com/VI/media']:
     assert s in js, f'Missing official map viewer control: {s}'
+assert 'data-j143="fetch"' in js
+assert 'media-rockstargames-com.akamaized.net/VI/downloads/artwork_wallpapers/Leonida_Map_Poster_Printable.zip' in js
+assert 'DecompressionStream' in js and 'imageFromZip' in js
 assert 'position:absolute;inset:0' in css
 assert '.j143-official-layer[hidden]' in css
 assert "No upload or third-party relay" in js
