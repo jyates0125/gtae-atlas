@@ -7,6 +7,7 @@
 const PAGE='6';
 const DATABASE='team-jura-official-map-v1',STORE='official-map',KEY='leonida-poster';
 const SOURCE='https://www.rockstargames.com/VI/media';
+const DIRECT_ZIP='https://media-rockstargames-com.akamaized.net/VI/downloads/artwork_wallpapers/Leonida_Map_Poster_Printable.zip';
 const $=id=>document.getElementById(id);
 const isSix=()=>document.body?.dataset?.startWorld===PAGE;
 function openDatabase(){
@@ -42,7 +43,7 @@ function mount(){
  const panel=document.createElement('section');panel.id='j143-official-layer';panel.className='j143-official-layer';
  panel.hidden=true;panel.setAttribute('aria-label','Official Rockstar Leonida map viewer');
  panel.innerHTML=`<header class="j143-toolbar"><div><strong>Leonida · Rockstar official map</strong><small>OFFICIAL POSTER VIEW · NO UNVERIFIED PINS</small></div><div class="j143-actions"><button type="button" data-j143="minus" aria-label="Zoom out">−</button><button type="button" data-j143="plus" aria-label="Zoom in">+</button><button type="button" data-j143="reset">Fit</button><button type="button" data-j143="close" aria-label="Return to interactive Leonida map">✕ Interactive map</button></div></header>
- <div class="j143-stage" tabindex="0" aria-label="Pan the official Leonida poster by dragging, use plus and minus buttons to zoom"><img class="j143-poster" alt="Your personal locally installed copy of Rockstar Games official Leonida map" hidden><div class="j143-empty"><strong>View Rockstar's official Leonida map here.</strong><p>Rockstar provides the print-ready map as a download. Download the official ZIP or save its JPEG, then select it below to open it in our zoomable, draggable map viewer. The image stays in this browser; it is never uploaded to Team Jura.</p><a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Get official Rockstar map ↗</a><label class="j143-upload">Choose official Rockstar ZIP / JPEG / PNG / WebP<input type="file" accept=".zip,application/zip,image/jpeg,image/png,image/webp" aria-label="Choose image from official Rockstar map download"></label></div></div>
+ <div class="j143-stage" tabindex="0" aria-label="Pan the official Leonida poster by dragging, use plus and minus buttons to zoom"><img class="j143-poster" alt="Your personal locally installed copy of Rockstar Games official Leonida map" hidden><div class="j143-empty"><strong>View Rockstar's official Leonida map here.</strong><p>Rockstar provides the print-ready map as a download. Download the official ZIP or save its JPEG, then select it below to open it in our zoomable, draggable map viewer. The image stays in this browser; it is never uploaded to Team Jura.</p><button type="button" data-j143="fetch">Load official map from Rockstar (~45 MB)</button><a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Download from Rockstar ↗</a><label class="j143-upload">Choose official Rockstar ZIP / JPEG / PNG / WebP<input type="file" accept=".zip,application/zip,image/jpeg,image/png,image/webp" aria-label="Choose image from official Rockstar map download"></label></div></div>
  <footer class="j143-foot"><span role="status" aria-live="polite" class="j143-status">Rockstar poster mode · no map pins are overlaid because coordinates are not calibrated.</span><div><label class="j143-replace">Change image<input type="file" accept=".zip,application/zip,image/jpeg,image/png,image/webp" aria-label="Replace personal official map image"></label><button type="button" data-j143="forget">Forget image</button><a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Source ↗</a></div></footer>`;
  map.append(panel);
  const img=panel.querySelector('.j143-poster'),stage=panel.querySelector('.j143-stage'),status=panel.querySelector('.j143-status');
@@ -115,6 +116,20 @@ function mount(){
  panel.addEventListener('click',async ev=>{
   const cmd=ev.target.closest('[data-j143]')?.dataset.j143;
   if(!cmd)return;
+  if(cmd==='fetch'){
+   try{
+    status.textContent='Downloading Rockstar\u2019s official ZIP. This may use about 45 MB of data…';
+    const response=await fetch(DIRECT_ZIP,{mode:'cors',credentials:'omit',cache:'default'});
+    if(!response.ok)throw Error('Rockstar download was not available');
+    const announced=Number(response.headers.get('content-length')||0);
+    if(announced>90*1024*1024)throw Error('File size exceeds allowed limit');
+    const file=await response.blob();
+    if(file.size>90*1024*1024)throw Error('File size exceeds allowed limit');
+    await onFile(new File([file],'Leonida_Map_Poster_Printable.zip',{type:'application/zip'}));
+   }catch{
+    status.textContent='Direct loading is blocked or unavailable. Get the official ZIP using Rockstar\u2019s download page and select it here. No image data was uploaded.';
+   }
+  }
   if(cmd==='close')closeView();
   if(cmd==='reset')fit();
   if(cmd==='plus'){zoom=Math.min(8,zoom*1.3);position()}
