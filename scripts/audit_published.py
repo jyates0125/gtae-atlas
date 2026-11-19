@@ -35,6 +35,7 @@ def main():
   if f.parent==ROOT:
    markup=f.read_text(encoding='utf8',errors='replace')
    if './atlas132-nav.js?v=132' not in markup or './atlas132-nav.css?v=132' not in markup:errors.append('Global site menu is missing on '+f.name)
+   if 'atlas131-social-icons.js' not in markup or 'atlas131-social-icons.css' not in markup:errors.append('Universal sharing footer is missing on '+f.name)
   p=Refs();p.feed(f.read_text(encoding='utf-8',errors='replace'))
   for ref in p.refs:
    error=target(f,ref)
