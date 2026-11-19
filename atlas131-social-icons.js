@@ -3,6 +3,7 @@
    when supported; on desktop copy a URL and open the platform for manual paste.
    No account access, scraping, or pretending to auto-post. */
 (()=>{'use strict';
+if(window.__juraUniversalSocialReady)return;window.__juraUniversalSocialReady=true;
 const URL='https://team-jura-atlas-preview.pages.dev/';
 const artwork={
  facebook:'<path fill="currentColor" d="M13.2 4.1h4.4V0h-5C7.8 0 6 3 6 7.7V12H2v4.7h4V30h5.4V16.7h4.2L16.3 12h-4.9V8c0-2.1.5-3.9 1.8-3.9Z" transform="translate(7 1) scale(.93)"/>',
@@ -19,7 +20,7 @@ const shareTarget=(key,url)=>{
  if(key==='reddit')return 'https://www.reddit.com/submit?url='+encodeURIComponent(url)+'&title='+encodeURIComponent('Team Jura Atlas · Public Preview');
  return null;
 };
-function currentShareURL(){return location.pathname.includes('one-last-ride')?new URL('one-last-ride.html',URL).href:URL}
+function currentShareURL(){const here=new URL(location.href);if(here.origin==='https://team-jura-atlas-preview.pages.dev')return here.href;return new URL(location.pathname+location.search,URL).href}
 function status(container,text){let p=container.querySelector('.j131-social-status');if(p)p.textContent=text}
 async function copy(value){try{await navigator.clipboard.writeText(value);return true}catch(_){let input=document.createElement('textarea');input.value=value;input.style.position='fixed';input.style.left='-5000px';document.body.append(input);input.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}input.remove();return ok}}
 async function selected(key,container){
@@ -39,7 +40,7 @@ function inject(node){
  if(existing){for(const button of existing.querySelectorAll('button[data-j131-platform]')){const key=button.dataset.j131Platform;if(!labels[key]||button.dataset.j131Ready)return;button.dataset.j131Ready='true';button.addEventListener('click',()=>selected(key,existing));}return;}
  const region=document.createElement('section');region.className='j131-social';region.setAttribute('aria-label','Share Team Jura Atlas with your community');
  const heading=document.createElement('div');heading.className='j131-social-title';
- heading.innerHTML='<div><h2>Share the Atlas with your crew</h2><p>Tap an icon to share or open your favorite app. No downloads or Team Jura login required.</p></div><a href="./atlas-share.html">Community &amp; launch hub ›</a>';
+ heading.innerHTML='<div><h2>Share the Atlas</h2><p>Many Crews. One Vision. Share a page with your community.</p></div><a href="./atlas-share.html">Sharing options ›</a>';
  const grid=document.createElement('div');grid.className='j131-social-grid';
  for(const key of Object.keys(labels)){
  const button=document.createElement('button');button.type='button';button.dataset.j131Platform=key;
@@ -52,9 +53,31 @@ function inject(node){
  region.append(heading,grid,hint,live);node.append(region);
 }
 function init(){
- const host=document.querySelector('[data-j131-social-host]');if(host)inject(host);
- // Compact icon hub should appear on public welcome and standalone share page,
- // not replace or duplicate their existing content.
+ // One small, predictable footer on every published route; never interrupt the page body.
+ // Relocate older per-page sharing modules rather than duplicating them.
+ let host=document.querySelector('[data-j131-social-host]');
+ const footer=document.createElement('footer');
+ footer.className='j133-universal-footer';
+ footer.setAttribute('aria-label','Community sharing and site resources');
+ if(host){
+   host.removeAttribute('class');
+   footer.append(host);
+ }else{
+   host=document.createElement('div');
+   host.setAttribute('data-j131-social-host','');
+   footer.append(host);
+ }
+ const links=document.createElement('nav');
+ links.className='j133-footer-links';
+ links.setAttribute('aria-label','Footer navigation');
+ links.innerHTML='<a href="./index.html">Welcome</a><a href="./maps.html">Maps</a><a href="./atlas93-garage.html">My Garage</a><a href="./atlas-account.html">Guest backup</a><a href="./atlas-credits.html">Sources &amp; rights</a><a href="./atlas-share.html">Share</a>';
+ const legal=document.createElement('p');legal.className='j133-footer-legal';legal.textContent='Elario Studios · Team Jura Atlas · Independent fan project. Not affiliated with Rockstar Games or Take-Two Interactive.';
+ footer.append(links,legal);
+ document.body.append(footer);
+ inject(host);
+ const title=host.querySelector('.j131-social-title');
+ if(title){const h=title.querySelector('h2');if(h)h.textContent='Share the Atlas';const sub=title.querySelector('p');if(sub)sub.textContent='Many Crews. One Vision. Share this page with your community.';const a=title.querySelector('a');if(a){a.textContent='Sharing options ›';a.href='./atlas-share.html';}}
+ const hint=host.querySelector('.j131-social-hint');if(hint)hint.textContent='User-initiated sharing. Some apps require pasting your link after sign-in.';
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
