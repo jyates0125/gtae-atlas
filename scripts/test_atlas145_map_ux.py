@@ -26,6 +26,9 @@ assert "if(!['atlas.html','atlas-online.html','atlas-vi.html'].includes(page))re
 assert "window.scrollTo({top:0" in mobile
 assert "visitorInteracted" in mobile and "setTimeout(restoreFirstView,420)" in mobile
 assert "initialHash" in mobile and "initialQuery.has('x')" in mobile
+assert '/^#game(?:5|6|online)$/i.test(initialHash)' in mobile
+assert '/^#game(?:5|6|online)$/i.test(location.hash)' in js
+assert "!initialQuery.has('place')" in mobile
 assert "sidebar.classList.add('mobile-collapsed')" in mobile
 for filename in ('atlas.html','atlas-online.html','atlas-vi.html'):
  assert 'atlas145-mobile-map-entry.js?v=145' in (root/filename).read_text(encoding='utf-8'),filename
