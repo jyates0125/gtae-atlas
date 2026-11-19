@@ -96,7 +96,7 @@ function mount(){
  }
  async function onFile(file){
   if(!file)return;
-  if(file.type==='application/zip'||/\\.zip$/i.test(file.name)){try{status.textContent='Opening the Rockstar map archive locally…';file=await imageFromZip(file)}catch(err){status.textContent=err?.message||'Could not read ZIP. Extract the JPEG and select it instead.';return}}
+  if(file.type==='application/zip'||/\.zip$/i.test(file.name)){try{status.textContent='Opening the Rockstar map archive locally…';file=await imageFromZip(file)}catch(err){status.textContent=err?.message||'Could not read ZIP. Extract the JPEG and select it instead.';return}}
   if(!['image/jpeg','image/png','image/webp'].includes(file.type)){status.textContent='Use the official map ZIP, JPEG, PNG or WebP file.';return}
   if(file.size>80*1024*1024){status.textContent='This image is over 80 MB. Use a smaller JPEG or WebP copy.';return}
   showFile(file,'Official map opened in this browser. Community pins are hidden on the poster view.');
