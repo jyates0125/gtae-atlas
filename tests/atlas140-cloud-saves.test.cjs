@@ -5,7 +5,7 @@ const {createRepository}=require('../atlas140-cloud-saves.js');
 
 function fake(options={}){
  const actions=[];
- const auth={getUser:async()=>options.unauthorized?{data:{user:null}}:{data:{user:{id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'}}};
+ const auth={getUser:async()=>options.unauthorized?{data:{user:null}}:{data:{user:{id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'}}}};
  function chain(op){
   const entry={op,fields:[]};actions.push(entry);
   const q={
