@@ -60,7 +60,7 @@ for (const rel of files) {
 for(const required of ['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','one-last-ride.html','atlas98-data-lab.html','atlas-source-registry.html','film/assets/one-last-ride-motion-preview.mp4','_headers']) {
   if (!fs.existsSync(path.join(out,required))) throw new Error(`Missing required production asset: ${required}`);
 }
-const pageBytes=Buffer.from(JSON.stringify({version:132,pages},null,2)+'\\n');
+const pageBytes=Buffer.from(JSON.stringify({version:132,pages},null,2));
 const pageFile='atlas132-page-directory.json';
 fs.writeFileSync(path.join(out,pageFile),pageBytes);
 bytes+=pageBytes.length;
