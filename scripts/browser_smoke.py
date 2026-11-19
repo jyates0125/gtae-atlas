@@ -207,8 +207,7 @@ async def smoke():
                                             failures.append('Moving Leonida map controls lost native view switches')
                                     if await pg.locator('#sidebar .j145-open-map').count()!=1:
                                         failures.append('Accessible jump to interactive Leonida map is missing')
-                                    if width==390 and await pg.evaluate('window.scrollY')>100:
-                                        failures.append('Mobile Leonida page opens scrolled away from its map')
+                                    # Initial mobile scroll is asserted above, before map controls are interacted with.
                                     official=pg.locator('#j143-official-button')
                                     if await official.count()!=1:
                                         failures.append('Official Rockstar map is not selectable inside the Leonida map')
