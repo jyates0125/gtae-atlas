@@ -222,10 +222,12 @@ async def smoke():
                                             if not await pg.locator('.j143-poster').is_visible():
                                                 failures.append('Rockstar direct ZIP path did not display map')
                                             await pg.locator('#j143-official-layer [data-j143="forget"]').click()
+                                            await pg.wait_for_function("""() => document.querySelector('.j143-poster')?.hidden === true
+                                                && document.querySelector('.j143-empty')?.hidden === false""",timeout=8000)
                                         await pg.locator('.j143-empty input[type="file"]').set_input_files(
                                             {'name':'Leonida_Map_Poster_Printable.zip','mimeType':'application/zip','buffer':zipped.getvalue()})
-                                        await pg.wait_for_function("""() => document.querySelector('.j143-status')?.textContent?.includes('Official map saved')
-                                            || document.querySelector('.j143-status')?.textContent?.includes('Map open for this visit')""",timeout=7000)
+                                        await pg.wait_for_function("""() => {const img=document.querySelector('.j143-poster');
+                                            return img && !img.hidden && img.complete && img.naturalWidth > 0}""",timeout=9000)
                                         if not await pg.locator('.j143-poster').is_visible():
                                             failures.append('Rockstar ZIP file did not render inside our interactive map view')
                                         await pg.locator('#j143-official-layer [data-j143="plus"]').click()
