@@ -278,6 +278,11 @@ async def smoke():
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html') and width==390:
                                 if await pg.locator('#sidebar .j145-open-map').count()!=1:
                                     failures.append('Mobile explorer missing the visible Open interactive map shortcut')
+                                else:
+                                    top=await pg.locator('#sidebar .worlds').bounding_box()
+                                    shortcut=await pg.locator('#sidebar .j145-open-map').bounding_box()
+                                    if not top or not shortcut or shortcut['y']>top['y']+top['height']+28:
+                                        failures.append('Mobile Open interactive map shortcut is buried below the search controls')
                                 if await pg.evaluate('window.scrollY')>100:
                                     failures.append('Mobile explorer opens scrolled into filters instead of showing the map')
                                 nav=pg.locator('#j132-nav-toggle')
