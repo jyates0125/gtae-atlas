@@ -21,6 +21,8 @@ assert "https://www.instagram.com/" in js
 assert "https://discord.com/app" in js
 assert "Sign in" in js and "No downloads" in js
 assert 'data-j131-social-host' in (R/'index.html').read_text()
+assert (R/'index.html').read_text().count('data-j131-platform=')==7, 'Homepage social buttons must exist before JS loads'
+assert "const existing=node.querySelector('.j131-social')" in js
 assert '.j131-social-grid' in css and '@media(max-width:430px)' in css
 for forbidden in ('download(','autoPost(','access_token','client_secret'):
  assert forbidden not in js,forbidden
