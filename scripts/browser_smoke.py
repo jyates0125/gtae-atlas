@@ -5,7 +5,7 @@ Uses local HTTP so canvas fetch, video, and navigation share a genuine origin.
 No live Rockstar/GTADB feed or external network request is considered verified.
 """
 from __future__ import annotations
-import asyncio, functools, http.server, json, os, socketserver, threading
+import asyncio, base64, functools, http.server, io, json, os, socketserver, threading, zipfile
 from pathlib import Path
 from playwright.async_api import async_playwright
 PROJECT=Path(__file__).resolve().parents[1]
@@ -193,6 +193,59 @@ async def smoke():
                                             failures.append('Universe search did not filter results')
                                 except Exception as exc:
                                     failures.append('Universe catalog browser interaction failed: '+str(exc)[:450])
+                            if not failures and path=='atlas-vi.html':
+                                try:
+                                    official=pg.locator('#j143-official-button')
+                                    if await official.count()!=1:
+                                        failures.append('Official Rockstar map is not selectable inside the Leonida map')
+                                    else:
+                                        await official.click()
+                                        if not await pg.locator('#j143-official-layer').is_visible():
+                                            failures.append('Official Rockstar map viewer failed to open')
+                                        if not await pg.locator('.j143-empty').is_visible():
+                                            failures.append('Official map viewer has no source-backed image loading affordance')
+                                        test_png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/bQAAAABJRU5ErkJggg==')
+                                        zipped=io.BytesIO()
+                                        with zipfile.ZipFile(zipped,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+                                            archive.writestr('Leonida_Map_Poster.png',test_png)
+                                        async def serve_official_zip(route):
+                                            await route.fulfill(status=200,headers={
+                                                'access-control-allow-origin':'*',
+                                                'content-type':'application/zip'},body=zipped.getvalue())
+                                        await pg.route('https://media-rockstargames-com.akamaized.net/VI/downloads/**',serve_official_zip)
+                                        if not await pg.locator('#j143-official-layer [data-j143="fetch"]').is_visible():
+                                            failures.append('No direct in-map Rockstar source-loading action')
+                                        else:
+                                            await pg.locator('#j143-official-layer [data-j143="fetch"]').click()
+                                            await pg.wait_for_function("""() => document.querySelector('.j143-status')?.textContent?.includes('Official map saved')
+                                                || document.querySelector('.j143-status')?.textContent?.includes('Map open for this visit')""",timeout=7000)
+                                            if not await pg.locator('.j143-poster').is_visible():
+                                                failures.append('Rockstar direct ZIP path did not display map')
+                                            await pg.locator('#j143-official-layer [data-j143="forget"]').click()
+                                            await pg.wait_for_function("""() => document.querySelector('.j143-poster')?.hidden === true
+                                                && document.querySelector('.j143-empty')?.hidden === false""",timeout=8000)
+                                        await pg.locator('.j143-empty input[type="file"]').set_input_files(
+                                            {'name':'Leonida_Map_Poster_Printable.zip','mimeType':'application/zip','buffer':zipped.getvalue()})
+                                        await pg.wait_for_function("""() => {const img=document.querySelector('.j143-poster');
+                                            return img && !img.hidden && img.complete && img.naturalWidth > 0}""",timeout=9000)
+                                        if not await pg.locator('.j143-poster').is_visible():
+                                            failures.append('Rockstar ZIP file did not render inside our interactive map view')
+                                        await pg.locator('#j143-official-layer [data-j143="plus"]').click()
+                                        if 'scale(' not in (await pg.locator('.j143-poster').get_attribute('style') or ''):
+                                            failures.append('Official map zoom did not update image')
+                                        await pg.locator('#j143-official-layer [data-j143="close"]').click()
+                                        if await pg.locator('#j143-official-layer').is_visible():
+                                            failures.append('Official map viewer cannot return to interactive map')
+                                        if not await pg.locator('#atlasCanvas').is_visible():
+                                            failures.append('Interactive GTA VI canvas was removed by official view')
+                                        await pg.evaluate("document.querySelector('#game5').click()")
+                                        if await official.is_visible():
+                                            failures.append('Official Leonida map button incorrectly shown in GTA V mode')
+                                        await pg.evaluate("document.querySelector('#game6').click()")
+                                        if not await official.is_visible():
+                                            failures.append('Official Leonida map button failed to return to GTA VI mode')
+                                except Exception as exc:
+                                    failures.append('Official Rockstar in-map view interaction failed: '+str(exc)[:350])
                             if not failures and path in ('index.html','atlas-dashboard.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas93-garage.html','atlas-share.html','one-last-ride.html'):
                                 icons=pg.locator('.j131-social-grid button[data-j131-platform]')
                                 try:

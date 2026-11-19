@@ -39,6 +39,9 @@ jobs:
           python scripts/test_account_131.py
           python scripts/test_atlas138_supabase.py
           python scripts/test_atlas141_leonida_research.py
+          python scripts/test_atlas142_official_sources.py
+          python scripts/test_atlas143_official_view.py
+          node --check atlas143-official-map-view.js
           node --check atlas131-account.js
           node --check atlas131-social-icons.js
           node --check atlas130-share.js

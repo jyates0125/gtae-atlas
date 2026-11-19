@@ -344,7 +344,16 @@ const VI_REGIONS=[
 function renderViRegions(){const box=$('viRegions');if(!box)return;box.classList.toggle('hidden',game!=='6');if(game!=='6'||box.dataset.ready)return;box.dataset.ready='true';
  const top=document.createElement('strong');top.textContent='🌴 Leonida · official named regions';const note=document.createElement('p');note.className='hint';note.textContent='Names confirmed by Rockstar. Boundaries and individual map pins are community estimates, not official GPS coordinates.';box.append(top,note);
  const grid=document.createElement('div');grid.className='vi-regions';for(const [name,description]of VI_REGIONS){const b=btn(name,()=>{$('search').value=name;$('districtFilter').value='';active[filterScope()]=null;page=0;showTab('Find');render();announce('Searching community-mapped landmarks for '+name+'. This does not verify coordinates.');});b.className='vi-region';const small=document.createElement('small');small.textContent=description;b.append(small);grid.append(b)}box.append(grid);
- const link=document.createElement('a');link.href='https://www.rockstargames.com/VI';link.target='_blank';link.rel='noopener noreferrer';link.textContent='Official Rockstar GTA VI information ↗';box.append(link);
+ const sourcePanel=document.createElement('div');sourcePanel.className='j142-official-sources';sourcePanel.setAttribute('aria-label','Rockstar GTA VI official reference sources');
+ const heading=document.createElement('strong');heading.textContent='Rockstar official sources · 19 Nov 2026';sourcePanel.append(heading);
+ const hint=document.createElement('p');hint.textContent='The game and region names are official. These community-map marker positions are not verified against Rockstar\u2019s published map; selecting a region searches research records rather than jumping to a claimed official coordinate.';sourcePanel.append(hint);
+ const links=[
+  ['Official Leonida map and poster','https://www.rockstargames.com/VI/media'],
+  ['Official Leonida screenshots','https://www.rockstargames.com/VI/media/screenshots'],
+  ['Rockstar GTA VI game information','https://www.rockstargames.com/VI']
+ ];
+ for(const [label,url]of links){const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=label+' ↗';sourcePanel.append(a)}
+ box.append(sourcePanel);
 }
 function choosePlace(place){selected=place;showPins=true;$('togglePins').textContent='📍 Pins on';$('togglePins').setAttribute('aria-pressed','true');
  camera.x=place.x;camera.y=place.y;camera.z=Math.max(3.4,camera.z);camera.z=clamp(camera.z,MIN_Z,MAX_Z);
