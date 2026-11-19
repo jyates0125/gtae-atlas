@@ -14,11 +14,15 @@ css = source("atlas98-portal.css")
 credits = source("atlas-credits.html")
 expected = ("story","online","vi","cayo","iv","sa","vc","iii","vcs","lcs","ctw","tlad","tbogt")
 assert worlds.count("coverFallback:") == len(expected)
+assert "coverSrc:" not in worlds
 for key in expected:
     entry = next((line for line in worlds.splitlines() if "{id:'" + key + "'" in line), None)
     assert entry is not None, key
-    assert re.search(r"coverSrc:'https://[^']+',coverFallback:'[^']+'",entry), key
-    assert re.search(r"art:'[^']+\.svg'",entry),key
+    # Source-of-truth covers now use bundled original Elario SVGs, not CDN URLs.
+    art=re.search(r"art:'([^']+\.svg)'",entry)
+    assert art and (ROOT/'art'/art.group(1)).is_file(),key
+    assert re.search(r"coverFallback:'\./art/[^']+'",entry),key
+    assert "coverSrc:" not in entry,key
 assert "world-art-frame" in portal and "world-art-main" in portal and "sourceIndex++" in portal
 assert ".world-card .world-art-frame" in css
 for name in ('atlas128-gta3-radar.png','atlas128-vice-city-radar.png','atlas128-gta4-landmarks.jpg'):
