@@ -19,7 +19,7 @@ function leonida(){
  function restoreLoki(){
   if(!layer||layer.querySelector('option[value="loki,view"]'))return;
   if(!layer.querySelector('option[value="scaly,view"]'))return;
-  const opt=new Option('Loki · DUPZOR V51','loki,view');
+  const opt=new Option('Loki · Styled V51','loki,view');
   layer.querySelector('option[value="scaly,view"]').after(opt);
  }
  restoreLoki();
