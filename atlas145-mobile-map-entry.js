@@ -27,7 +27,7 @@ function init(){
  // Browser fragment navigation can scroll into the filters on a first visit;
  // first-time mobile visitors should begin with the actual interactive map.
  // Explicit deep links and coordinate destinations retain their own navigation.
- if(matchMedia('(max-width:700px)').matches&&!initialHash&&!initialQuery.has('x')){
+ if(matchMedia('(max-width:700px)').matches && (!initialHash||/^#game(?:5|6|online)$/i.test(initialHash)) && !initialQuery.has('x') && !initialQuery.has('place')){
   // Late route/font/layout hydration can restore the sidebar scroll position
   // AFTER DOMContentLoaded. Correct it on a bounded schedule, but never after
   // a visitor starts interacting or on an explicit deep link.
