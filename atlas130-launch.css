@@ -87,3 +87,19 @@
 @media(prefers-reduced-motion:reduce){.j130-home *, .j130-share *{scroll-behavior:auto!important;transition:none!important}}
 
 .j130-quicklinks{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 24px;padding:2px 4px}.j130-quicklinks>span{font-size:10px;letter-spacing:.17em;font-weight:950;color:#bda3d1;margin-right:5px}.j130-quicklinks a{font-size:12px;font-weight:800;text-decoration:none;color:#ffe6ad;border:1px solid #7c568d;background:#241236;padding:8px 11px;border-radius:8px;min-height:39px}.j130-quicklinks a:hover{background:#543266;color:#fff}
+
+/* Poster-first visual storytelling for Elario's public arrival. Uses preapproved original art.
+   The independent high-resolution social poster is a separate artifact, not falsely bundled. */
+.j132-poster-welcome{min-height:min(740px,90svh);align-items:end;border-width:2px;border-color:#f7c77a;box-shadow:0 22px 65px #000b,0 0 35px #bd4dcd55}
+.j132-poster-welcome::before{background:linear-gradient(180deg,#11062122 0%,#16092039 38%,#11061de8 97%),url('./art/atlas98-approved-hero.webp') center 38%/cover;transform:none}
+.j132-poster-welcome .j130-public-copy{padding-top:clamp(105px,16vw,210px);padding-bottom:clamp(30px,5vw,65px)}
+.j132-poster-welcome .j130-public-copy h1{font-size:clamp(66px,10vw,139px);text-shadow:0 6px 16px #080217,0 12px 38px #100520,0 0 24px #b453df4d}
+.j132-poster-welcome .j130-preview-band{font-size:clamp(18px,2.2vw,28px);border-width:2px}
+.j132-poster-welcome .j130-hero-actions .action{min-height:54px}
+.j132-poster-art{position:absolute;inset:0;pointer-events:none;display:flex;align-items:flex-end;justify-content:space-between;gap:13px;padding:0 1.6% 23%;opacity:.62}
+.j132-poster-panel{position:relative;flex:1;max-width:25%;height:38%;background-size:cover;background-position:center;border:1px solid #f4b87599;border-radius:16px;box-shadow:0 0 20px #0a0616bc;transform:skewY(-3deg) rotate(-2deg)}
+.j132-poster-ls{background-image:url('./art/atlas93-los-santos.svg');transform:rotate(-7deg);margin-bottom:2.4%}
+.j132-poster-leonida{background-image:url('./art/atlas93-leonida.svg');transform:rotate(4deg);margin-top:14%}
+.j132-poster-island{background-image:url('./art/atlas93-cayo.svg');transform:rotate(7deg);margin-bottom:3%}
+.j132-login-note{font-size:11px;color:#f8d6ed;max-width:720px;margin:15px auto 0}
+@media(max-width:730px){.j132-poster-welcome{min-height:650px}.j132-poster-welcome .j130-public-copy{padding:100px 15px 28px}.j132-poster-art{opacity:.3;padding-bottom:42%;gap:4px}.j132-poster-panel{max-width:34%;height:26%}.j132-poster-welcome .j130-public-copy h1{font-size:clamp(56px,13vw,83px)}.j132-poster-welcome .j130-hero-actions{gap:7px}.j132-poster-welcome .j130-hero-actions .action,.j132-poster-welcome .j130-hero-actions .j130-share-button{min-height:46px;font-size:12px;padding:10px 12px}}
