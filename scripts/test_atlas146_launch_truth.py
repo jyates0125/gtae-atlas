@@ -10,6 +10,9 @@ assert 'YANIS V17' not in hq and 'YANIS V17' not in mapjs
 assert "yanis,17" not in controls
 assert "YANIS V18 · Current" in controls
 assert "research,view" in controls and "dupzor,51" in controls
+assert 'DUPZOR V51 · Source' in controls
+assert 'Loki · Styled V51' in (root/'atlas94-ui.js').read_text()
+assert "style==='loki,view'" in mapjs and "base:'dupzor,51'" in mapjs
 assert 'Current · YANIS V18' in hq
 assert 'Research · YANIS V18' in hq
 assert 'Rockstar' in hq and 'Official worldwide launch' in hq
