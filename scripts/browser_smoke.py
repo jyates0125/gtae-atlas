@@ -225,6 +225,12 @@ async def smoke():
                                             await pg.wait_for_function("""() => document.querySelector('.j143-poster')?.hidden === true
                                                 && document.querySelector('.j143-empty')?.hidden === false""",timeout=8000)
                                         await pg.locator('.j143-empty input[type="file"]').set_input_files(
+                                            {'name':'invalid.jpg','mimeType':'image/jpeg','buffer':b'not an image'})
+                                        await pg.wait_for_function("""() => document.querySelector('.j143-status')
+                                            ?.textContent.includes('could not be displayed')""",timeout=7000)
+                                        if not await pg.locator('.j143-empty').is_visible():
+                                            failures.append('Invalid image hid the Rockstar download and retry controls')
+                                        await pg.locator('.j143-empty input[type="file"]').set_input_files(
                                             {'name':'Leonida_Map_Poster_Printable.zip','mimeType':'application/zip','buffer':zipped.getvalue()})
                                         await pg.wait_for_function("""() => {const img=document.querySelector('.j143-poster');
                                             return img && !img.hidden && img.complete && img.naturalWidth > 0}""",timeout=9000)

@@ -25,9 +25,8 @@ async function stored(method,value){
   const transaction=db.transaction(STORE,method==='get'?'readonly':'readwrite');
   const store=transaction.objectStore(STORE);
   const request=method==='get'?store.get(KEY):method==='put'?store.put(value,KEY):store.delete(KEY);
-  request.onsuccess=()=>resolve(request.result);
   request.onerror=()=>reject(request.error||Error('Could not access saved map'));
-  transaction.oncomplete=()=>db.close();
+  transaction.oncomplete=()=>{db.close();resolve(request.result)};
   transaction.onabort=()=>{db.close();reject(transaction.error||Error('Storage interrupted'))};
  });
 }
@@ -48,12 +47,34 @@ function mount(){
  map.append(panel);
  const img=panel.querySelector('.j143-poster'),stage=panel.querySelector('.j143-stage'),status=panel.querySelector('.j143-status');
  const empty=panel.querySelector('.j143-empty');
+ const fetchButton=panel.querySelector('[data-j143="fetch"]');
+ const forgetButton=panel.querySelector('[data-j143="forget"]');
+ const fileInput=panel.querySelector('input[type="file"]');
+ function setBusy(busy){
+  for(const control of [fetchButton,forgetButton,fileInput])control.disabled=busy;
+ }
+ async function runOperation(operation){
+  if(fetchButton.disabled)return;
+  setBusy(true);
+  try{await operation()}
+  finally{setBusy(false)}
+ }
  let zoom=1,dx=0,dy=0,dragging=false,startX=0,startY=0,pointer=null,objectUrl=null,loaded=false;
  function position(){img.style.transform=`translate3d(${dx}px,${dy}px,0) scale(${zoom})`;}
  function fit(){zoom=1;dx=dy=0;position();}
- function showFile(file,notice){
-  if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null}
-  objectUrl=URL.createObjectURL(file);img.src=objectUrl;img.hidden=false;empty.hidden=true;loaded=true;fit();
+ async function showFile(file,notice){
+  const nextUrl=URL.createObjectURL(file);
+  try{
+   img.src=nextUrl;
+   await img.decode();
+  }catch{
+   URL.revokeObjectURL(nextUrl);
+   if(objectUrl)img.src=objectUrl;
+   else img.removeAttribute('src');
+   throw Error('This image could not be displayed. Try the official Rockstar download again.');
+  }
+  if(objectUrl)URL.revokeObjectURL(objectUrl);
+  objectUrl=nextUrl;img.hidden=false;empty.hidden=true;loaded=true;fit();
   status.textContent=notice;
  }
  async function imageFromZip(file){
@@ -96,50 +117,75 @@ function mount(){
   return new File([blob],name.split('/').pop(),{type});
  }
  async function onFile(file){
-  if(!file)return;
-  if(file.type==='application/zip'||/\.zip$/i.test(file.name)){try{status.textContent='Opening the Rockstar map archive locally…';file=await imageFromZip(file)}catch(err){status.textContent=err?.message||'Could not read ZIP. Extract the JPEG and select it instead.';return}}
-  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){status.textContent='Use the official map ZIP, JPEG, PNG or WebP file.';return}
-  if(file.size>80*1024*1024){status.textContent='This image is over 80 MB. Use a smaller JPEG or WebP copy.';return}
-  showFile(file,'Official map opened in this browser. Community pins are hidden on the poster view.');
+  if(file.type==='application/zip'||/\.zip$/i.test(file.name)){
+   status.textContent='Opening the Rockstar map archive locally…';
+   file=await imageFromZip(file);
+  }
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Use the official map ZIP, JPEG, PNG or WebP file.');
+  if(file.size>80*1024*1024)throw Error('This image is over 80 MB. Use a smaller JPEG or WebP copy.');
+  await showFile(file,'Official map opened in this browser. Community pins are hidden on the poster view.');
   try{await stored('put',file);status.textContent='Official map saved in this browser for future visits. No upload performed.'}
   catch{status.textContent='Map open for this visit only; this browser could not save the image offline.'}
  }
- for(const input of panel.querySelectorAll('input[type="file"]'))input.addEventListener('change',()=>{onFile(input.files?.[0]);input.value=''});
- async function openView(){
+ fileInput.addEventListener('change',()=>{
+  const file=fileInput.files?.[0];
+  fileInput.value='';
+  if(file)runOperation(async()=>{
+   try{await onFile(file)}
+   catch(err){status.textContent=err.message}
+  });
+ });
+ function openView(){
   panel.hidden=false;button.setAttribute('aria-expanded','true');
   button.setAttribute('aria-pressed','true');
-  if(!loaded){try{const f=await stored('get');if(f instanceof Blob)showFile(f,'Official map restored from this browser; no upload performed.')}catch{status.textContent='Choose the official Rockstar map image to view it here.'}}
   panel.querySelector('[data-j143="close"]').focus();
+  if(!loaded)runOperation(async()=>{
+   try{
+    const file=await stored('get');
+    if(file instanceof Blob)await showFile(file,'Official map restored from this browser; no upload performed.');
+   }catch{status.textContent='Open the official download to try again.'}
+  });
  }
  function closeView(){panel.hidden=true;button.setAttribute('aria-expanded','false');button.setAttribute('aria-pressed','false');button.focus()}
  button.addEventListener('click',()=>panel.hidden?openView():closeView());
  panel.addEventListener('click',async ev=>{
   const cmd=ev.target.closest('[data-j143]')?.dataset.j143;
   if(!cmd)return;
-  if(cmd==='fetch'){
+  if(cmd==='fetch')await runOperation(async()=>{
+   let file;
    try{
     status.textContent='Downloading Rockstar\u2019s official ZIP. This may use about 45 MB of data…';
-    const response=await fetch(DIRECT_ZIP,{mode:'cors',credentials:'omit',cache:'default'});
+    const response=await fetch(DIRECT_ZIP,{mode:'cors',credentials:'omit',signal:AbortSignal.timeout(90000)});
     if(!response.ok)throw Error('Rockstar download was not available');
     const announced=Number(response.headers.get('content-length')||0);
     if(announced>90*1024*1024)throw Error('File size exceeds allowed limit');
-    const file=await response.blob();
+    file=await response.blob();
     if(file.size>90*1024*1024)throw Error('File size exceeds allowed limit');
-    await onFile(new File([file],'Leonida_Map_Poster_Printable.zip',{type:'application/zip'}));
    }catch{
     status.textContent='Rockstar did not allow automatic loading in this browser. Expand “Map not loading? Other options” to open the official download here.';
+    panel.querySelector('.j143-advanced').open=true;
+    return;
    }
-  }
+   try{await onFile(new File([file],'Leonida_Map_Poster_Printable.zip',{type:'application/zip'}))}
+   catch(err){
+    status.textContent=err.message;
+    panel.querySelector('.j143-advanced').open=true;
+   }
+  });
   if(cmd==='close')closeView();
   if(cmd==='reset')fit();
   if(cmd==='plus'){zoom=Math.min(8,zoom*1.3);position()}
   if(cmd==='minus'){zoom=Math.max(1,zoom/1.3);if(zoom===1){dx=dy=0}position()}
-  if(cmd==='forget'){
-   try{await stored('delete')}catch{}
+  if(cmd==='forget')await runOperation(async()=>{
+   try{await stored('delete')}
+   catch{
+    status.textContent='Could not clear the saved map. Try again.';
+    return;
+   }
    if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null}
    img.removeAttribute('src');img.hidden=true;empty.hidden=false;loaded=false;fit();
    status.textContent='Local image forgotten. No player map progress was changed.';
-  }
+  });
  });
  stage.addEventListener('wheel',ev=>{if(!loaded)return;ev.preventDefault();zoom=Math.min(8,Math.max(1,zoom*(ev.deltaY<0?1.15:1/1.15)));if(zoom===1){dx=dy=0}position()},{passive:false});
  stage.addEventListener('pointerdown',ev=>{if(!loaded||ev.target!==img)return;dragging=true;pointer=ev.pointerId;startX=ev.clientX-dx;startY=ev.clientY-dy;img.setPointerCapture?.(pointer)});
