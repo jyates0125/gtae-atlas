@@ -24,7 +24,7 @@ body[data-start-world="6"] .j143-view-button:focus-visible,
 .j143-toolbar strong{font-size:clamp(14px,1.5vw,20px);color:#ffe1a5;display:block}
 .j143-toolbar small{font-size:10px;letter-spacing:.07em;color:#dcc9de}
 .j143-actions,.j143-foot>div{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.j143-actions button,.j143-foot button,.j143-foot a,.j143-upload,.j143-replace,.j143-empty>a{
+.j143-actions button,.j143-foot button,.j143-foot a,.j143-upload,.j143-replace,.j143-empty>a,.j143-empty button{
  border:1px solid #ac7eb0;border-radius:8px;background:#412b51;color:#ffdda3;
  padding:7px 10px;font:750 12px/1.4 system-ui,sans-serif;cursor:pointer;text-decoration:none
 }
@@ -41,6 +41,8 @@ body[data-start-world="6"] .j143-view-button:focus-visible,
 .j143-empty strong{color:#ffde9b;font-size:clamp(16px,2vw,24px);line-height:1.25}
 .j143-empty p{font-size:13px;line-height:1.5;max-width:540px;margin:0;color:#f0dfea}
 .j143-empty>a{color:#fff0ce;background:#5f3d60}
+.j143-empty button{background:linear-gradient(115deg,#ffd894,#efae6b);color:#261b2d;border-color:#ffe2a9;font-weight:900;max-width:100%}
+.j143-empty button:hover{filter:brightness(1.08)}
 .j143-upload{display:block;position:relative;background:#f3bd72;color:#291a35;border-color:#ffdfa9}
 .j143-upload input,.j143-replace input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
 .j143-replace{position:relative}
