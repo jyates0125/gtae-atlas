@@ -23,7 +23,19 @@ def target(path,ref):
 def main():
  errors=[]
  if not (ROOT/'index.html').exists():raise SystemExit('Run node scripts/build-cloudflare.cjs before auditing production output')
+ navdata=ROOT/'atlas132-page-directory.json'
+ if not navdata.is_file():errors.append('Public universal navigation directory missing')
+ else:
+  data=json.loads(navdata.read_text())
+  page_names={f.name for f in ROOT.glob('*.html')}
+  index_names={p.get('path') for p in data.get('pages',[])}
+  if page_names!=index_names:errors.append('Public universal navigation directory does not cover every HTML page')
+ if not (ROOT/'atlas132-nav.js').is_file() or not (ROOT/'atlas132-nav.css').is_file():errors.append('Universal menu assets missing')
  for f in ROOT.rglob('*.html'):
+  if f.parent==ROOT:
+   markup=f.read_text(encoding='utf8',errors='replace')
+   if './atlas132-nav.js?v=132' not in markup or './atlas132-nav.css?v=132' not in markup:errors.append('Global site menu is missing on '+f.name)
+   if 'atlas131-social-icons.js' not in markup or 'atlas131-social-icons.css' not in markup:errors.append('Universal sharing footer is missing on '+f.name)
   p=Refs();p.feed(f.read_text(encoding='utf-8',errors='replace'))
   for ref in p.refs:
    error=target(f,ref)

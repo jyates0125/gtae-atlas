@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','atlas-dashboard.html','atlas-share.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -193,19 +193,51 @@ async def smoke():
                                             failures.append('Universe search did not filter results')
                                 except Exception as exc:
                                     failures.append('Universe catalog browser interaction failed: '+str(exc)[:450])
+                            if not failures and path in ('index.html','atlas-dashboard.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas93-garage.html','atlas-share.html','one-last-ride.html'):
+                                icons=pg.locator('.j131-social-grid button[data-j131-platform]')
+                                try:
+                                    await pg.wait_for_function("document.querySelectorAll('.j131-social-grid button[data-j131-platform]').length===7",timeout=6000)
+                                except Exception:
+                                    failures.append('Seven clickable branded social icons did not render')
+                                if await icons.count()!=7:failures.append('Seven branded social icon buttons not present after ready')
+                                else:
+                                    actual=await icons.evaluate_all("(nodes)=>nodes.map(n=>n.getAttribute('data-j131-platform'))")
+                                    if actual!=['facebook','youtube','tiktok','instagram','discord','reddit','more']:failures.append('Social icon buttons use incorrect platform semantics')
+                                    if not await icons.first.is_visible():failures.append('Share icons not visible')
+                            if not failures and path in ('index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','one-last-ride.html'):
+                                global_nav=pg.locator('#j132-nav-toggle')
+                                if await global_nav.count()!=1:failures.append('Universal public page menu missing')
+                                else:
+                                    await global_nav.click()
+                                    if not await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot open')
+                                    await pg.locator('#j132-search').fill('garage')
+                                    if await pg.locator('#j132-groups a[href="./atlas93-garage.html"]').count()==0:failures.append('Universal page search did not find garage')
+                                    await pg.locator('.j132-close').click()
+                                    if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot close')
                             if not failures and path in ('index.html','maps.html'):
-                                start=pg.locator('a.j99-start-link[href="./atlas97-journey.html"]')
+                                dest='./atlas-dashboard.html' if path=='index.html' else './atlas97-journey.html'
+                                start=pg.locator('a.j99-start-link[href="'+dest+'"]')
                                 if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
                             if not failures and path=='index.html':
                                 if await pg.locator('a[href="./atlas-dashboard.html"]').count()==0:failures.append('Guest dashboard entry missing')
                                 if await pg.locator('[data-j130-action="share-page"]').count()==0:failures.append('Launch share action missing')
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Fewer than four flagship world cards')
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
+                            if not failures and path=='atlas-account.html':
+                                if await pg.locator('button[disabled]').count()<1:failures.append('Unconfigured sign-in must not collect credentials')
+                                if await pg.locator('#j131Export').count()!=1:failures.append('Atlas backup export missing')
+                                if await pg.locator('#j131Import').count()!=1:failures.append('Atlas backup restore input missing')
+                                try:
+                                    await pg.evaluate("localStorage.setItem('team-jura-passport-v74',JSON.stringify({test:3}))")
+                                    await pg.locator('#j131Export').click()
+                                    await pg.wait_for_function("document.querySelector('#j131ProgressStatus')?.textContent.includes('Backup exported')",timeout=2500)
+                                except Exception as exc:
+                                    failures.append('Account backup export interaction failed: '+str(exc)[:300])
                             if not failures and path=='atlas-dashboard.html':
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Preserved dashboard missing four featured game cards')
                                 if await pg.locator('#progressCollections').count()!=1:failures.append('Dashboard progress tracker missing')
                             if not failures and path=='atlas-share.html':
-                                if await pg.locator('#facebook,#tiktok,#instagram,#discord').count()!=4:failures.append('Social launch platform cards missing')
+                                if await pg.locator('.j130-share-stacks').count()!=0:failures.append('Legacy launch platform package is still present')
                                 if not await pg.locator('#shareCaptionText').input_value():failures.append('Launch caption not hydrated')
                                 await pg.locator('#shareCaptionText').fill('My own Team Jura launch caption')
                                 await pg.locator('[data-j130-action="copy-text"][data-kind="custom"]').click()
@@ -349,7 +381,7 @@ async def smoke():
                                 if await pg.locator('#classicMapBackground').count()!=1:
                                     failures.append('Existing personal map workbench missing')
 
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count()!=1:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Original Elario crest missing on classic world')
                                 try:
                                     # Use a generated original 16x8 image; never depend on a third-party map.
@@ -439,12 +471,12 @@ async def smoke():
                                     failures.append('Current Elario showcase theme missing')
                                 if not await pg.locator('a[href="https://github.com/jyates0125/team-jura-atlas-preview"]').count():
                                     failures.append('Showcase GitHub source link points to retired repository')
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count() == 0:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count() == 0:
                                     failures.append('Showcase missing original Elario crest')
                             if not failures and path=='atlas98b-test.html':
                                 if await pg.locator('#qaRunCore').count()!=1 or await pg.locator('#qaRunAll').count()!=1:
                                     failures.append('Atlas QA buttons missing')
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count() !=1:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count() !=1:
                                     failures.append('Atlas QA Elario crest missing')
                             if not failures and path=='atlas-credits.html':
                                 if await pg.locator('h1#pageTitle').count()!=1:
@@ -455,7 +487,7 @@ async def smoke():
                                     failures.append('GTAMap.io original source disclaimer not linked')
                                 if await pg.locator('a[href="https://github.com/rolux/gtadb.org"]').count()<1:
                                     failures.append('GTADB source repository not credited')
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count()!=1:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Original Elario crest missing on credits')
                                 if 'MANY CREWS' not in await pg.locator('header .brand').inner_text():
                                     failures.append('Community branding changed')

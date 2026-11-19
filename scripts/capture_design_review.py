@@ -14,7 +14,7 @@ ROOT=Path(__file__).resolve().parents[1]
 PUBLIC=ROOT/'public'
 BROWSER=os.getenv('ATLAS_BROWSER','chromium').lower()
 PAGES=[
- 'index.html','maps.html','atlas-activities.html?mode=online',
+ 'index.html','atlas-dashboard.html','atlas-account.html','atlas-share.html','maps.html','atlas-activities.html?mode=online',
  'atlas93-garage.html','project.html','atlas.html','atlas-vi.html',
  'one-last-ride.html'
 ]
