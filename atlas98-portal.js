@@ -16,8 +16,14 @@
  function makeWorld(w,short){const a=E('a',short?'rail-world':'world-card');a.href='./'+w.href;a.dataset.id=w.id;
    if(short){const emblem=E('span','rail-emblem',({'story':'V','online':'◉','vi':'VI','cayo':'☀','iv':'IV','sa':'SA'}[w.id]||'◆'));const label=E('span','rail-label',w.name);const detail=E('small','',w.short);label.append(detail);a.append(emblem,label);return a}
    const frame=E('span','world-art-frame'),blur=E('img','world-art-blur'),im=E('img','world-art-main');
-   const sources=[w.coverSrc,w.coverFallback,'./art/'+w.art].filter(Boolean);let sourceIndex=0;
-   const setCover=()=>{const url=sources[sourceIndex];im.src=url;im.alt=sourceIndex===sources.length-1?'Elario world-specific fallback illustration for '+w.name:sourceIndex===0?'Original Rockstar game artwork for '+w.name:'Original game-map imagery for '+w.name;frame.dataset.cover=sourceIndex===0?'official-art':sourceIndex===1?'game-map':'original-elario'};
+   // Use only bundled, approved Team Jura concept covers: third-party box art,
+   // screenshots, and remote mirrors are not a reliable or automatic reuse license.
+   // Each world keeps its individual original cover; featured worlds can lead
+   // with the separate Atlas 14.0 approved concept illustration.
+   const featuredConcept=w.group==='featured' && typeof w.coverFallback==='string'
+     && /^\.\/art\/atlas140-[a-z-]+-concept\.svg$/.test(w.coverFallback)?w.coverFallback:null;
+   const sources=[featuredConcept,'./art/'+w.art].filter(Boolean);let sourceIndex=0;
+   const setCover=()=>{im.src=sources[sourceIndex];im.alt='Original Team Jura fan illustration for '+w.name+'; not a screenshot or exact map';frame.dataset.cover='original-elario'};
    for(const image of [blur,im]){image.loading='lazy';image.decoding='async';image.referrerPolicy='no-referrer'}
    // The soft backdrop is a small, local concept asset: never download the full remote cover twice.
    blur.src=w.group==='featured'?'./art/atlas140-'+w.id+'-concept.svg':'./art/'+w.art;
