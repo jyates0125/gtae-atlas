@@ -239,6 +239,23 @@ async def smoke():
                                         await pg.locator('#j143-official-layer [data-j143="plus"]').click()
                                         if 'scale(' not in (await pg.locator('.j143-poster').get_attribute('style') or ''):
                                             failures.append('Official map zoom did not update image')
+                                        stage=pg.locator('.j143-stage')
+                                        await stage.press('0')
+                                        await stage.press('Equal')
+                                        if 'scale(1.3)' not in (await pg.locator('.j143-poster').get_attribute('style') or ''):
+                                            failures.append('Official map keyboard zoom did not update image')
+                                        if width==390:
+                                            await stage.press('0')
+                                            box=await stage.bounding_box()
+                                            cx=int(box['x']+box['width']/2)
+                                            cy=int(box['y']+box['height']/2)
+                                            touch=await ctx.new_cdp_session(pg)
+                                            await touch.send('Emulation.setTouchEmulationEnabled',{'enabled':True,'maxTouchPoints':2})
+                                            for event,spread in [('touchStart',22),('touchMove',60),('touchEnd',0)]:
+                                                points=[{'x':cx-spread,'y':cy,'id':1},{'x':cx+spread,'y':cy,'id':2}] if spread else []
+                                                await touch.send('Input.dispatchTouchEvent',{'type':event,'touchPoints':points})
+                                            await pg.wait_for_function("""() => new DOMMatrix(
+                                                getComputedStyle(document.querySelector('.j143-poster')).transform).a > 1.5""",timeout=5000)
                                         await pg.locator('#j143-official-layer [data-j143="close"]').click()
                                         if await pg.locator('#j143-official-layer').is_visible():
                                             failures.append('Official map viewer cannot return to interactive map')
