@@ -18,8 +18,11 @@ function init(){
    if(matchMedia('(max-width:700px)').matches)sidebar.classList.add('mobile-collapsed');
    map.scrollIntoView({block:'start',behavior:'smooth'});
   });
-  (sidebar.querySelector('.worlds')||sidebar.querySelector('.dataset')||sidebar.firstElementChild)
-   ?.insertAdjacentElement('afterend',link);
+  // The collectibles module inserts a second game-nav after .worlds.
+  // Place our shortcut before the heading so both navigation rows precede it.
+  const heading=sidebar.querySelector('.atlas-explorer-head');
+  if(heading)heading.insertAdjacentElement('beforebegin',link);
+  else (sidebar.querySelector('.j83-worldnav')||sidebar.querySelector('.worlds')||sidebar.firstElementChild)?.insertAdjacentElement('afterend',link);
  }
  // Browser fragment navigation can scroll into the filters on a first visit;
  // first-time mobile visitors should begin with the actual interactive map.
