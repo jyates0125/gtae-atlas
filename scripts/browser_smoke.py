@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','atlas-dashboard.html','atlas-share.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -208,6 +208,16 @@ async def smoke():
                                 if await pg.locator('[data-j130-action="share-page"]').count()==0:failures.append('Launch share action missing')
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Fewer than four flagship world cards')
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
+                            if not failures and path=='atlas-account.html':
+                                if await pg.locator('button[disabled]').count()<1:failures.append('Unconfigured sign-in must not collect credentials')
+                                if await pg.locator('#j131Export').count()!=1:failures.append('Atlas backup export missing')
+                                if await pg.locator('#j131Import').count()!=1:failures.append('Atlas backup restore input missing')
+                                try:
+                                    await pg.evaluate("localStorage.setItem('team-jura-passport-v74',JSON.stringify({test:3}))")
+                                    await pg.locator('#j131Export').click()
+                                    await pg.wait_for_function("document.querySelector('#j131ProgressStatus')?.textContent.includes('Backup exported')",timeout=2500)
+                                except Exception as exc:
+                                    failures.append('Account backup export interaction failed: '+str(exc)[:300])
                             if not failures and path=='atlas-dashboard.html':
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Preserved dashboard missing four featured game cards')
                                 if await pg.locator('#progressCollections').count()!=1:failures.append('Dashboard progress tracker missing')
