@@ -1,5 +1,6 @@
 /* Atlas 14.3 — official Leonida poster image view, Elario designed brand.
  * Overlay belongs only to GTA VI map canvas. No changes to map engine or site data. */
+body[data-start-world="6"] .j143-view-button[hidden]{display:none!important}
 body[data-start-world="6"] .j143-view-button{
  display:inline-flex;align-items:center;justify-content:center;
  padding:8px 12px;min-height:36px;border:1px solid #ffda9b;border-radius:10px;
