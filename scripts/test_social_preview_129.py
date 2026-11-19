@@ -15,7 +15,7 @@ base="https://gtae-online.pages.dev/"
 assert p.meta["og:type"]=="website"
 assert p.meta["og:url"]==base
 assert p.meta["og:image"]==base+"art/atlas98-approved-hero.webp"
-assert p.meta["og:site_name"].startswith("Elario Studios")
+assert p.meta["og:site_name"]=="GTAE · Elario Studios"
 assert "development preview" in p.meta["og:description"].lower()
 assert "13 GTA destinations" in p.meta["og:description"]
 assert p.meta["twitter:card"]=="summary_large_image"
