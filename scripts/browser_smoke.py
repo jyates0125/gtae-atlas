@@ -193,6 +193,13 @@ async def smoke():
                                             failures.append('Universe search did not filter results')
                                 except Exception as exc:
                                     failures.append('Universe catalog browser interaction failed: '+str(exc)[:450])
+                            if not failures and path in ('index.html','atlas-share.html','one-last-ride.html'):
+                                icons=pg.locator('.j131-social-grid button[data-j131-platform]')
+                                if await icons.count()!=7:failures.append('Seven clickable branded social icons did not render')
+                                else:
+                                    actual=await icons.evaluate_all("(nodes)=>nodes.map(n=>n.getAttribute('data-j131-platform'))")
+                                    if actual!=['facebook','youtube','tiktok','instagram','discord','reddit','more']:failures.append('Social icon buttons use incorrect platform semantics')
+                                    if not await icons.first.is_visible():failures.append('Share icons not visible')
                             if not failures and path in ('index.html','maps.html'):
                                 start=pg.locator('a.j99-start-link[href="./atlas97-journey.html"]')
                                 if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
