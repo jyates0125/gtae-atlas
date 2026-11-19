@@ -24,3 +24,17 @@
 @media(max-width:760px){.j131-social-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.j131-social-grid button{min-height:79px}.j131-social-grid svg{width:31px;height:31px}}
 @media(max-width:430px){.j131-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.j131-social-grid button{min-height:80px}}
 @media(prefers-reduced-motion:reduce){.j131-social-grid button{transition:none}}
+
+/* 13.3: site-wide, low-priority sharing footer. Never cover map interaction. */
+.j133-universal-footer{position:relative;clear:both;width:100%;box-sizing:border-box;margin-top:clamp(32px,5vw,80px);padding:18px clamp(12px,3vw,36px) calc(30px + env(safe-area-inset-bottom,0px));background:#140a23;color:#efddfa;border-top:1px solid #7b477f;font-family:system-ui,-apple-system,sans-serif}
+.j133-universal-footer [data-j131-social-host]{max-width:1220px;margin:auto}
+.j133-universal-footer .j131-social{margin:0 0 16px;background:transparent;box-shadow:none;border:0;border-radius:0;padding:8px 0 12px}
+.j133-universal-footer .j131-social-title h2{font-size:clamp(16px,1.7vw,21px)}
+.j133-universal-footer .j131-social-grid{display:flex;flex-wrap:wrap;gap:8px}
+.j133-universal-footer .j131-social-grid button{min-height:59px;min-width:76px;flex:0 0 auto;padding:8px 10px;font-size:10px;gap:3px}
+.j133-universal-footer .j131-social-grid svg{width:24px;height:24px}
+.j133-footer-links{max-width:1220px;margin:0 auto 11px;display:flex;flex-wrap:wrap;gap:8px 20px}
+.j133-footer-links a{color:#f2d39d;font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.j133-footer-links a:focus-visible{outline:3px solid #ffe49c;outline-offset:3px}
+.j133-footer-legal{max-width:1220px;margin:0 auto;color:#c4aed1;font-size:11px;line-height:1.6}
+@media(max-width:430px){.j133-universal-footer .j131-social-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.j133-universal-footer .j131-social-grid button{min-width:0;padding:7px 2px;min-height:60px;font-size:9px}.j133-universal-footer .j131-social-grid svg{width:23px;height:23px}}
