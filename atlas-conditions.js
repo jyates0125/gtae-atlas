@@ -92,8 +92,8 @@ function evaluate(id,ctx={}){
  if(r.kind==='rotation'){
   const feed=rotationFeed(ctx.snapshot,id,now);if(!feed)return{status:'unknown',reason:'No current dated position snapshot. Possible locations only; no yellow active pins.'};
   const marker=ctx.markerId!=null?String(ctx.markerId):null;
-  if(marker===null)return{status:'available-feed',reason:feed.active.size+' active location ID(s) in imported snapshot (unverified by Atlas)',ids:[...feed.active],until:feed.validUntilUtc};
-  return feed.active.has(marker)?{status:'active',reason:'In current imported selection (not independently verified)'}:{status:'possible',reason:'Known possible spot; not selected in current snapshot'};
+  if(marker===null)return{status:'available-feed',reason:feed.active.size+' dated selection ID(s) from a snapshot, not independently verified live',ids:[...feed.active],until:feed.validUntilUtc};
+  return feed.active.has(marker)?{status:'active',reason:'Selected by dated snapshot, not independently verified live'}:{status:'possible',reason:'Known possible spot; not selected in current snapshot'};
  }
  if(r.kind==='clock'){if(!Number.isInteger(ctx.hour)||ctx.hour<0||ctx.hour>23)return{status:'unknown',reason:'Set the in-game hour (not your real-world time)'};
    return ctx.hour===r.hour?{status:'active',reason:'Eligible in-game hour '+String(r.hour).padStart(2,'0')+':00–'+String((r.hour+1)%24).padStart(2,'0')+':00'}:{status:'possible',reason:'Not the required in-game hour'};}
@@ -106,7 +106,7 @@ function evaluate(id,ctx={}){
  return{status:'possible',reason:'Prerequisites satisfied; does not guarantee a spawn'};
 }
 function markerColor(status){return {active:'#facc15',possible:'#f8fafc',closed:'#f8fafc',locked:'#94a3b8',complete:'#64748b',unknown:'#38bdf8',research:'#38bdf8',excluded:'#64748b','available-feed':'#38bdf8'}[status]||'#38bdf8';}
-function statusText(status){return {active:'Eligible / selected',possible:'Possible · not currently selected',locked:'Locked · prerequisite',closed:'Not active',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
+function statusText(status){return {active:'Eligible / selected (not verified live)',possible:'Possible · not currently selected',locked:'Locked · prerequisite',closed:'Not active',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
 function emptyState(){return {completed:{},seen:{},flags:{},events:{}};}
 function safeState(s){const o=emptyState();if(!s||typeof s!=='object')return o;for(const k of Object.keys(o)){if(!s[k]||typeof s[k]!=='object'||Array.isArray(s[k]))continue;for(const [key,val] of Object.entries(s[k]))if(/^[a-z0-9-]{1,70}$/i.test(key)&&typeof val==='boolean')o[k][key]=val;}return o;}
 function safeSnapshot(s){if(!s||typeof s!=='object'||s.schema!==1||!s.rotations||typeof s.rotations!=='object')throw Error('Expected schema 1 with a rotations object.');const a={schema:1,rotations:{}};for(const [id,v] of Object.entries(s.rotations)){const r=BY_ID[id];if(!r||r.kind!=='rotation')continue;if(!v||!Array.isArray(v.activeIds)||v.activeIds.length>200||v.activeIds.some(i=>!/^[-a-z0-9_:]{1,80}$/i.test(String(i)))||!validIso(v.checkedAtUtc)||!validIso(v.validUntilUtc))throw Error('Invalid position data for '+id);
