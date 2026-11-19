@@ -16,6 +16,9 @@ assert "const sources=[featuredConcept,'./art/'+w.art].filter(Boolean)" in porta
 assert "Original Team Jura fan illustration for " in portal
 assert "frame.dataset.cover='original-elario'" in portal
 assert "w.coverSrc,w.coverFallback" not in portal
+assert "coverSrc:" not in worlds, "No stale third-party image URL in world registry"
+assert "https://m.media-amazon.com/images" not in worlds
+assert "https://fwmedia.fandomwire.com" not in worlds
 assert "im.src=sources[sourceIndex]" in portal
 assert "frame.append(blur,im);setCover()" in portal
 assert "im.onerror=" in portal
