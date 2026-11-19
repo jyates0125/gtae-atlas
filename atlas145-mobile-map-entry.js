@@ -28,9 +28,20 @@ function init(){
  // first-time mobile visitors should begin with the actual interactive map.
  // Explicit deep links and coordinate destinations retain their own navigation.
  if(matchMedia('(max-width:700px)').matches&&!initialHash&&!initialQuery.has('x')){
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  // Late route/font/layout hydration can restore the sidebar scroll position
+  // AFTER DOMContentLoaded. Correct it on a bounded schedule, but never after
+  // a visitor starts interacting or on an explicit deep link.
+  let visitorInteracted=false;
+  const markInteraction=()=>{visitorInteracted=true};
+  for(const type of ['pointerdown','touchstart','wheel','keydown'])
+   document.addEventListener(type,markInteraction,{once:true,passive:true,capture:true});
+  const restoreFirstView=()=>{
+   if(visitorInteracted||document.visibilityState==='hidden')return;
    if(window.scrollY>0)window.scrollTo({top:0,behavior:'instant'});
-  }));
+  };
+  requestAnimationFrame(()=>requestAnimationFrame(restoreFirstView));
+  setTimeout(restoreFirstView,420);
+  window.addEventListener('load',restoreFirstView,{once:true});
  }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
