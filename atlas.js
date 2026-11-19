@@ -348,7 +348,6 @@ function renderViRegions(){const box=$('viRegions');if(!box)return;box.classList
  const heading=document.createElement('strong');heading.textContent='Rockstar official sources · 19 Nov 2026';sourcePanel.append(heading);
  const hint=document.createElement('p');hint.textContent='The game and region names are official. These community-map marker positions are not verified against Rockstar\u2019s published map; selecting a region searches research records rather than jumping to a claimed official coordinate.';sourcePanel.append(hint);
  const links=[
-  ['Official Leonida map and poster','https://www.rockstargames.com/VI/media'],
   ['Official Leonida screenshots','https://www.rockstargames.com/VI/media/screenshots'],
   ['Rockstar GTA VI game information','https://www.rockstargames.com/VI']
  ];
