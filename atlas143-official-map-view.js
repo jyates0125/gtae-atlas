@@ -39,7 +39,9 @@ function mount(){
  button.type='button';button.id='j143-official-button';button.className='j143-view-button';
  button.textContent='▧ Rockstar · Official Map';button.setAttribute('aria-expanded','false');
  button.setAttribute('aria-controls','j143-official-layer');
- controls.insertBefore(button,controls.querySelector('.j141-official-flat'));
+ const mapSelector=controls.querySelector('#layer');
+ if(mapSelector)mapSelector.insertAdjacentElement('afterend',button);
+ else controls.append(button);
  const panel=document.createElement('section');panel.id='j143-official-layer';panel.className='j143-official-layer';
  panel.hidden=true;panel.setAttribute('aria-label','Official Rockstar Leonida map viewer');
  panel.innerHTML=`<header class="j143-toolbar"><div><strong>Leonida · Rockstar official map</strong><small>OFFICIAL POSTER VIEW · NO UNVERIFIED PINS</small></div><div class="j143-actions"><button type="button" data-j143="minus" aria-label="Zoom out">−</button><button type="button" data-j143="plus" aria-label="Zoom in">+</button><button type="button" data-j143="reset">Fit</button><button type="button" data-j143="close" aria-label="Return to interactive Leonida map">✕ Interactive map</button></div></header>
