@@ -68,6 +68,8 @@ jobs:
           node --test tests/atlas140-cloud-saves.test.cjs
           node --test tests/atlas144-cloud-transfer.test.cjs
           node --check atlas144-cloud-transfer.js
+          node --check atlas144-device-overview.js
+          python scripts/test_atlas144_account_review.py
       - name: Confirm four evidence workspaces use original page-specific artwork
         run: python scripts/test_research_identity_127.py
       - name: Build only public, approved static files (no live imports)
