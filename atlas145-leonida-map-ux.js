@@ -4,7 +4,7 @@
  * Repairs mobile first-visit scroll when a hash points below the map.
  */
 (()=>{'use strict';
-const wasLinkedToHash=!!location.hash;
+const wasLinkedToHash=!!location.hash && !/^#game(?:5|6|online)$/i.test(location.hash);
 function init(){
  if(document.body?.dataset?.startWorld!=='6')return;
  const sidebar=document.getElementById('sidebar');
