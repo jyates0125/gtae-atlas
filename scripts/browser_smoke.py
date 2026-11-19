@@ -5,7 +5,7 @@ Uses local HTTP so canvas fetch, video, and navigation share a genuine origin.
 No live Rockstar/GTADB feed or external network request is considered verified.
 """
 from __future__ import annotations
-import asyncio, functools, http.server, json, os, socketserver, threading
+import asyncio, base64, functools, http.server, io, json, os, socketserver, threading, zipfile
 from pathlib import Path
 from playwright.async_api import async_playwright
 PROJECT=Path(__file__).resolve().parents[1]
@@ -204,6 +204,19 @@ async def smoke():
                                             failures.append('Official Rockstar map viewer failed to open')
                                         if not await pg.locator('.j143-empty').is_visible():
                                             failures.append('Official map viewer has no source-backed image loading affordance')
+                                        test_png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/bQAAAABJRU5ErkJggg==')
+                                        zipped=io.BytesIO()
+                                        with zipfile.ZipFile(zipped,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+                                            archive.writestr('Leonida_Map_Poster.png',test_png)
+                                        await pg.locator('.j143-empty input[type="file"]').set_input_files(
+                                            {'name':'Leonida_Map_Poster_Printable.zip','mimeType':'application/zip','buffer':zipped.getvalue()})
+                                        await pg.wait_for_function("""() => document.querySelector('.j143-status')?.textContent?.includes('Official map saved')
+                                            || document.querySelector('.j143-status')?.textContent?.includes('Map open for this visit')""",timeout=7000)
+                                        if not await pg.locator('.j143-poster').is_visible():
+                                            failures.append('Rockstar ZIP file did not render inside our interactive map view')
+                                        await pg.locator('#j143-official-layer [data-j143="plus"]').click()
+                                        if 'scale(' not in (await pg.locator('.j143-poster').get_attribute('style') or ''):
+                                            failures.append('Official map zoom did not update image')
                                         await pg.locator('#j143-official-layer [data-j143="close"]').click()
                                         if await pg.locator('#j143-official-layer').is_visible():
                                             failures.append('Official map viewer cannot return to interactive map')
