@@ -34,7 +34,9 @@ async function selected(key,container){
  status(container,success?'Atlas link copied. Sign in to '+(labels[key]||'the app')+' and paste it into your post.':'Open '+(labels[key]||'your app')+' and paste the Atlas link: '+url);
 }
 function inject(node){
- if(!node||node.querySelector('.j131-social'))return;
+ if(!node)return;
+ const existing=node.querySelector('.j131-social');
+ if(existing){for(const button of existing.querySelectorAll('button[data-j131-platform]')){const key=button.dataset.j131Platform;if(!labels[key]||button.dataset.j131Ready)return;button.dataset.j131Ready='true';button.addEventListener('click',()=>selected(key,existing));}return;}
  const region=document.createElement('section');region.className='j131-social';region.setAttribute('aria-label','Share Team Jura Atlas with your community');
  const heading=document.createElement('div');heading.className='j131-social-title';
  heading.innerHTML='<div><h2>Share the Atlas with your crew</h2><p>Tap an icon to share or open your favorite app. No downloads or Team Jura login required.</p></div><a href="./atlas-share.html">Community &amp; launch hub ›</a>';
