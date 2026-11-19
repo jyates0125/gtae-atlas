@@ -377,7 +377,7 @@ async def smoke():
                                 if await pg.locator('#classicMapBackground').count()!=1:
                                     failures.append('Existing personal map workbench missing')
 
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count()!=1:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Original Elario crest missing on classic world')
                                 try:
                                     # Use a generated original 16x8 image; never depend on a third-party map.
@@ -467,12 +467,12 @@ async def smoke():
                                     failures.append('Current Elario showcase theme missing')
                                 if not await pg.locator('a[href="https://github.com/jyates0125/team-jura-atlas-preview"]').count():
                                     failures.append('Showcase GitHub source link points to retired repository')
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count() == 0:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count() == 0:
                                     failures.append('Showcase missing original Elario crest')
                             if not failures and path=='atlas98b-test.html':
                                 if await pg.locator('#qaRunCore').count()!=1 or await pg.locator('#qaRunAll').count()!=1:
                                     failures.append('Atlas QA buttons missing')
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count() !=1:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count() !=1:
                                     failures.append('Atlas QA Elario crest missing')
                             if not failures and path=='atlas-credits.html':
                                 if await pg.locator('h1#pageTitle').count()!=1:
@@ -483,7 +483,7 @@ async def smoke():
                                     failures.append('GTAMap.io original source disclaimer not linked')
                                 if await pg.locator('a[href="https://github.com/rolux/gtadb.org"]').count()<1:
                                     failures.append('GTADB source repository not credited')
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count()!=1:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Original Elario crest missing on credits')
                                 if 'MANY CREWS' not in await pg.locator('header .brand').inner_text():
                                     failures.append('Community branding changed')
