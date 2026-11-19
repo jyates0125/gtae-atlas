@@ -66,6 +66,8 @@ jobs:
           node --test tests/data-lab.test.cjs
           node --test tests/source-identity.test.cjs
           node --test tests/atlas140-cloud-saves.test.cjs
+          node --test tests/atlas144-cloud-transfer.test.cjs
+          node --check atlas144-cloud-transfer.js
       - name: Confirm four evidence workspaces use original page-specific artwork
         run: python scripts/test_research_identity_127.py
       - name: Build only public, approved static files (no live imports)
