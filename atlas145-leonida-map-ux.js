@@ -28,7 +28,7 @@ function init(){
    if(matchMedia('(max-width:700px)').matches)sidebar.classList.add('mobile-collapsed');
    map.scrollIntoView({block:'start',behavior:'smooth'});
   });
-  views.insertAdjacentElement('afterend',open);
+  (sidebar.querySelector('.worlds')||views).insertAdjacentElement('afterend',open);
  }
  // VI is a map-first destination. The map engine may update the URL fragment
  // to #game6; that must not make the mobile first screen jump into the sidebar.
