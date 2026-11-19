@@ -4,6 +4,28 @@ const u=new URLSearchParams(location.search),mode=['story','online','vi'].includ
 const titles={story:'GTA V · Story Mode activities',online:'GTA Online · activity conditions',vi:'GTA VI · Leonida research conditions'},intro={story:'Story collectibles, challenges and missions only. No Gun Van, Online pumpkins, dealers, rotating events or GTA VI research here.',online:'Daily rotations, unlocks, seasonal clocks, possible spawns and progress are tracked separately from GTA V Story Mode.',vi:'Provisional Leonida discoveries and validation queues. No GTA Online activity is considered playable in GTA VI without separate evidence.'};
 let state=C.safeState(load(KEY,{})),snapshot=null,needle='',group='';try{snapshot=C.safeSnapshot(load(FEED,{schema:1,rotations:{}}))}catch{snapshot={schema:1,rotations:{}}}
 function load(k,def){try{return JSON.parse(localStorage.getItem(k)||'null')||def}catch{return def}}
+let sourceLabel='Personal imported snapshot · not verified';
+async function loadReviewedRotations(){
+ if(mode!=='online')return;
+ const status=$('autoRotationStatus');
+ try{
+  const response=await fetch('./data/online-rotation-current.json',{cache:'no-cache'});
+  if(!response.ok)throw Error('Reviewed data unavailable');
+  const reviewed=C.safeSnapshot(await response.json());
+  // A personal import is kept separate and never replaced or described as verified.
+  const personal=load(FEED,null);
+  if(personal&&Object.keys(snapshot.rotations||{}).length){
+    if(status)status.textContent='Personal rotation file detected. This was not verified by Team Jura; official current positions are not guaranteed.';
+  }else{
+    snapshot=reviewed;
+    sourceLabel='Bundled source-reviewed selection';
+    if(status)status.textContent=Object.keys(reviewed.rotations).length
+      ? 'Automatically loaded '+Object.keys(reviewed.rotations).length+' reviewed rotation group(s). Each position is subject to its dated validity window.'
+      : 'Automatic data loaded. No currently verified daily positions are published; possible locations remain visible but are not marked Available now.';
+  }
+ }catch(_){if(status)status.textContent='Site rotation file is temporarily unavailable. All known activity categories remain visible; current positions are unconfirmed.';}
+ render();
+}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch{$('message').textContent='Storage unavailable: export progress to preserve it.'}}
 function setMsg(s){$('message').textContent=s}
 function checkedRow(id,label,initial,onChange){const row=document.createElement('label');row.className='check-label';const box=document.createElement('input');box.type='checkbox';box.checked=!!initial;box.onchange=()=>onChange(box.checked);row.append(box,document.createTextNode(' '+label));return row}
@@ -14,8 +36,8 @@ function build(){document.title='Atlas Activities · '+titles[mode];$('headline'
   for(const [key,label]of Object.entries(C.EVENT_NAMES))$('events').append(checkedRow(key,label,state.events[key],v=>{state.events[key]=v;save();render()}));
   for(const [key,label]of C.PREREQS.filter(([key])=>!key.startsWith('story-')))$('prereqs').append(checkedRow(key,label,state.flags[key],v=>{state.flags[key]=v;save();render()}));
   $('gameHour').value=load('jura68-online-hour','');$('gameHour').addEventListener('input',()=>{localStorage.setItem('jura68-online-hour',$('gameHour').value);render()});
-  $('importSnapshot').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>100000)throw Error('File is too large');const obj=JSON.parse(await file.text());snapshot=C.safeSnapshot(obj);localStorage.setItem(FEED,JSON.stringify(snapshot));render();setMsg('Snapshot imported, but it is user-provided, not independently verified.')}catch(err){setMsg('Import rejected: '+err.message)}finally{e.target.value=''}});
-  $('clearSnapshot').onclick=()=>{snapshot={schema:1,rotations:{}};localStorage.removeItem(FEED);render();setMsg('Imported daily positions cleared.')};
+  $('importSnapshot').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>100000)throw Error('File is too large');const obj=JSON.parse(await file.text());snapshot=C.safeSnapshot(obj);sourceLabel='Personal imported snapshot · not verified';localStorage.setItem(FEED,JSON.stringify(snapshot));render();setMsg('Personal snapshot imported; positions are NOT verified live locations.')}catch(err){setMsg('Import rejected: '+err.message)}finally{e.target.value=''}});
+  $('clearSnapshot').onclick=()=>{snapshot={schema:1,rotations:{}};localStorage.removeItem(FEED);loadReviewedRotations();setMsg('Personal import cleared; restored site-reviewed automatic data.')};
   updateResets();
  }else if(mode==='story'){
   for(const [key,label]of C.PREREQS.filter(([key])=>key.startsWith('story-')))$('storyFlags').append(checkedRow(key,label,state.flags[key],v=>{state.flags[key]=v;save();render()}));
@@ -23,12 +45,12 @@ function build(){document.title='Atlas Activities · '+titles[mode];$('headline'
  $('search').oninput=e=>{needle=e.target.value.toLowerCase().trim();render()};$('group').onchange=e=>{group=e.target.value;render()};
  $('resetProgress').onclick=()=>{if(!confirm('Reset only '+titles[mode]+' progress on this device?'))return;state=C.emptyState();save();location.reload()};
  $('export').onclick=()=>{const doc={schema:1,mode,exportedAtUtc:new Date().toISOString(),progress:state};const data=new Blob([JSON.stringify(doc,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(data);a.download='team-jura-'+mode+'-activity-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
- render();}
+ render();loadReviewedRotations();}
 function evaluation(r){return C.evaluate(r.id,{mode,state,snapshot,now:Date.now(),hour:$('gameHour').value===''?NaN:Number($('gameHour').value)})}
 function render(){const all=C.rulesForMode(mode),selected=all.filter(r=>(!group||r.group===group)&&(!needle||(r.name+' '+r.detail+' '+r.group).toLowerCase().includes(needle))),root=$('ruleList');root.replaceChildren();let active=0,unknown=0,finished=0;for(const r of all){let result=evaluation(r);if(result.status==='active')active++;if(['unknown','research','available-feed'].includes(result.status))unknown++;if(state.completed[r.id])finished++;}
  let last='';for(const r of selected){if(r.group!==last){last=r.group;const h=document.createElement('div');h.className='group';h.textContent=last;root.append(h)}const status=evaluation(r);const card=document.createElement('article');card.className='rule';const heading=document.createElement('div');heading.className='row space';const h=document.createElement('h3');h.textContent=r.name;const pill=document.createElement('span');pill.className='status';pill.style.setProperty('--status',C.markerColor(status.status));pill.textContent=C.statusText(status.status);heading.append(h,pill);const desc=document.createElement('p');desc.textContent=r.detail;const why=document.createElement('small');why.textContent=status.reason;const actions=document.createElement('div');actions.className='row';
  actions.append(checkedRow(r.id,'Completed / photographed',state.completed[r.id],v=>{state.completed[r.id]=v;save();render()}));if(mode==='online'&&r.kind==='session')actions.append(checkedRow('seen-'+r.id,'Seen in my session',state.seen[r.id],v=>{state.seen[r.id]=v;save();render()}));
  const source=document.createElement('a');source.href=r.source;source.target='_blank';source.rel='noopener noreferrer';source.textContent='Source ↗';actions.append(source);card.append(heading,desc,why,actions);root.append(card)}
- if(!selected.length){const empty=document.createElement('p');empty.className='empty';empty.textContent='No matching activities';root.append(empty)}$('ruleCount').textContent=all.length;$('completeCount').textContent=finished;$('activeCount').textContent=active;$('statusCount').textContent=unknown;$('resultTotal').textContent=selected.length+' shown';if(mode==='online'){$('snapshotStatus').textContent=Object.keys(snapshot.rotations||{}).length+' rotation group(s) imported (user supplied); active pins require matching mapped IDs. No automatic live verification.';}}
+ if(!selected.length){const empty=document.createElement('p');empty.className='empty';empty.textContent='No matching activities';root.append(empty)}$('ruleCount').textContent=all.length;$('completeCount').textContent=finished;$('activeCount').textContent=active;$('statusCount').textContent=unknown;$('resultTotal').textContent=selected.length+' shown';if(mode==='online'){$('snapshotStatus').textContent=Object.keys(snapshot.rotations||{}).length+' rotation group(s) loaded. '+sourceLabel+'. Dated positions do not imply Rockstar live verification.';}}
 function updateResets(){const list=[['Gun Van, Shipwreck, tags and many daily rotations',6],['Street Dealers',7]];const now=Date.now();const date=d=>new Date(d).toUTCString().slice(0,25);$('resetInfo').textContent=list.map(([name,h])=>name+': next reset '+date(C.nextReset(now,h))).join(' · ')}
 build();})();
