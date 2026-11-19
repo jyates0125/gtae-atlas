@@ -80,6 +80,11 @@ function rotationFeed(snapshot,id,now=Date.now()){
 function evaluate(id,ctx={}){
  const r=BY_ID[id];if(!r)return{status:'unknown',reason:'Rule not recognized'};if(ctx.mode&&ctx.mode!==r.mode)return{status:'excluded',reason:'This activity belongs to '+r.mode+', not '+ctx.mode};
  const state=ctx.state||{},completed=state.completed||{},seen=state.seen||{},flags=state.flags||{},events=state.events||{},now=Number.isFinite(ctx.now)?ctx.now:Date.now();
+ // Seasonal availability must never be inferred from a player's manual checkbox.
+ // The 2026 Halloween event ended November 4 UTC. Preserve access to archived rules
+ // and previous completion records, but never highlight closed spawns as live.
+ const halloween2026=r.event==='halloween'&&now>=Date.parse('2026-11-05T00:00:00Z')&&now<Date.parse('2027-01-01T00:00:00Z');
+ if(halloween2026)return{status:'closed',reason:'Halloween 2026 ended November 4. Archived locations and your progress remain accessible; not active now.'};
  if(completed[id])return{status:'complete',reason:'Marked collected / completed on this device'};
  if(r.event&&events[r.event]!==true){return events[r.event]===false?{status:'closed',reason:'Event set to off on this device'}:{status:'unknown',reason:'Event availability not confirmed'};}
  const needs=r.requires||[];for(const f of needs){if(f==='ghosts-nine'){if(!GH.slice(0,9).every(row=>completed[row[0]]))return{status:'locked',reason:'Photograph ghosts #1–9 first'};continue;}
@@ -101,7 +106,7 @@ function evaluate(id,ctx={}){
  return{status:'possible',reason:'Prerequisites satisfied; does not guarantee a spawn'};
 }
 function markerColor(status){return {active:'#facc15',possible:'#f8fafc',closed:'#f8fafc',locked:'#94a3b8',complete:'#64748b',unknown:'#38bdf8',research:'#38bdf8',excluded:'#64748b','available-feed':'#38bdf8'}[status]||'#38bdf8';}
-function statusText(status){return {active:'Eligible / selected',possible:'Possible · not currently selected',locked:'Locked · prerequisite',closed:'Event off',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
+function statusText(status){return {active:'Eligible / selected',possible:'Possible · not currently selected',locked:'Locked · prerequisite',closed:'Not active',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
 function emptyState(){return {completed:{},seen:{},flags:{},events:{}};}
 function safeState(s){const o=emptyState();if(!s||typeof s!=='object')return o;for(const k of Object.keys(o)){if(!s[k]||typeof s[k]!=='object'||Array.isArray(s[k]))continue;for(const [key,val] of Object.entries(s[k]))if(/^[a-z0-9-]{1,70}$/i.test(key)&&typeof val==='boolean')o[k][key]=val;}return o;}
 function safeSnapshot(s){if(!s||typeof s!=='object'||s.schema!==1||!s.rotations||typeof s.rotations!=='object')throw Error('Expected schema 1 with a rotations object.');const a={schema:1,rotations:{}};for(const [id,v] of Object.entries(s.rotations)){const r=BY_ID[id];if(!r||r.kind!=='rotation')continue;if(!v||!Array.isArray(v.activeIds)||v.activeIds.length>200||v.activeIds.some(i=>!/^[-a-z0-9_:]{1,80}$/i.test(String(i)))||!validIso(v.checkedAtUtc)||!validIso(v.validUntilUtc))throw Error('Invalid position data for '+id);
