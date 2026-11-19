@@ -10,7 +10,9 @@ const icons=[[/ghost/i,'👻'],[/gun van/i,'🚐'],[/shipwreck/i,'⚓'],[/street
 const icon=(r)=>icons.find(([re])=>re.test(r.name||''))?.[1]||'✦';
 window.TeamJuraEventIcon88=Object.freeze({forName:n=>icon({name:n}),forRecord:r=>r?.activityId?icon(C.BY_ID[r.activityId]||r):null});
 const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch{return d}};
-const statusFor=r=>{const state=C.safeState(read('jura68-conditions-online',{}));if(/^ghost-/i.test(r.id)&&state.events.halloween!==true)return{status:'closed',reason:'Halloween mode is not enabled in this tracker. This is not a claim about Rockstar event availability.'};const raw=read('jura68-rotation-feed',{schema:1,rotations:{}});let feed;try{feed=C.safeSnapshot(raw)}catch{feed={schema:1,rotations:{}}};const hour=read('jura68-online-hour',null);return C.evaluate(r.id,{mode:'online',state,snapshot:feed,hour:hour===null?NaN:Number(hour),now:Date.now()})};
+let reviewedFeed={schema:1,rotations:{}};
+const rotationFeed=()=>{const personal=read('jura68-rotation-feed',{schema:1,rotations:{}});return personal&&personal.rotations&&Object.keys(personal.rotations).length?personal:reviewedFeed};
+const statusFor=r=>{const state=C.safeState(read('jura68-conditions-online',{}));if(/^ghost-/i.test(r.id)&&state.events.halloween!==true)return{status:'closed',reason:'Halloween mode is not enabled in this tracker. This is not a claim about Rockstar event availability.'};const raw=rotationFeed();let feed;try{feed=C.safeSnapshot(raw)}catch{feed={schema:1,rotations:{}}};const hour=read('jura68-online-hour',null);return C.evaluate(r.id,{mode:'online',state,snapshot:feed,hour:hour===null?NaN:Number(hour),now:Date.now()})};
 const human=s=>({active:'CURRENT · YELLOW PIN',possible:'POSSIBLE · WHITE PIN',unknown:'NOT CONFIRMED',closed:'NOT ACTIVE',locked:'LOCKED',complete:'COMPLETED',research:'RESEARCH',excluded:'NOT IN THIS GAME', 'available-feed':'DATED SELECTION'})[s]||s.toUpperCase();
 const mk=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e};
 function groups(){const rs=C.rulesForMode('online');const listed=rs.filter(r=>['rotation','clock','clock-parent','seasonal','session','weekly','research'].includes(r.kind)||/ghost|halloween|ufo|peyote|snowmen|holiday/i.test(r.name));
@@ -55,7 +57,13 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  }if(!num)results.append(mk('p','j88-note','No matching event rules.'));}
  const redrawMap=()=>{if(mapPage){const mapSearch=$('search');if(mapSearch)mapSearch.dispatchEvent(new Event('input',{bubbles:true}))}};
  search.oninput=render;refresh.onclick=()=>{render();redrawMap()};hour.onchange=()=>{try{localStorage.setItem('jura68-online-hour',JSON.stringify(hour.value))}catch{}render();redrawMap()};checkbox.onchange=()=>{if(checkbox.disabled)return;let state=C.safeState(read('jura68-conditions-online',{}));state.events.halloween=checkbox.checked;try{localStorage.setItem('jura68-conditions-online',JSON.stringify(state))}catch{}render();redrawMap()};
- window.addEventListener('storage',e=>{if(['jura68-conditions-online','jura68-online-hour','jura68-rotation-feed'].includes(e.key))render()});render();
+ window.addEventListener('storage',e=>{if(['jura68-conditions-online','jura68-online-hour','jura68-rotation-feed'].includes(e.key))render()});
+ render();
+ // The sidebar shares the same bundled, reviewed feed as the full daily dashboard.
+ // Missing or empty current data means unknown/possible, never invented active pins.
+ fetch('./data/online-rotation-current.json',{cache:'no-cache'}).then(resp=>{if(!resp.ok)throw Error('No reviewed feed');return resp.json()})
+  .then(data=>{reviewedFeed=C.safeSnapshot(data);render()}).catch(()=>{});
+
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
 })();
