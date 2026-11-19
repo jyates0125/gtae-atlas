@@ -193,7 +193,7 @@ async def smoke():
                                             failures.append('Universe search did not filter results')
                                 except Exception as exc:
                                     failures.append('Universe catalog browser interaction failed: '+str(exc)[:450])
-                            if not failures and path in ('index.html','atlas-share.html','one-last-ride.html'):
+                            if not failures and path in ('index.html','atlas-dashboard.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas93-garage.html','atlas-share.html','one-last-ride.html'):
                                 icons=pg.locator('.j131-social-grid button[data-j131-platform]')
                                 try:
                                     await pg.wait_for_function("document.querySelectorAll('.j131-social-grid button[data-j131-platform]').length===7",timeout=6000)
@@ -237,7 +237,7 @@ async def smoke():
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Preserved dashboard missing four featured game cards')
                                 if await pg.locator('#progressCollections').count()!=1:failures.append('Dashboard progress tracker missing')
                             if not failures and path=='atlas-share.html':
-                                if await pg.locator('#facebook,#tiktok,#instagram,#discord').count()!=4:failures.append('Social launch platform cards missing')
+                                if await pg.locator('.j130-share-stacks').count()!=0:failures.append('Legacy launch platform package is still present')
                                 if not await pg.locator('#shareCaptionText').input_value():failures.append('Launch caption not hydrated')
                                 await pg.locator('#shareCaptionText').fill('My own Team Jura launch caption')
                                 await pg.locator('[data-j130-action="copy-text"][data-kind="custom"]').click()
