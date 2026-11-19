@@ -34,8 +34,8 @@ function build(){
  const open=()=>{
    drawer.hidden=false;button.setAttribute('aria-expanded','true');wrap.classList.add('is-open');render(input.value);input.focus();
  };
- const close=()=>{
-   drawer.hidden=true;button.setAttribute('aria-expanded','false');wrap.classList.remove('is-open');button.focus();
+ const close=(restoreFocus=true)=>{
+   drawer.hidden=true;button.setAttribute('aria-expanded','false');wrap.classList.remove('is-open');if(restoreFocus)button.focus();
  };
  button.addEventListener('click',()=>drawer.hidden?open():close());drawer.querySelector('.j132-close').addEventListener('click',close);
  input.addEventListener('input',()=>render(input.value));
@@ -49,7 +49,7 @@ function build(){
    if(e.shiftKey&&(document.activeElement===first||!drawer.contains(document.activeElement))){e.preventDefault();last.focus();}
    else if(!e.shiftKey&&(document.activeElement===last||!drawer.contains(document.activeElement))){e.preventDefault();first.focus();}
  });
- document.addEventListener('pointerdown',e=>{if(!drawer.hidden&&!wrap.contains(e.target))close()});
+ document.addEventListener('pointerdown',e=>{if(!drawer.hidden&&!wrap.contains(e.target))close(false)});
  document.body.append(wrap);render();
  // Production builder records all public HTML pages; expose the ones not in
  // the prominent categories under an honest "Other public pages" section.
