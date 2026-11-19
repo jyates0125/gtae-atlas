@@ -32,8 +32,12 @@ fs.mkdirSync(out,{recursive:true});
 const files=walk(root);
 const pages = files.filter(rel => rel.endsWith('.html') && !rel.includes('/')).sort().map(rel => {
   const source=fs.readFileSync(path.join(root,rel),'utf8');
-  const found=source.match(/<title[^>]*>([\\s\\S]*?)<\\/title>/i);
-  return {path:rel,title:(found?.[1]||rel).replace(/<[^>]*>/g,'').replace(/&amp;/gi,'&').trim()};
+  const lower=source.toLowerCase();
+  const tag=lower.indexOf('<title');
+  const valueStart=tag<0?-1:source.indexOf('>',tag)+1;
+  const valueEnd=valueStart<1?-1:lower.indexOf('</title>',valueStart);
+  const title=valueStart>0 && valueEnd>valueStart?source.slice(valueStart,valueEnd):rel;
+  return {path:rel,title:title.replace(/<[^>]*>/g,'').replace(/&amp;/gi,'&').trim()};
 });
 let bytes=0;
 const manifest=[];
@@ -43,8 +47,9 @@ for (const rel of files) {
   if (rel.endsWith('.html') && !rel.includes('/')) {
     const html=fs.readFileSync(src,'utf8');
     const includes='<link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=132"></script>';
-    if (!/<\\/head>/i.test(html)) throw new Error('Published HTML is missing head: '+rel);
-    fs.writeFileSync(dst,html.replace(/<\\/head>/i,includes+'</head>'));
+    const at=html.toLowerCase().lastIndexOf('</head>');
+    if (at<0) throw new Error('Published HTML is missing head: '+rel);
+    fs.writeFileSync(dst,html.slice(0,at)+includes+html.slice(at));
   } else {
     fs.copyFileSync(src,dst);
   }
