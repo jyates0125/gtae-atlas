@@ -11,6 +11,8 @@ assert "controls.querySelector('#layer')" in viewer
 assert "mapSelector.insertAdjacentElement('afterend',button)" in viewer
 assert "button.id='j143-official-button'" in viewer
 assert page.count('href="https://www.rockstargames.com/VI/media"')==1
+assert 'Official Leonida map and poster' not in (root/'atlas.js').read_text(encoding='utf-8'), 'Duplicate source-shelf link to poster'
+assert 'Official Leonida screenshots' in (root/'atlas.js').read_text(encoding='utf-8')
 assert 'Rockstar official map source' in page
 assert "aria-label=\"Open dedicated GTA VI Community Research map\"" in page
 assert 'data-j143="fetch"' in viewer
