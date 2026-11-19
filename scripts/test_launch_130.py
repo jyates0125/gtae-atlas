@@ -39,12 +39,13 @@ assert 'id="progressCollections"' in dash and 'id="progressVehicles"' in dash an
 assert 'data-page="home"' in dash
 assert 'href="./atlas-dashboard.html"' in dash
 assert dash.count('<h1')==1
-for label in ('facebook','tiktok','instagram','discord'):
- assert f'id="{label}"' in social
- assert f'data-kind="{label}"' in social
+# Atlas 13.3 replaces the launch-kit cards with a lean share page and global footer.
+assert 'j130-share-stacks' not in social
+assert 'data-j131-social-host' in social
+assert 'data-j130-action="share-page"' in social
+assert 'data-j130-action="copy-url"' in social
 assert 'data-kind="custom"' in social and 'data-j130-copytext' in social
-assert 'data-j130-action="open-social"' in social
-assert 'No official Team Jura server invite has been verified' in social
+assert 'No official Team Jura server invite has been verified' not in social
 assert social.count('<h1')==1
 assert "navigator.share" in js and "navigator.clipboard" in js
 assert "document.execCommand('copy')" in js and 'isSecureContext' in js
