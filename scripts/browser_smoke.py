@@ -195,7 +195,11 @@ async def smoke():
                                     failures.append('Universe catalog browser interaction failed: '+str(exc)[:450])
                             if not failures and path in ('index.html','atlas-share.html','one-last-ride.html'):
                                 icons=pg.locator('.j131-social-grid button[data-j131-platform]')
-                                if await icons.count()!=7:failures.append('Seven clickable branded social icons did not render')
+                                try:
+                                    await pg.wait_for_function("document.querySelectorAll('.j131-social-grid button[data-j131-platform]').length===7",timeout=6000)
+                                except Exception:
+                                    failures.append('Seven clickable branded social icons did not render')
+                                if await icons.count()!=7:failures.append('Seven branded social icon buttons not present after ready')
                                 else:
                                     actual=await icons.evaluate_all("(nodes)=>nodes.map(n=>n.getAttribute('data-j131-platform'))")
                                     if actual!=['facebook','youtube','tiktok','instagram','discord','reddit','more']:failures.append('Social icon buttons use incorrect platform semantics')
