@@ -15,6 +15,7 @@ function pageLink(a){const l=document.createElement('a');l.href='./'+a[1];l.text
 function build(){
  if(document.querySelector('#j132-nav-toggle'))return;
  const wrap=document.createElement('div');wrap.className='j132-nav';
+ if(/^atlas(?:-online|-vi)?\.html$/i.test(location.pathname.split('/').pop()||''))wrap.classList.add('j132-map-nav');
  wrap.innerHTML='<button id="j132-nav-toggle" type="button" aria-controls="j132-nav-drawer" aria-expanded="false" aria-label="Open all Team Jura pages">☰ <span>ALL PAGES</span></button><aside id="j132-nav-drawer" aria-label="All Team Jura navigation" hidden><div class="j132-nav-head"><img src="./art/elario-crest.svg" width="35" height="35" alt=""><div><strong>ELARIO STUDIOS · TEAM JURA</strong><small>EXPLORE EVERY ATLAS EXPERIENCE</small></div><button type="button" class="j132-close" aria-label="Close site navigation">✕</button></div><label class="j132-search">Search every page<input type="search" id="j132-search" placeholder="Maps, garages, collectibles, heists..." autocomplete="off"></label><div class="j132-groups" id="j132-groups"></div><p class="j132-nav-tail">Many Crews. One Vision. · Independent GTA fan companion</p></aside>';
  const button=wrap.querySelector('#j132-nav-toggle'),drawer=wrap.querySelector('#j132-nav-drawer'),input=wrap.querySelector('#j132-search'),list=wrap.querySelector('#j132-groups');
  let allCategories=CATEGORIES.slice();
@@ -38,7 +39,16 @@ function build(){
  };
  button.addEventListener('click',()=>drawer.hidden?open():close());drawer.querySelector('.j132-close').addEventListener('click',close);
  input.addEventListener('input',()=>render(input.value));
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!drawer.hidden)close()});
+ document.addEventListener('keydown',e=>{
+   if(drawer.hidden)return;
+   if(e.key==='Escape'){e.preventDefault();close();return;}
+   if(e.key!=='Tab')return;
+   const focusables=[...drawer.querySelectorAll('a[href],button:not([disabled]),input:not([disabled])')].filter(el=>el.getClientRects().length);
+   if(!focusables.length)return;
+   const first=focusables[0],last=focusables[focusables.length-1];
+   if(e.shiftKey&&(document.activeElement===first||!drawer.contains(document.activeElement))){e.preventDefault();last.focus();}
+   else if(!e.shiftKey&&(document.activeElement===last||!drawer.contains(document.activeElement))){e.preventDefault();first.focus();}
+ });
  document.addEventListener('pointerdown',e=>{if(!drawer.hidden&&!wrap.contains(e.target))close()});
  document.body.append(wrap);render();
  // Production builder records all public HTML pages; expose the ones not in
