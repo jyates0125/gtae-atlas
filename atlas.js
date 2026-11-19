@@ -30,7 +30,7 @@ const BOUNDS={
 };
 const LAYERS={
  '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid']],
- '6':[['scaly,view','Scaly · YANIS V18'],['yanis,18','YANIS V18 · Current'],['yanis,15','YANIS V15 · Archive'],['dupzor,51','Loki · DUPZOR V51']]
+ '6':[['scaly,view','Scaly · YANIS V18'],['yanis,18','YANIS V18 · Current'],['dupzor,51','Loki · DUPZOR V51'],['research,view','Research basemap · YANIS V18'],['yanis,15','YANIS V15 · Archive']]
 };
 /* Base views and published GTADB community add-on tiles.
  * The additional tile folders are *patches*, not complete independent worlds.
@@ -46,7 +46,7 @@ const PATCH_SET='aiwe,1,martipk,5,rickrick,3';
 function mapView(style,g=game){
  if(g==='6'&&style==='scaly,view')return{base:'yanis,18',overlay:false,filter:'saturate(1.15) contrast(1.06)'};
  if(g==='6'&&style==='loki,view')return{base:'dupzor,51',overlay:false,filter:'saturate(.88) contrast(1.13) brightness(.96)'};
- // Research is a content mode over the licensed YANIS V17 illustration, not a new GTADB tile source.
+ // Research is a dedicated labeled basemap option over licensed YANIS V18 tiles, not a separate tile source. GTA VI research records remain provisional.
  if(g==='6'&&style==='research,view')return{base:'yanis,18',overlay:false,filter:'none'};
  // The previous CYBER selection is retired: no cyber tiles are requested.
  return{base:style,overlay:false};

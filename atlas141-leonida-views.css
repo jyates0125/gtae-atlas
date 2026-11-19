@@ -1,0 +1,22 @@
+/* Atlas 14.1 — Leonida view selector. Official map remains an external flat reference;
+   the interactive canvas and provisional community markers remain unchanged. */
+body[data-start-world="6"] .mapcontrols .j141-official-flat {
+ display:inline-flex;align-items:center;justify-content:center;gap:6px;
+ padding:8px 12px;min-height:36px;max-width:100%;
+ border:1px solid #efb56c;border-radius:10px;
+ background:linear-gradient(135deg,#492953,#2a1838);
+ color:#ffe0a3;text-decoration:none;font:800 12px/1.4 system-ui,sans-serif;
+ white-space:normal;text-align:center;
+ box-shadow:0 3px 12px #10081888;
+}
+body[data-start-world="6"] .mapcontrols .j141-official-flat:hover {
+ background:#654071;border-color:#ffe4ad;color:#fff6e2;
+}
+body[data-start-world="6"] .mapcontrols .j141-official-flat:focus-visible {
+ outline:3px solid #ffe4ad;outline-offset:3px;
+}
+@media(max-width:600px){
+ body[data-start-world="6"] .mapcontrols .j141-official-flat{
+   padding:7px 9px;font-size:11px;max-width:160px;
+ }
+}

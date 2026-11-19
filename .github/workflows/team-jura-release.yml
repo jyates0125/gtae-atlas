@@ -38,6 +38,7 @@ jobs:
           python scripts/test_social_icons_131.py
           python scripts/test_account_131.py
           python scripts/test_atlas138_supabase.py
+          python scripts/test_atlas141_leonida_research.py
           node --check atlas131-account.js
           node --check atlas131-social-icons.js
           node --check atlas130-share.js

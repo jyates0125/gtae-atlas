@@ -35,7 +35,7 @@
 <script defer src="./atlas95-ui.js?v=95"></script>
 <link rel="stylesheet" href="./atlas97-connect.css?v=97">
 <script defer src="./atlas97-connect.js?v=97"></script>
-<link rel="stylesheet" href="./atlas117-world-brand.css?v=117"><link rel="stylesheet" href="./atlas128-map-chrome.css?v=128">
+<link rel="stylesheet" href="./atlas117-world-brand.css?v=117"><link rel="stylesheet" href="./atlas128-map-chrome.css?v=128"><link rel="stylesheet" href="./atlas141-leonida-views.css?v=141">
 </head>
 <body data-start-world="6" class="j117-map-world j128-map-chrome"><a data-j87-maps-link href="./maps.html" style="position:fixed;bottom:12px;right:12px;z-index:1000;background:#2a153a;color:#ffcb78;padding:10px 14px;border:1px solid #efae56;border-radius:10px;text-decoration:none;font:700 12px system-ui;box-shadow:0 4px 18px #10091fae">▦ All Maps</a>
 <header class="topbar">
@@ -52,7 +52,7 @@
     </div>
     <div class="atlas-explorer-head"><div class="atlas-eyebrow">ELARIO STUDIOS / TEAM JURA</div><h1>World Explorer</h1><p>Find places. Follow the map. Make your own route.</p></div>
     <div class="dataset"><span class="dot" id="dataDot"></span><span id="dataStatus" role="status">Loading local locations…</span></div>
-    <p class="hint"><a id="activityModeLink" href="./atlas-activities.html?mode=vi">◷ Leonida · Research & verification rules</a></p>
+    <p class="hint"><a id="activityModeLink" href="./atlas-activities.html?mode=vi">◷ Leonida · Research & verification rules</a> · <a href="./atlas-research.html" aria-label="Open dedicated GTA VI Community Research map">⌕ Open Community Research map</a></p>
     <label class="field-label" for="search">Search locations</label>
     <input id="search" type="search" placeholder="Find landmarks, vehicles, collections…" autocomplete="off">
     <label class="field-label" for="districtFilter">Area / neighborhood (optional)</label>
@@ -165,7 +165,7 @@
     <div class="jura-brand-map">ELARIO STUDIOS <span>× TEAM JURA</span> · UNOFFICIAL GTA MAP</div>
     <canvas id="atlasCanvas" tabindex="0" aria-label="GTA game map. Drag to move. Scroll or use plus and minus to zoom."></canvas>
     <!-- Team Jura 10.1: single sidebar legend; no duplicate floating or trailer panels. -->
-    <div class="maptop"><div class="maptitle"><strong id="mapTitle">GTA V · Los Santos</strong><small id="mapSubtitle">GTADB map and pins, all together</small></div><div class="mapcontrols"><label for="layer">Map view</label><select id="layer" title="GTADB CC BY 4.0 licensed map tiles. Scaly and Loki are Team Jura view names; original artwork is credited to its artists."><option>Loading views…</option></select><input type="range" min="0" max="100" step="5" id="overlayOpacity" aria-label="Unused legacy overlay opacity control" hidden><span id="opacityValue" hidden>100%</span><span class="jura-pin-mode" title="One marker per source location">📍 Individual pins</span><select id="density" aria-label="Individual markers only" disabled hidden><option value="individual">Individual</option></select><button id="resetView" type="button" title="Show whole map">⌖ Fit</button></div></div>
+    <div class="maptop"><div class="maptitle"><strong id="mapTitle">GTA V · Los Santos</strong><small id="mapSubtitle">GTADB map and pins, all together</small></div><div class="mapcontrols"><label for="layer">Map view</label><select id="layer" title="GTADB CC BY 4.0 licensed map tiles. Scaly and Loki are Team Jura view names; original artwork is credited to its artists."><option>Loading views…</option></select><a class="j141-official-flat" href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer" title="Open Rockstar Games official printable Leonida map in a separate tab. This is a flat source reference, not our calibrated interactive basemap.">▧ Rockstar official flat map ↗</a><input type="range" min="0" max="100" step="5" id="overlayOpacity" aria-label="Unused legacy overlay opacity control" hidden><span id="opacityValue" hidden>100%</span><span class="jura-pin-mode" title="One marker per source location">📍 Individual pins</span><select id="density" aria-label="Individual markers only" disabled hidden><option value="individual">Individual</option></select><button id="resetView" type="button" title="Show whole map">⌖ Fit</button></div></div>
     <div class="zoom" aria-label="Map zoom controls"><button id="zoomIn" type="button" aria-label="Zoom in">+</button><button id="zoomOut" type="button" aria-label="Zoom out">−</button></div>
     <div class="jura-quick-nav" role="group" aria-label="Map and navigation shortcuts"><button type="button" id="quickDirections">↗ Directions</button><button type="button" id="quickPhotos">▣ Source photos</button><button type="button" id="quickMap">▧ 2D overview</button><button type="button" id="threeDReference" title="Interactive WebGL terrain view (elevation availability depends on source)">▨ 3D terrain</button></div>
     <div class="map-actions"><button id="togglePins" type="button" aria-pressed="false">📍 Pins off</button><button id="mobileTools" type="button">☰ Find places</button><button id="original" type="button">Source ↗</button></div>
