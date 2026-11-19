@@ -208,6 +208,20 @@ async def smoke():
                                         zipped=io.BytesIO()
                                         with zipfile.ZipFile(zipped,'w',compression=zipfile.ZIP_DEFLATED) as archive:
                                             archive.writestr('Leonida_Map_Poster.png',test_png)
+                                        async def serve_official_zip(route):
+                                            await route.fulfill(status=200,headers={
+                                                'access-control-allow-origin':'*',
+                                                'content-type':'application/zip'},body=zipped.getvalue())
+                                        await pg.route('https://media-rockstargames-com.akamaized.net/VI/downloads/**',serve_official_zip)
+                                        if not await pg.locator('#j143-official-layer [data-j143="fetch"]').is_visible():
+                                            failures.append('No direct in-map Rockstar source-loading action')
+                                        else:
+                                            await pg.locator('#j143-official-layer [data-j143="fetch"]').click()
+                                            await pg.wait_for_function("""() => document.querySelector('.j143-status')?.textContent?.includes('Official map saved')
+                                                || document.querySelector('.j143-status')?.textContent?.includes('Map open for this visit')""",timeout=7000)
+                                            if not await pg.locator('.j143-poster').is_visible():
+                                                failures.append('Rockstar direct ZIP path did not display map')
+                                            await pg.locator('#j143-official-layer [data-j143="forget"]').click()
                                         await pg.locator('.j143-empty input[type="file"]').set_input_files(
                                             {'name':'Leonida_Map_Poster_Printable.zip','mimeType':'application/zip','buffer':zipped.getvalue()})
                                         await pg.wait_for_function("""() => document.querySelector('.j143-status')?.textContent?.includes('Official map saved')
