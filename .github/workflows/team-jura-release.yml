@@ -73,6 +73,7 @@ jobs:
           python scripts/test_atlas145_map_ux.py
           python scripts/test_atlas146_launch_truth.py
           python scripts/test_atlas147_garage_mobile.py
+          python scripts/test_atlas148_local_covers.py
           node --check leonida-hq.js
           node --check atlas145-leonida-map-ux.js
           node --check atlas145-mobile-map-entry.js
