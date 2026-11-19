@@ -28,7 +28,11 @@ function init(){
    if(matchMedia('(max-width:700px)').matches)sidebar.classList.add('mobile-collapsed');
    map.scrollIntoView({block:'start',behavior:'smooth'});
   });
-  (sidebar.querySelector('.worlds')||views).insertAdjacentElement('afterend',open);
+  // The collectibles module inserts .j83-worldnav after .worlds.
+  // Keep the jump shortcut below both game-navigation rows and above search.
+  const heading=sidebar.querySelector('.atlas-explorer-head');
+  if(heading)heading.insertAdjacentElement('beforebegin',open);
+  else (sidebar.querySelector('.j83-worldnav')||sidebar.querySelector('.worlds')||views).insertAdjacentElement('afterend',open);
  }
  // VI is a map-first destination. The map engine may update the URL fragment
  // to #game6; that must not make the mobile first screen jump into the sidebar.
