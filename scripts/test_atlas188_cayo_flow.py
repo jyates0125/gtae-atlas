@@ -11,6 +11,11 @@ assert "const route=window.teamJuraCayoPinRoute" in quick
 assert "new Set(route.getState().categories)" in quick
 assert "route.setCategories(selected)" in quick
 assert "route.setCategories([...selected])" in quick
+assert "source.setVisibleCategories([...selected])" in quick
+hotspots=(r/'atlas181-cayo-hotspots.js').read_text(encoding='utf-8')
+assert "function setVisibleCategories(values)" in hotspots
+assert "if(selected.has(cat))hiddenCats.delete(cat)" in hotspots
+assert "else hiddenCats.add(cat)" in hotspots
 assert "row.getAttribute('aria-pressed')" in quick
 assert "event.target.closest?.('.j180-legend-row[data-cat]')" in quick
 assert "teamjura:cayo:route-categories" in quick
