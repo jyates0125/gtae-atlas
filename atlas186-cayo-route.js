@@ -184,7 +184,9 @@ const credit=stage.querySelector('.j180-credit');
 stage.insertBefore(panel,credit||null);
 const svg=ns('svg',{class:'j186-route-layer',viewBox:'0 0 100 100',preserveAspectRatio:'none','aria-hidden':'true'});
 svg.setAttribute('focusable','false');world.append(svg);
-function clearLayer(){svg.replaceChildren()}
+const badges=ns('svg',{class:'j186-route-badges',viewBox:'0 0 100 100',preserveAspectRatio:'none','aria-hidden':'true'});
+badges.setAttribute('focusable','false');world.append(badges);
+function clearLayer(){svg.replaceChildren();badges.replaceChildren()}
 function drawLine(){
  clearLayer();
  const map=byId();
@@ -194,10 +196,14 @@ function drawLine(){
   svg.append(line);
  }
  for(const [i,n] of route.entries()){
+  // Route number badges are offset from the actual colored marker. They
+  // float ABOVE its icon while the gold line stays BELOW the icon layer.
+  // A badge identifies the visit order, never a second location pin.
+  const x=Math.max(2,Math.min(97,n.x+2.5)),y=Math.max(3,Math.min(97,n.y-2.4));
   const mark=ns('g',{class:'j186-stop'+(i===0?' j186-first':'')});
-  mark.append(ns('circle',{cx:n.x,cy:n.y,r:i===0?'2.5':'1.9'}));
-  const text=ns('text',{x:n.x,y:n.y+.64,'text-anchor':'middle'});
-  text.textContent=String(i+1);mark.append(text);svg.append(mark);
+  mark.append(ns('circle',{cx:x,cy:y,r:'1.55'}));
+  const text=ns('text',{x,y:y+.52,'text-anchor':'middle','font-size':'2.1'});
+  text.textContent=String(i+1);mark.append(text);badges.append(mark);
  }
  for(const node of world.querySelectorAll('.j181-hotspot,.j180-chest')){
   node.classList.toggle('j186-start',state.start===node.dataset.markerId||state.start==='chest-'+node.dataset.chest);
