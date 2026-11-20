@@ -26,6 +26,10 @@ CLASSIC_WORLDS={
     'tbogt':('The Ballad of Gay Tony','Base jumps'),
 }
 PAGES.extend('map-hub.html?game='+world for world in CLASSIC_WORLDS if world!='vc')
+HEIST_PAGES={p.name for p in ROOT.glob('heist-*.html')}
+if len(HEIST_PAGES)<15:
+    raise SystemExit('The release must contain all 15 heist planning pages')
+PAGES.extend(sorted(HEIST_PAGES.difference(PAGES)))
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -572,7 +576,7 @@ async def smoke():
                                             failures.append('Native 2D map did not recover after 3D')
                                     except Exception as exc:
                                         failures.append('3D map control could not be used: '+str(exc)[:150])
-                            if not failures and path in ('heist-fleeca.html','heist-cayo-perico.html'):
+                            if not failures and path in HEIST_PAGES:
                                 scene=pg.locator('.mapbox > img')
                                 if await scene.count()!=1:failures.append('Heist illustration missing')
                                 else:
@@ -584,7 +588,7 @@ async def smoke():
                                         await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=6000)
                                     except Exception:
                                         failures.append('Original heist illustration did not load')
-                            if not failures and path in ('heists.html','heist-fleeca.html','heist-cayo-perico.html'):
+                            if not failures and (path=='heists.html' or path in HEIST_PAGES):
                                 try:
                                     await pg.wait_for_selector('.sitebar .j104-logo',timeout=6000)
                                     if path=='heists.html':
