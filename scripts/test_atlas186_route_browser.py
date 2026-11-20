@@ -84,6 +84,9 @@ try:
    assert page.locator('.j186-route-layer').count()==1,'One route overlay after reloading chest start'
    # Cayo 18.6: Start-from-map is a direct player action, including the
    # crowded-marker chooser. The stop order must originate at that pin.
+   # Re-select all markers after the saved Equipment preset: the new
+   # map-first quick filters intentionally hide the control-tower category.
+   page.locator('.j188-preset[data-preset="all"]').click()
    picker=page.locator('#j186-pick-start')
    assert picker.count()==1,'Direct start-pin tool exists'
    picker.click()
