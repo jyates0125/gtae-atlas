@@ -47,7 +47,7 @@ try:
    page.locator('#j190-iv-scope').select_option('tbogt')
    assert page.locator('#visibleCount').inner_text()=='50'
    page.locator('#classicPins').click()
-   assert 'Landmark symbols hidden' in page.locator('#j190-marker-status').inner_text()
+   assert 'Map symbols hidden' in page.locator('#j190-marker-status').inner_text()
    page.locator('#classicPins').click()
    proof=ROOT/'qa-evidence'/engine
    proof.mkdir(parents=True,exist_ok=True)
