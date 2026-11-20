@@ -20,4 +20,8 @@ for ident in ['fleeca','prison-break','humane-labs','series-a','pacific-standard
  assert (root/'art'/f'atlas152-planning-{ident}.svg').is_file(),ident
 assert '--j120-hero-image' in heist_js
 assert 'atlas152-heist-' in heist_js and 'atlas152-planning-' in heist_js
-print('Atlas 15.2 six game-specific art groups, studio and 15 heist/map pair assets: PASS')
+film=(root/'one-last-ride.html').read_text()
+assert '<section class="j130-olr-share"' not in film, 'Obsolete large social launch kit panel remains'
+assert 'Social launch kit' not in film, 'Old posting kit link remains'
+assert 'id="watch"' in film and 'one-last-ride-motion-preview.mp4' in film
+print('Atlas 15.2 six game-specific art groups, studio, 15 heist/map pairs and uncluttered film entrance: PASS')
