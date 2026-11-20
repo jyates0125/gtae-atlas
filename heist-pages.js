@@ -31,6 +31,8 @@ if(document.body.classList.contains('j120-heist-page')){
   const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=180';document.body.append(flagship);
   const iconsStyle=document.createElement('link');iconsStyle.rel='stylesheet';iconsStyle.href='./atlas181-cayo-hotspots.css?v=181';document.head.append(iconsStyle);
   const icons=document.createElement('script');icons.async=false;icons.src='./atlas181-cayo-hotspots.js?v=181';document.body.append(icons);
+  const polishCSS=document.createElement('link');polishCSS.rel='stylesheet';polishCSS.href='./atlas185-cayo-polish.css?v=185';document.head.append(polishCSS);
+  const polish=document.createElement('script');polish.async=false;polish.src='./atlas185-cayo-polish.js?v=185';document.body.append(polish);
  }
 }
 })();
