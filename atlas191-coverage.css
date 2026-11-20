@@ -1,0 +1,16 @@
+/* Atlas 19.1: local evidence ledger, original Elario violet/amber. */
+#j191-coverage-ledger{margin:20px 0 26px;padding:clamp(14px,2.5vw,24px);border-radius:15px;border:1px solid #a87caf;background:linear-gradient(115deg,#281638,#21142f);color:#faf0ff}
+#j191-coverage-ledger h2{margin:3px 0 10px;font-size:clamp(18px,2.6vw,25px);color:#ffdfa6}
+#j191-coverage-ledger .j191-intro{max-width:850px;color:#e6d1eb;font:600 12px/1.6 system-ui}
+.j191-source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:13px 0}
+.j191-source-card{min-width:0;padding:12px 13px;border:1px solid #815c8b;border-radius:12px;background:#382144}
+.j191-source-heading{display:flex;flex-direction:column;gap:2px}
+.j191-source-heading strong{font:850 15px system-ui;color:#fff4e3}
+.j191-source-heading small{font:800 10px system-ui;letter-spacing:.08em;color:#f7c994}
+.j191-source-count{font:800 15px/1.4 system-ui;color:#ffe5ad;min-height:38px;margin:10px 0 8px}
+.j191-source-note{font:600 11px/1.5 system-ui;color:#e8d6e8;margin:0 0 8px;min-height:50px}
+.j191-source-date{font:500 10px/1.4 system-ui;color:#cbb0cc;display:block}
+.j191-source-link{display:inline-block;margin-top:12px;font:800 11px system-ui;color:#ffe5b3;text-decoration:underline}
+.j191-source-card[data-status=missing]{border-color:#d2a16b}
+#j191-coverage-ledger .j191-status{font:650 11px/1.55 system-ui;color:#f3d8ad}
+@media(max-width:520px){.j191-source-grid{grid-template-columns:1fr}.j191-source-count{min-height:0}.j191-source-note{min-height:0}}
