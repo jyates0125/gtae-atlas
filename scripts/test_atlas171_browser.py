@@ -53,6 +53,7 @@ try:
         if kind=='mobile':
             overflow=page.locator('#j171-cayo-board').evaluate('(e)=>e.scrollWidth>e.clientWidth+4')
             assert not overflow,'Cayo board exceeds phone viewport'
+        page.locator('#j171-cayo-board').scroll_into_view_if_needed()
         page.screenshot(path=str(path/('cayo-171-'+kind+'.png')),full_page=False,animations='disabled')
         context.close();browser.close()
     print('Cayo 17.1 browser interactions, route, save and art PASS on '+engine)
