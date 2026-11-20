@@ -85,6 +85,7 @@ async def smoke():
                             if path in ('heist-fleeca.html','heist-cayo-perico.html') and not failures:
                                 try:
                                     await pg.locator('#j164-mission-map').wait_for(timeout=7000)
+                                    mission=path.removeprefix('heist-').removesuffix('.html')
                                     # Atlas 16.7: each heist must show its own focused mission map
                                     # before the optional regional world-map iframe.
                                     await pg.locator('#j167-heist-map').wait_for(timeout=9000)
