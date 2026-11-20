@@ -10,3 +10,15 @@
 
 /*.json
   Cache-Control: public, max-age=300
+
+# The Atlas mission planner may frame ONLY the two native maps in same-origin pages.
+# Other site pages, including any future signup, retain global DENY.
+/atlas-online.html
+  ! X-Frame-Options
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self'
+
+/atlas-cayo.html
+  ! X-Frame-Options
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self'

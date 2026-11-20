@@ -22,6 +22,15 @@ assert 'teamjura-heist-plan-v1:' in js and 'localStorage.setItem' in js
 assert 'frame.src=map' in js and 'frame.hidden=!visible' in js
 assert 'j164-frame[hidden]' in css
 assert 'test_atlas164_heist_workspace.py' in wf
+headers=(p/'_headers').read_text()
+assert 'X-Frame-Options: DENY' in headers
+for url in ('/atlas-online.html','/atlas-cayo.html'):
+    section=headers.split(url+'\n',1)[1].split('\n\n',1)[0]
+    assert '! X-Frame-Options' in section
+    assert 'X-Frame-Options: SAMEORIGIN' in section
+    assert "Content-Security-Policy: frame-ancestors 'self'" in section
+assert '/atlas-account.html' not in headers
+
 for id in ids:
     html=(p/('heist-'+id+'.html')).read_text()
     assert './heist-pages.js' in html
