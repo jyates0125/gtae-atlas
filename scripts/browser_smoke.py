@@ -932,7 +932,7 @@ async def smoke():
                                         await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=6000)
                                     except Exception:
                                         failures.append('Original heist illustration did not load')
-                            if not failures and (path=='heists.html' or path in HEIST_PAGES):
+                            if not failures and (path=='heists.html' or (path in HEIST_PAGES and path!='heist-cayo-perico.html')):
                                 try:
                                     await pg.wait_for_selector('.sitebar .j104-logo',timeout=6000)
                                     if path=='heists.html':

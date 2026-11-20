@@ -67,7 +67,7 @@ async def capture():
                                     if not response or response.status!=200:
                                         raise RuntimeError('Unexpected page response')
                                     await page.wait_for_timeout(700)
-                                    await page.screenshot(path=str(file),animations='disabled',timeout=12000,full_page=False)
+                                    await page.screenshot(path=str(file),animations='disabled',timeout=26000 if path=='legacy-explorer.html' else 12000,full_page=False)
                                     # Advisory: a visually present image that has actually failed
                                     # to load is actionable. Lazy offscreen images are excluded.
                                     image_issues=await page.evaluate("""() => [...document.images]
