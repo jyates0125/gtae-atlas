@@ -88,6 +88,8 @@ jobs:
           python scripts/test_atlas156_mobile_nav.py
           python scripts/test_atlas151_heist_gallery.py
           python scripts/test_atlas160_premium_headers.py
+          python scripts/test_atlas158_premium_experiences.py
+          python scripts/test_atlas161_quality_gate.py
           python scripts/test_atlas152_art.py
           node --check atlas93-global.js
           node --check leonida-hq.js
