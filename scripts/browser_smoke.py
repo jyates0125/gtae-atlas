@@ -16,6 +16,17 @@ PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
 PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
+CLASSIC_WORLDS={
+    'vc':('GTA Vice City','Properties'),
+    'iii':('GTA III · Liberty City','Unique stunt jumps'),
+    'vcs':('Vice City Stories','Red balloons'),
+    'lcs':('Liberty City Stories','Rampages'),
+    'ctw':('Chinatown Wars','Security cameras'),
+    'tlad':('The Lost and Damned','Gang wars'),
+    'tbogt':('The Ballad of Gay Tony','Base jumps'),
+}
+PAGES.extend('map-hub.html?game='+world for world in CLASSIC_WORLDS if world!='vc')
+
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
     def log_message(self,*args):pass
@@ -596,7 +607,11 @@ async def smoke():
                             if not failures and path.startswith('map-hub.html?game='):
                                 await pg.wait_for_selector('#classicFlatLink',timeout=7000)
                                 href=await pg.locator('#classicFlatLink').get_attribute('href')
-                                if href!='https://gtamap.io/gta-vice-city-map/':
+                                world=path.split('game=',1)[1]
+                                title,category=CLASSIC_WORLDS[world]
+                                if await pg.locator('#classicTitle').inner_text()!=title:
+                                    failures.append('Wrong classic workspace title for '+world)
+                                if world=='vc' and href!='https://gtamap.io/gta-vice-city-map/':
                                     failures.append('Wrong 1986 Vice City actual map reference: '+str(href))
                                 if await pg.locator('#classicMapBackground').count()!=1:
                                     failures.append('Existing personal map workbench missing')
@@ -620,6 +635,7 @@ async def smoke():
                                     await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
                                     await pg.locator('#classicAddPin').click()
                                     await pg.locator('#classicMapSurface').click(position={'x':bounds['width']/2,'y':bounds['height']/2})
+                                    await pg.locator('#markerCategory').select_option(label=category)
                                     await pg.locator('#markerName').fill('Local high-res marker test')
                                     await pg.locator('#markerSave').click()
                                     if await pg.locator('#pinCount').inner_text()!='1':
@@ -636,9 +652,20 @@ async def smoke():
                                         failures.append('Removing an imported image deleted personal markers')
                                     if await pg.locator('#classicMapSourceLink').count()!=1 or not await pg.locator('#classicMapSourceLink').get_attribute('href'):
                                         failures.append('Classic game-map image provenance link missing')
-                                    await pg.locator('#classicRetryMap').click()
-                                    await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='game-original'",timeout=10000)
+                                    if world=='vc':
+                                        await pg.locator('#classicRetryMap').click()
+                                        await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='game-original'",timeout=10000)
+                                    async with pg.expect_download() as exported:
+                                        await pg.locator('#classicExport').evaluate('(button)=>button.click()')
+                                    download=await exported.value
+                                    backup=Path(await download.path()).read_bytes()
+                                    payload=json.loads(backup)
+                                    if payload['world']!=world or len(payload['markers'])!=1:
+                                        failures.append('Classic notebook exported incorrect world or marker count')
                                     await pg.locator('#classicClear').click()
+                                    await pg.locator('#classicImport').set_input_files(
+                                        {'name':'notebook.json','mimeType':'application/json','buffer':backup})
+                                    await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='1'",timeout=7000)
                                 except Exception as exc:
                                     failures.append('Local classic high-resolution image regression: '+str(exc)[:300])
                             if not failures and path.startswith('atlas-activities.html'):
