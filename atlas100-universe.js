@@ -79,7 +79,18 @@ function card(r){const node=make('article','u-card');node.append(artwork(r));con
  if(r.kind==='vehicle'&&r.model&&r.scope!=='vi')actions.append(link('▣ Garage','atlas93-garage.html?addModel='+encodeURIComponent(r.model)));
  if(r.kind==='vehicle'||r.kind==='weapon'){const cmp=make('button','u-action u-muted-action',compare.some(x=>x.id===r.id)?'✓ Selected':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.some(x=>x.id===r.id)));cmp.onclick=()=>selectCompare(r);actions.append(cmp)}
  body.append(actions);if(r.kind==='character'&&r.imageCredit&&r.imageCredit.startsWith('https://')){const credit=link('Portrait source ↗',r.imageCredit);credit.className='u-portrait-source';body.append(credit)}node.append(body);return node}
-function syncURL(){const url=new URL(location.href);if(kind!==DEFAULT_KIND)url.searchParams.set('kind',kind);else url.searchParams.delete('kind');if(game!==DEFAULT_GAME)url.searchParams.set('game',game);else url.searchParams.delete('game');if(query)url.searchParams.set('q',query);else url.searchParams.delete('q');history.replaceState(null,'',url)}
+function syncURL(){
+ const url=new URL(location.href);
+ const options=[
+  ['kind',kind,DEFAULT_KIND],['game',game,DEFAULT_GAME],['q',query,''],
+  ['group',group,'all'],['sort',order,'name'],['research',researchOnly?'1':'',''],['view',view,'grid']
+ ];
+ for(const [key,value,defaultValue] of options){
+  if(value===defaultValue)url.searchParams.delete(key);
+  else url.searchParams.set(key,value);
+ }
+ if(url.href!==location.href)history.replaceState(history.state,'',url);
+}
 function draw(){document.body.dataset.activeWorld=game;document.body.dataset.activeKind=kind;filtered=match();syncURL();
  document.querySelectorAll('[data-world]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.world===game)));
  const title=$('resultsTitle');if(title)title.textContent=(kind==='all'?'All types':LABELS[kind]||'References')+' · '+(game==='all'?'All worlds':world(game));page=Math.max(0,Math.min(page,Math.ceil(filtered.length/LIMIT)-1));$('totalRecords').textContent=String(all.length);$('visibleRecords').textContent=String(filtered.length);$('selectedCompare').textContent=String(compare.length);$('resultsCount').textContent=filtered.length.toLocaleString()+' matching records';
@@ -121,6 +132,14 @@ async function loadJSON(url){
  failed.push(url);return null;
 }
 async function init(){const args=new URLSearchParams(location.search);kind=MODE==='all'?(args.get('kind')||DEFAULT_KIND):MODE;if(kind!=='all'&&!Object.keys(LABELS).includes(kind))kind=DEFAULT_KIND;game=WORLD_CODES.has(args.get('game'))?args.get('game'):DEFAULT_GAME;const paramsKind=$('filterKind');paramsKind.value=kind;$('filterGame').value=game;if(args.has('q')){query=(args.get('q')||'').slice(0,120);$('universeSearch').value=query;}
+ group=args.get('group')||'all';
+ const sort=$('sortBy');
+ const requestedSort=args.get('sort');
+ if(Array.from(sort.options).some(option=>option.value===requestedSort))order=requestedSort;
+ sort.value=order;
+ researchOnly=args.get('research')==='1';
+ $('researchOnly').checked=researchOnly;
+ view=args.get('view')==='list'?'list':'grid';
  document.querySelectorAll('[data-world]').forEach(b=>b.addEventListener('click',()=>{game=b.dataset.world;group='all';page=0;$('filterGame').value=game;updateGroups();draw()}));
  const [profile,seed,catalog,sets]=await Promise.all(['data/atlas-universe-profiles.json?v=130','atlas90-seed.json','atlas-catalog.json','atlas-collections.json'].map(loadJSON));all=index(profile,seed,catalog,sets);updateGroups();
  $('universeSearch').addEventListener('input',e=>{query=e.target.value.trim();page=0;draw()});paramsKind.addEventListener('change',e=>{kind=e.target.value;page=0;group='all';updateGroups();draw()});$('filterGame').addEventListener('change',e=>{game=e.target.value;group='all';page=0;updateGroups();draw()});

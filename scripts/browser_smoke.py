@@ -188,6 +188,28 @@ async def smoke():
                                                         failures.append('Comparison panel failed to open')
                                                     await pg.locator('#compareDialog .u-close').click()
                                                 else:failures.append('Comparison selection did not enable Compare')
+                                        await pg.locator('[data-world="vi"]').click()
+                                        group_select=pg.locator('#filterGroup')
+                                        group=await group_select.locator('option').nth(1).get_attribute('value')
+                                        await group_select.select_option(group)
+                                        await pg.locator('#sortBy').select_option('name-desc')
+                                        await pg.locator('#researchOnly').check()
+                                        await pg.locator('#listView').click()
+                                        shared=await ctx.new_page()
+                                        try:
+                                            await shared.goto(pg.url,wait_until='domcontentloaded')
+                                            await shared.wait_for_function(
+                                                "() => document.querySelector('#recordGrid').classList.contains('u-list')")
+                                            state=await shared.evaluate("""() => [
+                                                document.querySelector('#filterGame').value,
+                                                document.querySelector('#filterGroup').value,
+                                                document.querySelector('#sortBy').value,
+                                                document.querySelector('#researchOnly').checked
+                                            ]""")
+                                            if state!=['vi',group,'name-desc',True]:
+                                                failures.append('Shared database URL did not restore world, group, sort and research filter')
+                                        finally:
+                                            await shared.close()
                                         await pg.locator('#universeSearch').fill('unlikely-jura-000000')
                                         if await pg.locator('#recordGrid .u-card').count()!=0:
                                             failures.append('Universe search did not filter results')
