@@ -135,6 +135,38 @@ try:
    assert resumed['order'][-1]=='exit-6','Resume still ends at selected map pin'
    page.locator('.j186-action').filter(has_text='Remove finish').click()
    assert page.evaluate("window.teamJuraCayoPinRoute.getState().finish") is None
+   # Cayo 18.8: one set of visible symbols drives both map and route.
+   quick=page.locator('#j188-quickbar')
+   assert quick.count()==1,'Map-first quick flow must exist exactly once'
+   assert page.locator('.j188-preset').count()==6,'Six direct user categories, not an extra crowded toolbar'
+   page.locator('.j188-preset[data-preset="equipment"]').click()
+   categories=page.evaluate("window.teamJuraCayoPinRoute.getState().categories")
+   assert set(categories)=={'bolts','grapple','clothes','truck','powder'},categories
+   assert page.locator('.j180-legend-row[data-cat="entry"]').get_attribute('aria-pressed')=='false'
+   assert page.locator('.j180-legend-row[data-cat="bolts"]').get_attribute('aria-pressed')=='true'
+   visible_cats=page.locator('.j181-hotspot:not([hidden])').evaluate_all(
+    '(nodes)=>[...new Set(nodes.map(n=>n.dataset.category))]')
+   assert set(visible_cats).issubset(set(categories)),visible_cats
+   # The original marker legend is the same selection; manual changes update the route.
+   page.locator('.j180-legend-row[data-cat="entry"]').click()
+   changed=page.evaluate("window.teamJuraCayoPinRoute.getState().categories")
+   assert 'entry' in changed and 'bolts' in changed,changed
+   page.locator('.j188-preset[data-preset="all"]').click()
+   assert len(page.evaluate("window.teamJuraCayoPinRoute.getState().categories"))==14
+   assert page.locator('.j180-legend-row[aria-pressed="true"]').count()==14
+   assert page.locator('.j186-map-jump').is_hidden(),'No duplicate header route buttons'
+   # Quick start stays on the island when a player chooses the origin.
+   page.locator('#j188-start').click()
+   assert page.locator('#j186-pick-start').get_attribute('aria-pressed')=='true'
+   page.locator('.j181-hotspot[data-category="control"]').first.click()
+   page.locator('.j185-cluster-choice').filter(has_text='Airstrip infiltration').click()
+   assert page.evaluate("window.teamJuraCayoPinRoute.getState().start")=='entry-0'
+   assert page.locator('#j188-start').get_attribute('aria-pressed')=='false'
+   assert 'Start:' in page.locator('#j188-status').inner_text()
+   # Sources are available at point of use without obscuring map controls.
+   assert page.locator('.j188-provenance a[href="./atlas-credits.html"]').count()==1
+   proof.mkdir(parents=True,exist_ok=True)
+   quick.screenshot(path=str(proof/('cayo-188-quickbar-'+kind+'.png')),animations='disabled')
    # Phone viewport should not gain horizontal scrolling from the new panel.
    if kind=='phone':
     bad=page.locator('#j186-route').evaluate('(e)=>e.scrollWidth>e.clientWidth+4')
