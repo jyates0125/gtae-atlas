@@ -36,6 +36,7 @@ jobs:
           python scripts/test_atlas136_status.py
           python scripts/test_atlas139_nav_focus.py
           python scripts/test_social_icons_131.py
+          python scripts/test_atlas153_welcome_social.py
           python scripts/test_account_131.py
           python scripts/test_atlas138_supabase.py
           python scripts/test_atlas141_leonida_research.py
