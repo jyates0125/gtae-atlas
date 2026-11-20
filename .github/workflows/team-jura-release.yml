@@ -99,6 +99,8 @@ jobs:
           python scripts/test_atlas168_heist_guides.py
           python scripts/test_atlas169_heist_views.py
           python scripts/test_atlas170_cayo_unified.py
+          python scripts/test_atlas171_cayo_board.py
+          node --check atlas171-cayo-board.js
           python scripts/test_atlas171_research_map.py
           python scripts/test_atlas172_research_map.py
           node --check atlas164-heist-workspace.js
