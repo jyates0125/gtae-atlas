@@ -16,6 +16,13 @@ assert 'canvas.getContext' in src
 assert "teamjura-heist-focus-v1:" in src and 'localStorage.setItem' in src
 assert 'ILLUSTRATIVE POSITIONS · NOT GEOREFERENCED' in src and 'not real travel paths' in src
 assert 'Chances & Progress' not in src and 'Challenges & progress' in src
+from hashlib import sha256
+files=[p/'art'/('jura167-map-'+slug+'.webp') for slug in (*ids,'heist-hq')]
+assert len(files)==16
+assert all(f.is_file() and f.stat().st_size>20000 for f in files)
+assert len({sha256(f.read_bytes()).hexdigest() for f in files})==16
+assert "photo.src='./art/jura167-map-'+id+'.webp'" in src and 'photoReady' in src
+
 assert 'jura159-heist-' in loader and 'atlas167-heist-focus.js?v=167' in loader
 assert 'atlas167-heist-focus.css?v=167' in loader
 assert 'teamjura-heist-plan-v1:' in old and "id==='cayo-perico'?'./atlas-cayo.html':'./atlas-online.html'" in old

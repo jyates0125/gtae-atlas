@@ -116,11 +116,24 @@ if(cover)cover.insertAdjacentElement('afterend',sec);else box.prepend(sec);
 function seed(s){let h=2166136261;for(const ch of s)h=Math.imul(h^ch.charCodeAt(0),16777619);return h>>>0}
 let randSeed=seed(id),rando=()=>{randSeed=(Math.imul(randSeed,1664525)+1013904223)>>>0;return randSeed/4294967296};
 const ctx=canvas.getContext('2d');const w=1100,h=660;
+let photoReady=false;
+const photo=new Image();
+photo.onload=()=>{photoReady=true;world.style.backgroundImage='linear-gradient(180deg,rgba(6,12,34,.14),rgba(6,7,24,.26)),url("./art/jura167-map-'+id+'.webp")';world.style.backgroundSize='cover';world.style.backgroundPosition='center';paint()};
+photo.onerror=()=>{photoReady=false;world.style.backgroundImage='none';paint()};
+photo.decoding='async';photo.src='./art/jura167-map-'+id+'.webp';
 const scheme={urban:['#1f2847','#3b324b','#586171'],prison:['#1b283b','#314758','#586578'],coast:['#11394b','#315864','#61706b'],industrial:['#302f42','#48465b','#77727d'],regional:['#282f47','#405272','#6e6681'],desert:['#403447','#735c67','#a68c72'],island:['#093950','#24766b','#497c56'],farm:['#343b35','#647051','#9f8a60'],casino:['#2d213e','#6d376d','#b27391'],cultural:['#302741','#574566','#95817c']};
 const pal=scheme[config.kind]||scheme.urban;
 function line(x1,y1,x2,y2,width,color){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
 function rect(x,y,bw,bh,color,stroke){ctx.fillStyle=color;ctx.fillRect(x,y,bw,bh);if(stroke){ctx.lineWidth=3;ctx.strokeStyle=stroke;ctx.strokeRect(x,y,bw,bh)}}
 function drawTerrain(){
+ if(photoReady){
+  ctx.clearRect(0,0,w,h);
+  for(let i=0;i<=11;i++){line(i*100,0,i*100,h,1,'#f8e8f433');}
+  for(let i=0;i<=10;i++){line(0,i*66,w,i*66,1,'#f8e8f427');}
+  ctx.font='800 18px system-ui';ctx.fillStyle='#ffe2a9';ctx.fillText('ORIGINAL ELARIO CONCEPT · GAME GEOGRAPHY UNVERIFIED',23,35);
+  ctx.font='600 14px system-ui';ctx.fillText('PERSONAL ROUTE PLANNING · APPROXIMATE PIN POSITIONS',23,628);
+  return;
+ }
  const bg=ctx.createLinearGradient(0,0,w,h);bg.addColorStop(0,pal[0]);bg.addColorStop(.58,pal[1]);bg.addColorStop(1,pal[0]);ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
  randSeed=seed(id);ctx.save();
  // Distinct site plan types, illustrated only. No false real-world coordinates.
