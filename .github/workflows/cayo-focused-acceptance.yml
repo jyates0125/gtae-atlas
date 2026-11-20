@@ -50,7 +50,7 @@ jobs:
           python scripts/test_atlas181_cayo_hotspots.py
           python scripts/test_atlas184_cayo_visible_symbols.py
           python scripts/test_atlas185_cayo_polish.py
-          python scripts/test_atlas186_cayo_route.py scripts/test_atlas186_cayo_route.py scripts/test_atlas186_route_browser.py
+          python scripts/test_atlas186_cayo_route.py
       - name: Build actual Cloudflare Pages payload
         run: |
           node scripts/build-cloudflare.cjs
