@@ -262,13 +262,15 @@ function autoRoute(){
 function appendNearest(){
  const map=byId();if(!map.has(state.start)){render('Tap a starting pin first.');return}
  if(!state.order.length)state.order=[state.start];
- const last=map.get(state.order.at(-1))||map.get(state.start);
+ const lastId=state.order.filter(id=>id!==state.finish).at(-1);
+ const last=map.get(lastId)||map.get(state.start);
  const candidates=availableTargets(map).filter(n=>!state.order.includes(n.id));
  if(!candidates.length){render('No more eligible locations for the selected categories.');return}
  candidates.sort((a,b)=>distance(last,a)-distance(last,b)||a.id.localeCompare(b.id));
  if(state.order.length>=100){render('Maximum 100 stops reached.');return}
- state.order.push(candidates[0].id);
- state.mode='manual';mode.value='manual';persist();render('Added '+candidates[0].label+' as the nearest available next stop.');
+ if(state.finish&&state.order.includes(state.finish))state.order.splice(state.order.indexOf(state.finish),0,candidates[0].id);
+ else state.order.push(candidates[0].id);
+ state.mode='manual';mode.value='manual';persist();render('Added '+candidates[0].label+' before the selected finish.');
 }
 function setFinish(id){
  const target=sourceFor(id);
@@ -299,7 +301,7 @@ function addStop(id){
 }
 function shift(id,delta){
  const index=state.order.indexOf(id),dest=index+delta;
- if(index<1||dest<1||dest>=state.order.length)return;
+ if(index<1||dest<1||dest>=state.order.length||id===state.finish||state.order[dest]===state.finish)return;
  [state.order[index],state.order[dest]]=[state.order[dest],state.order[index]];
  state.mode='manual';mode.value='manual';persist();render();
 }
@@ -356,8 +358,8 @@ function render(message){
    controls.append(done);
    row.classList.toggle('j186-visited',state.completed.includes(id));
   }
-  if(i>1){const up=button('↑','j186-mini',()=>shift(id,-1));up.setAttribute('aria-label','Move '+node.label+' earlier');controls.append(up);}
-  if(i>0&&i<state.order.length-1){const down=button('↓','j186-mini',()=>shift(id,1));down.setAttribute('aria-label','Move '+node.label+' later');controls.append(down);}
+  if(i>1&&id!==state.finish){const up=button('↑','j186-mini',()=>shift(id,-1));up.setAttribute('aria-label','Move '+node.label+' earlier');controls.append(up);}
+  if(i>0&&i<state.order.length-1&&state.order[i+1]!==state.finish){const down=button('↓','j186-mini',()=>shift(id,1));down.setAttribute('aria-label','Move '+node.label+' later');controls.append(down);}
   if(i>0){const del=button('×','j186-mini',()=>{if(id===state.finish)state.finish=null;
     state.order=state.order.filter(x=>x!==id);state.mode='manual';mode.value='manual';persist();render();});del.setAttribute('aria-label','Remove '+node.label+' from route');controls.append(del);}
   row.append(ordinal,show,category,controls);list.append(row);
@@ -367,7 +369,7 @@ function render(message){
 const watcher=new MutationObserver(()=>{
  // The daily chest module replaces buttons after each 06:00 UTC reset;
  // re-bind the route line to the refreshed button positions, not old nodes.
- if(state.order.some(id=>id.startsWith('chest-'))||state.start?.startsWith('chest-'))render();
+ if(state.order.some(id=>id.startsWith('chest-'))||state.start?.startsWith('chest-')||state.finish?.startsWith('chest-'))render();
 });
 watcher.observe(chests,{childList:true});
 const manualStart=()=>{panel.scrollIntoView({block:'nearest',behavior:'smooth'})};
