@@ -13,7 +13,7 @@
    menu.addEventListener('click',e=>{if(e.target.closest('a')){menu.dataset.open='false';btn.setAttribute('aria-expanded','false')}});
    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.dataset.open==='true'){menu.dataset.open='false';btn.setAttribute('aria-expanded','false');btn.focus()}});
  }
- function makeWorld(w,short){const a=E('a',short?'rail-world':'world-card');a.href='./'+w.href;a.dataset.id=w.id;
+ function makeWorld(w,short,directoryCover=false){const a=E('a',short?'rail-world':'world-card');a.href='./'+w.href;a.dataset.id=w.id;
    if(short){const emblem=E('span','rail-emblem',({'story':'V','online':'◉','vi':'VI','cayo':'☀','iv':'IV','sa':'SA'}[w.id]||'◆'));const label=E('span','rail-label',w.name);const detail=E('small','',w.short);label.append(detail);a.append(emblem,label);return a}
    const frame=E('span','world-art-frame'),blur=E('img','world-art-blur'),im=E('img','world-art-main');
    // Use only bundled, approved Team Jura concept covers: third-party box art,
@@ -27,7 +27,7 @@
    for(const image of [blur,im]){image.loading='lazy';image.decoding='async';image.referrerPolicy='no-referrer'}
    // The soft backdrop is a small, local concept asset: never download the full remote cover twice.
    blur.src=w.group==='featured'?'./art/atlas140-'+w.id+'-concept.svg':'./art/'+w.art;
-   if(w.group==='featured'&&(w.id==='story'||w.id==='online'))im.loading='eager';
+   if(directoryCover||(w.group==='featured'&&(w.id==='story'||w.id==='online')))im.loading='eager';
    blur.alt='';blur.setAttribute('aria-hidden','true');
    im.onerror=()=>{if(sourceIndex<sources.length-1){sourceIndex++;setCover()}else{im.onerror=null;frame.dataset.cover='unavailable'}};
    frame.append(blur,im);setCover();
@@ -52,7 +52,7 @@
  function directory(){const feature=$('#directoryFeatured'),additional=$('#directoryAdditional'),inp=$('#worldSearch'),count=$('#worldCount'),buttons=$$('[data-world-filter]');if(!feature||!additional)return;
    let mode='all';function paint(){feature.replaceChildren();additional.replaceChildren();const q=(inp?.value||'').trim().toLocaleLowerCase();let total=0;
      for(const w of worlds){const typeOk=mode==='all'||(mode==='interactive'?(w.kind==='interactive'||w.kind==='schematic'):mode==='research'?w.kind==='research':mode==='limited'?w.kind==='limited':w.kind==='gateway');if(!typeOk||!([w.name,w.game,w.short,w.grade,w.note,...w.features].join(' ').toLowerCase().includes(q)))continue;
-       const card=makeWorld(w,false);card.classList.add('directory-card');const features=E('p','',w.features.join(' · '));const caption=E('p','',w.note);caption.style.fontSize='10px';card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
+       const card=makeWorld(w,false,true);card.classList.add('directory-card');const features=E('p','',w.features.join(' · '));const caption=E('p','',w.note);caption.style.fontSize='10px';card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
      if(count)count.textContent=total+' of '+worlds.length+' destinations';if($('#noWorlds'))$('#noWorlds').hidden=total!==0;
      $('#mainWorlds').hidden=feature.children.length===0;$('#otherWorlds').hidden=additional.children.length===0;
    }
