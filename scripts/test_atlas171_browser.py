@@ -54,6 +54,24 @@ try:
         assert page.locator('.j181-hotspot').count()>=50,'Reference colored map icons must have clickable hotspots'
         assert page.locator('.j167-pins').evaluate('(x)=>getComputedStyle(x).display')=='none','Generic heist pins must not be visible in Cayo'
         assert page.locator('.j180-ref-layer').evaluate('(x)=>getComputedStyle(x).display')=='none','Generic misplaced reference pins must be hidden'
+        # Full desktop legend stays visible; phone legend is compact by default.
+        polish=page.locator('#j185-polish')
+        assert polish.count()==1,'Cayo 18.5 polish loaded'
+        pan=page.locator('.j185-pan')
+        assert pan.count()==1 and pan.get_attribute('aria-pressed')=='false','Pan toggle is discoverable'
+        pan.click()
+        assert pan.get_attribute('aria-pressed')=='true','Native map move mode turns on'
+        assert page.locator('.j167-viewport').evaluate("(e)=>e.style.touchAction")=='none','Pan must capture touch moves'
+        pan.click()
+        assert pan.get_attribute('aria-pressed')=='false','Pan mode turns back off'
+        assert page.locator('.j167-viewport').evaluate("(e)=>e.style.touchAction")=='pan-y','Normal page scrolling restored'
+        assert page.locator('.j167-viewport').evaluate("(e)=>abs(e.getBoundingClientRect().width/e.getBoundingClientRect().height-1284/1262)<0.025".replace('abs(', 'Math.abs(')),'Island aspect ratio is preserved'
+        if kind=='mobile':
+            toggle=page.get_by_role('button',name='Show marker filters')
+            assert toggle.count()==1 and toggle.is_visible(),'Compact filter control visible on phone'
+            assert page.locator('.j180-legend-rows').is_hidden(),'Phone map starts before expanded filter list'
+            toggle.click()
+            assert page.locator('.j180-legend-rows').is_visible(),'Phone filters can expand'
         legend=page.locator('.j180-legend-row').filter(has_text='Grappling equipment')
         assert legend.count()==1,'Grappling category must match the legend'
         legend.click()
@@ -62,6 +80,9 @@ try:
         assert page.locator('.j181-hotspot[data-category="grapple"]:visible').count()>0,'Legend restores grappling hotspots'
         page.locator('.j181-hotspot[data-category="entry"]').first.click()
         assert page.locator('.j180-pin-info').is_visible(),'Existing colorful source icon click opens map details'
+        assert page.locator('.j180-pin-info').evaluate("(e)=>getComputedStyle(e).position==='fixed'"),'Marker details stay visible as map scrolls'
+        page.keyboard.press('Escape')
+        assert page.locator('.j180-pin-info').is_hidden(),'Escape closes marker details'
         page.locator('#j180-shell').screenshot(path=str(path/('cayo-180-map-'+kind+'.png')),animations='disabled',timeout=35000)
         page.locator('.j180-menu-link').filter(has_text='Entry & exit planning').click()
         page.locator('#j171-cayo-board').wait_for(state='visible',timeout=10000)
@@ -92,7 +113,15 @@ try:
             assert not shell_overflow,'Flagship map shell exceeds phone viewport'
         page.locator('#j171-cayo-board').scroll_into_view_if_needed()
         page.screenshot(path=str(path/('cayo-171-'+kind+'.png')),full_page=False,animations='disabled')
+        if kind=='desktop':
+            backup=context.new_page()
+            backup.route('**/wikiassets.net/**',lambda route: route.abort())
+            backup.goto(url,wait_until='domcontentloaded',timeout=50000)
+            backup.wait_for_function("document.querySelector('#j167-heist-map')?.dataset.mapAsset === 'local-trace'",timeout=30000)
+            assert backup.locator('.j181-hotspot .j183-svg').count()>=50,'Offline map retains the same clickable colored icons'
+            assert backup.locator('.j180-chest').count()==19,'Offline fallback retains all 19 chest references'
+            backup.close()
         context.close();browser.close()
-    print('Cayo 17.1 browser interactions, route, save and art PASS on '+engine)
+    print('Cayo 18.5 desktop and mobile interactions, map pan, filters, popup, backup and art PASS on '+engine)
 finally:
  server.shutdown()
