@@ -105,6 +105,10 @@ jobs:
           python scripts/test_atlas184_cayo_visible_symbols.py
           python scripts/test_atlas185_cayo_polish.py
           python scripts/test_atlas186_cayo_route.py
+          python scripts/test_atlas192_world_completion.py
+          node --check atlas90-gallery.js
+          node --check atlas192-weapons6.js
+          node --check film/atlas192-storyboard.js
           python scripts/test_atlas190_marker_parity.py
           python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py
           node --check atlas-iv.js
