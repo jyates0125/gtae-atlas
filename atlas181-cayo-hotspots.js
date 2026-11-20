@@ -146,7 +146,7 @@ function update(){
  const query=String(focus.querySelector('.j167-search')?.value||'').trim().toLowerCase();
  const mapSource=focus.dataset.mapSource;
  for(const item of allItems){
-  const modeOk=mapSource!=='loading'&&(!item.view||item.view===mapSource);
+  const modeOk=mapSource!=='loading'&&(!item.view||item.view===mapSource||focus.dataset.mapAsset==='local-trace');
   const matches=!query||(item.name+' '+item.cat+' '+(descriptions[item.cat]||'')).toLowerCase().includes(query);
   item.button.hidden=!modeOk||hiddenCats.has(item.cat)||!matches;
   item.button.classList.toggle('j181-noted',visited.has(item.key));
@@ -165,7 +165,7 @@ records.forEach(([cat,x,y,name,poi,view],i)=>{
  const key=cat+'-'+i;
  const glyph=categories.find(c=>c[0]===cat)?.[2]||'●';
  const b=button(glyph,'j181-hotspot',()=>popup(name,descriptions[cat],allItems[i]));
- b.dataset.category=cat;b.dataset.markerId=key;b.style.left=x+'%';b.style.top=y+'%';
+ b.dataset.category=cat;b.dataset.markerId=key;b.style.left=x+'%';b.style.top=y+'%';b.dataset.glyph=categories.find(c=>c[0]===cat)?.[2]||'•';
  b.setAttribute('aria-label',categories.find(c=>c[0]===cat)?.[1]+': '+name+' (approximate)');
  b.title=name+' · '+(view==='enhanced'?'enhanced visual reference':'click map symbol for details');
  const item={key,name,cat,poi,view,button:b};allItems.push(item);layer.append(b);
