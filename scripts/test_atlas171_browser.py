@@ -29,6 +29,13 @@ try:
         context=browser.new_context(viewport={'width':width,'height':height},device_scale_factor=1)
         page=context.new_page()
         page.goto(url,wait_until='domcontentloaded',timeout=50000)
+        # The modern site header remains usable, but the old global floating
+        # nav must not obstruct Cayo map search or its marker legend.
+        assert page.locator('header nav').count()>0,'Primary site navigation is preserved'
+        if page.locator('#j89-shell').count():
+            assert page.locator('#j89-shell').evaluate("(e)=>getComputedStyle(e).display==='none'"),'Legacy All Pages dock must not cover the Cayo map'
+        if page.locator('#j98-flow').count():
+            assert page.locator('#j98-flow').evaluate("(e)=>getComputedStyle(e).display==='none'"),'Legacy map dock must not cover Cayo mission controls'
         # Atlas 18 flagship starts in map-first mode; open the linked planning drawer.
         page.locator('#j180-shell').wait_for(state='visible',timeout=30000)
         page.wait_for_function("document.querySelectorAll('.j180-chest').length === 19",timeout=20000)
