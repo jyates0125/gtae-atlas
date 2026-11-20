@@ -95,7 +95,10 @@ if(routeActions){
  }
 }
 advanced.append(extra);
-if(routeActions)routeActions.before(advanced);
+// Keep DOM/keyboard order aligned with the visible player journey.
+const routeList=details.querySelector('.j186-stops');
+if(routeList)routeList.after(advanced);
+else if(routeActions)routeActions.after(advanced);
 const chestEligibility=details.querySelector('select[aria-label="Treasure chest route eligibility"]');
 document.body.classList.add('j188-cayo-smooth');
 
