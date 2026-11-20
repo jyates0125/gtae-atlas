@@ -93,7 +93,7 @@ body.j180-cayo.j188-cayo-smooth .j186-panel .j186-head h3{
  font-size:clamp(19px,2vw,24px);
 }
 body.j180-cayo.j188-cayo-smooth .j188-advanced{
- order:6;display:block;
+ display:block;
  border:1px solid #84638e;border-radius:10px;
  background:#271a37;margin:2px 0 9px;overflow:hidden;
 }
@@ -112,13 +112,13 @@ body.j180-cayo.j188-cayo-smooth .j188-advanced[open]>summary{
 body.j180-cayo.j188-cayo-smooth .j188-advanced-actions{
  display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 0;
 }
-body.j180-cayo.j188-cayo-smooth .j186-panel .j186-actions{order:2;margin:4px 0 8px}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-actions{margin:4px 0 8px}
 body.j180-cayo.j188-cayo-smooth .j186-panel .j186-stops{
- order:3;max-height:min(520px,66dvh);
+ max-height:min(520px,66dvh);
 }
-body.j180-cayo.j188-cayo-smooth .j186-panel .j186-destination{order:1}
-body.j180-cayo.j188-cayo-smooth .j186-panel .j186-status{order:0}
-body.j180-cayo.j188-cayo-smooth .j186-panel .j186-caveat{order:5}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-destination{margin-bottom:6px}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-status{margin-bottom:7px}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-caveat{margin-top:3px}
 body.j180-cayo.j188-cayo-smooth .j188-advanced>summary:focus-visible{
  outline:3px solid #ffe0a3;outline-offset:-3px;
 }
