@@ -22,11 +22,12 @@
    // with the separate Atlas 14.0 approved concept illustration.
    const featuredConcept=w.group==='featured' && typeof w.coverFallback==='string'
      && /^\.\/art\/atlas140-[a-z-]+-concept\.svg$/.test(w.coverFallback)?w.coverFallback:null;
-   const sources=[featuredConcept,'./art/'+w.art].filter(Boolean);let sourceIndex=0;
-   const setCover=()=>{im.src=sources[sourceIndex];im.alt='Original Team Jura fan illustration for '+w.name+'; not a screenshot or exact map';frame.dataset.cover='original-elario'};
+   const premiumCover=typeof w.coverSrc==='string' && /^\.\/art\/jura155-(story|online|vi|cayo)\.webp$/.test(w.coverSrc)?w.coverSrc:null;
+   const sources=[premiumCover,featuredConcept,'./art/'+w.art].filter(Boolean);let sourceIndex=0;
+   const setCover=()=>{im.src=sources[sourceIndex];im.alt=sourceIndex===0&&premiumCover?'Original Elario Studios cinematic fan concept artwork for '+w.name+'; not official gameplay':'Original Team Jura fan illustration for '+w.name+'; not a screenshot or exact map';frame.dataset.cover=sourceIndex===0&&premiumCover?'original-cinematic':'original-elario'};
    for(const image of [blur,im]){image.loading='lazy';image.decoding='async';image.referrerPolicy='no-referrer'}
    // The soft backdrop is a small, local concept asset: never download the full remote cover twice.
-   blur.src=w.group==='featured'?'./art/atlas140-'+w.id+'-concept.svg':'./art/'+w.art;
+   blur.src=premiumCover||(w.group==='featured'?'./art/atlas140-'+w.id+'-concept.svg':'./art/'+w.art);
    if(directoryCover||(w.group==='featured'&&(w.id==='story'||w.id==='online')))im.loading='eager';
    blur.alt='';blur.setAttribute('aria-hidden','true');
    im.onerror=()=>{if(sourceIndex<sources.length-1){sourceIndex++;setCover()}else{im.onerror=null;frame.dataset.cover='unavailable'}};

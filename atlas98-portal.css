@@ -51,3 +51,8 @@
   #mainWorlds,#otherWorlds,
   #featured,#featuredGrid{scroll-margin-top:205px}
 }
+
+/* Atlas 15.5: fill featured cards with their own locally generated premium raster artwork; fallback remains intact. */
+.world-card .world-art-frame[data-cover="original-cinematic"] .world-art-main{object-fit:cover;object-position:center center;filter:none}
+.world-card .world-art-frame[data-cover="original-cinematic"] .world-art-blur{filter:blur(22px) brightness(.56) saturate(1.15)}
+.world-card .world-art-frame[data-cover="original-cinematic"]{background:#1a122e}

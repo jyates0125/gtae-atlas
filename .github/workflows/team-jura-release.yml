@@ -76,6 +76,7 @@ jobs:
           python scripts/test_atlas146_launch_truth.py
           python scripts/test_atlas147_garage_mobile.py
           python scripts/test_atlas148_local_covers.py
+          python scripts/test_atlas155_premium_art.py
           python scripts/test_atlas149_leonida_toolbar.py
           python scripts/test_atlas154_map_zoom.py
           python scripts/test_atlas151_heist_gallery.py

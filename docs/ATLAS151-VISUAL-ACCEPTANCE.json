@@ -25,5 +25,12 @@
     "tlad": null,
     "tbogt": null
   },
-  "note": "Staging only. Every world must have a distinct local source-cleared cinematic artwork, reviewed visually. Do not mark approved merely because CI/browser functionality passes."
+  "note": "Staging-only: eight distinct Elario premium raster concepts committed. Nine classic-world premium covers and 15 individual heist premium artwork remain outstanding, alongside full device QA and owner approval. Do NOT merge to development yet.",
+  "staging_premium_webp_assets": 8,
+  "staging_premium_cover_worlds": [
+    "story",
+    "online",
+    "vi",
+    "cayo"
+  ]
 }
