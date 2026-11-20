@@ -86,6 +86,16 @@ function fromMarker(event){
  }
 }
 focus.addEventListener('click',fromMarker);
+// The marker card is fixed to stay readable while inspecting the island,
+// but must not obstruct the route planner below the map when scrolling.
+function dismissCardOffMap(){
+ if(info.hidden)return;
+ const rect=frame.getBoundingClientRect();
+ if(rect.bottom<Math.max(60,innerHeight*.2)||rect.top>innerHeight*.85)
+  info.hidden=true;
+}
+window.addEventListener('scroll',dismissCardOffMap,{passive:true});
+window.addEventListener('resize',dismissCardOffMap,{passive:true});
 info.addEventListener('keydown',event=>{
  if(event.key!=='Escape')return;
  const close=info.querySelector('.j180-info-close');
