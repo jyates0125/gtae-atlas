@@ -88,6 +88,29 @@ async def smoke():
                             if missing:failures.extend('Missing local response: '+e for e in missing)
                             if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
 
+                            # Site-wide release candidate: the ONE universal page-directory
+                            # button must actually open, filter, and dismiss on *every*
+                            # published page. This is an interaction, not a source assertion.
+                            if not failures:
+                                try:
+                                    nav=pg.locator('#j132-nav-toggle')
+                                    await nav.wait_for(state='visible',timeout=4500)
+                                    await nav.click(timeout=4500)
+                                    drawer=pg.locator('#j132-nav-drawer')
+                                    if not await drawer.is_visible():
+                                        failures.append('All Pages button did not open navigation')
+                                    else:
+                                        await pg.locator('#j132-search').fill('My Garage')
+                                        if await drawer.locator('a[href="./atlas93-garage.html"]').count()!=1:
+                                            failures.append('All Pages search omitted My Garage')
+                                        await pg.keyboard.press('Escape')
+                                        if await drawer.is_visible():
+                                            failures.append('All Pages Escape did not dismiss navigation')
+                                        if await nav.get_attribute('aria-expanded')!='false':
+                                            failures.append('All Pages button did not reset aria-expanded')
+                                except Exception as ex:
+                                    failures.append('All Pages universal control failed: '+str(ex)[:200])
+
                             # Atlas 17.2: the separate Leonida Research page must be usable
                             # on an actual mobile viewport, with a reversible full-size map.
                             if path=='atlas-research.html' and not failures:
