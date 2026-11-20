@@ -112,3 +112,19 @@ body.j180-cayo.j185-cayo-polished #j89-shell,
 body.j180-cayo.j185-cayo-polished #j98-flow{
  display:none!important
 }
+
+/* The newer Atlas 13.2 all-pages navigator is not the 8.9 legacy dock.
+   It is necessary as a deep site index, but fixed top-right on desktop it
+   covered Cayo search/markers. For Cayo only place it AFTER the page footer
+   in normal document flow, with its drawer opening upward on demand. */
+body.j180-cayo.j185-cayo-polished .j132-nav{
+ position:relative!important;
+ top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;
+ width:max-content!important;max-width:calc(100% - 24px)!important;
+ margin:16px auto 20px!important;z-index:100!important
+}
+body.j180-cayo.j185-cayo-polished .j132-nav #j132-nav-drawer{
+ position:absolute!important;top:auto!important;bottom:calc(100% + 10px)!important;
+ right:0!important;left:auto!important;
+ max-height:min(72dvh,600px)!important
+}
