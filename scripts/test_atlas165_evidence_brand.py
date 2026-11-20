@@ -15,7 +15,9 @@ for page,asset,body in [('atlas-coverage.html','jura165-coverage.webp','j127-cov
  assert image[:4]==b'RIFF' and image[8:12]==b'WEBP' and len(image)>60000
  hashes.add(sha256(image).hexdigest())
  assert body in h and 'atlas165-premium-evidence.css?v=165' in h
- assert 'src="./art/'+asset+'"' in h and 'not a verified gameplay map' in h.lower() if page=='atlas-coverage.html' else 'not real georeferenced game data' in h.lower()
+ assert 'src="./art/'+asset+'"' in h, asset
+ disclaimer='not a verified gameplay map' if page=='atlas-coverage.html' else 'not real georeferenced game data'
+ assert disclaimer in h.lower(), page
  assert 'class="j165-feature-image"' in h
  assert 'atlas-credits.html' in h and 'maps.html' in h
 assert len(hashes)==2
