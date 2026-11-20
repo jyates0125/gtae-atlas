@@ -254,8 +254,12 @@ function selectStop(id){
 }
 function render(message){
  const map=byId();
- state.order=[...new Set(state.order)].filter(id=>map.has(id));
- if(state.start&&!map.has(state.start)){state.start=null;state.order=[]}
+ // Chests arrive via a separate async data request. Preserve saved or
+ // shared chest starts while the 19 references have not loaded.
+ const chestReady=chests.querySelectorAll('.j180-chest[data-chest]').length===19;
+ const pending=id=>!chestReady&&id.startsWith('chest-');
+ state.order=[...new Set(state.order)].filter(id=>map.has(id)||pending(id));
+ if(state.start&&!map.has(state.start)&&!pending(state.start)){state.start=null;state.order=[]}
  if(state.start&&state.order[0]!==state.start){
   state.order=[state.start,...state.order.filter(x=>x!==state.start)];
  }
@@ -302,6 +306,18 @@ const manualStart=()=>{panel.scrollIntoView({block:'nearest',behavior:'smooth'})
 const jump=button('Build a route','j186-map-jump',manualStart);
 const headToolbar=stage.querySelector('.j180-map-header .j180-modes');
 headToolbar?.append(jump);
+// The old header "Route" view was a conceptual 16.x second route plan. Cayo
+// now uses this ONE real colored-pin planner. Leave the game map visible.
+const oldRouteMode=headToolbar?.querySelector('.j180-mode[data-mode="route"]');
+if(oldRouteMode){
+ oldRouteMode.textContent='Plan route';
+ oldRouteMode.title='Use the route planner on this same island map';
+ oldRouteMode.addEventListener('click',event=>{
+  event.preventDefault();event.stopImmediatePropagation();
+  window.teamJuraHeistViews?.activate('original');
+  panel.scrollIntoView({block:'start',behavior:'smooth'});
+ },true);
+}
 // Integrate with BOTH map marker systems. The original colorful hotspot
 // and chest scripts build the popup first; we append route actions afterward.
 // In crowded areas, the 18.5 chooser invokes the chosen marker's click, so
