@@ -1,0 +1,934 @@
+{
+  "schema": 1,
+  "version": "19.5",
+  "generatedFrom": "Bundled GTADB community research snapshots. Source labels are not gameplay/collectible categories; a record may have multiple labels.",
+  "sources": [
+    {
+      "game": "4",
+      "title": "GTA IV · Liberty City",
+      "scope": "community-sourced landmark research, not collectible verification",
+      "source": "GTADB.ORG and contributors",
+      "sourceUrl": "https://github.com/rolux/gtadb.org/tree/c3afd7b46b68fad64f831fc9ed2a29e8f0543bc3/map/data/4",
+      "license": "CC BY 4.0",
+      "sourceUpdated": "2026-11-15T10:06:05Z",
+      "sourceCommit": "c3afd7b46b68fad64f831fc9ed2a29e8f0543bc3",
+      "records": 2650,
+      "mapped": 2648,
+      "searchOnly": 2,
+      "tags": [
+        {
+          "label": "unclassified",
+          "tagged": 2355,
+          "mapped": 2354,
+          "searchOnly": 1
+        },
+        {
+          "label": "retail",
+          "tagged": 89,
+          "mapped": 89,
+          "searchOnly": 0
+        },
+        {
+          "label": "residential",
+          "tagged": 73,
+          "mapped": 73,
+          "searchOnly": 0
+        },
+        {
+          "label": "restaurant",
+          "tagged": 23,
+          "mapped": 23,
+          "searchOnly": 0
+        },
+        {
+          "label": "transportation",
+          "tagged": 19,
+          "mapped": 18,
+          "searchOnly": 1
+        },
+        {
+          "label": "leisure",
+          "tagged": 16,
+          "mapped": 16,
+          "searchOnly": 0
+        },
+        {
+          "label": "renovated",
+          "tagged": 14,
+          "mapped": 14,
+          "searchOnly": 0
+        },
+        {
+          "label": "reused",
+          "tagged": 12,
+          "mapped": 12,
+          "searchOnly": 0
+        },
+        {
+          "label": "government",
+          "tagged": 11,
+          "mapped": 11,
+          "searchOnly": 0
+        },
+        {
+          "label": "office",
+          "tagged": 10,
+          "mapped": 10,
+          "searchOnly": 0
+        },
+        {
+          "label": "demolished",
+          "tagged": 8,
+          "mapped": 8,
+          "searchOnly": 0
+        },
+        {
+          "label": "hotel",
+          "tagged": 7,
+          "mapped": 7,
+          "searchOnly": 0
+        },
+        {
+          "label": "industrial",
+          "tagged": 7,
+          "mapped": 7,
+          "searchOnly": 0
+        },
+        {
+          "label": "landmark",
+          "tagged": 5,
+          "mapped": 5,
+          "searchOnly": 0
+        },
+        {
+          "label": "nature",
+          "tagged": 5,
+          "mapped": 5,
+          "searchOnly": 0
+        },
+        {
+          "label": "public",
+          "tagged": 5,
+          "mapped": 5,
+          "searchOnly": 0
+        },
+        {
+          "label": "mixed",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "closed",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "facade-only",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "fixme-image",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "infrastructure",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "needssplitting",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "transport",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        }
+      ]
+    },
+    {
+      "game": "5",
+      "title": "GTA V · Los Santos",
+      "scope": "community-sourced landmark research, not collectible verification",
+      "source": "GTADB.ORG and contributors",
+      "sourceUrl": "https://github.com/rolux/gtadb.org/tree/5c1d69ff864623d181da5457afaacd00b623e1a4/map/data/5",
+      "license": "CC BY 4.0",
+      "sourceUpdated": "2026-11-17T06:17:30Z",
+      "sourceCommit": "5c1d69ff864623d181da5457afaacd00b623e1a4",
+      "records": 2337,
+      "mapped": 2337,
+      "searchOnly": 0,
+      "tags": [
+        {
+          "label": "residential",
+          "tagged": 918,
+          "mapped": 918,
+          "searchOnly": 0
+        },
+        {
+          "label": "retail",
+          "tagged": 460,
+          "mapped": 460,
+          "searchOnly": 0
+        },
+        {
+          "label": "industrial",
+          "tagged": 252,
+          "mapped": 252,
+          "searchOnly": 0
+        },
+        {
+          "label": "restaurant",
+          "tagged": 122,
+          "mapped": 122,
+          "searchOnly": 0
+        },
+        {
+          "label": "transportation",
+          "tagged": 115,
+          "mapped": 115,
+          "searchOnly": 0
+        },
+        {
+          "label": "office",
+          "tagged": 104,
+          "mapped": 104,
+          "searchOnly": 0
+        },
+        {
+          "label": "entertainment",
+          "tagged": 91,
+          "mapped": 91,
+          "searchOnly": 0
+        },
+        {
+          "label": "landmark",
+          "tagged": 68,
+          "mapped": 68,
+          "searchOnly": 0
+        },
+        {
+          "label": "public",
+          "tagged": 58,
+          "mapped": 58,
+          "searchOnly": 0
+        },
+        {
+          "label": "unclassified",
+          "tagged": 44,
+          "mapped": 44,
+          "searchOnly": 0
+        },
+        {
+          "label": "hotel",
+          "tagged": 42,
+          "mapped": 42,
+          "searchOnly": 0
+        },
+        {
+          "label": "government",
+          "tagged": 35,
+          "mapped": 35,
+          "searchOnly": 0
+        },
+        {
+          "label": "natural",
+          "tagged": 26,
+          "mapped": 26,
+          "searchOnly": 0
+        },
+        {
+          "label": "other",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "unconfirmed",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        }
+      ]
+    },
+    {
+      "game": "6",
+      "title": "GTA VI · Leonida research",
+      "scope": "provisional/unverified game placement",
+      "source": "GTADB.ORG and contributors",
+      "sourceUrl": "https://github.com/rolux/gtadb.org/tree/main/map/data/6",
+      "license": "CC BY 4.0",
+      "sourceUpdated": "2026-11-15T10:33:17+00:00",
+      "sourceCommit": null,
+      "records": 3425,
+      "mapped": 3334,
+      "searchOnly": 91,
+      "tags": [
+        {
+          "label": "unclassified",
+          "tagged": 1022,
+          "mapped": 1000,
+          "searchOnly": 22
+        },
+        {
+          "label": "l4",
+          "tagged": 716,
+          "mapped": 715,
+          "searchOnly": 1
+        },
+        {
+          "label": "enterable",
+          "tagged": 380,
+          "mapped": 379,
+          "searchOnly": 1
+        },
+        {
+          "label": "residential",
+          "tagged": 350,
+          "mapped": 343,
+          "searchOnly": 7
+        },
+        {
+          "label": "unconfirmed",
+          "tagged": 343,
+          "mapped": 325,
+          "searchOnly": 18
+        },
+        {
+          "label": "l1",
+          "tagged": 188,
+          "mapped": 186,
+          "searchOnly": 2
+        },
+        {
+          "label": "retail",
+          "tagged": 178,
+          "mapped": 172,
+          "searchOnly": 6
+        },
+        {
+          "label": "transportation",
+          "tagged": 157,
+          "mapped": 156,
+          "searchOnly": 1
+        },
+        {
+          "label": "l6",
+          "tagged": 124,
+          "mapped": 124,
+          "searchOnly": 0
+        },
+        {
+          "label": "demolished",
+          "tagged": 99,
+          "mapped": 97,
+          "searchOnly": 2
+        },
+        {
+          "label": "natural",
+          "tagged": 99,
+          "mapped": 99,
+          "searchOnly": 0
+        },
+        {
+          "label": "//pink",
+          "tagged": 96,
+          "mapped": 96,
+          "searchOnly": 0
+        },
+        {
+          "label": "industrial",
+          "tagged": 94,
+          "mapped": 93,
+          "searchOnly": 1
+        },
+        {
+          "label": "l7",
+          "tagged": 89,
+          "mapped": 89,
+          "searchOnly": 0
+        },
+        {
+          "label": "hotel",
+          "tagged": 75,
+          "mapped": 73,
+          "searchOnly": 2
+        },
+        {
+          "label": "leisure",
+          "tagged": 74,
+          "mapped": 71,
+          "searchOnly": 3
+        },
+        {
+          "label": "government",
+          "tagged": 56,
+          "mapped": 56,
+          "searchOnly": 0
+        },
+        {
+          "label": "l8",
+          "tagged": 51,
+          "mapped": 51,
+          "searchOnly": 0
+        },
+        {
+          "label": "events",
+          "tagged": 50,
+          "mapped": 16,
+          "searchOnly": 34
+        },
+        {
+          "label": "closed",
+          "tagged": 47,
+          "mapped": 47,
+          "searchOnly": 0
+        },
+        {
+          "label": "utilities",
+          "tagged": 45,
+          "mapped": 44,
+          "searchOnly": 1
+        },
+        {
+          "label": "reused",
+          "tagged": 44,
+          "mapped": 44,
+          "searchOnly": 0
+        },
+        {
+          "label": "landmark",
+          "tagged": 35,
+          "mapped": 30,
+          "searchOnly": 5
+        },
+        {
+          "label": "#bus",
+          "tagged": 34,
+          "mapped": 34,
+          "searchOnly": 0
+        },
+        {
+          "label": "public",
+          "tagged": 34,
+          "mapped": 32,
+          "searchOnly": 2
+        },
+        {
+          "label": "restaurant",
+          "tagged": 29,
+          "mapped": 28,
+          "searchOnly": 1
+        },
+        {
+          "label": "construction",
+          "tagged": 20,
+          "mapped": 20,
+          "searchOnly": 0
+        },
+        {
+          "label": "#gas",
+          "tagged": 19,
+          "mapped": 19,
+          "searchOnly": 0
+        },
+        {
+          "label": "#supermarket",
+          "tagged": 17,
+          "mapped": 17,
+          "searchOnly": 0
+        },
+        {
+          "label": "//may-not-exist",
+          "tagged": 12,
+          "mapped": 11,
+          "searchOnly": 1
+        },
+        {
+          "label": "//todo",
+          "tagged": 12,
+          "mapped": 9,
+          "searchOnly": 3
+        },
+        {
+          "label": "mirrored",
+          "tagged": 12,
+          "mapped": 11,
+          "searchOnly": 1
+        },
+        {
+          "label": "#train",
+          "tagged": 11,
+          "mapped": 11,
+          "searchOnly": 0
+        },
+        {
+          "label": "//green",
+          "tagged": 10,
+          "mapped": 10,
+          "searchOnly": 0
+        },
+        {
+          "label": "#airport",
+          "tagged": 10,
+          "mapped": 10,
+          "searchOnly": 0
+        },
+        {
+          "label": "#marina",
+          "tagged": 10,
+          "mapped": 10,
+          "searchOnly": 0
+        },
+        {
+          "label": "office",
+          "tagged": 10,
+          "mapped": 9,
+          "searchOnly": 1
+        },
+        {
+          "label": "//blue",
+          "tagged": 7,
+          "mapped": 7,
+          "searchOnly": 0
+        },
+        {
+          "label": "#metromover",
+          "tagged": 7,
+          "mapped": 7,
+          "searchOnly": 0
+        },
+        {
+          "label": "#fence",
+          "tagged": 6,
+          "mapped": 6,
+          "searchOnly": 0
+        },
+        {
+          "label": "#vendor",
+          "tagged": 6,
+          "mapped": 6,
+          "searchOnly": 0
+        },
+        {
+          "label": "#metro",
+          "tagged": 5,
+          "mapped": 5,
+          "searchOnly": 0
+        },
+        {
+          "label": "#tennis",
+          "tagged": 5,
+          "mapped": 5,
+          "searchOnly": 0
+        },
+        {
+          "label": "#food",
+          "tagged": 4,
+          "mapped": 4,
+          "searchOnly": 0
+        },
+        {
+          "label": "#police",
+          "tagged": 4,
+          "mapped": 4,
+          "searchOnly": 0
+        },
+        {
+          "label": "#racetrack",
+          "tagged": 4,
+          "mapped": 4,
+          "searchOnly": 0
+        },
+        {
+          "label": "#safehouse",
+          "tagged": 4,
+          "mapped": 4,
+          "searchOnly": 0
+        },
+        {
+          "label": "l2",
+          "tagged": 4,
+          "mapped": 4,
+          "searchOnly": 0
+        },
+        {
+          "label": "//address-ambiguous",
+          "tagged": 3,
+          "mapped": 3,
+          "searchOnly": 0
+        },
+        {
+          "label": "#bar",
+          "tagged": 3,
+          "mapped": 3,
+          "searchOnly": 0
+        },
+        {
+          "label": "#clothes",
+          "tagged": 3,
+          "mapped": 3,
+          "searchOnly": 0
+        },
+        {
+          "label": "#guns",
+          "tagged": 3,
+          "mapped": 3,
+          "searchOnly": 0
+        },
+        {
+          "label": "#hair",
+          "tagged": 3,
+          "mapped": 3,
+          "searchOnly": 0
+        },
+        {
+          "label": "#hospital",
+          "tagged": 3,
+          "mapped": 3,
+          "searchOnly": 0
+        },
+        {
+          "label": "gtav",
+          "tagged": 3,
+          "mapped": 3,
+          "searchOnly": 0
+        },
+        {
+          "label": "supermarket",
+          "tagged": 3,
+          "mapped": 3,
+          "searchOnly": 0
+        },
+        {
+          "label": "//also-in-l8-2",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "//make-more-specific-later",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "#electronics",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "#fastfood",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "#jail",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "#modshop",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "#nightclub",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "#pay'n'spray",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "#stripclub",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "#tattoos",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "agriculture",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "l5",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "point-of-interest",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
+          "label": "@billy",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "@brian",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "@raymond",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "@wyman",
+          "tagged": 1,
+          "mapped": 0,
+          "searchOnly": 1
+        },
+        {
+          "label": "@yago",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//583q+3q2",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//doesnt_exist",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//doesnt-exist?",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//duplicate-of-1142",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//duplicate-of-823",
+          "tagged": 1,
+          "mapped": 0,
+          "searchOnly": 1
+        },
+        {
+          "label": "//m4/1",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//possibly_reused_l712",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//qrf3+f8",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//qrm5+cgh",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//road-under-construction",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "//todo_not_here?",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "/possibly_reused_l3284",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#airbase",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#bikeshop",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#blimp",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#carwash",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#cinema",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#drinks",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#ferriswheel",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#golf",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#gym",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#liquor",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#pharmacy",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#shoes",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#volleyball",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "badboys",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "cancelled",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "dexter",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "fastfood",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "fence",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "fictional",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "l3",
+          "tagged": 1,
+          "mapped": 0,
+          "searchOnly": 1
+        },
+        {
+          "label": "recreation",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "scarface",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "service",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        }
+      ]
+    }
+  ]
+}

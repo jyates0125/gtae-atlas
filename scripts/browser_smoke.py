@@ -163,6 +163,19 @@ async def smoke():
                                         failures.append('My Crew browser refresh lost locally saved crew/task')
                                 except Exception as err:
                                     failures.append('My Crew save and reload workflow failed: '+str(err)[:190])
+                            if not failures and path=='atlas-coverage.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#j195-status')?.textContent?.includes('unique landmark research entries')",timeout=12000)
+                                    await pg.locator('#j195-world').select_option('6')
+                                    if '3,425 unique' not in await pg.locator('#j195-status').inner_text():
+                                        failures.append('Local GTA VI research source count is inaccurate')
+                                    await pg.locator('#j195-search').fill('residential')
+                                    if await pg.locator('#j195-rows tr').count()<1:
+                                        failures.append('Source-tag filter failed')
+                                    if await pg.locator('#j195-export').is_disabled():
+                                        failures.append('Source-tag CSV export not interactive')
+                                except Exception as err:
+                                    failures.append('Local per-world source-tag audit: '+str(err)[:220])
                             if not failures and path=='atlas93-dispatch.html':
                                 try:
                                     await pg.locator('#dispatchCards article').first.wait_for(timeout=7000)
