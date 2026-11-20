@@ -11,6 +11,32 @@ const legend=document.querySelector('.j180-legend-rows'),info=mapArea?.querySele
 if(!focus||!world||!mapArea||!legend||!info)return;
 document.body.classList.add('j181-map-hotspots');
 const el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=String(txt);return n};
+/* Original Team Jura symbol family — a SINGLE source of truth for both
+   the legend and clickable map locations. Symbols are SVG, not emoji-font
+   stand-ins or generic dark pin badges. */
+const SVG_NS='http://www.w3.org/2000/svg';
+const svg=(tag,attrs={})=>{const e=document.createElementNS(SVG_NS,tag);for(const [key,val] of Object.entries(attrs))e.setAttribute(key,String(val));return e};
+const markerIcons={
+ entry:[['path',{d:'M12 22S4.7 14.6 4.7 9a7.3 7.3 0 0 1 14.6 0C19.3 14.6 12 22 12 22Z',fill:'currentColor',stroke:'currentColor'}],['circle',{cx:12,cy:9,r:3,fill:'#191127',stroke:'#fff5cf','stroke-width':1.3}]],
+ exit:[['path',{d:'M12 2 23 22H1L12 2Z',fill:'currentColor',stroke:'#f5ffc6','stroke-width':.7}]],
+ drainage:[['circle',{cx:12,cy:12,r:10,fill:'#181824',stroke:'currentColor','stroke-width':2}],['path',{d:'M7 3v18M12 2v20M17 3v18M3 7h18M2 12h20M3 17h18',stroke:'currentColor','stroke-width':1.2,fill:'none'}]],
+ secondary:[['circle',{cx:12,cy:12,r:8.2,fill:'currentColor',stroke:'#f2ffff','stroke-width':1}]],
+ gated:[['circle',{cx:12,cy:12,r:8.9,fill:'none',stroke:'currentColor','stroke-width':2.6}],['circle',{cx:12,cy:12,r:4.7,fill:'currentColor',stroke:'#142137','stroke-width':1.2}]],
+ bolts:[['path',{d:'M7 3 16 18M17 3 8 18M5 3l7 10M19 3l-7 10',fill:'none',stroke:'currentColor','stroke-width':2.5,'stroke-linecap':'round'}],['circle',{cx:7,cy:19,r:3,fill:'none',stroke:'currentColor','stroke-width':1.8}],['circle',{cx:17,cy:19,r:3,fill:'none',stroke:'currentColor','stroke-width':1.8}]],
+ grapple:[['path',{d:'M3 19 14 7c3-3 8-2 8 2 0 3-3 5-5 3-2-2-1-5 2-5M9 12l5 5M13 18l-3 3',fill:'none',stroke:'currentColor','stroke-width':2.5,'stroke-linecap':'round','stroke-linejoin':'round'}]],
+ clothes:[['path',{d:'m7 3 5 2 5-2 5 5-4 4-2-2v11H8V10l-2 2-4-4 5-5Z',fill:'currentColor',stroke:'#26192f','stroke-width':1}]],
+ truck:[['rect',{x:2,y:6,width:14,height:12,rx:2,fill:'currentColor'}],['path',{d:'M16 9h4l2 4v5h-6V9Z',fill:'currentColor'}],['circle',{cx:7,cy:19,r:2,fill:'#182433',stroke:'currentColor','stroke-width':1.2}],['circle',{cx:19,cy:19,r:2,fill:'#182433',stroke:'currentColor','stroke-width':1.2}]],
+ control:[['path',{d:'M12 7 8 22h8L12 7Zm0 0v-4M9 13h6M8 18h8M5 7c-2 2-2 7 0 9M19 7c2 2 2 7 0 9M2 5c-3 4-3 9 0 13M22 5c3 4 3 9 0 13',fill:'none',stroke:'currentColor','stroke-width':1.7,'stroke-linecap':'round'}]],
+ power:[['path',{d:'m14 1-9 13h7l-2 9 10-14h-7l1-8Z',fill:'currentColor',stroke:'#18202b','stroke-width':.9}]],
+ powder:[['path',{d:'M6 3h12l2 18H4L6 3Z',fill:'currentColor',stroke:'#f0d5aa','stroke-width':1.2}],['path',{d:'M7 9h10M8 13h8',fill:'none',stroke:'#312138','stroke-width':1.5}]],
+ water:[['path',{d:'M12 2C9 7 5 11 5 15a7 7 0 0 0 14 0c0-4-4-8-7-13Z',fill:'currentColor',stroke:'#ceffff','stroke-width':1}],['path',{d:'M8 16c0 2 1 3 3 3',fill:'none',stroke:'#0e5872','stroke-width':1.5,'stroke-linecap':'round'}]],
+ chest:[['circle',{cx:12,cy:12,r:6,fill:'currentColor',stroke:'#202025','stroke-width':1.2}]]
+};
+const makeMarkerIcon=cat=>{
+ const image=svg('svg',{viewBox:'0 0 24 24',width:22,height:22,'aria-hidden':'true',focusable:'false',class:'j183-svg'});
+ for(const [tag,attrs] of markerIcons[cat]||markerIcons.secondary)image.append(svg(tag,attrs));
+ return image;
+};
 const button=(label,cls,handler)=>{const e=el('button',cls,label);e.type='button';e.addEventListener('click',handler);return e};
 const categories=[
  ['entry','Infiltration points','📍','Possible island approach locations'],
@@ -146,7 +172,9 @@ function update(){
  const query=String(focus.querySelector('.j167-search')?.value||'').trim().toLowerCase();
  const mapSource=focus.dataset.mapSource;
  for(const item of allItems){
-  const modeOk=mapSource!=='loading'&&(!item.view||item.view===mapSource||focus.dataset.mapAsset==='local-trace');
+  // All reference categories are available on the flat game map and its
+  // local fallback. Map pixel positions are visually approximate in both.
+  const modeOk=mapSource!=='loading';
   const matches=!query||(item.name+' '+item.cat+' '+(descriptions[item.cat]||'')).toLowerCase().includes(query);
   item.button.hidden=!modeOk||hiddenCats.has(item.cat)||!matches;
   item.button.classList.toggle('j181-noted',visited.has(item.key));
@@ -164,7 +192,8 @@ function update(){
 records.forEach(([cat,x,y,name,poi,view],i)=>{
  const key=cat+'-'+i;
  const glyph=categories.find(c=>c[0]===cat)?.[2]||'●';
- const b=button(glyph,'j181-hotspot',()=>popup(name,descriptions[cat],allItems[i]));
+ const b=button('','j181-hotspot',()=>popup(name,descriptions[cat],allItems[i]));
+ b.append(makeMarkerIcon(cat));
  b.dataset.category=cat;b.dataset.markerId=key;b.style.left=x+'%';b.style.top=y+'%';b.dataset.glyph=categories.find(c=>c[0]===cat)?.[2]||'•';
  b.setAttribute('aria-label',categories.find(c=>c[0]===cat)?.[1]+': '+name+' (approximate)');
  b.title=name+' · '+(view==='enhanced'?'enhanced visual reference':'click map symbol for details');
@@ -179,7 +208,7 @@ for(const [cat,name,icon,description] of categories){
  });
  b.dataset.j181Cat=cat;b.dataset.cat=cat;b.setAttribute('aria-pressed','true');
  b.title='Toggle '+name.toLowerCase();
- const glyph=el('span','j180-glyph j181-glyph-'+cat,icon);
+ const glyph=el('span','j180-glyph j181-glyph-'+cat);glyph.append(makeMarkerIcon(cat));
  const label=el('span','j180-legend-copy');label.append(el('strong','',name),el('small','',cat==='chest'?'19 possible · 2 daily':description+(count?' · '+count+' reference spots':'')));
  b.append(glyph,label);legend.append(b);
 }
@@ -197,7 +226,7 @@ if(chestLayer){
  chestMonitor.observe(chestLayer,{childList:true});
 }
 const notice=document.querySelector('.j180-legend-foot');
-if(notice)notice.textContent='Tap the Team Jura marker symbols on the map for details. Positions approximate and based on source/owner references; yellow means possible treasure chest, cyan means dated calculated or personal selection.';
+if(notice)notice.textContent='Colorful icons share the exact same categories as the legend. Tap a symbol for its details; tap its legend row to show or hide that category. Positions approximate; yellow chests are possible spawns, cyan are dated/player-selected.';
 const status=document.querySelector('.j180-map-status');
 const updateSourceCaption=()=>{
  const source=focus.dataset.mapSource;
