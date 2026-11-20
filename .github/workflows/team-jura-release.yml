@@ -80,6 +80,7 @@ jobs:
           python scripts/test_atlas155_art_review.py
           python scripts/test_atlas149_leonida_toolbar.py
           python scripts/test_atlas154_map_zoom.py
+          python scripts/test_atlas156_mobile_nav.py
           python scripts/test_atlas151_heist_gallery.py
           python scripts/test_atlas152_art.py
           node --check atlas93-global.js
