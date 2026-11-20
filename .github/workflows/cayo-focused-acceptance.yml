@@ -73,5 +73,6 @@ jobs:
           path: |
             qa-evidence/chromium/cayo-180-map-*.png
             qa-evidence/chromium/cayo-171-*.png
+            qa-evidence/chromium/cayo-186-route-*.png
           if-no-files-found: warn
           retention-days: 14
