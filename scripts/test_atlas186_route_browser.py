@@ -170,17 +170,17 @@ try:
    visible_cats=page.locator('.j181-hotspot:not([hidden])').evaluate_all(
     '(nodes)=>[...new Set(nodes.map(n=>n.dataset.category))]')
    assert set(visible_cats).issubset(set(categories)),visible_cats
-   # Mobile hides detailed legend rows until the player taps the filter drawer.
-   # Open the real control rather than force-click a hidden category button.
+   # Desktop shows category rows directly. Phone keeps them collapsed, so
+   # open the visible disclosure once; do not double-toggle or click a
+   # display:none mobile-only button on desktop.
    if kind=='phone':
-    page.locator('.j185-legend-toggle').click()
-    assert page.locator('.j185-legend-toggle').get_attribute('aria-expanded')=='true'
-   # The individual marker legend is intentionally collapsed to leave more
-   # map area on phones. Expand it through the real user-facing disclosure.
-   legend_toggle=page.locator('.j185-legend-toggle')
-   assert legend_toggle.count()==1,'One working marker-filter disclosure'
-   legend_toggle.click()
-   assert legend_toggle.get_attribute('aria-expanded')=='true','Marker filters must expand'
+    legend_toggle=page.locator('.j185-legend-toggle')
+    assert legend_toggle.count()==1,'One working marker-filter disclosure'
+    if legend_toggle.get_attribute('aria-expanded')!='true':
+     legend_toggle.click()
+    assert legend_toggle.get_attribute('aria-expanded')=='true','Marker filters must expand'
+   else:
+    assert page.locator('.j180-legend-row[data-cat="entry"]').is_visible(), 'Desktop categories must be visible'
    page.locator('.j180-legend-row[data-cat="entry"]').click()
    changed=page.evaluate("window.teamJuraCayoPinRoute.getState().categories")
    assert 'entry' in changed and 'bolts' in changed,changed
