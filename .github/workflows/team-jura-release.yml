@@ -92,6 +92,9 @@ jobs:
           python scripts/test_atlas161_quality_gate.py
           python scripts/test_atlas162_subject_heroes.py
           python scripts/test_atlas163_premium_asset_ledger.py
+          python scripts/test_atlas164_heist_workspace.py
+          node --check atlas164-heist-workspace.js
+          node --check heist-pages.js
           python scripts/test_atlas152_art.py
           node --check atlas93-global.js
           node --check leonida-hq.js
