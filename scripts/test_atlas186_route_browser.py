@@ -170,6 +170,11 @@ try:
    visible_cats=page.locator('.j181-hotspot:not([hidden])').evaluate_all(
     '(nodes)=>[...new Set(nodes.map(n=>n.dataset.category))]')
    assert set(visible_cats).issubset(set(categories)),visible_cats
+   # Mobile hides detailed legend rows until the player taps the filter drawer.
+   # Open the real control rather than force-click a hidden category button.
+   if kind=='phone':
+    page.locator('.j185-legend-toggle').click()
+    assert page.locator('.j185-legend-toggle').get_attribute('aria-expanded')=='true'
    # The original marker legend is the same selection; manual changes update the route.
    page.locator('.j180-legend-row[data-cat="entry"]').click()
    changed=page.evaluate("window.teamJuraCayoPinRoute.getState().categories")
