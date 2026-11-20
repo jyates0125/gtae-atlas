@@ -244,5 +244,18 @@ const updateSourceCaption=()=>{
 updateSourceCaption();
 new MutationObserver(updateSourceCaption).observe(focus,{attributes:true,attributeFilter:['data-map-source','data-map-asset']});
 update();
-window.teamJuraCayoHotspots={count:allItems.length,categories:categories.map(c=>c[0]),refresh:update,openMarker:key=>{const r=allItems.find(x=>x.key===key);r?.button.click();return !!r}};
+// Apply one authoritative category selection to actual hotspot visibility.
+// aria-pressed is a presentation attribute, not the internal filter state.
+function setVisibleCategories(values){
+ if(!Array.isArray(values))return false;
+ const known=new Set(categories.map(item=>item[0]));
+ const selected=new Set(values.filter(x=>known.has(x)));
+ for(const cat of known){
+  if(selected.has(cat))hiddenCats.delete(cat);
+  else hiddenCats.add(cat);
+ }
+ update();
+ return true;
+}
+window.teamJuraCayoHotspots={count:allItems.length,categories:categories.map(c=>c[0]),refresh:update,setVisibleCategories,openMarker:key=>{const r=allItems.find(x=>x.key===key);r?.button.click();return !!r}};
 })();
