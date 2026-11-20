@@ -139,3 +139,8 @@ body.j180-cayo #j153-advisory.j180-advisory-bottom{margin:18px auto 4px;max-widt
   body.j180-cayo #j153-advisory.j180-advisory-bottom{margin:15px 0 0;padding:10px;font-size:11px}
 }
 @media(max-width:380px){body.j180-cayo .j180-menu{grid-template-columns:1fr}}
+
+
+/* Approved desktop/iPhone page has one global all-pages menu, not the old
+   overlapping Start Here dock. Other world pages preserve their controls. */
+body.j180-cayo:has(#j132-nav-toggle) #j89-shell{display:none!important}
