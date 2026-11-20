@@ -18,6 +18,11 @@ assert "moveNative.click();syncPan();" in js
 assert "legend.classList.toggle('j185-open',isOpen)" in js
 assert "if(status && source.parentNode!==status)status.prepend(source);" in js
 assert "requestAnimationFrame" in js
+assert "j185-cluster-choices" in js and "j185-cluster-choices" in css
+assert "event.stopImmediatePropagation()" in js
+assert "directSelection=true" in js and "directSelection=false" in js
+assert "Choose nearby location" in js
+assert "Airstrip infiltration" in browser
 assert "const source=document.createElement('span')" in js
 assert "focus.dataset.mapSource" in js and "focus.dataset.mapAsset" in js
 assert "position:fixed!important" in css
