@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Atlas 12.8 visual map shell: check game-specific art and unchanged functional controls."""
+"""Map shell regression: preserve controls and the current approved cinematic art."""
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 css=(ROOT/"atlas128-map-chrome.css").read_text(encoding="utf-8")
 worlds={
- "atlas.html":("5","atlas93-los-santos.svg"),
- "atlas-online.html":("online","atlas93-gta-online.svg"),
- "atlas-vi.html":("6","atlas93-leonida.svg"),
+ "atlas.html":("5","jura155-story.webp"),
+ "atlas-online.html":("online","jura155-online.webp"),
+ "atlas-vi.html":("6","jura155-vi.webp"),
 }
 for page,(mode,art) in worlds.items():
  html=(ROOT/page).read_text(encoding="utf-8")
@@ -21,4 +21,4 @@ for page,(mode,art) in worlds.items():
 assert "body.j128-map-chrome" in css
 assert "prefers-reduced-motion" in css
 assert "localStorage.setItem(" not in css
-print("PASS Atlas 12.8: world-accurate original brand art, 3 map shells and untouched controls")
+print("PASS map shell: 3 approved cinematic game headers and untouched map controls")
