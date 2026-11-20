@@ -40,9 +40,11 @@ function selectMapCategories(categories){
  const selected=new Set(categories);
  syncing=true;
  try{
-  for(const row of rows()){
-   const show=selected.has(row.dataset.cat);
-   if((row.getAttribute('aria-pressed')==='true')!==show)row.click();
+  // Drive the real hidden-category filter, not just the aria-pressed labels.
+  const source=window.teamJuraCayoHotspots;
+  if(source?.setVisibleCategories)source.setVisibleCategories([...selected]);
+  else for(const row of rows()){
+   if((row.getAttribute('aria-pressed')==='true')!==selected.has(row.dataset.cat))row.click();
   }
  }finally{syncing=false}
  route.setCategories([...selected]);
@@ -131,7 +133,9 @@ function mirrorRouteToLegend(){
  const selected=new Set(route.getState().categories);
  syncing=true;
  try{
-  for(const row of rows()){
+  const source=window.teamJuraCayoHotspots;
+  if(source?.setVisibleCategories)source.setVisibleCategories([...selected]);
+  else for(const row of rows()){
    if((row.getAttribute('aria-pressed')==='true')!==selected.has(row.dataset.cat))row.click();
   }
  }finally{syncing=false}
