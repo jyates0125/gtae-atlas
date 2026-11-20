@@ -36,6 +36,9 @@ try:
             assert page.locator('#j89-shell').evaluate("(e)=>getComputedStyle(e).display==='none'"),'Legacy All Pages dock must not cover the Cayo map'
         if page.locator('#j98-flow').count():
             assert page.locator('#j98-flow').evaluate("(e)=>getComputedStyle(e).display==='none'"),'Legacy map dock must not cover Cayo mission controls'
+        if page.locator('.j132-nav').count():
+            assert page.locator('.j132-nav').evaluate("(e)=>getComputedStyle(e).position!=='fixed'"),'Modern All Pages menu should remain available in page flow, not cover Cayo map'
+            assert page.locator('#j132-nav-toggle').count()==1,'All Pages directory remains accessible'
         # Atlas 18 flagship starts in map-first mode; open the linked planning drawer.
         page.locator('#j180-shell').wait_for(state='visible',timeout=30000)
         page.wait_for_function("document.querySelectorAll('.j180-chest').length === 19",timeout=20000)
