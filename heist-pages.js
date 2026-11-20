@@ -18,7 +18,7 @@ if(document.body.classList.contains('j120-heist-page')){
  const planner=document.createElement('script');planner.async=false;planner.src='./atlas164-heist-workspace.js?v=164';document.body.append(planner);
  // Mission-specific mapped POIs and challenges appear ABOVE the optional regional map.
  const focusStyle=document.createElement('link');focusStyle.rel='stylesheet';focusStyle.href='./atlas167-heist-focus.css?v=167';document.head.append(focusStyle);
- const focus=document.createElement('script');focus.async=false;focus.src='./atlas167-heist-focus.js?v=167';document.body.append(focus);
+ const focus=document.createElement('script');focus.async=false;focus.src='./atlas167-heist-focus.js?v=191';document.body.append(focus);
  const guideStyle=document.createElement('link');guideStyle.rel='stylesheet';guideStyle.href='./atlas168-heist-guides.css?v=168';document.head.append(guideStyle);
  const guide=document.createElement('script');guide.async=false;guide.src='./atlas168-heist-guides.js?v=168';document.body.append(guide);
  const viewsStyle=document.createElement('link');viewsStyle.rel='stylesheet';viewsStyle.href='./atlas169-heist-views.css?v=169';document.head.append(viewsStyle);
@@ -30,11 +30,11 @@ if(document.body.classList.contains('j120-heist-page')){
   const flagshipStyle=document.createElement('link');flagshipStyle.rel='stylesheet';flagshipStyle.href='./atlas180-cayo-flagship.css?v=180';document.head.append(flagshipStyle);
   const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=180';document.body.append(flagship);
   const iconsStyle=document.createElement('link');iconsStyle.rel='stylesheet';iconsStyle.href='./atlas181-cayo-hotspots.css?v=181';document.head.append(iconsStyle);
-  const icons=document.createElement('script');icons.async=false;icons.src='./atlas181-cayo-hotspots.js?v=181';document.body.append(icons);
+  const icons=document.createElement('script');icons.async=false;icons.src='./atlas181-cayo-hotspots.js?v=191';document.body.append(icons);
   const polishCSS=document.createElement('link');polishCSS.rel='stylesheet';polishCSS.href='./atlas185-cayo-polish.css?v=185';document.head.append(polishCSS);
   const polish=document.createElement('script');polish.async=false;polish.src='./atlas185-cayo-polish.js?v=185';document.body.append(polish);
   const routeStyle=document.createElement('link');routeStyle.rel='stylesheet';routeStyle.href='./atlas186-cayo-route.css?v=187';document.head.append(routeStyle);
-  const routePlanner=document.createElement('script');routePlanner.async=false;routePlanner.src='./atlas186-cayo-route.js?v=187';document.body.append(routePlanner);
+  const routePlanner=document.createElement('script');routePlanner.async=false;routePlanner.src='./atlas186-cayo-route.js?v=191';document.body.append(routePlanner);
   // Atlas 18.8: one user-facing filter selection shared by Cayo icons + personal route.
   const quickStyle=document.createElement('link');quickStyle.rel='stylesheet';quickStyle.href='./atlas188-cayo-flow.css?v=1882';document.head.append(quickStyle);
   const quick=document.createElement('script');quick.async=false;quick.src='./atlas188-cayo-flow.js?v=1882';document.body.append(quick);
