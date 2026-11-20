@@ -103,3 +103,7 @@ body[data-page="classic"] .classic-controls button:disabled{opacity:.44;cursor:n
 body[data-page="classic"] .classic-zoom-level{display:inline-flex;min-width:50px;align-items:center;justify-content:center;border:1px solid #bd85aa;border-radius:9px;padding:10px 6px;color:#ffe0a8;background:#22102e;font-size:12px;font-weight:850;font-variant-numeric:tabular-nums}
 body[data-page="classic"] #classicViewport{touch-action:none;overscroll-behavior:contain}
 @media(max-width:570px){body[data-page="classic"] .classic-controls{gap:5px}body[data-page="classic"] .classic-controls button{padding:10px 8px}body[data-page="classic"] .classic-zoom-level{padding:10px 5px}}
+
+/* Atlas 19.0: licensed episode map linked from original classic workspace. */
+.j190-episode-link:not([hidden]){display:block;width:max-content;max-width:100%;padding:10px 12px;border-radius:9px;border:1px solid #ffd89b;background:linear-gradient(115deg,#f6cf91,#dcaa7a);color:#301638;text-decoration:none;font:850 12px/1.4 system-ui;margin:9px 0;white-space:normal}
+.j190-episode-link:focus-visible{outline:3px solid #ffeab9;outline-offset:2px}
