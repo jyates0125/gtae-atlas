@@ -90,6 +90,22 @@ try:
    # Re-select all markers after the saved Equipment preset: the new
    # map-first quick filters intentionally hide the control-tower category.
    page.locator('.j188-preset[data-preset="all"]').click()
+   # Confirm the map engine actually exposed the selected symbol. A route
+   # filter showing "All" while the corresponding icon remains hidden is a
+   # real user-facing regression, not a reason to force-click a hidden pin.
+   try:
+    page.wait_for_function("() => { const n=document.querySelector('.j181-hotspot[data-category=control]'); return n && !n.hidden; }",timeout=12000)
+   except Exception:
+    info=page.evaluate("""() => ({
+      source:document.querySelector('#j167-heist-map')?.dataset.mapSource,
+      asset:document.querySelector('#j167-heist-map')?.dataset.mapAsset,
+      search:document.querySelector('#j167-heist-map .j167-search')?.value,
+      controlLegend:document.querySelector('.j180-legend-row[data-cat=control]')?.getAttribute('aria-pressed'),
+      routeCategories:window.teamJuraCayoPinRoute?.getState().categories,
+      controlHidden:document.querySelector('.j181-hotspot[data-category=control]')?.hidden,
+      availablePins:document.querySelectorAll('.j181-hotspot:not([hidden])').length
+    })""")
+    raise AssertionError('Visible-map filter did not reveal control tower: '+str(info))
    picker=page.locator('#j186-pick-start')
    assert picker.count()==1,'Direct start-pin tool exists'
    picker.click()
