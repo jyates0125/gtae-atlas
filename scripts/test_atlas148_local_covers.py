@@ -14,7 +14,7 @@ for game in ('story','online','vi','cayo'):
  assert (root/'art'/f'atlas140-{game}-concept.svg').is_file(),game
 assert "const sources=[premiumCover,featuredConcept,'./art/'+w.art].filter(Boolean)" in portal
 assert "Original Team Jura fan illustration for " in portal
-assert "frame.dataset.cover='original-elario'" in portal
+assert "'original-cinematic':'original-elario'" in portal
 assert "w.coverSrc,w.coverFallback" not in portal
 assert worlds.count("coverSrc:'./art/jura155-")==4, "Four local premium raster covers expected"
 assert "https://m.media-amazon.com/images" not in worlds
