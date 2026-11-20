@@ -272,9 +272,31 @@ async def smoke():
                                 except Exception as err:
                                     failures.append('Research map display controls failed: '+str(err)[:180])
                             
+                            # Atlas 19.5: the Cayo 18.6 island/route view replaces the
+                            # retired 16.4/16.9 panels. Test actual public controls;
+                            # separate focused Cayo acceptance covers route order, saves,
+                            # presets and every filter/pin interaction in two browsers.
+                            if path=='heist-cayo-perico.html' and not failures:
+                                try:
+                                    await pg.locator('#j186-route').wait_for(state='visible',timeout=14000)
+                                    if not await pg.locator('.j180-map-frame').is_visible():
+                                        failures.append('Current Cayo island workspace is not visible')
+                                    if await pg.locator('.j186-filter').count()!=14:
+                                        failures.append('Cayo map/route categories do not match all 14 legend filters')
+                                    if await pg.locator('.j181-hotspot').count()<12:
+                                        failures.append('Current Cayo island markers are missing')
+                                    if not await pg.evaluate("Boolean(window.teamJuraCayoPinRoute?.getState)"):
+                                        failures.append('Cayo route state API is unavailable')
+                                    if await pg.locator('.j186-route-layer').count()!=1:
+                                        failures.append('Cayo route overlay is detached from island map')
+                                    if await pg.locator('#j169-views').is_visible():
+                                        failures.append('Retired duplicate 16.9 Cayo view controls still visible')
+                                except Exception as err:
+                                    failures.append('Cayo active island/route UI: '+str(err)[:320])
+
                             # Atlas 16.4: interactive mission map is user-triggered; plans are local
                             # and must not change the existing mission checklist storage.
-                            if path in ('heist-fleeca.html','heist-cayo-perico.html') and not failures:
+                            if path=='heist-fleeca.html' and not failures:
                                 try:
                                     await pg.locator('#j164-mission-map').wait_for(state='attached',timeout=7000)
                                     mission=path.removeprefix('heist-').removesuffix('.html')
@@ -1205,7 +1227,17 @@ async def smoke():
                             # Do not click destructive/financial/account/import actions automatically.
                             if not failures:
                                 try:
-                                    for d in (await pg.locator('details > summary').all())[:1]:
+                                    disclosures=pg.locator('details > summary')
+                                    if path=='atlas-research.html':
+                                        # The map-first phone layout intentionally keeps
+                                        # research accordion filters inside the Filters /
+                                        # Results drawer, not behind the map canvas.
+                                        if width==390:
+                                            await pg.locator('#toggleRail').click(timeout=5500)
+                                            if not await pg.locator('#rail').evaluate("(e)=>e.classList.contains('open')"):
+                                                failures.append('Research Filters / Results drawer did not open')
+                                        disclosures=pg.locator('#rail > details > summary')
+                                    for d in (await disclosures.all())[:1]:
                                         if await d.is_visible():
                                             was=await d.evaluate('(e)=>e.parentElement.open')
                                             await d.click(timeout=5500)
@@ -1213,7 +1245,7 @@ async def smoke():
                                             if was==now:failures.append('Details disclosure did not respond')
                                             break
                                 except Exception as exc:
-                                    failures.append('Details disclosure interaction: '+str(exc)[:150])
+                                    failures.append('Details disclosure interaction: '+str(exc)[:230])
                             results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures,
                               'controls':info['controls'],'unlabeledControls':info['unlabeledCount'],
                               'unlabeledExamples':info['unlabeled']})
