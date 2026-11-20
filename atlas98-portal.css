@@ -41,3 +41,13 @@
 .world-card[data-id="cayo"] .world-art-frame{background:linear-gradient(120deg,#174f55,#142643)}
 .world-card .world-art-frame[data-cover="original-elario"] .world-art-main{object-fit:cover}
 @media(prefers-reduced-motion:reduce){.world-card{transition:none}}
+
+/* Atlas 15.1: on narrow iPhones the brand, Menu and Start Here occupy two
+   sticky header rows. Native #anchor links must leave the target heading
+   visible rather than jumping behind that header. */
+@media(max-width:470px){
+  html{scroll-padding-top:205px}
+  .world-section,
+  #mainWorlds,#otherWorlds,
+  #featured,#featuredGrid{scroll-margin-top:205px}
+}
