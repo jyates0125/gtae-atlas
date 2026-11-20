@@ -78,8 +78,15 @@ try:
         assert page.locator('.j181-hotspot[data-category="grapple"]:visible').count()==0,'Legend hides only grappling hotspots'
         legend.click()
         assert page.locator('.j181-hotspot[data-category="grapple"]:visible').count()>0,'Legend restores grappling hotspots'
-        page.locator('.j181-hotspot[data-category="entry"]').first.click()
+        # These colorful reference icons are legitimately clustered at the
+        # airstrip. Tapping the topmost one must offer the underlying markers.
+        page.locator('.j181-hotspot[data-category="control"]').first.click()
         assert page.locator('.j180-pin-info').is_visible(),'Existing colorful source icon click opens map details'
+        assert page.locator('.j185-cluster-choices').is_visible(),'Overlapping icons should expose a specific-target picker'
+        option=page.locator('.j185-cluster-choice').filter(has_text='Airstrip infiltration')
+        assert option.count()==1,'Crowded entry marker remains individually selectable'
+        option.click()
+        assert 'Airstrip infiltration' in page.locator('.j180-pin-info').inner_text(),'Chosen airstrip entry detail opens'
         assert page.locator('.j180-pin-info').evaluate("(e)=>getComputedStyle(e).position==='fixed'"),'Marker details stay visible as map scrolls'
         page.keyboard.press('Escape')
         assert page.locator('.j180-pin-info').is_hidden(),'Escape closes marker details'
