@@ -9,10 +9,15 @@ portal=(ROOT/'atlas98-portal.js').read_text(encoding='utf-8')
 cayo=(ROOT/'atlas-cayo.html').read_text(encoding='utf-8')
 credits=(ROOT/'atlas-credits.html').read_text(encoding='utf-8')
 worlds=['story','online','vi','cayo','iv','sa','vc','iii','vcs','lcs','ctw','tlad','tbogt']
-premium=re.findall(r"coverSrc:'(\./art/jura155-(?:story|online|vi|cayo)\.webp)'",directory)
-assert len(premium)==4 and len(set(premium))==4, "Exactly four distinct local premium map-cover assets expected"
-assert directory.count("coverSrc:")==4, "Remote or unapproved map cover source detected"
-assert all((ROOT / path.removeprefix('./')).is_file() for path in premium),premium
+# Atlas 15.7: all thirteen original cinematic WebPs are local and distinct.
+premium=re.findall(r"coverSrc:'(\\./art/(?:jura155-(?:story|online|vi|cayo)|jura157-(?:iv|sa|vc|iii|vcs|lcs|ctw|tlad|tbogt)-cinematic)\\.webp)'",directory)
+assert len(premium)==13 and len(set(premium))==13, "Thirteen unique premium local world-cover assets required"
+assert directory.count("coverSrc:")==13, "Remote or unknown additional map cover source detected"
+for source in premium:
+ path=ROOT/source.removeprefix('./')
+ assert path.is_file(),source
+ blob=path.read_bytes()
+ assert len(blob)>25000 and blob[:4]==b'RIFF' and blob[8:12]==b'WEBP',source
 for world in worlds:
  assert re.search(r"\{id:'"+world+r"',[^\n]*art:'([^']+)'",directory),world
 for world in ['iii','vc','vcs','lcs','ctw','tlad','tbogt']:
