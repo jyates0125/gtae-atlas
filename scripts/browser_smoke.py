@@ -680,6 +680,34 @@ async def smoke():
                                     await pg.locator('#classicImport').set_input_files(
                                         {'name':'notebook.json','mimeType':'application/json','buffer':backup})
                                     await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='1'",timeout=7000)
+                                    # Atlas 15.0: each of the seven classic worlds must connect
+                                    # a numbered checklist slot to a user-placed map-image pin.
+                                    if await pg.locator('#j98bGrid .j150-place-pin').count()==0:
+                                        failures.append('Classic checklist missing place-on-map actions: '+world)
+                                    else:
+                                        await pg.locator('#j98bGrid .j150-place-pin').first.click()
+                                        if await pg.locator('#classicAddPin').get_attribute('aria-pressed')!='true':
+                                            failures.append('Collectible slot did not enable map placement: '+world)
+                                        area=await pg.locator('#classicMapSurface').bounding_box()
+                                        if not area or area['width']<40 or area['height']<40:
+                                            failures.append('Slot placement has no usable map canvas')
+                                        else:
+                                            await pg.locator('#classicMapSurface').click(position={'x':area['width']*.27,'y':area['height']*.29})
+                                            if not await pg.locator('#classicEditor').is_visible():
+                                                failures.append('Image-relative pin editor did not open')
+                                            else:
+                                                await pg.locator('#markerSave').click()
+                                                pins=await pg.evaluate("""() => JSON.parse(localStorage.getItem('team-jura-atlas98-classic-'+new URLSearchParams(location.search).get('game')+'-v1')).markers""")
+                                                linked=[m for m in pins if m.get('collectionSlot')==1]
+                                                if len(linked)!=1 or linked[0].get('source')!='personal-image-percent':
+                                                    failures.append('Slot marker lost numbered link or personal-position provenance')
+                                                await pg.locator('#j98bGrid .j150-slot > button:first-child').first.click()
+                                                if await pg.locator('#classicMarkerLayer .classic-marker[data-slot-done="true"]').count()!=1:
+                                                    failures.append('Checklist completion did not update map pin state')
+                                                await pg.reload(wait_until='domcontentloaded')
+                                                await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='2'",timeout=7000)
+                                                if await pg.locator('#classicMarkerLayer .classic-marker[data-slot-done="true"]').count()!=1:
+                                                    failures.append('Numbered pin/completion relationship lost on reload')
                                 except Exception as exc:
                                     failures.append('Local classic high-resolution image regression: '+str(exc)[:300])
                             if not failures and path.startswith('atlas-activities.html'):
