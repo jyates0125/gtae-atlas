@@ -25,8 +25,14 @@ assert 'test_atlas162_subject_heroes.py' in flow
 assert len({(r/'art'/('jura161-'+x+'.webp')).read_bytes()[:2000] for x in cases})==len(cases),'Repeated media'
 accept=json.loads((r/'docs/ATLAS151-VISUAL-ACCEPTANCE.json').read_text(encoding='utf-8'))
 assert accept['owner_cinematic_art_direction_approved'] is True
-assert accept['status']=='HOLD' and accept['approved_by_owner'] is False
+assert accept['status'] in ('HOLD','APPROVED')
+if accept['status']=='APPROVED':
+    assert accept.get('approved_by_owner') is True
+    assert accept.get('owner_final_site_merge_approval') is True
+    assert accept.get('reviewed_cloudflare_preview','').startswith('https://')
+else:
+    assert accept.get('approved_by_owner') is False and accept.get('owner_final_site_merge_approval') is False
 assert len(set(accept['approved_world_covers'].values()))==13
 for path in accept['approved_world_covers'].values():
     assert (r/path).is_file(),path
-print('Atlas 16.2: 5 unique premium subjects, 13 owner-reviewed covers, release hold: PASS')
+print('Atlas 16.2: 5 unique premium subjects, 13 owner-reviewed covers and signed release status PASS')

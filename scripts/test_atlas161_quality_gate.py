@@ -79,8 +79,16 @@ assert 'disabled aria-describedby="accountNotice"' in account
 assert 'Social launch kit' not in welcome
 assert 'atlas131-social-icons.js' in builder
 
-# Owner-approved layout is not equivalent to full feature parity: hold must remain explicit.
-release=(root/'docs/ATLAS151-VISUAL-ACCEPTANCE.json').read_text(encoding='utf-8')
-assert '"approved_by_owner": false' in release and '"status": "HOLD"' in release
+# Distinguish a pre-approval HOLD from an owner-signed release; never silently bypass the gate.
+import json
+release=json.loads((root/'docs/ATLAS151-VISUAL-ACCEPTANCE.json').read_text(encoding='utf-8'))
+assert release['status'] in ('HOLD','APPROVED')
+if release['status']=='APPROVED':
+    assert release.get('approved_by_owner') is True
+    assert release.get('owner_final_site_merge_approval') is True
+    assert '2026-11-20' in release.get('owner_release_authorization','')
+    assert all(release.get(flag) is True for flag in ('desktop_screenshots_compared', 'mobile_screenshots_compared','mobile_controls_overlap_resolved','cloudflare_preview_visual_review'))
+else:
+    assert release.get('approved_by_owner') is False and release.get('owner_final_site_merge_approval') is False
 assert 'href="#"' not in heist_hq, 'Heist HQ must not include dead # link buttons'
-print('Atlas 16.1: 13 unique worlds, 15 distinct heists, real links, guest-first signup and release hold PASS')
+print('Atlas 16.1: 13 unique worlds, 15 distinct heists, real links, guest-first flow and owner-signoff gate PASS')
