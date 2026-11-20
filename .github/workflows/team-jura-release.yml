@@ -114,7 +114,10 @@ jobs:
         continue-on-error: true
         env:
           ATLAS_BROWSER: chromium
-        run: python scripts/capture_design_review.py
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+          python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Chromium)
         if: always()
         uses: actions/upload-artifact@v4
@@ -151,7 +154,10 @@ jobs:
         continue-on-error: true
         env:
           ATLAS_BROWSER: msedge
-        run: python scripts/capture_design_review.py
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install msedge
+          python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Edge)
         if: always()
         uses: actions/upload-artifact@v4

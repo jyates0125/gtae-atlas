@@ -26,10 +26,13 @@ for slug in SLUGS:
     path=f'heist-{slug}.html'
     html=(ROOT/path).read_text(encoding='utf-8')
     parsed=HTMLProbe();parsed.feed(html)
-    art=f'./art/atlas93-heist-{slug}.svg'
-    assert art in [src for src,alt in parsed.svgs],(path,'missing exact artwork')
-    assert (ROOT/art[2:]).stat().st_size>2000,(path,'empty art file')
-    assert any('not a verified in-game map' in alt for src,alt in parsed.svgs if src==art),path
+    art=f'./art/jura159-heist-{slug}.webp'
+    assert art in [src for src,alt in parsed.svgs],(path,'missing exact premium mission artwork')
+    assert (ROOT/art[2:]).stat().st_size>20000,(path,'empty premium image')
+    assert (ROOT/art[2:]).read_bytes()[:4]==b'RIFF',(path,'not WebP')
+    assert any(('concept' in alt.lower() or 'illustrat' in alt.lower()) for src,alt in parsed.svgs if src==art),(path,'missing illustrative art disclosure')
+    # The schematic remains explicitly separate from the cinematic hero.
+    assert (ROOT/f'art/atlas152-planning-{slug}.svg').is_file(),(path,'missing fallback planning diagram')
     assert 'j120-heist-page' in html and f'data-heist="{slug}"' in html
     assert f'body.j120-heist-page[data-heist="{slug}"]' in css
     assert './atlas120-heist-worlds.css?v=120' in html
@@ -44,4 +47,4 @@ for slug in SLUGS:
     missing=[u for u in parsed.urls if u and not (ROOT/u).is_file()]
     assert not missing,(path,missing)
 assert len(SLUGS)==len(set(SLUGS))==15
-print('Atlas 12.0 PASS: 15 original heist illustrations, current Elario headers, save-key UI and source cautions')
+print('Atlas 12.0 PASS: 15 unique cinematic heist images and separate planning diagrams, current Elario headers, save-key UI and source cautions')
