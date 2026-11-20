@@ -199,3 +199,38 @@ body.j186-cayo-routing .j186-route-badges .j186-first circle{
 body.j186-cayo-routing .j186-route-badges .j186-first text{
  fill:#2c1634;stroke:none
 }
+
+/* Atlas 18.6 route readability pass: the real visual check showed the old
+   <1px stroke disappearing against Cayo's white road network. */
+body.j186-cayo-routing .j186-route-line{
+ stroke:#ffd166!important;stroke-width:4.1!important;
+ stroke-dasharray:10 7!important;stroke-linecap:round!important;
+ opacity:1!important;vector-effect:non-scaling-stroke;
+ filter:drop-shadow(0 1px 2px #170a25) drop-shadow(0 0 2px #100918)
+}
+body.j186-cayo-routing .j186-stop circle{
+ stroke-width:2.4!important;vector-effect:non-scaling-stroke;
+ filter:drop-shadow(0 0 3px #0c0716)
+}
+body.j186-cayo-routing .j186-first circle{
+ fill:#087a73!important;stroke:#b6fff4!important;stroke-width:2.5!important
+}
+body.j186-cayo-routing .j186-filter-drawer{
+ border:1px solid #725883;border-radius:9px;margin-top:4px;
+ background:#261a36;min-width:0
+}
+body.j186-cayo-routing .j186-filter-drawer summary{
+ list-style:revert;cursor:pointer;padding:11px 13px;
+ font:800 12px system-ui;color:#ffdaa3;min-height:40px
+}
+body.j186-cayo-routing .j186-filter-drawer:focus-within{
+ border-color:#ffdda6
+}
+body.j186-cayo-routing .j186-filter-drawer .j186-categories{
+ border-top:1px solid #6f557e;border-bottom:0;
+ padding:10px;gap:6px
+}
+body.j186-cayo-routing .j186-preset[aria-pressed=true]{
+ background:#ffdda4!important;color:#2d1837!important;
+ border-color:#ffeac3!important;box-shadow:0 0 0 1px #ffe6a466
+}
