@@ -29,6 +29,8 @@ if(document.body.classList.contains('j120-heist-page')){
   // Nov 20 owner-approved Cayo flagship: map-first purple/gold layout with dated chests.
   const flagshipStyle=document.createElement('link');flagshipStyle.rel='stylesheet';flagshipStyle.href='./atlas180-cayo-flagship.css?v=180';document.head.append(flagshipStyle);
   const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=180';document.body.append(flagship);
+  const iconsStyle=document.createElement('link');iconsStyle.rel='stylesheet';iconsStyle.href='./atlas181-cayo-hotspots.css?v=181';document.head.append(iconsStyle);
+  const icons=document.createElement('script');icons.async=false;icons.src='./atlas181-cayo-hotspots.js?v=181';document.body.append(icons);
  }
 }
 })();
