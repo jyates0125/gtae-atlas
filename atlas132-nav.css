@@ -53,3 +53,10 @@
  }
  .j132-nav.is-open::before{z-index:-1}
 }
+
+/* Atlas 15.9 · remove the redundant legacy Atlas HQ / Menu floating dock
+   when the accessible global All Pages navigation is available.
+   Prevents blocking map CTAs and obscuring iPhone browser controls. */
+@media(max-width:820px){
+ body:has(#j132-nav-toggle) #j89-shell{display:none!important}
+}
