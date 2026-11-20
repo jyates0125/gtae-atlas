@@ -163,7 +163,8 @@ function update(){
 }
 records.forEach(([cat,x,y,name,poi,view],i)=>{
  const key=cat+'-'+i;
- const b=button('','j181-hotspot',()=>popup(name,descriptions[cat],allItems[i]));
+ const glyph=categories.find(c=>c[0]===cat)?.[2]||'●';
+ const b=button(glyph,'j181-hotspot',()=>popup(name,descriptions[cat],allItems[i]));
  b.dataset.category=cat;b.dataset.markerId=key;b.style.left=x+'%';b.style.top=y+'%';
  b.setAttribute('aria-label',categories.find(c=>c[0]===cat)?.[1]+': '+name+' (approximate)');
  b.title=name+' · '+(view==='enhanced'?'enhanced visual reference':'click map symbol for details');
@@ -196,20 +197,21 @@ if(chestLayer){
  chestMonitor.observe(chestLayer,{childList:true});
 }
 const notice=document.querySelector('.j180-legend-foot');
-if(notice)notice.textContent='Tap the colored symbols on the map for their details. No duplicate pins. Icon hotspots are reference-aligned, not exact GTA coordinates; yellow chest markers are possible spots, cyan outlines denote dated or personal selections.';
+if(notice)notice.textContent='Tap the Team Jura marker symbols on the map for details. Positions approximate and based on source/owner references; yellow means possible treasure chest, cyan means dated calculated or personal selection.';
 const status=document.querySelector('.j180-map-status');
 const updateSourceCaption=()=>{
  const source=focus.dataset.mapSource;
  if(source==='original'||source==='enhanced'){
   const modes=document.querySelectorAll('.j180-mode[data-mode]');
   modes.forEach(m=>{if(m.dataset.mode==='original'||m.dataset.mode==='enhanced')m.setAttribute('aria-pressed',String(m.dataset.mode===source));});
+  const locallyTraced=focus.dataset.mapAsset==='local-trace';
   if(status)status.textContent=source==='original'?
-   'In-game island base map · colorful symbol hotspots approximate; use the legend to filter map references.':
-   'Enhanced Cayo illustration fallback · colorful symbol hotspots approximate; game island image could not be loaded. Route coordinates remain schematic.';
+   (locallyTraced?'Offline Elario Cayo road-map reconstruction based on the owner reference. Symbols clickable, positions approximate; not an in-game map export.':'GTA Wiki in-game island base map with original Team Jura clickable reference markers, approximate positions.'):
+   'Original Elario enhanced concept map · illustrative marker positions and no verified travel routing.';
  }
 };
 updateSourceCaption();
-new MutationObserver(updateSourceCaption).observe(focus,{attributes:true,attributeFilter:['data-map-source']});
+new MutationObserver(updateSourceCaption).observe(focus,{attributes:true,attributeFilter:['data-map-source','data-map-asset']});
 update();
 window.teamJuraCayoHotspots={count:allItems.length,categories:categories.map(c=>c[0]),refresh:update,openMarker:key=>{const r=allItems.find(x=>x.key===key);r?.button.click();return !!r}};
 })();
