@@ -74,14 +74,27 @@ async def capture():
                                       .filter(img=>{const r=img.getBoundingClientRect();return r.width>0&&r.height>0&&r.top<innerHeight&&r.bottom>0})
                                       .filter(img=>img.complete&&img.naturalWidth===0)
                                       .map(img=>({src:img.getAttribute('src')||'',alt:img.alt||''})).slice(0,12)""")
-                                    overflow=await page.evaluate("""() => ({
-                                      scroll:document.documentElement.scrollWidth,
-                                      width:window.innerWidth
-                                    })""")
+                                    overflow=await page.evaluate("""() => {
+                                      const width=window.innerWidth;
+                                      const scroll=document.documentElement.scrollWidth;
+                                      if(scroll<=width+8)return {scroll,width,offenders:[]};
+                                      const offenders=[...document.body.querySelectorAll('*')].map(el=>{
+                                        const box=el.getBoundingClientRect();
+                                        return {el,left:Math.round(box.left),right:Math.round(box.right),
+                                          width:Math.round(box.width)};
+                                      }).filter(o=>o.width>0&&o.left<width&&o.right>width+8)
+                                        .sort((a,b)=>b.right-a.right).slice(0,18)
+                                        .map(o=>({tag:o.el.tagName.toLowerCase(),id:o.el.id,
+                                          cls:String(o.el.className?.baseVal||o.el.className||'').slice(0,100),
+                                          left:o.left,right:o.right,width:o.width,
+                                          overflowX:getComputedStyle(o.el).overflowX}));
+                                      return {scroll,width,offenders};
+                                    }""")
                                     records.append({'page':path,'viewport':[width,height],'captured':True,
                                       'file':file.relative_to(ROOT).as_posix(),
                                       'visibleImageFailures':image_issues,
-                                      'horizontalOverflowPixels':max(0,overflow['scroll']-overflow['width'])})
+                                      'horizontalOverflowPixels':max(0,overflow['scroll']-overflow['width']),
+                                      'horizontalOverflowCandidates':overflow['offenders']})
                                 except Exception as exc:
                                     records.append({'page':path,'viewport':[width,height],'captured':False,'reason':str(exc)[:260]})
                                     print('Visual evidence warning:',path,label,str(exc)[:180])

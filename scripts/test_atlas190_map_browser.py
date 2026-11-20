@@ -47,8 +47,9 @@ try:
    page.locator('#j190-iv-scope').select_option('tbogt')
    assert page.locator('#visibleCount').inner_text()=='50'
    page.locator('#classicPins').click()
-   assert 'Map symbols hidden' in page.locator('#j190-marker-status').inner_text()
+   page.wait_for_function("document.querySelector('#j190-marker-status')?.textContent?.includes('Map symbols hidden')",timeout=10000)
    page.locator('#classicPins').click()
+   page.wait_for_function("document.querySelector('#j190-marker-status')?.textContent?.includes('matching landmark records')",timeout=10000)
    proof=ROOT/'qa-evidence'/engine
    proof.mkdir(parents=True,exist_ok=True)
    page.locator('#classicMapShell').screenshot(path=str(proof/('atlas-190-iv-collectibles-'+kind+'.png')),animations='disabled',timeout=30000)
