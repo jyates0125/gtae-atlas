@@ -251,7 +251,13 @@ function juraSwitchMap(mode){
  zoom=1;dx=dy=0;setView();detailFor(null);
  if(juraMapMode==='original'){
   if(juraSourceReady)juraShowSource();
-  else{sec.dataset.mapSource='loading';hint.textContent='Loading Cayo island map…';juraSource.src=juraLocalFallback?juraLocalRoadPlan:juraOriginalMap;
+  else{sec.dataset.mapSource='loading';sec.dataset.mapAsset='local-trace';
+   // Show the bundled offline Elario road-map surface immediately while
+   // attempting the external original image: marker users never see a blank map.
+   world.style.backgroundImage='url("'+juraLocalRoadPlan+'")';
+   world.style.backgroundSize='100% 100%';world.style.backgroundPosition='center';
+   hint.textContent='Local island road-map fallback visible while checking the game-map source. Pins approximate; routes schematic.';
+   juraSource.src=juraLocalFallback?juraLocalRoadPlan:juraOriginalMap;
   if(juraSourceTimeout)clearTimeout(juraSourceTimeout);
   if(!juraLocalFallback)juraSourceTimeout=setTimeout(()=>{if(!juraSourceReady&&juraMapMode==='original'&&!juraLocalFallback){juraLocalFallback=true;sec.dataset.mapAsset='local-trace';juraSource.src=juraLocalRoadPlan;}},6500);
  }
