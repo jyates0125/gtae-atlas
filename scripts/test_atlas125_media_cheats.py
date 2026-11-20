@@ -22,7 +22,7 @@ for key in expected:
     art=re.search(r"art:'([^']+\.svg)'",entry)
     assert art and (ROOT/'art'/art.group(1)).is_file(),key
     assert re.search(r"coverFallback:'\./art/[^']+'",entry),key
-    image=re.search(r"coverSrc:'(\\./art/(?:jura155-(?:story|online|vi|cayo)|jura157-(?:iv|sa|vc|iii|vcs|lcs|ctw|tlad|tbogt)-cinematic)\\.webp)'",entry)
+    image=re.search(r"coverSrc:'(\./art/(?:jura155-(?:story|online|vi|cayo)|jura157-(?:iv|sa|vc|iii|vcs|lcs|ctw|tlad|tbogt)-cinematic)\.webp)'",entry)
     assert image is not None, f"Missing world-specific cinematic cover: {key}"
     asset=ROOT/image.group(1).removeprefix('./')
     blob=asset.read_bytes()
