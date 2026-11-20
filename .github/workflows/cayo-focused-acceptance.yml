@@ -14,6 +14,7 @@ on:
       - 'scripts/test_atlas1*_cayo_*.py'
       - 'scripts/test_atlas171_browser.py'
       - 'scripts/test_atlas186_route_browser.py'
+      - 'scripts/test_atlas188_cayo_flow.py'
       - '.github/workflows/cayo-focused-acceptance.yml'
   workflow_dispatch:
 permissions:
@@ -35,12 +36,13 @@ jobs:
           python-version: '3.12'
       - name: Parse Cayo tests and scripts
         run: |
-          python -m py_compile scripts/test_atlas171_browser.py scripts/test_atlas180_cayo_flagship.py scripts/test_atlas181_cayo_hotspots.py scripts/test_atlas184_cayo_visible_symbols.py scripts/test_atlas185_cayo_polish.py scripts/test_atlas186_cayo_route.py scripts/test_atlas186_route_browser.py
+          python -m py_compile scripts/test_atlas171_browser.py scripts/test_atlas180_cayo_flagship.py scripts/test_atlas181_cayo_hotspots.py scripts/test_atlas184_cayo_visible_symbols.py scripts/test_atlas185_cayo_polish.py scripts/test_atlas186_cayo_route.py scripts/test_atlas186_route_browser.py scripts/test_atlas188_cayo_flow.py
           node --check atlas171-cayo-board.js
           node --check atlas180-cayo-flagship.js
           node --check atlas181-cayo-hotspots.js
           node --check atlas185-cayo-polish.js
           node --check atlas186-cayo-route.js
+          node --check atlas188-cayo-flow.js
           node --check heist-pages.js
       - name: Validate Cayo map, icon categories and source data
         run: |
@@ -51,6 +53,7 @@ jobs:
           python scripts/test_atlas184_cayo_visible_symbols.py
           python scripts/test_atlas185_cayo_polish.py
           python scripts/test_atlas186_cayo_route.py
+          python scripts/test_atlas188_cayo_flow.py
       - name: Build actual Cloudflare Pages payload
         run: |
           node scripts/build-cloudflare.cjs
@@ -75,5 +78,6 @@ jobs:
             qa-evidence/chromium/cayo-171-*.png
             qa-evidence/chromium/cayo-186-*.png
             qa-evidence/chromium/cayo-186-route-*.png
+            qa-evidence/chromium/cayo-188-*.png
           if-no-files-found: warn
           retention-days: 14
