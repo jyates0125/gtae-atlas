@@ -63,7 +63,20 @@ const clearRoute=btn('Clear route','j167-secondary',()=>{saved.route=[];persist(
 const challengeHeading=el('h3','','Challenges & progress');side.append(challengeHeading);
 const challengeText=el('p','j167-note','Personal tracking only. Career Progress tiers and exact Elite conditions must be checked in the current game menu; this is not linked to Rockstar progress.');
 side.append(challengeText);
-const awardNames=['Elite finale reviewed','Career tier 1','Career tier 2','Career tier 3','Career tier 4'];
+const originalHeists=new Set(['fleeca','prison-break','humane-labs','series-a','pacific-standard']);
+const doomsdayActs=new Set(['doomsday-act-1','doomsday-act-2','doomsday-act-3']);
+let awardNames;
+if(id==='cayo-perico'){
+ awardNames=['Elite: under 15 minutes','Elite: zero failed hacks','Elite: full loot bags','Elite: no team deaths','Elite: avoid compound detection',
+             'Cayo Career Progress category · Tier 1','Cayo Career Progress category · Tier 2','Cayo Career Progress category · Tier 3','Cayo Career Progress category · Tier 4'];
+}else if(id==='diamond-casino'){
+ awardNames=['Elite finale reviewed','Casino Heist Career category · Tier 1','Casino Heist Career category · Tier 2','Casino Heist Career category · Tier 3','Casino Heist Career category · Tier 4'];
+}else if(doomsdayActs.has(id)||originalHeists.has(id)){
+ const shared=doomsdayActs.has(id)?'Doomsday':'Original Heists';
+ awardNames=['Elite finale reviewed',shared+' Career category · Tier 1',shared+' Career category · Tier 2',shared+' Career category · Tier 3',shared+' Career category · Tier 4'];
+}else{
+ awardNames=['Personal optional challenge goal 1','Personal optional challenge goal 2','Personal optional challenge goal 3','Personal optional challenge goal 4'];
+}
 const awardBox=el('div','j167-awards');
 for(const [i,label] of awardNames.entries()){
  const line=el('label','j167-award');const input=el('input');input.type='checkbox';input.checked=saved.awards.includes('a'+i);
@@ -75,6 +88,7 @@ const sourceWrap=el('div','j167-sources');
 sourceWrap.append(el('p','j167-note','Mission/POI names are research references. Pins and routes on this custom map are illustrative; variable loot, entrances and daily chests must be checked in-game.'));
 const source=el('a','','Mission information source ↗');source.href=config.source;source.target='_blank';source.rel='noopener noreferrer';
 sourceWrap.append(source);
+if(id==='cayo-perico'){const elite=el('a','','Cayo Elite criteria and rewards (GTABase) ↗');elite.href='https://www.gtabase.com/gta-online/jobs/heists/the-cayo-perico-heist';elite.target='_blank';elite.rel='noopener noreferrer';sourceWrap.append(elite);}
 const career=el('a','','Official GTA Online Career Progress ↗');career.href='https://www.rockstargames.com/gta-online';career.target='_blank';career.rel='noopener noreferrer';sourceWrap.append(career);
 side.append(sourceWrap);
 const panels=el('div','j167-panels');panels.append(list,side);sec.append(detail,panels);
