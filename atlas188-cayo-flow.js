@@ -59,7 +59,7 @@ status.setAttribute('role','status');status.setAttribute('aria-live','polite');
 bar.append(status);
 const provenance=make('details','j188-provenance');
 provenance.append(make('summary','','Map accuracy, sources & credits'));
-const sourceNote=make('p','','Map icons are original Elario symbols aligned approximately with the selected island image. Loot and equipment vary by heist. Yellow chests are possible locations; dated/player-selected cyan highlights are not official live confirmation. The gold route follows map-image positions, not drivable paths.');
+const sourceNote=make('p','','Map icons are original Elario symbols aligned approximately with the selected island image. Loot and equipment vary by heist. All 19 possible treasure chest positions remain available; yellow means possible, and dated/player-selected cyan highlights are not official live confirmation. The gold route follows map-image positions, not drivable paths.');
 provenance.append(sourceNote);
 const links=make('p','j188-source-links');
 for(const [name,url] of [
