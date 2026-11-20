@@ -124,6 +124,10 @@ jobs:
         env:
           ATLAS_BROWSER: chromium
         run: python scripts/browser_smoke.py
+      - name: Verify Cayo mission board and capture phone/desktop screenshots
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas171_browser.py
       - name: Independently capture designed-brand screenshots (Chromium)
         if: always()
         continue-on-error: true
@@ -164,6 +168,10 @@ jobs:
         env:
           ATLAS_BROWSER: msedge
         run: python scripts/browser_smoke.py
+      - name: Verify Cayo mission board and capture phone/desktop screenshots
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas171_browser.py
       - name: Independently capture designed-brand screenshots (Edge)
         if: always()
         continue-on-error: true
