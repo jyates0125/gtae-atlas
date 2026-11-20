@@ -14,7 +14,7 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-stats.html','atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-sa.html','atlas-stats.html','atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
 
 CLASSIC_WORLDS={
     'vc':('GTA Vice City','Properties'),
@@ -502,6 +502,16 @@ async def smoke():
                                     if len(set(urls))<8:failures.append('Too few distinct game-world map artworks displayed')
                                     if any('oldcity.svg' in x or 'sunset.svg' in x for x in urls):
                                         failures.append('Legacy skyline artwork returned to map covers')
+                            if not failures and path=='atlas-sa.html':
+                                await pg.wait_for_function("document.querySelector('#mapped')?.textContent==='150'")
+                                for label in ['Graffiti Tags','Unique Stunt Jumps','Snapshots']:
+                                    await pg.locator('#categories button').filter(has_text=label).click()
+                                    status=pg.locator('#mapStatus')
+                                    if label=='Snapshots':
+                                        if '50 mapped' not in await status.inner_text():
+                                            failures.append('SA snapshot coverage count is incorrect')
+                                    elif '0 mapped' not in await status.inner_text() or await status.locator('a').count()!=1:
+                                        failures.append('SA guide-only collection lacks its coverage count or map reference')
                             if not failures and path=='atlas-cayo.html':
                                 if await pg.locator('#j121Original').count()!=1 or await pg.locator('#j121Planner').count()!=1:
                                     failures.append('Original Cayo game map and separate heist planning tabs missing')
