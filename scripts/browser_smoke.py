@@ -30,6 +30,11 @@ HEIST_PAGES={p.name for p in ROOT.glob('heist-*.html')}
 if len(HEIST_PAGES)<15:
     raise SystemExit('The release must contain all 15 heist planning pages')
 PAGES.extend(sorted(HEIST_PAGES.difference(PAGES)))
+# Atlas 19.1: every deployable root HTML page must be covered, including
+# archive/secondary tools omitted from the earlier hand-maintained list.
+PAGES.extend(p.name for p in sorted(ROOT.glob('*.html')) if p.name not in PAGES)
+assert {p.name for p in ROOT.glob('*.html')} <= {p.split('?')[0] for p in PAGES}
+
 # Release-candidate completeness: do not let newly added/older public pages fall
 # through the cracks just because an earlier manual smoke list missed them.
 # Preserve explicit query-state scenarios, then append every other published
@@ -80,7 +85,18 @@ async def smoke():
                             pg.on('response',lambda r:missing.append(r.url) if r.status>=400 and r.url.startswith(URL+'/') else None)
                             response=await pg.goto(URL+'/'+path,wait_until='domcontentloaded',timeout=25000)
                             await pg.wait_for_timeout(800)
-                            info=await pg.evaluate('''() => ({title:document.title, h1:document.querySelector('h1')?.textContent?.trim(),scroll:document.documentElement.scrollWidth, width:window.innerWidth})''')
+                            info=await pg.evaluate('''() => {
+ const controls=[...document.querySelectorAll('button,input:not([type=hidden]),select,textarea,[role=button]')];
+ const unlabeled=controls.filter(el => {
+   const aria=el.getAttribute('aria-label')||el.getAttribute('aria-labelledby')||el.title||'';
+   const text=el.textContent?.trim()||el.value||'';
+   const wrapping=el.closest('label')?.textContent?.trim()||'';
+   return !(aria||text||wrapping||el.labels?.length);
+ }).map(el=>({tag:el.tagName,id:el.id||'',type:el.type||''})).slice(0,8);
+ return {title:document.title,h1:document.querySelector('h1')?.textContent?.trim(),
+   scroll:document.documentElement.scrollWidth,width:window.innerWidth,
+   controls:controls.length,unlabeledCount:unlabeled.length,unlabeled};
+}''')
                             failures=[]
                             if not response or response.status!=200:failures.append('HTTP page response not 200')
                             if not info.get('title') or not info.get('h1'):failures.append('Missing page title or heading')
@@ -1051,7 +1067,22 @@ async def smoke():
                                 if await pg.locator('.j130-olr-share').count():failures.append('Discontinued film share kit still interrupts content')
                                 if await pg.locator('[data-j131-social-host] [data-j131-platform]').count()<4:
                                     failures.append('Bottom-of-page community social buttons missing on film')
-                            results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures})
+                            # Generic, non-destructive UX checks after individual page tests.
+                            # Do not click destructive/financial/account/import actions automatically.
+                            if not failures:
+                                try:
+                                    for d in (await pg.locator('details > summary').all())[:1]:
+                                        if await d.is_visible():
+                                            was=await d.evaluate('(e)=>e.parentElement.open')
+                                            await d.click(timeout=1800)
+                                            now=await d.evaluate('(e)=>e.parentElement.open')
+                                            if was==now:failures.append('Details disclosure did not respond')
+                                            break
+                                except Exception as exc:
+                                    failures.append('Details disclosure interaction: '+str(exc)[:150])
+                            results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures,
+                              'controls':info['controls'],'unlabeledControls':info['unlabeledCount'],
+                              'unlabeledExamples':info['unlabeled']})
                             await pg.close()
                         await ctx.close()
                     ctx=await browser.new_context(viewport={'width':1366,'height':850})
