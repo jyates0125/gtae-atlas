@@ -156,6 +156,7 @@ const pickStart=button('Pick starting pin','j186-action j186-primary',()=>{
  if(choosingStart)frame.scrollIntoView({block:'start',behavior:'smooth'});
 });
 pickStart.setAttribute('aria-pressed','false');
+pickStart.id='j186-pick-start';
 const buildBtn=button('Build nearest route','j186-action j186-primary',()=>autoRoute());
 const nextBtn=button('Add next nearest','j186-action',()=>appendNearest());
 const reverseBtn=button('Reverse stops','j186-action',()=>{
