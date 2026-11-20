@@ -234,3 +234,32 @@ body.j186-cayo-routing .j186-preset[aria-pressed=true]{
  background:#ffdda4!important;color:#2d1837!important;
  border-color:#ffeac3!important;box-shadow:0 0 0 1px #ffe6a466
 }
+
+/* Atlas 18.7 — Explicit final-stop reference, never a second source pin. */
+body.j186-cayo-routing .j186-destination{
+ margin:0 0 10px;padding:8px 10px;border:1px solid #80628a;
+ border-radius:8px;background:#2b203b;color:#f5dcf2;
+ font:650 12px/1.5 system-ui;
+}
+body.j186-cayo-routing .j186-final-stop{
+ border-color:#ffdb9b;background:#40304a;
+}
+body.j186-cayo-routing .j186-final-stop .j186-ordinal{color:#ffe0a3}
+body.j186-cayo-routing .j181-hotspot.j186-finish .j183-svg{
+ filter:drop-shadow(0 0 3px #fff4d1) drop-shadow(0 0 4px #ffbe71)!important;
+}
+body.j186-cayo-routing .j180-chest.j186-finish:after{
+ outline:2px dashed #ffda9b;outline-offset:4px;
+}
+body.j186-cayo-routing .j186-route-badges .j186-last circle{
+ fill:#63366f;stroke:#ffe6a3;stroke-width:2.5;
+}
+body.j186-cayo-routing .j186-route-badges .j186-last text{
+ fill:#ffefc4;stroke:#251230;
+}
+body.j186-cayo-routing .j180-pin-info .j186-pin-actions{
+ grid-template-columns:repeat(auto-fit,minmax(125px,1fr));
+}
+@media(max-width:425px){
+ body.j186-cayo-routing .j180-pin-info .j186-pin-actions{grid-template-columns:1fr}
+}
