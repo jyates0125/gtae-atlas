@@ -146,7 +146,7 @@ function update(){
  const query=String(focus.querySelector('.j167-search')?.value||'').trim().toLowerCase();
  const mapSource=focus.dataset.mapSource;
  for(const item of allItems){
-  const modeOk=!item.view||item.view===mapSource;
+  const modeOk=mapSource!=='loading'&&(!item.view||item.view===mapSource);
   const matches=!query||(item.name+' '+item.cat+' '+(descriptions[item.cat]||'')).toLowerCase().includes(query);
   item.button.hidden=!modeOk||hiddenCats.has(item.cat)||!matches;
   item.button.classList.toggle('j181-noted',visited.has(item.key));
@@ -198,7 +198,18 @@ if(chestLayer){
 const notice=document.querySelector('.j180-legend-foot');
 if(notice)notice.textContent='Tap the colored symbols on the map for their details. No duplicate pins. Icon hotspots are reference-aligned, not exact GTA coordinates; yellow chest markers are possible spots, cyan outlines denote dated or personal selections.';
 const status=document.querySelector('.j180-map-status');
-if(status)status.textContent='The map symbols themselves are interactive. Touch or click a colorful location, or filter with the legend. Position alignment is approximate.';
+const updateSourceCaption=()=>{
+ const source=focus.dataset.mapSource;
+ if(source==='original'||source==='enhanced'){
+  const modes=document.querySelectorAll('.j180-mode[data-mode]');
+  modes.forEach(m=>{if(m.dataset.mode==='original'||m.dataset.mode==='enhanced')m.setAttribute('aria-pressed',String(m.dataset.mode===source));});
+  if(status)status.textContent=source==='original'?
+   'In-game island base map · colorful symbol hotspots approximate; use the legend to filter map references.':
+   'Enhanced Cayo illustration fallback · colorful symbol hotspots approximate; game island image could not be loaded. Route coordinates remain schematic.';
+ }
+};
+updateSourceCaption();
+new MutationObserver(updateSourceCaption).observe(focus,{attributes:true,attributeFilter:['data-map-source']});
 update();
 window.teamJuraCayoHotspots={count:allItems.length,categories:categories.map(c=>c[0]),refresh:update,openMarker:key=>{const r=allItems.find(x=>x.key===key);r?.button.click();return !!r}};
 })();
