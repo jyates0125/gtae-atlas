@@ -113,6 +113,16 @@ if(id==='cayo-perico'){
 const tertiary=el('div','j167-footer');tertiary.append(el('span','','Need a wider setup route? The regional GTA Online map remains below as an optional tool.'));sec.append(tertiary);
 const cover=box.querySelector(':scope > img');
 if(cover)cover.insertAdjacentElement('afterend',sec);else box.prepend(sec);
+// Preserve the working regional fallback, but rename legacy text to match the new
+// dedicated heist-first map presentation. Do not duplicate empty world-map invites.
+const oldTitle=box.querySelector(':scope > h2');
+const oldDesc=box.querySelector(':scope > p');
+const oldLink=box.querySelector(':scope > a.btn');
+const oldNote=box.querySelector(':scope > .small');
+if(oldTitle)oldTitle.textContent=id==='cayo-perico'?'Original Cayo island map · source reference':'Regional support map · optional';
+if(oldDesc)oldDesc.textContent=id==='cayo-perico'?'The complete Cayo explorer offers the original island image and separate interactive schematic. Your mission-specific POIs and personal route are above.':'Use the regional GTA Online map for wider setups and long-distance routes. The localized mission diagram, pin list and progress tools are above.';
+if(oldLink)oldLink.textContent=id==='cayo-perico'?'Open original Cayo island explorer ↗':'Open GTA Online regional map ↗';
+if(oldNote)oldNote.textContent='The mission map above is an original illustration, not verified game geography.';
 function seed(s){let h=2166136261;for(const ch of s)h=Math.imul(h^ch.charCodeAt(0),16777619);return h>>>0}
 let randSeed=seed(id),rando=()=>{randSeed=(Math.imul(randSeed,1664525)+1013904223)>>>0;return randSeed/4294967296};
 const ctx=canvas.getContext('2d');const w=1100,h=660;

@@ -22,6 +22,7 @@ assert len(files)==16
 assert all(f.is_file() and f.stat().st_size>20000 for f in files)
 assert len({sha256(f.read_bytes()).hexdigest() for f in files})==16
 assert "photo.src='./art/jura167-map-'+id+'.webp'" in src and 'photoReady' in src
+assert "Regional support map · optional" in src and "Original Cayo island map · source reference" in src
 
 assert 'jura159-heist-' in loader and 'atlas167-heist-focus.js?v=167' in loader
 assert 'atlas167-heist-focus.css?v=167' in loader

@@ -88,6 +88,7 @@ async def smoke():
                                     # Atlas 16.7: each heist must show its own focused mission map
                                     # before the optional regional world-map iframe.
                                     await pg.locator('#j167-heist-map').wait_for(timeout=9000)
+                                    await pg.wait_for_function("""() => getComputedStyle(document.querySelector('#j167-heist-map .j167-world')).backgroundImage.includes('jura167-map-')""",timeout=9000)
                                     pins=pg.locator('#j167-heist-map .j167-pin')
                                     if await pins.count()<5:
                                         failures.append('Focused mission map has fewer than five accessible POI pins')
