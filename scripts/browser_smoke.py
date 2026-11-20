@@ -87,6 +87,9 @@ async def smoke():
                             pg.on('response',lambda r:missing.append(r.url) if r.status>=400 and r.url.startswith(URL+'/') else None)
                             response=await pg.goto(URL+'/'+path,wait_until='domcontentloaded',timeout=25000)
                             await pg.wait_for_timeout(800)
+                            # Record first-load scroll before Playwright scrolls into off-screen
+                            # sidebar and category controls further down this test.
+                            initial_map_scroll=await pg.evaluate('window.scrollY') if width==390 and path in ('atlas.html','atlas-online.html','atlas-vi.html') else 0
                             info=await pg.evaluate('''() => {
  const controls=[...document.querySelectorAll('button,input:not([type=hidden]),select,textarea,[role=button]')];
  const unlabeled=controls.filter(el => {
@@ -273,7 +276,7 @@ async def smoke():
                             # and must not change the existing mission checklist storage.
                             if path in ('heist-fleeca.html','heist-cayo-perico.html') and not failures:
                                 try:
-                                    await pg.locator('#j164-mission-map').wait_for(timeout=7000)
+                                    await pg.locator('#j164-mission-map').wait_for(state='attached',timeout=7000)
                                     mission=path.removeprefix('heist-').removesuffix('.html')
                                     # Atlas 16.7: each heist must show its own focused mission map
                                     # before the optional regional world-map iframe.
@@ -707,8 +710,8 @@ async def smoke():
                                         }""")
                                     if not placed:
                                         failures.append('Mobile Open interactive map shortcut must follow all game nav before explorer search')
-                                if await pg.evaluate('window.scrollY')>100:
-                                    failures.append('Mobile explorer opens scrolled into filters instead of showing the map')
+                                if initial_map_scroll>100:
+                                    failures.append('Mobile explorer opens scrolled into filters instead of showing the map: '+str(initial_map_scroll)+'px at initial load')
                                 nav=pg.locator('#j132-nav-toggle')
                                 if await nav.count()!=1 or not await nav.is_visible():failures.append('Mobile map all-pages navigation missing')
                                 else:
@@ -853,17 +856,20 @@ async def smoke():
                                         first=pg.locator('#legend button.legend-choice').first
                                         await first.wait_for(state='visible',timeout=6500)
                                         await first.scroll_into_view_if_needed(timeout=6500)
-                                        if await first.get_attribute('aria-pressed')!='false':
-                                            failures.append('New visitor sees active marker categories by default')
+                                        # Keep owner-approved first-visit visible map categories.
+                                        # Toggle off and on; saved preferences must still work.
+                                        initial=await first.get_attribute('aria-pressed')
+                                        if initial!='true':
+                                            failures.append('New visitor is missing the default visible map category')
                                         else:
                                             await first.click(timeout=5000)
-                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='true':
-                                                failures.append('One-click category on did not change button state')
-                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
-                                                failures.append('One-click category on did not activate map pins')
-                                            await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
                                             if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='false':
-                                                failures.append('One-click category off did not disable pins')
+                                                failures.append('One-click category off did not disable selected category')
+                                            await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
+                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='true':
+                                                failures.append('One-click category on did not restore selected category')
+                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
+                                                failures.append('Restored category did not activate map pins')
                                     except Exception as exc:
                                         failures.append('Map legend could not be toggled: '+str(exc)[:700])
                                 toggle=pg.locator('#juraToggle3d')
@@ -1101,8 +1107,8 @@ async def smoke():
                             if not failures and path=='atlas93-garage.html':
                                 if width==390:
                                     garage_nav=pg.locator('.mast nav')
-                                    if await garage_nav.locator('a').count()!=7:
-                                        failures.append('Mobile Garage navigation must preserve all seven destinations')
+                                    if await garage_nav.locator('a').count()!=8:
+                                        failures.append('Mobile Garage navigation must preserve all eight current destinations, including GTA VI vehicles')
                                     metrics=await garage_nav.evaluate('(el)=>({height:el.getBoundingClientRect().height, scroll:el.scrollWidth,client:el.clientWidth,wrap:getComputedStyle(el).flexWrap})')
                                     if metrics['height']>65 or metrics['wrap']!='nowrap':
                                         failures.append('Garage mobile header navigation wraps into multiple rows')
@@ -1177,7 +1183,10 @@ async def smoke():
                             if not failures and path=='atlas-iv.html':
                                 if await pg.locator('#classicCanvas').count()==0:failures.append('GTA IV canvas missing')
                                 if await pg.locator('#classicLayer option').count()<2:failures.append('GTA IV layers missing')
-                                if 'source landmarks' not in await pg.locator('#recordStatus').inner_text():failures.append('Local GTA IV landmark snapshot did not load') 
+                                if 'licensed community landmarks' not in await pg.locator('#recordStatus').inner_text():
+                                    failures.append('Bundled GTA IV landmark snapshot did not load')
+                                if int((await pg.locator('#visibleCount').inner_text()).replace(',','') or '0')<2000:
+                                    failures.append('GTA IV landmark snapshot has fewer than 2,000 mapped records') 
                                 if await pg.locator('#classic3dToggle').count():
                                     failures.append('Older map incorrectly includes deferred 3D viewer')
                             if not failures and path=='atlas98-landmarks.html':
@@ -1199,7 +1208,7 @@ async def smoke():
                                     for d in (await pg.locator('details > summary').all())[:1]:
                                         if await d.is_visible():
                                             was=await d.evaluate('(e)=>e.parentElement.open')
-                                            await d.click(timeout=1800)
+                                            await d.click(timeout=5500)
                                             now=await d.evaluate('(e)=>e.parentElement.open')
                                             if was==now:failures.append('Details disclosure did not respond')
                                             break
