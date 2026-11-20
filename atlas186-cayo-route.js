@@ -112,7 +112,7 @@ for(const b of document.querySelectorAll('.j180-legend-row[data-cat]')){
  check.addEventListener('change',()=>{
   if(check.checked&&!state.categories.includes(cat))state.categories.push(cat);
   else if(!check.checked)state.categories=state.categories.filter(x=>x!==cat);
-  persist();if(state.start&&state.mode==='nearest')autoRoute();else render();
+  refreshFilters();persist();if(state.start&&state.mode==='nearest')autoRoute();else render();
  });
  const icon=b.querySelector('.j180-glyph')?.cloneNode(true);
  if(icon)label.append(icon);
