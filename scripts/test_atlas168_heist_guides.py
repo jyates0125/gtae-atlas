@@ -23,4 +23,7 @@ assert 'guide.async=false' in loader and 'focus.async=false' in loader
 assert 'jura159-heist-' in loader and "atlas93-heist-'+heistId+'.svg" not in loader
 assert css.count('{')==css.count('}') and '@media(max-width:480px)' in css
 assert 'background-image:' not in css and '.svg' not in css
+browser=(r/'scripts/browser_smoke.py').read_text()
+assert "await pg.locator('#j168-heist-guide').wait_for" in browser
+assert "teamjura-heist-walkthrough-v1:" in browser and "Walkthrough map POI button" in browser
 print('Atlas 16.8 15 heists: 5W prep/finale walkthrough, map context, save/export, artistic non-regression PASS')

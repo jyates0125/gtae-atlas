@@ -89,6 +89,25 @@ async def smoke():
                                     # Atlas 16.7: each heist must show its own focused mission map
                                     # before the optional regional world-map iframe.
                                     await pg.locator('#j167-heist-map').wait_for(timeout=9000)
+                                    # Atlas 16.8: the visible heist map and the source-informed
+                                    # five-question guide must coexist without changing older save keys.
+                                    await pg.locator('#j168-heist-guide').wait_for(timeout=9000)
+                                    if await pg.locator('#j168-heist-guide .j168-fields dt').all_inner_texts()!=['What','When','Where','Why','How']:
+                                        failures.append('Walkthrough does not explain What, When, Where, Why and How')
+                                    await pg.locator('#j168-heist-guide .j168-tab').filter(has_text='Preps').click()
+                                    if await pg.locator('#j168-heist-guide .j168-step').count()<1:
+                                        failures.append('Source-informed heist preparations missing')
+                                    else:
+                                        await pg.locator('#j168-heist-guide .j168-step').first.click()
+                                        await pg.locator('#j168-heist-guide .j168-done').click()
+                                        done=await pg.evaluate("""() => JSON.parse(localStorage.getItem('teamjura-heist-walkthrough-v1:'+document.body.dataset.heist)||'{}').done""")
+                                        if not isinstance(done,list) or not done:
+                                            failures.append('New heist walkthrough completion was not saved locally')
+                                        if await pg.locator('#j168-heist-guide .j168-map').count():
+                                            await pg.locator('#j168-heist-guide .j168-map').click()
+                                            field=await pg.locator('#j167-heist-map .j167-search').input_value()
+                                            if not field:
+                                                failures.append('Walkthrough map POI button did not filter the focused map')
                                     await pg.wait_for_function("""() => getComputedStyle(document.querySelector('#j167-heist-map .j167-world')).backgroundImage.includes('jura167-map-')""",timeout=9000)
                                     pins=pg.locator('#j167-heist-map .j167-pin')
                                     if await pins.count()<5:
