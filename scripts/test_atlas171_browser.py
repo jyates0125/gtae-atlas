@@ -34,6 +34,18 @@ try:
         page.wait_for_function("document.querySelectorAll('.j180-chest').length === 19",timeout=20000)
         assert page.locator('.j180-chest').count()==19,'All 19 possible chest references render'
         assert page.locator('.j180-legend-row').count()==14,'All 14 interactive marker legend rows render'
+        page.locator('#j181-hotspots').wait_for(state='attached',timeout=10000)
+        assert page.locator('.j181-hotspot').count()>=50,'Reference colored map icons must have clickable hotspots'
+        assert page.locator('.j167-pins').evaluate('(x)=>getComputedStyle(x).display')=='none','Generic heist pins must not be visible in Cayo'
+        assert page.locator('.j180-ref-layer').evaluate('(x)=>getComputedStyle(x).display')=='none','Generic misplaced reference pins must be hidden'
+        legend=page.locator('.j180-legend-row').filter(has_text='Grappling equipment')
+        assert legend.count()==1,'Grappling category must match the legend'
+        legend.click()
+        assert page.locator('.j181-hotspot[data-category="grapple"]:visible').count()==0,'Legend hides only grappling hotspots'
+        legend.click()
+        assert page.locator('.j181-hotspot[data-category="grapple"]:visible').count()>0,'Legend restores grappling hotspots'
+        page.locator('.j181-hotspot[data-category="entry"]').first.click()
+        assert page.locator('.j180-pin-info').is_visible(),'Existing colorful source icon click opens map details'
         page.locator('#j180-shell').screenshot(path=str(path/('cayo-180-map-'+kind+'.png')),animations='disabled',timeout=35000)
         page.locator('.j180-menu-link').filter(has_text='Entry & exit planning').click()
         page.locator('#j171-cayo-board').wait_for(state='visible',timeout=10000)
