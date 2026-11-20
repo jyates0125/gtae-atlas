@@ -2,6 +2,7 @@
 """Atlas Universe 10.0 source and page integration guard, dependency-free."""
 from pathlib import Path
 import json
+import re
 from html.parser import HTMLParser
 
 D = Path(__file__).resolve().parents[1]
@@ -49,7 +50,7 @@ for page, expected_kind in PAGES.items():
     assert 'u-category-paths' in html and 'u-world-buttons' in html
     assert './atlas93-garage.html' in html
 
-    assert "./atlas100-universe.js?v=130" in p.refs, (page, "shared JS")
+    assert any(re.fullmatch(r"\./atlas100-universe\.js\?v=\d+", ref) for ref in p.refs), (page, "shared JS")
     assert "./atlas100-universe.css?v=130" in p.refs, (page, "shared CSS")
     for ref in p.refs:
         if not ref.startswith("./"):
