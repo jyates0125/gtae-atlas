@@ -45,7 +45,7 @@ function mount(){
  const panel=document.createElement('section');panel.id='j143-official-layer';panel.className='j143-official-layer';
  panel.hidden=true;panel.setAttribute('aria-label','Official Rockstar Leonida map viewer');
  panel.innerHTML=`<header class="j143-toolbar"><div><strong>Leonida · Rockstar official map</strong><small>OFFICIAL POSTER VIEW · NO UNVERIFIED PINS</small></div><div class="j143-actions"><button type="button" data-j143="minus" aria-label="Zoom out">−</button><button type="button" data-j143="plus" aria-label="Zoom in">+</button><button type="button" data-j143="reset">Fit</button><button type="button" data-j143="close" aria-label="Return to interactive Leonida map">✕ Interactive map</button></div></header>
- <div class="j143-stage" tabindex="0" aria-label="Official Leonida map. Drag or use arrow keys to pan. Pinch or use plus and minus to zoom."><img class="j143-poster" alt="Your personal locally installed copy of Rockstar Games official Leonida map" hidden><div class="j143-empty"><strong>Explore Rockstar's official Leonida map</strong><p>Open the official map here and zoom or pan just like our other map views. This downloads about 45 MB once, then can save it in this browser for later visits. No account or file setup required.</p><button type="button" data-j143="fetch">Show Rockstar official map</button><details class="j143-advanced"><summary>Map not loading? Other options</summary><p>Some browsers block Rockstar's download. You can download the official map directly and open it here without uploading it to Team Jura.</p><a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Get map from Rockstar ↗</a><label class="j143-upload">Open downloaded map<input type="file" accept=".zip,application/zip,image/jpeg,image/png,image/webp" aria-label="Open downloaded official Rockstar map image"></label></details></div></div>
+ <div class="j143-stage" tabindex="0" aria-label="Official Leonida map. Drag or use arrow keys to pan. Pinch or use plus and minus to zoom."><img class="j143-poster" alt="Your personal locally installed copy of Rockstar Games official Leonida map" hidden><div class="j143-empty"><strong>Explore Rockstar's official Leonida map</strong><p>Open the official map here and zoom or pan just like our other map views. The official map loads here and can be saved in this browser for later visits.</p><button type="button" data-j143="fetch" hidden>Reload Rockstar map</button><details class="j143-advanced"><summary>Map not loading? Other options</summary><p>Some browsers block Rockstar's download. You can download the official map directly and open it here without uploading it to Team Jura.</p><a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Get map from Rockstar ↗</a><label class="j143-upload">Open downloaded map<input type="file" accept=".zip,application/zip,image/jpeg,image/png,image/webp" aria-label="Open downloaded official Rockstar map image"></label></details></div></div>
  <footer class="j143-foot"><span role="status" aria-live="polite" class="j143-status">Rockstar poster view · research pins are shown only on calibrated community map layers.</span><div><button type="button" data-j143="forget">Clear locally saved map</button><a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Official source ↗</a></div></footer>`;
  map.append(panel);
  const img=panel.querySelector('.j143-poster'),stage=panel.querySelector('.j143-stage'),status=panel.querySelector('.j143-status');
@@ -160,6 +160,30 @@ function mount(){
   else return;
   if(url.href!==location.href)history.replaceState(history.state,'',url);
  }
+ async function loadRockstarMap(){
+   fetchButton.hidden=true;
+   let file;
+   try{
+    status.textContent='Loading Rockstar’s official map…';
+    const response=await fetch(DIRECT_ZIP,{mode:'cors',credentials:'omit',signal:AbortSignal.timeout(90000)});
+    if(!response.ok)throw Error('Rockstar download was not available');
+    const announced=Number(response.headers.get('content-length')||0);
+    if(announced>90*1024*1024)throw Error('File size exceeds allowed limit');
+    file=await response.blob();
+    if(file.size>90*1024*1024)throw Error('File size exceeds allowed limit');
+   }catch{
+    fetchButton.hidden=false;
+    status.textContent='Rockstar did not allow automatic loading in this browser. Expand “Map not loading? Other options” to open the official download here.';
+    panel.querySelector('.j143-advanced').open=true;
+    return;
+   }
+   try{await onFile(new File([file],'Leonida_Map_Poster_Printable.zip',{type:'application/zip'}))}
+   catch(err){
+    fetchButton.hidden=false;
+    status.textContent=err.message;
+    panel.querySelector('.j143-advanced').open=true;
+   }
+   }
  function openView({focus=true}={}){
   updateViewUrl(true);
   panel.hidden=false;button.setAttribute('aria-expanded','true');
@@ -168,8 +192,14 @@ function mount(){
   if(!loaded)runOperation(async()=>{
    try{
     const file=await stored('get');
-    if(file instanceof Blob)await showFile(file,'Official map restored from this browser; no upload performed.');
-   }catch{status.textContent='Open the official download to try again.'}
+    if(file instanceof Blob){
+     await showFile(file,'Official map restored from this browser; no upload performed.');
+     return;
+    }
+   }catch{
+    // An unavailable or unreadable cache should fall back to Rockstar.
+   }
+   if(!panel.hidden)await loadRockstarMap();
   });
  }
  function closeView(){
@@ -181,27 +211,7 @@ function mount(){
  panel.addEventListener('click',async ev=>{
   const cmd=ev.target.closest('[data-j143]')?.dataset.j143;
   if(!cmd)return;
-  if(cmd==='fetch')await runOperation(async()=>{
-   let file;
-   try{
-    status.textContent='Downloading Rockstar\u2019s official ZIP. This may use about 45 MB of data…';
-    const response=await fetch(DIRECT_ZIP,{mode:'cors',credentials:'omit',signal:AbortSignal.timeout(90000)});
-    if(!response.ok)throw Error('Rockstar download was not available');
-    const announced=Number(response.headers.get('content-length')||0);
-    if(announced>90*1024*1024)throw Error('File size exceeds allowed limit');
-    file=await response.blob();
-    if(file.size>90*1024*1024)throw Error('File size exceeds allowed limit');
-   }catch{
-    status.textContent='Rockstar did not allow automatic loading in this browser. Expand “Map not loading? Other options” to open the official download here.';
-    panel.querySelector('.j143-advanced').open=true;
-    return;
-   }
-   try{await onFile(new File([file],'Leonida_Map_Poster_Printable.zip',{type:'application/zip'}))}
-   catch(err){
-    status.textContent=err.message;
-    panel.querySelector('.j143-advanced').open=true;
-   }
-  });
+  if(cmd==='fetch')await runOperation(loadRockstarMap);
   if(cmd==='close')closeView();
   if(cmd==='reset')fit();
   if(cmd==='plus'&&loaded)zoomFromCenter(1.3);
@@ -213,7 +223,7 @@ function mount(){
     return;
    }
    if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null}
-   img.removeAttribute('src');img.hidden=true;empty.hidden=false;loaded=false;fit();
+   img.removeAttribute('src');img.hidden=true;empty.hidden=false;fetchButton.hidden=false;loaded=false;fit();
    status.textContent='Local image forgotten. No player map progress was changed.';
   });
  });

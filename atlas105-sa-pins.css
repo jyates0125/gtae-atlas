@@ -1,9 +1,0 @@
-/* Atlas 10.5 — San Andreas sourced, approximately projected 2D collectible pins. */
-.j105-accuracy{margin:9px 15px 11px;padding:12px 14px;border:1px solid #e9b376;border-radius:10px;background:linear-gradient(115deg,#1a2d3bdd,#382241dd);color:#f7e3d0;font-size:12px;line-height:1.55}
-.j105-accuracy strong{font-size:11px;letter-spacing:.08em;color:#ffd28f}.j105-accuracy a{font-weight:850;color:#ffdfaa}
-.pin.pin-source-projected{background:linear-gradient(150deg,#58326e,#1b3552);border:2px solid #ffd28c;box-shadow:0 4px 18px #100a21bd,0 0 0 2px #fce8c92c;color:#fff;font-size:19px;min-width:32px;min-height:33px;display:grid;place-items:center;isolation:isolate;transition:transform .16s ease,filter .16s ease;line-height:1.2}
-.pin.pin-source-projected:hover,.pin.pin-source-projected:focus-visible{z-index:20;transform:translate(-50%,-100%) scale(1.15);filter:brightness(1.2)}
-.pin.pin-source-projected.done{opacity:.42;border-color:#a07c86;filter:grayscale(.35)}.pin.pin-source-projected:focus-visible{outline:3px solid #fff;outline-offset:3px}
-#mapStatus{padding:9px 12px;color:#ffdeb4;font-size:11px;font-weight:800;background:#181127c9;border-top:1px solid #805782}
-@media(max-width:600px){.j105-accuracy{margin:7px 8px 10px;padding:9px;font-size:11px}.pin.pin-source-projected{font-size:17px;min-height:30px;min-width:30px}}
-@media(prefers-reduced-motion:reduce){.pin.pin-source-projected{transition:none}}

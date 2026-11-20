@@ -223,24 +223,9 @@ async def smoke():
                                     if await official.count()!=1:
                                         failures.append('Official Rockstar map is not selectable inside the Leonida map')
                                     else:
-                                        linked=await ctx.new_page()
                                         async def unexpected_poster_request(route):
-                                            failures.append('Opening a Rockstar map link started a download without a click')
+                                            failures.append('A cached Rockstar map made another network request')
                                             await route.abort()
-                                        try:
-                                            await linked.route('https://media-rockstargames-com.akamaized.net/VI/downloads/**',unexpected_poster_request)
-                                            await linked.goto(URL+'/atlas-vi.html?view=rockstar',wait_until='domcontentloaded')
-                                            await linked.locator('#j143-official-layer [data-j143="fetch"]').wait_for(state='visible')
-                                            await linked.locator('[data-j143="close"]').click()
-                                            if 'view=rockstar' in linked.url:
-                                                failures.append('Closing the linked poster left the poster selected in the URL')
-                                        finally:
-                                            await linked.close()
-                                        await official.click()
-                                        if not await pg.locator('#j143-official-layer').is_visible():
-                                            failures.append('Official Rockstar map viewer failed to open')
-                                        if not await pg.locator('.j143-empty').is_visible():
-                                            failures.append('Official map viewer has no source-backed image loading affordance')
                                         test_png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/bQAAAABJRU5ErkJggg==')
                                         zipped=io.BytesIO()
                                         with zipfile.ZipFile(zipped,'w',compression=zipfile.ZIP_DEFLATED) as archive:
@@ -250,27 +235,27 @@ async def smoke():
                                                 'access-control-allow-origin':'*',
                                                 'content-type':'application/zip'},body=zipped.getvalue())
                                         await pg.route('https://media-rockstargames-com.akamaized.net/VI/downloads/**',serve_official_zip)
-                                        if not await pg.locator('#j143-official-layer [data-j143="fetch"]').is_visible():
-                                            failures.append('No direct in-map Rockstar source-loading action')
-                                        else:
-                                            await pg.locator('#j143-official-layer [data-j143="fetch"]').click()
-                                            await pg.wait_for_function("""() => document.querySelector('.j143-status')?.textContent?.includes('Official map saved')
-                                                || document.querySelector('.j143-status')?.textContent?.includes('Map open for this visit')""",timeout=7000)
-                                            if not await pg.locator('.j143-poster').is_visible():
-                                                failures.append('Rockstar direct ZIP path did not display map')
-                                            if 'Official map saved' in await pg.locator('.j143-status').inner_text():
-                                                restored=await ctx.new_page()
-                                                try:
-                                                    await restored.route('https://media-rockstargames-com.akamaized.net/VI/downloads/**',unexpected_poster_request)
-                                                    await restored.goto(URL+'/atlas-vi.html?view=rockstar',wait_until='domcontentloaded')
-                                                    await restored.wait_for_function(
-                                                        "() => document.querySelector('.j143-status')?.textContent.includes('Official map restored')",
-                                                        timeout=7000)
-                                                finally:
-                                                    await restored.close()
-                                            await pg.locator('#j143-official-layer [data-j143="forget"]').click()
-                                            await pg.wait_for_function("""() => document.querySelector('.j143-poster')?.hidden === true
-                                                && document.querySelector('.j143-empty')?.hidden === false""",timeout=8000)
+                                        await official.click()
+                                        await pg.wait_for_function(
+                                            "() => document.querySelector('.j143-status')?.textContent?.includes('Official map saved')"
+                                            " || document.querySelector('.j143-status')?.textContent?.includes('Map open for this visit')",
+                                            timeout=7000)
+                                        if not await pg.locator('.j143-poster').is_visible():
+                                            failures.append('Selecting the Rockstar map did not load the poster automatically')
+                                        restored=await ctx.new_page()
+                                        try:
+                                            cached='Official map saved' in await pg.locator('.j143-status').inner_text()
+                                            await restored.route('https://media-rockstargames-com.akamaized.net/VI/downloads/**',
+                                                                 unexpected_poster_request if cached else serve_official_zip)
+                                            await restored.goto(URL+'/atlas-vi.html?view=rockstar',wait_until='domcontentloaded')
+                                            await restored.locator('.j143-poster').wait_for(state='visible',timeout=7000)
+                                            await restored.locator('[data-j143="close"]').click()
+                                            if 'view=rockstar' in restored.url:
+                                                failures.append('Closing the linked poster left it selected in the URL')
+                                        finally:
+                                            await restored.close()
+                                        await pg.locator('#j143-official-layer [data-j143="forget"]').click()
+                                        await pg.locator('#j143-official-layer [data-j143="fetch"]').wait_for(state='visible',timeout=8000)
                                         await pg.locator('.j143-empty input[type="file"]').set_input_files(
                                             {'name':'invalid.jpg','mimeType':'image/jpeg','buffer':b'not an image'})
                                         await pg.wait_for_function("""() => document.querySelector('.j143-status')

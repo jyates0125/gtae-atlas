@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
-<title id="title">Elario Studios original E crest</title><desc id="desc">Original angular letter E within a crowned faceted shield, amber and violet.</desc>
-<defs><linearGradient id="g" x1=".1" y1=".1" x2=".9" y2=".9"><stop stop-color="#FBD27D"/><stop offset=".55" stop-color="#DE8955"/><stop offset="1" stop-color="#9F5EDB"/></linearGradient><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#36144E"/><stop offset="1" stop-color="#111428"/></linearGradient></defs>
-<path d="M16 37 64 17l48 20v45q-11 27-48 38Q27 109 16 82Z" fill="url(#p)" stroke="url(#g)" stroke-width="6" stroke-linejoin="round"/>
-<path d="m32 29 8-18 24 12 24-12 8 18-12 4-20-9-20 9Z" fill="url(#g)" stroke="#F6DC9D" stroke-width="2" stroke-linejoin="round"/>
-<path d="M42 46h48v11H56v11h29v10H56v11h34v11H42Z" fill="url(#g)"/>
-<path d="M41 47h48" stroke="#FFECB5" stroke-width="2" opacity=".75"/><circle cx="64" cy="19" r="4" fill="#FFF2C9"/>
-</svg>
