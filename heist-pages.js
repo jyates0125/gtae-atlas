@@ -16,5 +16,8 @@ const key='teamjura-heist-'+(document.body.dataset.heist||'unknown');const check
 if(document.body.classList.contains('j120-heist-page')){
  const style=document.createElement('link');style.rel='stylesheet';style.href='./atlas164-heist-workspace.css?v=164';document.head.append(style);
  const planner=document.createElement('script');planner.src='./atlas164-heist-workspace.js?v=164';document.body.append(planner);
+ // Mission-specific mapped POIs and challenges appear ABOVE the optional regional map.
+ const focusStyle=document.createElement('link');focusStyle.rel='stylesheet';focusStyle.href='./atlas167-heist-focus.css?v=167';document.head.append(focusStyle);
+ const focus=document.createElement('script');focus.src='./atlas167-heist-focus.js?v=167';document.body.append(focus);
 }
 })();
