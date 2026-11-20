@@ -82,5 +82,5 @@ assert 'atlas131-social-icons.js' in builder
 # Owner-approved layout is not equivalent to full feature parity: hold must remain explicit.
 release=(root/'docs/ATLAS151-VISUAL-ACCEPTANCE.json').read_text(encoding='utf-8')
 assert '"approved_by_owner": false' in release and '"status": "HOLD"' in release
-assert 'No live merge' not in heist_hq or 'No live merge' in heist_hq # no-ops do not count as QA
+assert 'href="#"' not in heist_hq, 'Heist HQ must not include dead # link buttons'
 print('Atlas 16.1: 13 unique worlds, 15 distinct heists, real links, guest-first signup and release hold PASS')
