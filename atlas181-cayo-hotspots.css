@@ -195,3 +195,18 @@ body.j180-cayo.j181-map-hotspots .j181-hotspot:focus-visible{
   width:20px!important;height:20px!important;font-size:15px!important;
  }
 }
+
+/* Treasure chest reference locations use the user's tiny yellow-dot
+   iconography, NOT the removed generic heist pins. Position is registered to
+   the 19 published spots and visually checked against IMG_2782.jpeg.
+   Only the two dated/personal selections receive a cyan active outline. */
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active):after{
+ content:"";position:absolute;pointer-events:none;
+ width:8px;height:8px;left:50%;top:50%;transform:translate(-50%,-50%);
+ border:1px solid #131d1d;border-radius:50%;
+ background:#fff41e;box-shadow:0 0 0 1px #fffbb8bb,0 0 4px #f8ef4daa
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active):hover:after,
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active):focus-visible:after{
+ width:10px;height:10px;background:#fffca3
+}
