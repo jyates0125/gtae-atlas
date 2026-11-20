@@ -101,14 +101,14 @@ try:
    page.locator('#j186-route').screenshot(path=str(evidence/('cayo-186-route-planner-'+kind+'.png')),animations='disabled',timeout=35000)
    # Shared plans must actually rehydrate in a new tab, without
    # transferring checklist keys or personal notes.
-   shared={'version':1,'start':'chest-4','order':['chest-4','secondary-0'],
+   shared={'version':1,'start':'chest-4','order':['chest-4','secondary-11'],
            'categories':['secondary'],'mode':'manual','chestMode':'all','limit':10}
    link=url+'?cayoRoute='+urllib.parse.quote(__import__('json').dumps(shared,separators=(',',':')))
    other=ctx.new_page();other.goto(link,wait_until='domcontentloaded',timeout=50000)
    other.locator('#j186-route').wait_for(state='visible',timeout=30000)
    other.wait_for_function("document.querySelectorAll('.j180-chest').length===19",timeout=20000)
    imported=other.evaluate("window.teamJuraCayoPinRoute.getState()")
-   assert imported['start']=='chest-4' and imported['order'][:2]==['chest-4','secondary-0'],'Shared URL restores route start and stop sequence'
+   assert imported['start']=='chest-4' and imported['order'][:2]==['chest-4','secondary-11'],'Shared URL restores route start and stop sequence'
    other.close()
    # Phone viewport should not gain horizontal scrolling from the new panel.
    if kind=='phone':
