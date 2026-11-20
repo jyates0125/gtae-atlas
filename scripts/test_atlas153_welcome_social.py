@@ -29,6 +29,9 @@ assert 'j132-poster-panel' not in index
 # Social buttons exist as progressive enhancement but begin below the original footer, not after hero.
 assert index.count('data-j131-social-host') == 1
 assert index.index('<div data-j131-social-host') > index.index('</footer>')
+for name in ('atlas-share.html', 'one-last-ride.html'):
+    html = read(name)
+    assert html.index('<div data-j131-social-host') > html.index('</footer>'), name
 assert index.count('data-j131-platform=') == 7
 assert 'Get the social launch kit' not in index
 assert 'j130-social-inline' not in index
