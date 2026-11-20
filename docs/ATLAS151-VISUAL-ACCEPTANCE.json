@@ -3,7 +3,7 @@
   "source": "docs/ATLAS151-PREMIUM-VISUAL-RELEASE-HOLD.md",
   "status": "HOLD",
   "last_owner_review": "2026-11-20",
-  "reason": "Owner approved 13 cinematic world covers, premium home direction and the 15 mission artwork designs on Nov 20. Full final production site review, cross-device visual comparison, feature-parity caveats and release permission remain outstanding.",
+  "reason": "Owner has approved premium art direction and examples (33-art gallery, Vice City, home and heists). All-page visual QA, full non-regression review and owner approval of the final staged release remain outstanding.",
   "approved_by_owner": false,
   "desktop_screenshots_compared": false,
   "mobile_screenshots_compared": false,
@@ -51,5 +51,14 @@
     "weapons",
     "vehicles5",
     "vehicles6"
-  ]
+  ],
+  "owner_approved_visual_examples": {
+    "gallery": "Owner enthusiastically approved screenshot of the premium 33-artwork review gallery; visual reference for quality and diversity, not 33 production-page signoffs.",
+    "vice_city": "Owner explicitly approved premium Vice City/ Vice City Stories world presentation and existing functional map workspace layout.",
+    "home": "Owner explicitly approved current premium home page presentation.",
+    "heist": "Owner explicitly approved the current cinematic heist art/presentation; preserve current distinct heist imagery."
+  },
+  "cross_page_cinematic_quality_required": true,
+  "artwork_uniqueness_rule": "Every page/card/hero needs its own subject-appropriate cinematic concept or licensed image; do not reuse generic legacy SVG skylines as the primary artwork; preserve functional UI, research provenance and map engines.",
+  "owner_final_site_merge_approval": false
 }
