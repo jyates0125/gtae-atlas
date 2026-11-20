@@ -56,3 +56,8 @@
 .world-card .world-art-frame[data-cover="original-cinematic"] .world-art-main{object-fit:cover;object-position:center center;filter:none}
 .world-card .world-art-frame[data-cover="original-cinematic"] .world-art-blur{filter:blur(22px) brightness(.56) saturate(1.15)}
 .world-card .world-art-frame[data-cover="original-cinematic"]{background:#1a122e}
+
+/* Atlas 15.7 · remove repetitive tall directory-copy walls without concealing real availability. */
+.directory-card .world-copy .world-feature-summary{font-size:12px;line-height:1.43;color:#ddc7e7;margin:10px 0 6px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+.directory-card .world-copy .world-coverage-note{font-size:11px;line-height:1.45;color:#dcc9de;margin:4px 0 0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+.directory-card .world-copy{padding-bottom:16px}

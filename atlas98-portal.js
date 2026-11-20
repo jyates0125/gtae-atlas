@@ -53,7 +53,11 @@
  function directory(){const feature=$('#directoryFeatured'),additional=$('#directoryAdditional'),inp=$('#worldSearch'),count=$('#worldCount'),buttons=$$('[data-world-filter]');if(!feature||!additional)return;
    let mode='all';function paint(){feature.replaceChildren();additional.replaceChildren();const q=(inp?.value||'').trim().toLocaleLowerCase();let total=0;
      for(const w of worlds){const typeOk=mode==='all'||(mode==='interactive'?(w.kind==='interactive'||w.kind==='schematic'):mode==='research'?w.kind==='research':mode==='limited'?w.kind==='limited':w.kind==='gateway');if(!typeOk||!([w.name,w.game,w.short,w.grade,w.note,...w.features].join(' ').toLowerCase().includes(q)))continue;
-       const card=makeWorld(w,false,true);card.classList.add('directory-card');const features=E('p','',w.features.join(' · '));const caption=E('p','',w.note);caption.style.fontSize='10px';card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
+       const card=makeWorld(w,false,true);card.classList.add('directory-card');
+       const summary=w.kind==='gateway'?'Individual checklist · Personal pins & routes':w.features.slice(0,3).join(' · ');
+       const note=w.kind==='gateway'?'Built-in verified map calibration pending · Open for full coverage details':w.note;
+       const features=E('p','world-feature-summary',summary);const caption=E('p','world-coverage-note',note);
+       card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
      if(count)count.textContent=total+' of '+worlds.length+' destinations';if($('#noWorlds'))$('#noWorlds').hidden=total!==0;
      $('#mainWorlds').hidden=feature.children.length===0;$('#otherWorlds').hidden=additional.children.length===0;
    }

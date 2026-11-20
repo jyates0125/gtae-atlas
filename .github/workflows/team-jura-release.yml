@@ -79,6 +79,7 @@ jobs:
           python scripts/test_atlas148_local_covers.py
           python scripts/test_atlas155_premium_art.py
           python scripts/test_atlas155_art_review.py
+          python scripts/test_atlas157_directory.py
           python scripts/test_atlas149_leonida_toolbar.py
           python scripts/test_atlas154_map_zoom.py
           python scripts/test_atlas156_mobile_nav.py
