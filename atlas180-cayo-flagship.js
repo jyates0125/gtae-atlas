@@ -170,8 +170,8 @@ function showInfo(title,description,number){
 }
 function project(spawn){
  // The screenshot underlay has no verified pixel transform; avoid pretending this is georeferenced.
- const x=Math.max(3,Math.min(97, 8+(spawn.worldX-3900)/1699*84));
- const y=Math.max(3,Math.min(97, 8+(-4293-spawn.worldY)/1568*85));
+ const x=Math.max(3,Math.min(97, 6+(spawn.worldX-3900)/1700*86));
+ const y=Math.max(3,Math.min(97, 2+(-4300-spawn.worldY)/1600*90));
  return [x,y];
 }
 function paintChests(){
