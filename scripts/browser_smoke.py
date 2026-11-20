@@ -127,6 +127,62 @@ async def smoke():
                                 except Exception as ex:
                                     failures.append('All Pages universal control failed: '+str(ex)[:200])
 
+                            # Release 19.1: actual player actions on the tool pages
+                            # that had previously escaped the page-by-page smoke list.
+                            # Every page has its own browser context; test data is not
+                            # sent to a user account or the shared canonical Atlas.
+                            if not failures and path in ('atlas90-vehicles5.html','atlas90-vehicles6.html','atlas90-weapons.html'):
+                                try:
+                                    await pg.locator('#j90Cards').wait_for(timeout=7000)
+                                    await pg.wait_for_function("document.querySelector('#j90Results')?.textContent?.includes('visible')",timeout=9000)
+                                    await pg.locator('#j90Search').fill('zzx-nonexistent-atlas-marker')
+                                    if '0 visible' not in await pg.locator('#j90Results').inner_text():
+                                        failures.append('Gallery search failed to apply an empty-result filter')
+                                    await pg.locator('#j90Search').fill('')
+                                    if 'zzx-nonexistent-atlas-marker' in await pg.locator('#j90Search').input_value():
+                                        failures.append('Gallery search did not clear')
+                                except Exception as err:
+                                    failures.append('Vehicle/weapon gallery search failed: '+str(err)[:190])
+                            if not failures and path=='my-crew.html':
+                                try:
+                                    await pg.locator('#crewName').fill('Team Jura QA')
+                                    await pg.locator('#crewForm button[type="submit"]').click()
+                                    if 'Team Jura QA' not in await pg.locator('#cardName').inner_text():
+                                        failures.append('My Crew save failed to update the visible crew card')
+                                    await pg.locator('#taskInput').fill('Test a private crew plan')
+                                    await pg.locator('#taskForm button[type="submit"]').click()
+                                    if await pg.locator('#taskList li').count()!=1:
+                                        failures.append('My Crew add-task action failed')
+                                    await pg.reload(wait_until='domcontentloaded')
+                                    if 'Team Jura QA' not in await pg.locator('#cardName').inner_text() or await pg.locator('#taskList li').count()!=1:
+                                        failures.append('My Crew browser refresh lost locally saved crew/task')
+                                except Exception as err:
+                                    failures.append('My Crew save and reload workflow failed: '+str(err)[:190])
+                            if not failures and path=='atlas93-dispatch.html':
+                                try:
+                                    await pg.locator('#dispatchCards article').first.wait_for(timeout=7000)
+                                    mark=pg.locator('#dispatchCards article button').first
+                                    await mark.click()
+                                    if 'Done today' not in await mark.inner_text():
+                                        failures.append('Dispatch card did not mark a task completed')
+                                    await pg.locator('#dispatchReset').click()
+                                    if 'Mark done' not in await pg.locator('#dispatchCards article button').first.inner_text():
+                                        failures.append('Dispatch reset did not clear the daily task flag')
+                                except Exception as err:
+                                    failures.append('Daily Dispatch actions failed: '+str(err)[:190])
+                            if not failures and path=='atlas-collectibles.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#universeStatus')?.textContent?.startsWith('Indexed ')",timeout=13000)
+                                    await pg.locator('#universeSearch').fill('zzx-nonexistent-atlas-marker')
+                                    await pg.locator('#clearFilters').click()
+                                    if await pg.locator('#universeSearch').input_value():
+                                        failures.append('Collectibles clear-filters action did not clear the search')
+                                    await pg.locator('#listView').click()
+                                    if await pg.locator('#listView').get_attribute('aria-pressed')!='true':
+                                        failures.append('Collectibles list-view action did not activate')
+                                except Exception as err:
+                                    failures.append('Collectibles search/list actions failed: '+str(err)[:190])
+
                             # Atlas 17.2: the separate Leonida Research page must be usable
                             # on an actual mobile viewport, with a reversible full-size map.
                             if path=='atlas-research.html' and not failures:
