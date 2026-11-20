@@ -26,7 +26,7 @@ try:
     pg=context.new_page();errors=[]
     pg.on('pageerror',lambda e:errors.append(str(e)[:250]))
     pg.goto(base+pageName,wait_until='domcontentloaded',timeout=40000)
-    pg.wait_for_function("() => window.JuraDualLegendAPI?.categories().some(c=>c.count>0)",timeout=25000)
+    pg.wait_for_function("() => window.JuraDualLegendAPI?.categories().some(c=>c.enabled && c.count>0)",timeout=25000)
     actual=pg.evaluate("""() => window.JuraDualLegendAPI.categories().filter(c=>c.enabled).map(c=>c.id)""")
     assert set(actual)==set(desired),(pageName,'unexpected default pin types',actual)
     count=pg.evaluate("""() => window.JuraDualLegendAPI.categories().filter(c=>c.enabled).reduce((sum,c)=>sum+c.count,0)""")

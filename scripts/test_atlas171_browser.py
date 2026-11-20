@@ -136,6 +136,9 @@ try:
             backup.route('**/wikiassets.net/**',lambda route: route.abort())
             backup.goto(url,wait_until='domcontentloaded',timeout=50000)
             backup.wait_for_function("document.querySelector('#j167-heist-map')?.dataset.mapAsset === 'local-trace'",timeout=30000)
+            # Rendering the fallback image and the SVG pin layer happens on
+            # separate frames. Wait for both before checking marker parity.
+            backup.wait_for_function("document.querySelectorAll('.j181-hotspot .j183-svg').length>=50 && document.querySelectorAll('.j180-chest').length===19",timeout=20000)
             assert backup.locator('.j181-hotspot .j183-svg').count()>=50,'Offline map retains the same clickable colored icons'
             assert backup.locator('.j180-chest').count()==19,'Offline fallback retains all 19 chest references'
             backup.close()
