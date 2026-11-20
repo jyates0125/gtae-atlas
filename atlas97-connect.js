@@ -44,6 +44,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* Atlas 9.8 forward-only navigation bridge. The original 9.7 functions above remain unchanged. */
 (()=>{'use strict';
  if(document.querySelector('script[data-team-jura-flow]'))return;
- const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href='./atlas98-flow.css?v=98a';sheet.dataset.teamJuraFlow='true';document.head.append(sheet);
+ const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href='./atlas98-flow.css?v=151';sheet.dataset.teamJuraFlow='true';document.head.append(sheet);
  const script=document.createElement('script');script.defer=true;script.src='./atlas98-flow.js?v=98a';script.dataset.teamJuraFlow='true';document.head.append(script);
 })();
