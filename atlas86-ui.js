@@ -117,7 +117,7 @@ function moveLegends(){
 function betterMapNav(){
  // Keep existing map links; add direct HQ to the primary header and keep its label explicit.
  const header=document.querySelector('header.topbar nav');if(!header)return;
- if(!header.querySelector('[data-j86-home]')){const a=created('a','j86-home-link','⌂ Atlas HQ');a.href='./atlas81-hq.html';a.dataset.j86Home='true';header.prepend(a)}
+ if(!header.querySelector('a[href="./atlas81-hq.html"]')){const a=created('a','j86-home-link','⌂ Atlas HQ');a.href='./atlas81-hq.html';a.dataset.j86Home='true';header.prepend(a)}
 }
 function init(){
  document.body.classList.add('jura86-designed-brand');

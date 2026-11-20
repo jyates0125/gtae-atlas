@@ -443,6 +443,9 @@ async def smoke():
                                 if await pg.locator('#j121Original').count()!=1 or await pg.locator('#j121Planner').count()!=1:
                                     failures.append('Original Cayo game map and separate heist planning tabs missing')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
+                                header_hq=pg.locator('header.topbar nav a[href="./atlas81-hq.html"]')
+                                if await header_hq.count()!=1 or not await header_hq.first.is_visible():
+                                    failures.append('Map header must show exactly one Atlas HQ link')
                                 if not await pg.locator('body.j117-map-world').count():
                                     failures.append('Current Elario flagship map brand missing')
                                 if await pg.locator('header.topbar img[src="./art/elario-crest.svg"]').count()!=1:
