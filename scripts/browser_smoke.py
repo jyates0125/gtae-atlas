@@ -85,6 +85,36 @@ async def smoke():
                             if path in ('heist-fleeca.html','heist-cayo-perico.html') and not failures:
                                 try:
                                     await pg.locator('#j164-mission-map').wait_for(timeout=7000)
+                                    # Atlas 16.7: each heist must show its own focused mission map
+                                    # before the optional regional world-map iframe.
+                                    await pg.locator('#j167-heist-map').wait_for(timeout=9000)
+                                    pins=pg.locator('#j167-heist-map .j167-pin')
+                                    if await pins.count()<5:
+                                        failures.append('Focused mission map has fewer than five accessible POI pins')
+                                    if await pg.locator('#j167-heist-map canvas.j167-canvas').count()!=1:
+                                        failures.append('Focused custom mission map canvas missing')
+                                    if await pg.locator('#j167-heist-map .j167-tool').count()<3:
+                                        failures.append('Mission map zoom and Fit controls missing')
+                                    await pg.locator('#j167-heist-map .j167-tool').filter(has_text='+').first.click()
+                                    z=await pg.locator('#j167-heist-map .j167-scale').inner_text()
+                                    if z.strip()=='1.0×':
+                                        failures.append('Focused mission zoom did not advance')
+                                    await pg.locator('#j167-heist-map .j167-tool').filter(has_text='Fit').click()
+                                    z=await pg.locator('#j167-heist-map .j167-scale').inner_text()
+                                    if z.strip()!='1.0×':
+                                        failures.append('Focused mission map Fit did not reset')
+                                    await pins.first.click()
+                                    await pg.locator('#j167-heist-map .j167-detail-actions .j167-primary').click()
+                                    route=await pg.evaluate("""() => JSON.parse(localStorage.getItem('teamjura-heist-focus-v1:'+document.body.dataset.heist)||'{}').route""")
+                                    if not route or len(route)<1:
+                                        failures.append('New mission-specific route did not save locally')
+                                    await pg.locator('#j167-heist-map .j167-detail-actions .j167-secondary').click()
+                                    scoped=await pg.evaluate("""() => JSON.parse(localStorage.getItem('teamjura-heist-focus-v1:'+document.body.dataset.heist)||'{}').scoped""")
+                                    if not scoped or len(scoped)<1:
+                                        failures.append('Mission-specific scoped POI did not persist')
+                                    if mission=='cayo-perico':
+                                        if await pg.locator('#j167-heist-map a[href="./atlas-cayo.html"]').count()!=1:
+                                            failures.append('Cayo island original-map and scoping source is not linked')
                                     actual_art=await pg.locator('.mapbox > img').get_attribute('src')
                                     mission=path.removeprefix('heist-').removesuffix('.html')
                                     if actual_art!='./art/jura159-heist-'+mission+'.webp':
