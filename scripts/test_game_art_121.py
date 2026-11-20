@@ -29,7 +29,8 @@ assert 'highResUrl||state.background' in classic
 # Public cards and registry must use validated local illustrations, not a third-party CDN.
 assert "const sources=[premiumCover,featuredConcept,'./art/'+w.art].filter(Boolean)" in portal
 assert "w.coverSrc" in portal and 'im.onerror=' in portal
-assert "jura155-(story|online|vi|cayo)" in portal
+assert "jura155-(?:story|online|vi|cayo)" in portal
+assert "jura157-(?:iv|sa|vc|iii|vcs|lcs|ctw|tlad|tbogt)-cinematic" in portal
 assert 'Original Team Jura fan illustration' in portal
 local_covers=re.findall(r"\bart:'([^']+)'",directory)
 assert len(local_covers)==13 and len(set(local_covers))==13
