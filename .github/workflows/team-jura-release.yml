@@ -52,6 +52,7 @@ jobs:
           python scripts/test_map_chrome_128.py
           python scripts/test_classic_flat_106.py
           python scripts/test_atlas150_classic_slots.py
+          python scripts/test_atlas157_classic_zoom.py
           node --check atlas103-hub.js
           node --check atlas98-portal.js
           node --check atlas98-worlds.js

@@ -52,13 +52,18 @@ const $=q=>document.querySelector(q),E=(tag,cls,text)=>{const e=document.createE
 const params=new URLSearchParams(location.search),raw=(params.get('game')||params.get('world')||'iii').toLowerCase();const id=worlds[raw]?raw:(alias[raw]||'iii'),w=worlds[id];
 const key='team-jura-atlas98-classic-'+id+'-v1';const blank=()=>({schema:'team-jura-atlas98-classic-v1',world:id,markers:[],completed:[],background:null});
 function read(){try{const data=JSON.parse(localStorage.getItem(key)||'null');if(data&&data.schema==='team-jura-atlas98-classic-v1'&&data.world===id&&Array.isArray(data.markers))return data}catch{}return blank()}
-let state=read(),adding=false,editing=null,pendingSlot=null,scale=1,dx=0,dy=0,pointer=null,dragged=false;
+let state=read(),adding=false,editing=null,pendingSlot=null,scale=1,dx=0,dy=0,dragged=false;
 let highResUrl=null,highResSize=null; // personal map raster is stored separately
 let originalMapReady=false,originalMapSize=null,activeMapUrl=null; // source-backed map image, not a world coordinate transform
 const status=message=>{if($('#classicMessage'))$('#classicMessage').textContent=message};
 function persist(){try{localStorage.setItem(key,JSON.stringify(state));window.dispatchEvent(new CustomEvent('team-jura:classic-change',{detail:{world:id}}));return true}catch(e){status('This browser could not save all records. Export a backup, or remove an oversized map image.');return false}}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-function applyTransform(){const s=$('#classicMapSurface');if(s)s.style.transform=`translate(${dx}px,${dy}px) scale(${scale})`}
+function applyTransform(){const s=$('#classicMapSurface');if(s)s.style.transform=`translate(${dx}px,${dy}px) scale(${scale})`;
+ const level=$('#classicZoomLevel');if(level)level.textContent=scale.toFixed(1)+'×';
+ const inBtn=$('#classicZoomIn'),outBtn=$('#classicZoomOut');
+ if(inBtn){inBtn.disabled=scale>=5.999;inBtn.title=inBtn.disabled?'Maximum zoom reached':'Zoom in'}
+ if(outBtn){outBtn.disabled=scale<=1.001;outBtn.title=outBtn.disabled?'Minimum zoom reached':'Zoom out'}
+}
 
 function fitClassicImage(){
  const viewport=$('#classicViewport'),surface=$('#classicMapSurface');if(!viewport||!surface)return;
@@ -158,12 +163,67 @@ function createOrEdit(){const name=$('#markerName').value.trim(),category=$('#ma
  else state.markers.push({id:globalThis.crypto?.randomUUID?.()||'p'+Date.now()+Math.random().toString(36).slice(2),name:name.slice(0,100),category,note:note.slice(0,300),x,y,source:'personal-image-percent',...(link?{collectionSet:link.set,collectionSlot:link.slot}:{})});
  if(state.markers.length>1000){state.markers.pop();status('Limit reached (1000 markers per world).');return}persist();closeEditor();draw();status('Saved personal marker to this browser.')}
 function coords(e){const s=$('#classicMapSurface').getBoundingClientRect();if(!s.width||!s.height||e.clientX<s.left||e.clientX>s.right||e.clientY<s.top||e.clientY>s.bottom)return null;return {x:clamp((e.clientX-s.left)/s.width*100,0,100),y:clamp((e.clientY-s.top)/s.height*100,0,100)}}
-function bindMap(){const viewport=$('#classicViewport');viewport.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;pointer={id:e.pointerId,x:e.clientX,y:e.clientY,dx,dy};dragged=false;viewport.setPointerCapture?.(e.pointerId)});
- viewport.addEventListener('pointermove',e=>{if(!pointer||pointer.id!==e.pointerId||adding)return;const mx=e.clientX-pointer.x,my=e.clientY-pointer.y;if(Math.abs(mx)+Math.abs(my)>5)dragged=true;dx=clamp(pointer.dx+mx,-viewport.clientWidth*scale/1.8,viewport.clientWidth*scale/1.8);dy=clamp(pointer.dy+my,-viewport.clientHeight*scale/1.8,viewport.clientHeight*scale/1.8);applyTransform()});
- viewport.addEventListener('pointerup',e=>{if(!pointer||pointer.id!==e.pointerId)return;pointer=null;if(adding&&!dragged&&!e.target.closest('button')){const p=coords(e);if(p){adding=false;openEditor(null,p)}}});
- viewport.addEventListener('pointercancel',()=>pointer=null);
- viewport.addEventListener('wheel',e=>{e.preventDefault();scale=clamp(scale+(e.deltaY<0?.15:-.15),1,4);applyTransform()},{passive:false});
- $('#classicZoomIn').addEventListener('click',()=>{scale=clamp(scale+.25,1,4);applyTransform()});$('#classicZoomOut').addEventListener('click',()=>{scale=clamp(scale-.25,1,4);applyTransform()});$('#classicReset').addEventListener('click',()=>{scale=1;dx=0;dy=0;applyTransform();status('Map view reset.')});
+function bindMap(){const viewport=$('#classicViewport');
+ // Atlas 15.7: multitouch mobile controls and zoom-at-anchor, preserving all world data.
+ const pointers=new Map();
+ let pan=null,pinch=null;
+ const controls=document.querySelector('.classic-controls');
+ let indicator=$('#classicZoomLevel');
+ if(controls&&!indicator){indicator=document.createElement('output');indicator.id='classicZoomLevel';indicator.className='classic-zoom-level';indicator.setAttribute('aria-label','Map zoom');controls.append(indicator)}
+ function setZoom(next,clientX,clientY){
+   const zoom=clamp(next,1,6);
+   if(Math.abs(zoom-scale)<.001){status(zoom>=6?'Maximum map zoom reached. Use − or Fit to zoom out.':'Minimum map zoom reached. Use + to zoom in.');return false}
+   const rect=viewport.getBoundingClientRect();
+   const anchorX=Number.isFinite(clientX)?clientX-rect.left-rect.width/2:0;
+   const anchorY=Number.isFinite(clientY)?clientY-rect.top-rect.height/2:0;
+   const factor=zoom/scale;
+   dx=clamp(dx+(anchorX-dx)*(1-factor),-rect.width*zoom/1.8,rect.width*zoom/1.8);
+   dy=clamp(dy+(anchorY-dy)*(1-factor),-rect.height*zoom/1.8,rect.height*zoom/1.8);
+   scale=zoom;applyTransform();return true;
+ }
+ function spacing(){const a=[...pointers.values()];if(a.length<2)return null;return{distance:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}}
+ viewport.addEventListener('pointerdown',e=>{
+   if(e.target.closest('button,input,a,[role="button"]'))return;
+   pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+   dragged=false;viewport.setPointerCapture?.(e.pointerId);
+   if(pointers.size===1){pan={id:e.pointerId,x:e.clientX,y:e.clientY,dx,dy};pinch=null}
+   if(pointers.size===2){const start=spacing();pinch={distance:Math.max(start.distance,1),zoom:scale};pan=null;dragged=true}
+ });
+ viewport.addEventListener('pointermove',e=>{
+   if(!pointers.has(e.pointerId))return;
+   pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+   if(pointers.size>=2&&pinch){const span=spacing();if(span&&span.distance>2){setZoom(pinch.zoom*span.distance/pinch.distance,span.x,span.y);dragged=true}return}
+   if(!pan||pan.id!==e.pointerId||adding)return;
+   const mx=e.clientX-pan.x,my=e.clientY-pan.y;
+   if(Math.abs(mx)+Math.abs(my)>5)dragged=true;
+   dx=clamp(pan.dx+mx,-viewport.clientWidth*scale/1.8,viewport.clientWidth*scale/1.8);
+   dy=clamp(pan.dy+my,-viewport.clientHeight*scale/1.8,viewport.clientHeight*scale/1.8);
+   applyTransform();
+ });
+ function endPointer(e){
+   if(!pointers.has(e.pointerId))return;
+   const only=pointers.size===1;
+   pointers.delete(e.pointerId);
+   if(only&&adding&&!dragged&&!e.target.closest('button,input,a,[role="button"]')){
+     const point=coords(e);if(point){adding=false;openEditor(null,point)}
+   }
+   if(pointers.size===1){const [id,p]=pointers.entries().next().value;pan={id,x:p.x,y:p.y,dx,dy};pinch=null;dragged=true}
+   else if(pointers.size===0){pan=null;pinch=null;dragged=false}
+ }
+ viewport.addEventListener('pointerup',endPointer);
+ viewport.addEventListener('pointercancel',endPointer);
+ viewport.addEventListener('lostpointercapture',endPointer);
+ viewport.addEventListener('wheel',e=>{e.preventDefault();setZoom(scale*(e.deltaY<0?1.22:1/1.22),e.clientX,e.clientY)},{passive:false});
+ viewport.addEventListener('dblclick',e=>{if(adding||e.target.closest('button,a'))return;e.preventDefault();setZoom(scale*1.4,e.clientX,e.clientY)});
+ viewport.addEventListener('keydown',e=>{
+   if(e.key==='+'||e.key==='='){e.preventDefault();setZoom(scale*1.3)}
+   else if(e.key==='-'){e.preventDefault();setZoom(scale/1.3)}
+   else if(e.key==='0'){e.preventDefault();scale=1;dx=0;dy=0;applyTransform()}
+ });
+ $('#classicZoomIn').addEventListener('click',()=>setZoom(scale*1.3));
+ $('#classicZoomOut').addEventListener('click',()=>setZoom(scale/1.3));
+ $('#classicReset').addEventListener('click',()=>{scale=1;dx=0;dy=0;applyTransform();status('Map fitted to viewport.')});
+ applyTransform();
  $('#classicAddPin').addEventListener('click',()=>{pendingSlot=null;adding=!adding;$('#classicAddPin').setAttribute('aria-pressed',String(adding));viewport.classList.toggle('adding',adding);status(adding?'Tap the map to place a personal marker.':'Marker placement canceled.')});
  $('#classicSearch').addEventListener('input',renderMarkers);$('#markerSave').addEventListener('click',createOrEdit);$('#markerCancel').addEventListener('click',closeEditor);
  
