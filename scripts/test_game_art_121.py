@@ -10,7 +10,7 @@ cayo=(ROOT/'atlas-cayo.html').read_text(encoding='utf-8')
 credits=(ROOT/'atlas-credits.html').read_text(encoding='utf-8')
 worlds=['story','online','vi','cayo','iv','sa','vc','iii','vcs','lcs','ctw','tlad','tbogt']
 # Atlas 15.7: all thirteen original cinematic WebPs are local and distinct.
-premium=re.findall(r"coverSrc:'(\\./art/(?:jura155-(?:story|online|vi|cayo)|jura157-(?:iv|sa|vc|iii|vcs|lcs|ctw|tlad|tbogt)-cinematic)\\.webp)'",directory)
+premium=re.findall(r"coverSrc:'(\./art/(?:jura155-(?:story|online|vi|cayo)|jura157-(?:iv|sa|vc|iii|vcs|lcs|ctw|tlad|tbogt)-cinematic)\.webp)'",directory)
 assert len(premium)==13 and len(set(premium))==13, "Thirteen unique premium local world-cover assets required"
 assert directory.count("coverSrc:")==13, "Remote or unknown additional map cover source detected"
 for source in premium:
