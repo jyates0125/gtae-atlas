@@ -25,8 +25,20 @@ assert "if(heistId==='cayo-perico')" in loader
 assert "if(document.body.dataset.heist!=='cayo-perico'" in js
 assert "teamjura-heist-focus-v1:" not in js
 assert "teamjura-cayo-daily-choice-v1" in source
-assert "6+(spawn.worldX-3900)/1700*86" in source
-assert "2+(-4300-spawn.worldY)/1600*90" in source
+assert "(68+(spawn.worldX-3900)*.698)/1284*100" in source
+assert "(38+(-4293-spawn.worldY)*.69)/1262*100" in source
+# Audited published game-space anchors must project close to the actual
+# yellow source-image dot centers (not merely be scattered around an island).
+import json
+spots=json.loads((root/'data/cayo-treasure-spots.json').read_text())['spawns']
+anchors={1:(70,327),2:(270,87),4:(710,52),7:(1249,676),8:(1150,1122),15:(796,39),19:(788,638)}
+for p in spots:
+ if p['id'] in anchors:
+  x=68+(p['worldX']-3900)*.698
+  y=38+(-4293-p['worldY'])*.69
+  ax,ay=anchors[p['id']]
+  assert abs(x-ax)<20 and abs(y-ay)<23,(p['id'],x,y,ax,ay)
+
 assert js.count('{') == js.count('}')
 assert css.count('{') == css.count('}')
 print("Atlas 18.1: native generic pins removed; colored map hotspots clickable + legend synced + daily source preserved PASS")
