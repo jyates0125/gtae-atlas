@@ -242,3 +242,67 @@ body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j1
 body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active)::after{
  content:none!important
 }
+
+/* Atlas 18.4 -- primary FLAT in-game map has a bare geographic raster.
+ * The prior hit-target-only style was leaving equipment and target symbols
+ * invisible (only chest dots visible). Render ONE original Team Jura SVG
+ * symbol per mapped POI on BOTH the in-game map and offline reconstruction.
+ * Icons match the legend; no large generic badge, border or shadow-disc. */
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:clamp(22px,2vw,28px)!important;height:clamp(22px,2vw,28px)!important;
+ min-width:0!important;min-height:0!important;
+ background:transparent!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;text-shadow:none!important;
+ padding:0!important;color:transparent!important;opacity:1!important;
+ z-index:12
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot .j183-svg{
+ display:block!important;width:20px!important;height:20px!important;
+ flex:none!important;overflow:visible!important;
+ color:var(--j183-color,#e686f6)!important;
+ filter:drop-shadow(0 1px 1.5px #0a101ae0) drop-shadow(0 0 2px #05070ad9);
+ pointer-events:none!important;opacity:1!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot::after{
+ content:none!important;display:none!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot[hidden]{
+ display:none!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot:hover,
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot:focus-visible{
+ outline:2px solid #ffe4a2!important;outline-offset:2px!important;
+ border-radius:50%!important;background:#ffecb923!important
+}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j180-glyph{
+ display:grid;place-items:center;min-width:24px;height:24px
+}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j183-svg{
+ display:block;width:20px;height:20px;overflow:visible;
+ color:var(--j183-color,#e686f6)!important;pointer-events:none!important;
+ filter:drop-shadow(0 1px 1px #10101a)
+}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=entry],.j181-glyph-entry){--j183-color:#e978f3}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=exit],.j181-glyph-exit){--j183-color:#e7ec68}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=drainage],.j181-glyph-drainage){--j183-color:#f6e357}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=secondary],.j181-glyph-secondary){--j183-color:#26bfff}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=gated],.j181-glyph-gated){--j183-color:#3c99ff}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=bolts],.j181-glyph-bolts){--j183-color:#ff6059}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=grapple],.j181-glyph-grapple){--j183-color:#ba75fd}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=clothes],.j181-glyph-clothes){--j183-color:#ecb485}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=truck],.j181-glyph-truck){--j183-color:#34d891}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=control],.j181-glyph-control){--j183-color:#f4e6d3}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=power],.j181-glyph-power){--j183-color:#ffdc53}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=powder],.j181-glyph-powder){--j183-color:#f2a271}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=water],.j181-glyph-water){--j183-color:#34e5f5}
+body.j180-cayo.j181-map-hotspots .j181-glyph-chest{--j183-color:#f5ea35}
+body.j180-cayo.j181-map-hotspots .j181-glyph-chest .j183-svg{color:var(--j183-color)!important}
+@media(max-width:590px){
+ body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot{
+  width:23px!important;height:23px!important;
+ }
+ body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot .j183-svg{
+  width:18px!important;height:18px!important
+ }
+}
