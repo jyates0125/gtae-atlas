@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 575" role="img" aria-label="Illustrative mission planning diagram for BANK + CITY, not a real in-game map">
+<defs><linearGradient id="panel" x2="1" y2="1"><stop stop-color="#13253e"/><stop offset="1" stop-color="#251231"/></linearGradient><pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" stroke="#e8af8b" stroke-width="2" stroke-opacity=".15" fill="none"/></pattern></defs>
+<rect width="1000" height="575" fill="url(#panel)"/><rect width="1000" height="575" fill="url(#grid)"/><rect x="16" y="16" width="968" height="543" rx="19" fill="none" stroke="#e8af8b" stroke-opacity=".7" stroke-width="3"/>
+<rect x="225" y="195" width="550" height="245" rx="13" fill="#292545" fill-opacity=".5" stroke="#e1c4d9" stroke-width="12"/><circle cx="500" cy="318" r="112" fill="none" stroke="#ffd4a8" stroke-width="9"/><path d="M225 317h550m-275-122v245" stroke="#f7d7b1" stroke-width="9"/><path d="M245 396Q395 325 500 400T755 291" fill="none" stroke="#ffe4ac" stroke-width="10" stroke-dasharray="20 13"/>
+<circle cx="245" cy="396" r="25" fill="#4ccbab" stroke="#ffecc6" stroke-width="8"/><circle cx="500" cy="400" r="24" fill="#a982db" stroke="#ffecc6" stroke-width="8"/><circle cx="755" cy="291" r="25" fill="#ffca8a" stroke="#ffecc6" stroke-width="8"/>
+<text x="32" y="66" fill="#ffe0b5" font-family="Arial" font-size="23" font-weight="bold" letter-spacing="4">BANK + CITY · CONCEPT</text>
+<text x="32" y="102" fill="#e8d5ed" font-family="Arial" font-size="17">PERSONAL MISSION NOTEBOARD · SCHEMATIC ONLY</text>
+<text x="32" y="539" fill="#ffdfa7" font-family="Arial" font-size="15">Not aligned to verified map coordinates. Open the live Atlas map to plan real routes.</text></svg>
