@@ -114,6 +114,9 @@ const close=btn('Close ×','j180-action',()=>{drawer.hidden=true;shell.scrollInt
 drawerHead.append(drawerTitle,close);drawer.append(drawerHead);
 const panes=el('div','j180-drawer-content');drawer.append(panes);
 main.insertBefore(shell,layout);shell.append(rail,mapStage);main.insertBefore(bottom,layout);main.insertBefore(drawer,layout);
+const advisory=document.getElementById('j153-advisory');
+if(advisory){advisory.classList.add('j180-advisory-bottom');main.append(advisory);}
+
 const originalChecklist=layout.querySelector('aside.panel:not(.detail)'),sourcePanel=layout.querySelector('aside.panel.detail');
 const notes=document.querySelector('.j164-notes');
 const sectionsByName=new Map();
