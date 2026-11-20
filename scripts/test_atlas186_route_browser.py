@@ -103,36 +103,36 @@ try:
    # Shared plans must actually rehydrate in a new tab, without
    # transferring checklist keys or personal notes.
    shared={'version':1,'start':'chest-4','order':['chest-4','secondary-11'],
-           'categories':['secondary'],'mode':'manual','chestMode':'all','limit':10,'finish':'exit-0'}
+           'categories':['secondary'],'mode':'manual','chestMode':'all','limit':10,'finish':'exit-6'}
    link=url+'?cayoRoute='+urllib.parse.quote(__import__('json').dumps(shared,separators=(',',':')))
    other=ctx.new_page();other.goto(link,wait_until='domcontentloaded',timeout=50000)
    other.locator('#j186-route').wait_for(state='visible',timeout=30000)
    other.wait_for_function("document.querySelectorAll('.j180-chest').length===19",timeout=20000)
    imported=other.evaluate("window.teamJuraCayoPinRoute.getState()")
    assert imported['start']=='chest-4' and imported['order'][:2]==['chest-4','secondary-11'],'Shared URL restores route start and stop sequence'
-   assert imported['finish']=='exit-0' and imported['order'][-1]=='exit-0','Shared URL preserves a distinct, final destination'
+   assert imported['finish']=='exit-6' and imported['order'][-1]=='exit-6','Shared URL preserves a distinct, final destination'
    other.close()
    # Atlas 18.7: selecting any map exit as the ending pin keeps it last,
    # even when exit markers are NOT in the active loot categories.
-   assert page.evaluate("window.teamJuraCayoPinRoute.setFinish('exit-0')") is True
+   assert page.evaluate("window.teamJuraCayoPinRoute.setFinish('exit-6')") is True
    page.evaluate("window.teamJuraCayoPinRoute.autoRoute()")
    ended=page.evaluate("window.teamJuraCayoPinRoute.getState()")
-   assert ended['finish']=='exit-0' and ended['order'][-1]=='exit-0',ended
-   assert ended['order'].count('exit-0')==1,'Finish appears exactly once'
+   assert ended['finish']=='exit-6' and ended['order'][-1]=='exit-6',ended
+   assert ended['order'].count('exit-6')==1,'Finish appears exactly once'
    assert page.locator('.j186-final-stop').count()==1,'Finish labeled in player stop list'
    assert page.locator('.j186-route-badges .j186-last').count()==1,'Finish badge is visible on the same map'
    # Adding another stop must be routed before the chosen finish, not after it.
    page.locator('.j186-action').filter(has_text='Add next nearest').click()
    extended=page.evaluate("window.teamJuraCayoPinRoute.getState()")
-   assert extended['order'][-1]=='exit-0' and len(extended['order'])==len(ended['order'])+1,extended
+   assert extended['order'][-1]=='exit-6' and len(extended['order'])==len(ended['order'])+1,extended
    # A checked stop becomes a new origin when resuming; checked stops remain
    # local and the destination is not dropped.
    first_pending=extended['order'][1]
    page.locator('.j186-done').first.click()
    page.locator('.j186-action').filter(has_text='Resume after visited').click()
    resumed=page.evaluate("window.teamJuraCayoPinRoute.getState()")
-   assert resumed['start']==first_pending and resumed['finish']=='exit-0',resumed
-   assert resumed['order'][-1]=='exit-0','Resume still ends at selected map pin'
+   assert resumed['start']==first_pending and resumed['finish']=='exit-6',resumed
+   assert resumed['order'][-1]=='exit-6','Resume still ends at selected map pin'
    page.locator('.j186-action').filter(has_text='Remove finish').click()
    assert page.evaluate("window.teamJuraCayoPinRoute.getState().finish") is None
    # Phone viewport should not gain horizontal scrolling from the new panel.
