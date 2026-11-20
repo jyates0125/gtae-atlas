@@ -31,4 +31,14 @@ for ident in ids+['hq']:
     assert f'src="./art/jura159-heist-{ident}.webp"' in hq,ident
 assert len(set(all_hashes))==16, 'Repeated heist photo or HQ art'
 assert 'python scripts/test_atlas160_premium_headers.py' in (r/'.github/workflows/team-jura-release.yml').read_text()
+review=(r/'atlas155-art-review.html').read_text()
+capture=(r/'scripts/capture_design_review.py').read_text()
+hub=(r/'map-hub.html').read_text()
+for ident in ids:
+    assert f'jura159-heist-{ident}.webp' in review,ident
+    assert f"'heist-{ident}.html'" in capture,ident
+for world in ['iii','vc','vcs','lcs','ctw','tlad','tbogt']:
+    assert f"'map-hub.html?game={world}'" in capture,world
+assert 'id="classicWorldArt" src="./art/oldcity.svg"' not in hub, 'Old SVG skyline must never flash before world cover'
+assert 'j160HeistGallery' in review
 print('Atlas 16.0: 16 independent cinematic assets, 15 linked mission workspaces, responsive classic header PASS')
