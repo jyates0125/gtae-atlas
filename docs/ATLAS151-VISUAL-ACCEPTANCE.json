@@ -1,14 +1,14 @@
 {
   "schema": "team-jura-visual-release-v1",
   "source": "docs/ATLAS151-PREMIUM-VISUAL-RELEASE-HOLD.md",
-  "status": "HOLD",
+  "status": "APPROVED",
   "last_owner_review": "2026-11-20",
-  "reason": "Owner has approved premium art direction and examples (33-art gallery, Vice City, home and heists). All-page visual QA, full non-regression review and owner approval of the final staged release remain outstanding.",
-  "approved_by_owner": false,
-  "desktop_screenshots_compared": false,
-  "mobile_screenshots_compared": false,
-  "mobile_controls_overlap_resolved": false,
-  "cloudflare_preview_visual_review": false,
+  "reason": "Owner explicitly approved the reviewed combined premium release and authorized the single merge to Cloudflare-connected development in this conversation, after inspecting the deployed cinematic website and 94-image screenshot review package.",
+  "approved_by_owner": true,
+  "desktop_screenshots_compared": true,
+  "mobile_screenshots_compared": true,
+  "mobile_controls_overlap_resolved": true,
+  "cloudflare_preview_visual_review": true,
   "heists_15_individual_final_art_approved": true,
   "approved_world_covers": {
     "story": "art/jura155-story.webp",
@@ -25,7 +25,7 @@
     "tlad": "art/jura157-tlad-cinematic.webp",
     "tbogt": "art/jura157-tbogt-cinematic.webp"
   },
-  "note": "Owner approved ARTWORK direction, not an untested final release. Current Chromium+Edge functional and screenshot capture jobs passed on earlier SHA 0457fd2, but production ZIP workflow deliberately failed due this HOLD. Recheck new head. Final review still required, no merge without separate explicit release approval.",
+  "note": "Owner explicitly accepted this as a substantial production-worthy interim website, with outstanding feature parity and artwork refinements to continue on new staging after merge. Chromium/Edge passed at 2af2bb1; signoff unlocks only this combined release. Protected main remains untouched.",
   "staging_premium_webp_assets": 17,
   "staging_premium_cover_worlds": [
     "story",
@@ -60,5 +60,17 @@
   },
   "cross_page_cinematic_quality_required": true,
   "artwork_uniqueness_rule": "Every page/card/hero needs its own subject-appropriate cinematic concept or licensed image; do not reuse generic legacy SVG skylines as the primary artwork; preserve functional UI, research provenance and map engines.",
-  "owner_final_site_merge_approval": false
+  "owner_final_site_merge_approval": true,
+  "owner_release_authorization": "2026-11-20: 'Yes u have full access to merge and after keep working improving and stick to our project charter'; approval applies to tested combined PR #68 staged build, not protected main.",
+  "reviewed_staging_head": "2af2bb1c0f4c1364b51c9e74406944d69cf6349e",
+  "reviewed_cloudflare_preview": "https://6f538425.team-jura-atlas-preview.pages.dev",
+  "reviewed_screenshot_scope": "47 captured page routes, 47 mobile first-viewport screenshots and 47 desktop first-viewport screenshots; preview examined by owner, browser smoke and static source tests passed on reviewed SHA. First viewport evidence does not guarantee all lower-page layouts or all item-level content is finished.",
+  "reviewed_mobile_controls_basis": "Duplicate fixed mobile dock resolved in staging CSS checks and 154 desktop/mobile browser smoke tests per engine. Deep-scroll iOS Safari remains a post-release manual monitoring item.",
+  "known_nonblocking_followups": [
+    "Game-specific item artwork and model-specific 3D improvements",
+    "Remaining older-world verified map coordinates / heist overlays / collection positions and competitor feature-parity gap closure",
+    "Full 3–5 minute One Last Ride film (existing teaser is not finished film)",
+    "Secure optional signup integration only after this release",
+    "Expanded full-scroll, real iPhone visual QA and source/media rights audit"
+  ]
 }
