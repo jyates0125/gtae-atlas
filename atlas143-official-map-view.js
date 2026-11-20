@@ -5,6 +5,7 @@
  */
 (()=>{'use strict';
 const PAGE='6';
+const VIEW_KEY='view',ROCKSTAR_VIEW='rockstar';
 const DATABASE='team-jura-official-map-v1',STORE='official-map',KEY='leonida-poster';
 const SOURCE='https://www.rockstargames.com/VI/media';
 const DIRECT_ZIP='https://media-rockstargames-com.akamaized.net/VI/downloads/artwork_wallpapers/Leonida_Map_Poster_Printable.zip';
@@ -152,10 +153,18 @@ function mount(){
    catch(err){status.textContent=err.message}
   });
  });
- function openView(){
+ function updateViewUrl(open){
+  const url=new URL(location.href);
+  if(open)url.searchParams.set(VIEW_KEY,ROCKSTAR_VIEW);
+  else if(url.searchParams.get(VIEW_KEY)===ROCKSTAR_VIEW)url.searchParams.delete(VIEW_KEY);
+  else return;
+  if(url.href!==location.href)history.replaceState(history.state,'',url);
+ }
+ function openView({focus=true}={}){
+  updateViewUrl(true);
   panel.hidden=false;button.setAttribute('aria-expanded','true');
   button.setAttribute('aria-pressed','true');
-  panel.querySelector('[data-j143="close"]').focus();
+  if(focus)panel.querySelector('[data-j143="close"]').focus();
   if(!loaded)runOperation(async()=>{
    try{
     const file=await stored('get');
@@ -163,7 +172,11 @@ function mount(){
    }catch{status.textContent='Open the official download to try again.'}
   });
  }
- function closeView(){panel.hidden=true;button.setAttribute('aria-expanded','false');button.setAttribute('aria-pressed','false');button.focus()}
+ function closeView(){
+  updateViewUrl(false);
+  panel.hidden=true;button.setAttribute('aria-expanded','false');button.setAttribute('aria-pressed','false');
+  if(!button.hidden)button.focus();
+ }
  button.addEventListener('click',()=>panel.hidden?openView():closeView());
  panel.addEventListener('click',async ev=>{
   const cmd=ev.target.closest('[data-j143]')?.dataset.j143;
@@ -259,6 +272,9 @@ function mount(){
   observer.observe(worldSwitch,{attributes:true,attributeFilter:['aria-pressed']});
  }
  syncWorld();
+ if(!button.hidden&&new URLSearchParams(location.search).get(VIEW_KEY)===ROCKSTAR_VIEW){
+  openView({focus:false});
+ }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 })();
