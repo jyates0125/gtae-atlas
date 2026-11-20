@@ -1,0 +1,6 @@
+/* Atlas 19.2 — personal garage empty-state uses approved Elario palette. */
+.j192-garage-empty{grid-column:1/-1;display:grid;gap:9px;justify-items:start;align-content:center;min-height:250px;padding:clamp(18px,3vw,32px);border:1px solid #b889a5;border-radius:16px;background:linear-gradient(120deg,#341d4b 0%,#241330d9 60%),url('./art/atlas93-garage-hero.webp') center/cover no-repeat}
+.j192-garage-empty h3{font:900 clamp(20px,2.4vw,28px)/1.2 system-ui;color:#ffddaa;margin:0}
+.j192-garage-empty p{font:600 13px/1.55 system-ui;color:#f2e3ef;max-width:530px;margin:0}
+.j192-garage-empty button{margin-top:10px;min-height:46px;padding:11px 16px;background:#f6cf96;color:#201330;border:1px solid #ffecb9;border-radius:9px;font:850 12px system-ui}
+.j192-garage-empty button:focus-visible{outline:3px solid #fff;outline-offset:3px}
