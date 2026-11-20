@@ -94,6 +94,9 @@ info.addEventListener('keydown',event=>{
 // Keep fullscreen and its backup CSS mode easy to exit on mobile.
 document.addEventListener('keydown',event=>{
  if(event.key!=='Escape')return;
+ // Also close details when the event originated outside the card, e.g. after
+ // pressing an existing route/zoom control; do not trap keyboard navigation.
+ if(!info.hidden){event.preventDefault();info.querySelector('.j180-info-close')?.click();}
  if(frame.classList.contains('j180-expanded'))frame.classList.remove('j180-expanded');
 });
 })();
