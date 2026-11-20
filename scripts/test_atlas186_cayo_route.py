@@ -20,7 +20,7 @@ assert 'j180-mode[data-mode="route"]' in code
 assert "const map=byId()" in code
 assert "Math.hypot" not in code or True
 assert 'route' in style and 'stroke-dasharray' in style and 'pointer-events:none' in style
-assert "atlas186-cayo-route.js?v=187" in loader
+assert "atlas186-cayo-route.js?v=191" in loader
 assert "atlas186-cayo-route.css?v=187" in loader
 assert "if(heistId==='cayo-perico')" in loader
 assert "if(document.body.dataset.heist!=='cayo-perico'" in code
