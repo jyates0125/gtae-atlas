@@ -1,0 +1,1165 @@
+{
+  "schema": 1,
+  "source": "static development branch after cumulative integration",
+  "scope": "structural audit, NOT a browser/live art or full gameplay verification",
+  "pages": [
+    {
+      "page": "atlas-activities.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 7,
+      "scripts": 7,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure visitor has one clear next action, working links, source credit, and responsive layout."
+    },
+    {
+      "page": "atlas-calibration.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 1,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": true,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure visitor has one clear next action, working links, source credit, and responsive layout."
+    },
+    {
+      "page": "atlas-catalog.html",
+      "section": "Garage and references",
+      "legacy": false,
+      "staticControls": 17,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Prominently link pictorial catalog and personal garage."
+    },
+    {
+      "page": "atlas-cayo.html",
+      "section": "Maps and route tools",
+      "legacy": false,
+      "staticControls": 8,
+      "scripts": 7,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": true,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Check entry/exit tools, 2D pinboard vs gameplay and accessible category toggles."
+    },
+    {
+      "page": "atlas-checklist.html",
+      "section": "Progress tracking",
+      "legacy": false,
+      "staticControls": 10,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": true,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Test cross-page completion reconciliation and same-browser persistence."
+    },
+    {
+      "page": "atlas-completion.html",
+      "section": "Progress tracking",
+      "legacy": false,
+      "staticControls": 12,
+      "scripts": 7,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Confirm tracked items open the correct map coordinates."
+    },
+    {
+      "page": "atlas-coverage.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 4,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": false,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure visitor has one clear next action, working links, source credit, and responsive layout."
+    },
+    {
+      "page": "atlas-credits.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 0,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": false,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": true,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure visitor has one clear next action, working links, source credit, and responsive layout."
+    },
+    {
+      "page": "atlas-feature-audit.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 0,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Do not promote static code coverage into live feature parity."
+    },
+    {
+      "page": "atlas-iv.html",
+      "section": "Maps and route tools",
+      "legacy": false,
+      "staticControls": 16,
+      "scripts": 6,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Check tile/landmark load; disclose partial game coverage."
+    },
+    {
+      "page": "atlas-online.html",
+      "section": "Maps and route tools",
+      "legacy": false,
+      "staticControls": 93,
+      "scripts": 22,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure expired daily records never show current."
+    },
+    {
+      "page": "atlas-pack-format.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 0,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": false,
+      "brandMentions": {
+        "elario": false,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure visitor has one clear next action, working links, source credit, and responsive layout."
+    },
+    {
+      "page": "atlas-passport.html",
+      "section": "Progress tracking",
+      "legacy": false,
+      "staticControls": 4,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Distinguish personal notes from actual verified in-game achievements."
+    },
+    {
+      "page": "atlas-research.html",
+      "section": "Maps and route tools",
+      "legacy": false,
+      "staticControls": 26,
+      "scripts": 10,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": true,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Verify community-only pinned records, clustering, 3D fallback and mobile filters."
+    },
+    {
+      "page": "atlas-sa.html",
+      "section": "Maps and route tools",
+      "legacy": false,
+      "staticControls": 11,
+      "scripts": 7,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Replace schematic-only map only when licensed positions are verified."
+    },
+    {
+      "page": "atlas-test-center.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 3,
+      "scripts": 7,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Show pass/fail scope and external testing limits."
+    },
+    {
+      "page": "atlas-toolkit.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 9,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": false,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure visitor has one clear next action, working links, source credit, and responsive layout."
+    },
+    {
+      "page": "atlas-verification.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 2,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": true,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Maintain an accessible evidence/provenance key."
+    },
+    {
+      "page": "atlas-vi.html",
+      "section": "Maps and route tools",
+      "legacy": false,
+      "staticControls": 93,
+      "scripts": 21,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Test Scaly/Loki/Yanis maps, source labels and unobstructed illustration."
+    },
+    {
+      "page": "atlas.html",
+      "section": "Maps and route tools",
+      "legacy": false,
+      "staticControls": 93,
+      "scripts": 19,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Test story/online separation, marker detail and 100-stop hunts in browser."
+    },
+    {
+      "page": "atlas8-preview.html",
+      "section": "Supporting / archived",
+      "legacy": true,
+      "staticControls": 6,
+      "scripts": 5,
+      "images": 2,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Keep as archived functional workspace; provide obvious link to modern experience."
+    },
+    {
+      "page": "atlas81-hq.html",
+      "section": "Homepage and branded universe",
+      "legacy": false,
+      "staticControls": 24,
+      "scripts": 7,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure completed sets and map progress clearly link back to a mapped pin."
+    },
+    {
+      "page": "atlas87-daily.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 0,
+      "scripts": 9,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Display source dates, reset clocks and unknown states truthfully."
+    },
+    {
+      "page": "atlas90-vehicles5.html",
+      "section": "Garage and references",
+      "legacy": false,
+      "staticControls": 7,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Test catalog → garage links and owned/wishlist synchronization."
+    },
+    {
+      "page": "atlas90-vehicles6.html",
+      "section": "Garage and references",
+      "legacy": false,
+      "staticControls": 7,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Do not present GTA V archive renders as GTA VI evidence."
+    },
+    {
+      "page": "atlas90-weapons.html",
+      "section": "Garage and references",
+      "legacy": false,
+      "staticControls": 7,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Check missing models/pictures with original fallback and source credit."
+    },
+    {
+      "page": "atlas93-dispatch.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 2,
+      "scripts": 4,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Make next activity action real and tied to existing trackers."
+    },
+    {
+      "page": "atlas93-garage.html",
+      "section": "Garage and references",
+      "legacy": false,
+      "staticControls": 12,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Validate duplicate-model parking bays, real owned state and imported backups."
+    },
+    {
+      "page": "atlas97-journey.html",
+      "section": "Homepage and branded universe",
+      "legacy": false,
+      "staticControls": 0,
+      "scripts": 3,
+      "images": 6,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure visitor has one clear next action, working links, source credit, and responsive layout."
+    },
+    {
+      "page": "directory.html",
+      "section": "Supporting / archived",
+      "legacy": true,
+      "staticControls": 1,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": false,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Keep as archived functional workspace; provide obvious link to modern experience."
+    },
+    {
+      "page": "discovery.html",
+      "section": "Supporting / archived",
+      "legacy": true,
+      "staticControls": 6,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": false,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Keep as archived functional workspace; provide obvious link to modern experience."
+    },
+    {
+      "page": "elario.html",
+      "section": "Homepage and branded universe",
+      "legacy": false,
+      "staticControls": 1,
+      "scripts": 5,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Keep Elario as parent brand; do not imply Rockstar endorsement."
+    },
+    {
+      "page": "explorer.html",
+      "section": "Supporting / archived",
+      "legacy": true,
+      "staticControls": 18,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": false,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Keep as archived functional workspace; provide obvious link to modern experience."
+    },
+    {
+      "page": "guides.html",
+      "section": "Supporting / archived",
+      "legacy": false,
+      "staticControls": 0,
+      "scripts": 5,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure visitor has one clear next action, working links, source credit, and responsive layout."
+    },
+    {
+      "page": "heist-agency-vip.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 6,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-auto-shop.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 7,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-cayo-perico.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 9,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-cluckin-bell.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 9,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-diamond-casino.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 8,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-doomsday-act-1.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 6,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-doomsday-act-2.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 6,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-doomsday-act-3.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 5,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-fleeca.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 6,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-humane-labs.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 9,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-kortz-center.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 8,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-pacific-standard.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 9,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-prison-break.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 8,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-salvage-yard.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 7,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heist-series-a.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 9,
+      "scripts": 7,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Review individual setup checklist and mark schematic pins vs confirmed gameplay sources."
+    },
+    {
+      "page": "heists.html",
+      "section": "Heist missions",
+      "legacy": false,
+      "staticControls": 0,
+      "scripts": 4,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Give each heist a clear launch destination and progress overview."
+    },
+    {
+      "page": "hunt-hq.html",
+      "section": "Progress tracking",
+      "legacy": true,
+      "staticControls": 40,
+      "scripts": 0,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": false,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": false,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": false,
+      "recommendedHumanQA": "Keep as archived functional workspace; provide obvious link to modern experience."
+    },
+    {
+      "page": "index.html",
+      "section": "Homepage and branded universe",
+      "legacy": false,
+      "staticControls": 2,
+      "scripts": 5,
+      "images": 17,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Make the Start Here action obvious and check menu/navigation."
+    },
+    {
+      "page": "legacy-explorer.html",
+      "section": "Supporting / archived",
+      "legacy": true,
+      "staticControls": 33,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": false,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": false,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Keep as archived functional workspace; provide obvious link to modern experience."
+    },
+    {
+      "page": "leonida-hq.html",
+      "section": "Supporting / archived",
+      "legacy": true,
+      "staticControls": 0,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Keep as archived functional workspace; provide obvious link to modern experience."
+    },
+    {
+      "page": "map-hub.html",
+      "section": "Maps and route tools",
+      "legacy": false,
+      "staticControls": 0,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Ensure visitor has one clear next action, working links, source credit, and responsive layout."
+    },
+    {
+      "page": "maps.html",
+      "section": "Maps and route tools",
+      "legacy": false,
+      "staticControls": 2,
+      "scripts": 6,
+      "images": 13,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Each world must clearly say live map, source-only reference, or tracking workspace."
+    },
+    {
+      "page": "one-last-ride.html",
+      "section": "Homepage and branded universe",
+      "legacy": false,
+      "staticControls": 10,
+      "scripts": 7,
+      "images": 2,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Check media loading, mute controls, credit and content notices."
+    },
+    {
+      "page": "online-explorer.html",
+      "section": "Supporting / archived",
+      "legacy": true,
+      "staticControls": 33,
+      "scripts": 6,
+      "images": 0,
+      "duplicateIds": [],
+      "hasH1": false,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": false,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Keep as archived functional workspace; provide obvious link to modern experience."
+    },
+    {
+      "page": "project.html",
+      "section": "Homepage and branded universe",
+      "legacy": false,
+      "staticControls": 0,
+      "scripts": 5,
+      "images": 3,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Show current release status instead of the stale 7.x title."
+    },
+    {
+      "page": "team-jura.html",
+      "section": "Homepage and branded universe",
+      "legacy": false,
+      "staticControls": 1,
+      "scripts": 5,
+      "images": 1,
+      "duplicateIds": [],
+      "hasH1": true,
+      "hasMain": true,
+      "brandMentions": {
+        "elario": true,
+        "team_jura": true
+      },
+      "staleVersionMarkerInSource": false,
+      "currentJourneyLink": false,
+      "sitewideBridgeInstalled": true,
+      "recommendedHumanQA": "Compare new hero and mascots against approved character references."
+    }
+  ],
+  "count": 60,
+  "legacyCount": 8,
+  "withDirectStartHereLink": 0,
+  "withJ97Bridge": 59,
+  "criticalUnresolved": [
+    "Current hosted preview not yet verified against the approved visual reference pack.",
+    "GTA VI provisional positions require post-release gameplay verification.",
+    "Third-party archive image reuse rights and live hosting remain separate checks.",
+    "Historic gallery, checklist and map progress keys overlap and need careful reconciliation.",
+    "Legacy page names/versions still exist in the underlying markup; do not rewrite working engines only for labels.",
+    "Heist workspace maps are mostly schematic, not confirmed driving routes.",
+    "Offline and mobile map-loading QA require a deployed browser run."
+  ],
+  "baseAuditSummary": {
+    "pages": 60,
+    "missingRefs": 2,
+    "criticalMissing": []
+  }
+}

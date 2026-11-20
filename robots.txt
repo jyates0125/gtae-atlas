@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://team-jura-atlas-preview.pages.dev/sitemap.xml

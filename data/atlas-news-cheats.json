@@ -1,0 +1,1725 @@
+{
+  "schema": 1,
+  "checkedAt": "2026-11-18",
+  "policy": "Manually curated public source references; not a live feed. GTA V/SA cheat codes are single-player only. No leaks, story spoilers or GTA Online exploit instructions.",
+  "credits": {
+    "story": [
+      "https://www.pcgamer.com/gta-5-cheats/",
+      "https://gta.guide/gta-5/cheats",
+      "https://www.gtabase.com/grand-theft-auto-v/gta-5-cheats-ps5-ps4-ps3-cheat-codes",
+      "https://gtamap.io/gta-5-cheats/"
+    ],
+    "sa": [
+      "https://vandal.elespanol.com/en/grand-theft-auto-san-andreas/grand-theft-auto-san-andreas-pc-cheats.html",
+      "https://gtaside.com/tips/san-andreas/cheat-codes/pc/",
+      "https://gtaside.com/tips/san-andreas/cheat-codes/playstation/",
+      "https://gtaside.com/tips/san-andreas/cheat-codes/xbox/"
+    ],
+    "iii": [
+      "https://totalgta.com/gta-3/cheats/",
+      "https://gtaside.com/tips/gta3/cheat-codes/"
+    ],
+    "vc": [
+      "https://totalgta.com/gta-vice-city/cheats/",
+      "https://gtaside.com/tips/vice-city/cheat-codes/"
+    ],
+    "iv": [
+      "https://www.gtabase.com/grand-theft-auto-iv/gta-4-cheats-xbox-360-ps3-pc-full-list-of-cheat-codes",
+      "https://gtaside.com/tips/gta4/cheat-codes/"
+    ],
+    "tlad": [
+      "https://www.gtabase.com/grand-theft-auto-iv/gta-4-cheats-xbox-360-ps3-pc-full-list-of-cheat-codes",
+      "https://gtaside.com/tips/gta4/cheat-codes/"
+    ],
+    "tbogt": [
+      "https://www.gtabase.com/grand-theft-auto-iv/gta-4-cheats-xbox-360-ps3-pc-full-list-of-cheat-codes",
+      "https://gtaside.com/tips/gta4/cheat-codes/"
+    ],
+    "lcs": [
+      "https://www.gtabase.com/articles/gta-liberty-city-stories-cheats-cheat-codes-for-psp-ps2",
+      "https://www.grandtheftwiki.com/Cheats_in_GTA_Liberty_City_Stories"
+    ],
+    "vcs": [
+      "https://www.gtabase.com/articles/gta-vice-city-stories-cheats-all-cheat-codes-for-psp-ps2",
+      "https://www.grandtheftwiki.com/Cheats_in_GTA_Vice_City_Stories"
+    ],
+    "ctw": [
+      "https://www.gtabase.com/articles/gta-chinatown-wars-cheats-cheat-codes-for-psp-ds-mobile",
+      "https://www.grandtheftwiki.com/Cheats_in_GTA_Chinatown_Wars"
+    ]
+  },
+  "cheats": [
+    {
+      "game": "story",
+      "group": "Survival",
+      "name": "Max health & armor",
+      "code": "TURTLE",
+      "phone": "1-999-887-853",
+      "ps": "Circle L1 Triangle R2 Cross Square Circle Right Square L1 L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Survival",
+      "name": "Invincibility (5 minutes)",
+      "code": "PAINKILLER",
+      "phone": "1-999-724-654-5537",
+      "ps": "Right Cross Right Left Right R1 Right Left Cross Triangle"
+    },
+    {
+      "game": "story",
+      "group": "Weapons",
+      "name": "Weapons & ammunition",
+      "code": "TOOLUP",
+      "phone": "1-999-866-587",
+      "ps": "Triangle R2 Left L1 Cross Right Triangle Down Square L1 L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Police",
+      "name": "Lower wanted level",
+      "code": "LAWYERUP",
+      "phone": "1-999-5299-3787",
+      "ps": "R1 R1 Circle R2 Right Left Right Left Right Left"
+    },
+    {
+      "game": "story",
+      "group": "Police",
+      "name": "Raise wanted level",
+      "code": "FUGITIVE",
+      "phone": "1-999-3844-8483",
+      "ps": "R1 R1 Circle R2 Left Right Left Right Left Right"
+    },
+    {
+      "game": "story",
+      "group": "Movement",
+      "name": "Super jump",
+      "code": "HOPTOIT",
+      "phone": "1-999-467-8648",
+      "ps": "Left Left Triangle Triangle Right Right Left Right Square R1 R2"
+    },
+    {
+      "game": "story",
+      "group": "Movement",
+      "name": "Fast running",
+      "code": "CATCHME",
+      "phone": "1-999-228-2463",
+      "ps": "Triangle Left Right Right L2 L1 Square"
+    },
+    {
+      "game": "story",
+      "group": "Movement",
+      "name": "Parachute",
+      "code": "SKYDIVE",
+      "phone": "1-999-759-3483",
+      "ps": "Left Right L1 L2 R1 R2 R2 Left Left Right L1"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Comet sports car",
+      "code": "COMET",
+      "phone": "1-999-266-38",
+      "ps": "R1 Circle R2 Right L1 L2 Cross Cross Square R1"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Buzzard attack helicopter",
+      "code": "BUZZOFF",
+      "phone": "1-999-289-9633",
+      "ps": "Circle Circle L1 Circle Circle Circle L1 L2 R1 Triangle Circle Triangle"
+    },
+    {
+      "game": "story",
+      "group": "Effects",
+      "name": "Slow motion",
+      "code": "SLOWMO",
+      "phone": "1-999-756-966",
+      "ps": "Triangle Left Right Right Square R2 R1"
+    },
+    {
+      "game": "story",
+      "group": "Effects",
+      "name": "Slippery tires",
+      "code": "SNOWDAY",
+      "phone": "1-999-766-9329",
+      "ps": "Triangle R1 R1 Left R1 L1 R2 L1"
+    },
+    {
+      "game": "sa",
+      "group": "Survival",
+      "name": "Health, armor and $250,000",
+      "code": "HESOYAM",
+      "phone": null,
+      "ps": "R1 R2 L1 Cross Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "sa",
+      "group": "Survival",
+      "name": "Near-infinite health",
+      "code": "BAGUVIX",
+      "phone": null,
+      "ps": "Down Cross Right Left Right R1 Right Down Up Triangle",
+      "versions": "original-only"
+    },
+    {
+      "game": "sa",
+      "group": "Weapons",
+      "name": "Weapon set 1",
+      "code": "LXGIWYL",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "sa",
+      "group": "Weapons",
+      "name": "Weapon set 2",
+      "code": "KJKSZPJ",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Left"
+    },
+    {
+      "game": "sa",
+      "group": "Weapons",
+      "name": "Unlimited ammunition",
+      "code": "FULLCLIP",
+      "phone": null,
+      "ps": "L1 R1 Square R1 Left R2 R1 Left Square Down L1 L1"
+    },
+    {
+      "game": "sa",
+      "group": "Police",
+      "name": "Clear wanted level",
+      "code": "ASNAEB",
+      "phone": null,
+      "ps": "R1 R1 Circle R2 Up Down Up Down Up Down"
+    },
+    {
+      "game": "sa",
+      "group": "Vehicles",
+      "name": "Spawn Rhino",
+      "code": "AIWPRTON",
+      "phone": null,
+      "ps": "Circle Circle L1 Circle Circle Circle L1 L2 R1 Triangle Circle Triangle"
+    },
+    {
+      "game": "sa",
+      "group": "Vehicles",
+      "name": "Spawn Hydra",
+      "code": "JUMPJET",
+      "phone": null,
+      "ps": "Triangle Triangle Square Circle Cross L1 L1 Down Up"
+    },
+    {
+      "game": "sa",
+      "group": "Equipment",
+      "name": "Jetpack",
+      "code": "ROCKETMAN",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 Up Down Left Right L1 L2 R1 R2 Up Down Left Right"
+    },
+    {
+      "game": "story",
+      "group": "Survival",
+      "name": "Recharge special ability",
+      "code": "POWERUP",
+      "phone": "1-999-769-3787",
+      "ps": "Cross Cross Square R1 L1 Cross Right Left Cross"
+    },
+    {
+      "game": "story",
+      "group": "Movement",
+      "name": "Fast swimming",
+      "code": "GOTGILLS",
+      "phone": "1-999-4684-4557",
+      "ps": "Left Left L1 Right Right R2 Left L2 Right"
+    },
+    {
+      "game": "story",
+      "group": "Movement",
+      "name": "Skyfall",
+      "code": "SKYFALL",
+      "phone": "1-999-759-3255",
+      "ps": "L1 L2 R1 R2 Left Right Left Right L1 L2 R1 R2 Left Right Left Right"
+    },
+    {
+      "game": "story",
+      "group": "Effects",
+      "name": "Drunk mode",
+      "code": "LIQUOR",
+      "phone": "1-999-547-867",
+      "ps": "Triangle Right Right Left Right Square Circle Left"
+    },
+    {
+      "game": "story",
+      "group": "Weapons",
+      "name": "Explosive bullets",
+      "code": "HIGHEX",
+      "phone": "1-999-444-439",
+      "ps": "Right Square Cross Left R1 R2 Left Right Right L1 L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Weapons",
+      "name": "Flaming bullets",
+      "code": "INCENDIARY",
+      "phone": "1-999-462-363-4279",
+      "ps": "L1 R1 Square R1 Left R2 R1 Left Square Right L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Weapons",
+      "name": "Explosive melee",
+      "code": "HOTHANDS",
+      "phone": "1-999-4684-2637",
+      "ps": "Right Left Cross Triangle R1 Circle Circle Circle L2"
+    },
+    {
+      "game": "story",
+      "group": "Weapons",
+      "name": "Slow-motion aim",
+      "code": "DEADEYE",
+      "phone": "1-999-332-3393",
+      "ps": "Square L2 R1 Triangle Left Square L2 Right Cross"
+    },
+    {
+      "game": "story",
+      "group": "Effects",
+      "name": "Low gravity",
+      "code": "FLOATER",
+      "phone": "1-999-356-2837",
+      "ps": "Left Left L1 R1 L1 Right Left L1 Left"
+    },
+    {
+      "game": "story",
+      "group": "Effects",
+      "name": "Change weather",
+      "code": "MAKEITRAIN",
+      "phone": "1-999-625-348-7246",
+      "ps": "R2 Cross L1 L1 L2 L2 L2 Square"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Rapid GT",
+      "code": "RAPIDGT",
+      "phone": "1-999-727-4348",
+      "ps": "R2 L1 Circle Right L1 R1 Right Left Circle R2"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Stretch limousine",
+      "code": "VINEWOOD",
+      "phone": "1-999-8463-9663",
+      "ps": "R2 Right L2 Left Left R1 L1 Circle Right"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Trashmaster",
+      "code": "TRASHED",
+      "phone": "1-999-872-7433",
+      "ps": "Circle R1 Circle R1 Left Left R1 L1 Circle Right"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Caddy golf cart",
+      "code": "HOLEIN1",
+      "phone": "1-999-465-3461",
+      "ps": "Circle L1 Left R1 L2 Cross R1 L1 Circle Cross"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Sanchez dirt bike",
+      "code": "OFFROAD",
+      "phone": "1-999-633-7623",
+      "ps": "Circle Cross L1 Circle Circle L1 Circle R1 R2 L2 L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "PCJ-600 motorcycle",
+      "code": "ROCKET",
+      "phone": "1-999-762-538",
+      "ps": "R1 Right Left Right R2 Left Right Square Right L2 L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "BMX bicycle",
+      "code": "BANDIT",
+      "phone": "1-999-226-348",
+      "ps": "Left Left Right Right Left Right Square Circle Triangle R1 R2"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Mallard stunt plane",
+      "code": "BARNSTORM",
+      "phone": "1-999-227-678-676",
+      "ps": "Circle Right L1 L2 Left R1 L1 L1 Left Left Cross Triangle"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Duster crop plane",
+      "code": "FLYSPRAY",
+      "phone": "1-999-3597-7729",
+      "ps": "Right Left R1 R1 R1 Left Triangle Triangle Cross Circle L1 L1"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Dodo seaplane",
+      "code": "EXTINCT",
+      "phone": "1-999-398-4628",
+      "ps": "Square R1 Square R1 Left Left R1 L1 Square Right",
+      "versions": "gen8plus"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Duke O'Death",
+      "code": "DEATHCAR",
+      "phone": "1-999-3328-4227",
+      "ps": "Triangle R1 Triangle R1 Right Left R1 L1 Triangle Right",
+      "versions": "gen8plus"
+    },
+    {
+      "game": "story",
+      "group": "Vehicles",
+      "name": "Kraken submarine",
+      "code": "BUBBLES",
+      "phone": "1-999-282-2537",
+      "ps": "R2 Left L2 Right Right R1 L1 Square Right",
+      "versions": "gen8plus"
+    },
+    {
+      "game": "story",
+      "group": "Phone-only",
+      "name": "Director mode",
+      "code": "",
+      "phone": "1-999-5782-5368",
+      "ps": null,
+      "versions": "gen8plus"
+    },
+    {
+      "game": "story",
+      "group": "Phone-only",
+      "name": "Black cellphone",
+      "code": "",
+      "phone": "1-999-367-3767",
+      "ps": null,
+      "versions": "gen8plus"
+    },
+    {
+      "game": "sa",
+      "group": "Weapons",
+      "name": "Weapon set 3",
+      "code": "UZUMYMW",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Down"
+    },
+    {
+      "game": "sa",
+      "group": "Police",
+      "name": "Lock wanted level",
+      "code": "AEZAKMI",
+      "phone": null,
+      "ps": "Circle Right Circle Right Left Square Triangle Up"
+    },
+    {
+      "game": "sa",
+      "group": "Police",
+      "name": "Raise wanted level",
+      "code": "OSRBLHH",
+      "phone": null,
+      "ps": "R1 R1 Circle R2 Left Right Left Right Left Right"
+    },
+    {
+      "game": "sa",
+      "group": "Police",
+      "name": "Six-star wanted level",
+      "code": "BRINGITON",
+      "phone": null,
+      "ps": "Circle Right Circle Right Left Square Cross Down"
+    },
+    {
+      "game": "sa",
+      "group": "Weapons",
+      "name": "Weapon set 2 (alternate PC code)",
+      "code": "PROFESSIONALSKIT",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Left"
+    },
+    {
+      "game": "sa",
+      "group": "Movement",
+      "name": "Super jump",
+      "code": "KANGAROO",
+      "phone": null,
+      "ps": "Up Up Triangle Triangle Up Up Left Right Square R2 R2"
+    },
+    {
+      "game": "sa",
+      "group": "Equipment",
+      "name": "Parachute",
+      "code": "AIYPWZQP",
+      "phone": null,
+      "ps": "Left Right L1 L2 R1 R2 R2 Up Down Right L1"
+    },
+    {
+      "game": "sa",
+      "group": "Vehicles",
+      "name": "Hunter helicopter",
+      "code": "OHDUDE",
+      "phone": null,
+      "ps": "Circle Cross L1 Circle Circle L1 Circle R1 R2 L2 L1 L1"
+    },
+    {
+      "game": "iii",
+      "group": "Player",
+      "name": "$250,000 Cash",
+      "code": "IFIWEREARICHMAN",
+      "phone": null,
+      "ps": "R2 R2 L1 L1 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "iii",
+      "group": "Weapons",
+      "name": "All Weapons",
+      "code": "GUNSGUNSGUNS",
+      "phone": null,
+      "ps": "R2 R2 L1 R2 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Better Handling",
+      "code": "CORNERSLIKEMAD",
+      "phone": null,
+      "ps": "R1 L1 R2 L1 Left R1 R1 Triangle"
+    },
+    {
+      "game": "iii",
+      "group": "Effects",
+      "name": "Big Head Mode",
+      "code": "",
+      "phone": null,
+      "ps": "Up Up Down Down Left Right Left Right Circle Cross",
+      "versions": "definitive-only"
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Blow Up All Cars",
+      "code": "BANGBANGBANG",
+      "phone": null,
+      "ps": "L2 R2 L1 R1 L2 R2 Triangle Square Circle Triangle L2 L1"
+    },
+    {
+      "game": "iii",
+      "group": "Player",
+      "name": "Change Outfit",
+      "code": "ILIKEDRESSINGUP",
+      "phone": null,
+      "ps": "Right Down Left Up L1 L2 Up Left Down Right"
+    },
+    {
+      "game": "iii",
+      "group": "Police",
+      "name": "Clear Wanted Level",
+      "code": "NOPOLICEPLEASE",
+      "phone": null,
+      "ps": "R2 R2 L1 R2 Up Down Up Down Up Down"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Cloudy Weather",
+      "code": "ILIKESCOTLAND",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 R2 R1 L2 Square"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Fast Motion",
+      "code": "TIMEFLIESWHENYOU",
+      "phone": null,
+      "ps": "Triangle Up Right Down Square L1 L2"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Faster Clock",
+      "code": "MADWEATHER",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Flying Cars",
+      "code": "CHITTYCHITTYBB",
+      "phone": null,
+      "ps": "Right R2 Circle R1 L2 Down L1 R1"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Foggy Weather",
+      "code": "PEASOUP",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 R2 R1 L2 Cross"
+    },
+    {
+      "game": "iii",
+      "group": "Player",
+      "name": "Full Armor",
+      "code": "TORTOISE",
+      "phone": null,
+      "ps": "R2 R2 L1 L2 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "iii",
+      "group": "Player",
+      "name": "Full Health",
+      "code": "GESUNDHEIT",
+      "phone": null,
+      "ps": "R2 R2 L1 R1 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Invisible Cars",
+      "code": "ANICESETOFWHEELS",
+      "phone": null,
+      "ps": "L1 L1 Square R2 Triangle L1 Triangle",
+      "versions": "original-only"
+    },
+    {
+      "game": "iii",
+      "group": "Weapons",
+      "name": "More Gore",
+      "code": "NASTYLIMBSCHEAT",
+      "phone": null,
+      "ps": "Square L1 Circle Down L1 R1 Triangle Right L1 Cross"
+    },
+    {
+      "game": "iii",
+      "group": "Effects",
+      "name": "Pedestrian Riot",
+      "code": "ITSALLGOINGMAAAD",
+      "phone": null,
+      "ps": "Down Up Left Up Cross R1 R2 L2 L1"
+    },
+    {
+      "game": "iii",
+      "group": "Effects",
+      "name": "Pedestrians Attack You",
+      "code": "NOBODYLIKESME",
+      "phone": null,
+      "ps": "Down Up Left Up Cross R1 R2 L1 L2"
+    },
+    {
+      "game": "iii",
+      "group": "Weapons",
+      "name": "Pedestrians Have Weapons",
+      "code": "WEAPONSFORALL",
+      "phone": null,
+      "ps": "R2 R1 Triangle Cross L2 L1 Up Down"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Rainy Weather",
+      "code": "ILOVESCOTLAND",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 R2 R1 L2 Circle"
+    },
+    {
+      "game": "iii",
+      "group": "Police",
+      "name": "Raise Wanted Level",
+      "code": "MOREPOLICEPLEASE",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Slow Motion",
+      "code": "BOOOOORING",
+      "phone": null,
+      "ps": "Triangle Up Right Down Square R1 R2"
+    },
+    {
+      "game": "iii",
+      "group": "Vehicles",
+      "name": "Spawn Rhino Tank",
+      "code": "GIVEUSATANK",
+      "phone": null,
+      "ps": "Circle Circle Circle Circle Circle Circle R1 L2 L1 Triangle Circle Triangle"
+    },
+    {
+      "game": "iii",
+      "group": "World",
+      "name": "Sunny Weather",
+      "code": "SKINCANCERFORME",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 R2 R1 L2 Triangle"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Aggressive Traffic",
+      "code": "MIAMITRAFFIC",
+      "phone": null,
+      "ps": "R2 Circle R1 L2 Left R1 L1 R2 L2"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "All Green Lights",
+      "code": "GREENLIGHT",
+      "phone": null,
+      "ps": "Right R1 Up L2 L2 Left R1 L1 R1 R1"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Armed Female Pedestrians",
+      "code": "CHICKSWITHGUNS",
+      "phone": null,
+      "ps": "Right L1 Circle L2 Left Cross R1 L1 L1 Cross"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Big Head Mode",
+      "code": "",
+      "phone": null,
+      "ps": "Up Up Down Down Left Right Left Right Circle Cross",
+      "versions": "definitive-only"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Big Wheels",
+      "code": "LOADSOFLITTLETHINGS",
+      "phone": null,
+      "ps": "R1 Cross Triangle Right R2 Square Up Down Square"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Black Traffic",
+      "code": "IWANTITPAINTEDBLACK",
+      "phone": null,
+      "ps": "Circle L2 Up R1 Left Cross R1 L1 Left Circle"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Blow Up All Cars",
+      "code": "BIGBANG",
+      "phone": null,
+      "ps": "R2 L2 R1 L1 L2 R2 Square Triangle Circle Triangle L2 L1"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Cars Drive on Water",
+      "code": "SEAWAYS",
+      "phone": null,
+      "ps": "Right R2 Circle R1 L2 Square R1 R2"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Change Outfit",
+      "code": "STILLLIKEDRESSINGUP",
+      "phone": null,
+      "ps": "Right Right Left Up L1 L2 Left Up Down Right"
+    },
+    {
+      "game": "vc",
+      "group": "Police",
+      "name": "Clear Wanted Level",
+      "code": "LEAVEMEALONE",
+      "phone": null,
+      "ps": "R1 R1 Circle R2 Up Down Up Down Up Down"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Fast Motion",
+      "code": "ONSPEED",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Faster Clock",
+      "code": "LIFEISPASSINGMEBY",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Flying Boats",
+      "code": "AIRSHIP",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Flying Cars",
+      "code": "COMEFLYWITHME",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Foggy Weather",
+      "code": "CANTSEEATHING",
+      "phone": null,
+      "ps": "R2 Cross L1 L1 L2 L2 L2 Cross"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Full Armor",
+      "code": "PRECIOUSPROTECTION",
+      "phone": null,
+      "ps": "R1 R2 L1 Cross Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Full Health",
+      "code": "ASPIRINE",
+      "phone": null,
+      "ps": "R1 R2 L1 Circle Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Invisible Cars",
+      "code": "WHEELSAREALLINEED",
+      "phone": null,
+      "ps": "Triangle L1 Triangle R2 Square L1 L1",
+      "versions": "original-only"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Ladies Man",
+      "code": "FANNYMAGNET",
+      "phone": null,
+      "ps": "Circle Cross L1 L1 R2 Cross Cross Circle Triangle"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Light Clouds Weather",
+      "code": "APLEASANTDAY",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Overcast Weather",
+      "code": "ABITDRIEG",
+      "phone": null,
+      "ps": "R2 Cross L1 L1 L2 L2 L2 Square"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Pedestrians Attack You",
+      "code": "NOBODYLIKESME",
+      "phone": null,
+      "ps": "Down Up Up Up Cross R2 R1 L2 L2"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Pedestrians Get In Your Car",
+      "code": "HOPINGIRL",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Weapons",
+      "name": "Pedestrians Have Weapons",
+      "code": "OURGODGIVENRIGHTTOBEARARMS",
+      "phone": null,
+      "ps": "R2 R1 Cross Triangle Cross Triangle Up Down"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Perfect Handling",
+      "code": "GRIPISEVERYTHING",
+      "phone": null,
+      "ps": "Triangle R1 R1 Left R1 L1 R2 L1"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Pink Traffic",
+      "code": "AHAIRDRESSERSCAR",
+      "phone": null,
+      "ps": "Circle L1 Down L2 Left Cross R1 L1 Right Circle"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Candy Suxxx",
+      "code": "IWANTBIGTITS",
+      "phone": null,
+      "ps": "Circle R2 Down R1 Left Right R1 L1 Cross L2"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Dick Love Fist",
+      "code": "WELOVEOURDICK",
+      "phone": null,
+      "ps": "R1 L2 R2 L1 Right R2 Left Cross Square L1"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Hilary King",
+      "code": "ILOOKLIKEHILARY",
+      "phone": null,
+      "ps": "R1 Circle R2 L1 Right R1 L1 Cross R2"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Jezz Torrent",
+      "code": "ROCKANDROLLMAN",
+      "phone": null,
+      "ps": "Down L1 Down L2 Left Cross R1 L1 Cross Cross"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Ken Rosenberg",
+      "code": "MYSONISALAWYER",
+      "phone": null,
+      "ps": "Right L1 Up L2 L1 Right R1 L1 Cross R1"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Lance Vance",
+      "code": "LOOKLIKELANCE",
+      "phone": null,
+      "ps": "Circle L2 Left Cross R1 L1 Cross L1"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Mercedes",
+      "code": "FOXYLITTLETHING",
+      "phone": null,
+      "ps": "R2 L1 Up L1 Right R1 Right Up Circle Triangle"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Phil Cassidy",
+      "code": "ONEARMEDBANDIT",
+      "phone": null,
+      "ps": "Right R1 Up R2 L1 Right R1 L1 Right Circle"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Ricardo Diaz",
+      "code": "CHEATSHAVEBEENCRACKED",
+      "phone": null,
+      "ps": "L1 L2 R1 R2 Down L1 R2 L2"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Play as Sonny Forelli",
+      "code": "IDONTHAVETHEMONEYSONNY",
+      "phone": null,
+      "ps": "Circle L1 Circle L2 Left Cross R1 L1 Cross Cross"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Rainy Weather",
+      "code": "CATSANDDOGS",
+      "phone": null,
+      "ps": "R2 Cross L1 L1 L2 L2 L2 Circle"
+    },
+    {
+      "game": "vc",
+      "group": "Police",
+      "name": "Raise Wanted Level",
+      "code": "YOUWONTTAKEMEALIVE",
+      "phone": null,
+      "ps": "R1 R1 Circle R2 Left Right Left Right Left Right"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Riot Mode",
+      "code": "FIGHTFIGHTFIGHT",
+      "phone": null,
+      "ps": "Down Left Up Left Cross R2 R1 L2 L1"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Slow Motion",
+      "code": "BOOOOOORING",
+      "phone": null,
+      "ps": "Triangle Up Right Down Square R2 R1"
+    },
+    {
+      "game": "vc",
+      "group": "Effects",
+      "name": "Smoke a Cigarette",
+      "code": "CERTAINDEATH",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Bloodring Banger Variant 1",
+      "code": "",
+      "phone": null,
+      "ps": "Up Right Right L1 Right Up Square L2"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Bloodring Banger Variant 2",
+      "code": "",
+      "phone": null,
+      "ps": "Down R1 Circle L2 L2 Cross R1 L1 Left Left"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Caddy",
+      "code": "BETTERTHANWALKING",
+      "phone": null,
+      "ps": "Circle L1 Up R1 L2 Cross R1 L1 Circle Cross"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Hotring Racer Variant 1",
+      "code": "",
+      "phone": null,
+      "ps": "R1 Circle R2 Right L1 L2 Cross Cross Square R1"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Hotring Racer Variant 2",
+      "code": "",
+      "phone": null,
+      "ps": "R2 L1 Circle Right L1 R1 Right Up Circle R2"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Love Fist Limo",
+      "code": "ROCKANDROLLCAR",
+      "phone": null,
+      "ps": "R2 Up L2 Left Left R1 L1 Circle Right"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Rhino Tank",
+      "code": "PANZER",
+      "phone": null,
+      "ps": "Circle Circle L1 Circle Circle Circle L1 L2 R1 Triangle Circle Triangle"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Romero Hearse",
+      "code": "THELASTRIDE",
+      "phone": null,
+      "ps": "Down R2 Down R1 L2 Left R1 L1 Left Right"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Sabre Turbo",
+      "code": "GETTHEREFAST",
+      "phone": null,
+      "ps": "Right L2 Down L2 L2 Cross R1 L1 Circle Left"
+    },
+    {
+      "game": "vc",
+      "group": "Vehicles",
+      "name": "Spawn Trashmaster",
+      "code": "RUBBISHCAR",
+      "phone": null,
+      "ps": "Circle R1 Circle R1 Left Left R1 L1 Circle Right"
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Suicide",
+      "code": "ICANTTAKEITANYMORE",
+      "phone": null,
+      "ps": "Right L2 Down R1 Left Left R1 L1 L2 L1"
+    },
+    {
+      "game": "vc",
+      "group": "World",
+      "name": "Sunny Weather",
+      "code": "ALOVELYDAY",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Thick Arms and Legs",
+      "code": "DEEPFRIEDMARSBARS",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Player",
+      "name": "Thin Arms and Legs",
+      "code": "PROGRAMMER",
+      "phone": null,
+      "ps": null
+    },
+    {
+      "game": "vc",
+      "group": "Weapons",
+      "name": "Weapon Set 1",
+      "code": "THUGSTOOLS",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Right Up"
+    },
+    {
+      "game": "vc",
+      "group": "Weapons",
+      "name": "Weapon Set 2",
+      "code": "PROFESSIONALTOOLS",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Left"
+    },
+    {
+      "game": "vc",
+      "group": "Weapons",
+      "name": "Weapon Set 3",
+      "code": "NUTTERTOOLS",
+      "phone": null,
+      "ps": "R1 R2 L1 R2 Left Down Right Up Left Down Down Down"
+    },
+    {
+      "game": "iv",
+      "group": "Survival",
+      "name": "Max health and armor",
+      "code": "",
+      "phone": "362-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Survival",
+      "name": "Max health armor weapons",
+      "code": "",
+      "phone": "482-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Weapons",
+      "name": "Weapons tier 1",
+      "code": "",
+      "phone": "486-555-0150",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Weapons",
+      "name": "Weapons tier 2",
+      "code": "",
+      "phone": "486-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Police",
+      "name": "Clear wanted level",
+      "code": "",
+      "phone": "267-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Police",
+      "name": "Raise wanted level",
+      "code": "",
+      "phone": "267-555-0150",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Effects",
+      "name": "Cycle weather",
+      "code": "",
+      "phone": "468-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Cognoscenti",
+      "code": "",
+      "phone": "227-555-0142",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Comet",
+      "code": "",
+      "phone": "227-555-0175",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn FIB Buffalo",
+      "code": "",
+      "phone": "227-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Super GT",
+      "code": "",
+      "phone": "227-555-0168",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Turismo",
+      "code": "",
+      "phone": "227-555-0147",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn NRG-900",
+      "code": "",
+      "phone": "625-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Sanchez",
+      "code": "",
+      "phone": "625-555-0150",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Annihilator",
+      "code": "",
+      "phone": "359-555-0100",
+      "ps": null
+    },
+    {
+      "game": "iv",
+      "group": "Vehicles",
+      "name": "Spawn Jetmax boat",
+      "code": "",
+      "phone": "938-555-0100",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Double T Custom",
+      "code": "",
+      "phone": "245-555-0125",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Hakuchou Custom",
+      "code": "",
+      "phone": "245-555-0199",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Hexer",
+      "code": "",
+      "phone": "245-555-0150",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Innovation",
+      "code": "",
+      "phone": "245-555-0100",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Gang Burrito",
+      "code": "",
+      "phone": "826-555-0150",
+      "ps": null
+    },
+    {
+      "game": "tlad",
+      "group": "Vehicles",
+      "name": "Spawn Slamvan",
+      "code": "",
+      "phone": "826-555-0100",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Weapons",
+      "name": "Explosive sniper rounds",
+      "code": "",
+      "phone": "486-555-2526",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Weapons",
+      "name": "Super Punch",
+      "code": "",
+      "phone": "276-555-2666",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Equipment",
+      "name": "Parachute",
+      "code": "",
+      "phone": "359-555-7272",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn APC tank",
+      "code": "",
+      "phone": "272-555-8265",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Bullet GT",
+      "code": "",
+      "phone": "227-555-9666",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Akuma",
+      "code": "",
+      "phone": "625-555-0200",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Vader",
+      "code": "",
+      "phone": "625-555-3273",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Buzzard helicopter",
+      "code": "",
+      "phone": "359-555-2899",
+      "ps": null
+    },
+    {
+      "game": "tbogt",
+      "group": "Vehicles",
+      "name": "Spawn Floater boat",
+      "code": "",
+      "phone": "938-555-0150",
+      "ps": null
+    },
+    {
+      "game": "lcs",
+      "group": "Survival",
+      "name": "Restore health",
+      "ps": "L1 R1 Cross L1 R1 Square L1 R1"
+    },
+    {
+      "game": "lcs",
+      "group": "Survival",
+      "name": "Full armor",
+      "ps": "L1 R1 Circle L1 R1 Cross L1 R1"
+    },
+    {
+      "game": "lcs",
+      "group": "Money",
+      "name": "Add $250,000",
+      "ps": "L1 R1 Triangle L1 R1 Circle L1 R1"
+    },
+    {
+      "game": "lcs",
+      "group": "Weapons",
+      "name": "Weapon set 1",
+      "ps": "Up Square Square Down Left Square Square Right"
+    },
+    {
+      "game": "lcs",
+      "group": "Weapons",
+      "name": "Weapon set 2",
+      "ps": "Up Circle Circle Down Left Circle Circle Right"
+    },
+    {
+      "game": "lcs",
+      "group": "Weapons",
+      "name": "Weapon set 3",
+      "ps": "Up Cross Cross Down Left Cross Cross Right"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "Clear weather",
+      "ps": "Up Down Circle Up Down Square L1 R1"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "Speed up clock",
+      "ps": "L1 L1 Left L1 L1 Right Circle Cross"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "Faster gameplay",
+      "ps": "R1 R1 L1 R1 R1 L1 Down Cross"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "Change pedestrian outfit",
+      "ps": "L1 L1 Left L1 L1 Right Square Triangle"
+    },
+    {
+      "game": "lcs",
+      "group": "Gameplay",
+      "name": "End player life",
+      "ps": "L1 Down Left R1 Cross Circle Up Triangle"
+    },
+    {
+      "game": "vcs",
+      "group": "Survival",
+      "name": "Restore health",
+      "ps": "Up Down Left Right Circle Circle L1 R1"
+    },
+    {
+      "game": "vcs",
+      "group": "Survival",
+      "name": "Full armor",
+      "ps": "Up Down Left Right Square Square L1 R1"
+    },
+    {
+      "game": "vcs",
+      "group": "Money",
+      "name": "Add $250,000",
+      "ps": "Up Down Left Right Cross Cross L1 R1"
+    },
+    {
+      "game": "vcs",
+      "group": "Weapons",
+      "name": "Weapon set 1",
+      "ps": "Left Right Cross Up Down Square Left Right"
+    },
+    {
+      "game": "vcs",
+      "group": "Weapons",
+      "name": "Weapon set 2",
+      "ps": "Left Right Square Up Down Triangle Left Right"
+    },
+    {
+      "game": "vcs",
+      "group": "Weapons",
+      "name": "Weapon set 3",
+      "ps": "Left Right Triangle Up Down Circle Left Right"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Clear weather",
+      "ps": "Left Down R1 L1 Right Up Left Cross"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Speed up clock",
+      "ps": "R1 L1 L1 Down Up Cross Down L1"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Faster gameplay",
+      "ps": "Left Left R1 R1 Up Triangle Down Cross"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Foggy weather",
+      "ps": "Left Down Triangle Cross Right Up Left L1"
+    },
+    {
+      "game": "vcs",
+      "group": "Gameplay",
+      "name": "Overcast weather",
+      "ps": "Left Down L1 R1 Right Up Left Square"
+    },
+    {
+      "game": "ctw",
+      "group": "Survival",
+      "name": "Restore health and armor",
+      "ps": "L1 L1 R1 Circle Circle Cross Cross R1",
+      "ds": "L L R A A B B R",
+      "mobile": "LIFEUP"
+    },
+    {
+      "game": "ctw",
+      "group": "Survival",
+      "name": "Full armor",
+      "ps": "L1 L1 R1 Cross Cross Circle Circle R1",
+      "ds": "L L R B B A A R",
+      "mobile": "SHELLY"
+    },
+    {
+      "game": "ctw",
+      "group": "Police",
+      "name": "Lower wanted level",
+      "ps": "R1 Triangle Triangle Square Square R1 L1 L1",
+      "ds": "R X X Y Y R L L",
+      "mobile": "COPOUT"
+    },
+    {
+      "game": "ctw",
+      "group": "Police",
+      "name": "Raise wanted level",
+      "ps": "L1 L1 R1 Square Square Triangle Triangle R1",
+      "ds": "L L R Y Y X X R",
+      "mobile": "COPIN"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Weapon set 1",
+      "ps": "R1 Up Cross Down Left R1 Cross Right",
+      "ds": "R Up B Down Left R B Right",
+      "mobile": "LOADOA"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Weapon set 2",
+      "ps": "R1 Up Circle Down Left R1 Circle Right",
+      "ds": "R Up A Down Left R A Right",
+      "mobile": "LOADOB"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Weapon set 3",
+      "ps": "R1 Up Square Down Left R1 Square Right",
+      "ds": "R Up Y Down Left R Y Right",
+      "mobile": "LOADOC"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Weapon set 4",
+      "ps": "R1 Up Triangle Down Left R1 Triangle Right",
+      "ds": "R Up X Down Left R X Right",
+      "mobile": "LOADOD"
+    },
+    {
+      "game": "ctw",
+      "group": "Weapons",
+      "name": "Explosive Eagle",
+      "ps": "L1 R1 Triangle Square Circle Cross Up Down",
+      "ds": "L R X Y A B Up Down",
+      "mobile": "BOOMCAN"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Sunny weather",
+      "ps": "Up Down Left Right Circle Cross L1 R1",
+      "ds": "Up Down Left Right A B L R"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Extra sunny weather",
+      "ps": "Up Down Left Right Cross Triangle L1 R1",
+      "ds": "Up Down Left Right B X L R"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Cloudy weather",
+      "ps": "Up Down Left Right Triangle Square L1 R1",
+      "ds": "Up Down Left Right X Y L R"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Foggy weather",
+      "ps": "Up Down Left Right Square Cross R1 L1",
+      "ds": "Up Down Left Right Y B R L"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Rainy weather",
+      "ps": "Up Down Left Right Square Circle L1 R1",
+      "ds": "Up Down Left Right Y A L R"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Heavy rain",
+      "ps": "Up Down Left Right Circle Triangle R1 L1",
+      "ds": "Up Down Left Right A X R L"
+    },
+    {
+      "game": "ctw",
+      "group": "Weather",
+      "name": "Stormy weather",
+      "ps": "Up Down Left Right Cross Square R1 L1",
+      "ds": "Up Down Left Right B Y R L",
+      "mobile": "TEMPEST"
+    },
+    {
+      "game": "ctw",
+      "group": "Money",
+      "name": "Get $10,000",
+      "mobile": "CASHIN"
+    },
+    {
+      "game": "ctw",
+      "group": "Time",
+      "name": "Advance one day",
+      "mobile": "JUMPDAY"
+    },
+    {
+      "game": "ctw",
+      "group": "Time",
+      "name": "Advance one hour",
+      "mobile": "JUMPHR"
+    },
+    {
+      "game": "ctw",
+      "group": "Time",
+      "name": "Advance six hours",
+      "mobile": "JUMPHRS"
+    },
+    {
+      "game": "ctw",
+      "group": "Time",
+      "name": "Stop clock",
+      "mobile": "NOTIME"
+    }
+  ],
+  "news": [
+    {
+      "id": "vi-preload",
+      "game": "vi",
+      "date": "2026-11-10",
+      "title": "Grand Theft Auto VI digital pre-load is available",
+      "summary": "Rockstar's official pre-load announcement for digital pre-orders. Platform availability is source-dependent.",
+      "url": "https://www.rockstargames.com/newswire/article/89834o94713o21/pre-load-grand-theft-auto-vi-now"
+    },
+    {
+      "id": "vi-festival",
+      "game": "vi",
+      "date": "2026-11-09",
+      "title": "Grand Theft Auto VI: The Festival",
+      "summary": "Rockstar announced a November 21 live music celebration in Miami.",
+      "url": "https://www.rockstargames.com/newswire/article/o39o87a435a25a/grand-theft-auto-vi-the-festival"
+    },
+    {
+      "id": "vi-gallery",
+      "game": "vi",
+      "date": "2026-11-05",
+      "title": "Grand Theft Auto VI launch gallery published",
+      "summary": "Browse the publicly released official screenshots rather than leaked pre-release material.",
+      "url": "https://www.rockstargames.com/newswire/article/39ak81277255o9/explore-the-grand-theft-auto-vi-launch-gallery"
+    },
+    {
+      "id": "online-heist",
+      "game": "online",
+      "date": "2026-11-05",
+      "title": "The Kortz Center heist event",
+      "summary": "Rockstar's GTA Online heist-week announcement; bonuses and availability may have expired.",
+      "url": "https://www.rockstargames.com/newswire/article/4k17a844oakk5o/take-down-the-kortz-center-and-more-high-value-targets-in-this-week-s"
+    },
+    {
+      "id": "online-updates",
+      "game": "online",
+      "date": "2026-10-27",
+      "title": "GTA V and GTA Online title update 1.73 notes",
+      "summary": "Official Rockstar support change log for update 1.73 and earlier entries.",
+      "url": "https://support.rockstargames.com/articles/4vRqEDvjUs9h7nqRUgc8YO/gtav-title-update-1-73-notes-ps5-ps4-xbox-series-x-or-s-xbox-one-pc-enhanced-legacy"
+    },
+    {
+      "id": "vi-extended",
+      "game": "vi",
+      "date": "2026-08-27",
+      "title": "Grand Theft Auto VI: An Extended Look",
+      "summary": "Official Rockstar footage announcement; linked externally with no embedded plot spoilers.",
+      "url": "https://www.rockstargames.com/newswire/article/4k138k8okkk483/grand-theft-auto-vi-an-extended-look-now-playing"
+    }
+  ]
+}

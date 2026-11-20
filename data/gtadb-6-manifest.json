@@ -1,0 +1,12 @@
+{
+  "game": "6",
+  "status": "provisional / unverified GTA VI coordinates",
+  "sourceUpdated": "2026-11-15T10:33:17+00:00",
+  "count": 3425,
+  "mappedCount": 3334,
+  "searchOnlyCount": 91,
+  "sourceHash": "e753f35125e7cb600046b95ce9cd74c837677ecfd135c5836a6c1c363d390519",
+  "sourceUrl": "https://github.com/rolux/gtadb.org/tree/main/map/data/6",
+  "license": "CC BY 4.0",
+  "note": "Metadata for the existing development-branch snapshot; not a new upstream synchronization. Research entries are provisional, not verified game locations."
+}

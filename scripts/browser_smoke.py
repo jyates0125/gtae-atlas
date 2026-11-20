@@ -226,22 +226,33 @@ async def smoke():
                                         async def unexpected_poster_request(route):
                                             failures.append('A cached Rockstar map made another network request')
                                             await route.abort()
-                                        test_png=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/bQAAAABJRU5ErkJggg==')
+                                        # The official printable ZIP contains a CMYK JPEG.
+                                        poster_jpeg=base64.b64decode('/9j/7gAOQWRvYmUAZAAAAAAA/9sAQwAIBgYHBgUIBwcHCQkICgwUDQwLCwwZEhMPFB0aHx4dGhwcICQuJyAiLCMcHCg3KSwwMTQ0NB8nOT04MjwuMzQy/8AAFAgABgAEBEMRAE0RAFkRAEsRAP/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/aAA4EQwBNAFkASwAAPwD2uu5r3+vda//Z')
                                         zipped=io.BytesIO()
                                         with zipfile.ZipFile(zipped,'w',compression=zipfile.ZIP_DEFLATED) as archive:
-                                            archive.writestr('Leonida_Map_Poster.png',test_png)
+                                            archive.writestr('Leonida_Map_Poster_Printable.jpg',poster_jpeg)
+                                        official_zip='https://media-rockstargames-com.akamaized.net/VI/downloads/artwork_wallpapers/Leonida_Map_Poster_Printable.zip'
                                         async def serve_official_zip(route):
                                             await route.fulfill(status=200,headers={
                                                 'access-control-allow-origin':'*',
                                                 'content-type':'application/zip'},body=zipped.getvalue())
-                                        await pg.route('https://media-rockstargames-com.akamaized.net/VI/downloads/**',serve_official_zip)
+                                        async def unavailable_poster(route):
+                                            await route.fulfill(status=503,headers={'access-control-allow-origin':'*'})
+                                        await pg.route(official_zip,unavailable_poster,times=1)
                                         await official.click()
+                                        retry=pg.locator('[data-j143="fetch"]')
+                                        await retry.wait_for(state='visible',timeout=7000)
+                                        download=pg.locator('#j143-official-layer .j143-foot a',has_text='Download GTA VI map (ZIP)')
+                                        if await download.get_attribute('href')!=official_zip:
+                                            failures.append('Optional GTA VI download does not link to Rockstar’s printable map')
+                                        await pg.route(official_zip,serve_official_zip)
+                                        await retry.click()
                                         await pg.wait_for_function(
                                             "() => document.querySelector('.j143-status')?.textContent?.includes('Official map saved')"
                                             " || document.querySelector('.j143-status')?.textContent?.includes('Map open for this visit')",
                                             timeout=7000)
                                         if not await pg.locator('.j143-poster').is_visible():
-                                            failures.append('Selecting the Rockstar map did not load the poster automatically')
+                                            failures.append('Rockstar map did not load after retry')
                                         restored=await ctx.new_page()
                                         try:
                                             cached='Official map saved' in await pg.locator('.j143-status').inner_text()

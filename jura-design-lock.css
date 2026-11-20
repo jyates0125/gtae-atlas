@@ -1,0 +1,15 @@
+/* Team Jura approved visual language: additive CSS, no map engine modifications. */
+:root{--jura-ink:#110d1d;--jura-panel:#21152e;--jura-amber:#ffb44d;--jura-violet:#ad5cff;--jura-edge:#91556c}
+html{scroll-behavior:smooth}body{background-color:#100d1b;color:#f8f0fa}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ffca72!important;outline-offset:2px}
+button,input,select,textarea{max-width:100%}
+main,section,article,aside{min-width:0}
+img,video,canvas,svg{max-width:100%}
+/* Existing page styles retain their sizing and interactive map geometry. */
+body:not(.portal-home) h1,body:not(.portal-home) h2{color:#ffd095}
+body:not(.portal-home) a{accent-color:#ffbc65}
+body:not(.portal-home) header:not(.portal-top){border-bottom-color:#f6a344}
+body:not(.portal-home) .panel,body:not(.portal-home) .db-head{border-color:#805478;background-color:#20192e}
+body:not(.portal-home) .toolbar input,body:not(.portal-home) .toolbar select,body:not(.portal-home) .toolbar button,body:not(.portal-home) .db-tools input,body:not(.portal-home) .db-tools select,body:not(.portal-home) .db-tools button{background:#21172e;border-color:#895d82;color:#fff4f9}
+@media(max-width:760px){body:not(.portal-home) main{padding-inline:12px}body:not(.portal-home) .toolbar{flex-wrap:wrap}body:not(.portal-home) .toolbar>*{min-width:0;flex:1 1 160px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

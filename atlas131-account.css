@@ -1,0 +1,37 @@
+/* Atlas 13.1 · user-choice accounts, guest backup center */
+.j131-account{color:#fff6ed;background:radial-gradient(ellipse at 48% 0,#391762,#10071d 69%)}
+.j131-account-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#30144a,#150827);border:1px solid #f3b76c;border-radius:22px;min-height:290px;margin:13px 0 17px;display:flex;align-items:center;justify-content:space-between}
+.j131-account-hero>div{max-width:780px;position:relative;z-index:1;padding:clamp(20px,4vw,48px)}
+.j131-account-hero img{position:absolute;right:0;top:0;width:55%;height:100%;object-fit:cover;opacity:.36;mask-image:linear-gradient(90deg,transparent,#000)}
+.j131-account-hero h1{font-size:clamp(40px,6vw,70px);line-height:.98;letter-spacing:-.05em;margin:10px 0}
+.j131-account-hero h1 span{color:#ffd37e}
+.j131-account-hero p{max-width:590px;color:#f3d9ed;font-size:15px}
+.j131-account-pills{display:flex;flex-wrap:wrap;gap:7px}
+.j131-account-pills span{padding:6px 10px;border:1px solid #a972bd;background:#301944;border-radius:20px;font-size:11px;color:#ffe4af}
+.j131-account-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.j131-account-panel{border:1px solid #a76eaa;border-radius:15px;padding:clamp(18px,2.4vw,28px);background:linear-gradient(125deg,#29123e,#160a25);margin-bottom:16px;box-shadow:0 7px 20px #0004}
+.j131-account-panel h2{font-size:clamp(23px,3vw,31px);line-height:1.2;color:#ffdd9d;margin:6px 0 12px}
+.j131-account-panel p{font-size:14px;color:#e7d1e9;max-width:800px;line-height:1.6}
+.j131-account-panel a,.j131-account-panel button,.j131-file-label{display:inline-flex;align-items:center;justify-content:center;min-height:46px;margin:4px 8px 6px 0;padding:11px 15px;border:1px solid #d9a46e;background:#392151;border-radius:9px;color:#fff8ef;text-decoration:none;font-weight:850;font-size:13px;cursor:pointer}
+.j131-account-panel .j131-primary{background:linear-gradient(125deg,#ffe29c,#ffb75f);color:#2b1231;border-color:#ffe3ae}
+.j131-account-panel button[disabled]{opacity:.55;cursor:not-allowed}
+.j131-account-panel .j131-honesty{font-size:12px;color:#dbc8df}
+.j131-actions{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+#j131ProgressStatus{font-size:12px;color:#ffe1a6;min-height:19px}
+.j131-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.j131-steps>div{background:#1b0d2e;padding:13px;border:1px solid #7c509c;border-radius:10px}
+.j131-steps strong{color:#ffdaa1}
+.j131-steps p{font-size:12px}
+@media(max-width:730px){.j131-account-grid{grid-template-columns:1fr}.j131-steps{grid-template-columns:1fr}.j131-account-hero img{width:100%;opacity:.18}.j131-account-hero>div{padding:26px 18px}}
+
+/* Atlas 14.4: user-initiated, read-only local progress review. */
+.j144-device-panel{background:radial-gradient(circle at 90% 0,#56365f7d,transparent 55%),linear-gradient(125deg,#301944,#190b29)}
+.j144-device-panel #j144Summary{color:#ffdfae;font-size:13px;min-height:20px}
+.j144-device-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:0;margin:16px 0;list-style:none}
+.j144-device-list li{border:1px solid #7b588f;background:#1b112d;border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:5px;min-height:65px}
+.j144-device-list li strong{font-size:13px;line-height:1.35;color:#fff0f8}
+.j144-device-list li span{font-size:11px;color:#d0bbd8}
+.j144-device-list li.j144-present{border-color:#dab077;background:#382244}
+.j144-device-list li.j144-present span{color:#ffe3ae}
+@media(max-width:850px){.j144-device-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.j144-device-list{grid-template-columns:1fr}}
