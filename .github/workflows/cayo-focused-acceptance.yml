@@ -20,8 +20,9 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: cayo-acceptance-${{ github.sha }}
-  cancel-in-progress: false
+  # Keep checks for the newest staging PR head; cancel only superseded Cayo runs.
+  group: cayo-acceptance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   focused-chromium:
     runs-on: ubuntu-24.04
