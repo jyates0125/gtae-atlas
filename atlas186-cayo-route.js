@@ -309,7 +309,7 @@ function shift(id,delta){
 }
 function selectStop(id){
  const n=sourceFor(id);if(!n)return;
- if(focus.dataset.mapSource==='loading')return;
+ if(focus.dataset.mapSource==='loading'&&focus.dataset.mapAsset!=='local-trace')return;
  n.element.focus({preventScroll:true});
  n.element.click();frame.scrollIntoView({block:'start',behavior:'smooth'});
 }
