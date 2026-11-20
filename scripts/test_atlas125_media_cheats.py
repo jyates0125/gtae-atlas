@@ -14,11 +14,19 @@ css = source("atlas98-portal.css")
 credits = source("atlas-credits.html")
 expected = ("story","online","vi","cayo","iv","sa","vc","iii","vcs","lcs","ctw","tlad","tbogt")
 assert worlds.count("coverFallback:") == len(expected)
+assert worlds.count("coverSrc:") == len(expected), "All thirteen world covers must use local premium assets"
 for key in expected:
     entry = next((line for line in worlds.splitlines() if "{id:'" + key + "'" in line), None)
     assert entry is not None, key
-    assert re.search(r"coverSrc:'https://[^']+',coverFallback:'[^']+'",entry), key
-    assert re.search(r"art:'[^']+\.svg'",entry),key
+    # Source-of-truth covers use distinct bundled cinematic WebPs; SVG is fallback only.
+    art=re.search(r"art:'([^']+\.svg)'",entry)
+    assert art and (ROOT/'art'/art.group(1)).is_file(),key
+    assert re.search(r"coverFallback:'\./art/[^']+'",entry),key
+    image=re.search(r"coverSrc:'(\./art/(?:jura155-(?:story|online|vi|cayo)|jura157-(?:iv|sa|vc|iii|vcs|lcs|ctw|tlad|tbogt)-cinematic)\.webp)'",entry)
+    assert image is not None, f"Missing world-specific cinematic cover: {key}"
+    asset=ROOT/image.group(1).removeprefix('./')
+    blob=asset.read_bytes()
+    assert len(blob)>25000 and blob[:4]==b'RIFF' and blob[8:12]==b'WEBP',key
 assert "world-art-frame" in portal and "world-art-main" in portal and "sourceIndex++" in portal
 assert ".world-card .world-art-frame" in css
 for name in ('atlas128-gta3-radar.png','atlas128-vice-city-radar.png','atlas128-gta4-landmarks.jpg'):

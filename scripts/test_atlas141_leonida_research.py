@@ -17,7 +17,7 @@ assert "if(g==='6'&&style==='research,view')return{base:'yanis,18'" in engine
 assert "YANIS V17 illustration" not in engine
 assert 'href="./atlas-research.html"' in explorer
 assert 'href="https://www.rockstargames.com/VI/media"' in explorer
-assert 'Rockstar official flat map' in explorer
+assert 'Rockstar official map source' in explorer
 assert 'href="./atlas-vi.html"' in research
 assert "['./data/gtadb-6.json','./gtadb-v6.json']" in research_js
 assert "maps.gtadb.org/tiles/6/yanis,18/" in research_js

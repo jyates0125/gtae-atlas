@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 575" role="img" aria-label="Illustrative mission planning diagram for LAB FACILITY, not a real in-game map">
+<defs><linearGradient id="panel" x2="1" y2="1"><stop stop-color="#13253e"/><stop offset="1" stop-color="#251231"/></linearGradient><pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" stroke="#9ce1cd" stroke-width="2" stroke-opacity=".15" fill="none"/></pattern></defs>
+<rect width="1000" height="575" fill="url(#panel)"/><rect width="1000" height="575" fill="url(#grid)"/><rect x="16" y="16" width="968" height="543" rx="19" fill="none" stroke="#9ce1cd" stroke-opacity=".7" stroke-width="3"/>
+<path d="M220 200h560v240H220Z" fill="#173c4f" fill-opacity=".55" stroke="#c5e9ef" stroke-width="11"/><circle cx="500" cy="316" r="96" fill="none" stroke="#84e6dc" stroke-width="12"/><path d="M220 316h560m-280-116v240" stroke="#c8e6ea" stroke-width="8"/><path d="M245 396Q395 325 500 400T755 291" fill="none" stroke="#ffe4ac" stroke-width="10" stroke-dasharray="20 13"/>
+<circle cx="245" cy="396" r="25" fill="#4ccbab" stroke="#ffecc6" stroke-width="8"/><circle cx="500" cy="400" r="24" fill="#a982db" stroke="#ffecc6" stroke-width="8"/><circle cx="755" cy="291" r="25" fill="#ffca8a" stroke="#ffecc6" stroke-width="8"/>
+<text x="32" y="66" fill="#ffe0b5" font-family="Arial" font-size="23" font-weight="bold" letter-spacing="4">LAB FACILITY · CONCEPT</text>
+<text x="32" y="102" fill="#e8d5ed" font-family="Arial" font-size="17">PERSONAL MISSION NOTEBOARD · SCHEMATIC ONLY</text>
+<text x="32" y="539" fill="#ffdfa7" font-family="Arial" font-size="15">Not aligned to verified map coordinates. Open the live Atlas map to plan real routes.</text></svg>

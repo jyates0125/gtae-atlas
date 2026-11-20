@@ -23,3 +23,15 @@
 .j131-steps strong{color:#ffdaa1}
 .j131-steps p{font-size:12px}
 @media(max-width:730px){.j131-account-grid{grid-template-columns:1fr}.j131-steps{grid-template-columns:1fr}.j131-account-hero img{width:100%;opacity:.18}.j131-account-hero>div{padding:26px 18px}}
+
+/* Atlas 14.4: user-initiated, read-only local progress review. */
+.j144-device-panel{background:radial-gradient(circle at 90% 0,#56365f7d,transparent 55%),linear-gradient(125deg,#301944,#190b29)}
+.j144-device-panel #j144Summary{color:#ffdfae;font-size:13px;min-height:20px}
+.j144-device-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:0;margin:16px 0;list-style:none}
+.j144-device-list li{border:1px solid #7b588f;background:#1b112d;border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:5px;min-height:65px}
+.j144-device-list li strong{font-size:13px;line-height:1.35;color:#fff0f8}
+.j144-device-list li span{font-size:11px;color:#d0bbd8}
+.j144-device-list li.j144-present{border-color:#dab077;background:#382244}
+.j144-device-list li.j144-present span{color:#ffe3ae}
+@media(max-width:850px){.j144-device-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.j144-device-list{grid-template-columns:1fr}}

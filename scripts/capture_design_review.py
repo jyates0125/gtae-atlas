@@ -16,7 +16,9 @@ BROWSER=os.getenv('ATLAS_BROWSER','chromium').lower()
 PAGES=[
  'index.html','atlas-dashboard.html','atlas-account.html','atlas-share.html','maps.html','atlas-activities.html?mode=online',
  'atlas93-garage.html','project.html','atlas.html','atlas-vi.html',
- 'one-last-ride.html'
+ 'one-last-ride.html','atlas155-art-review.html','atlas-characters.html','heists.html','elario.html',
+ 'atlas-online.html','atlas90-weapons.html','atlas-vehicle-configurator.html','map-hub.html?game=vc',
+ 'atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas-animals.html','atlas-collectibles.html','atlas90-vehicles5.html','atlas90-vehicles6.html','map-hub.html?game=iii','map-hub.html?game=vcs','map-hub.html?game=lcs','map-hub.html?game=ctw','map-hub.html?game=tlad','map-hub.html?game=tbogt','heist-fleeca.html','heist-prison-break.html','heist-humane-labs.html','heist-series-a.html','heist-pacific-standard.html','heist-doomsday-act-1.html','heist-doomsday-act-2.html','heist-doomsday-act-3.html','heist-diamond-casino.html','heist-cayo-perico.html','heist-cluckin-bell.html','heist-salvage-yard.html','heist-auto-shop.html','heist-agency-vip.html','heist-kortz-center.html'
 ]
 VIEWPORTS=[('desktop',1440,900),('mobile',390,844)]
 OUT=ROOT/'qa-evidence'/BROWSER

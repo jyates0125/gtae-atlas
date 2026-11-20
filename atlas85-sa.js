@@ -1,6 +1,7 @@
 (()=>{'use strict';
 const sets=[{id:'tags',name:'Graffiti Tags',total:100,icon:'🎨',region:'Los Santos',required:true},{id:'snapshots',name:'Snapshots',total:50,icon:'📷',region:'San Fierro',required:true},{id:'horseshoes',name:'Horseshoes',total:50,icon:'🧲',region:'Las Venturas',required:true},{id:'oysters',name:'Oysters',total:50,icon:'🦪',region:'Statewide waters',required:true},{id:'jumps',name:'Unique Stunt Jumps',total:70,icon:'🏍️',region:'Statewide',required:false}];
 const $=id=>document.getElementById(id), KEY='team-jura-sa-v1';let set=sets[0],state={schema:1,items:{}},map=null,mapHasArtwork=false,positions=[],transform={scale:1,x:0,y:0},drag=null;
+let categoryChosen=false;
 let builtIn=false,customMap=false,customPack=false,activeMapLabel='';
 try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(old?.schema===1&&old.items&&typeof old.items==='object'&&!Array.isArray(old.items))state=old}catch{}
 function message(s){$('status').textContent=s}
@@ -9,10 +10,21 @@ function id(slot){return set.id+':'+slot}
 function record(slot){return state.items[id(slot)]||{done:false,note:''}}
 function count(s){let n=0;for(let i=1;i<=s.total;i++)if(state.items[s.id+':'+i]?.done)n++;return n}
 function exportFile(payload,name){const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
-function renderCats(){const target=$('categories');target.replaceChildren();for(const s of sets){const b=document.createElement('button');b.className='cat';b.type='button';b.setAttribute('aria-pressed',String(s.id===set.id));b.innerHTML='<span class="emoji"></span><span class="label"></span><span class="count"></span>';b.children[0].textContent=s.icon;b.children[1].textContent=s.name;b.children[2].textContent=count(s)+' / '+s.total;b.onclick=()=>{set=s;render()};target.append(b)}}
+function renderCats(){const target=$('categories');target.replaceChildren();for(const s of sets){const b=document.createElement('button');b.className='cat';b.type='button';b.setAttribute('aria-pressed',String(s.id===set.id));b.innerHTML='<span class="emoji"></span><span class="label"></span><span class="count"></span>';b.children[0].textContent=s.icon;b.children[1].textContent=s.name;b.children[2].textContent=count(s)+' / '+s.total;b.onclick=()=>{categoryChosen=true;set=s;render()};target.append(b)}}
 function renderPins(){const layer=$('pinLayer');layer.replaceChildren();if(!map||!mapHasArtwork){$('mapped').textContent=positions.length;return}const hide=$('hideComplete').checked;const only=$('onlyMapped').checked;const visible=positions.filter(p=>p.set===set.id&&p.slot>=1&&p.slot<=set.total);$('mapped').textContent=positions.length;
  for(const p of visible){const done=!!record(p.slot).done;if(hide&&done)continue;const el=document.createElement('button');el.type='button';el.className='pin'+(done?' done':'')+(builtIn?' pin-source-projected':'');el.style.left=(p.x/map.width*100)+'%';el.style.top=(p.y/map.height*100)+'%';el.textContent=set.icon;el.title=(p.label||set.name+' '+p.slot)+(builtIn?' · sourced world position / approximate 2D placement':'');el.setAttribute('aria-label',el.title+(done?' collected':''));el.onclick=()=>{const item=$('item-'+p.slot);if(item){item.scrollIntoView({block:'nearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')?.focus()}};layer.append(el)}
- $('mapStatus').textContent=positions.length?(builtIn?'150 SOURCE-BACKED LOCATIONS · 2D placement approximate · verify on game map':'Imported location pack: '+positions.length+' records · check alignment with selected image'):'No sourced pins for this collection yet · custom map packs supported';}
+ const status=$('mapStatus');
+ status.textContent=visible.length
+  ? set.name+' · '+visible.length+' mapped'+(builtIn?' · approximate placement':' · imported positions')
+  : set.name+' · 0 mapped · checklist available';
+ if(!visible.length&&['tags','jumps'].includes(set.id)){
+  const guide=document.createElement('a');
+  guide.href='https://gtamap.io/gta-san-andreas-map/';
+  guide.target='_blank';guide.rel='noopener noreferrer';
+  guide.textContent='View '+set.name+' on GTAMap.io ↗';
+  status.append(' · ',guide);
+ }
+}
 function renderItems(){const list=$('items');list.replaceChildren();let shown=0;const q=$('search').value.toLowerCase().trim();const hide=$('hideComplete').checked,only=$('onlyMapped').checked;
  for(let i=1;i<=set.total;i++){const r=record(i),p=positions.find(p=>p.set===set.id&&p.slot===i);if(hide&&r.done)continue;if(only&&!p)continue;const label=p?.label||set.name+' '+String(i).padStart(3,'0');if(q&&!`${label} ${r.note||''} ${i}`.toLowerCase().includes(q))continue;
  const card=document.createElement('div');card.className='item';card.id='item-'+i;const line=document.createElement('label');line.className='itemTop';const box=document.createElement('input');box.type='checkbox';box.checked=!!r.done;box.setAttribute('aria-label','Collected '+label);box.onchange=()=>{state.items[id(i)]={...record(i),done:box.checked};persist();render()};const title=document.createElement('strong');title.textContent=set.icon+' '+label;line.append(box,title);card.append(line);
@@ -65,7 +77,7 @@ async function loadAtlasSourcePins(){
   if(customMap||customPack||!mapHasArtwork||!activeMapLabel.includes('Toliak'))return;
   positions=verified;builtIn=true;
   // Default to a sourced collection so the site does not appear to have an empty map.
-  if(set.id==='tags')set=sets[1];
+  if(!categoryChosen&&set.id==='tags')set=sets[1];
   render();message('150 sourced San Andreas pickups: 50 snapshots, 50 horseshoes, 50 oysters. Approximate SVG placement; sources and original 3D game coordinates available in credits.');
  }catch(err){message('Bundled locations unavailable: '+err.message+'; manual source packs still work.')}
 }

@@ -1,0 +1,22 @@
+/* Atlas 15.1: mission-specific imagery on Heist HQ cards.
+   Uses the existing 15 individual local original Elario scenes.  These are
+   source-labeled illustrations, not verified game screenshots or gameplay maps.
+   Upgrade them to approved premium artworks without changing URLs/card layout. */
+body.j119-heists .card .j151-heist-cover{
+  display:block;
+  width:calc(100% + 34px);
+  max-width:calc(100% + 34px);
+  height:auto;
+  margin:-17px -17px 6px;
+  aspect-ratio:16/7.2;
+  object-fit:cover;
+  object-position:center;
+  background:#130b23;
+  border-bottom:1px solid #ac6bba;
+  box-shadow:0 6px 18px #09031555;
+}
+body.j119-heists .cards .card{isolation:isolate;min-width:0}
+body.j119-heists .cards .card:hover .j151-heist-cover{filter:brightness(1.1)}
+@media(max-width:580px){
+ body.j119-heists .card .j151-heist-cover{aspect-ratio:16/8.8}
+}

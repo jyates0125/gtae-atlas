@@ -37,9 +37,10 @@ function index(profile,seed,catalog,sets){
  for(const id of seed?.weapons||[]){if(!/^[a-z0-9_]+$/.test(id))continue;result.push({id:'archive:weapon:'+id,key:'weapons:'+id,name:nice(id),kind:'weapon',scope:'online',group:weaponGroup(id),image:image('weapon',id),imageCredit:ART_CREDIT,verification:'Community GTA V model archive',summary:'Pictured GTA V model reference; individual gameplay stats are not verified.'});}
  for(const id of seed?.vehicles||[]){if(!/^[a-z0-9_]+$/.test(id))continue;result.push({id:'archive:vehicle:'+id,key:'vehicles5:'+id,model:id,name:nice(id),kind:'vehicle',scope:'online',group:carGroup(id),image:image('vehicle',id),imageCredit:ART_CREDIT,verification:'Community GTA V model archive',summary:'Vehicle archive render. Prices, performance and game availability are not verified by an image.'});}
  for(const [i,r] of (seed?.vi||[]).entries()){if(!r.name)continue;result.push({id:'research:vehicle:'+i+':'+slug(r.name),name:r.name,kind:'vehicle',scope:'vi',group:r.type||'Vehicles',brand:r.brand||'',image:'',imageCredit:'',verification:'Provisional / unverified',summary:'GTA VI community roster research. An image will appear only when a GTA VI-specific source and its reuse permission are confirmed. Any generic graphic is an original Team Jura concept, not the exact vehicle.'});}
- for(const s of sets?.sets||[]){if(!s.id||!s.name)continue;const scope=s.mode==='story'?'story':s.mode==='online'?'online':'vi';result.push({id:'set:'+s.id,name:s.name,kind:'collectible',scope,group:s.cycle||'Collection',total:s.total,summary:s.note||'Collection tracker; exact map points may not be sourced.',sourceUrl:s.sourceUrl,verification:s.verification||'Published set index'});}
+ for(const s of sets?.sets||[]){if(!s.id||!s.name)continue;const scope=s.mode==='story'?'story':s.mode==='online'?'online':'vi';result.push({id:'set:'+s.id,collectionId:s.id,name:s.name,kind:'collectible',scope,group:s.cycle||'Collection',total:s.total,summary:s.note||'Collection tracker; exact map points may not be sourced.',sourceUrl:s.sourceUrl,verification:s.verification||'Published set index'});}
  // Keep a pictured archive entry when a generic catalog index duplicates it; never merge Story into Online.
  const uniq=new Map();for(const r of result){const k=r.kind+'|'+slug(r.name)+'|'+r.scope;const old=uniq.get(k);
+ if(old&&r.collectionId){uniq.set(k,{...old,collectionId:r.collectionId,total:r.total,sourceUrl:r.sourceUrl||old.sourceUrl});continue;}
  if(!old||(!old.image&&r.image)||(!old.key&&r.key))uniq.set(k,{...old,...r,sourceUrl:r.sourceUrl||old?.sourceUrl,attributes:r.attributes||old?.attributes});}
  return [...uniq.values()].sort((a,b)=>a.name.localeCompare(b.name));
 }
@@ -79,7 +80,18 @@ function card(r){const node=make('article','u-card');node.append(artwork(r));con
  if(r.kind==='vehicle'&&r.model&&r.scope!=='vi')actions.append(link('▣ Garage','atlas93-garage.html?addModel='+encodeURIComponent(r.model)));
  if(r.kind==='vehicle'||r.kind==='weapon'){const cmp=make('button','u-action u-muted-action',compare.some(x=>x.id===r.id)?'✓ Selected':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.some(x=>x.id===r.id)));cmp.onclick=()=>selectCompare(r);actions.append(cmp)}
  body.append(actions);if(r.kind==='character'&&r.imageCredit&&r.imageCredit.startsWith('https://')){const credit=link('Portrait source ↗',r.imageCredit);credit.className='u-portrait-source';body.append(credit)}node.append(body);return node}
-function syncURL(){const url=new URL(location.href);if(kind!==DEFAULT_KIND)url.searchParams.set('kind',kind);else url.searchParams.delete('kind');if(game!==DEFAULT_GAME)url.searchParams.set('game',game);else url.searchParams.delete('game');if(query)url.searchParams.set('q',query);else url.searchParams.delete('q');history.replaceState(null,'',url)}
+function syncURL(){
+ const url=new URL(location.href);
+ const options=[
+  ['kind',kind,DEFAULT_KIND],['game',game,DEFAULT_GAME],['q',query,''],
+  ['group',group,'all'],['sort',order,'name'],['research',researchOnly?'1':'',''],['view',view,'grid']
+ ];
+ for(const [key,value,defaultValue] of options){
+  if(value===defaultValue)url.searchParams.delete(key);
+  else url.searchParams.set(key,value);
+ }
+ if(url.href!==location.href)history.replaceState(history.state,'',url);
+}
 function draw(){document.body.dataset.activeWorld=game;document.body.dataset.activeKind=kind;filtered=match();syncURL();
  document.querySelectorAll('[data-world]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.world===game)));
  const title=$('resultsTitle');if(title)title.textContent=(kind==='all'?'All types':LABELS[kind]||'References')+' · '+(game==='all'?'All worlds':world(game));page=Math.max(0,Math.min(page,Math.ceil(filtered.length/LIMIT)-1));$('totalRecords').textContent=String(all.length);$('visibleRecords').textContent=String(filtered.length);$('selectedCompare').textContent=String(compare.length);$('resultsCount').textContent=filtered.length.toLocaleString()+' matching records';
@@ -92,7 +104,12 @@ function draw(){document.body.dataset.activeWorld=game;document.body.dataset.act
 function field(list,label,value){const d=make('div','u-field');d.append(make('dt','',label),make('dd','',value===null||value===undefined||value===''?'Not provided / unverified':String(value)));list.append(d)}
 function actionsFor(r,box){if(r.kind==='vehicle'){if(r.model&&r.scope!=='vi')box.append(link('▣ Add to My Garage','atlas93-garage.html?addModel='+encodeURIComponent(r.model)));box.append(link('View vehicle gallery',r.scope==='vi'?'atlas90-vehicles6.html':'atlas90-vehicles5.html'))}
  if(r.kind==='weapon')box.append(link('Pictured weapon gallery','atlas90-weapons.html'));
- if(r.kind==='collectible'){box.append(link('Collection HQ','atlas81-hq.html#collections'));box.append(link('Open relevant map',r.scope==='online'?'atlas-online.html':r.scope==='vi'?'atlas-vi.html':'atlas.html'))}
+ if(r.kind==='collectible'){
+  box.append(link('Collection HQ','atlas81-hq.html#collections'));
+  const map=r.scope==='online'?'atlas-online.html':r.scope==='vi'?'atlas-vi.html':'atlas.html';
+  if(r.collectionId)box.append(link('Open collection on map',map+'?collection='+encodeURIComponent(r.collectionId)));
+  else box.append(link('Open relevant map',map));
+ }
  if(r.kind==='animal'||r.kind==='character')box.append(link('Explore map',r.scope==='vi'?'atlas-vi.html':r.scope==='online'?'atlas-online.html':r.scope==='classic'?'maps.html':'atlas.html'));
  if(r.sourceUrl&&r.sourceUrl.startsWith('https://'))box.append(link('Source ↗',r.sourceUrl));if(r.imageCredit)box.append(link('Artwork credits ↗',r.imageCredit));
  if(r.key){const state=own();for(const [key,word] of [['owned','Mark owned'],['wishlist','Wishlist']]){const b=make('button','u-action',state[key]?.[r.key]?'✓ '+word:word);b.type='button';b.onclick=()=>{if(toggleOwned(r,key))details(r,false);else alert('Storage unavailable; export your garage before clearing this device.');};box.append(b)}}
@@ -121,6 +138,14 @@ async function loadJSON(url){
  failed.push(url);return null;
 }
 async function init(){const args=new URLSearchParams(location.search);kind=MODE==='all'?(args.get('kind')||DEFAULT_KIND):MODE;if(kind!=='all'&&!Object.keys(LABELS).includes(kind))kind=DEFAULT_KIND;game=WORLD_CODES.has(args.get('game'))?args.get('game'):DEFAULT_GAME;const paramsKind=$('filterKind');paramsKind.value=kind;$('filterGame').value=game;if(args.has('q')){query=(args.get('q')||'').slice(0,120);$('universeSearch').value=query;}
+ group=args.get('group')||'all';
+ const sort=$('sortBy');
+ const requestedSort=args.get('sort');
+ if(Array.from(sort.options).some(option=>option.value===requestedSort))order=requestedSort;
+ sort.value=order;
+ researchOnly=args.get('research')==='1';
+ $('researchOnly').checked=researchOnly;
+ view=args.get('view')==='list'?'list':'grid';
  document.querySelectorAll('[data-world]').forEach(b=>b.addEventListener('click',()=>{game=b.dataset.world;group='all';page=0;$('filterGame').value=game;updateGroups();draw()}));
  const [profile,seed,catalog,sets]=await Promise.all(['data/atlas-universe-profiles.json?v=130','atlas90-seed.json','atlas-catalog.json','atlas-collections.json'].map(loadJSON));all=index(profile,seed,catalog,sets);updateGroups();
  $('universeSearch').addEventListener('input',e=>{query=e.target.value.trim();page=0;draw()});paramsKind.addEventListener('change',e=>{kind=e.target.value;page=0;group='all';updateGroups();draw()});$('filterGame').addEventListener('change',e=>{game=e.target.value;group='all';page=0;updateGroups();draw()});

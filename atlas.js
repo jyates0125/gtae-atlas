@@ -348,7 +348,6 @@ function renderViRegions(){const box=$('viRegions');if(!box)return;box.classList
  const heading=document.createElement('strong');heading.textContent='Rockstar official sources · 19 Nov 2026';sourcePanel.append(heading);
  const hint=document.createElement('p');hint.textContent='The game and region names are official. These community-map marker positions are not verified against Rockstar\u2019s published map; selecting a region searches research records rather than jumping to a claimed official coordinate.';sourcePanel.append(hint);
  const links=[
-  ['Official Leonida map and poster','https://www.rockstargames.com/VI/media'],
   ['Official Leonida screenshots','https://www.rockstargames.com/VI/media/screenshots'],
   ['Rockstar GTA VI game information','https://www.rockstargames.com/VI']
  ];
@@ -464,7 +463,7 @@ const TILE_HOSTS=[UPSTREAM+'maps/tiles/']; // Read from GTADB's licensed GitHub 
 function sourceUrl(g,style,z,tx,ty,host=0){return `${TILE_HOSTS[host]}${g}/${style}/${z}/${z},${ty},${tx}.jpg`+(host?'?atlas_tiles=62':'');}
 function tileHealth(){const el=$('tileHealth');if(!el)return;const current=styles[game],all=[...tileStore.values()].filter(t=>t.game===game);const valid=new Set([mapView(current,game).base,...sourceTileStyles(current,0,1,1,game)]);const group=all.filter(t=>valid.has(t.path));const good=group.filter(t=>t.state==='ok').length,loading=group.filter(t=>t.state==='loading').length,bad=group.filter(t=>t.state==='error').length;
  el.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`:bad?'Map artwork unavailable · retry a different layer or connection':'Preparing artwork…';
- el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='Licensed GTADB community illustrations; Research uses YANIS V17 artwork with Atlas category and source tools. No official Rockstar map claims.';}
+ el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='Licensed GTADB community illustrations; Research uses YANIS V18 community artwork with Atlas category and source tools. No official Rockstar map claims.';}
 
 function within(style,z,x,y,g=game){const r=BOUNDS[mapView(style,g).base]?.[z];return !!r&&x>=r[0]&&x<=r[2]&&y>=r[1]&&y<=r[3]}
 function tileImage(style,z,x,y,g=game){

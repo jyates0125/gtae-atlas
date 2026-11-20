@@ -13,15 +13,22 @@
    menu.addEventListener('click',e=>{if(e.target.closest('a')){menu.dataset.open='false';btn.setAttribute('aria-expanded','false')}});
    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.dataset.open==='true'){menu.dataset.open='false';btn.setAttribute('aria-expanded','false');btn.focus()}});
  }
- function makeWorld(w,short){const a=E('a',short?'rail-world':'world-card');a.href='./'+w.href;a.dataset.id=w.id;
+ function makeWorld(w,short,directoryCover=false){const a=E('a',short?'rail-world':'world-card');a.href='./'+w.href;a.dataset.id=w.id;
    if(short){const emblem=E('span','rail-emblem',({'story':'V','online':'◉','vi':'VI','cayo':'☀','iv':'IV','sa':'SA'}[w.id]||'◆'));const label=E('span','rail-label',w.name);const detail=E('small','',w.short);label.append(detail);a.append(emblem,label);return a}
    const frame=E('span','world-art-frame'),blur=E('img','world-art-blur'),im=E('img','world-art-main');
-   const sources=[w.coverSrc,w.coverFallback,'./art/'+w.art].filter(Boolean);let sourceIndex=0;
-   const setCover=()=>{const url=sources[sourceIndex];im.src=url;im.alt=sourceIndex===sources.length-1?'Elario world-specific fallback illustration for '+w.name:sourceIndex===0?'Original Rockstar game artwork for '+w.name:'Original game-map imagery for '+w.name;frame.dataset.cover=sourceIndex===0?'official-art':sourceIndex===1?'game-map':'original-elario'};
+   // Use only bundled Elario art candidates; owner's release approval remains pending: third-party box art,
+   // screenshots, and remote mirrors are not a reliable or automatic reuse license.
+   // Each world keeps its individual original cover; featured worlds can lead
+   // with the separate Atlas 14.0 approved concept illustration.
+   const featuredConcept=w.group==='featured' && typeof w.coverFallback==='string'
+     && /^\.\/art\/atlas140-[a-z-]+-concept\.svg$/.test(w.coverFallback)?w.coverFallback:null;
+   const premiumCover=typeof w.coverSrc==='string' && /^\.\/art\/(?:jura155-(?:story|online|vi|cayo)|jura157-(?:iv|sa|vc|iii|vcs|lcs|ctw|tlad|tbogt)-cinematic)\.webp$/.test(w.coverSrc)?w.coverSrc:null;
+   const sources=[premiumCover,featuredConcept,'./art/'+w.art].filter(Boolean);let sourceIndex=0;
+   const setCover=()=>{im.src=sources[sourceIndex];im.alt=sourceIndex===0&&premiumCover?'Original Elario Studios cinematic fan concept artwork for '+w.name+'; not official gameplay':'Original Team Jura fan illustration for '+w.name+'; not a screenshot or exact map';frame.dataset.cover=sourceIndex===0&&premiumCover?'original-cinematic':'original-elario'};
    for(const image of [blur,im]){image.loading='lazy';image.decoding='async';image.referrerPolicy='no-referrer'}
    // The soft backdrop is a small, local concept asset: never download the full remote cover twice.
-   blur.src=w.group==='featured'?'./art/atlas140-'+w.id+'-concept.svg':'./art/'+w.art;
-   if(w.group==='featured'&&(w.id==='story'||w.id==='online'))im.loading='eager';
+   blur.src=premiumCover||(w.group==='featured'?'./art/atlas140-'+w.id+'-concept.svg':'./art/'+w.art);
+   if(directoryCover||(w.group==='featured'&&(w.id==='story'||w.id==='online')))im.loading='eager';
    blur.alt='';blur.setAttribute('aria-hidden','true');
    im.onerror=()=>{if(sourceIndex<sources.length-1){sourceIndex++;setCover()}else{im.onerror=null;frame.dataset.cover='unavailable'}};
    frame.append(blur,im);setCover();
@@ -46,7 +53,11 @@
  function directory(){const feature=$('#directoryFeatured'),additional=$('#directoryAdditional'),inp=$('#worldSearch'),count=$('#worldCount'),buttons=$$('[data-world-filter]');if(!feature||!additional)return;
    let mode='all';function paint(){feature.replaceChildren();additional.replaceChildren();const q=(inp?.value||'').trim().toLocaleLowerCase();let total=0;
      for(const w of worlds){const typeOk=mode==='all'||(mode==='interactive'?(w.kind==='interactive'||w.kind==='schematic'):mode==='research'?w.kind==='research':mode==='limited'?w.kind==='limited':w.kind==='gateway');if(!typeOk||!([w.name,w.game,w.short,w.grade,w.note,...w.features].join(' ').toLowerCase().includes(q)))continue;
-       const card=makeWorld(w,false);card.classList.add('directory-card');const features=E('p','',w.features.join(' · '));const caption=E('p','',w.note);caption.style.fontSize='10px';card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
+       const card=makeWorld(w,false,true);card.classList.add('directory-card');
+       const summary=w.kind==='gateway'?'Individual checklist · Personal pins & routes':w.features.slice(0,3).join(' · ');
+       const note=w.kind==='gateway'?'Built-in verified map calibration pending · Open for full coverage details':w.note;
+       const features=E('p','world-feature-summary',summary);const caption=E('p','world-coverage-note',note);
+       card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
      if(count)count.textContent=total+' of '+worlds.length+' destinations';if($('#noWorlds'))$('#noWorlds').hidden=total!==0;
      $('#mainWorlds').hidden=feature.children.length===0;$('#otherWorlds').hidden=additional.children.length===0;
    }

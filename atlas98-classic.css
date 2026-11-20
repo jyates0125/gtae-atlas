@@ -90,3 +90,16 @@ body[data-page="classic"] .classic-controls button:hover{
 .j106-flat-reference #classicRetryMap{grid-column:auto;min-height:36px;min-width:0;padding:7px 12px;border-radius:9px;border:1px solid #d0a66e;background:#21182e;color:#ffe2b4;font-size:11px;font-weight:750;cursor:pointer}
 .j106-flat-reference #classicRetryMap:hover{background:#4b2944}
 @media(max-width:690px){.j106-flat-reference #classicMapSourceLink,.j106-flat-reference #classicRetryMap{grid-column:1/-1;max-width:none}}
+
+/* Atlas 15.0: match pin to collectible type; completion mirrors saved checklist data. */
+.classic-marker[data-slot-done="true"]{border-color:#92f2b4;background:#185b41;box-shadow:0 0 0 3px #053b2eb0,0 3px 12px #030207}
+.classic-marker:focus-visible{outline:3px solid #ffe6ac;outline-offset:3px}
+
+
+/* Atlas 15.7 · classic map pinch/zoom status and minimum 44px tap targets. */
+body[data-page="classic"] .classic-controls{align-items:center;flex-wrap:wrap}
+body[data-page="classic"] .classic-controls button{min-width:44px;min-height:44px;font-weight:750}
+body[data-page="classic"] .classic-controls button:disabled{opacity:.44;cursor:not-allowed}
+body[data-page="classic"] .classic-zoom-level{display:inline-flex;min-width:50px;align-items:center;justify-content:center;border:1px solid #bd85aa;border-radius:9px;padding:10px 6px;color:#ffe0a8;background:#22102e;font-size:12px;font-weight:850;font-variant-numeric:tabular-nums}
+body[data-page="classic"] #classicViewport{touch-action:none;overscroll-behavior:contain}
+@media(max-width:570px){body[data-page="classic"] .classic-controls{gap:5px}body[data-page="classic"] .classic-controls button{padding:10px 8px}body[data-page="classic"] .classic-zoom-level{padding:10px 5px}}

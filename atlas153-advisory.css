@@ -1,0 +1,7 @@
+/* Atlas 15.3: courteous maturity notice that is never a disruptive age gate. */
+.j153-advisory{box-sizing:border-box;display:flex;align-items:flex-start;gap:12px;max-width:min(1180px,calc(100% - 26px));padding:14px 16px;margin:16px auto;border:1px solid #bd8b91;border-left:3px solid #efbc73;border-radius:13px;background:linear-gradient(125deg,#2b173d,#171025);color:#f7e9f5;box-shadow:0 8px 22px #05031045;font:13px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.j153-advisory-mark{flex:0 0 28px;width:28px;height:28px;display:grid;place-items:center;border:1px solid #f8d69c;border-radius:50%;background:#f4c781;color:#28132d;font-weight:900;font-size:18px}
+.j153-advisory-body{min-width:0;max-width:980px}.j153-advisory strong{font-size:14px;color:#ffe5b0;line-height:1.35;display:block;margin-bottom:3px}.j153-advisory p{margin:0 0 5px;color:#e3d7ea}.j153-advisory a{color:#ffe6ae;text-decoration:underline;text-underline-offset:3px}.j153-advisory a:focus-visible{outline:3px solid #ffe6a4;outline-offset:3px}
+.j153-advisory.j153-footer{font-size:12px;opacity:.9;margin-block:24px}.j153-advisory.j153-footer .j153-advisory-body{max-width:950px}
+@media(max-width:570px){.j153-advisory{margin:12px auto;max-width:calc(100% - 20px);padding:12px;gap:9px}.j153-advisory strong{font-size:13px}.j153-advisory p{font-size:12px}}
+@media print{.j153-advisory{box-shadow:none;border:1px solid #555}}

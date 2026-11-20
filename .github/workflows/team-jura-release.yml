@@ -36,6 +36,7 @@ jobs:
           python scripts/test_atlas136_status.py
           python scripts/test_atlas139_nav_focus.py
           python scripts/test_social_icons_131.py
+          python scripts/test_atlas153_welcome_social.py
           python scripts/test_account_131.py
           python scripts/test_atlas138_supabase.py
           python scripts/test_atlas141_leonida_research.py
@@ -50,6 +51,8 @@ jobs:
           python scripts/test_game_art_121.py
           python scripts/test_map_chrome_128.py
           python scripts/test_classic_flat_106.py
+          python scripts/test_atlas150_classic_slots.py
+          python scripts/test_atlas157_classic_zoom.py
           node --check atlas103-hub.js
           node --check atlas98-portal.js
           node --check atlas98-worlds.js
@@ -66,6 +69,33 @@ jobs:
           node --test tests/data-lab.test.cjs
           node --test tests/source-identity.test.cjs
           node --test tests/atlas140-cloud-saves.test.cjs
+          node --test tests/atlas144-cloud-transfer.test.cjs
+          node --check atlas144-cloud-transfer.js
+          node --check atlas144-device-overview.js
+          python scripts/test_atlas144_account_review.py
+          python scripts/test_atlas145_map_ux.py
+          python scripts/test_atlas146_launch_truth.py
+          python scripts/test_atlas147_garage_mobile.py
+          python scripts/test_atlas148_local_covers.py
+          python scripts/test_atlas155_premium_art.py
+          python scripts/test_atlas157_cinematic_world_covers.py
+          python scripts/test_atlas155_art_review.py
+          python scripts/test_atlas157_directory.py
+          python scripts/test_atlas158_browser_contract.py
+          python scripts/test_atlas159_duplicate_nav.py
+          python scripts/test_atlas149_leonida_toolbar.py
+          python scripts/test_atlas154_map_zoom.py
+          python scripts/test_atlas156_mobile_nav.py
+          python scripts/test_atlas151_heist_gallery.py
+          python scripts/test_atlas160_premium_headers.py
+          python scripts/test_atlas158_premium_experiences.py
+          python scripts/test_atlas161_quality_gate.py
+          python scripts/test_atlas162_subject_heroes.py
+          python scripts/test_atlas152_art.py
+          node --check atlas93-global.js
+          node --check leonida-hq.js
+          node --check atlas145-leonida-map-ux.js
+          node --check atlas145-mobile-map-entry.js
       - name: Confirm four evidence workspaces use original page-specific artwork
         run: python scripts/test_research_identity_127.py
       - name: Build only public, approved static files (no live imports)
@@ -85,7 +115,10 @@ jobs:
         continue-on-error: true
         env:
           ATLAS_BROWSER: chromium
-        run: python scripts/capture_design_review.py
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+          python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Chromium)
         if: always()
         uses: actions/upload-artifact@v4
@@ -122,7 +155,10 @@ jobs:
         continue-on-error: true
         env:
           ATLAS_BROWSER: msedge
-        run: python scripts/capture_design_review.py
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install msedge
+          python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Edge)
         if: always()
         uses: actions/upload-artifact@v4
@@ -154,3 +190,5 @@ jobs:
           path: public/
           if-no-files-found: error
           retention-days: 21
+      - name: Owner visual signoff — prevent artwork regression release
+        run: python scripts/test_atlas151_visual_release.py

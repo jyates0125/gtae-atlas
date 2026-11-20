@@ -13,7 +13,7 @@ assert 'qa-evidence' in src and 'manifest.json' in src
 assert 'animations=\'disabled\'' in src
 for file in ('index.html','maps.html','atlas-activities.html?mode=online','atlas93-garage.html','project.html','atlas.html','atlas-vi.html','one-last-ride.html'):
     assert file in src,file
-assert workflow.count("run: python scripts/capture_design_review.py")==2
+assert workflow.count("python scripts/capture_design_review.py")==2, "Both browser screenshot jobs must invoke the capture script"
 assert workflow.count("continue-on-error: true")==2
 assert "ATLAS_VISUAL_CAPTURE" not in workflow
 assert 'team-jura-atlas-design-review-chromium' in workflow

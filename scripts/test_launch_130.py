@@ -54,7 +54,10 @@ assert not re.search(r'(?:google-analytics\.com|googletagmanager\.com|facebook\.
 assert 'film/assets/one-last-ride-motion-preview.mp4' in film
 assert 'id="olrSceneList"' in film and 'id="moments"' in film and 'community-moments.js' in film
 assert 'Full animation' in film or 'full animated film' in film
-assert 'j130-film-plan' in film and 'data-j130-action="share-page"' in film
+# Atlas 15.3 intentionally moved share actions out of the film's main content.
+# The film keeps its production roadmap and the shared compact footer host.
+assert 'j130-film-plan' in film and 'data-j131-social-host' in film
+assert 'data-j130-action="share-page"' not in film
 assert 'og:image' in film and 'atlas98-one-last-ride.webp' in film
 assert 'atlas98-approved-hero.webp' in style and 'atlas130-launch.css' in index
 for name,html in [('index.html',index),('atlas-dashboard.html',dash),('atlas-share.html',social),('one-last-ride.html',film)]:

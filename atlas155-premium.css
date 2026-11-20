@@ -1,0 +1,22 @@
+/* Atlas 15.5 · premium, source-owned cinematic page heroes.
+   The approved original raster is presentation only, never a gameplay map or account screen. */
+body[data-atlas-kind="character"] .u-hero .u-hero-art{
+ background:linear-gradient(90deg,#23102a8a,transparent 60%),url('./art/jura155-characters.webp') 58% center/cover!important;
+ min-height:295px;
+}
+body.j119-heists:not(.j120-heist-page) .hero{
+ min-height:310px;
+ background:linear-gradient(90deg,#1a0b2ff5,#331440c9 51%,#150a2944),url('./art/jura155-heists.webp') center/cover!important;
+ border-bottom:2px solid #f3b46f;
+}
+.studio-vision .studio-scenery, .studio-vision picture,.studio-vision picture img{
+ display:block;width:100%;height:auto;max-width:100%;object-fit:cover;
+}
+.studio-vision picture{min-width:0;border-radius:12px;overflow:hidden}
+body[data-page="maps"] .directory-hero{
+ background:linear-gradient(92deg,#1c0e2cef,#24113c93 53%,#19112b38),url('./art/jura155-map.webp') 52% center/cover!important;
+}
+@media(max-width:730px){
+ body[data-atlas-kind="character"] .u-hero .u-hero-art{min-height:230px;background-position:56% center!important}
+ body.j119-heists:not(.j120-heist-page) .hero{min-height:260px;background-position:56% center!important}
+}
