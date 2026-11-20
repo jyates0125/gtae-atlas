@@ -18,8 +18,9 @@ const ns=(tag,attrs={})=>{const n=document.createElementNS(SVG_NS,tag);for(const
 const el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=String(txt);return n};
 const button=(txt,cls,cb)=>{const b=el('button',cls,txt);b.type='button';b.addEventListener('click',cb);return b};
 const storage='teamjura-cayo-pinroute-v1';
-const DEFAULT=['secondary','gated'];
 const ALL_CATS=['entry','exit','drainage','secondary','gated','bolts','grapple','clothes','truck','control','power','powder','water','chest'];
+// One visible-map default: all 14 types shown unless this device already saved a different selection.
+const DEFAULT=ALL_CATS.slice();
 const presets={
  'Loot':['secondary','gated'],
  'Equipment':['bolts','grapple','clothes','truck','powder'],
@@ -128,6 +129,7 @@ function refreshFilters(){
    selected.length===state.categories.length&&selected.every(cat=>state.categories.includes(cat)):
    btn.textContent==='All types'&&state.categories.length===ALL_CATS.length));
  }
+ window.dispatchEvent(new CustomEvent('teamjura:cayo:route-categories',{detail:{categories:state.categories.slice()}}));
 }
 const filterDrawer=el('details','j186-filter-drawer');
 const filterSummary=el('summary','','Customize the 14 marker categories');
@@ -365,6 +367,7 @@ function render(message){
   row.append(ordinal,show,category,controls);list.append(row);
  }
  drawLine();
+ window.dispatchEvent(new CustomEvent('teamjura:cayo:route-updated',{detail:{start:state.start,finish:state.finish,stops:state.order.length}}));
 }
 const watcher=new MutationObserver(()=>{
  // The daily chest module replaces buttons after each 06:00 UTC reset;
@@ -374,13 +377,15 @@ const watcher=new MutationObserver(()=>{
 watcher.observe(chests,{childList:true});
 const manualStart=()=>{panel.scrollIntoView({block:'nearest',behavior:'smooth'})};
 const jump=button('Build a route','j186-map-jump',manualStart);
+// Keep the tested DOM hook for compatibility, but remove duplicated header route buttons.
+jump.hidden=true;jump.setAttribute('aria-hidden','true');jump.tabIndex=-1;
 const headToolbar=stage.querySelector('.j180-map-header .j180-modes');
 headToolbar?.append(jump);
 // The old header "Route" view was a conceptual 16.x second route plan. Cayo
 // now uses this ONE real colored-pin planner. Leave the game map visible.
 const oldRouteMode=headToolbar?.querySelector('.j180-mode[data-mode="route"]');
 if(oldRouteMode){
- oldRouteMode.textContent='Plan route';
+ oldRouteMode.textContent='Route details';
  oldRouteMode.title='Use the route planner on this same island map';
  oldRouteMode.addEventListener('click',event=>{
   event.preventDefault();event.stopImmediatePropagation();
@@ -400,7 +405,7 @@ world.addEventListener('click',event=>{
   startFrom(id);
   const details=document.querySelector('.j180-pin-info');
   if(details)details.hidden=true;
-  panel.scrollIntoView({block:'nearest',behavior:'smooth'});
+  // Keep the island in view; player now gets route status directly beside the map.
  }
  queueMicrotask(()=>{
   const info=document.querySelector('.j180-pin-info');
@@ -414,7 +419,15 @@ world.addEventListener('click',event=>{
   info.append(row);
  });
 });
-window.teamJuraCayoPinRoute={startFrom,setFinish,addStop,autoRoute,appendNearest,render,
+function setCategories(values){
+ if(!Array.isArray(values))return false;
+ const next=[...new Set(values.filter(cat=>ALL_CATS.includes(cat)))];
+ if(next.length===state.categories.length&&next.every(cat=>state.categories.includes(cat)))return true;
+ state.categories=next;refreshFilters();persist();
+ if(state.start&&state.mode==='nearest')autoRoute();else render();
+ return true;
+}
+window.teamJuraCayoPinRoute={startFrom,setFinish,addStop,autoRoute,appendNearest,render,setCategories,
  getState:()=>JSON.parse(JSON.stringify(state)),
  getStops:()=>state.order.slice(),
  getNodes:()=>nodes().map(n=>({id:n.id,cat:n.cat,label:n.label,x:n.x,y:n.y,active:n.active})),
