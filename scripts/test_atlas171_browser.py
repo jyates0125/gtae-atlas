@@ -33,16 +33,21 @@ try:
         page.locator('#j180-shell').wait_for(state='visible',timeout=30000)
         page.wait_for_function("document.querySelectorAll('.j180-chest').length === 19",timeout=20000)
         page.wait_for_function("['gta-wiki','local-trace'].includes(document.querySelector('#j167-heist-map')?.dataset.mapAsset)",timeout=30000)
-        # The existing colorful source-raster symbols get transparent hit targets.
-        # Only the offline vector road plan needs to render a matching glyph once.
-        marker=page.locator('.j181-hotspot').first
+        # All map sources now use one Elario SVG marker family. The bare
+        # game-map raster was previously showing only yellow chest dots.
         page.locator('#j181-hotspots').wait_for(state='attached')
-        assert marker.evaluate("(e)=>getComputedStyle(e).fontSize==='0px'"),'No second visible generic button icon over source art'
-        provenance=page.locator('#j167-heist-map').get_attribute('data-map-asset')
-        if provenance=='local-trace':
-            assert marker.evaluate("(e)=>getComputedStyle(e,'::after').content!=='none'"),'Offline fallback displays clickable colored glyphs'
-        else:
-            assert marker.evaluate("(e)=>getComputedStyle(e,'::after').content==='none'"),'Source image must not receive duplicate icons'
+        marker=page.locator('.j181-hotspot[data-category="entry"]').first
+        assert marker.locator('.j183-svg').count()==1,'Game map entry pin requires SVG icon'
+        assert page.locator('.j181-hotspot .j183-svg').count()>=50,'All category icons render as real map assets'
+        assert marker.evaluate("(e)=>getComputedStyle(e.querySelector('svg')).color!=='rgba(0, 0, 0, 0)'"),'Colored SVG must be visible on primary game map'
+        assert marker.evaluate("(e)=>getComputedStyle(e.querySelector('svg')).width !== '0px'"),'SVG must have nonzero visible width'
+        assert marker.evaluate("(e)=>getComputedStyle(e,'::after').content==='none'"),'No second glyph should overlay a primary or backup map symbol'
+        assert page.locator('.j180-legend-row .j183-svg').count()==14,'Legend shares exact same SVG marker artwork'
+        page.get_by_role('button',name='Enhanced',exact=True).click()
+        page.wait_for_function("document.querySelector('#j167-heist-map')?.dataset.mapSource==='enhanced'")
+        assert marker.locator('.j183-svg').is_visible(),'Enhanced map retains working colorful symbols'
+        page.get_by_role('button',name='Game map',exact=True).click()
+        page.wait_for_function("document.querySelector('#j167-heist-map')?.dataset.mapSource==='original'",timeout=30000)
         assert page.locator('.j180-chest').count()==19,'All 19 possible chest references render'
         assert page.locator('.j180-legend-row').count()==14,'All 14 interactive marker legend rows render'
         page.locator('#j181-hotspots').wait_for(state='attached',timeout=10000)
