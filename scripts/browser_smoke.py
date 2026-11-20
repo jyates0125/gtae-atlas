@@ -89,6 +89,32 @@ async def smoke():
                                     # Atlas 16.7: each heist must show its own focused mission map
                                     # before the optional regional world-map iframe.
                                     await pg.locator('#j167-heist-map').wait_for(timeout=9000)
+                                    # Atlas 16.9: view tabs are mission-specific, save-safe and functional.
+                                    await pg.locator('#j169-views').wait_for(timeout=9000)
+                                    if await pg.locator('#j169-views .j169-view').count()!=(4 if path=='heist-cayo-perico.html' else 3):
+                                        failures.append('Wrong mission view count')
+                                    await pg.locator('#j169-views .j169-view[data-view="objective"]').click()
+                                    if not await pg.locator('#j169-objective').is_visible():
+                                        failures.append('Mission objective reference did not open')
+                                    if await pg.locator('#j169-objective .j169-objective-card').count()<1:
+                                        failures.append('Missing interactive objective POI cards')
+                                    await pg.locator('#j169-objective .j169-objective-card').first.click()
+                                    if not await pg.locator('#j167-heist-map .j167-viewport').is_visible():
+                                        failures.append('Objective POI failed to return to map')
+                                    if path=='heist-cayo-perico.html':
+                                        await pg.locator('#j169-views .j169-view[data-view="original"]').click()
+                                        if not await pg.locator('#j169-original').is_visible():
+                                            failures.append('Cayo source island view did not open')
+                                        if await pg.locator('#j169-cayo-frame').get_attribute('src'):
+                                            failures.append('Source island viewer loaded without user action')
+                                        await pg.locator('#j169-original .j169-load').click()
+                                        if await pg.locator('#j169-cayo-frame').get_attribute('src')!='./atlas-cayo.html':
+                                            failures.append('Original island viewer source mismatch')
+                                        await pg.locator('#j169-original .j169-load').click()
+                                    await pg.locator('#j169-views .j169-view[data-view="route"]').click()
+                                    if not await pg.locator('#j167-heist-map .j167-viewport').is_visible():
+                                        failures.append('Route planning map did not reopen')
+                                    await pg.locator('#j169-views .j169-view[data-view="enhanced"]').click()
                                     # Atlas 16.8: the visible heist map and the source-informed
                                     # five-question guide must coexist without changing older save keys.
                                     await pg.locator('#j168-heist-guide').wait_for(timeout=9000)

@@ -97,6 +97,7 @@ jobs:
           python scripts/test_atlas166_release_status.py
           python scripts/test_atlas167_heist_focus.py
           python scripts/test_atlas168_heist_guides.py
+          python scripts/test_atlas169_heist_views.py
           node --check atlas164-heist-workspace.js
           node --check heist-pages.js
           python scripts/test_atlas152_art.py

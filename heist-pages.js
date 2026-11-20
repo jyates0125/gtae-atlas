@@ -21,5 +21,7 @@ if(document.body.classList.contains('j120-heist-page')){
  const focus=document.createElement('script');focus.async=false;focus.src='./atlas167-heist-focus.js?v=167';document.body.append(focus);
  const guideStyle=document.createElement('link');guideStyle.rel='stylesheet';guideStyle.href='./atlas168-heist-guides.css?v=168';document.head.append(guideStyle);
  const guide=document.createElement('script');guide.async=false;guide.src='./atlas168-heist-guides.js?v=168';document.body.append(guide);
+ const viewsStyle=document.createElement('link');viewsStyle.rel='stylesheet';viewsStyle.href='./atlas169-heist-views.css?v=169';document.head.append(viewsStyle);
+ const views=document.createElement('script');views.async=false;views.src='./atlas169-heist-views.js?v=169';document.body.append(views);
 }
 })();
