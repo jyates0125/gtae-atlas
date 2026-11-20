@@ -103,3 +103,12 @@ body.j180-cayo.j185-cayo-polished .j185-cluster-choice:hover{
  border-color:#ffe5ad!important;outline:2px solid #ffe5ad!important;
  outline-offset:1px!important;background:#694177!important;
 }
+
+/* Remove old floating sitewide duplicates from ONLY the completed Cayo
+   workspace. The real responsive header navigation stays intact and contains
+   Home, All Maps, Heist HQ, Credits, Garage and Dispatch. Fixed overlays
+   previously obscured the island map search and the mission action menu. */
+body.j180-cayo.j185-cayo-polished #j89-shell,
+body.j180-cayo.j185-cayo-polished #j98-flow{
+ display:none!important
+}
