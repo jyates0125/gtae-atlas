@@ -120,7 +120,7 @@ document.addEventListener('click',e=>{
  });
 },true);
 const oldLink=$('.j167-island-note a');
-if(oldLink&&id==='cayo-perico'){const sourceBtn=makeButton('Open original island view here','j169-open-view',()=>{activate('original');original.scrollIntoView({block:'start',behavior:'smooth'})});oldLink.insertAdjacentElement('afterend',sourceBtn)}
+if(oldLink&&id==='cayo-perico'){const sourceBtn=makeButton('Open original island view here','j169-open-view',()=>{activate('original');original.scrollIntoView({block:'start',behavior:'smooth'})});oldLink.replaceWith(sourceBtn)}
 // Use original custom HTML/CSS pin geometry; no copied Rockstar or third-party marker artwork.
 // Existing .j167-pin classes retain color, selectability and saved-point IDs.
 activate('enhanced');
