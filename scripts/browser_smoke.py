@@ -80,6 +80,23 @@ async def smoke():
                             if missing:failures.extend('Missing local response: '+e for e in missing)
                             if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
 
+                            # Atlas 17.2: the separate Leonida Research page must be usable
+                            # on an actual mobile viewport, with a reversible full-size map.
+                            if path=='atlas-research.html' and not failures:
+                                try:
+                                    await pg.locator('#j172-research-tools').wait_for(timeout=7000)
+                                    await pg.locator('#j172-bright').click()
+                                    if await pg.locator('#j172-bright').get_attribute('aria-pressed')!='true':
+                                        failures.append('Research map brightness button did not toggle')
+                                    await pg.locator('#j172-expand').click()
+                                    if not await pg.locator('#maparea').evaluate("(n) => n.classList.contains('j172-full-map')"):
+                                        failures.append('Research map did not expand')
+                                    await pg.keyboard.press('Escape')
+                                    if await pg.locator('#maparea').evaluate("(n) => n.classList.contains('j172-full-map')"):
+                                        failures.append('Research map Escape did not restore view')
+                                except Exception as err:
+                                    failures.append('Research map display controls failed: '+str(err)[:180])
+                            
                             # Atlas 16.4: interactive mission map is user-triggered; plans are local
                             # and must not change the existing mission checklist storage.
                             if path in ('heist-fleeca.html','heist-cayo-perico.html') and not failures:
