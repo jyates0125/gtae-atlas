@@ -40,6 +40,7 @@ try:
    assert a['start']=='entry-0' and a['order'][0]=='entry-0',a
    assert len(a['order'])>1,'Nearest route must include candidate locations'
    assert page.locator('.j186-route-line').count()==1,'Route line visible on the island after pin click'
+   assert page.locator('.j186-route-badges .j186-stop').count()==len(a['order']),'All route steps need readable numbers above the source map'
    assert page.locator('.j186-stop-item').count()==len(a['order']),'Visible stop list matches island line'
    # Save actual Chromium/Edge evidence showing BOTH the map route overlay
    # and the companion mission planner, on desktop and a phone-width page.
