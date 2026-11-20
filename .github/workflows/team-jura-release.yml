@@ -101,8 +101,10 @@ jobs:
           python scripts/test_atlas170_cayo_unified.py
           python scripts/test_atlas171_cayo_board.py
           python scripts/test_atlas180_cayo_flagship.py
+          python scripts/test_atlas181_cayo_hotspots.py
           node --check atlas171-cayo-board.js
           node --check atlas180-cayo-flagship.js
+          node --check atlas181-cayo-hotspots.js
           python scripts/test_atlas171_research_map.py
           python scripts/test_atlas172_research_map.py
           node --check atlas164-heist-workspace.js
