@@ -34,7 +34,7 @@ for page,expected_title in (
         assert 'j117-map-world' in data,page
         for name in ('layer','atlasCanvas','legend','sidebar'):
             assert name in p.ids,(page,name)
-        assert './atlas.js?v=103-tiles' in data
+        assert './atlas.js?v=191' in data, 'Keep the original Atlas map engine linked on each game workspace; current cache revision must match'
     if page=='atlas-cayo.html':
         assert 'j117-cayo' in data and 'Illustrative schematic:' in data
     if page=='one-last-ride.html':
