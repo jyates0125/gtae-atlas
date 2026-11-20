@@ -25,7 +25,7 @@
     "tlad": null,
     "tbogt": null
   },
-  "note": "STAGING ONLY: 13 unique world-cover raster candidates and 4 page hero raster concepts integrated. All 13 world art candidates must be compared with owner reference pack and approved, plus 15 final heist artworks, interactive/mobile and browser QA, before release. Do not merge.",
+  "note": "Atlas 16.0: 13 world covers and 16 distinct mission/HQ cinematic WebPs staged, larger headers on desktop/mobile. Owner screenshot review and feature-parity signoff pending. Do not merge to development without explicit owner approval.",
   "staging_premium_webp_assets": 17,
   "staging_premium_cover_worlds": [
     "story",
@@ -41,5 +41,7 @@
     "ctw",
     "tlad",
     "tbogt"
-  ]
+  ],
+  "staging_premium_heist_scenes": 16,
+  "staging_premium_heist_mission_cover_count": 15
 }

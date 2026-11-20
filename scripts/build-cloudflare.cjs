@@ -46,7 +46,7 @@ for (const rel of files) {
   fs.mkdirSync(path.dirname(dst),{recursive:true});
   if (rel.endsWith('.html') && !rel.includes('/')) {
     const html=fs.readFileSync(src,'utf8');
-    const includes='<link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script><link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=132"></script>'+(!html.includes('atlas131-social-icons.css')?'<link rel="stylesheet" href="./atlas131-social-icons.css?v=133">':'')+(!html.includes('atlas131-social-icons.js')?'<script defer src="./atlas131-social-icons.js?v=133"></script>':'');
+    const includes='<link rel="stylesheet" href="./atlas160-premium-headers.css?v=160"><link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script><link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=132"></script>'+(!html.includes('atlas131-social-icons.css')?'<link rel="stylesheet" href="./atlas131-social-icons.css?v=133">':'')+(!html.includes('atlas131-social-icons.js')?'<script defer src="./atlas131-social-icons.js?v=133"></script>':'');
     const at=html.toLowerCase().lastIndexOf('</head>');
     if (at<0) throw new Error('Published HTML is missing head: '+rel);
     fs.writeFileSync(dst,html.slice(0,at)+includes+html.slice(at));
