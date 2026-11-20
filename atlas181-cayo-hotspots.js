@@ -40,7 +40,7 @@ const makeMarkerIcon=cat=>{
 const button=(label,cls,handler)=>{const e=el('button',cls,label);e.type='button';e.addEventListener('click',handler);return e};
 const categories=[
  ['entry','Infiltration points','📍','Possible island approach locations'],
- ['exit','Exit points','▲','Finale exit options (enhanced reference)'],
+ ['exit','Exit points','▲','Possible finale escape locations'],
  ['drainage','Drainage tunnel','▦','Underwater compound entrance'],
  ['secondary','Secondary targets','●','Possible loot areas · contents vary'],
  ['gated','Gated secondary targets','◉','Loot behind a locked access area'],
@@ -196,7 +196,7 @@ records.forEach(([cat,x,y,name,poi,view],i)=>{
  b.append(makeMarkerIcon(cat));
  b.dataset.category=cat;b.dataset.markerId=key;b.style.left=x+'%';b.style.top=y+'%';b.dataset.glyph=categories.find(c=>c[0]===cat)?.[2]||'•';
  b.setAttribute('aria-label',categories.find(c=>c[0]===cat)?.[1]+': '+name+' (approximate)');
- b.title=name+' · '+(view==='enhanced'?'enhanced visual reference':'click map symbol for details');
+ b.title=name+' · select this colorful map symbol for details';
  const item={key,name,cat,poi,view,button:b};allItems.push(item);layer.append(b);
 });
 legend.replaceChildren();
