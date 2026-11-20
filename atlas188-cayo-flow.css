@@ -84,3 +84,48 @@ body.j180-cayo.j188-cayo-smooth .j186-presets{
 @media(prefers-reduced-motion:reduce){
  body.j180-cayo.j188-cayo-smooth .j188-choices{scroll-snap-type:none}
 }
+
+/* Atlas 18.8 release-candidate: everyday route actions before advanced settings. */
+body.j180-cayo.j188-cayo-smooth .j186-panel{
+ display:flex;flex-direction:column;gap:7px;
+}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-head h3{
+ font-size:clamp(19px,2vw,24px);
+}
+body.j180-cayo.j188-cayo-smooth .j188-advanced{
+ order:6;display:block;
+ border:1px solid #84638e;border-radius:10px;
+ background:#271a37;margin:2px 0 9px;overflow:hidden;
+}
+body.j180-cayo.j188-cayo-smooth .j188-advanced>summary{
+ padding:13px 12px;min-height:42px;
+ color:#ffe1b0;cursor:pointer;
+ font:800 12px/1.4 system-ui;
+}
+body.j180-cayo.j188-cayo-smooth .j188-advanced[open]{
+ padding:0 10px 12px;
+}
+body.j180-cayo.j188-cayo-smooth .j188-advanced[open]>summary{
+ margin:0 -10px 12px;padding:11px 12px;
+ background:#3a264b;border-bottom:1px solid #86618f;
+}
+body.j180-cayo.j188-cayo-smooth .j188-advanced-actions{
+ display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 0;
+}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-actions{order:2;margin:4px 0 8px}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-stops{
+ order:3;max-height:min(520px,66dvh);
+}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-destination{order:1}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-status{order:0}
+body.j180-cayo.j188-cayo-smooth .j186-panel .j186-caveat{order:5}
+body.j180-cayo.j188-cayo-smooth .j188-advanced>summary:focus-visible{
+ outline:3px solid #ffe0a3;outline-offset:-3px;
+}
+@media(max-width:700px){
+ body.j180-cayo.j188-cayo-smooth .j186-panel .j186-actions .j186-action{
+  flex:1 1 calc(50% - 7px);min-width:0;
+ }
+ body.j180-cayo.j188-cayo-smooth .j186-panel .j186-stops{max-height:330px}
+ body.j180-cayo.j188-cayo-smooth .j188-advanced>summary{font-size:11px}
+}
