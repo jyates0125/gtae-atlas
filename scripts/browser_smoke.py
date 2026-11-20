@@ -624,8 +624,9 @@ async def smoke():
                                 if await scene.count()!=1:failures.append('Heist illustration missing')
                                 else:
                                     image_src=await scene.get_attribute('src')
-                                    if not image_src or 'atlas93-heist-' not in image_src:
-                                        failures.append('Specific original heist art not selected')
+                                    expected_art='./art/jura159-heist-'+path.removeprefix('heist-').removesuffix('.html')+'.webp'
+                                    if image_src!=expected_art:
+                                        failures.append('Approved cinematic heist artwork regressed: expected '+expected_art+', got '+str(image_src))
                                     await scene.evaluate("(el)=>el.loading='eager'")
                                     try:
                                         await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=6000)
@@ -638,7 +639,11 @@ async def smoke():
                                         if await pg.locator('.cards .card[data-theme]').count()<10:
                                             failures.append('Heist HQ lacks operation-specific art classes')
                                     else:
-                                        await pg.wait_for_selector('#missionBrief .j104-brief-visual img',timeout=7000)
+                                        await pg.wait_for_selector('#missionBrief .j104-brief-visual figcaption',timeout=7000)
+                                        if await pg.locator('#missionBrief .j104-brief-visual img').count():
+                                            failures.append('Retired schematic image is still inserted above the real mission map')
+                                        if await pg.locator('#j164-mission-map .j164-main').count()!=1:
+                                            failures.append('Opt-in real Atlas map controls are missing from the heist workspace')
                                         if await pg.locator('#missionBrief .j104-mission-flow li').count()<1:
                                             failures.append('Heist planning sequence missing')
                                         if await pg.locator('.j104-heist-actions button').count()!=1:
