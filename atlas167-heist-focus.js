@@ -42,12 +42,22 @@ zoomBtns.append(
  btn('+','j167-tool',()=>{zoom=Math.min(2.8,Math.round((zoom+.2)*10)/10);setView()}),
  btn('Fit','j167-tool',()=>{zoom=1;dx=dy=0;setView()}));
 zoomBtns.append(el('strong','j167-scale','1.0×'));
-bar.append(zoomBtns);sec.append(bar);
+bar.append(zoomBtns);
+const move=btn('Move map: Off','j167-tool',()=>{moveMode=!moveMode;move.textContent='Move map: '+(moveMode?'On':'Off');move.setAttribute('aria-pressed',String(moveMode));zone.style.touchAction=moveMode?'none':'pan-y'});
+move.setAttribute('aria-pressed','false');
+bar.append(move);
+sec.append(bar);
 const chips=el('div','j167-chips');chips.setAttribute('aria-label','Toggle point categories');
 const enabled=new Set(Object.keys(kinds));
 for(const [key,val] of Object.entries(kinds)){const c=btn(val.symbol+' '+val.label,'j167-chip',()=>{enabled.has(key)?enabled.delete(key):enabled.add(key);c.setAttribute('aria-pressed',String(enabled.has(key)));paint()});c.dataset.cat=key;c.setAttribute('aria-pressed','true');chips.append(c)}
 sec.append(chips);
+let moveMode=false,drag=null;
 const zone=el('div','j167-viewport');zone.setAttribute('aria-label','Illustrative mission-area map with selectable points of interest');
+zone.style.touchAction='pan-y';
+zone.addEventListener('pointerdown',e=>{if(!moveMode||e.target.closest('button'))return;drag={x:e.clientX,y:e.clientY,dx,dy};zone.setPointerCapture?.(e.pointerId)});
+zone.addEventListener('pointermove',e=>{if(!drag||!moveMode)return;dx=drag.dx+e.clientX-drag.x;dy=drag.dy+e.clientY-drag.y;setView()});
+zone.addEventListener('pointerup',()=>{drag=null});
+zone.addEventListener('pointercancel',()=>{drag=null});
 const world=el('div','j167-world');const canvas=el('canvas','j167-canvas');canvas.width=1100;canvas.height=660;canvas.setAttribute('aria-hidden','true');
 world.append(canvas);const pinLayer=el('div','j167-pins');world.append(pinLayer);zone.append(world);
 const hint=el('span','j167-map-hint','Original Team Jura site-plan concept · Exact game positions are not asserted');zone.append(hint);
@@ -177,4 +187,21 @@ function paint(){
 }
 search.addEventListener('input',paint);
 detailFor(null);paint();setView();
+if(id==='cayo-perico'){
+ // Extend the focused overview with the locally maintained Cayo named scoping data.
+ // This file explicitly marks every coordinate as schematic, not Rockstar game-space.
+ fetch('./data/cayo-schematic.json').then(r=>{if(!r.ok)throw Error('Cayo notes unavailable');return r.json()}).then(d=>{
+  const categories={infiltration:'entry',compound:'entry',intel:'intel',escape:'exit',research:'loot'};
+  if(!Array.isArray(d.locations))return;
+  const known=new Set(points.map(p=>p.name.toLowerCase()));
+  let added=0;
+  for(const p of d.locations){
+   if(!p||typeof p.name!=='string'||known.has(p.name.toLowerCase())||!Number.isFinite(p.x)||!Number.isFinite(p.y))continue;
+   if(p.positionQuality!=='schematic')continue;
+   points.push({id:'source-'+p.id,name:p.name,cat:categories[p.category]||'intel',x:Math.max(7,Math.min(93,p.x/10)),y:Math.max(8,Math.min(92,p.y/10.8)),description:p.description+' · Schematic location only.'});
+   known.add(p.name.toLowerCase());added++;
+  }
+  if(added){paint();const n=el('p','j167-note','Added '+added+' extra locally catalogued Cayo scoping references. All positions remain schematic, not verified in-game coordinates.');sec.querySelector('.j167-island-note')?.append(n);}
+ }).catch(()=>{/* The initial source-backed overview is still usable offline. */});
+}
 })();
