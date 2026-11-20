@@ -94,6 +94,7 @@ jobs:
           python scripts/test_atlas163_premium_asset_ledger.py
           python scripts/test_atlas164_heist_workspace.py
           python scripts/test_atlas165_evidence_brand.py
+          python scripts/test_atlas166_release_status.py
           node --check atlas164-heist-workspace.js
           node --check heist-pages.js
           python scripts/test_atlas152_art.py

@@ -53,7 +53,23 @@ def main():
  headers=ROOT/'_headers'
  if headers.is_file():
   rules=headers.read_text(encoding='utf-8',errors='replace')
-  global_block=rules.split('/*',1)[1].split('\\n\\n',1)[0] if '/*' in rules else ''
+  # Parse selector blocks rather than searching for a literal backslash-n.
+  # The global block must remain DENY even when exact map pages allow self-framing.
+  blocks={}
+  current=None
+  for line in rules.splitlines():
+   raw=line.strip()
+   if not raw or raw.startswith('#'):
+    continue
+   if not line.startswith((' ','\\t')) and raw.startswith('/'):
+    current=raw
+    blocks.setdefault(current,{'headers':{},'removed':set()})
+   elif current and raw.startswith('! '):
+    blocks[current]['removed'].add(raw[2:].strip().lower())
+   elif current and ':' in raw:
+    key,value=raw.split(':',1)
+    blocks[current]['headers'][key.strip().lower()]=value.strip().lower()
+  parsed=blocks.get('/*',{}).get('headers',{})
   required={
    'x-content-type-options':'nosniff',
    'x-frame-options':'deny',
@@ -61,14 +77,21 @@ def main():
    'permissions-policy':'camera=()',
    'strict-transport-security':'max-age=',
   }
-  parsed={}
-  for line in global_block.splitlines():
-   if ':' in line:
-    key,value=line.strip().split(':',1)
-    parsed[key.strip().lower()]=value.strip().lower()
   for key,value in required.items():
    if value not in parsed.get(key,''):
     errors.append('Missing or weakened global Cloudflare security header: '+key)
+  allowed_overrides={'/atlas-online.html','/atlas-cayo.html'}
+  for selector,block in blocks.items():
+   if selector=='/*':
+    continue
+   frame=block['headers'].get('x-frame-options')
+   if selector not in allowed_overrides and (frame or 'x-frame-options' in block['removed']):
+    errors.append('Unexpected frame override outside the approved map pages: '+selector)
+  for selector in allowed_overrides:
+   block=blocks.get(selector,{})
+   scoped=block.get('headers',{})
+   if scoped.get('x-frame-options')!='sameorigin' or scoped.get('content-security-policy')!="frame-ancestors 'self'" or 'x-frame-options' not in block.get('removed',set()):
+    errors.append('Missing or unsafe exact map frame exception: '+selector)
  for name in ('index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-cayo.html','one-last-ride.html','atlas98-data-lab.html','atlas-source-registry.html','_headers'):
   if not (ROOT/name).is_file():errors.append('Missing production-critical: '+name)
  status={'passed':not errors,'html_pages':len(list(ROOT.rglob('*.html'))),'files':len([x for x in ROOT.rglob('*') if x.is_file()]),'errors':errors}
