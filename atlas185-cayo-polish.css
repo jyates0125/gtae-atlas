@@ -83,3 +83,23 @@ body.j180-cayo.j185-cayo-polished .j180-map-area .j167-world{
 @media(prefers-reduced-motion:reduce){
  body.j180-cayo.j185-cayo-polished .j167-world{transition:none!important}
 }
+
+/* Crowded Cayo reference icons: the selected marker remains at the sourced
+   position; players can choose an individual target from the overlapping
+   group instead of being sent to a different object. */
+body.j180-cayo.j185-cayo-polished .j185-cluster-choices{
+ display:grid;grid-template-columns:1fr;gap:6px;
+ margin-top:10px;max-height:min(32dvh,290px);overflow:auto;
+}
+body.j180-cayo.j185-cayo-polished .j185-cluster-choice{
+ min-height:40px!important;width:100%;padding:9px 11px!important;
+ text-align:left!important;color:#ffe5bf!important;
+ background:#493059!important;border:1px solid #9f7ca8!important;
+ border-radius:8px!important;font:750 12px/1.4 system-ui!important;
+ cursor:pointer;
+}
+body.j180-cayo.j185-cayo-polished .j185-cluster-choice:focus-visible,
+body.j180-cayo.j185-cayo-polished .j185-cluster-choice:hover{
+ border-color:#ffe5ad!important;outline:2px solid #ffe5ad!important;
+ outline-offset:1px!important;background:#694177!important;
+}
