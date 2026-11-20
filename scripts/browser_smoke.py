@@ -30,6 +30,8 @@ HEIST_PAGES={p.name for p in ROOT.glob('heist-*.html')}
 if len(HEIST_PAGES)<15:
     raise SystemExit('The release must contain all 15 heist planning pages')
 PAGES.extend(sorted(HEIST_PAGES.difference(PAGES)))
+# Separate Story Mode progression must be exercised as a real URL state.
+PAGES.append('atlas90-weapons.html?world=story')
 # Atlas 19.1: every deployable root HTML page must be covered, including
 # archive/secondary tools omitted from the earlier hand-maintained list.
 PAGES.extend(p.name for p in sorted(ROOT.glob('*.html')) if p.name not in PAGES)
@@ -182,6 +184,73 @@ async def smoke():
                                         failures.append('Collectibles list-view action did not activate')
                                 except Exception as err:
                                     failures.append('Collectibles search/list actions failed: '+str(err)[:190])
+
+                            # Atlas 19.2: actual game-separated weapon, garage and film
+                            # interactions, tested on desktop and on a phone-sized viewport.
+                            if not failures and path=='atlas90-weapons.html?world=story':
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#j90Results')?.textContent?.includes('visible')",timeout=9000)
+                                    if await pg.locator('body').get_attribute('data-active-world')!='story':
+                                        failures.append('Story weapon page silently opened GTA Online mode')
+                                    if 'Story' not in await pg.locator('#j90Header').inner_text():
+                                        failures.append('Story armory heading lacks game identity')
+                                    await pg.locator('#j90Cards .j90-card button').first.click()
+                                    scoped=await pg.evaluate("""() => {
+                                     const x=JSON.parse(localStorage.getItem('team-jura-atlas90-collection-v1')||'{}');
+                                     return Object.keys(x.owned||{}).filter(k=>k.startsWith('weapons-story:')&&x.owned[k]).length
+                                    }""")
+                                    if scoped<1:
+                                        failures.append('GTA V Story tracking did not use a separate save key')
+                                except Exception as err:
+                                    failures.append('Story armory scope/collection failed: '+str(err)[:220])
+                            if not failures and path=='atlas90-weapons6.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelectorAll('#viWeaponCards .viweapon-card').length===7",timeout=10000)
+                                    if await pg.locator('#viWeaponClass option').count()<3:
+                                        failures.append('GTA VI weapon classes did not load from source evidence')
+                                    await pg.locator('#viWeaponSearch').fill('Girardi')
+                                    if await pg.locator('#viWeaponCards .viweapon-card').count()!=1:
+                                        failures.append('GTA VI armory search did not isolate Girardi evidence')
+                                    await pg.locator('#viWeaponCards .viweapon-note').click()
+                                    notes=await pg.evaluate("JSON.parse(localStorage.getItem('teamjura-vi-weapon-notes-v1')||'{}')")
+                                    if not notes.get('seen',{}).get('girardi-es9'):
+                                        failures.append('GTA VI weapon review did not persist to its own storage key')
+                                    await pg.reload(wait_until='domcontentloaded')
+                                    await pg.wait_for_function("document.querySelectorAll('#viWeaponCards .viweapon-card').length===7",timeout=10000)
+                                    await pg.locator('#viWeaponSearch').fill('Girardi')
+                                    if await pg.locator('.viweapon-note').get_attribute('aria-pressed')!='true':
+                                        failures.append('GTA VI weapon review lost on refresh')
+                                    if await pg.locator('#viWeaponCards img').count()!=0:
+                                        failures.append('GTA VI weapons unexpectedly display recycled GTA V archive images')
+                                except Exception as err:
+                                    failures.append('GTA VI armory interactive checks failed: '+str(err)[:220])
+                            if not failures and path=='atlas93-garage.html':
+                                try:
+                                    await pg.wait_for_function("Number(document.querySelector('#catalogCount')?.textContent.replace(/,/g,''))>10",timeout=10000)
+                                    await pg.locator('#showAll').click()
+                                    if await pg.locator('#garageCards .card').count()==0 and await pg.locator('#garageCards article').count()==0:
+                                        failures.append('Garage All models button did not show the picture catalog')
+                                    if await pg.locator('#garageClassFilter option').count()<3:
+                                        failures.append('Garage categories did not load')
+                                except Exception as err:
+                                    failures.append('Garage model browse checks failed: '+str(err)[:210])
+                            if not failures and path=='one-last-ride.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelectorAll('#olrSceneList .olr-scene-btn').length===9",timeout=7000)
+                                    play=pg.locator('#olrStoryboardPlay')
+                                    await play.click()
+                                    if await play.get_attribute('aria-pressed')!='true':
+                                        failures.append('Guided storyboard did not start')
+                                    await pg.locator('#olrNext').click()
+                                    if await pg.locator('#olrStoryboardProgress').get_attribute('value')!='2':
+                                        failures.append('Storyboard did not track selected chapter')
+                                    await pg.locator('#olrStoryboardRestart').click()
+                                    if await pg.locator('#sceneCounter').inner_text()!='1 / 9':
+                                        failures.append('Storyboard reset did not restore first chapter')
+                                    if await play.get_attribute('aria-pressed')!='false':
+                                        failures.append('Storyboard reset kept background playback active')
+                                except Exception as err:
+                                    failures.append('One Last Ride storyboard controls failed: '+str(err)[:210])
 
                             # Atlas 17.2: the separate Leonida Research page must be usable
                             # on an actual mobile viewport, with a reversible full-size map.
