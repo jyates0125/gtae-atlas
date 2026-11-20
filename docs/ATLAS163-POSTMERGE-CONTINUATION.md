@@ -24,3 +24,8 @@ All changes stage in feature branches, new draft PR, full QA and owner review. N
 - Static contracts and new Chromium/Edge heist interaction tests are staged; completed CI and actual preview verification remain separate pending evidence.
 - Hourly merge-review alerts are paused. Builder reports only major outcomes or actionable owner needs. Signup remains deferred.
 - Relevant reference categories: https://gtamap.io/gta-online-map/ and https://gtadb.net/gta-online-map/interactive/. These help identify data/parity gaps but do not license cloning.
+
+## Atlas 16.5 — restore premium identity on evidence tools
+- Upgraded Marker Coverage and Feature Audit pages from placeholder teal headers to the current violet/amber/gold Elario brand, with two entirely separate original cinematic WebP artworks.
+- Preserved original marker filters, export, historical caveats, sources, audit table and links. The art is illustrative, explicitly not a verified game map or coordinate source.
+- Kept a static source regression test and Chromium/Edge page screenshot coverage. New release requires another visual check and owner approval before any live merge.
