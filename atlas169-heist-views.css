@@ -29,3 +29,10 @@ body.j120-heist-page .j167-pin{border:2px solid #ffe8bc!important;border-radius:
 body.j120-heist-page .j167-pin[aria-pressed=true]{filter:saturate(1.15);outline:3px solid #fff0ac!important;box-shadow:0 0 0 6px #ffdca82b,0 6px 15px #000c!important}
 body.j120-heist-page .j169-views button:focus-visible,body.j120-heist-page .j169-surface :is(button,a,input):focus-visible{outline:3px solid #ffe5a7!important;outline-offset:3px!important}
 @media(max-width:650px){body.j120-heist-page .j169-objective-grid{grid-template-columns:1fr}body.j120-heist-page .j169-view{flex:1 1 calc(50% - 5px);max-width:none}body.j120-heist-page .j169-frame{height:540px}}
+
+/* Atlas 17.0: game basemap and all existing controls share one Cayo map viewport. */
+body.j120-heist-page .j167-focus[data-map-source='original'] .j167-viewport{width:100%;max-width:790px;min-height:0!important;aspect-ratio:3/4;margin-inline:auto}
+body.j120-heist-page .j167-focus[data-map-source='original'] .j167-world{background-repeat:no-repeat;background-position:center;background-color:#161124}
+body.j120-heist-page .j167-focus[data-map-source='original'] .j167-pin{width:28px;height:30px;font-size:16px}
+body.j120-heist-page .j167-focus[data-map-source='original'] .j167-map-hint{background:#100b1ae5;line-height:1.35;max-height:88px;overflow:auto}
+@media(max-width:480px){body.j120-heist-page .j167-focus[data-map-source='original'] .j167-pin{width:25px;height:27px}}

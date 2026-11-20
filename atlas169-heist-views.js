@@ -14,7 +14,7 @@ if(!more||!toolbar||!chips||!viewport||!detail||!panels)return;
 const nav=el('div','j169-views');nav.id='j169-views';nav.setAttribute('role','group');nav.setAttribute('aria-label','Switch mission map and detail views');
 const notice=el('p','j169-view-caption');
 const available=[['enhanced','Enhanced map'],['objective',id==='diamond-casino'?'Vault & objectives':id==='cayo-perico'?'Compound & objectives':id==='kortz-center'?'Museum & objectives':'Objective details'],['route','Route planning']];
-if(id==='cayo-perico')available.splice(1,0,['original','Original island explorer']);
+if(id==='cayo-perico')available.splice(0,0,['original','Game map + pins']);
 const buttons=new Map();
 const makeButton=(label,cls,cb)=>{const b=el('button',cls,label);b.type='button';b.addEventListener('click',cb);return b;};
 let mode='enhanced';
@@ -65,14 +65,15 @@ const primary=[toolbar,chips,viewport,detail,panels];
 const display=(node,on)=>{node.classList.toggle('j169-hidden',!on);node.setAttribute('aria-hidden',String(!on));};
 function activate(next){
  if(!buttons.has(next))next='enhanced';
- mode=next;const mapMode=next==='enhanced'||next==='route';
+ mode=next;const mapMode=next==='enhanced'||next==='route'||next==='original';
+ if(id==='cayo-perico')window.teamJuraHeistBaseMap?.setSource(next==='original'?'original':'enhanced');
  for(const [key,b] of buttons)b.setAttribute('aria-pressed',String(key===mode));
  primary.forEach(n=>display(n,mapMode));
  objective.hidden=next!=='objective';
- original.hidden=next!=='original';
+ original.hidden=true; // no second map window: the game map is inside the single interactive viewport
  routeHelp.hidden=next!=='route';
  if(next==='objective'){renderObjectives();notice.textContent='Objective and interior references · one-tap return to map POIs. Images are concepts, not exact floor plans.';}
- else if(next==='original'){notice.textContent='Separate sourced Cayo island explorer · original map geometry and schematic pins are not automatically aligned.';}
+ else if(next==='original'){notice.textContent='Cayo in-game island map with Team Jura pins, search, layer toggles, zoom and routes together. Static POI positions are approximate; rotating loot has no invented fixed pin.';}
  else if(next==='route'){notice.textContent='Enhanced route planner · select pins, reorder by removing/re-adding, and use the route list below.';}
  else notice.textContent='Original Elario enhanced overhead art · interactive category pins · schematic positions.';
  focus.dataset.j169View=mode;
@@ -120,9 +121,9 @@ document.addEventListener('click',e=>{
  });
 },true);
 const oldLink=$('.j167-island-note a');
-if(oldLink&&id==='cayo-perico'){const sourceBtn=makeButton('Open original island view here','j169-open-view',()=>{activate('original');original.scrollIntoView({block:'start',behavior:'smooth'})});oldLink.replaceWith(sourceBtn)}
+if(oldLink&&id==='cayo-perico'){const sourceBtn=makeButton('Open original island view here','j169-open-view',()=>{activate('original');viewport.scrollIntoView({block:'start',behavior:'smooth'})});oldLink.replaceWith(sourceBtn)}
 // Use original custom HTML/CSS pin geometry; no copied Rockstar or third-party marker artwork.
 // Existing .j167-pin classes retain color, selectability and saved-point IDs.
-activate('enhanced');
+activate(id==='cayo-perico'?'original':'enhanced');
 window.teamJuraHeistViews={activate,selectPOI}; // Non-destructive API for linked prep cards.
 })();

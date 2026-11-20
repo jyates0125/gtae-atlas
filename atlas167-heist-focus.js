@@ -35,6 +35,21 @@ const search=el('input','j167-search');search.type='search';search.placeholder='
 bar.append(search);
 const zoomBtns=el('div','j167-zoom');const btn=(label,cls,handler)=>{const b=el('button',cls,label);b.type='button';b.addEventListener('click',handler);return b};
 let zoom=1,dx=0,dy=0;
+// These are EDITORIALLY APPROXIMATE relative landmarks on the in-game map.
+// No conversion from the custom schematic is implied; unknown rotating loot is hidden.
+let juraMapMode='enhanced';
+const juraOriginalMap="https://wikiassets.net/gta-wiki-aef1ab/images/3a038f45d60d9b4ebb65f4f0260b3ff7.webp";
+const islandLandmarks={
+'airstrip':[23,34],'north dock':[69,43],'main dock':[60,62],
+'control tower':[32,35],'power station':[38,46],
+'compound gate':[75,74],'el rubio compound':[76,78],
+'drainage tunnel':[79,85],'west beach':[19,44],
+'north drop zone':[50,30],'south drop zone':[62,70],
+'compound main gate':[74,73],'compound north gate':[77,73],
+'compound south gate':[79,82],'compound north wall':[77,76],
+'compound south wall':[80,80],'kosatka escape area':[24,28]
+};
+const juraCoord=p=>juraMapMode==='original'&&id==='cayo-perico'?(islandLandmarks[p.name.toLowerCase()]||null):[p.x,p.y];
 let redraw=()=>{};
 function setView(){const world=sec.querySelector('.j167-world');if(world)world.style.transform='translate('+dx+'px,'+dy+'px) scale('+zoom+')'; const t=sec.querySelector('.j167-scale');if(t)t.textContent=zoom.toFixed(1)+'×';}
 zoomBtns.append(
@@ -131,14 +146,14 @@ const photo=new Image();
 // The museum-like Kortz site receives a detailed original overhead raster.
 // It is a concept derived from reference study, not in-game image geometry.
 const photoAsset=id==='kortz-center'?'./art/jura168-kortz-center-aerial.webp':'./art/jura167-map-'+id+'.webp';
-photo.onload=()=>{photoReady=true;world.style.backgroundImage='linear-gradient(180deg,rgba(6,12,34,.14),rgba(6,7,24,.26)),url("'+photoAsset+'")';world.style.backgroundSize='cover';world.style.backgroundPosition='center';paint()};
+photo.onload=()=>{photoReady=true;if(juraMapMode!=='original'){world.style.backgroundImage='linear-gradient(180deg,rgba(6,12,34,.14),rgba(6,7,24,.26)),url("'+photoAsset+'")';world.style.backgroundSize='cover';world.style.backgroundPosition='center';paint()}};
 photo.onerror=()=>{photoReady=false;world.style.backgroundImage='none';paint()};
 photo.decoding='async';photo.src=photoAsset;
 const scheme={urban:['#1f2847','#3b324b','#586171'],prison:['#1b283b','#314758','#586578'],coast:['#11394b','#315864','#61706b'],industrial:['#302f42','#48465b','#77727d'],regional:['#282f47','#405272','#6e6681'],desert:['#403447','#735c67','#a68c72'],island:['#093950','#24766b','#497c56'],farm:['#343b35','#647051','#9f8a60'],casino:['#2d213e','#6d376d','#b27391'],cultural:['#302741','#574566','#95817c']};
 const pal=scheme[config.kind]||scheme.urban;
 function line(x1,y1,x2,y2,width,color){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
 function rect(x,y,bw,bh,color,stroke){ctx.fillStyle=color;ctx.fillRect(x,y,bw,bh);if(stroke){ctx.lineWidth=3;ctx.strokeStyle=stroke;ctx.strokeRect(x,y,bw,bh)}}
-function drawTerrain(){
+function drawTerrain(){if(juraMapMode==='original'&&id==='cayo-perico'){ctx.clearRect(0,0,w,h);return}
  if(photoReady){
   ctx.clearRect(0,0,w,h);
   for(let i=0;i<=11;i++){line(i*100,0,i*100,h,1,'#f8e8f433');}
@@ -191,14 +206,14 @@ function detailFor(p){
 }
 function paint(){
  const q=search.value.toLowerCase().trim();
- const visible=points.filter(p=>enabled.has(p.cat)&&(!q||(p.name+' '+p.description).toLowerCase().includes(q)));
+ const visible=points.filter(p=>enabled.has(p.cat)&&juraCoord(p)&&(!q||(p.name+' '+p.description).toLowerCase().includes(q)));
  drawTerrain();ctx.save();
- if(saved.route.length>1){let order=saved.route.map(key=>points.find(p=>p.id===key)).filter(Boolean);ctx.beginPath();order.forEach((p,i)=>{const x=p.x/100*w,y=p.y/100*h;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.strokeStyle='#ffe4ab';ctx.lineWidth=7;ctx.setLineDash([12,9]);ctx.stroke();ctx.setLineDash([]);}
+ if(saved.route.length>1){let order=saved.route.map(key=>points.find(p=>p.id===key)).filter(p=>p&&juraCoord(p));if(order.length>1){ctx.beginPath();order.forEach((p,i)=>{const coord=juraCoord(p);const x=coord[0]/100*w,y=coord[1]/100*h;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.strokeStyle='#ffe4ab';ctx.lineWidth=7;ctx.setLineDash([12,9]);ctx.stroke();ctx.setLineDash([])}}
  ctx.restore();
  pinLayer.replaceChildren();itemList.replaceChildren();
  for(const p of visible){
   const marker=btn(kinds[p.cat].symbol,'j167-pin',()=>{current=p.id;detailFor(p);pinLayer.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.point===p.id)))});
-  marker.style.left=p.x+'%';marker.style.top=p.y+'%';marker.style.setProperty('--pin-color',kinds[p.cat].color);
+  const pos=juraCoord(p);marker.style.left=pos[0]+'%';marker.style.top=pos[1]+'%';marker.style.setProperty('--pin-color',kinds[p.cat].color);
   marker.dataset.point=p.id;marker.setAttribute('aria-label',p.name+' ('+kinds[p.cat].label+')');
   marker.setAttribute('aria-pressed',String(current===p.id));marker.title=p.name+' · illustrative';
   if(saved.scoped.includes(p.id))marker.classList.add('j167-scoped');pinLayer.append(marker);
@@ -212,6 +227,35 @@ function paint(){
  if(!saved.route.length)routeList.append(el('li','j167-route-empty','Select a marker to create your route.'));
 }
 search.addEventListener('input',paint);
+const juraSource=new Image();
+let juraSourceReady=false;
+juraSource.onload=()=>{juraSourceReady=true;if(juraMapMode==='original')juraShowSource()};
+juraSource.onerror=()=>{juraSourceReady=false;if(juraMapMode==='original')juraSwitchMap('enhanced')};
+function juraShowSource(){
+ if(!juraSourceReady)return;
+ world.style.backgroundImage='url("'+juraOriginalMap+'")';
+ world.style.backgroundSize='100% 100%';world.style.backgroundPosition='center';
+ zone.style.aspectRatio=juraSource.naturalWidth+'/'+juraSource.naturalHeight;
+ zone.style.minHeight='0';sec.dataset.mapSource='original';
+ hint.textContent='GTA Online Cayo Island map © Rockstar Games / Take-Two, via GTA Wiki. Team Jura static landmark pins are approximate; routes indicate selected planning order, not verified travel paths.';
+ paint();
+}
+function juraSwitchMap(mode){
+ if(id!=='cayo-perico')return false;
+ juraMapMode=mode==='original'?'original':'enhanced';
+ zoom=1;dx=dy=0;setView();detailFor(null);
+ if(juraMapMode==='original'){
+  if(juraSourceReady)juraShowSource();
+  else{sec.dataset.mapSource='loading';hint.textContent='Loading Cayo island map…';juraSource.src=juraOriginalMap}
+ }else{
+  sec.dataset.mapSource='enhanced';zone.style.aspectRatio='';zone.style.minHeight='';
+  world.style.backgroundImage=photoReady?'linear-gradient(180deg,rgba(6,12,34,.14),rgba(6,7,24,.26)),url("'+photoAsset+'")':'none';
+  world.style.backgroundSize='cover';
+  hint.textContent='Original Elario enhanced concept map · illustrative pin positions.';
+  paint();
+ }return true;
+}
+window.teamJuraHeistBaseMap={setSource:juraSwitchMap,getSource:()=>juraMapMode};
 detailFor(null);paint();setView();
 if(id==='cayo-perico'){
  // Extend the focused overview with the locally maintained Cayo named scoping data.
