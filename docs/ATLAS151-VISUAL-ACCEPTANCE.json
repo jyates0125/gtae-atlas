@@ -1,0 +1,29 @@
+{
+  "schema": "team-jura-visual-release-v1",
+  "source": "docs/ATLAS151-PREMIUM-VISUAL-RELEASE-HOLD.md",
+  "status": "HOLD",
+  "last_owner_review": "2026-11-19",
+  "reason": "Owner rejected regression from approved cinematic artwork to generic SVG world-card covers and iPhone navigation overlap.",
+  "approved_by_owner": false,
+  "desktop_screenshots_compared": false,
+  "mobile_screenshots_compared": false,
+  "mobile_controls_overlap_resolved": false,
+  "cloudflare_preview_visual_review": false,
+  "heists_15_individual_final_art_approved": false,
+  "approved_world_covers": {
+    "story": null,
+    "online": null,
+    "vi": null,
+    "cayo": null,
+    "iv": null,
+    "sa": null,
+    "vc": null,
+    "iii": null,
+    "vcs": null,
+    "lcs": null,
+    "ctw": null,
+    "tlad": null,
+    "tbogt": null
+  },
+  "note": "Staging only. Every world must have a distinct local source-cleared cinematic artwork, reviewed visually. Do not mark approved merely because CI/browser functionality passes."
+}
