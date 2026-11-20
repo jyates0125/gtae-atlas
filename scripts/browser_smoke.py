@@ -5,7 +5,7 @@ Uses local HTTP so canvas fetch, video, and navigation share a genuine origin.
 No live Rockstar/GTADB feed or external network request is considered verified.
 """
 from __future__ import annotations
-import asyncio, base64, functools, http.server, io, json, os, socketserver, threading, zipfile
+import asyncio, base64, functools, http.server, io, json, os, threading, zipfile
 from pathlib import Path
 from playwright.async_api import async_playwright
 PROJECT=Path(__file__).resolve().parents[1]
@@ -20,9 +20,12 @@ class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
     def log_message(self,*args):pass
 
+class AssetServer(http.server.ThreadingHTTPServer):
+    request_queue_size=32
+
 async def smoke():
     results=[]
-    with socketserver.TCPServer(('127.0.0.1',PORT),Server) as http:
+    with AssetServer(('127.0.0.1',PORT),Server) as http:
         thread=threading.Thread(target=http.serve_forever,daemon=True);thread.start()
         try:
             async with async_playwright() as pw:
@@ -465,10 +468,7 @@ async def smoke():
                                 covers=pg.locator('#directoryFeatured img.world-art-main,#directoryAdditional img.world-art-main')
                                 if await covers.count()!=13:failures.append('Map directory must render 13 distinct primary cover images')
                                 else:
-                                    # The site intentionally lazy-loads the nine
-                                    # additional covers. Test real scroll-to-view
-                                    # decoding, not an artificial 13-image eager
-                                    # allocation spike that exhausts mobile Edge.
+                                    # Check each cover as the user scrolls through the directory.
                                     for index in range(13):
                                         cover=covers.nth(index)
                                         try:
