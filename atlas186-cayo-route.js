@@ -118,8 +118,19 @@ for(const b of document.querySelectorAll('.j180-legend-row[data-cat]')){
  if(icon)label.append(icon);
  label.append(check,el('span','',caption));filters.append(label);filterChecks.set(cat,check);
 }
-function refreshFilters(){for(const [cat,check] of filterChecks)check.checked=state.categories.includes(cat);}
-presetsBox.append(filters);panel.append(presetsBox);
+function refreshFilters(){
+ for(const [cat,check] of filterChecks)check.checked=state.categories.includes(cat);
+ for(const btn of choices.querySelectorAll('.j186-preset')){
+  const selected=presets[btn.textContent];
+  btn.setAttribute('aria-pressed',String(selected?
+   selected.length===state.categories.length&&selected.every(cat=>state.categories.includes(cat)):
+   btn.textContent==='All types'&&state.categories.length===ALL_CATS.length));
+ }
+}
+const filterDrawer=el('details','j186-filter-drawer');
+const filterSummary=el('summary','','Customize the 14 marker categories');
+filterDrawer.append(filterSummary,filters);
+presetsBox.append(filterDrawer);panel.append(presetsBox);
 const controls=el('div','j186-controls');
 const modeLabel=el('label','j186-select-label','Routing style');
 const mode=el('select');mode.setAttribute('aria-label','Routing style');
