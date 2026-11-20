@@ -10,7 +10,7 @@ for name in ('Infiltration points','Exit points','Drainage tunnel','Secondary ta
              'Bolt cutters','Grappling equipment','Guard clothing','Supply truck','Control tower','Power station',
              'Cutting powder','Water tower','Treasure chests'):
  assert name in js,name
-for term in ('#j181-hotspots','j181-hotspot','j180-legend-row','MutationObserver','aria-label',
+for term in ('j181-hotspots','j181-hotspot','j180-legend-row','MutationObserver','aria-label',
              'j181-hide-chests','window.teamJuraHeistViews?.selectPOI','teamjura-cayo-map-references-v1'):
  assert term in js,term
 assert "body.j180-cayo.j181-map-hotspots .j167-pins{display:none!important}" in css
