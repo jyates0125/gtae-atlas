@@ -81,6 +81,34 @@ try:
    reloaded=page.evaluate("window.teamJuraCayoPinRoute.getState()")
    assert reloaded['start']=='chest-19','Async daily-chest module must not erase saved starting pin'
    assert page.locator('.j186-route-layer').count()==1,'One route overlay after reloading chest start'
+   # Cayo 18.6: Start-from-map is a direct player action, including the
+   # crowded-marker chooser. The stop order must originate at that pin.
+   picker=page.get_by_role('button',name='Pick starting pin')
+   assert picker.count()==1,'Direct start-pin tool exists'
+   picker.click()
+   assert picker.get_attribute('aria-pressed')=='true','Selecting a start is an explicit mode'
+   page.locator('.j181-hotspot[data-category="control"]').first.click()
+   page.locator('.j185-cluster-choice').filter(has_text='Airstrip infiltration').click()
+   picked=page.evaluate("window.teamJuraCayoPinRoute.getState()")
+   assert picked['start']=='entry-0','Clicked colorful pin becomes actual route origin'
+   assert picker.get_attribute('aria-pressed')=='false','Start selection exits after pin choice'
+   page.locator('.j186-action').filter(has_text='Build nearest route').click()
+   assert page.locator('.j186-route-line').count()==1,'Route drawn from clicked pin'
+   evidence=ROOT/'qa-evidence'/engine
+   evidence.mkdir(parents=True,exist_ok=True)
+   page.locator('.j180-map-frame').screenshot(path=str(evidence/('cayo-186-island-route-'+kind+'.png')),animations='disabled',timeout=35000)
+   page.locator('#j186-route').screenshot(path=str(evidence/('cayo-186-route-planner-'+kind+'.png')),animations='disabled',timeout=35000)
+   # Shared plans must actually rehydrate in a new tab, without
+   # transferring checklist keys or personal notes.
+   shared={'version':1,'start':'chest-4','order':['chest-4','secondary-0'],
+           'categories':['secondary'],'mode':'manual','chestMode':'all','limit':10}
+   link=url+'?cayoRoute='+urllib.parse.quote(__import__('json').dumps(shared,separators=(',',':')))
+   other=ctx.new_page();other.goto(link,wait_until='domcontentloaded',timeout=50000)
+   other.locator('#j186-route').wait_for(state='visible',timeout=30000)
+   other.wait_for_function("document.querySelectorAll('.j180-chest').length===19",timeout=20000)
+   imported=other.evaluate("window.teamJuraCayoPinRoute.getState()")
+   assert imported['start']=='chest-4' and imported['order'][:2]==['chest-4','secondary-0'],'Shared URL restores route start and stop sequence'
+   other.close()
    # Phone viewport should not gain horizontal scrolling from the new panel.
    if kind=='phone':
     bad=page.locator('#j186-route').evaluate('(e)=>e.scrollWidth>e.clientWidth+4')
