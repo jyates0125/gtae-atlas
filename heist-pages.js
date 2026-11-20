@@ -4,8 +4,10 @@
 const heistId=String(document.body.dataset.heist||'');
 const scene=document.querySelector('.mapbox > img');
 if(scene && /^[a-z0-9-]+$/.test(heistId)){
- scene.src='./art/atlas93-heist-'+heistId+'.svg';
- scene.alt='Original Team Jura illustrated '+heistId.replaceAll('-',' ')+' heist preview — NOT a gameplay map';
+ // Never overwrite owner-approved cinematic art with legacy SVG content.
+ const premium='./art/jura159-heist-'+heistId+'.webp';
+ if(scene.getAttribute('src')!==premium)scene.setAttribute('src',premium);
+ scene.alt='Original cinematic Elario mission concept; not an in-game map or route';
  scene.loading='eager';
  scene.decoding='async';
 }
