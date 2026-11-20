@@ -110,6 +110,12 @@ const fallback={
  S('finale','Complete the final mission sequence','Finish the contract’s linked finale stages.','After required investigations.','Locations shown by the current contract.','Completes the VIP strand.','Follow stage-specific mission instructions and check completion on the Agency board.','Finale objective','research')]}
 };
 Object.assign(missions,fallback);
+// Every heist has a challenge tab, but never invent specific official tier thresholds.
+for(const mission of Object.values(missions)){
+ if(!mission.steps.some(s=>s.phase==='challenges')){
+  mission.steps.push(S('challenges','Check Elite and Career Progress','Review official Elite, Awards or Career Progress conditions that actually apply to this job.','Before launching the finale and again after finishing.','Current GTA Online challenge or Career Progress display.','The conditions vary by activity, edition and update.','Copy the visible current criteria into your private notes, then track completion from gameplay results; this page does not assert fabricated tier requirements.','','reference'));
+ }
+}
 const config=missions[id];if(!config)return;
 const H=(tag,cls,txt)=>{const x=document.createElement(tag);if(cls)x.className=cls;if(txt!==undefined)x.textContent=String(txt);return x;};
 const section=H('section','j168-guide');section.id='j168-heist-guide';section.setAttribute('aria-labelledby','j168-title');

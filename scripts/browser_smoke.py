@@ -108,6 +108,8 @@ async def smoke():
                                             field=await pg.locator('#j167-heist-map .j167-search').input_value()
                                             if not field:
                                                 failures.append('Walkthrough map POI button did not filter the focused map')
+                                            # Restore all markers for the independent map-coverage checks below.
+                                            await pg.locator('#j167-heist-map .j167-search').fill('')
                                     await pg.wait_for_function("""() => getComputedStyle(document.querySelector('#j167-heist-map .j167-world')).backgroundImage.includes('jura167-map-')""",timeout=9000)
                                     pins=pg.locator('#j167-heist-map .j167-pin')
                                     if await pins.count()<5:
