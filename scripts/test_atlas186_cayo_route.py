@@ -26,6 +26,17 @@ assert "if(heistId==='cayo-perico')" in loader
 assert "if(document.body.dataset.heist!=='cayo-perico'" in code
 assert "localStorage.removeItem('teamjura-heist-focus" not in code
 assert 'schema:1' in code
+# Atlas 18.7: start and finish are independent, a chosen finish stays last,
+# manual insertions cannot accidentally change the requested destination.
+for token in ('setFinish', 'state.finish', 'finish:state.finish',
+              'const routeBudget=finish?', 'if(finish)order.push(finish.id)',
+              'n.id===state.finish', 'j186-final-stop',
+              'Resume after visited', 'Remove finish',
+              'button(\'Finish route here\'',
+              'state.order.splice(state.order.indexOf(state.finish),0,candidates[0].id)'):
+ assert token in code,token
+assert 'j186-final-stop' in style
+assert 'j186-route-badges .j186-last circle' in style
 assert code.count('{')==code.count('}')
 assert style.count('{')==style.count('}')
 print('PASS Cayo 18.6: pin start, category filters, nearest routing, manual order, shareable safe route and offline planning')
