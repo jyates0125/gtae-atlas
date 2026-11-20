@@ -19,3 +19,9 @@ Representative source references checked Nov 20 2026:
 - https://gta.wiki/w/The_Doomsday_Heist
 
 Still needed before feature parity claims: exact permitted heist basemaps and georeferencing, verified marker locations, item-by-item source provenance, current Career tier criteria, full user flows in iOS Safari. Browser CI is required before merge, and the user's visual approval is pending.
+
+## Premium Kortz Museum Site Plan · November 20
+- `art/jura168-kortz-center-aerial.webp` is an original AI-assisted detailed aerial **concept**, based on visible museum architectural character (distinct galleries, rotunda/plaza, winding road, landscaped approaches) from official and community references. It is NOT a screenshot or georeferenced map. Marker coordinates remain schematic, the exact entrances/indoor rooms are not asserted.
+- Approved cinematic hero artwork remains unchanged; the new raster only replaces the **map background** on `heist-kortz-center.html`. Existing selectable pins, saved routes, and notes retain the same IDs/storage.
+- Architecture reference: https://www.rockstargames.com/newswire/article/517k8ak75ao327/the-next-big-score ; game/location background: https://gta.wiki/w/Kortz_Center ; heist description: https://www.gtabase.com/missions/gta-online/heists/the-kortz-center-heist
+- Future improvement requires verified permitted game geography or gameplay-calibrated Kortz screenshot coordinates and explicit media rights assessment; do not repurpose DeepAI example renders as licensed gameplay maps.

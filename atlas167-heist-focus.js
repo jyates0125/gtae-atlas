@@ -128,9 +128,12 @@ let randSeed=seed(id),rando=()=>{randSeed=(Math.imul(randSeed,1664525)+101390422
 const ctx=canvas.getContext('2d');const w=1100,h=660;
 let photoReady=false;
 const photo=new Image();
-photo.onload=()=>{photoReady=true;world.style.backgroundImage='linear-gradient(180deg,rgba(6,12,34,.14),rgba(6,7,24,.26)),url("./art/jura167-map-'+id+'.webp")';world.style.backgroundSize='cover';world.style.backgroundPosition='center';paint()};
+// The museum-like Kortz site receives a detailed original overhead raster.
+// It is a concept derived from reference study, not in-game image geometry.
+const photoAsset=id==='kortz-center'?'./art/jura168-kortz-center-aerial.webp':'./art/jura167-map-'+id+'.webp';
+photo.onload=()=>{photoReady=true;world.style.backgroundImage='linear-gradient(180deg,rgba(6,12,34,.14),rgba(6,7,24,.26)),url("'+photoAsset+'")';world.style.backgroundSize='cover';world.style.backgroundPosition='center';paint()};
 photo.onerror=()=>{photoReady=false;world.style.backgroundImage='none';paint()};
-photo.decoding='async';photo.src='./art/jura167-map-'+id+'.webp';
+photo.decoding='async';photo.src=photoAsset;
 const scheme={urban:['#1f2847','#3b324b','#586171'],prison:['#1b283b','#314758','#586578'],coast:['#11394b','#315864','#61706b'],industrial:['#302f42','#48465b','#77727d'],regional:['#282f47','#405272','#6e6681'],desert:['#403447','#735c67','#a68c72'],island:['#093950','#24766b','#497c56'],farm:['#343b35','#647051','#9f8a60'],casino:['#2d213e','#6d376d','#b27391'],cultural:['#302741','#574566','#95817c']};
 const pal=scheme[config.kind]||scheme.urban;
 function line(x1,y1,x2,y2,width,color){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
