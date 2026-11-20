@@ -38,7 +38,7 @@ try:
         assert page.locator('.j171-cards .j171-card').count()==4,kind+' escape count'
         page.get_by_role('tab',name='Island infiltration').click()
         # Select approach and verify persistence is independent of historic heist keys.
-        page.get_by_label('Approach vehicle').select_option('Longfin')
+        page.get_by_role('combobox',name='Approach vehicle',exact=True).select_option('Longfin')
         saved=page.evaluate("JSON.parse(localStorage.getItem('teamjura-cayo-mission-v1'))")
         assert saved['approach']=='Longfin',kind+' local mission selection'
         assert page.evaluate("typeof window.teamJuraCayoRoute?.setRoute")== 'function',kind+' route engine'
