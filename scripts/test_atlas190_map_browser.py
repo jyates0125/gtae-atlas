@@ -67,7 +67,7 @@ try:
    one=route[1]
    slot=int(one.split(':')[1])
    page.locator('#item-%s input[type=checkbox]'%slot).check()
-   page.wait_for_function("(id)=>!window.TeamJuraSARoute.getRoute().includes(id)",one,timeout=10000)
+   page.wait_for_function("(id)=>!window.TeamJuraSARoute.getRoute().includes(id)",arg=one,timeout=10000)
    assert page.locator('#j190-sa-list .j190-sa-stop').count()==15
    page.locator('#mapContainer').screenshot(path=str(proof/('atlas-190-sa-route-'+kind+'.png')),animations='disabled',timeout=30000)
    for scope in ('tlad','tbogt'):
