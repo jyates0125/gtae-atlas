@@ -102,6 +102,7 @@ jobs:
           python scripts/test_atlas171_cayo_board.py
           python scripts/test_atlas180_cayo_flagship.py
           python scripts/test_atlas181_cayo_hotspots.py
+          python scripts/test_atlas184_cayo_visible_symbols.py
           node --check atlas171-cayo-board.js
           node --check atlas180-cayo-flagship.js
           node --check atlas181-cayo-hotspots.js
