@@ -105,6 +105,10 @@ jobs:
           python scripts/test_atlas184_cayo_visible_symbols.py
           python scripts/test_atlas185_cayo_polish.py
           python scripts/test_atlas186_cayo_route.py
+          python scripts/test_atlas190_marker_parity.py
+          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py
+          node --check atlas-iv.js
+          node --check atlas190-sa-route.js
           node --check atlas186-cayo-route.js
           node --check atlas185-cayo-polish.js
           node --check atlas171-cayo-board.js
@@ -139,6 +143,7 @@ jobs:
         run: |
           python scripts/test_atlas171_browser.py
           python scripts/test_atlas186_route_browser.py
+          python scripts/test_atlas190_map_browser.py
       - name: Independently capture designed-brand screenshots (Chromium)
         if: always()
         continue-on-error: true
@@ -185,6 +190,7 @@ jobs:
         run: |
           python scripts/test_atlas171_browser.py
           python scripts/test_atlas186_route_browser.py
+          python scripts/test_atlas190_map_browser.py
       - name: Independently capture designed-brand screenshots (Edge)
         if: always()
         continue-on-error: true
