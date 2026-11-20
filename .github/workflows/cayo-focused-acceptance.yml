@@ -19,8 +19,8 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: cayo-acceptance-${{ github.head_ref || github.ref }}
-  cancel-in-progress: true
+  group: cayo-acceptance-${{ github.sha }}
+  cancel-in-progress: false
 jobs:
   focused-chromium:
     runs-on: ubuntu-24.04
