@@ -161,6 +161,32 @@ async def smoke():
                                             failures.append('Individual record detail dialog failed to open')
                                         else:
                                             await pg.locator('#recordDialog .u-close').click()
+                                    if path=='atlas-collectibles.html':
+                                        await pg.locator('#universeSearch').fill('Spaceship Parts')
+                                        await pg.get_by_role('button',name='Spaceship Parts',exact=True).click()
+                                        collection_link=pg.get_by_role('link',name='Open collection on map')
+                                        href=await collection_link.get_attribute('href')
+                                        if href!='./atlas.html?collection=story-spaceship-parts':
+                                            failures.append('Collection detail did not point to the right Story set')
+                                        else:
+                                            target=await ctx.new_page()
+                                            try:
+                                                story_fixture=[{
+                                                    'id':i+1,'title':f'Fixture part {i+1}',
+                                                    'type':'Spaceship Part','lat':60,'lng':-125
+                                                } for i in range(276)]
+                                                async def serve_story_fixture(route):
+                                                    await route.fulfill(json=story_fixture,headers={'access-control-allow-origin':'*'})
+                                                await target.route('https://raw.githubusercontent.com/danharper/GTAV/master/locations.json',serve_story_fixture)
+                                                await target.goto(URL+'/'+href.removeprefix('./'),wait_until='domcontentloaded')
+                                                await target.wait_for_function(
+                                                    "() => document.querySelector('#j83-set')?.value==='story-spaceship-parts'",
+                                                    timeout=10000)
+                                                if not await target.locator('#j83-showset').is_enabled():
+                                                    failures.append('Mapped Spaceship Parts lost access to map pins')
+                                            finally:
+                                                await target.close()
+                                        await pg.locator('#recordDialog .u-close').click()
                                     if path=='atlas-characters.html':
                                         portrait=pg.locator('#recordGrid .u-card').first
                                         if await portrait.locator('a.u-portrait-source').count()!=1:

@@ -37,9 +37,10 @@ function index(profile,seed,catalog,sets){
  for(const id of seed?.weapons||[]){if(!/^[a-z0-9_]+$/.test(id))continue;result.push({id:'archive:weapon:'+id,key:'weapons:'+id,name:nice(id),kind:'weapon',scope:'online',group:weaponGroup(id),image:image('weapon',id),imageCredit:ART_CREDIT,verification:'Community GTA V model archive',summary:'Pictured GTA V model reference; individual gameplay stats are not verified.'});}
  for(const id of seed?.vehicles||[]){if(!/^[a-z0-9_]+$/.test(id))continue;result.push({id:'archive:vehicle:'+id,key:'vehicles5:'+id,model:id,name:nice(id),kind:'vehicle',scope:'online',group:carGroup(id),image:image('vehicle',id),imageCredit:ART_CREDIT,verification:'Community GTA V model archive',summary:'Vehicle archive render. Prices, performance and game availability are not verified by an image.'});}
  for(const [i,r] of (seed?.vi||[]).entries()){if(!r.name)continue;result.push({id:'research:vehicle:'+i+':'+slug(r.name),name:r.name,kind:'vehicle',scope:'vi',group:r.type||'Vehicles',brand:r.brand||'',image:'',imageCredit:'',verification:'Provisional / unverified',summary:'GTA VI community roster research. An image will appear only when a GTA VI-specific source and its reuse permission are confirmed. Any generic graphic is an original Team Jura concept, not the exact vehicle.'});}
- for(const s of sets?.sets||[]){if(!s.id||!s.name)continue;const scope=s.mode==='story'?'story':s.mode==='online'?'online':'vi';result.push({id:'set:'+s.id,name:s.name,kind:'collectible',scope,group:s.cycle||'Collection',total:s.total,summary:s.note||'Collection tracker; exact map points may not be sourced.',sourceUrl:s.sourceUrl,verification:s.verification||'Published set index'});}
+ for(const s of sets?.sets||[]){if(!s.id||!s.name)continue;const scope=s.mode==='story'?'story':s.mode==='online'?'online':'vi';result.push({id:'set:'+s.id,collectionId:s.id,name:s.name,kind:'collectible',scope,group:s.cycle||'Collection',total:s.total,summary:s.note||'Collection tracker; exact map points may not be sourced.',sourceUrl:s.sourceUrl,verification:s.verification||'Published set index'});}
  // Keep a pictured archive entry when a generic catalog index duplicates it; never merge Story into Online.
  const uniq=new Map();for(const r of result){const k=r.kind+'|'+slug(r.name)+'|'+r.scope;const old=uniq.get(k);
+ if(old&&r.collectionId){uniq.set(k,{...old,collectionId:r.collectionId,total:r.total,sourceUrl:r.sourceUrl||old.sourceUrl});continue;}
  if(!old||(!old.image&&r.image)||(!old.key&&r.key))uniq.set(k,{...old,...r,sourceUrl:r.sourceUrl||old?.sourceUrl,attributes:r.attributes||old?.attributes});}
  return [...uniq.values()].sort((a,b)=>a.name.localeCompare(b.name));
 }
@@ -103,7 +104,12 @@ function draw(){document.body.dataset.activeWorld=game;document.body.dataset.act
 function field(list,label,value){const d=make('div','u-field');d.append(make('dt','',label),make('dd','',value===null||value===undefined||value===''?'Not provided / unverified':String(value)));list.append(d)}
 function actionsFor(r,box){if(r.kind==='vehicle'){if(r.model&&r.scope!=='vi')box.append(link('▣ Add to My Garage','atlas93-garage.html?addModel='+encodeURIComponent(r.model)));box.append(link('View vehicle gallery',r.scope==='vi'?'atlas90-vehicles6.html':'atlas90-vehicles5.html'))}
  if(r.kind==='weapon')box.append(link('Pictured weapon gallery','atlas90-weapons.html'));
- if(r.kind==='collectible'){box.append(link('Collection HQ','atlas81-hq.html#collections'));box.append(link('Open relevant map',r.scope==='online'?'atlas-online.html':r.scope==='vi'?'atlas-vi.html':'atlas.html'))}
+ if(r.kind==='collectible'){
+  box.append(link('Collection HQ','atlas81-hq.html#collections'));
+  const map=r.scope==='online'?'atlas-online.html':r.scope==='vi'?'atlas-vi.html':'atlas.html';
+  if(r.collectionId)box.append(link('Open collection on map',map+'?collection='+encodeURIComponent(r.collectionId)));
+  else box.append(link('Open relevant map',map));
+ }
  if(r.kind==='animal'||r.kind==='character')box.append(link('Explore map',r.scope==='vi'?'atlas-vi.html':r.scope==='online'?'atlas-online.html':r.scope==='classic'?'maps.html':'atlas.html'));
  if(r.sourceUrl&&r.sourceUrl.startsWith('https://'))box.append(link('Source ↗',r.sourceUrl));if(r.imageCredit)box.append(link('Artwork credits ↗',r.imageCredit));
  if(r.key){const state=own();for(const [key,word] of [['owned','Mark owned'],['wishlist','Wishlist']]){const b=make('button','u-action',state[key]?.[r.key]?'✓ '+word:word);b.type='button';b.onclick=()=>{if(toggleOwned(r,key))details(r,false);else alert('Storage unavailable; export your garage before clearing this device.');};box.append(b)}}

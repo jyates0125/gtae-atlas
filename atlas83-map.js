@@ -2,6 +2,7 @@
 /* Atlas 8.3 map-sidebar collectible bridge. No fabricated coordinates. */
 const path=(location.pathname.split('/').pop()||'').toLowerCase();
 if(!['atlas.html','atlas-online.html','atlas-vi.html'].includes(path))return;
+const linkedSet=new URLSearchParams(location.search).get('collection');
 const mode=path==='atlas-online.html'?'online':path==='atlas-vi.html'?'vi':'story';
 const $=id=>document.getElementById(id), SKEY='team-jura-checklist-v54',HQKEY='team-jura-atlas81-hq-v1',MPKEY='jura3-progress';
 function atlas85SetIcon(t){const name=String(t||'').toLowerCase();const options=[['spaceship','🛸'],['letter scrap','✉'],['nuclear waste','☢'],['submarine','⚓'],['monkey mosaic','🐒'],['peyote','🌵'],['epsilon','📜'],['hidden package','🎁'],['stunt jump','🏍'],['under the bridge','🌉'],['knife flight','✈'],['playing card','🃏'],['action figure','🤖'],['signal jammer','📡'],['ld organics','🍃'],['movie prop','🎬'],['media stick','💿'],['snowm','☃'],['jack','🎃'],['ls tag','🎨']];return options.find(([k])=>name.includes(k))?.[1]||'◆'}
@@ -28,6 +29,7 @@ function openRecord(rec){if(!rec)return;location.href='./atlas.html?world=5&plac
 function percent(s){let n=0;for(let i=1;i<=s.total;i++)if(rawStatus(s,i).done)n++;return n}
 function render(){const select=$('j83-set');if(!select)return;const list=$('j83-items');list.replaceChildren();const s=current();if(!s)return;
 const completed=percent(s),mappedCount=Array.from({length:s.total},(_,i)=>mapped.has(s.id+':'+(i+1))).filter(Boolean).length;
+$('j83-showset').disabled=$('j85-route').disabled=mappedCount===0;
 $('j83-count').textContent=completed+' / '+s.total+' collected · '+mappedCount+' mapped';
 $('j83-summary').textContent=mode==='online'?'GTA Online collectible sets only · map coordinates shown only where sourced.':mode==='vi'?'GTA VI research is provisional; no confirmed collectible locations.':'GTA V Story · individual records where the community source provides positions.';
 let shown=0;for(let i=1;i<=s.total;i++){
@@ -46,14 +48,15 @@ let shown=0;for(let i=1;i<=s.total;i++){
  const hide=$('hideFound');$('j83-hide').checked=!!hide?.checked;
  $('j83-mapped').hidden=mode!=='story';}
 function showSetOnMap(){
- const s=current(),query=$('search');if(!s||!query)return;
+ const s=current(),query=$('search');if(!s||!query)return false;
  const rec=Array.from(mapped.entries()).find(([key])=>key.startsWith(s.id+':'))?.[1];
- if(!rec){feedback('No verified map records are imported for this set yet. The collection guide is still available.');return}
+ if(!rec){feedback('No verified map records are imported for this set yet. The collection guide is still available.');return false}
  // Native Atlas map search uses collectionType for marker filtering.
  query.value=rec.collectionType||rec.name;query.dispatchEvent(new Event('input',{bubbles:true}));
  const all=$('allOn');if(all)all.click();
  const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true;
  feedback('Filtering map to '+s.name+'. Click a pin to mark it found or add it to a route.');
+ return true;
 }
 function clearSetOnMap(){const q=$('search');if(q){q.value='';q.dispatchEvent(new Event('input',{bubbles:true}))}feedback('Map collection filter cleared.');}
 function setOptions(){const sel=$('j83-set');sel.replaceChildren();for(const s of sets){const o=new Option(atlas85SetIcon(s.name)+' '+s.name+' · '+s.total,s.id);sel.add(o)}if(sets.some(s=>s.id===setId))sel.value=setId;else setId=sel.value;render()}
@@ -74,8 +77,9 @@ function install(){const drawer=$('atlasFilterDrawer'),side=$('sidebar');if(!dra
  for(const [name,target,k] of [['GTA V Story','atlas.html','story'],['GTA Online','atlas-online.html','online'],['Leonida Research','atlas-vi.html','vi']]){
  const a=elt('a',k===mode?'current':'',name);a.href='./'+target;if(k===mode)a.setAttribute('aria-current','page');banner.append(a)}
  const top=side.querySelector('.worlds');if(top)top.insertAdjacentElement('afterend',banner);else side.prepend(banner);
- $('j83-set').onchange=e=>{setId=e.target.value;render()};$('j83-showset').onclick=showSetOnMap;$('j85-route').onclick=()=>{showSetOnMap();if(window.JuraAtlas85)window.JuraAtlas85.startRouteForVisible();else feedback('Refresh the map to activate the Atlas 8.5 route engine.');};$('j83-clearset').onclick=clearSetOnMap;$('j83-search').oninput=e=>{search=e.target.value.trim().toLowerCase();render()};
+ $('j83-set').onchange=e=>{setId=e.target.value;render()};$('j83-showset').onclick=showSetOnMap;$('j85-route').onclick=()=>{if(!showSetOnMap())return;if(window.JuraAtlas85)window.JuraAtlas85.startRouteForVisible();else feedback('Refresh the map to activate the Atlas 8.5 route engine.');};$('j83-clearset').onclick=clearSetOnMap;$('j83-search').oninput=e=>{search=e.target.value.trim().toLowerCase();render()};
  $('j83-unfinished').onchange=e=>{onlyPending=e.target.checked;render()};$('j83-hide').onchange=e=>{const native=$('hideFound');if(native){native.checked=e.target.checked;native.dispatchEvent(new Event('change',{bubbles:true}))}else feedback('Native map Hide collected control was not found.')};
+ $('j83-showset').disabled=$('j85-route').disabled=true;
  $('j83-set').add(new Option('Loading…',''));
  if(mode==='vi'){$('j83-set').replaceChildren();$('j83-summary').textContent='GTA VI collectible positions cannot be confirmed; use the research map and provenance tools.';$('j83-count').textContent='No confirmed GTA VI collectible sets';$('j83-hide').disabled=true;$('j83-showset').disabled=true;return;}
  load();}
@@ -83,7 +87,16 @@ async function load(){if(loading)return;loading=true;try{
  const r=await fetch('./atlas-collections.json',{cache:'no-cache'});if(!r.ok)throw Error('collections HTTP '+r.status);const d=await r.json();sets=d.sets.filter(s=>s.mode===mode);
  // No cross-game sharing: Online never inherits Story pins.
  if(mode==='story' && window.JuraSources?.load){try{const result=await window.JuraSources.load('story');for(const rec of result.records){const id=names[rec.collectionType];if(id&&Number.isInteger(rec.collectionSlot)&&rec.collectionSlot>0)mapped.set(id+':'+rec.collectionSlot,rec)}}catch(err){feedback('Community coordinate feed unavailable. Counts and guides still work.')}}
- const preferred=sessionStorage.getItem('j83-selection');if(preferred){setId=preferred;sessionStorage.removeItem('j83-selection')}setOptions();
+ const preferred=sessionStorage.getItem('j83-selection');
+ if(preferred)sessionStorage.removeItem('j83-selection');
+ const linked=sets.some(set=>set.id===linkedSet);
+ setId=linked?linkedSet:preferred||'';
+ setOptions();
+ if(linked){
+  const sidebar=$('sidebar');
+  sidebar.classList.remove('mobile-collapsed');
+  if(innerWidth<=700)$('jura83-panel').scrollIntoView({block:'start'});
+ }
  }catch(err){feedback('Cannot load collection database: '+err.message);$('j83-summary').textContent='Collection source unavailable';$('j83-set').replaceChildren()}
  finally{loading=false}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
