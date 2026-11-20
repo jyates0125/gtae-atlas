@@ -29,7 +29,14 @@ try:
         context=browser.new_context(viewport={'width':width,'height':height},device_scale_factor=1)
         page=context.new_page()
         page.goto(url,wait_until='domcontentloaded',timeout=50000)
-        page.locator('#j171-cayo-board').wait_for(state='visible',timeout=30000)
+        # Atlas 18 flagship starts in map-first mode; open the linked planning drawer.
+        page.locator('#j180-shell').wait_for(state='visible',timeout=30000)
+        page.wait_for_function("document.querySelectorAll('.j180-chest').length === 19",timeout=20000)
+        assert page.locator('.j180-chest').count()==19,'All 19 possible chest references render'
+        assert page.locator('.j180-legend-row').count()==14,'All 14 interactive marker legend rows render'
+        page.locator('#j180-shell').screenshot(path=str(path/('cayo-180-map-'+kind+'.png')),animations='disabled',timeout=35000)
+        page.locator('.j180-menu-link').filter(has_text='Entry & exit planning').click()
+        page.locator('#j171-cayo-board').wait_for(state='visible',timeout=10000)
         # Verify real tab actions, DOM category counts and focusable controls.
         assert page.locator('.j171-cards .j171-card').count()==8,kind+' infiltration count'
         page.get_by_role('tab',name='Compound entrances').click()
@@ -53,6 +60,8 @@ try:
         if kind=='mobile':
             overflow=page.locator('#j171-cayo-board').evaluate('(e)=>e.scrollWidth>e.clientWidth+4')
             assert not overflow,'Cayo board exceeds phone viewport'
+            shell_overflow=page.locator('#j180-shell').evaluate('(e)=>e.scrollWidth>e.clientWidth+4')
+            assert not shell_overflow,'Flagship map shell exceeds phone viewport'
         page.locator('#j171-cayo-board').scroll_into_view_if_needed()
         page.screenshot(path=str(path/('cayo-171-'+kind+'.png')),full_page=False,animations='disabled')
         context.close();browser.close()
