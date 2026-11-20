@@ -11,7 +11,7 @@ for key in ('startFrom','addStop','appendNearest','autoRoute','shareBtn',
             'completed','cayoRoute','localStorage.setItem','window.teamJuraCayoPinRoute'):
  assert key in code,key
 assert 'distance(here,a)-distance(here,b)' in code
-assert 'state.start=id;state.order=[id]' in code
+assert 'state.start=id;if(state.finish===id)state.finish=null;state.order=[id]' in code
 assert "const chestReady=chests.querySelectorAll('.j180-chest[data-chest]').length===19" in code
 assert "url.searchParams.set('cayoRoute'" in code
 assert "'teamjura-cayo-pinroute-v1'" in code
