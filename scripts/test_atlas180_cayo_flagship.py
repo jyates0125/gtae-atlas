@@ -50,7 +50,10 @@ assert len(local_map)>1000 and len(local_map)<15000
 assert 'jura182-cayo-local-road-plan.svg' in core
 assert "juraLocalFallback=true" in core and "sec.dataset.mapAsset='local-trace'" in core
 assert "setTimeout(()=>{if(!juraSourceReady" in core
-assert "const glyph=categories.find" in hotspots and "button(glyph,'j181-hotspot'" in hotspots
+assert "const makeMarkerIcon=cat=>" in hotspots
+assert "b.append(makeMarkerIcon(cat))" in hotspots
+assert "glyph.append(makeMarkerIcon(cat))" in hotspots
+assert "#j167-heist-map .j181-hotspot .j183-svg" in hotspot_css
 assert "data-map-asset" in hotspots
 assert ".j181-hotspot[data-category=" in hotspot_css
 assert ".j180-chest::before" in hotspot_css
