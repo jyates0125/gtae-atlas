@@ -49,6 +49,9 @@ try:
    page.locator('.j180-map-frame').screenshot(path=str(proof/('cayo-186-route-map-'+kind+'.png')),animations='disabled')
    page.locator('#j186-route').screenshot(path=str(proof/('cayo-186-route-planner-'+kind+'.png')),animations='disabled')
    assert page.locator('.j186-start').count()==1,'Start pin is highlighted'
+   assert page.locator('#j188-advanced').count()==1,'Advanced routing options remain available but compact'
+   assert page.locator('#j188-advanced').get_attribute('open') is None,'Advanced options should start collapsed'
+   page.locator('#j188-advanced > summary').click()
    page.locator('.j186-preset').filter(has_text='Equipment').click()
    b=page.evaluate("window.teamJuraCayoPinRoute.getState()")
    assert b['categories']==['bolts','grapple','clothes','truck','powder'],b['categories']
@@ -125,6 +128,7 @@ try:
    assert page.locator('.j186-final-stop').count()==1,'Finish labeled in player stop list'
    assert page.locator('.j186-route-badges .j186-last').count()==1,'Finish badge is visible on the same map'
    # Adding another stop must be routed before the chosen finish, not after it.
+   page.locator('#j188-advanced > summary').click()
    page.locator('.j186-action').filter(has_text='Add next nearest').click()
    extended=page.evaluate("window.teamJuraCayoPinRoute.getState()")
    assert extended['order'][-1]=='exit-6' and len(extended['order'])==len(ended['order'])+1,extended
