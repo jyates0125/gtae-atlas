@@ -41,6 +41,7 @@ assert "const existing=node.querySelector('.j131-social')" in js
 assert "(!html.includes('atlas131-social-icons.js')" in build  # all other pages receive the footer script
 assert 'atlas131-social-icons.css' in build
 assert 'data-j130-action="share-page"' in index
+assert index.index('data-j130-action="share-page"') > index.index('id="featuredGrid"')
 
 # Sharing is optional: no forced kit download, account signup or misleading automatic posting.
 for banned in ('Social Launch Kit', 'Download social kit', 'autoPost(', 'access_token'):
