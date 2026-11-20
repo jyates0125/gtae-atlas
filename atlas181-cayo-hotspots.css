@@ -146,3 +146,28 @@ body.j180-cayo.j181-map-hotspots .j181-hide-chests .j180-chest{display:none!impo
 @media(max-width:590px){
  body.j180-cayo.j181-map-hotspots .j181-hotspot{width:20px!important;height:20px!important;font-size:12px!important}
 }
+
+/* When the externally sourced raster is unavailable, our original vector
+   fallback has NO embedded colored symbols. Render the same small glyphs in
+   the transparent hit areas, rather than showing blank unclickable-looking
+   map positions or adding a second set of generic oversized pin badges.
+   For the sourced raster, these glyphs are always hidden. */
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot:after{
+ content:attr(data-glyph);display:grid;place-items:center;
+ position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ pointer-events:none;min-width:20px;min-height:20px;
+ font:bold 16px/1 "Segoe UI Symbol",system-ui,sans-serif!important;
+ color:#d57af5;text-shadow:0 1px 4px #090713,0 0 5px #090713;
+ background:transparent;border:0;border-radius:0;white-space:nowrap
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=entry]:after{color:#ee73e9}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=exit]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=drainage]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=power]:after{color:#f6f263}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=secondary]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=gated]:after{color:#30beff}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=bolts]:after{color:#fb6357}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=clothes]:after{color:#ffbd8f}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=truck]:after{color:#42d985}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=water]:after{color:#48f7f7}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=control]:after{color:#fff2e7}
