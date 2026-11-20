@@ -15,6 +15,7 @@
    of active card buttons, progress controls, or iOS browser chrome.
    Legacy pages without the modern menu retain a compact world switcher. */
 @media (max-width: 820px) {
+  body:has(header nav) .j98-flow,
   body:has(header .menu-toggle) .j98-flow,
   body:has(header .primary-nav) .j98-flow { display:none!important; }
   .j98-flow {
