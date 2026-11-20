@@ -38,3 +38,22 @@ assert style.count('(')>=style.count(')')
 assert (root/'art/jura159-heist-cayo-perico.webp').is_file()
 assert 'j180-cayo' not in (root/'heist-theme.css').read_text(), 'Style may not alter other 14 heists'
 print('PASS Atlas 18: Cayo owner-design, 19 source-backed chest points, expiring daily feed and preserved legacy data')
+
+
+# Atlas 18.2: prevent invisible pins if externally hosted game art fails.
+core=(root/'atlas167-heist-focus.js').read_text()
+hotspots=(root/'atlas181-cayo-hotspots.js').read_text()
+hotspot_css=(root/'atlas181-cayo-hotspots.css').read_text()
+local_map=(root/'art/jura182-cayo-local-road-plan.svg').read_text()
+assert '<svg' in local_map and 'viewBox="0 0 1284 1262"' in local_map
+assert len(local_map)>1000 and len(local_map)<15000
+assert 'jura182-cayo-local-road-plan.svg' in core
+assert "juraLocalFallback=true" in core and "sec.dataset.mapAsset='local-trace'" in core
+assert "setTimeout(()=>{if(!juraSourceReady" in core
+assert "const glyph=categories.find" in hotspots and "button(glyph,'j181-hotspot'" in hotspots
+assert "data-map-asset" in hotspots
+assert ".j181-hotspot[data-category=" in hotspot_css
+assert ".j180-chest::before" in hotspot_css
+assert ".j180-chest.j180-chest-active::before" in hotspot_css
+assert 'atlas181-cayo-hotspots.js?v=181' in loader and 'atlas181-cayo-hotspots.css?v=181' in loader
+print('PASS Atlas 18.2: local island fallback, visible marker symbols and chest-dot status integrity')
