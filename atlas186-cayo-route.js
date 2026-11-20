@@ -146,7 +146,16 @@ chestMode.value=state.chestMode;chestMode.addEventListener('change',()=>{
  state.chestMode=chestMode.value;persist();if(state.start&&state.mode==='nearest')autoRoute();else render();
 });chestLabel.append(chestMode);controls.append(chestLabel);
 panel.append(controls);
+let choosingStart=false;
 const actions=el('div','j186-actions');
+const pickStart=button('Pick starting pin','j186-action j186-primary',()=>{
+ choosingStart=!choosingStart;
+ pickStart.textContent=choosingStart?'Tap any island marker…':'Pick starting pin';
+ pickStart.setAttribute('aria-pressed',String(choosingStart));
+ status.textContent=choosingStart?'Select the colorful map symbol or chest where you want to start. For crowded groups, pick the exact item from the nearby menu.':'Start selection cancelled.';
+ if(choosingStart)frame.scrollIntoView({block:'start',behavior:'smooth'});
+});
+pickStart.setAttribute('aria-pressed','false');
 const buildBtn=button('Build nearest route','j186-action j186-primary',()=>autoRoute());
 const nextBtn=button('Add next nearest','j186-action',()=>appendNearest());
 const reverseBtn=button('Reverse stops','j186-action',()=>{
@@ -166,7 +175,7 @@ const shareBtn=button('Share this route','j186-action',async()=>{
  catch(_){if(navigator.share){try{await navigator.share({title:'Team Jura Cayo route',url:url.href});}catch(__){status.textContent='Sharing was canceled. Your personal route is still saved on this device.';}}
  else{window.prompt('Copy your Cayo route link:',url.href);status.textContent='Route link ready to copy.';}}
 });
-actions.append(buildBtn,nextBtn,reverseBtn,clearBtn,shareBtn);panel.append(actions);
+actions.append(pickStart,buildBtn,nextBtn,reverseBtn,clearBtn,shareBtn);panel.append(actions);
 const list=el('ol','j186-stops');panel.append(list);
 const caveat=el('p','j186-caveat','Source map and equipment positions are reference-aligned, not exact Rockstar world coordinates. Nearest means shortest straight-line separation between map symbols, not fastest or safely traversable travel. Hidden or unavailable daily chests are excluded in daily-only mode.');
 panel.append(caveat);
@@ -227,6 +236,7 @@ function appendNearest(){
 }
 function startFrom(id){
  const marker=sourceFor(id);if(!marker)return false;
+ choosingStart=false;pickStart.textContent='Pick starting pin';pickStart.setAttribute('aria-pressed','false');
  state.start=id;state.order=[id];persist();
  if(state.mode==='nearest')autoRoute();
  else render('Starting pin: '+marker.label+'. Tap another marker and choose “Add as stop”, or use “Add next nearest”.');
@@ -326,6 +336,7 @@ world.addEventListener('click',event=>{
  const marker=event.target.closest?.('.j181-hotspot[data-marker-id],.j180-chest[data-chest]');
  if(!marker)return;
  const id=marker.dataset.markerId||('chest-'+marker.dataset.chest);
+ if(choosingStart){startFrom(id);panel.scrollIntoView({block:'nearest',behavior:'smooth'});}
  queueMicrotask(()=>{
   const info=document.querySelector('.j180-pin-info');
   if(!info||info.hidden||!sourceFor(id)||info.querySelector('.j186-pin-actions'))return;
@@ -341,7 +352,7 @@ window.teamJuraCayoPinRoute={startFrom,addStop,autoRoute,appendNearest,render,
  getState:()=>JSON.parse(JSON.stringify(state)),
  getStops:()=>state.order.slice(),
  getNodes:()=>nodes().map(n=>({id:n.id,cat:n.cat,label:n.label,x:n.x,y:n.y,active:n.active})),
- reset:()=>{state=defaultState();refreshFilters();mode.value=state.mode;limitSelect.value=String(state.limit);chestMode.value=state.chestMode;persist();render()},
+ reset:()=>{state=defaultState();choosingStart=false;pickStart.textContent='Pick starting pin';pickStart.setAttribute('aria-pressed','false');refreshFilters();mode.value=state.mode;limitSelect.value=String(state.limit);chestMode.value=state.chestMode;persist();render()},
  selectCategory:(cat)=>{if(!ALL_CATS.includes(cat))return false;state.categories=[cat];refreshFilters();persist();if(state.start)autoRoute();else render();return true}};
 refreshFilters();render();
 })();
