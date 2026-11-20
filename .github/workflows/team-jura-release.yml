@@ -104,6 +104,8 @@ jobs:
           python scripts/test_atlas181_cayo_hotspots.py
           python scripts/test_atlas184_cayo_visible_symbols.py
           python scripts/test_atlas185_cayo_polish.py
+          python scripts/test_atlas186_cayo_route.py
+          node --check atlas186-cayo-route.js
           node --check atlas185-cayo-polish.js
           node --check atlas171-cayo-board.js
           node --check atlas180-cayo-flagship.js
@@ -134,7 +136,9 @@ jobs:
       - name: Verify Cayo mission board and capture phone/desktop screenshots
         env:
           ATLAS_BROWSER: chromium
-        run: python scripts/test_atlas171_browser.py
+        run: |
+          python scripts/test_atlas171_browser.py
+          python scripts/test_atlas186_route_browser.py
       - name: Independently capture designed-brand screenshots (Chromium)
         if: always()
         continue-on-error: true
@@ -178,7 +182,9 @@ jobs:
       - name: Verify Cayo mission board and capture phone/desktop screenshots
         env:
           ATLAS_BROWSER: msedge
-        run: python scripts/test_atlas171_browser.py
+        run: |
+          python scripts/test_atlas171_browser.py
+          python scripts/test_atlas186_route_browser.py
       - name: Independently capture designed-brand screenshots (Edge)
         if: always()
         continue-on-error: true
