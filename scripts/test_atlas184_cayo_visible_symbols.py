@@ -18,7 +18,7 @@ assert "const modeOk=mapSource!=='loading'||focus.dataset.mapAsset==='local-trac
 assert "hiddenCats.add(cat)" in js and "hiddenCats.delete(cat)" in js
 assert "item.button.hidden=!modeOk||hiddenCats.has(item.cat)||!matches" in js
 assert "document.createElementNS(SVG_NS,tag)" in js
-assert "atlas181-cayo-hotspots.js?v=1813" in loader
+assert "atlas181-cayo-hotspots.js?v=191" in loader
 assert 'Atlas 18.4 -- primary FLAT' in css
 assert "svg" in css and "--j183-color" in css
 assert "#j167-heist-map .j181-hotspot .j183-svg" in css
