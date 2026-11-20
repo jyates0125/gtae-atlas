@@ -175,7 +175,12 @@ try:
    if kind=='phone':
     page.locator('.j185-legend-toggle').click()
     assert page.locator('.j185-legend-toggle').get_attribute('aria-expanded')=='true'
-   # The original marker legend is the same selection; manual changes update the route.
+   # The individual marker legend is intentionally collapsed to leave more
+   # map area on phones. Expand it through the real user-facing disclosure.
+   legend_toggle=page.locator('.j185-legend-toggle')
+   assert legend_toggle.count()==1,'One working marker-filter disclosure'
+   legend_toggle.click()
+   assert legend_toggle.get_attribute('aria-expanded')=='true','Marker filters must expand'
    page.locator('.j180-legend-row[data-cat="entry"]').click()
    changed=page.evaluate("window.teamJuraCayoPinRoute.getState().categories")
    assert 'entry' in changed and 'bolts' in changed,changed
