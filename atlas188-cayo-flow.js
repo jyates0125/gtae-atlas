@@ -21,7 +21,7 @@ const presets=[
  {id:'equipment',title:'Equipment',categories:['bolts','grapple','clothes','truck','powder']},
  {id:'entry',title:'Entry / Exit',categories:['entry','exit','drainage']},
  {id:'intel',title:'Island intel',categories:['control','power','water']},
- {id:'chests',title:'Chests',categories:['chest']}
+ {id:'chests',title:'19 possible chests',categories:['chest']}
 ];
 const bar=make('section','j188-quickbar');bar.id='j188-quickbar';
 bar.setAttribute('aria-label','Cayo island map quick start and filters');
@@ -49,7 +49,7 @@ function selectMapCategories(categories){
  updateStatus();
 }
 for(const preset of presets){
- const b=btn(preset.title,()=>selectMapCategories(preset.categories),'j188-preset');
+ const b=btn(preset.title,()=>{if(preset.id==='chests'&&chestEligibility){chestEligibility.value='all';chestEligibility.dispatchEvent(new Event('change',{bubbles:true}));}selectMapCategories(preset.categories);},'j188-preset');
  b.dataset.preset=preset.id;b.setAttribute('aria-pressed','false');
  choices.append(b);buttons.set(preset.id,b);
 }
@@ -74,6 +74,29 @@ for(const [name,url] of [
 }
 provenance.append(links);bar.append(provenance);
 stage.insertBefore(bar,frame);
+// Put the essential player workflow first; preserve every advanced control and
+// its existing listeners in a native keyboard-accessible disclosure.
+const routeTitle=details.querySelector('.j186-head h3');
+if(routeTitle)routeTitle.textContent='Your island route';
+const routeHelp=details.querySelector('.j186-head p');
+if(routeHelp)routeHelp.textContent='Pick a starting symbol on the map, choose target categories above, and follow your numbered stops. You can optionally choose a final pin.';
+const advanced=make('details','j188-advanced');advanced.id='j188-advanced';
+advanced.append(make('summary','','Advanced routing options · manual order, limits & daily chests'));
+const oldPresets=details.querySelector('.j186-presets');
+const oldSettings=details.querySelector('.j186-controls');
+const routeActions=details.querySelector('.j186-actions');
+if(oldPresets)advanced.append(oldPresets);
+if(oldSettings)advanced.append(oldSettings);
+const extra=make('div','j188-advanced-actions');
+if(routeActions){
+ for(const label of ['Add next nearest','Resume after visited','Reverse stops','Remove finish']){
+  const action=[...routeActions.querySelectorAll('button')].find(n=>n.textContent.trim()===label);
+  if(action)extra.append(action);
+ }
+}
+advanced.append(extra);
+if(routeActions)routeActions.before(advanced);
+const chestEligibility=details.querySelector('select[aria-label="Treasure chest route eligibility"]');
 document.body.classList.add('j188-cayo-smooth');
 
 function getShown(){
@@ -130,6 +153,6 @@ new MutationObserver(updateStatus).observe(focus,{attributes:true,attributeFilte
 new MutationObserver(updateStatus).observe(focus.querySelector('.j180-chest-layer'),{childList:true});
 mirrorRouteToLegend();
 window.teamJuraCayoQuickFlow={version:'18.8',selectPreset:id=>{
- const p=presets.find(x=>x.id===id);if(!p)return false;selectMapCategories(p.categories);return true;
+ const p=presets.find(x=>x.id===id);if(!p)return false;if(id==='chests'&&chestEligibility){chestEligibility.value='all';chestEligibility.dispatchEvent(new Event('change',{bubbles:true}));}selectMapCategories(p.categories);return true;
 },getVisibleCount:getShown,refresh:updateStatus};
 })();
