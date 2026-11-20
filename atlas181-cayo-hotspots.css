@@ -171,3 +171,27 @@ body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .
 body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=truck]:after{color:#42d985}
 body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=water]:after{color:#48f7f7}
 body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=control]:after{color:#fff2e7}
+
+/* Atlas 18.3: owner requires legend-matched pictograms, NOT another generic circular pin family.
+   Only the category glyph is visible, directly interactive; the icon itself is the tap target.
+   Subtle focus halo appears only during interaction. */
+body.j180-cayo.j181-map-hotspots .j181-hotspot{
+ display:grid!important;place-items:center!important;
+ width:22px!important;height:22px!important;
+ background:transparent!important;border:0!important;
+ border-radius:0!important;box-shadow:none!important;
+ font-size:18px!important;line-height:1!important;
+ text-shadow:0 1px 3px #10121f,0 0 5px #030409!important;
+}
+body.j180-cayo.j181-map-hotspots .j181-hotspot:hover,
+body.j180-cayo.j181-map-hotspots .j181-hotspot:focus-visible{
+ border-radius:50%!important;
+ background:#fdde9526!important;
+ outline:2px solid #ffdf9c!important;
+ box-shadow:0 0 0 4px #f6ce8d40!important;
+}
+@media(max-width:590px){
+ body.j180-cayo.j181-map-hotspots .j181-hotspot{
+  width:20px!important;height:20px!important;font-size:15px!important;
+ }
+}
