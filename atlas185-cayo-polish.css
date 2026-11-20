@@ -128,3 +128,22 @@ body.j180-cayo.j185-cayo-polished .j132-nav #j132-nav-drawer{
  right:0!important;left:auto!important;
  max-height:min(72dvh,600px)!important
 }
+
+/* The actively maintained All Pages drawer (Atlas 13.2) belongs in normal
+   page flow ON CAYO, after its footer. Do not hide it: players retain the
+   searchable global page directory, but its floating trigger can no longer
+   obscure the Cayo workspace search, legend or zoom controls on desktop. */
+body.j180-cayo.j185-cayo-polished .j132-nav{
+ position:relative!important;top:auto!important;right:auto!important;
+ bottom:auto!important;left:auto!important;
+ width:max-content!important;max-width:calc(100% - 24px)!important;
+ margin:14px 12px 25px auto!important;
+ z-index:2147483000!important
+}
+body.j180-cayo.j185-cayo-polished .j132-nav #j132-nav-drawer{
+ position:fixed!important;top:auto!important;
+ bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;
+ right:12px!important;left:12px!important;
+ width:auto!important;max-width:min(560px,calc(100vw - 24px))!important;
+ margin:0 0 0 auto!important;max-height:min(80dvh,670px)!important
+}
