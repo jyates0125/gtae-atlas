@@ -76,6 +76,7 @@ jobs:
           python scripts/test_atlas147_garage_mobile.py
           python scripts/test_atlas148_local_covers.py
           python scripts/test_atlas149_leonida_toolbar.py
+          python scripts/test_atlas151_heist_gallery.py
           node --check leonida-hq.js
           node --check atlas145-leonida-map-ux.js
           node --check atlas145-mobile-map-entry.js
@@ -167,3 +168,5 @@ jobs:
           path: public/
           if-no-files-found: error
           retention-days: 21
+      - name: Owner visual signoff — prevent artwork regression release
+        run: python scripts/test_atlas151_visual_release.py
