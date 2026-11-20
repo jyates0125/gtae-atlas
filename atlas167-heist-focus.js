@@ -39,6 +39,8 @@ let zoom=1,dx=0,dy=0;
 // No conversion from the custom schematic is implied; unknown rotating loot is hidden.
 let juraMapMode='enhanced';
 const juraOriginalMap="https://wikiassets.net/gta-wiki-aef1ab/images/3a038f45d60d9b4ebb65f4f0260b3ff7.webp";
+const juraLocalRoadPlan='./art/jura182-cayo-local-road-plan.svg';
+let juraLocalFallback=false,juraSourceTimeout=null;
 const islandLandmarks={
 'airstrip':[23,34],'north dock':[69,43],'main dock':[60,62],'halo jump':[46,18],
 'control tower':[32,35],'power station':[38,46],
@@ -228,16 +230,19 @@ function paint(){
 }
 search.addEventListener('input',paint);
 const juraSource=new Image();
-let juraSourceReady=false;
-juraSource.onload=()=>{juraSourceReady=true;if(juraMapMode==='original')juraShowSource()};
-juraSource.onerror=()=>{juraSourceReady=false;if(juraMapMode==='original'){juraSwitchMap('enhanced');window.teamJuraHeistViews?.activate('enhanced');}};
-function juraShowSource(){
+ let juraSourceReady=false;
+ juraSource.onload=()=>{juraSourceReady=true;if(juraSourceTimeout)clearTimeout(juraSourceTimeout);if(juraMapMode==='original')juraShowSource()};
+ juraSource.onerror=()=>{juraSourceReady=false;if(juraMapMode!=='original')return;
+  if(!juraLocalFallback){juraLocalFallback=true;sec.dataset.mapAsset='local-trace';juraSource.src=juraLocalRoadPlan;}
+  else{juraSwitchMap('enhanced');window.teamJuraHeistViews?.activate('enhanced');}
+ };
+ function juraShowSource(){
  if(!juraSourceReady)return;
- world.style.backgroundImage='url("'+juraOriginalMap+'")';
+ world.style.backgroundImage='url("'+(juraLocalFallback?juraLocalRoadPlan:juraOriginalMap)+'")';
  world.style.backgroundSize='100% 100%';world.style.backgroundPosition='center';
  zone.style.aspectRatio=juraSource.naturalWidth+'/'+juraSource.naturalHeight;
- zone.style.minHeight='0';sec.dataset.mapSource='original';
- hint.textContent='GTA Online Cayo Island map © Rockstar Games / Take-Two, via GTA Wiki. Team Jura static landmark pins are approximate; routes indicate selected planning order, not verified travel paths.';
+ zone.style.minHeight='0';sec.dataset.mapSource='original';sec.dataset.mapAsset=juraLocalFallback?'local-trace':'gta-wiki';
+ hint.textContent=juraLocalFallback?'Local Elario island road-plan reconstructed from the owner’s reference; not game-exact. Pins and routes are approximate.':'GTA Online Cayo island map © Rockstar Games / Take-Two via GTA Wiki. Team Jura pins and routes are approximate.';
  paint();
 }
 function juraSwitchMap(mode){
@@ -246,9 +251,12 @@ function juraSwitchMap(mode){
  zoom=1;dx=dy=0;setView();detailFor(null);
  if(juraMapMode==='original'){
   if(juraSourceReady)juraShowSource();
-  else{sec.dataset.mapSource='loading';hint.textContent='Loading Cayo island map…';juraSource.src=juraOriginalMap}
+  else{sec.dataset.mapSource='loading';hint.textContent='Loading Cayo island map…';juraSource.src=juraLocalFallback?juraLocalRoadPlan:juraOriginalMap;
+  if(juraSourceTimeout)clearTimeout(juraSourceTimeout);
+  if(!juraLocalFallback)juraSourceTimeout=setTimeout(()=>{if(!juraSourceReady&&juraMapMode==='original'&&!juraLocalFallback){juraLocalFallback=true;sec.dataset.mapAsset='local-trace';juraSource.src=juraLocalRoadPlan;}},6500);
+ }
  }else{
-  sec.dataset.mapSource='enhanced';zone.style.aspectRatio='';zone.style.minHeight='';
+  sec.dataset.mapSource='enhanced';sec.dataset.mapAsset='elario-concept';zone.style.aspectRatio='';zone.style.minHeight='';
   world.style.backgroundImage=photoReady?'linear-gradient(180deg,rgba(6,12,34,.14),rgba(6,7,24,.26)),url("'+photoAsset+'")':'none';
   world.style.backgroundSize='cover';
   hint.textContent='Original Elario enhanced concept map · illustrative pin positions.';
