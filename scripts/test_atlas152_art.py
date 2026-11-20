@@ -18,5 +18,6 @@ heist_js=(root/'atlas93-global.js').read_text()
 for ident in ['fleeca','prison-break','humane-labs','series-a','pacific-standard','doomsday-act-1','doomsday-act-2','doomsday-act-3','diamond-casino','cayo-perico','cluckin-bell','salvage-yard','auto-shop','agency-vip','kortz-center']:
  assert (root/'art'/f'atlas152-heist-{ident}.svg').is_file(),ident
  assert (root/'art'/f'atlas152-planning-{ident}.svg').is_file(),ident
-assert '--j120-hero-image' in heist_js and 'a152' not in heist_js or True
+assert '--j120-hero-image' in heist_js
+assert 'atlas152-heist-' in heist_js and 'atlas152-planning-' in heist_js
 print('Atlas 15.2 six game-specific art groups, studio and 15 heist/map pair assets: PASS')
