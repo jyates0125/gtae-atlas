@@ -9,7 +9,7 @@ loader=(root/'heist-pages.js').read_text()
 categories=('entry','exit','drainage','secondary','gated','bolts',
             'grapple','clothes','truck','control','power','powder','water','chest')
 for cat in categories:
-    assert (cat+':[[') in js or (" "+cat+':[[") in js,cat
+    assert f'{cat}:[[' in js,cat
     assert 'j181-glyph-'+cat in js or 'j181-glyph-'+cat in css or "'"+cat+"'" in js
 assert 'const makeMarkerIcon=cat=>' in js
 assert "b.append(makeMarkerIcon(cat))" in js
