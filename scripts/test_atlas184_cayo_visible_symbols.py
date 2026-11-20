@@ -14,7 +14,7 @@ for cat in categories:
 assert 'const makeMarkerIcon=cat=>' in js
 assert "b.append(makeMarkerIcon(cat))" in js
 assert "glyph.append(makeMarkerIcon(cat))" in js
-assert "const modeOk=mapSource!=='loading';" in js
+assert "const modeOk=mapSource!=='loading'||focus.dataset.mapAsset==='local-trace';" in js
 assert "hiddenCats.add(cat)" in js and "hiddenCats.delete(cat)" in js
 assert "item.button.hidden=!modeOk||hiddenCats.has(item.cat)||!matches" in js
 assert "document.createElementNS(SVG_NS,tag)" in js
