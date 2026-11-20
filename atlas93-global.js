@@ -41,3 +41,31 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Heist-only cinematic mission planner; kept outside global map engines and save keys. */
 (()=>{const page=location.pathname.split('/').pop()||'';if(page==='heists.html'||/^heist-[a-z0-9-]+\.html$/.test(page)){const script=document.createElement('script');script.src='./atlas104-heist-experience.js?v=104';script.defer=true;document.head.append(script)}})();
+
+/* Atlas 15.2: Art-only enhancement for existing fifteen heist workspaces.
+   Safe additive presentation: no map, route, checklist, coordinate or storage writes. */
+(()=>{'use strict';
+const apply=()=>{
+ const mission=document.body?.dataset?.heist;
+ const allowed=new Set(['fleeca','prison-break','humane-labs','series-a','pacific-standard','doomsday-act-1','doomsday-act-2','doomsday-act-3','diamond-casino','cayo-perico','cluckin-bell','salvage-yard','auto-shop','agency-vip','kortz-center']);
+ const fallback=(img,url,alt)=>{
+  if(!img)return;
+  const prev=img.getAttribute('src');
+  img.addEventListener('error',()=>{if(prev&&img.getAttribute('src')!==prev)img.src=prev},{once:true});
+  img.setAttribute('src',url);
+  img.alt=alt;
+ };
+ if(mission&&allowed.has(mission)&&document.body.classList.contains('j120-heist-page')){
+  document.body.style.setProperty('--j120-hero-image',`url("./art/atlas152-heist-${mission}.svg")`);
+  const img=document.querySelector('.mapbox img[src*="atlas93-heist-"]');
+  fallback(img,`./art/atlas152-planning-${mission}.svg`,'Original schematic planning illustration for this mission; not an actual game map or verified route');
+ }
+ if(location.pathname.endsWith('/heists.html')){
+  document.querySelectorAll('img.j151-heist-cover').forEach(img=>{
+   const match=(img.getAttribute('src')||'').match(/atlas93-heist-([a-z0-9-]+)\.svg$/);
+   if(match&&allowed.has(match[1]))fallback(img,`./art/atlas152-heist-${match[1]}.svg`,'Original heist-specific Elario fan concept scene; not exact game artwork');
+  });
+ }
+};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
+})();
