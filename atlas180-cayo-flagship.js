@@ -170,8 +170,11 @@ function showInfo(title,description,number){
 }
 function project(spawn){
  // The screenshot underlay has no verified pixel transform; avoid pretending this is georeferenced.
- const x=Math.max(3,Math.min(97, 6+(spawn.worldX-3900)/1700*86));
- const y=Math.max(3,Math.min(97, 2+(-4300-spawn.worldY)/1600*90));
+ // Re-registered against the 19 yellow centers on the user's 1284×1262
+ // in-game reference. GTA world coordinates are SOURCE data; the
+ // raster-to-world conversion remains approximate (no perspective proof).
+ const x=Math.max(2,Math.min(98, (68+(spawn.worldX-3900)*.698)/1284*100));
+ const y=Math.max(2,Math.min(98, (38+(-4293-spawn.worldY)*.69)/1262*100));
  return [x,y];
 }
 function paintChests(){
