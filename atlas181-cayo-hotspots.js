@@ -174,7 +174,9 @@ function update(){
  for(const item of allItems){
   // All reference categories are available on the flat game map and its
   // local fallback. Map pixel positions are visually approximate in both.
-  const modeOk=mapSource!=='loading';
+  // The offline road-map trace is visible during source-image loading. Preserve
+  // its clickable markers instead of leaving the island blank for offline users.
+  const modeOk=mapSource!=='loading'||focus.dataset.mapAsset==='local-trace';
   const matches=!query||(item.name+' '+item.cat+' '+(descriptions[item.cat]||'')).toLowerCase().includes(query);
   item.button.hidden=!modeOk||hiddenCats.has(item.cat)||!matches;
   item.button.classList.toggle('j181-noted',visited.has(item.key));
