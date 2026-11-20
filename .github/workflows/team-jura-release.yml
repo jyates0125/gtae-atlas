@@ -78,6 +78,7 @@ jobs:
           python scripts/test_atlas147_garage_mobile.py
           python scripts/test_atlas148_local_covers.py
           python scripts/test_atlas155_premium_art.py
+          python scripts/test_atlas157_cinematic_world_covers.py
           python scripts/test_atlas155_art_review.py
           python scripts/test_atlas157_directory.py
           python scripts/test_atlas158_browser_contract.py

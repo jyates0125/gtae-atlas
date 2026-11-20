@@ -16,13 +16,13 @@
  function makeWorld(w,short,directoryCover=false){const a=E('a',short?'rail-world':'world-card');a.href='./'+w.href;a.dataset.id=w.id;
    if(short){const emblem=E('span','rail-emblem',({'story':'V','online':'◉','vi':'VI','cayo':'☀','iv':'IV','sa':'SA'}[w.id]||'◆'));const label=E('span','rail-label',w.name);const detail=E('small','',w.short);label.append(detail);a.append(emblem,label);return a}
    const frame=E('span','world-art-frame'),blur=E('img','world-art-blur'),im=E('img','world-art-main');
-   // Use only bundled, approved Team Jura concept covers: third-party box art,
+   // Use only bundled Elario art candidates; owner's release approval remains pending: third-party box art,
    // screenshots, and remote mirrors are not a reliable or automatic reuse license.
    // Each world keeps its individual original cover; featured worlds can lead
    // with the separate Atlas 14.0 approved concept illustration.
    const featuredConcept=w.group==='featured' && typeof w.coverFallback==='string'
      && /^\.\/art\/atlas140-[a-z-]+-concept\.svg$/.test(w.coverFallback)?w.coverFallback:null;
-   const premiumCover=typeof w.coverSrc==='string' && /^\.\/art\/jura155-(story|online|vi|cayo)\.webp$/.test(w.coverSrc)?w.coverSrc:null;
+   const premiumCover=typeof w.coverSrc==='string' && /^\.\/art\/(?:jura155-(?:story|online|vi|cayo)|jura157-(?:iv|sa|vc|iii|vcs|lcs|ctw|tlad|tbogt)-cinematic)\.webp$/.test(w.coverSrc)?w.coverSrc:null;
    const sources=[premiumCover,featuredConcept,'./art/'+w.art].filter(Boolean);let sourceIndex=0;
    const setCover=()=>{im.src=sources[sourceIndex];im.alt=sourceIndex===0&&premiumCover?'Original Elario Studios cinematic fan concept artwork for '+w.name+'; not official gameplay':'Original Team Jura fan illustration for '+w.name+'; not a screenshot or exact map';frame.dataset.cover=sourceIndex===0&&premiumCover?'original-cinematic':'original-elario'};
    for(const image of [blur,im]){image.loading='lazy';image.decoding='async';image.referrerPolicy='no-referrer'}

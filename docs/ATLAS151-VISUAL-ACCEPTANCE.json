@@ -25,12 +25,21 @@
     "tlad": null,
     "tbogt": null
   },
-  "note": "Staging-only: eight distinct Elario premium raster concepts committed. Nine classic-world premium covers and 15 individual heist premium artwork remain outstanding, alongside full device QA and owner approval. Do NOT merge to development yet.",
-  "staging_premium_webp_assets": 8,
+  "note": "STAGING ONLY: 13 unique world-cover raster candidates and 4 page hero raster concepts integrated. All 13 world art candidates must be compared with owner reference pack and approved, plus 15 final heist artworks, interactive/mobile and browser QA, before release. Do not merge.",
+  "staging_premium_webp_assets": 17,
   "staging_premium_cover_worlds": [
     "story",
     "online",
     "vi",
-    "cayo"
+    "cayo",
+    "iv",
+    "sa",
+    "vc",
+    "iii",
+    "vcs",
+    "lcs",
+    "ctw",
+    "tlad",
+    "tbogt"
   ]
 }
