@@ -90,7 +90,9 @@ for page in ("atlas90-vehicles5.html", "atlas90-vehicles6.html", "atlas90-weapon
     h = (D / page).read_text(encoding="utf8")
     assert "./atlas100-showroom.css?v=100a" in h
     assert "./atlas100-showroom.js?v=100a" in h
-    assert "./atlas90-gallery.js?v=90" in h, "Do not replace old gallery ownership logic"
+    version='192' if page=='atlas90-weapons.html' else '90'
+    assert f"./atlas90-gallery.js?v={version}" in h, "Gallery engine and ownership logic must remain present"
+assert "const STORE='team-jura-atlas90-collection-v1'" in (D/'atlas90-gallery.js').read_text(), "Preserve original gallery collection key"
 
 for page in ("index.html", "maps.html", "atlas93-garage.html", "atlas97-journey.html", "atlas81-hq.html"):
     assert "./atlas-database.html" in (D / page).read_text(encoding="utf8"), page
