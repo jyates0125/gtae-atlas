@@ -114,8 +114,19 @@ const close=btn('Close ×','j180-action',()=>{drawer.hidden=true;shell.scrollInt
 drawerHead.append(drawerTitle,close);drawer.append(drawerHead);
 const panes=el('div','j180-drawer-content');drawer.append(panes);
 main.insertBefore(shell,layout);shell.append(rail,mapStage);main.insertBefore(bottom,layout);main.insertBefore(drawer,layout);
-const advisory=document.getElementById('j153-advisory');
-if(advisory){advisory.classList.add('j180-advisory-bottom');main.append(advisory);}
+// The content notice can mount before or after the dynamic mission renderer.
+ // Keep the advisory accessible below the Cayo map in both timing orders.
+ const relocateAdvisory=()=>{
+  const notice=document.getElementById('j153-advisory');
+  if(!notice)return false;
+  notice.classList.add('j180-advisory-bottom');
+  main.append(notice);
+  return true;
+ };
+ if(!relocateAdvisory()){
+  const advisoryWatch=new MutationObserver(()=>{if(relocateAdvisory())advisoryWatch.disconnect()});
+  advisoryWatch.observe(main,{childList:true});
+ }
 
 const originalChecklist=layout.querySelector('aside.panel:not(.detail)'),sourcePanel=layout.querySelector('aside.panel.detail');
 const notes=document.querySelector('.j164-notes');
