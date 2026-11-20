@@ -16,7 +16,8 @@ BROWSER=os.getenv('ATLAS_BROWSER','chromium').lower()
 PAGES=[
  'index.html','atlas-dashboard.html','atlas-account.html','atlas-share.html','maps.html','atlas-activities.html?mode=online',
  'atlas93-garage.html','project.html','atlas.html','atlas-vi.html',
- 'one-last-ride.html'
+ 'one-last-ride.html','atlas155-art-review.html','atlas-characters.html','heists.html','elario.html',
+ 'atlas-online.html','atlas90-weapons.html','atlas-vehicle-configurator.html','map-hub.html?game=vc'
 ]
 VIEWPORTS=[('desktop',1440,900),('mobile',390,844)]
 OUT=ROOT/'qa-evidence'/BROWSER

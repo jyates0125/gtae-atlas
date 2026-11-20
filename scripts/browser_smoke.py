@@ -411,7 +411,10 @@ async def smoke():
                                 if await nav.count()!=1 or not await nav.is_visible():failures.append('Mobile map all-pages navigation missing')
                                 else:
                                     area=await nav.bounding_box()
-                                    if not area or area['x']>95:failures.append('Mobile map all-pages button is not kept at the left edge')
+                                    if not area or area['width']<38:failures.append('Mobile map all-pages button lacks accessible size')
+                                    positioning=await nav.evaluate('(el)=>getComputedStyle(el.closest(".j132-nav")).position')
+                                    if positioning not in ('relative','static'):
+                                        failures.append('Mobile map all-pages control still floats above map content')
                                     if path=='atlas.html':
                                         maps=pg.locator('[data-j87-maps-link]')
                                         if await maps.count()==1 and await maps.is_visible():
@@ -879,7 +882,9 @@ async def smoke():
                                     failures.append('Film project Elario crest missing')
                                 if await pg.locator('video source[src*="one-last-ride-motion-preview.mp4"]').count()==0:failures.append('Film preview source missing')
                                 if await pg.locator('.olr-scene-btn').count()!=9:failures.append('One Last Ride nine film chapters missing')
-                                if await pg.locator('[data-j130-action="share-page"]').count()==0:failures.append('Film-specific share CTA missing')
+                                if await pg.locator('.j130-olr-share').count():failures.append('Discontinued film share kit still interrupts content')
+                                if await pg.locator('[data-j131-social-host] [data-j131-platform]').count()<4:
+                                    failures.append('Bottom-of-page community social buttons missing on film')
                             results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures})
                             await pg.close()
                         await ctx.close()
