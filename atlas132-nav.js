@@ -11,7 +11,14 @@ const CATEGORIES=[
 ];
 const ALL=new Set(CATEGORIES.flatMap(x=>x.items.map(y=>y[1])));
 const safeHref=x=>/^[a-z0-9-]+\.html$/i.test(x);
-function pageLink(a){const l=document.createElement('a');l.href='./'+a[1];l.textContent=a[0];if(location.pathname.endsWith('/'+a[1])||(a[1]==='index.html'&&(location.pathname==='/'||location.pathname.endsWith('/index.html')))){l.setAttribute('aria-current','page')}return l}
+function pageLink(a){const l=document.createElement('a');l.href='./'+a[1];l.textContent=a[0];
+ const target=new URL(l.href),current=new URL(location.href);
+ const pathnameMatch=current.pathname===target.pathname||(a[1]==='index.html'&&(current.pathname==='/'||current.pathname.endsWith('/index.html')));
+ const scopedQuery=[...target.searchParams].every(([key,value])=>current.searchParams.get(key)===value);
+ const storyOnlineRule=target.pathname.endsWith('/atlas90-weapons.html')&&
+   (target.searchParams.get('world')==='story'?(current.searchParams.get('world')==='story'):(current.searchParams.get('world')!=='story'));
+ if(pathnameMatch&&scopedQuery&&storyOnlineRule!==false)l.setAttribute('aria-current','page');
+ return l}
 function build(){
  if(document.querySelector('#j132-nav-toggle'))return;
  const wrap=document.createElement('div');wrap.className='j132-nav';
