@@ -15,7 +15,7 @@ for text in ('j150-place-pin','team-jura:classic-place-slot','team-jura:classic-
  assert text in p,text
 for text in ('collectionSlot','collectionSet','pendingSlot','team-jura:classic-place-slot',
              'team-jura:classic-checklist-change','personal-image-percent','iconFor',
-             'data-map-image','team-jura-atlas98b-items-'):
+             'dataset.mapImage','team-jura-atlas98b-items-'):
  assert text in c,text
 assert "source:'personal-image-percent',...(link?{collectionSet:link.set,collectionSlot:link.slot}:{})" in c
 assert 'validLink?' in c, 'Backup import should validate optional slot linking'
