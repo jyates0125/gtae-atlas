@@ -40,9 +40,6 @@ try:
         assert directory.count()==1,'Searchable All Pages directory remains available'
         assert directory.evaluate("(e)=>getComputedStyle(e).position!=='fixed'"),'All Pages menu must not float over Cayo map'
         assert page.locator('#j132-nav-toggle').count()==1,'All Pages remains operable'
-        if page.locator('.j132-nav').count():
-            assert page.locator('.j132-nav').evaluate("(e)=>getComputedStyle(e).position!=='fixed'"),'Modern All Pages menu should remain available in page flow, not cover Cayo map'
-            assert page.locator('#j132-nav-toggle').count()==1,'All Pages directory remains accessible'
         # Atlas 18 flagship starts in map-first mode; open the linked planning drawer.
         page.locator('#j180-shell').wait_for(state='visible',timeout=30000)
         page.wait_for_function("document.querySelectorAll('.j180-chest').length === 19",timeout=20000)
