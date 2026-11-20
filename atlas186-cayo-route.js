@@ -354,7 +354,12 @@ world.addEventListener('click',event=>{
  const marker=event.target.closest?.('.j181-hotspot[data-marker-id],.j180-chest[data-chest]');
  if(!marker)return;
  const id=marker.dataset.markerId||('chest-'+marker.dataset.chest);
- if(choosingStart){startFrom(id);panel.scrollIntoView({block:'nearest',behavior:'smooth'});}
+ if(choosingStart){
+  startFrom(id);
+  const details=document.querySelector('.j180-pin-info');
+  if(details)details.hidden=true;
+  panel.scrollIntoView({block:'nearest',behavior:'smooth'});
+ }
  queueMicrotask(()=>{
   const info=document.querySelector('.j180-pin-info');
   if(!info||info.hidden||!sourceFor(id)||info.querySelector('.j186-pin-actions'))return;
