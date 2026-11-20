@@ -79,7 +79,7 @@ function activate(next){
  focus.dataset.j169View=mode;
 }
 function selectPOI(term){
- activate('enhanced');const query=$('.j167-search');
+ activate(id==='cayo-perico'?'original':'enhanced');const query=$('.j167-search');
  if(!query)return false;
  const termLower=String(term||'').toLowerCase().trim();
  if(!termLower)return false;
@@ -113,7 +113,7 @@ document.addEventListener('click',e=>{
  const guide=e.target.closest('#j168-heist-guide .j168-map');
  if(!guide)return;
  // Use the existing guide's source-informed POI search after returning to map.
- activate('enhanced');
+ activate(id==='cayo-perico'?'original':'enhanced');
  // Guide handler fills search on click; select its matching result immediately after.
  queueMicrotask(()=>{
   const term=$('.j167-search')?.value||'';

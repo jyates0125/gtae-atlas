@@ -6,7 +6,7 @@ js=(root/'atlas169-heist-views.js').read_text()
 css=(root/'atlas169-heist-views.css').read_text()
 loader=(root/'heist-pages.js').read_text()
 assert "j169-views" in js and 'j169-view' in css
-for phrase in ['Enhanced map','Objective details','Route planning','Original island explorer','Vault & objectives','Museum & objectives','Compound & objectives']:
+for phrase in ['Enhanced map','Objective details','Route planning','Game map + pins','Vault & objectives','Museum & objectives','Compound & objectives']:
  assert phrase in js,phrase
 assert "id==='cayo-perico'" in js and "originalFrame.src='./atlas-cayo.html'" in js
 assert 'oldLink.replaceWith(sourceBtn)' in js, 'Cayo original map CTA must not duplicate the existing full-size source link'

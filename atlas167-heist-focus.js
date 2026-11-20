@@ -147,7 +147,7 @@ const photo=new Image();
 // It is a concept derived from reference study, not in-game image geometry.
 const photoAsset=id==='kortz-center'?'./art/jura168-kortz-center-aerial.webp':'./art/jura167-map-'+id+'.webp';
 photo.onload=()=>{photoReady=true;if(juraMapMode!=='original'){world.style.backgroundImage='linear-gradient(180deg,rgba(6,12,34,.14),rgba(6,7,24,.26)),url("'+photoAsset+'")';world.style.backgroundSize='cover';world.style.backgroundPosition='center';paint()}};
-photo.onerror=()=>{photoReady=false;world.style.backgroundImage='none';paint()};
+photo.onerror=()=>{photoReady=false;if(juraMapMode!=='original')world.style.backgroundImage='none';paint()};
 photo.decoding='async';photo.src=photoAsset;
 const scheme={urban:['#1f2847','#3b324b','#586171'],prison:['#1b283b','#314758','#586578'],coast:['#11394b','#315864','#61706b'],industrial:['#302f42','#48465b','#77727d'],regional:['#282f47','#405272','#6e6681'],desert:['#403447','#735c67','#a68c72'],island:['#093950','#24766b','#497c56'],farm:['#343b35','#647051','#9f8a60'],casino:['#2d213e','#6d376d','#b27391'],cultural:['#302741','#574566','#95817c']};
 const pal=scheme[config.kind]||scheme.urban;
