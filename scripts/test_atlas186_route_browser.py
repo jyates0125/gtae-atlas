@@ -93,6 +93,7 @@ try:
    picked=page.evaluate("window.teamJuraCayoPinRoute.getState()")
    assert picked['start']=='entry-0','Clicked colorful pin becomes actual route origin'
    assert picker.get_attribute('aria-pressed')=='false','Start selection exits after pin choice'
+   assert page.locator('.j180-pin-info').is_hidden(),'Start-picker marker card closes to reveal route controls on phone'
    page.locator('.j186-action').filter(has_text='Build nearest route').click()
    assert page.locator('.j186-route-line').count()==1,'Route drawn from clicked pin'
    evidence=ROOT/'qa-evidence'/engine
