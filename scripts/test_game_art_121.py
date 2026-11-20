@@ -9,7 +9,10 @@ portal=(ROOT/'atlas98-portal.js').read_text(encoding='utf-8')
 cayo=(ROOT/'atlas-cayo.html').read_text(encoding='utf-8')
 credits=(ROOT/'atlas-credits.html').read_text(encoding='utf-8')
 worlds=['story','online','vi','cayo','iv','sa','vc','iii','vcs','lcs','ctw','tlad','tbogt']
-assert "coverSrc:" not in directory, "Source URLs must never be rendered as map covers"
+premium=re.findall(r"coverSrc:'(\./art/jura155-(?:story|online|vi|cayo)\.webp)'",directory)
+assert len(premium)==4 and len(set(premium))==4, "Exactly four distinct local premium map-cover assets expected"
+assert directory.count("coverSrc:")==4, "Remote or unapproved map cover source detected"
+assert all((ROOT / path.removeprefix('./')).is_file() for path in premium),premium
 for world in worlds:
  assert re.search(r"\{id:'"+world+r"',[^\n]*art:'([^']+)'",directory),world
 for world in ['iii','vc','vcs','lcs','ctw','tlad','tbogt']:
@@ -19,8 +22,9 @@ for name in ('atlas128-gta3-radar.png','atlas128-vice-city-radar.png','atlas128-
 assert 'originalMapReady' in classic and 'loadOriginalWorldMap()' in classic
 assert 'highResUrl||state.background' in classic
 # Public cards and registry must use validated local illustrations, not a third-party CDN.
-assert "const sources=[featuredConcept,'./art/'+w.art].filter(Boolean)" in portal
-assert "w.coverSrc" not in portal and 'im.onerror=' in portal
+assert "const sources=[premiumCover,featuredConcept,'./art/'+w.art].filter(Boolean)" in portal
+assert "w.coverSrc" in portal and 'im.onerror=' in portal
+assert "jura155-(story|online|vi|cayo)" in portal
 assert 'Original Team Jura fan illustration' in portal
 local_covers=re.findall(r"\bart:'([^']+)'",directory)
 assert len(local_covers)==13 and len(set(local_covers))==13
