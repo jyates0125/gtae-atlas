@@ -2,30 +2,30 @@
   "schema": "team-jura-visual-release-v1",
   "source": "docs/ATLAS151-PREMIUM-VISUAL-RELEASE-HOLD.md",
   "status": "HOLD",
-  "last_owner_review": "2026-11-19",
-  "reason": "Owner rejected regression from approved cinematic artwork to generic SVG world-card covers and iPhone navigation overlap.",
+  "last_owner_review": "2026-11-20",
+  "reason": "Owner approved 13 cinematic world covers, premium home direction and the 15 mission artwork designs on Nov 20. Full final production site review, cross-device visual comparison, feature-parity caveats and release permission remain outstanding.",
   "approved_by_owner": false,
   "desktop_screenshots_compared": false,
   "mobile_screenshots_compared": false,
   "mobile_controls_overlap_resolved": false,
   "cloudflare_preview_visual_review": false,
-  "heists_15_individual_final_art_approved": false,
+  "heists_15_individual_final_art_approved": true,
   "approved_world_covers": {
-    "story": null,
-    "online": null,
-    "vi": null,
-    "cayo": null,
-    "iv": null,
-    "sa": null,
-    "vc": null,
-    "iii": null,
-    "vcs": null,
-    "lcs": null,
-    "ctw": null,
-    "tlad": null,
-    "tbogt": null
+    "story": "art/jura155-story.webp",
+    "online": "art/jura155-online.webp",
+    "vi": "art/jura155-vi.webp",
+    "cayo": "art/jura155-cayo.webp",
+    "iv": "art/jura157-iv-cinematic.webp",
+    "sa": "art/jura157-sa-cinematic.webp",
+    "vc": "art/jura157-vc-cinematic.webp",
+    "iii": "art/jura157-iii-cinematic.webp",
+    "vcs": "art/jura157-vcs-cinematic.webp",
+    "lcs": "art/jura157-lcs-cinematic.webp",
+    "ctw": "art/jura157-ctw-cinematic.webp",
+    "tlad": "art/jura157-tlad-cinematic.webp",
+    "tbogt": "art/jura157-tbogt-cinematic.webp"
   },
-  "note": "Atlas 16.0: 13 world covers and 16 distinct mission/HQ cinematic WebPs staged, larger headers on desktop/mobile. Owner screenshot review and feature-parity signoff pending. Do not merge to development without explicit owner approval.",
+  "note": "Owner approved ARTWORK direction, not an untested final release. Current Chromium+Edge functional and screenshot capture jobs passed on earlier SHA 0457fd2, but production ZIP workflow deliberately failed due this HOLD. Recheck new head. Final review still required, no merge without separate explicit release approval.",
   "staging_premium_webp_assets": 17,
   "staging_premium_cover_worlds": [
     "story",
@@ -43,5 +43,13 @@
     "tbogt"
   ],
   "staging_premium_heist_scenes": 16,
-  "staging_premium_heist_mission_cover_count": 15
+  "staging_premium_heist_mission_cover_count": 15,
+  "owner_cinematic_art_direction_approved": true,
+  "staging_premium_subject_heroes": [
+    "wildlife",
+    "collectibles",
+    "weapons",
+    "vehicles5",
+    "vehicles6"
+  ]
 }
