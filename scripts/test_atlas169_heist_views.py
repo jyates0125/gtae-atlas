@@ -15,7 +15,7 @@ assert 'jura159-heist-' in js and 'jura159-heist-' in loader
 assert 'j169-surface' in css and 'j169-objective-grid' in css
 assert 'j167-pin' in css and 'radial-gradient' in css and not '.svg' in css
 assert 'teamjura-heist-focus-v1:' not in js and 'localStorage.setItem' not in js
-assert 'selectPOI' in js and "activate('enhanced')" in js
+assert 'selectPOI' in js and "activate(id==='cayo-perico'?'original':'enhanced')" in js
 assert 'atlas169-heist-views.js?v=169' in loader and 'atlas169-heist-views.css?v=169' in loader
 assert 'views.async=false' in loader and 'focus.async=false' in loader
 assert css.count('{')==css.count('}')

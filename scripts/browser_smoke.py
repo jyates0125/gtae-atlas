@@ -103,14 +103,18 @@ async def smoke():
                                         failures.append('Objective POI failed to return to map')
                                     if path=='heist-cayo-perico.html':
                                         await pg.locator('#j169-views .j169-view[data-view="original"]').click()
-                                        if not await pg.locator('#j169-original').is_visible():
-                                            failures.append('Cayo source island view did not open')
+                                        # Atlas 17.0: Cayo ORIGINAL basemap is now the SAME interactive
+                                        # map viewport with POI pins, routes and controls—not an iframe.
+                                        if await pg.locator('#j169-original').is_visible():
+                                            failures.append('Legacy separate Cayo source panel unexpectedly visible')
                                         if await pg.locator('#j169-cayo-frame').get_attribute('src'):
-                                            failures.append('Source island viewer loaded without user action')
-                                        await pg.locator('#j169-original .j169-load').click()
-                                        if await pg.locator('#j169-cayo-frame').get_attribute('src')!='./atlas-cayo.html':
-                                            failures.append('Original island viewer source mismatch')
-                                        await pg.locator('#j169-original .j169-load').click()
+                                            failures.append('Legacy Cayo source iframe unexpectedly loaded')
+                                        if not await pg.locator('#j167-heist-map .j167-viewport').is_visible():
+                                            failures.append('Cayo original map with interactive pins is missing')
+                                        if not await pg.evaluate("Boolean(window.teamJuraHeistBaseMap?.setSource)"):
+                                            failures.append('Cayo original basemap switcher is unavailable')
+                                        if await pg.locator('#j169-views [data-view="original"]').get_attribute('aria-pressed')!='true':
+                                            failures.append('Cayo combined original map tab did not activate')
                                     await pg.locator('#j169-views .j169-view[data-view="route"]').click()
                                     if not await pg.locator('#j167-heist-map .j167-viewport').is_visible():
                                         failures.append('Route planning map did not reopen')
@@ -136,7 +140,7 @@ async def smoke():
                                                 failures.append('Walkthrough map POI button did not filter the focused map')
                                             # Restore all markers for the independent map-coverage checks below.
                                             await pg.locator('#j167-heist-map .j167-search').fill('')
-                                    await pg.wait_for_function("""() => getComputedStyle(document.querySelector('#j167-heist-map .j167-world')).backgroundImage.includes('jura167-map-')""",timeout=9000)
+                                    await pg.wait_for_function("""() => /jura167-map-|wikiassets/.test(getComputedStyle(document.querySelector('#j167-heist-map .j167-world')).backgroundImage)""",timeout=9000)
                                     pins=pg.locator('#j167-heist-map .j167-pin')
                                     if await pins.count()<5:
                                         failures.append('Focused mission map has fewer than five accessible POI pins')
