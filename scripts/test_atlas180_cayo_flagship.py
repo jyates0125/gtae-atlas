@@ -58,5 +58,5 @@ assert "data-map-asset" in hotspots
 assert ".j181-hotspot[data-category=" in hotspot_css
 assert ".j180-chest::before" in hotspot_css
 assert ".j180-chest.j180-chest-active::before" in hotspot_css
-assert 'atlas181-cayo-hotspots.js?v=181' in loader and 'atlas181-cayo-hotspots.css?v=181' in loader
+assert 'atlas181-cayo-hotspots.js?v=191' in loader and 'atlas181-cayo-hotspots.css?v=181' in loader
 print('PASS Atlas 18.2: local island fallback, visible marker symbols and chest-dot status integrity')
