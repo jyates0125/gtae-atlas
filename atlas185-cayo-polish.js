@@ -99,4 +99,56 @@ document.addEventListener('keydown',event=>{
  if(!info.hidden){event.preventDefault();info.querySelector('.j180-info-close')?.click();}
  if(frame.classList.contains('j180-expanded'))frame.classList.remove('j180-expanded');
 });
+
+// When a dense group of colored source-reference markers overlaps, don't
+// silently select whichever button was painted last. Allow the player to
+// pick the intended item without moving the markers away from their data.
+const world=focus.querySelector('.j167-world');
+let directSelection=false;
+function markerLabel(button){
+ return (button.getAttribute('aria-label')||button.title||'Cayo location')
+   .replace(/\s*\(approximate\)\s*$/i,'');
+}
+function presentNearby(items){
+ info.hidden=false;info.replaceChildren();
+ const close=makeButton('j180-info-close','×',()=>{info.hidden=true});
+ close.setAttribute('aria-label','Close nearby locations');
+ const heading=document.createElement('strong');
+ heading.textContent='Choose nearby location';
+ const note=document.createElement('p');
+ note.textContent=items.length+' markers share this small map area. Choose the exact location below; positions remain approximate.';
+ const list=document.createElement('div');list.className='j185-cluster-choices';
+ for(const node of items.slice(0,12)){
+  const choice=makeButton('j185-cluster-choice',markerLabel(node),()=>{
+   directSelection=true;
+   try{node.click();}finally{directSelection=false;}
+  });
+  list.append(choice);
+ }
+ info.append(close,heading,note,list);
+ requestAnimationFrame(()=>list.querySelector('button')?.focus({preventScroll:true}));
+}
+world?.addEventListener('click',event=>{
+ if(directSelection)return;
+ const target=event.target.closest?.('.j181-hotspot,.j180-chest');
+ if(!target||target.hidden)return;
+ const rect=target.getBoundingClientRect();
+ const x=rect.left+rect.width/2,y=rect.top+rect.height/2;
+ const visible=[...world.querySelectorAll('.j181-hotspot,.j180-chest')].filter(node=>{
+  if(node.hidden||getComputedStyle(node).display==='none')return false;
+  const r=node.getBoundingClientRect();
+  if(!r.width||!r.height)return false;
+  const dx=r.left+r.width/2-x,dy=r.top+r.height/2-y;
+  return Math.hypot(dx,dy)<=28;
+ });
+ if(visible.length<2)return;
+ event.preventDefault();event.stopImmediatePropagation();
+ visible.sort((a,b)=>{
+  const ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
+  const da=Math.hypot(ra.left+ra.width/2-x,ra.top+ra.height/2-y);
+  const db=Math.hypot(rb.left+rb.width/2-x,rb.top+rb.height/2-y);
+  return da-db;
+ });
+ presentNearby(visible);
+},true);
 })();
