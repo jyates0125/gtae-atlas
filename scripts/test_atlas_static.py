@@ -42,10 +42,10 @@ research=(D/'atlas-research.js').read_text()
 assert "'yanis,18'" in js and "base:'yanis,18'" in js
 assert "yanis,17" not in js and "/yanis,17/" not in research, 'Retired tiles cause the grid fallback'
 assert "maps/tiles/6/yanis,18/" in research, 'Research primary imagery not migrated'
-assert "./atlas-sw.js?v=103-tiles" in js, 'Service worker refresh missing'
-assert "team-jura-atlas-v103-tiles" in (D/'atlas-sw.js').read_text()
+assert "./atlas-sw.js?v=191" in js, 'Service worker refresh missing'
+assert "team-jura-atlas-v191" in (D/'atlas-sw.js').read_text()
 for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
-    assert "./atlas.js?v=103-tiles" in (D/page).read_text(), page
+    assert "./atlas.js?v=191" in (D/page).read_text(), page
 assert "./atlas-research.js?v=103-tiles" in (D/'atlas-research.html').read_text()
 print('Atlas static regression PASS: licensed community VI views, navigation, legacy keys, links, sync plumbing')
 
