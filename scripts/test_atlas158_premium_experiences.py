@@ -8,7 +8,8 @@ classic=(root/'atlas98-classic.js').read_text(encoding='utf-8')
 css=(root/'atlas158-premium-experiences.css').read_text(encoding='utf-8')
 ids=["iv","sa","vc","iii","vcs","lcs","ctw","tlad","tbogt"]
 assert 'class="map-preview j158-map-preview"' in dashboard
-assert 'jura155-map.webp' in css
+assert 'jura158-map-world-cinematic.webp' in css
+assert (root/'art'/'jura158-map-world-cinematic.webp').is_file()
 assert 'j158-map-hud' in dashboard and 'aria-hidden="true"' in dashboard
 assert 'class="j158-nine-grid"' in dashboard
 assert dashboard.count('class="j158-nine-card"') == 9
