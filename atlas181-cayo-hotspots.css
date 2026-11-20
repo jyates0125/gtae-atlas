@@ -95,3 +95,54 @@ body.j180-cayo.j181-map-hotspots .j181-qualifier{
 @media(prefers-reduced-motion:reduce){
  body.j180-cayo.j181-map-hotspots .j181-hotspot{transition:none!important}
 }
+
+/* Atlas 18.2 correction: the current GTA Wiki basemap and local fallback do
+   NOT guarantee that source pictograms are baked into their pixels.
+   Render our OWN clickable category symbols; native 16.7 pins remain hidden
+   to avoid doubled icon layers. */
+body.j180-cayo.j181-map-hotspots .j181-hotspot{
+ width:24px!important;height:24px!important;
+ display:grid!important;place-items:center!important;
+ background:radial-gradient(circle at 35% 20%,#443046,#1c1828)!important;
+ border:1px solid #f4d49b!important;border-radius:50%!important;
+ box-shadow:0 3px 8px #0009,0 0 0 1px #180c2190!important;
+ color:#f8d89b!important;text-shadow:0 1px 3px #050608!important;
+ font-size:16px!important;font-weight:900!important;line-height:1!important;
+ z-index:8;
+}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="entry"]{color:#ec83f5!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="exit"],
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="drainage"]{color:#f2ef65!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="secondary"],
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="gated"]{color:#36beff!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="bolts"]{color:#ff776b!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="grapple"]{color:#d17cff!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="clothes"]{color:#ffe0a2!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="truck"]{color:#5beba5!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="power"]{color:#ffdd55!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="water"]{color:#48e8f6!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="powder"]{color:#fda37e!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[hidden]{display:none!important}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest{
+ position:absolute!important;width:25px!important;height:25px!important;
+ display:block!important;background:transparent!important;border:0!important;
+ font-size:0!important;opacity:1!important;box-shadow:none!important;
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest::before{
+ content:'';display:block;position:absolute;left:50%;top:50%;
+ width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);
+ background:#ffef45;border:1px solid #3c3b1d;box-shadow:0 0 0 1px #fff59d7d,0 0 7px #ffd549b7;
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest.j180-chest-active::before{
+ width:15px;height:15px;background:#11f0e9;border:2px solid #f7ffba;
+ box-shadow:0 0 0 2px #11efff65,0 0 10px #00faff;
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest.j180-chest-active::after{
+ inset:1px;border:2px solid #36fff6!important;background:transparent!important;
+ box-shadow:0 0 8px #00faffb5!important;
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest[hidden],
+body.j180-cayo.j181-map-hotspots .j181-hide-chests .j180-chest{display:none!important}
+@media(max-width:590px){
+ body.j180-cayo.j181-map-hotspots .j181-hotspot{width:20px!important;height:20px!important;font-size:12px!important}
+}
