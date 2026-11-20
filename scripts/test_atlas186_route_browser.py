@@ -41,6 +41,12 @@ try:
    assert len(a['order'])>1,'Nearest route must include candidate locations'
    assert page.locator('.j186-route-line').count()==1,'Route line visible on the island after pin click'
    assert page.locator('.j186-stop-item').count()==len(a['order']),'Visible stop list matches island line'
+   # Save actual Chromium/Edge evidence showing BOTH the map route overlay
+   # and the companion mission planner, on desktop and a phone-width page.
+   proof=ROOT/'qa-evidence'/engine
+   proof.mkdir(parents=True,exist_ok=True)
+   page.locator('.j180-map-frame').screenshot(path=str(proof/('cayo-186-route-map-'+kind+'.png')),animations='disabled')
+   page.locator('#j186-route').screenshot(path=str(proof/('cayo-186-route-planner-'+kind+'.png')),animations='disabled')
    assert page.locator('.j186-start').count()==1,'Start pin is highlighted'
    page.locator('.j186-preset').filter(has_text='Equipment').click()
    b=page.evaluate("window.teamJuraCayoPinRoute.getState()")
