@@ -79,6 +79,36 @@ async def smoke():
                             if errors:failures.extend('JS: '+e for e in errors)
                             if missing:failures.extend('Missing local response: '+e for e in missing)
                             if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
+
+                            # Atlas 16.4: interactive mission map is user-triggered; plans are local
+                            # and must not change the existing mission checklist storage.
+                            if path in ('heist-fleeca.html','heist-cayo-perico.html') and not failures:
+                                try:
+                                    await pg.locator('#j164-mission-map').wait_for(timeout=7000)
+                                    actual_art=await pg.locator('.mapbox > img').get_attribute('src')
+                                    mission=path.removeprefix('heist-').removesuffix('.html')
+                                    if actual_art!='./art/jura159-heist-'+mission+'.webp':
+                                        failures.append('Mission artwork regressed to legacy image: '+str(actual_art))
+                                    await pg.locator('.j164-notes textarea').first.fill('Atlas 16.4 real-browser saved test')
+                                    saved=await pg.evaluate("""() => localStorage.getItem('teamjura-heist-plan-v1:'+document.body.dataset.heist)""")
+                                    if not saved or 'real-browser saved test' not in saved:
+                                        failures.append('Heist personal note did not persist locally')
+                                    await pg.locator('.j164-main').click()
+                                    frame=pg.locator('#j164-map-frame')
+                                    if not await frame.is_visible():
+                                        failures.append('Embedded world map did not open')
+                                    expect='./atlas-cayo.html' if mission=='cayo-perico' else './atlas-online.html'
+                                    if await frame.get_attribute('src')!=expect:
+                                        failures.append('Wrong game map loaded in mission workspace')
+                                    await pg.locator('.j164-main').click()
+                                    if await frame.is_visible():
+                                        failures.append('Embedded map failed to close')
+                                    progress=await pg.evaluate("""() => localStorage.getItem('teamjura-heist-'+document.body.dataset.heist)""")
+                                    if progress is None:
+                                        failures.append('Existing checklist key was not preserved')
+                                except Exception as e:
+                                    failures.append('Heist real-map and local note UI: '+str(e)[:330])
+
                             if not failures and path in ('atlas-cheats.html','atlas-news.html'):
                                 try:
                                     await pg.wait_for_function("document.querySelector('#hubCount')?.textContent?.includes('snapshot ')",timeout=8000)
