@@ -1,0 +1,72 @@
+name: Team Jura Cayo - focused acceptance
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas1*-cayo-*.js'
+      - 'atlas1*-cayo-*.css'
+      - 'atlas167-heist-focus.js'
+      - 'atlas167-heist-focus.css'
+      - 'atlas169-heist-views.js'
+      - 'heist-pages.js'
+      - 'data/cayo-*.json'
+      - 'art/jura182-cayo-local-road-plan.svg'
+      - 'scripts/test_atlas1*_cayo_*.py'
+      - 'scripts/test_atlas171_browser.py'
+      - '.github/workflows/cayo-focused-acceptance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cayo-acceptance-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+jobs:
+  focused-chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Parse Cayo tests and scripts
+        run: |
+          python -m py_compile scripts/test_atlas171_browser.py scripts/test_atlas180_cayo_flagship.py scripts/test_atlas181_cayo_hotspots.py scripts/test_atlas184_cayo_visible_symbols.py scripts/test_atlas185_cayo_polish.py
+          node --check atlas171-cayo-board.js
+          node --check atlas180-cayo-flagship.js
+          node --check atlas181-cayo-hotspots.js
+          node --check atlas185-cayo-polish.js
+          node --check heist-pages.js
+      - name: Validate Cayo map, icon categories and source data
+        run: |
+          python scripts/test_atlas170_cayo_unified.py
+          python scripts/test_atlas171_cayo_board.py
+          python scripts/test_atlas180_cayo_flagship.py
+          python scripts/test_atlas181_cayo_hotspots.py
+          python scripts/test_atlas184_cayo_visible_symbols.py
+          python scripts/test_atlas185_cayo_polish.py
+      - name: Build actual Cloudflare Pages payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install browser for visual and interaction acceptance
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install --with-deps chromium
+      - name: Test Cayo desktop, phone, markers, daily locations, and forced local backup
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas171_browser.py
+      - name: Save actual Cayo desktop and phone screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cayo-only-desktop-mobile-visual-proof
+          path: |
+            qa-evidence/chromium/cayo-180-map-*.png
+            qa-evidence/chromium/cayo-171-*.png
+          if-no-files-found: warn
+          retention-days: 14
