@@ -30,6 +30,14 @@ HEIST_PAGES={p.name for p in ROOT.glob('heist-*.html')}
 if len(HEIST_PAGES)<15:
     raise SystemExit('The release must contain all 15 heist planning pages')
 PAGES.extend(sorted(HEIST_PAGES.difference(PAGES)))
+# Release-candidate completeness: do not let newly added/older public pages fall
+# through the cracks just because an earlier manual smoke list missed them.
+# Preserve explicit query-state scenarios, then append every other published
+# top-level HTML page exactly once for desktop + phone browser load checks.
+AUDITED_PAGE_NAMES={p.split('?',1)[0] for p in PAGES}
+PAGES.extend(sorted(p.name for p in ROOT.glob('*.html') if p.name not in AUDITED_PAGE_NAMES))
+assert {p.name for p in ROOT.glob('*.html')}.issubset({p.split('?',1)[0] for p in PAGES})
+
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
