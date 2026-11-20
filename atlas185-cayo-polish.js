@@ -65,6 +65,9 @@ const source=document.createElement('span');source.className='j185-source-status
 source.setAttribute('aria-live','polite');
 source.textContent='Loading island artwork';status?.prepend(source);
 function syncSource(){
+ // The existing map-view module updates status.textContent when changing maps.
+ // Reinsert our source label so it stays visible after every switch.
+ if(status && source.parentNode!==status)status.prepend(source);
  const type=focus.dataset.mapSource,asset=focus.dataset.mapAsset;
  if(type==='original'&&asset==='gta-wiki')source.textContent='Game-map source';
  else if(type==='original'&&asset==='local-trace')source.textContent='Local road-map fallback';
