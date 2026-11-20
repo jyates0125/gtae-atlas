@@ -27,13 +27,14 @@ const presets={
  'Island intel':['control','power','water'],
  'Chests':['chest']
 };
-const defaultState=()=>({start:null,order:[],categories:[...DEFAULT],limit:10,mode:'nearest',chestMode:'active',completed:[]});
+const defaultState=()=>({start:null,finish:null,order:[],categories:[...DEFAULT],limit:10,mode:'nearest',chestMode:'active',completed:[]});
 let state=defaultState();
 try{
  const v=JSON.parse(localStorage.getItem(storage)||'null');
  if(v&&typeof v==='object'){
   const safeId=x=>typeof x==='string'&&/^(?:entry|exit|drainage|secondary|gated|bolts|grapple|clothes|truck|control|power|powder|water)-\d+$|^chest-(?:[1-9]|1[0-9])$/.test(x);
   state.start=safeId(v.start)?v.start:null;
+  state.finish=safeId(v.finish)&&v.finish!==v.start?v.finish:null;
   state.order=Array.isArray(v.order)?[...new Set(v.order.filter(safeId))].slice(0,110):[];
   state.categories=Array.isArray(v.categories)?[...new Set(v.categories.filter(x=>ALL_CATS.includes(x)))]:[...DEFAULT];
   state.limit=[5,10,20,50,100].includes(v.limit)?v.limit:10;
@@ -50,6 +51,7 @@ if(shared&&shared.length<3500){
   const safe=id=>typeof id==='string'&&/^(?:entry|exit|drainage|secondary|gated|bolts|grapple|clothes|truck|control|power|powder|water)-\d+$|^chest-(?:[1-9]|1[0-9])$/.test(id);
   if(v?.version===1&&safe(v.start)){
    state.start=v.start;
+   state.finish=safe(v.finish)&&v.finish!==v.start?v.finish:null;
    state.order=Array.isArray(v.order)?[...new Set(v.order.filter(safe))].slice(0,100):[v.start];
    if(state.order[0]!==v.start)state.order=[v.start,...state.order.filter(x=>x!==v.start)];
    state.categories=Array.isArray(v.categories)?[...new Set(v.categories.filter(x=>ALL_CATS.includes(x)))]:[...DEFAULT];
@@ -81,7 +83,7 @@ const distance=(a,b)=>{const dx=(a.x-b.x)*1.0174,dy=a.y-b.y;return dx*dx+dy*dy};
 const panel=el('section','j186-panel');panel.id='j186-route';panel.setAttribute('aria-label','Build a Cayo route from a selected map marker');
 const head=el('div','j186-head');
 const heading=el('div');heading.append(el('span','j186-eyebrow','PERSONAL ROUTE · ON THE ISLAND MAP'),el('h3','','Choose a starting pin and build a route'));
-const helper=el('p','','Tap any colorful pin or chest, choose “Start route here”, then select the categories you want to visit. The line orders nearby reference markers; it is not a verified in-game road, path, speed or travel-time calculation.');
+const helper=el('p','','Tap any colorful pin or chest, choose “Start route here”, then choose categories and optionally an ending pin. The line orders nearby reference markers; it is not a verified in-game road, path, speed or travel-time calculation.');
 head.append(heading,helper);panel.append(head);
 const status=el('p','j186-status','Choose any colorful marker on the island to begin.');
 status.setAttribute('role','status');status.setAttribute('aria-live','polite');panel.append(status);
@@ -157,6 +159,8 @@ chestMode.value=state.chestMode;chestMode.addEventListener('change',()=>{
  state.chestMode=chestMode.value;persist();if(state.start&&state.mode==='nearest')autoRoute();else render();
 });chestLabel.append(chestMode);controls.append(chestLabel);
 panel.append(controls);
+const destination=el('p','j186-destination','Optional: tap a marker and choose “Finish route here” to set your final stop.');
+panel.append(destination);
 let choosingStart=false;
 const actions=el('div','j186-actions');
 const pickStart=button('Pick starting pin','j186-action j186-primary',()=>{
@@ -170,24 +174,34 @@ pickStart.setAttribute('aria-pressed','false');
 pickStart.id='j186-pick-start';
 const buildBtn=button('Build nearest route','j186-action j186-primary',()=>autoRoute());
 const nextBtn=button('Add next nearest','j186-action',()=>appendNearest());
+const resumeBtn=button('Resume after visited','j186-action',()=>{
+ const last=state.order.filter(id=>state.completed.includes(id)).at(-1);
+ if(!last||last===state.finish){render('Mark an intermediate stop visited first.');return;}
+ state.mode='nearest';mode.value='nearest';startFrom(last);
+});
 const reverseBtn=button('Reverse stops','j186-action',()=>{
  if(state.order.length<3)return;
  state.mode='manual';mode.value='manual';
  const first=state.order[0];state.order=[first,...state.order.slice(1).reverse()];persist();render();
 });
 const clearBtn=button('Clear my route','j186-action',()=>{
- state.start=null;state.order=[];persist();render();
+ state.start=null;state.finish=null;state.order=[];persist();render();
+});
+const clearFinishBtn=button('Remove finish','j186-action',()=>{
+ const old=state.finish;state.finish=null;state.order=state.order.filter(id=>id!==old);
+ if(state.start&&state.mode==='nearest')autoRoute();
+ else {persist();render('Ending pin cleared.');}
 });
 const shareBtn=button('Share this route','j186-action',async()=>{
  if(!state.start||!state.order.length){render('Choose a starting pin before sharing a route.');return;}
  const url=new URL(location.href);
- url.searchParams.set('cayoRoute',JSON.stringify({version:1,start:state.start,order:state.order.slice(0,100),categories:state.categories,mode:'manual',chestMode:state.chestMode,limit:state.limit}));
+ url.searchParams.set('cayoRoute',JSON.stringify({version:1,start:state.start,finish:state.finish,order:state.order.slice(0,100),categories:state.categories,mode:'manual',chestMode:state.chestMode,limit:state.limit}));
  url.hash='j186-route';
  try{await navigator.clipboard.writeText(url.href);status.textContent='Personal route link copied. The link shares only map stops and chosen categories—never notes or saved progress.';}
  catch(_){if(navigator.share){try{await navigator.share({title:'Team Jura Cayo route',url:url.href});}catch(__){status.textContent='Sharing was canceled. Your personal route is still saved on this device.';}}
  else{window.prompt('Copy your Cayo route link:',url.href);status.textContent='Route link ready to copy.';}}
 });
-actions.append(pickStart,buildBtn,nextBtn,reverseBtn,clearBtn,shareBtn);panel.append(actions);
+actions.append(pickStart,buildBtn,nextBtn,resumeBtn,reverseBtn,clearFinishBtn,clearBtn,shareBtn);panel.append(actions);
 const list=el('ol','j186-stops');panel.append(list);
 const caveat=el('p','j186-caveat','Source map and equipment positions are reference-aligned, not exact Rockstar world coordinates. Nearest means shortest straight-line separation between map symbols, not fastest or safely traversable travel. Hidden or unavailable daily chests are excluded in daily-only mode.');
 panel.append(caveat);
@@ -211,19 +225,20 @@ function drawLine(){
   // float ABOVE its icon while the gold line stays BELOW the icon layer.
   // A badge identifies the visit order, never a second location pin.
   const x=Math.max(2,Math.min(97,n.x+2.5)),y=Math.max(3,Math.min(97,n.y-2.4));
-  const mark=ns('g',{class:'j186-stop'+(i===0?' j186-first':'')});
+  const mark=ns('g',{class:'j186-stop'+(i===0?' j186-first':n.id===state.finish?' j186-last':'')});
   mark.append(ns('circle',{cx:x,cy:y,r:'1.55'}));
   const text=ns('text',{x,y:y+.52,'text-anchor':'middle','font-size':'2.1'});
   text.textContent=String(i+1);mark.append(text);badges.append(mark);
  }
  for(const node of world.querySelectorAll('.j181-hotspot,.j180-chest')){
   node.classList.toggle('j186-start',state.start===node.dataset.markerId||state.start==='chest-'+node.dataset.chest);
+  node.classList.toggle('j186-finish',state.finish===node.dataset.markerId||state.finish==='chest-'+node.dataset.chest);
  }
 }
 function sourceFor(id){return byId().get(id)}
 function availableTargets(map=byId()){
  return [...map.values()].filter(n=>{
-  if(n.id===state.start||state.completed.includes(n.id)||!state.categories.includes(n.cat)||!n.shown)return false;
+  if(n.id===state.start||n.id===state.finish||state.completed.includes(n.id)||!state.categories.includes(n.cat)||!n.shown)return false;
   return n.cat!=='chest'||state.chestMode==='all'||n.active;
  });
 }
@@ -233,13 +248,16 @@ function autoRoute(){
  state.mode='nearest';mode.value='nearest';
  const remaining=availableTargets(map);let here=start;
  const order=[state.start];
- while(remaining.length&&order.length<state.limit){
+ const finish=state.finish&&state.finish!==state.start?map.get(state.finish):null;
+ const routeBudget=finish?Math.max(1,state.limit-1):state.limit;
+ while(remaining.length&&order.length<routeBudget){
   remaining.sort((a,b)=>distance(here,a)-distance(here,b)||(a.id.localeCompare(b.id)));
   here=remaining.shift();order.push(here.id);
  }
+ if(finish)order.push(finish.id);
  state.order=order;persist();
  const count=order.length-1;
- render(count?'Built a route from '+start.label+' through '+count+' nearby references.':'Starting at '+start.label+'. Select matching target categories or display more map pins.');
+ render(count?'Built a map-reference route from '+start.label+' with '+count+' stops'+(finish?' ending at '+finish.label:'')+'.':'Starting at '+start.label+'. Select matching target categories or display more map pins.');
 }
 function appendNearest(){
  const map=byId();if(!map.has(state.start)){render('Tap a starting pin first.');return}
@@ -252,10 +270,20 @@ function appendNearest(){
  state.order.push(candidates[0].id);
  state.mode='manual';mode.value='manual';persist();render('Added '+candidates[0].label+' as the nearest available next stop.');
 }
+function setFinish(id){
+ const target=sourceFor(id);
+ if(!target||id===state.start)return false;
+ state.finish=id;state.order=state.order.filter(x=>x!==id);
+ if(state.start){
+  if(state.mode==='nearest')autoRoute();
+  else {state.order.push(id);persist();render('Ending pin: '+target.label+'. Your manual route ends here.');}
+ }else{persist();render('Finish saved: '+target.label+'. Now choose a starting pin.');}
+ return true;
+}
 function startFrom(id){
  const marker=sourceFor(id);if(!marker)return false;
  choosingStart=false;pickStart.textContent='Pick starting pin';pickStart.setAttribute('aria-pressed','false');
- state.start=id;state.order=[id];persist();
+ state.start=id;if(state.finish===id)state.finish=null;state.order=[id];persist();
  if(state.mode==='nearest')autoRoute();
  else render('Starting pin: '+marker.label+'. Tap another marker and choose “Add as stop”, or use “Add next nearest”.');
  return true;
@@ -263,6 +291,7 @@ function startFrom(id){
 function addStop(id){
  const target=sourceFor(id);if(!target)return false;
  if(!state.start)return startFrom(id);
+ if(id===state.finish){render('This is already your last stop.');return true}
  if(state.order.includes(id)){render('This location is already in your route.');return true}
  if(state.order.length>=100){render('Maximum of 100 manually chosen stops reached.');return false}
  state.mode='manual';mode.value='manual';state.order.push(id);persist();render('Added '+target.label+' to your route.');
@@ -291,18 +320,28 @@ function render(message){
  if(state.start&&state.order[0]!==state.start){
   state.order=[state.start,...state.order.filter(x=>x!==state.start)];
  }
- const start=map.get(state.start);
+ if(state.finish&&!map.has(state.finish)&&!pending(state.finish))state.finish=null;
+ if(state.finish===state.start)state.finish=null;
+ if(state.start&&state.finish){
+  state.order=state.order.filter(id=>id!==state.finish).slice(0,99);
+  state.order.push(state.finish);
+ }
+ const start=map.get(state.start),finish=map.get(state.finish);
+ destination.textContent=finish?'Ending at: '+finish.label+' · Tap another marker to change the finish, or use Remove finish.':'Optional finish: tap any marker and choose “Finish route here”.';
  status.textContent=message||(start?
-  'Start: '+start.label+' · '+Math.max(0,state.order.length-1)+' stops in personal route.':
+  'Start: '+start.label+(finish?' · Finish: '+finish.label:'')+' · '+Math.max(0,state.order.length-1)+' stops in personal route.':
   'Select a colorful island marker, tap “Start route here”, and choose your destination types.');
  buildBtn.disabled=!start;nextBtn.disabled=!start;
- reverseBtn.disabled=state.order.length<3;clearBtn.disabled=!start&&!state.order.length;
+ reverseBtn.disabled=state.order.length<3;clearBtn.disabled=!start&&!state.order.length&&!state.finish;
+ clearFinishBtn.disabled=!state.finish;
+ resumeBtn.disabled=!state.order.some(id=>id!==state.start&&id!==state.finish&&state.completed.includes(id));
  list.replaceChildren();
  if(!state.order.length)list.append(el('li','j186-empty','Tap any island marker to select your starting point.'));
  else for(const [i,id] of state.order.entries()){
   const node=map.get(id);if(!node)continue;
   const row=el('li','j186-stop-item');
-  const ordinal=el('span','j186-ordinal',i?'Stop '+i:'START');
+  const ordinal=el('span','j186-ordinal',!i?'START':id===state.finish?'FINISH':'Stop '+i);
+  row.classList.toggle('j186-final-stop',id===state.finish);
   const show=button(node.label,'j186-stop-name',()=>selectStop(id));
   const category=el('span','j186-stop-category',node.cat==='chest'?'Treasure chest':node.cat);
   const controls=el('div','j186-stop-controls');
@@ -319,7 +358,8 @@ function render(message){
   }
   if(i>1){const up=button('↑','j186-mini',()=>shift(id,-1));up.setAttribute('aria-label','Move '+node.label+' earlier');controls.append(up);}
   if(i>0&&i<state.order.length-1){const down=button('↓','j186-mini',()=>shift(id,1));down.setAttribute('aria-label','Move '+node.label+' later');controls.append(down);}
-  if(i>0){const del=button('×','j186-mini',()=>{state.order=state.order.filter(x=>x!==id);state.mode='manual';mode.value='manual';persist();render();});del.setAttribute('aria-label','Remove '+node.label+' from route');controls.append(del);}
+  if(i>0){const del=button('×','j186-mini',()=>{if(id===state.finish)state.finish=null;
+    state.order=state.order.filter(x=>x!==id);state.mode='manual';mode.value='manual';persist();render();});del.setAttribute('aria-label','Remove '+node.label+' from route');controls.append(del);}
   row.append(ordinal,show,category,controls);list.append(row);
  }
  drawLine();
@@ -366,12 +406,13 @@ world.addEventListener('click',event=>{
   const row=el('div','j186-pin-actions');
   row.append(
    button('Start route here','',()=>{startFrom(id);info.hidden=true;}),
-   button(state.start?'Add as next stop':'Select as start','',()=>{if(state.start)addStop(id);else startFrom(id);info.hidden=true;})
+   button(state.start?'Add as next stop':'Select as start','',()=>{if(state.start)addStop(id);else startFrom(id);info.hidden=true;}),
+   button('Finish route here','',()=>{if(!setFinish(id))render('Choose a different finish from your starting pin.');info.hidden=true;})
   );
   info.append(row);
  });
 });
-window.teamJuraCayoPinRoute={startFrom,addStop,autoRoute,appendNearest,render,
+window.teamJuraCayoPinRoute={startFrom,setFinish,addStop,autoRoute,appendNearest,render,
  getState:()=>JSON.parse(JSON.stringify(state)),
  getStops:()=>state.order.slice(),
  getNodes:()=>nodes().map(n=>({id:n.id,cat:n.cat,label:n.label,x:n.x,y:n.y,active:n.active})),
