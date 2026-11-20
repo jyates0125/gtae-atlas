@@ -210,3 +210,35 @@ body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-acti
 body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active):focus-visible:after{
  width:10px;height:10px;background:#fffca3
 }
+
+/* Final visual invariant: when the source game raster has icons embedded in it,
+   the hit area must not draw a SECOND icon. Text is kept for accessible naming
+   but visually hidden; the in-game source icon itself remains the visible art.
+   In offline and enhanced art, the :after glyph appears ONCE. */
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot{
+ font-size:0!important;color:transparent!important;text-shadow:none!important;
+ border:0!important;border-radius:0!important;background:transparent!important;
+ box-shadow:none!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot:hover,
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot:focus-visible{
+ outline:2px solid #ffe3aa!important;outline-offset:2px!important;
+ background:#f8cf9625!important;border-radius:50%!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot:after{
+ content:attr(data-glyph);display:grid;place-items:center;pointer-events:none;
+ position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+ font:bold 16px/1 "Segoe UI Symbol",system-ui,sans-serif!important;
+ color:#dc9cf7;text-shadow:0 1px 4px #080413;
+ min-width:19px;min-height:19px
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=bolts]:after{color:#ff7665}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=secondary]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=gated]:after{color:#53caff}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=exit]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=drainage]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=power]:after{color:#ffef54}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=truck]:after{color:#45e095}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active)::after{
+ content:none!important
+}
