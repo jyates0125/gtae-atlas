@@ -55,7 +55,7 @@ legendEntries.forEach(([name,icon,key,description],index)=>{
    const was=disabled.has(key);
    if(was)disabled.delete(key);else disabled.add(key);
    const native=focus.querySelector('.j167-chip[data-cat="'+key+'"]');
-   if(native && native.getAttribute('aria-pressed')===String(was))native.click();
+   if(native && native.getAttribute('aria-pressed')!==String(was))native.click();
    repaintLegend();
  });
  b.dataset.cat=key;b.setAttribute('aria-pressed','true');
