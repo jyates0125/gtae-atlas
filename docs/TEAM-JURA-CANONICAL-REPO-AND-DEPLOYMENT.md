@@ -45,7 +45,7 @@ The `main` and `development` release trees were verified byte-identical at `713d
 
 ## Branch and repository cleanup policy
 
-On 2026-11-21 the canonical repository had **95 branch refs**. That count includes many old merged/release/feature branches, open PR heads, Dependabot branches, and important safety backups. This count is an observed snapshot, not an authorization to delete anything.
+On 2026-11-21 the canonical repository had **95 branch refs**. See the full dated [branch cleanup inventory](TEAM-JURA-BRANCH-CLEANUP-INVENTORY.md) for all names, head SHAs and 10 active PR head refs. That count includes many old merged/release/feature branches, open PR heads, Dependabot branches, and important safety backups. This count is an observed snapshot, not an authorization to delete anything.
 
 1. Keep `main`, `development`, every currently active PR's head, and every safety/rollback ref.
 2. Inventory the remaining branches with SHA, most recent commit, merged-into status, active PRs, owner approval, and any unmerged files or changes.
