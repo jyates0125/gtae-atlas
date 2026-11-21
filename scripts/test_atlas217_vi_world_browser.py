@@ -37,11 +37,11 @@ try:
    # The nested launch directory can legitimately repeat or expand destinations.
    # Validate the canonical eight-link world grid, not all descendant links.
    assert links.count()==8,('Expected eight VI-specific destinations',links.count())
-   assert links.locator('a[href="./atlas-vi.html?view=rockstar"]').count()==1
-   assert links.locator('a[href="./atlas90-vehicles6.html"]').count()==1
-   assert links.locator('a[href="./atlas90-weapons6.html"]').count()==1
-   assert links.locator('a[href="./atlas-characters.html?game=vi#mainCharacterEra"]').count()==1
-   assert links.locator('a[href="./atlas-research.html"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas-vi.html?view=rockstar"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas90-vehicles6.html"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas90-weapons6.html"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas-characters.html?game=vi#mainCharacterEra"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas-research.html"]').count()==1
    assert page.locator('#atlasCanvas').count()==1
    if width==390:
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1'),'VI workspace document overflows phone'
