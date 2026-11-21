@@ -60,9 +60,12 @@ function normalize(raw){
  for(const [id,v]of Object.entries(rows)){
   if(!Array.isArray(v)||!Array.isArray(v[1])||typeof v[0]!=='string')continue;
   const [x,y]=v[1];if(!Number.isFinite(x)||!Number.isFinite(y))continue;
-  out.push({id,name:v[0],x,y,address:typeof v[3]==='string'?v[3]:'',
+  // Some licensed source rows have positions and IDs but no supplied name.
+  // Keep all of them searchable without inventing an in-game landmark identity.
+  const sourceTitle=v[0].trim();
+  out.push({id,name:sourceTitle||`Unnamed community landmark (source ${id})`,x,y,address:typeof v[3]==='string'?v[3]:'',
    tags:Array.isArray(v[6])?v[6].filter(x=>typeof x==='string'):[],
-   region:v[0].split(',').slice(-2).join(',').trim()});
+   region:sourceTitle?sourceTitle.split(',').slice(-2).join(',').trim():'Source title unavailable'});
  }
  return out;
 }
