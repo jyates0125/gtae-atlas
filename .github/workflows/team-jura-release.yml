@@ -139,6 +139,7 @@ jobs:
           python scripts/test_atlas219_hq_premium.py
           python scripts/test_atlas220_vi_mobile.py
           node --check atlas220-vi-mobile.js
+          node --check atlas220-cayo-recovery.js
           node --check atlas164-heist-workspace.js
           node --check heist-pages.js
           python scripts/test_atlas152_art.py
@@ -270,6 +271,7 @@ jobs:
           python scripts/test_atlas220_vi_mobile.py
           node --check atlas.js
           node --check atlas220-vi-mobile.js
+          node --check atlas220-cayo-recovery.js
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
       - name: Install focused Chromium
@@ -316,6 +318,7 @@ jobs:
           python scripts/test_atlas220_vi_mobile.py
           node --check atlas.js
           node --check atlas220-vi-mobile.js
+          node --check atlas220-cayo-recovery.js
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
       - name: Install focused Microsoft Edge
