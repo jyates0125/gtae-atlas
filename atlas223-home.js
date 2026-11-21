@@ -109,5 +109,26 @@ async function initData(){
   a.append(img,make('strong','',c.name.split(' ')[0]));host.append(a);
  }
 }
+const evidenceExplanations={
+ official:'Correct. Rockstar is a primary source for the named character. Other details—such as unshown spawn positions—still need their own proof.',
+ community:'Correct. Screenshot-aligned community coordinates are a useful estimate, but not confirmed in-game positioning.',
+ unverified:'Correct. Without a traceable source or independent gameplay check, the exact spawn claim must remain unverified.'
+};
+const evidenceTryAgain={
+ official:'Not quite. A published Rockstar profile verifies the name; keep other gameplay claims separate.',
+ community:'Not quite. Screenshot alignment is a community estimate, not a Rockstar-confirmed position.',
+ unverified:'Not quite. A location with no evidence cannot be labeled official or calibrated research.'
+};
+document.querySelectorAll('.j223-evidence-card').forEach(card=>{
+ const answer=card.dataset.j223Evidence;
+ const feedback=card.querySelector('.j223-evidence-feedback');
+ const buttons=[...card.querySelectorAll('[data-j223-grade]')];
+ for(const button of buttons)button.addEventListener('click',()=>{
+  const choice=button.dataset.j223Grade;
+  buttons.forEach(x=>x.setAttribute('aria-pressed',String(x===button)));
+  feedback.textContent=choice===answer?evidenceExplanations[answer]:evidenceTryAgain[answer];
+  feedback.classList.toggle('j223-correct',choice===answer);
+ });
+});
 initData();
 })();
