@@ -47,7 +47,7 @@ for token in ('hitTargets.push','const clustered=size>1','getComputedStyle' if F
 for token in ('j190-iv-scope','GTA IV · 200 Flying Rats','50 Seagulls','j190-iv-found',
               'j190-marker-status','pigeon-locator','MIT'):
     assert token in ivhtml,token
-assert 'atlas-iv.js?v=200' in ivhtml and 'atlas-iv.css?v=200' in ivhtml
+assert 'atlas-iv.js?v=201' in ivhtml and 'atlas-iv.css?v=200' in ivhtml
 pack=json.loads(read('data/atlas-sa-150-sourced-pins.json'))
 assert pack['schema']==1 and len(pack['records'])==150
 assert pack['counts']=={'snapshots':50,'horseshoes':50,'oysters':50}
