@@ -55,7 +55,7 @@ body[data-start-world="6"] #selectedCard .selected-actions :is(button,a){
     Avoid another four-button row across the tiny map workspace. */
  body[data-start-world="6"] .jura-quick-nav{display:none!important}
  body[data-start-world="6"] .jura-3d-tools{display:none!important}
- body[data-start-world="6"] .jura-in-3d .jura-3d-tools{
+ body[data-start-world="6"].jura-in-3d .jura-3d-tools{
   display:flex!important;top:182px;right:8px;
  }
  body[data-start-world="6"] .maptop{
