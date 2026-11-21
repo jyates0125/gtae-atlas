@@ -10,7 +10,7 @@ async function start(){
  try{const r=await fetch('./data/atlas222-vi-release-index.json?v=222',{cache:'no-cache'});if(!r.ok)throw Error('Missing VI index');db=await r.json();if(db.schema!==1||!Array.isArray(db.categories))throw Error('Invalid VI index')}
  catch{state.textContent='Local release index unavailable. Use Rockstar’s official links below.';return}
  const sourceMap=new Map((db.sources||[]).map(s=>[s.id,s]));
- const approved=/^[a-z0-9][a-z0-9-]*\.html(?:[?#][a-z0-9=&%-]*)?$/i;
+ const approved=/^[a-z0-9][a-z0-9-]*\.html(?:\?[a-z0-9=&%-]*)?(?:#[a-z0-9_-]+)?$/i;
  host.replaceChildren();
  for(const row of db.categories){
   const card=make('article','j222-launch-card');
