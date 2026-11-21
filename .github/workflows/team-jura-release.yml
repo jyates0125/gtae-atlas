@@ -106,6 +106,7 @@ jobs:
           python scripts/test_atlas185_cayo_polish.py
           python scripts/test_atlas186_cayo_route.py
           python scripts/test_atlas192_world_completion.py
+          python scripts/test_atlas207_policies.py
           python scripts/test_atlas195_source_tags.py
           node --check atlas195-source-tags.js
           python scripts/test_atlas196_legacy_explorer.py

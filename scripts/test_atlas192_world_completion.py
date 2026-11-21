@@ -2,6 +2,7 @@
 """Atlas 19.2: world-isolated weapons, honest VI evidence, garage usability, film treatment."""
 from pathlib import Path
 import json
+import re
 r=Path(__file__).resolve().parents[1]
 read=lambda p:(r/p).read_text(encoding='utf-8')
 html=read('atlas90-weapons.html')
@@ -49,7 +50,8 @@ assert 'art/jura161-vehicles.webp' in garage
 assert 'j192-garage-empty' in garage
 assert "team-jura-atlas93-garage-v1" in garage
 assert 'atlas192-garage-empty.css?v=192' in garagehtml
-assert 'atlas93-garage.js?v=192' in garagehtml
+garage_version=re.search(r'atlas93-garage\.js\?v=(\d+)',garagehtml)
+assert garage_version and int(garage_version.group(1))>=192, 'Garage must load current cache-busted engine'
 assert 'My vehicles' in garagehtml and 'Boats &amp;' not in garagehtml
 assert 'olrSceneList' in film and 'one-last-ride-motion-preview.mp4' in film
 assert 'film/atlas192-storyboard.js?v=192' in film
