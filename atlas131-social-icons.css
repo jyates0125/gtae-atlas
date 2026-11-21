@@ -1,0 +1,40 @@
+/* Atlas 13.1: one-tap social sharing. No dependency, sign-in, tracker, or downloads. */
+.j131-social{margin:18px 0 22px;background:linear-gradient(120deg,#301341,#170b2d);border:1px solid #e5aa6a;border-radius:16px;padding:18px clamp(14px,2.8vw,28px);box-shadow:0 9px 24px #09030c6b}
+.j131-social-title{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:13px}
+.j131-social-title h2{font-size:clamp(18px,2.1vw,27px);line-height:1.2;margin:0 0 3px;letter-spacing:-.02em;color:#ffe2a1}
+.j131-social-title p{margin:0;color:#e0c8e8;font-size:12px;max-width:680px}
+.j131-social-title a{color:#ffe5a0;font-weight:800;font-size:12px}
+.j131-social-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px}
+.j131-social-grid button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:91px;padding:10px 4px;color:#fff;background:#281436;border:1px solid #8760a0;border-radius:11px;cursor:pointer;font:800 11px/1.15 system-ui,-apple-system,sans-serif;transition:background .12s,transform .12s,border-color .12s}
+.j131-social-grid button:hover{background:#4b2659;border-color:#f7ca82;transform:translateY(-2px)}
+.j131-social-grid button:focus-visible{outline:3px solid #ffe29a;outline-offset:3px}
+.j131-social-grid svg{width:34px;height:34px;flex:none;display:block}
+.j131-social-grid [data-j131-platform=facebook] svg{color:#4d8ef7}
+.j131-social-grid [data-j131-platform=youtube] svg{color:#ff3636}
+.j131-social-grid [data-j131-platform=tiktok] svg{color:#fff}
+.j131-social-grid [data-j131-platform=instagram] svg{color:#f673a6}
+.j131-social-grid [data-j131-platform=discord] svg{color:#8d94ff}
+.j131-social-grid [data-j131-platform=reddit] svg{color:#ff6e2a}
+.j131-social-grid [data-j131-platform=more] svg{color:#ffd384}
+.j131-social-hint{font-size:11px;color:#d0b9d8;margin:12px 0 0}
+.j131-social-status{font-size:12px;color:#ffe6ad;margin:8px 0 0;min-height:18px}
+.j131-social-status:empty{display:none}
+.j131-share-card-bar{margin-bottom:24px}
+.j131-share-card-bar .j131-social{margin-top:0}
+@media(max-width:760px){.j131-social-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.j131-social-grid button{min-height:79px}.j131-social-grid svg{width:31px;height:31px}}
+@media(max-width:430px){.j131-social-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.j131-social-grid button{min-height:80px}}
+@media(prefers-reduced-motion:reduce){.j131-social-grid button{transition:none}}
+
+/* 13.3: site-wide, low-priority sharing footer. Never cover map interaction. */
+.j133-universal-footer{position:relative;clear:both;width:100%;box-sizing:border-box;margin-top:clamp(32px,5vw,80px);padding:18px clamp(12px,3vw,36px) calc(30px + env(safe-area-inset-bottom,0px));background:#140a23;color:#efddfa;border-top:1px solid #7b477f;font-family:system-ui,-apple-system,sans-serif}
+.j133-universal-footer [data-j131-social-host]{max-width:1220px;margin:auto}
+.j133-universal-footer .j131-social{margin:0 0 16px;background:transparent;box-shadow:none;border:0;border-radius:0;padding:8px 0 12px}
+.j133-universal-footer .j131-social-title h2{font-size:clamp(16px,1.7vw,21px)}
+.j133-universal-footer .j131-social-grid{display:flex;flex-wrap:wrap;gap:8px}
+.j133-universal-footer .j131-social-grid button{min-height:59px;min-width:76px;flex:0 0 auto;padding:8px 10px;font-size:10px;gap:3px}
+.j133-universal-footer .j131-social-grid svg{width:24px;height:24px}
+.j133-footer-links{max-width:1220px;margin:0 auto 11px;display:flex;flex-wrap:wrap;gap:8px 20px}
+.j133-footer-links a{color:#f2d39d;font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.j133-footer-links a:focus-visible{outline:3px solid #ffe49c;outline-offset:3px}
+.j133-footer-legal{max-width:1220px;margin:0 auto;color:#c4aed1;font-size:11px;line-height:1.6}
+@media(max-width:430px){.j133-universal-footer .j131-social-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.j133-universal-footer .j131-social-grid button{min-width:0;padding:7px 2px;min-height:60px;font-size:9px}.j133-universal-footer .j131-social-grid svg{width:23px;height:23px}}

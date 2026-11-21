@@ -12,7 +12,10 @@
       "region": "Los Santos",
       "summary": "Retired bank robber and one of GTA V's three protagonists",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://m.thegtaplace.com/images/gtav/artwork/v_michael4.jpg",
+      "imageCredit": "https://m.thegtaplace.com/gtav/artwork/",
+      "sourceUrl": "https://m.thegtaplace.com/gtav/artwork/",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:franklin",
@@ -24,7 +27,10 @@
       "region": "Los Santos",
       "summary": "Young hustler who builds a career through Los Santos",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://www.igta5.com/images/official-artwork-franklin-families.jpg",
+      "imageCredit": "https://www.igta5.com/official-artwork",
+      "sourceUrl": "https://www.igta5.com/official-artwork",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:trevor",
@@ -36,7 +42,10 @@
       "region": "Blaine County",
       "summary": "GTA V protagonist operating from Blaine County",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://www.gtabase.com/igallery/501-600/GTA_V_Artwork_Trevor_3-561-1600.jpg",
+      "imageCredit": "https://www.gtabase.com/grand-theft-auto-v/characters/trevor-philips",
+      "sourceUrl": "https://www.gtabase.com/grand-theft-auto-v/characters/trevor-philips",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:lamar",
@@ -48,7 +57,10 @@
       "region": "Los Santos",
       "summary": "Franklin's longtime friend; appears in GTA V and GTA Online",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://cdn.gracza.pl/i_gp/h/22/349641291.jpg",
+      "imageCredit": "https://gta.fandom.com/wiki/Lamar_Davis",
+      "sourceUrl": "https://gta.fandom.com/wiki/Lamar_Davis",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:lester",
@@ -60,7 +72,10 @@
       "region": "Los Santos",
       "summary": "Heist planner and mission contact",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://img.consolepulse.com/uploads/franchises/gta/characters/Lester-Crest-2.webp",
+      "imageCredit": "https://gta.fandom.com/wiki/Lester_Crest",
+      "sourceUrl": "https://gta.fandom.com/wiki/Lester_Crest",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:chop",
@@ -72,7 +87,10 @@
       "region": "Los Santos",
       "summary": "Franklin and Lamar's Rottweiler companion",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://img6.gram.pl/120130916172316.jpg",
+      "imageCredit": "https://www.rockstargames.com/V/",
+      "sourceUrl": "https://www.rockstargames.com/V/",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:simeon",
@@ -84,7 +102,10 @@
       "region": "Los Santos",
       "summary": "Vehicle dealership owner in GTA V",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://staticg.sportskeeda.com/editor/2022/01/0ce6d-16409961842342-1920.jpg",
+      "imageCredit": "https://www.grandtheftwiki.com/Simeon_Yetarian",
+      "sourceUrl": "https://www.grandtheftwiki.com/Simeon_Yetarian",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:amanda",
@@ -96,7 +117,10 @@
       "region": "Los Santos",
       "summary": "Member of the De Santa family",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://i.pinimg.com/736x/db/15/66/db1566e10fe95db684091c9d72b6c3da.jpg",
+      "imageCredit": "https://gta.fandom.com/wiki/Amanda_De_Santa",
+      "sourceUrl": "https://gta.fandom.com/wiki/Amanda_De_Santa",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:jimmy",
@@ -108,7 +132,10 @@
       "region": "Los Santos",
       "summary": "Michael and Amanda's son",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://imagecdn.voicify.ai/models/75b1a12e-dc9c-499e-9e4e-5c618f71a7cb.png",
+      "imageCredit": "https://gta.fandom.com/wiki/Jimmy_De_Santa",
+      "sourceUrl": "https://gta.fandom.com/wiki/Jimmy_De_Santa",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:tracey",
@@ -120,7 +147,10 @@
       "region": "Los Santos",
       "summary": "Michael and Amanda's daughter",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://www.voquent.com/blog/wp-content/uploads/2023/01/Tracey500.jpg",
+      "imageCredit": "https://gta.fandom.com/wiki/Tracey_De_Santa",
+      "sourceUrl": "https://gta.fandom.com/wiki/Tracey_De_Santa",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:pavel",
@@ -132,7 +162,10 @@
       "region": "Cayo Perico",
       "summary": "Kosatka operator for the Cayo Perico Heist",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://cdn.mos.cms.futurecdn.net/v2/t%3A0%2Cl%3A254%2Ccw%3A663%2Cch%3A663%2Cq%3A80%2Cw%3A663/LbpV5KPYkYeifSYKvhWzpC.jpg",
+      "imageCredit": "https://gta.fandom.com/wiki/Pavel",
+      "sourceUrl": "https://gta.fandom.com/wiki/Pavel",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:agent14",
@@ -144,7 +177,10 @@
       "region": "Los Santos",
       "summary": "Underground bunker and gunrunning contact",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://static.wikia.nocookie.net/gtawiki/images/8/84/Agent14-GTAOe-2017Portrait-TheDoomsdayHeist.png/revision/latest?cb=20220726011513",
+      "imageCredit": "https://gta.fandom.com/wiki/Agent_14",
+      "sourceUrl": "https://gta.fandom.com/wiki/Agent_14",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:english-dave",
@@ -156,7 +192,10 @@
       "region": "Los Santos",
       "summary": "Nightclub and Cayo-related contact",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://static.wikia.nocookie.net/gtawiki/images/1/1b/EnglishDave-GTAO-2020Portrait.png/revision/latest?cb=20201210032917",
+      "imageCredit": "https://gta.fandom.com/wiki/English_Dave",
+      "sourceUrl": "https://gta.fandom.com/wiki/English_Dave",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:agatha-baker",
@@ -168,7 +207,10 @@
       "region": "Los Santos",
       "summary": "Diamond Casino and Resort management contact",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://www.gtabase.com/images/gta-5/characters/full/agatha-baker.jpg",
+      "imageCredit": "https://www.gtabase.com/grand-theft-auto-v/characters/agatha-baker",
+      "sourceUrl": "https://www.gtabase.com/grand-theft-auto-v/characters/agatha-baker",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:niko",
@@ -180,7 +222,10 @@
       "region": "Liberty City",
       "summary": "GTA IV protagonist",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://i.imgur.com/GSh34GY.jpg",
+      "imageCredit": "https://www.grandtheftwiki.com/Niko_Bellic",
+      "sourceUrl": "https://www.grandtheftwiki.com/Niko_Bellic",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:roman",
@@ -192,7 +237,10 @@
       "region": "Liberty City",
       "summary": "Niko's cousin and taxi business operator",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://staticg.sportskeeda.com/editor/2021/02/d4d73-16123935030093-800.jpg",
+      "imageCredit": "https://www.grandtheftwiki.com/Roman_Bellic",
+      "sourceUrl": "https://www.grandtheftwiki.com/Roman_Bellic",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:kate",
@@ -204,7 +252,10 @@
       "region": "Liberty City",
       "summary": "Member of the McReary family",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://vignette.wikia.nocookie.net/gtawiki/images/7/76/KateMcReary-GTAIV.png/revision/latest?cb=20170318130755",
+      "imageCredit": "https://gta.fandom.com/wiki/Kate_McReary",
+      "sourceUrl": "https://gta.fandom.com/wiki/Kate_McReary",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:cj",
@@ -216,7 +267,10 @@
       "region": "San Andreas",
       "summary": "Grove Street character and protagonist",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://static.android.com.pl/uploads/bonusso3/2014/10/Grand-Theft-Auto-San-Andreas-android.jpg",
+      "imageCredit": "https://www.gtabase.com/gta-san-andreas/artworks/",
+      "sourceUrl": "https://www.gtabase.com/gta-san-andreas/artworks/",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:sweet",
@@ -228,7 +282,10 @@
       "region": "San Andreas",
       "summary": "Carl Johnson's older brother",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://staticg.sportskeeda.com/editor/2021/03/458d9-16148080553043-800.jpg",
+      "imageCredit": "https://www.gta-sanandreas.com/characters/",
+      "sourceUrl": "https://www.gta-sanandreas.com/characters/",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:bigsmoke",
@@ -240,7 +297,10 @@
       "region": "San Andreas",
       "summary": "Grove Street character",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://static.tvtropes.org/pmwiki/pub/images/742166b172cde5979a078118699242ba.jpg",
+      "imageCredit": "https://www.gtabase.com/gta-san-andreas/artworks/",
+      "sourceUrl": "https://www.gtabase.com/gta-san-andreas/artworks/",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:tommy",
@@ -252,7 +312,10 @@
       "region": "Vice City",
       "summary": "GTA Vice City protagonist",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://wallpaperaccess.com/full/2315251.jpg",
+      "imageCredit": "https://www.grandtheftwiki.com/Tommy_Vercetti",
+      "sourceUrl": "https://www.grandtheftwiki.com/Tommy_Vercetti",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:lance",
@@ -264,7 +327,10 @@
       "region": "Vice City",
       "summary": "Vice City story character",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://www.igrandtheftauto.com/content/images/lg/2137-gtavc-lance-vance.jpg?etag=4aa8d9b1",
+      "imageCredit": "https://www.igrandtheftauto.com/gtavc/images/2137-gtavc-lance-vance",
+      "sourceUrl": "https://www.igrandtheftauto.com/gtavc/images/2137-gtavc-lance-vance",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:claude",
@@ -276,7 +342,10 @@
       "region": "Liberty City",
       "summary": "Silent protagonist of GTA III",
       "verification": "Curated reference; review individual details",
-      "image": null
+      "image": "https://media.rockstargames.com/rockstargames/img/global/downloads/wallpapers/games/gta3-lithograph_claude_2560x1600.jpg",
+      "sourceUrl": "https://www.rockstargames.com/newswire/article/19261/grand-theft-auto-iii-10th-anniversary-artwork-now-available-as-d.html",
+      "imageCredit": "https://www.rockstargames.com/newswire/article/19261/grand-theft-auto-iii-10th-anniversary-artwork-now-available-as-d.html",
+      "imageRights": "Rockstar Games / Take-Two Interactive · original game image"
     },
     {
       "id": "character:lucia",
@@ -288,7 +357,10 @@
       "region": "Leonida",
       "summary": "Featured in official GTA VI promotional material; gameplay details pending verification",
       "verification": "Official-promo identity; further details unverified",
-      "image": null
+      "image": "https://gtatr.com/img/vi/char/Lucia-Caminos.jpg",
+      "imageCredit": "https://www.rockstargames.com/VI",
+      "sourceUrl": "https://www.rockstargames.com/VI",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "character:jason",
@@ -300,7 +372,10 @@
       "region": "Leonida",
       "summary": "Featured in official GTA VI promotional material; gameplay details pending verification",
       "verification": "Official-promo identity; further details unverified",
-      "image": null
+      "image": "https://gta6intel.com/image/item/9ed91681-4533-4b4f-bfff-d25aa664dad7/portrait?version=1748871422",
+      "imageCredit": "https://www.rockstargames.com/VI",
+      "sourceUrl": "https://www.rockstargames.com/VI",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
     },
     {
       "id": "animal:alligator",
@@ -324,7 +399,10 @@
       "region": "Wetlands",
       "summary": "Community-tracked wildlife appearance; locations and gameplay presence remain unverified.",
       "verification": "Provisional / unverified research",
-      "image": null
+      "image": "https://cdn.mos.cms.futurecdn.net/bWQ38SWNkmACper38vdvb8.jpg",
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots",
+      "imageCredit": "https://www.rockstargames.com/VI/media/screenshots",
+      "imageRights": "Rockstar Games / Take-Two Interactive · original game image"
     },
     {
       "id": "animal:iguana",
@@ -396,7 +474,10 @@
       "region": "Desert",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://www.faxagate.com/resources/-/gaming/gta-5-director-mode/animals/9-4.webp",
+      "imageCredit": "https://www.faxagate.com/en/gaming/gta-5-director-mode-animals",
+      "sourceUrl": "https://www.faxagate.com/en/gaming/gta-5-director-mode-animals",
+      "imageRights": "In-game GTA V imagery © Rockstar Games / Take-Two Interactive"
     },
     {
       "id": "animal:deer",
@@ -408,7 +489,10 @@
       "region": "Woodlands",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://img.redbull.com/images/q_auto%2Cf_auto/redbullcom/2015/02/10/1331704357527_2/grand-theft-auto-v",
+      "sourceUrl": "https://www.redbull.com/int-en/the-weirdest-wildlife-clips-from-gta-v",
+      "imageCredit": "https://www.redbull.com/int-en/the-weirdest-wildlife-clips-from-gta-v",
+      "imageRights": "Rockstar Games / Take-Two Interactive · original game image"
     },
     {
       "id": "animal:boar",
@@ -420,7 +504,10 @@
       "region": "Woodlands",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://www.gtabase.com/igallery/4201-4300/GTA5_Animals_Boar_PeyotePlant-4288-1080.jpg",
+      "imageCredit": "https://www.gtabase.com/grand-theft-auto-v/animals/boar",
+      "sourceUrl": "https://www.gtabase.com/grand-theft-auto-v/animals/boar",
+      "imageRights": "In-game GTA V imagery © Rockstar Games / Take-Two Interactive"
     },
     {
       "id": "animal:cow",
@@ -432,7 +519,10 @@
       "region": "Farmland",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://images.steamusercontent.com/ugc/12380771599791969638/AA5D64DFF944687A18A018A6E454057F50132C26/?ima=fit&imcolor=%23000000&impolicy=Letterbox&imw=1024&letterbox=false",
+      "imageCredit": "https://steamcommunity.com/app/271590",
+      "sourceUrl": "https://steamcommunity.com/app/271590",
+      "imageRights": "In-game GTA V imagery © Rockstar Games / Take-Two Interactive"
     },
     {
       "id": "animal:pig",
@@ -468,7 +558,10 @@
       "region": "Sea",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://www.gtaboom.com/Gta-v-shark.jpg",
+      "imageCredit": "https://www.gtaboom.com/gta-online-shark-card-prices-might-drop-with-rdr2-release-3fbe",
+      "sourceUrl": "https://www.gtaboom.com/gta-online-shark-card-prices-might-drop-with-rdr2-release-3fbe",
+      "imageRights": "In-game GTA V imagery © Rockstar Games / Take-Two Interactive"
     },
     {
       "id": "animal:dolphin-v",
@@ -516,7 +609,85 @@
       "region": "Urban",
       "summary": "Series wildlife index; habitats are broad categories, not verified spawn points.",
       "verification": "Curated wildlife index; source verification pending",
-      "image": null
+      "image": "https://img6.gram.pl/120130916172316.jpg",
+      "sourceUrl": "https://www.rockstargames.com/V",
+      "imageCredit": "https://www.rockstargames.com/V",
+      "imageRights": "Rockstar Games / Take-Two Interactive · original game image"
+    },
+    {
+      "id": "character:vic-vance",
+      "name": "Victor Vance",
+      "game": "GTA Vice City Stories",
+      "region": "Vice City",
+      "summary": "Playable protagonist of Vice City Stories, set in 1984.",
+      "image": "https://gtwfilesie.grandtheftwiki.com/VictorVance-GTAVCS-artwork.jpg",
+      "sourceUrl": "https://www.grandtheftwiki.com/File:VictorVance-GTAVCS-artwork.jpg",
+      "imageCredit": "https://www.grandtheftwiki.com/File:VictorVance-GTAVCS-artwork.jpg",
+      "kind": "character",
+      "scope": "classic",
+      "group": "Protagonist",
+      "verification": "Source-checked game identity; original artwork credited individually",
+      "imageRights": "Original game character illustration © Rockstar Games / Take-Two Interactive · independent non-commercial fan reference"
+    },
+    {
+      "id": "character:toni-cipriani",
+      "name": "Toni Cipriani",
+      "game": "GTA Liberty City Stories",
+      "region": "Liberty City",
+      "summary": "Playable protagonist of Liberty City Stories and a character in GTA III.",
+      "image": "https://gtwfilesie.grandtheftwiki.com/ToniCipriani-GTALCS.png",
+      "sourceUrl": "https://www.grandtheftwiki.com/File:ToniCipriani-GTALCS.png",
+      "imageCredit": "https://www.grandtheftwiki.com/File:ToniCipriani-GTALCS.png",
+      "kind": "character",
+      "scope": "classic",
+      "group": "Protagonist",
+      "verification": "Source-checked game identity; original artwork credited individually",
+      "imageRights": "Original game character illustration © Rockstar Games / Take-Two Interactive · independent non-commercial fan reference"
+    },
+    {
+      "id": "character:huang-lee",
+      "name": "Huang Lee",
+      "game": "GTA Chinatown Wars",
+      "region": "Liberty City",
+      "summary": "Playable protagonist of Chinatown Wars, a top-down Liberty City adventure.",
+      "image": "https://www.gtabase.com/igallery/gta-chinatown-wars-artworks/chinatownwars-huangsniper-1600.jpg",
+      "sourceUrl": "https://www.rockstargames.com/newswire/article/25o2411873o794/new-chinatown-wars-artwork-desktops-featuring-ling-and-huang-lee.html",
+      "imageCredit": "https://www.gtabase.com/gta-chinatown-wars/artworks/",
+      "kind": "character",
+      "scope": "classic",
+      "group": "Protagonist",
+      "verification": "Source-checked game identity; original artwork credited individually",
+      "imageRights": "Original game character illustration © Rockstar Games / Take-Two Interactive · independent non-commercial fan reference"
+    },
+    {
+      "id": "character:johnny-klebitz",
+      "name": "Johnny Klebitz",
+      "game": "GTA The Lost and Damned",
+      "region": "Liberty City",
+      "summary": "Playable protagonist of The Lost and Damned and member of The Lost motorcycle club.",
+      "image": "https://gtwfilesie.grandtheftwiki.com/JohnnyKlebitz-Artwork2.jpg",
+      "sourceUrl": "https://www.grandtheftwiki.com/File:JohnnyKlebitz-Artwork2.jpg",
+      "imageCredit": "https://www.grandtheftwiki.com/File:JohnnyKlebitz-Artwork2.jpg",
+      "kind": "character",
+      "scope": "classic",
+      "group": "Protagonist",
+      "verification": "Source-checked game identity; original artwork credited individually",
+      "imageRights": "Original game character illustration © Rockstar Games / Take-Two Interactive · independent non-commercial fan reference"
+    },
+    {
+      "id": "character:luis-lopez",
+      "name": "Luis Fernando Lopez",
+      "game": "GTA The Ballad of Gay Tony",
+      "region": "Liberty City",
+      "summary": "Playable protagonist of The Ballad of Gay Tony and nightclub associate.",
+      "image": "https://media.gtaboom.com/media/images/ec/5e/Official_Artwork_of_Luis_wearing_a_suit.jpg",
+      "sourceUrl": "https://www.rockstargames.com/newswire/article/o349k552o8aoo2/new-luis-lopez-character-artwork-from-the-ballad-of-gay-tony.html",
+      "imageCredit": "https://www.gtaboom.com/the-ballad-of-gay-tony-794c",
+      "kind": "character",
+      "scope": "classic",
+      "group": "Protagonist",
+      "verification": "Source-checked game identity; original artwork credited individually",
+      "imageRights": "Original game character illustration © Rockstar Games / Take-Two Interactive · independent non-commercial fan reference"
     }
   ]
 }

@@ -1,0 +1,69 @@
+{
+  "schema": "elario-project-release-board-v1",
+  "project": "Team Jura Atlas",
+  "status": "PROPOSED",
+  "authority": "docs/TEAM-JURA-STANDING-CHARTER.md",
+  "operatingStandard": "docs/TEAM-JURA-RELEASE-OPERATIONS-V2-PROPOSAL.md",
+  "allowedStatuses": [
+    "not-started",
+    "implemented",
+    "evidence-checked",
+    "browser-tested",
+    "visually-reviewed",
+    "owner-approved",
+    "released"
+  ],
+  "evidenceRule": "Every status beyond implemented must identify the exact evaluated commit and evidence; do not infer approval from tests.",
+  "mergePolicy": "No development or main merge without explicit current owner approval of the exact staged preview.",
+  "entries": [
+    {
+      "id": "world-map-directory",
+      "scope": "13 map destinations",
+      "status": "implemented",
+      "source": "maps.html",
+      "next": "check world-specific interactive map, visual alignment and per-mode pin sources"
+    },
+    {
+      "id": "liberty-city",
+      "scope": "GTA IV / TLAD / TBOGT",
+      "status": "implemented",
+      "source": "atlas-iv.html",
+      "next": "exact-SHA Chromium/Edge result and episode routing"
+    },
+    {
+      "id": "cayo",
+      "scope": "Cayo map and route workspace",
+      "status": "implemented",
+      "source": "heist-cayo-perico.html",
+      "next": "exact-SHA desktop/phone Edge and Chromium click acceptance"
+    },
+    {
+      "id": "garage-squalo",
+      "scope": "Squalo boat model and showroom",
+      "status": "implemented",
+      "source": "atlas93-garage.html",
+      "next": "prove linked model choice, facts, local notes, mobile width, art fallback"
+    },
+    {
+      "id": "weapons-vehicles",
+      "scope": "story/online/VI separated galleries",
+      "status": "implemented",
+      "source": "atlas90-gallery.js",
+      "next": "verify individual source and missing-image/empty states per world"
+    },
+    {
+      "id": "visual-production",
+      "scope": "80 pages and approved brand",
+      "status": "not-started",
+      "source": "docs/ATLAS192-PUBLIC-PAGE-RELEASE-LEDGER.md",
+      "next": "review screenshots and full scroll against approved ref pack, not captures alone"
+    },
+    {
+      "id": "delivery",
+      "scope": "verified release ZIP and owner staging approval",
+      "status": "not-started",
+      "source": ".github/workflows/team-jura-release.yml",
+      "next": "freeze SHA, run all gates, owner preview approval before merge"
+    }
+  ]
+}

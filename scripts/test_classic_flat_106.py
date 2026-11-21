@@ -17,14 +17,38 @@ expect={
 }
 for game,path in expect.items():
     assert f"{game}:{{url:'https://gtamap.io/{path}'" in js, game
-assert "function flatReference()" in js and "flatReference();document.title=" in js
-assert "not embedded or licensed for redistribution" in js
+assert "function flatReference()" in js and "flatReference();" in js and "document.title=w.name+" in js
+assert "The original game map appears above" in js
 for id in ('classicFlatReference','classicFlatTitle','classicFlatDescription','classicFlatLink','classicFlatCredit'):
     assert f'id="{id}"' in page,id
 assert 'src="./art/elario-crest.svg"' in page
 assert "atlas108-local-map.js?v=108" in page
-assert "atlas98-classic.js?v=108" in page and "atlas98-classic.css?v=108" in page
+assert "atlas98-classic.js?v=190" in page and "atlas98-classic.css?v=190" in page
 assert 'id="classicClearMap"' in page and 'id="classicImageFile"' in page
+for control in ('classicMapAttribution','classicMapSourceLink','classicRetryMap'):
+    assert f'id="{control}"' in page,control
+for image in ('ViceCity-GTAVCS-map.png','LibertyCity-GTALCS-MapFull-ExceptUpstate.png','1934-gtacw-full-map.jpg'):
+    assert image in js,image
+assert 'mapAlternates' in js and 'activeMapUrl' in js and 'image.onerror=next' in js
+# Verify that the default map is real, world-specific geography, not the world cover art.
+# External sources are cited individually; copied GTA III/Vice City/GTA IV images ship locally.
+expected_default_maps={
+    'iii':'./art/atlas128-gta3-radar.png',
+    'vc':'./art/atlas128-vice-city-radar.png',
+    'vcs':'https://gtwfilesie.grandtheftwiki.com/ViceCity-GTAVCS-map.png',
+    'lcs':'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-map.jpg',
+    'ctw':'https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg',
+    'tlad':'./art/atlas128-gta4-landmarks.jpg',
+    'tbogt':'./art/atlas128-gta4-landmarks.jpg',
+}
+for world,image in expected_default_maps.items():
+    assert re.search(r"\b"+world+r":\{name:[^\n]*map:'"+re.escape(image)+r"'",js), (world,image)
+assert 'image.referrerPolicy' in js and 'loadOriginalWorldMap()' in js
+assert "image.onerror=next" in js
+assert "b.querySelector('span').hidden=true" in js
+for name in ('atlas128-gta3-radar.png','atlas128-vice-city-radar.png','atlas128-gta4-landmarks.jpg'):
+    assert (ROOT/'art'/name).stat().st_size>40_000,name
+
 assert "j106-flat-reference" in css
 assert "team-jura-atlas98-classic-" in js
 assert "state.background" in js and "state.markers" in js

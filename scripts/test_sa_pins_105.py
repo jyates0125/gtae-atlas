@@ -31,7 +31,7 @@ for required in ('loadAtlasSourcePins','atlas-sa-150-sourced-pins.json','builtIn
     assert required in js,required
 assert '150 source-backed approximate collectible pins' in html
 assert 'atlas105-sa-pins.css?v=105' in html
-assert 'atlas85-sa.js?v=105' in html
+assert 'atlas85-sa.js?v=157' in html
 assert 'id="pinLayer"' in html
 assert 'Flentric/SA.MapCollectibles' in html
 print('PASS Atlas 10.5: 150 source-backed approximate SA pins, projection and full MIT license; existing progress save key preserved')

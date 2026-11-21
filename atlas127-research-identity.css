@@ -1,0 +1,53 @@
+/* Atlas 12.7 — evidence-workspace identities.
+   Each public workspace has relevant original artwork instead of repeating the crew poster.
+   Presentation only: research evidence, data, checks and browser saves stay untouched. */
+body.j127-evidence-page{--j127-art:url('./art/atlas92-map-directory.webp');--j127-art-position:center 46%;}
+body.j127-test{--j127-art:url('./art/interface-illustration.webp');--j127-art-position:center 36%;}
+body.j127-coverage{--j127-art:url('./art/atlas92-map-directory.webp');--j127-art-position:center 47%;}
+body.j127-verification{--j127-art:url('./art/atlas93-leonida.svg');--j127-art-position:center 52%;}
+body.j127-history{--j127-art:url('./art/atlas93-gta-online.svg');--j127-art-position:center 50%;}
+body.j127-evidence-page .j115-source-head{
+  isolation:isolate;min-height:240px;
+  border:2px solid #f4b778;border-radius:22px;
+  padding:clamp(25px,4.5vw,58px);margin-bottom:24px;
+  background-image:linear-gradient(92deg,#1d0e2bf8 0%,#261337ed 51%,#1e122bac 100%),var(--j127-art);
+  background-size:cover;background-position:center,var(--j127-art-position);
+  box-shadow:0 18px 40px #090416b8,0 0 0 5px #bb6cdb19;
+}
+body.j127-evidence-page .j115-source-head::after{content:"";position:absolute;pointer-events:none;
+  inset:auto 0 0;height:4px;background:linear-gradient(90deg,#ffbb74,#bd72e4,#ffc482)}
+body.j127-evidence-page .j115-source-head h1{
+  max-width:22ch;font-weight:950;font-size:clamp(31px,4.2vw,56px);
+  line-height:1.07;letter-spacing:-.035em;color:#fff8fd;text-shadow:0 5px 14px #0e0518
+}
+body.j127-evidence-page .j115-source-head small{font-weight:900;letter-spacing:.11em;color:#ffe0a2}
+body.j127-evidence-page .j115-source-head p{max-width:66ch;color:#f6e5f4;
+  font-size:clamp(14px,1.4vw,17px);line-height:1.62;text-shadow:0 2px 7px #14071d}
+body.j127-evidence-page .j127-page-links{
+  margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+}
+body.j127-evidence-page .j127-page-links a{
+  display:inline-flex;align-items:center;min-height:42px;
+  border:1px solid #d19add;border-radius:10px;
+  background:#332044e8;color:#fff5fc;text-decoration:none;
+  padding:10px 15px;font-size:13px;font-weight:850;
+}
+body.j127-evidence-page .j127-page-links a:first-child{
+  color:#261328;border-color:#ffe2ab;background:linear-gradient(120deg,#ffe1a5,#f6ab6c)
+}
+body.j127-evidence-page .j127-page-links a:hover{border-color:#fff1ba;background:#65316b;color:#fff}
+body.j127-evidence-page .j127-page-links a:first-child:hover{background:#ffdf9c;color:#211127}
+body.j127-evidence-page :is(a,button,input,select):focus-visible{outline:3px solid #ffe0a3!important;outline-offset:3px}
+body.j127-evidence-page .note{border-left-color:#f4b775;color:#f8e3f1}
+body.j127-history table{border-color:#956497}
+body.j127-history table th{background:#3c254d;color:#ffe2a5}
+body.j127-history table td{border-bottom-color:#74517d}
+body.j127-history table tr:nth-child(even){background:#21132f}
+body.j127-test .row .stat{background:linear-gradient(135deg,#372342,#1c172d);border-color:#9f6eaa}
+body.j127-test .row .stat strong{color:#ffdc95}
+body.j127-coverage .j115-source-head h1{max-width:24ch}
+@media(max-width:680px){
+  body.j127-evidence-page .j115-source-head{padding:25px 17px;min-height:0;
+    background-position:center,65% center}
+  body.j127-evidence-page .j127-page-links a{flex:1 1 145px;justify-content:center;text-align:center}
+}

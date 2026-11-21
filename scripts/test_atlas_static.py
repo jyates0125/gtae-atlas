@@ -12,7 +12,7 @@ class RefParser(HTMLParser):
             url=a.get(key,'')
             if url.startswith('./') and not ('?' in url and not url.split('?',1)[0]): self.refs.append(url.split('?',1)[0].split('#')[0].removeprefix('./'))
 js=(D/'atlas.js').read_text()
-expected=['scaly,view','yanis,18','yanis,15','dupzor,51']
+expected=['scaly,view','yanis,18','dupzor,51','research,view','yanis,15']
 m=re.search(r" '6':\[(.*)\]\n\};",js)
 assert m,'GTA VI layer selector missing'
 actual=re.findall(r"\['([^']+)','",m.group(1))
@@ -42,12 +42,12 @@ research=(D/'atlas-research.js').read_text()
 assert "'yanis,18'" in js and "base:'yanis,18'" in js
 assert "yanis,17" not in js and "/yanis,17/" not in research, 'Retired tiles cause the grid fallback'
 assert "maps/tiles/6/yanis,18/" in research, 'Research primary imagery not migrated'
-assert "./atlas-sw.js?v=103-tiles" in js, 'Service worker refresh missing'
-assert "team-jura-atlas-v103-tiles" in (D/'atlas-sw.js').read_text()
+assert "./atlas-sw.js?v=191" in js, 'Service worker refresh missing'
+assert "team-jura-atlas-v191" in (D/'atlas-sw.js').read_text()
 for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
-    assert "./atlas.js?v=103-tiles" in (D/page).read_text(), page
-assert "./atlas-research.js?v=103-tiles" in (D/'atlas-research.html').read_text()
-print('Atlas 6.7 static regression PASS: 5 unique VI views, navigation, legacy keys, links, sync plumbing')
+    assert "./atlas.js?v=191" in (D/page).read_text(), page
+assert "./atlas-research.js?v=218-yanis18" in (D/'atlas-research.html').read_text()
+print('Atlas static regression PASS: licensed community VI views, navigation, legacy keys, links, sync plumbing')
 
 # Universe database, showroom and gallery integration regression.
 import runpy
@@ -71,5 +71,32 @@ runpy.run_path(str(D / 'scripts/test_cover_art_106.py'),run_name='__main__')
 # Centralized, source-checked credits including Rockstar policy and GTADB MIT notice.
 runpy.run_path(str(D / 'scripts/test_credits_109.py'),run_name='__main__')
 
+# Original designed-brand alignment across primary and earlier-built public workspaces.
+runpy.run_path(str(D / 'scripts/test_visual_unification_112.py'), run_name='__main__')
+
+# Current project showcase, QA crest and collectables visual/version labels.
+runpy.run_path(str(D / 'scripts/test_showcase_116.py'), run_name='__main__')
+
+# Continue current Elario designed-brand parity to personally saved catalogs and reference tools.
+runpy.run_path(str(D / 'scripts/test_workspace_design_113.py'), run_name='__main__')
+
+# Verification, calibration, source-pack and quality assurance pages follow the same Elario design.
+runpy.run_path(str(D / 'scripts/test_research_design_115.py'),run_name='__main__')
+
 # Game-specific authentic classic flat-map references; maintain local marker storage.
 runpy.run_path(str(D / 'scripts/test_classic_flat_106.py'),run_name='__main__')
+
+# Current flagship Elario map/film identity, untouched source libraries and player controls.
+runpy.run_path(str(D / 'scripts/test_flagship_brand_117.py'),run_name='__main__')
+
+# Design-comparison screenshots stay isolated from generated public site assets.
+runpy.run_path(str(D / 'scripts/test_design_review_118.py'),run_name='__main__')
+
+# GTA IV, source-aware research, heist HQ and Data Lab current Elario identity.
+runpy.run_path(str(D / 'scripts/test_workspace_brand_119.py'),run_name='__main__')
+
+# Fifteen unique Elario mission artworks and original heist source/guide controls.
+runpy.run_path(str(D / 'scripts/test_heist_art_120.py'),run_name='__main__')
+
+# Original game-map imagery and source rights, player progress unchanged.
+runpy.run_path(str(D / 'scripts/test_game_art_121.py'), run_name='__main__')
