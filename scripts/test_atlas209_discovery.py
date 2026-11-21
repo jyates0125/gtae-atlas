@@ -49,4 +49,13 @@ assert 'art/atlas98-approved-hero.webp' in home
 for value in (launch,icons):
  for forbidden in ('cloudflareinsights.com', 'googletagmanager.com', 'adsbygoogle', 'ko-fi.com/'):
   assert forbidden not in value, forbidden
-print('PASS Atlas 20.9: canonical live origin, 41 search destinations, accurate social links and no tracking changes')
+# Before forwarding old public links, preserve previous-origin guest backup.
+account=(ROOT/'atlas-account.html').read_text(encoding='utf-8')
+policy=(ROOT/'atlas-policies.html').read_text(encoding='utf-8')
+assert 'j209LegacyTitle' in account
+assert 'https://team-jura-atlas-preview.pages.dev/atlas-account.html' in account
+assert 'A redirect to gtae-online.pages.dev does not automatically move it.' in account
+assert 'Cloudflare Web Analytics' in policy
+assert 'The GTAE public site' in policy
+assert 'Before launching optional analytics' not in policy
+print('PASS Atlas 20.9: canonical live origin, 41 search destinations, optional backup and transparent analytics policy')
