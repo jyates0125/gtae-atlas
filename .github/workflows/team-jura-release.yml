@@ -174,7 +174,7 @@ jobs:
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Chromium)
-        if: always() && !cancelled()
+        if: success()
         continue-on-error: true
         env:
           ATLAS_BROWSER: chromium
@@ -183,7 +183,7 @@ jobs:
           python -m playwright install chromium
           python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Chromium)
-        if: always() && !cancelled()
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: team-jura-atlas-design-review-chromium
@@ -232,7 +232,7 @@ jobs:
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Edge)
-        if: always() && !cancelled()
+        if: success()
         continue-on-error: true
         env:
           ATLAS_BROWSER: msedge
@@ -241,7 +241,7 @@ jobs:
           python -m playwright install msedge
           python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Edge)
-        if: always() && !cancelled()
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: team-jura-atlas-design-review-edge
