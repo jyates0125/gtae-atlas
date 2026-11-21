@@ -2,6 +2,8 @@
 **Effective:** November 18, 2026 · **Authority:** Owner-approved original designed brand, decisions, and tested repository history
 **Project:** Team Jura Atlas · **Parent:** Elario Studios · **Motto:** Many Crews. One Vision.
 
+**Studio-wide master charter (owner-approved 2026-11-21):** `docs/ELARIO-STUDIOS-OPERATING-CHARTER-V2-PROPOSAL.md` (filename retained for link compatibility; content now adopted). Its Elario 2150 Vision and quality gates apply to Atlas alongside this binding project charter; no Atlas-specific requirements or release holds are removed. The owner has not approved merging PR #87 by this charter decision.
+
 ## Design authority and creative license
 1. Treat `docs/ATLAS92-MASTER-SPEC.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md`, `docs/ATLAS98-LAUNCH-PARITY-AND-BRAND.md`, `docs/APPROVED-DESIGNED-BRAND-MASTER.png`, and later specifically approved reference art as the authoritative design and requirements material.
 2. Preserve the future-facing Elario violet / amber / gold visual identity, original E crest, accessibility, four featured destinations and all thirteen game maps.
