@@ -355,7 +355,7 @@
       "game": "GTA VI Story",
       "group": "Protagonist",
       "region": "Leonida",
-      "summary": "One of GTA VI's two protagonists; Rockstar's published profile places Lucia in Leonida.",
+      "summary": "Rockstar introduces Lucia as a fighter whose family-first choices brought her to Leonida Penitentiary. Newly free, she pursues a better life in Leonida with Jason.",
       "verification": "Rockstar official character profile · launch 2026-11-19",
       "image": "https://gtatr.com/img/vi/char/Lucia-Caminos.jpg",
       "imageCredit": "https://www.rockstargames.com/VI",
@@ -365,8 +365,15 @@
         "Lucia",
         "Leonida",
         "GTA 6",
-        "VI"
-      ]
+        "VI",
+        "Manni L. Perez"
+      ],
+      "attributes": {
+        "performer": "Manni L. Perez",
+        "affiliation": "Jason Duval; family in Leonida",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "character:jason",
@@ -376,7 +383,7 @@
       "game": "GTA VI Story",
       "group": "Protagonist",
       "region": "Leonida",
-      "summary": "One of GTA VI's two protagonists; Rockstar's published profile places Jason in Leonida.",
+      "summary": "A former Army recruit who grew up among grifters and criminals. Rockstar places Jason in the Keys, working for local runners and trying to find a new path with Lucia.",
       "verification": "Rockstar official character profile · launch 2026-11-19",
       "image": "https://gta6intel.com/image/item/9ed91681-4533-4b4f-bfff-d25aa664dad7/portrait?version=1748871422",
       "imageCredit": "https://www.rockstargames.com/VI",
@@ -386,8 +393,15 @@
         "Jason",
         "Leonida",
         "GTA 6",
-        "VI"
-      ]
+        "VI",
+        "Dylan Rourke"
+      ],
+      "attributes": {
+        "performer": "Dylan Rourke",
+        "affiliation": "Lucia Caminos; Cal Hampton; Brian Heder",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "animal:alligator",
@@ -709,19 +723,26 @@
       "game": "GTA VI Story",
       "group": "Supporting",
       "region": "Leonida Keys",
-      "summary": "Jason's friend, associated with Brian Heder.",
+      "summary": "Jason's friend and Brian's associate. His official character profile emphasizes Coast Guard radio monitoring, internet theories and a low-key lifestyle in Leonida.",
       "aliases": [
         "Cal",
         "GTA 6",
         "Leonida",
         "GTA VI",
-        "Cal Hampton"
+        "Cal Hampton",
+        "Bobby Moynihan"
       ],
       "verification": "Rockstar official character profile · launch 2026-11-19",
       "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
       "image": "",
       "imageCredit": "",
-      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback",
+      "attributes": {
+        "performer": "Bobby Moynihan",
+        "affiliation": "Jason Duval; Brian Heder",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "character:boobie-ike",
@@ -731,19 +752,26 @@
       "game": "GTA VI Story",
       "group": "Supporting",
       "region": "Vice City",
-      "summary": "Vice City entrepreneur involved in property, nightlife and recording.",
+      "summary": "A prominent Vice City operator with interests in real estate, nightlife and a recording studio. Rockstar highlights his partnership with Dre'Quan at Only Raw Records.",
       "aliases": [
         "Boobie",
         "GTA 6",
         "Leonida",
         "GTA VI",
-        "Boobie Ike"
+        "Boobie Ike",
+        "Mike Forbs"
       ],
       "verification": "Rockstar official character profile · launch 2026-11-19",
       "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
       "image": "",
       "imageCredit": "",
-      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback",
+      "attributes": {
+        "performer": "Mike Forbs",
+        "affiliation": "Only Raw Records; Dre'Quan Priest",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "character:dre-quan-priest",
@@ -753,19 +781,26 @@
       "game": "GTA VI Story",
       "group": "Supporting",
       "region": "Vice City",
-      "summary": "Music entrepreneur working with Only Raw Records.",
+      "summary": "An aspiring Vice City music-business leader working with Boobie Ike at Only Raw Records. His Rockstar profile says he has signed the rap duo Real Dimez.",
       "aliases": [
         "DreQuan",
         "GTA 6",
         "Leonida",
         "GTA VI",
-        "Dre'Quan Priest"
+        "Dre'Quan Priest",
+        "Naiqui Macabroad"
       ],
       "verification": "Rockstar official character profile · launch 2026-11-19",
       "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
       "image": "",
       "imageCredit": "",
-      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback",
+      "attributes": {
+        "performer": "Naiqui Macabroad",
+        "affiliation": "Only Raw Records; Boobie Ike; Real Dimez",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "character:real-dimez",
@@ -775,19 +810,27 @@
       "game": "GTA VI Story",
       "group": "Music duo",
       "region": "Vice City",
-      "summary": "Rap duo Bae-Luxe and Roxy, signed to Only Raw Records.",
+      "summary": "Bae-Luxe and Roxy make up the Vice City rap duo Real Dimez. Rockstar describes their social-media success and their record deal with Only Raw Records.",
       "aliases": [
         "Bae-Luxe, Roxy",
         "GTA 6",
         "Leonida",
         "GTA VI",
-        "Real Dimez"
+        "Real Dimez",
+        "Hood Brat (Bae-Luxe)",
+        "Krissy Celess (Roxy Rashad)"
       ],
       "verification": "Rockstar official character profile · launch 2026-11-19",
       "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
       "image": "",
       "imageCredit": "",
-      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback",
+      "attributes": {
+        "performer": "Hood Brat (Bae-Luxe); Krissy Celess (Roxy Rashad)",
+        "affiliation": "Bae-Luxe and Roxy; Only Raw Records; Dre'Quan Priest",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "character:raul-bautista",
@@ -797,19 +840,26 @@
       "game": "GTA VI Story",
       "group": "Supporting",
       "region": "Leonida",
-      "summary": "Experienced robber described in Rockstar's character showcase.",
+      "summary": "A confident, experienced bank robber introduced by Rockstar as someone hunting for ambitious collaborators. His featured profile doesn't provide exact mission or map coordinates.",
       "aliases": [
         "Raul",
         "GTA 6",
         "Leonida",
         "GTA VI",
-        "Raul Bautista"
+        "Raul Bautista",
+        "Manny Perez"
       ],
       "verification": "Rockstar official character profile · launch 2026-11-19",
       "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
       "image": "",
       "imageCredit": "",
-      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback",
+      "attributes": {
+        "performer": "Manny Perez",
+        "affiliation": "Experienced heist planner",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "character:brian-heder",
@@ -819,19 +869,26 @@
       "game": "GTA VI Story",
       "group": "Supporting",
       "region": "Leonida Keys",
-      "summary": "Keys boat-yard operator and Jason's associate.",
+      "summary": "A veteran smuggler in the Leonida Keys who runs business through his boat yard. Rockstar describes Jason as living at one of Brian's properties.",
       "aliases": [
         "Brian",
         "GTA 6",
         "Leonida",
         "GTA VI",
-        "Brian Heder"
+        "Brian Heder",
+        "Stephen Root"
       ],
       "verification": "Rockstar official character profile · launch 2026-11-19",
       "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
       "image": "",
       "imageCredit": "",
-      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback",
+      "attributes": {
+        "performer": "Stephen Root",
+        "affiliation": "Jason Duval; Cal Hampton; Lori Heder",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "place:vi:vice-city",
