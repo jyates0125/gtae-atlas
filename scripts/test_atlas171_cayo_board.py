@@ -17,5 +17,6 @@ assert "'halo jump':" in mapjs
 assert 'window.teamJuraCayoRoute' in mapjs
 assert 'teamjura-heist-focus-v1:' in mapjs, 'Existing save key must remain'
 assert 'jura159-heist-' in loader, 'Premium art must remain'
+assert '<link rel="stylesheet" href="./atlas181-cayo-hotspots.css?v=202">' in (r/'heist-cayo-perico.html').read_text(), 'Cayo marker-hiding stylesheet must load in page head before async hotspots (Edge race)'
 assert style.count('{')==style.count('}') and 'j171-board' in style and '@media(max-width:600px)' in style
 print('Atlas 17.1 Cayo mission categories, selectors, entry+exit, local saves and preserved heist art PASS')
