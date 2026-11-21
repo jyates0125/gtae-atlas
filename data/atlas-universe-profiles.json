@@ -1079,6 +1079,86 @@
         "prison",
         "GTA VI"
       ]
+    },
+    {
+      "id": "character:lamar-story",
+      "kind": "character",
+      "name": "Lamar Davis",
+      "scope": "story",
+      "game": "GTA V Story",
+      "group": "Supporting",
+      "region": "Los Santos",
+      "summary": "Franklin Clinton's friend and repossession partner in GTA V Story, including the early Franklin and Lamar mission.",
+      "verification": "Community GTA V Story mission index · Story appearance; no precise spawn data",
+      "image": "https://cdn.gracza.pl/i_gp/h/22/349641291.jpg",
+      "imageCredit": "https://gta.fandom.com/wiki/Lamar_Davis",
+      "sourceUrl": "https://gta.wiki/w/Missions_in_GTA_V",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Lamar",
+        "Franklin and Lamar",
+        "Repossession"
+      ]
+    },
+    {
+      "id": "character:lester-story",
+      "kind": "character",
+      "name": "Lester Crest",
+      "scope": "story",
+      "game": "GTA V Story",
+      "group": "Heist planner",
+      "region": "Los Santos",
+      "summary": "Michael's longtime associate and an organizer of heists during GTA V Story.",
+      "verification": "Community GTA V Story character index · Story appearance; no precise spawn data",
+      "image": "https://img.consolepulse.com/uploads/franchises/gta/characters/Lester-Crest-2.webp",
+      "imageCredit": "https://gta.fandom.com/wiki/Lester_Crest",
+      "sourceUrl": "https://gta.wiki/w/Characters_in_GTA_V",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Lester",
+        "GTA V Story heists"
+      ]
+    },
+    {
+      "id": "character:franklin-online",
+      "kind": "character",
+      "name": "Franklin Clinton",
+      "scope": "online",
+      "game": "GTA Online",
+      "group": "Agency contact",
+      "region": "Los Santos",
+      "summary": "Returns in GTA Online: The Contract as the founder of F. Clinton and Partner, an Agency business for the Online player.",
+      "verification": "Rockstar Newswire · GTA Online The Contract · December 15, 2021",
+      "image": "https://www.igta5.com/images/official-artwork-franklin-families.jpg",
+      "imageCredit": "https://www.igta5.com/official-artwork",
+      "sourceUrl": "https://www.rockstargames.com/newswire/article/ak759k91592728/gta-online-the-contract-out-now",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Franklin",
+        "F. Clinton and Partner",
+        "The Contract",
+        "Agency"
+      ]
+    },
+    {
+      "id": "character:chop-online",
+      "kind": "character",
+      "name": "Chop",
+      "scope": "online",
+      "game": "GTA Online",
+      "group": "Companion",
+      "region": "Los Santos",
+      "summary": "Franklin's dog appears with the Agency cast in GTA Online: The Contract.",
+      "verification": "Rockstar Newswire · GTA Online The Contract · December 15, 2021",
+      "image": "https://img6.gram.pl/120130916172316.jpg",
+      "imageCredit": "https://www.rockstargames.com/V/",
+      "sourceUrl": "https://www.rockstargames.com/newswire/article/ak759k91592728/gta-online-the-contract-out-now",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Chop",
+        "Agency",
+        "The Contract"
+      ]
     }
   ]
 }

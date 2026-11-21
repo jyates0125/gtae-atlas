@@ -17,6 +17,7 @@ const CLASSIC={
  'GTA The Ballad of Gay Tony':'map-hub.html?game=tbogt'
 };
 const worlds={story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story',classic:'Classic GTA'};
+let indexedCharacters=[];
 const profileLink=r=>'./atlas-characters.html?game='+encodeURIComponent(r.scope)+'&q='+encodeURIComponent(r.name)+'&profile='+encodeURIComponent(r.id)+'#mainCharacterEra';
 const worldLink=r=>r.scope==='classic'?'./'+(CLASSIC[r.game]||'maps.html'):
  r.scope==='story'?'./atlas.html':r.scope==='online'?'./atlas-online.html':'./atlas-vi.html';
@@ -77,6 +78,17 @@ function showProfile(dialog,r){
  if(srcSafe(r.imageCredit)&&r.imageCredit!==r.sourceUrl){const credit=make('a','j222-action','Image credit');credit.href=r.imageCredit;credit.target='_blank';credit.rel='noopener noreferrer';links.append(credit)}
  const share=make('a','j222-action','Link to character');share.href=profileLink(r);links.append(share);
  content.append(links);
+ const alternates=indexedCharacters.filter(x=>x.kind==='character'&&x.name===r.name&&x.scope!==r.scope);
+ if(alternates.length){
+  const other=make('nav','j225-character-appearances');
+  other.setAttribute('aria-label','Other documented game appearances');
+  other.append(make('p','j225-appearances-heading','Also appears in'));
+  for(const entry of alternates){
+   const link=make('a','j222-action','View '+(worlds[entry.scope]||entry.game)+' profile');
+   link.href=profileLink(entry);other.append(link);
+  }
+  content.append(other);
+ }
  const url=new URL(location.href);
  if(url.searchParams.get('profile')!==r.id){
   url.searchParams.set('profile',r.id);
@@ -88,7 +100,7 @@ async function start(){
  const grid=$('j222-character-grid'),search=$('j222-character-search'),stat=$('j222-character-count');
  if(!grid||!search)return;
  let data=[];
- try{const resp=await fetch('./data/atlas-universe-profiles.json?v=222',{cache:'no-cache'});if(!resp.ok)throw Error('Character database missing');const json=await resp.json();data=(json.records||[]).filter(r=>r.kind==='character'&&ALLOWED.has(r.scope));}
+ try{const resp=await fetch('./data/atlas-universe-profiles.json?v=222',{cache:'no-cache'});if(!resp.ok)throw Error('Character database missing');const json=await resp.json();data=(json.records||[]).filter(r=>r.kind==='character'&&ALLOWED.has(r.scope));indexedCharacters=data;}
  catch{grid.replaceChildren(make('p','j222-empty','Character data could not load. Open the full records search below.'));return}
  const buttons=[...document.querySelectorAll('[data-j222-scope]')];
  const args=new URLSearchParams(location.search);

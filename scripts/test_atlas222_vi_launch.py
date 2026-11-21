@@ -39,6 +39,13 @@ assert all('reuse rights are not guaranteed' in r['imageRights'] for r in rockst
 assert all('/VI/_next/static/media/' in r['image'] for r in rockstar_media)
 assert len({r['image'] for r in rockstar_media})==8,'Character-specific Rockstar media URLs must not repeat'
 assert len({r['id'] for r in cast})==len(cast)
+all_cast=[r for r in profiles['records'] if r.get('kind')=='character']
+assert len(all_cast)==40 and len({r['id'] for r in all_cast})==40
+for name in ('Lamar Davis','Lester Crest','Franklin Clinton','Chop'):
+ editions=[r for r in all_cast if r['name']==name]
+ assert len(editions)==2 and {r['scope'] for r in editions}=={'story','online'}, (name,editions)
+ assert all(r['sourceUrl'].startswith('https://') and r['verification'] for r in editions)
+assert 'j225-character-appearances' in ch_js, 'Game-specific versions must link to each other'
 names={r['name'] for r in cast}
 for name in ('Lucia Caminos','Jason Duval','Cal Hampton','Boobie Ike',
              "Dre'Quan Priest",'Real Dimez','Raul Bautista','Brian Heder'):

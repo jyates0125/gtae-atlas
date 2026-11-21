@@ -43,6 +43,17 @@ try:
    expect(modal).to_be_hidden()
    assert 'profile=' not in page.url,'Close must clear selected profile from the URL'
    assert 'atlas-vi.html' in cards.first.locator('.j222-card-actions a').nth(1).get_attribute('href')
+   # Shared characters have distinct verified Story/Online records, not a merged world.
+   page.locator('#j222-character-search').fill('Lamar')
+   expect(cards).to_have_count(2,timeout=10000)
+   assert {c.get_attribute('data-j222-world') for c in cards.all()}=={'story','online'}
+   page.locator('[data-j222-scope="story"]').click()
+   expect(cards).to_have_count(1,timeout=10000)
+   cards.first.locator('.j222-primary').click()
+   expect(page.locator('#j222-profile-dialog .j225-character-appearances a')).to_have_count(1)
+   assert 'game=online' in page.locator('#j222-profile-dialog .j225-character-appearances a').get_attribute('href')
+   page.keyboard.press('Escape')
+   expect(page.locator('#j222-profile-dialog')).to_be_hidden()
    page.locator('#j222-reset').click()
    assert cards.count()>=30,'Reset must restore all records'
    page.locator('[data-j222-scope="vi"]').click()
@@ -50,10 +61,10 @@ try:
    assert 'game=vi' in page.url,'World filters must be deep-linkable'
    assert cards.first.get_attribute('data-j222-world')=='vi'
    page.locator('[data-j222-scope="online"]').click()
-   expect(cards).to_have_count(6,timeout=10000)
+   expect(cards).to_have_count(8,timeout=10000)
    assert all(card.get_attribute('data-j222-world')=='online' for card in cards.all())
    page.locator('[data-j222-scope="story"]').click()
-   expect(cards).to_have_count(8,timeout=10000)
+   expect(cards).to_have_count(10,timeout=10000)
    assert all(card.get_attribute('data-j222-world')=='story' for card in cards.all())
    page.locator('[data-j222-scope="all"]').click()
    page.locator('#j132-nav-toggle').click()
