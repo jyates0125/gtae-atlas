@@ -32,6 +32,18 @@ try:
    # change aria-pressed while resetting the category to All.
    total=int(page.locator('#visibleCount').inner_text())
    first=page.locator('.classic-result').first.inner_text()
+   assert first.strip(),'A mapped source landmark is presented as a blank result'
+   # The licensed pack has 14 positioned but untitled community records.
+   # They must remain reachable, named honestly, and retain the original ID.
+   page.locator('#classicSearch').fill('Unnamed community landmark')
+   expect(page.locator('#resultCount')).to_have_text('14')
+   expect(page.locator('.classic-result')).to_have_count(14)
+   page.locator('.classic-result').first.click()
+   expect(page.locator('#detailName')).to_contain_text('Unnamed community landmark (source L')
+   assert 'loc=L' in page.url
+   page.locator('#closeDetail').click()
+   page.locator('#classicSearch').clear()
+   expect(page.locator('#resultCount')).to_have_text(str(total))
    page.locator('#ivNext').click()
    assert page.locator('.classic-result').first.inner_text()!=first
    expect(page.locator('#ivRange')).to_have_text('81–160 of '+str(total))
