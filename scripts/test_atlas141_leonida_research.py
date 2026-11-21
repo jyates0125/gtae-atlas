@@ -24,5 +24,5 @@ assert "maps.gtadb.org/tiles/6/yanis,18/" in research_js
 assert "href:'atlas-vi.html'" in worlds
 assert manifest["game"]=="6" and manifest["count"]==manifest["mappedCount"]+manifest["searchOnlyCount"]
 assert manifest["status"].startswith("provisional")
-assert 'COMMUNITY RESEARCH · UNVERIFIED' in explorer
+assert 'GTA VI · OUT NOW · COMMUNITY COORDINATES PROVISIONAL' in explorer
 print("GTA VI primary YANIS V18, Loki/Scaly, dedicated Research entry, source and status checks PASS")
