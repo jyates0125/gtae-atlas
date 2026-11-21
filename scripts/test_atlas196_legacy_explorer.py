@@ -17,6 +17,8 @@ assert "switchGame(5);populateCategories();restoreDeepLink();loadFullData();" in
 assert "switchGame(6);populateCategories();restoreDeepLink();loadFullData();" in (r/'legacy-explorer.html').read_text()
 import json
 pack=json.loads((r/'data/gtadb-6.json').read_text(encoding='utf-8'))
-assert pack['game']=='6' and pack['count']==3425 and pack['mappedCount']==3334
-assert len(pack['records'])==3425
+manifest=json.loads((r/'data/gtadb-6-manifest.json').read_text(encoding='utf-8'))
+assert pack['game']=='6' and pack['count']==manifest['count'] and pack['mappedCount']==manifest['mappedCount']
+assert pack['searchOnlyCount']==manifest['searchOnlyCount']
+assert len(pack['records'])==manifest['count']
 print('Atlas 19.6 legacy map performance/source/nav regression: PASS')
