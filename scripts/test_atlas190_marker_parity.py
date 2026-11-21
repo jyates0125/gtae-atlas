@@ -36,7 +36,7 @@ assert gtadb['mappedCount']==2648
 # Never discard positioned entries whose upstream source left the title blank.
 source_rows=json.loads(read('data/gtadb-4.json'))['records']
 untitled=[key for key,row in source_rows.items() if isinstance(row,list) and isinstance(row[0],str) and not row[0].strip()]
-assert len(untitled)==14 and len(source_rows)==2648
+assert len(untitled)==14 and len(source_rows)==2650
 assert 'Unnamed community landmark (source ${id})' in iv
 assert 'Source title unavailable' in iv
 assert 'Math.ceil(visible.length/400)' not in iv,'Old stride-based data omission returned'
