@@ -85,14 +85,22 @@ let researchOverlays=loadStore('jura99-research-overlays',{'5-story':true,'5-onl
 if(!researchOverlays||typeof researchOverlays!=='object'||Array.isArray(researchOverlays))researchOverlays={'5-story':true,'5-online':true,'6':true};
 const researchOn=()=>researchOverlays[filterScope()]!==false;
 let eventFocusIds=null;
-// Newly visiting players see the illustrated basemap with NO location pins.
-// Preferences are scoped per world and saved only when controls change.
+// Atlas 19.1: first-time explorers should not mistake a blank radar for
+// an empty Atlas. Begin with a small, honest selection of source categories,
+// never fabricated item spawns. Restore every returning visitor's own choice,
+// including an intentionally empty [] or the explicit 'all' preference.
+const FIRST_VISIT_CATEGORIES=Object.freeze({
+ '5-story':['landmark','transport','nature','collectible'],
+ '5-online':['landmark','transport','activity','collectible','shop'],
+ '6':['landmark','transport','food']
+});
 const PIN_PREF_KEY='jura101-visible-map-categories-v1';
 const pinPrefs=loadStore(PIN_PREF_KEY,{});
 function restoredCategories(scope){
  const value=pinPrefs&&typeof pinPrefs==='object'&&!Array.isArray(pinPrefs)?pinPrefs[scope]:undefined;
  if(value==='all')return null;
- return new Set(Array.isArray(value)?value.filter(key=>Object.prototype.hasOwnProperty.call(CATEGORIES,key)):[]);
+ if(Array.isArray(value))return new Set(value.filter(key=>Object.prototype.hasOwnProperty.call(CATEGORIES,key)));
+ return new Set(FIRST_VISIT_CATEGORIES[scope]||[]);
 }
 function savedCategoryMode(){
  const next={};
@@ -844,7 +852,7 @@ function init(){
  if(q)$('search').value=q.slice(0,100);
  if(cat&&CATEGORIES[cat]){active[filterScope()]=new Set([cat]);showTab('Services')}
  if(q||cat)render();readPacks();renderSources();loadDataset('5');loadDataset('6');loadSources();
- if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=103-tiles',{scope:'./'}).catch(()=>{});
+ if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=191',{scope:'./'}).catch(()=>{});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

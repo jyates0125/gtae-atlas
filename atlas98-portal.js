@@ -51,17 +51,34 @@
    if(known[last.page]){const a=$('#resumeLink'),label=$('#resumeLabel');if(a){a.href='./'+last.page;a.textContent='Continue '+known[last.page]+' ›'}if(label)label.textContent='Welcome back · '+known[last.page]}
  }
  function directory(){const feature=$('#directoryFeatured'),additional=$('#directoryAdditional'),inp=$('#worldSearch'),count=$('#worldCount'),buttons=$$('[data-world-filter]');if(!feature||!additional)return;
-   let mode='all';function paint(){feature.replaceChildren();additional.replaceChildren();const q=(inp?.value||'').trim().toLocaleLowerCase();let total=0;
-     for(const w of worlds){const typeOk=mode==='all'||(mode==='interactive'?(w.kind==='interactive'||w.kind==='schematic'):mode==='research'?w.kind==='research':mode==='limited'?w.kind==='limited':w.kind==='gateway');if(!typeOk||!([w.name,w.game,w.short,w.grade,w.note,...w.features].join(' ').toLowerCase().includes(q)))continue;
+   const params=new URLSearchParams(location.search);
+   const modes=buttons.map(b=>b.dataset.worldFilter);
+   let mode=modes.includes(params.get('filter'))?params.get('filter'):'all';
+   inp.value=params.get('q')||'';
+   function apply(){
+     const url=new URL(location.href);
+     for(const [key,value] of [['q',inp.value.trim()],['filter',mode==='all'?'':mode]]){
+       if(value)url.searchParams.set(key,value);else url.searchParams.delete(key);
+     }
+     history.replaceState(null,'',url);
+     paint();
+   }
+   function paint(){feature.replaceChildren();additional.replaceChildren();const q=(inp?.value||'').trim().toLocaleLowerCase();let total=0;
+     for(const w of worlds){const typeOk=mode==='all'||(mode==='interactive'?(w.kind==='interactive'||w.kind==='schematic'):mode==='research'?w.kind==='research':mode==='limited'?w.kind==='limited':w.kind==='gateway');if(!typeOk||!([w.id,w.name,w.game,w.short,w.grade,w.note,...w.features].join(' ').toLowerCase().includes(q)))continue;
        const card=makeWorld(w,false,true);card.classList.add('directory-card');
-       const summary=w.kind==='gateway'?'Individual checklist · Personal pins & routes':w.features.slice(0,3).join(' · ');
-       const note=w.kind==='gateway'?'Built-in verified map calibration pending · Open for full coverage details':w.note;
+       const episode=w.id==='tlad'||w.id==='tbogt';
+       const summary=episode?'50 sourced seagulls · Saved routes':w.kind==='gateway'?'Individual checklist · Personal pins & routes':w.features.slice(0,3).join(' · ');
+       const note=episode?w.note:w.kind==='gateway'?'Built-in verified map calibration pending · Open for full coverage details':w.note;
        const features=E('p','world-feature-summary',summary);const caption=E('p','world-coverage-note',note);
        card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
      if(count)count.textContent=total+' of '+worlds.length+' destinations';if($('#noWorlds'))$('#noWorlds').hidden=total!==0;
      $('#mainWorlds').hidden=feature.children.length===0;$('#otherWorlds').hidden=additional.children.length===0;
    }
-   inp?.addEventListener('input',paint);buttons.forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.worldFilter;buttons.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));paint()}));paint();
+   function syncButtons(){buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.worldFilter===mode)))}
+   inp.addEventListener('input',apply);
+   buttons.forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.worldFilter;syncButtons();apply()}));
+   $('#resetWorldSearch').onclick=()=>{mode='all';inp.value='';syncButtons();apply();inp.focus()};
+   syncButtons();paint();
  }
  const looks=[
   {id:'hero',title:'Original cinematic crew identity',kind:'approved',description:'Approved Team Jura character direction featuring the red-hatted Loki and Scaly Man.',art:'atlas98-approved-hero.webp'},

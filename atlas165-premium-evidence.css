@@ -1,0 +1,36 @@
+/* Team Jura Atlas 16.5 — premium evidence and parity workspaces. Existing filters/tables remain functional. */
+body.j127-coverage,body.j127-history{background:radial-gradient(ellipse at 88% -12%,#682b71 0,transparent 45rem),linear-gradient(145deg,#190b29,#0e0b1c 72%)!important;color:#f5e9f2!important;font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+body.j127-coverage main,body.j127-history main{max-width:1320px;margin:auto;padding:clamp(15px,3vw,30px) clamp(12px,3vw,30px) 90px}
+body.j127-coverage h1,body.j127-history h1{color:#fff1d7;font-size:clamp(27px,4.2vw,48px);line-height:1.16;text-shadow:0 3px 13px #090312}
+body.j127-coverage h2,body.j127-history h2{color:#ffdea4}
+body.j127-coverage a,body.j127-history a{color:#ffe0a0}
+body.j127-coverage .j115-source-head,body.j127-history .j115-source-head{background:linear-gradient(113deg,#341945,#1b102a)!important;border:1px solid #cf9cba;border-left:4px solid #f9c588;border-radius:19px;box-shadow:0 13px 31px #07041088;padding:clamp(18px,3vw,30px)!important}
+body.j127-coverage .j115-source-head small,body.j127-history .j115-source-head small{color:#ffd394!important;letter-spacing:.12em}
+.j165-feature-image{overflow:hidden;margin:19px auto 26px;border:1px solid #ffcd91;border-radius:19px;background:#1c0d2b;box-shadow:0 19px 42px #05031188}
+.j165-feature-image img{display:block;width:100%;height:auto;max-height:470px;aspect-ratio:2.7/1;object-fit:cover;object-position:center}
+.j165-feature-image figcaption{background:#281630;color:#ead3e4;padding:11px 15px;font-size:12px}
+body.j127-coverage .description,body.j127-history p,body.j127-history li{color:#ead6e8}
+body.j127-coverage :is(.panel,.item),body.j127-history :is(.note,blockquote){background:linear-gradient(135deg,#2c193b,#1a122a)!important;border:1px solid #93699d!important;border-radius:14px;color:#f9edf7}
+body.j127-coverage .item{box-shadow:0 8px 19px #0804124d}
+body.j127-coverage .item small{color:#d6c1dd}
+body.j127-coverage :is(.toolbar input,.toolbar select,.toolbar button){border:1px solid #c090a6;background:#281a38;color:#fff3fa;border-radius:10px;min-height:44px}
+body.j127-coverage .toolbar button{background:linear-gradient(115deg,#f8cd87,#efaa6c);color:#301832;font-weight:800;cursor:pointer}
+body.j127-history table{border-collapse:collapse;background:#1d142b;border-radius:12px}
+body.j127-history :is(th,td){border-color:#674d75;color:#f7e8f4}
+body.j127-history th{background:#3b2252;color:#ffdfaa}
+body.j127-history tr:nth-child(even){background:#281b39}
+body.j127-history code{background:#3a2550;color:#ffe4ac}
+body.j127-history .toplinks a,body.j127-coverage .links a{border:1px solid #d3a27c;background:#311f43;border-radius:10px;padding:11px 13px;color:#ffe2b3;min-height:43px;display:inline-flex;align-items:center}
+body.j127-history :is(.toplinks a,.j127-page-links a):focus-visible,body.j127-coverage :is(.links a,.j127-page-links a):focus-visible{outline:3px solid #ffe3aa;outline-offset:3px}
+@media(max-width:630px){.j165-feature-image img{max-height:300px;aspect-ratio:16/10}.j165-feature-image figcaption{font-size:11px}body.j127-coverage .toolbar{align-items:stretch}body.j127-coverage .toolbar :is(input,select,button){flex:1 1 150px}}
+
+/* Atlas 19.9 · historical research mobile width: unbroken provenance URLs
+   and audit cells must wrap or scroll INSIDE their section, never push the
+   whole page sideways. Keep detailed source URLs available to readers. */
+@media(max-width:630px){
+  body.j127-history main,body.j127-history .j115-source-head,
+  body.j127-history .j165-feature-image{min-width:0;max-width:100%}
+  body.j127-history :is(p,li,a,code,td,th,small,blockquote){overflow-wrap:anywhere;word-break:normal}
+  body.j127-history :is(pre,table){max-width:100%;overflow-x:auto}
+  body.j127-history .toplinks{min-width:0;max-width:100%}
+}

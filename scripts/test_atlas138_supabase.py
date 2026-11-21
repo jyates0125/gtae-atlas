@@ -12,12 +12,14 @@ assert "create table if not exists public.atlas_saves" in schema
 assert "references auth.users(id) on delete cascade" in schema
 assert "enable row level security" in schema
 assert "force row level security" in schema
-assert "revoke all on table public.atlas_saves from public, anon" in schema
+assert "revoke all on table public.atlas_saves from public, anon, authenticated" in schema
 for command in ("select", "insert", "update", "delete"):
     assert f"for {command} to authenticated" in schema, command
 assert schema.count("with check ((select auth.uid()) = user_id)") == 2
 assert schema.count("using ((select auth.uid()) = user_id)") == 3
 assert "has_table_privilege('anon'" in verify
+assert "authenticated_can_truncate" in verify and "authenticated_can_trigger" in verify
+assert "20261121043647_harden_atlas_save_table_privileges.sql" in security
 assert "relforcerowsecurity" in verify
 assert "pg_policies" in verify
 assert "does NOT test two-user isolation" in verify

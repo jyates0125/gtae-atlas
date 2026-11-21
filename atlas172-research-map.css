@@ -1,0 +1,28 @@
+/* Atlas 17.2 — GTA VI Community Research map usability. No data or rendering changes. */
+body.j119-research .workspace{height:calc(100dvh - 125px)!important;min-height:570px!important}
+body.j119-research .maparea{min-width:0;min-height:0;background:#38234b!important}
+body.j119-research .maparea #map{filter:brightness(1.17) contrast(1.07)}
+body.j119-research .maparea.j172-bright-map #map{filter:brightness(1.38) contrast(1.12) saturate(1.06)}
+body.j119-research .maparea .pill{background:#2c1a40ed;border:1px solid #d5a4bd;color:#ffe6f0;font-size:12px}
+body.j119-research .maparea .controls{right:12px;top:18px;z-index:7}
+body.j119-research .maparea .controls button{width:48px;height:47px;min-height:47px;border:1px solid #e7bf95;background:#3d244c;color:#ffe4ac;font-size:23px}
+body.j119-research .j172-tools{position:absolute;left:12px;bottom:89px;z-index:16;display:flex;flex-wrap:wrap;gap:7px;padding:6px;background:#22152ff3;border:1px solid #d7a8b9;border-radius:12px;box-shadow:0 9px 22px #050210ac}
+body.j119-research .j172-tools button{min-height:44px;border:1px solid #efc395;background:#472b56;color:#ffe9bb;font:850 12px/1.3 system-ui;padding:9px 12px;border-radius:9px}
+body.j119-research .j172-tools button[aria-pressed="true"]{background:linear-gradient(100deg,#ffdeac,#f1a66d);color:#291531}
+body.j119-research .j172-tools button:focus-visible{outline:3px solid #ffe7ad;outline-offset:3px}
+body.j119-research .maparea.j172-full-map{position:fixed!important;inset:0!important;height:100dvh!important;width:100vw!important;min-height:0!important;z-index:1800!important;border:2px solid #edbf94}
+body.j119-research.j172-map-expanded{overflow:hidden!important}
+body.j119-research .maparea.j172-full-map .mobileFilter{display:block!important;z-index:20!important}
+body.j119-research.j172-map-expanded #rail.open{position:fixed!important;z-index:2100!important;top:0!important;bottom:0!important}
+@media(max-width:870px){body.j119-research .workspace{height:calc(100dvh - 130px)!important;min-height:600px!important}}
+@media(max-width:760px){
+ body.j119-research .workspace{height:78dvh!important;min-height:580px!important;position:relative}
+ body.j119-research .maparea{height:100%!important;min-height:580px}
+ body.j119-research .maparea.j172-full-map{height:100dvh!important;min-height:0!important}
+ body.j119-research .j172-tools{left:8px;bottom:87px;max-width:calc(100% - 96px)}
+ body.j119-research .j172-tools button{font-size:11px;padding:7px}
+ body.j119-research .maparea .maptop{top:60px!important;left:10px}
+ body.j119-research .maparea .pill{font-size:10px}
+}
+@media(max-width:390px){body.j119-research .j172-tools{max-width:60%}}
+@media(prefers-reduced-motion:reduce){body.j119-research .j172-tools *{transition:none!important}}

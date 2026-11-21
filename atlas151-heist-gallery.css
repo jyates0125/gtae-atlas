@@ -20,3 +20,10 @@ body.j119-heists .cards .card:hover .j151-heist-cover{filter:brightness(1.1)}
 @media(max-width:580px){
  body.j119-heists .card .j151-heist-cover{aspect-ratio:16/8.8}
 }
+
+.heist-finder{display:flex;align-items:center;flex-wrap:wrap;gap:.8rem 1.2rem;margin-bottom:1rem;padding:.9rem 1rem;color:#fff3e5;background:#291733;border:1px solid #82568c;border-radius:12px}
+.heist-finder label{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.heist-finder input[type=search]{width:min(16rem,100%);min-height:40px;border:1px solid #906398;border-radius:8px;background:#190f25;color:#fff;padding:.5rem}
+.heist-finder button{color:#ffe1aa;background:#422846;border:1px solid #ab83a4;border-radius:8px;padding:.5rem}
+.heist-finder[hidden],.heist-finder button[hidden],.cards .card[hidden]{display:none}
+.cards .card small:not([hidden]){display:block;color:#ffdb9e;margin-block:.45rem}

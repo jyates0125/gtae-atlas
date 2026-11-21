@@ -4,14 +4,21 @@
 (()=>{'use strict';
 const CATEGORIES=[
  {title:'START & COMMUNITY',prefix:'start',items:[['Welcome','index.html'],['Enter Atlas dashboard','atlas-dashboard.html'],['Choose a world','atlas97-journey.html'],['All 13 maps','maps.html'],['Optional account & backup','atlas-account.html'],['Share the Atlas','atlas-share.html'],['One Last Ride','one-last-ride.html'],['Team Jura','team-jura.html'],['Elario Studios','elario.html']]},
- {title:'GAME MAPS & EXPLORERS',prefix:'maps',items:[['GTA V Story','atlas.html'],['GTA Online','atlas-online.html'],['GTA VI Research','atlas-vi.html'],['Cayo Perico','atlas-cayo.html'],['GTA IV','atlas-iv.html'],['San Andreas','atlas-sa.html'],['Classic GTA worlds','map-hub.html'],['Map directory','maps.html']]},
- {title:'COLLECTIONS & PLAYER TOOLS',prefix:'tools',items:[['Universe database','atlas-database.html'],['GTA V vehicles','atlas90-vehicles5.html'],['GTA VI vehicle research','atlas90-vehicles6.html'],['Weapons','atlas90-weapons.html'],['Characters','atlas-characters.html'],['Animals','atlas-animals.html'],['Collectibles','atlas-collectibles.html'],['My Garage','atlas93-garage.html'],['My Crew','my-crew.html'],['Vehicle 3D concept','atlas-vehicle-configurator.html'],['Atlas Passport','atlas-passport.html'],['Tracker & HQ','atlas81-hq.html'],['Cheat sheets','atlas-cheats.html'],['Guides','guides.html'],['Activities','atlas-activities.html'],['Your toolkit','atlas-toolkit.html']]},
- {title:'HEISTS & MISSIONS',prefix:'heists',items:[['Heists HQ','heists.html'],['Cayo Perico heist','heist-cayo-perico.html'],['Diamond Casino','heist-diamond-casino.html'],['Doomsday Act I','heist-doomsday-act-1.html'],['Doomsday Act II','heist-doomsday-act-2.html'],['Doomsday Act III','heist-doomsday-act-3.html'],['Pacific Standard','heist-pacific-standard.html'],['Fleeca Job','heist-fleeca.html'],['Prison Break','heist-prison-break.html'],['Humane Labs','heist-humane-labs.html'],['Auto Shop','heist-auto-shop.html'],['Cluckin Bell','heist-cluckin-bell.html']]},
+ {title:'GAME MAPS & EXPLORERS',prefix:'maps',items:[['GTA V Story','atlas.html'],['GTA Online','atlas-online.html'],['GTA VI Research','atlas-vi.html'],['Cayo Perico','heist-cayo-perico.html'],['GTA IV','atlas-iv.html'],['San Andreas','atlas-sa.html'],['Vice City','map-hub.html?game=vc'],['GTA III','map-hub.html?game=iii'],['Vice City Stories','map-hub.html?game=vcs'],['Liberty City Stories','map-hub.html?game=lcs'],['Chinatown Wars','map-hub.html?game=ctw'],['The Lost and Damned (TLAD)','map-hub.html?game=tlad'],['The Ballad of Gay Tony (TBOGT)','map-hub.html?game=tbogt'],['Map directory','maps.html']]},
+ {title:'COLLECTIONS & PLAYER TOOLS',prefix:'tools',items:[['Universe database','atlas-database.html'],['GTA V vehicles','atlas90-vehicles5.html'],['GTA VI vehicle research','atlas90-vehicles6.html'],['GTA V Story Weapons','atlas90-weapons.html?world=story'],['GTA Online Weapons','atlas90-weapons.html'],['GTA VI Weapon Research','atlas90-weapons6.html'],['Characters','atlas-characters.html'],['Animals','atlas-animals.html'],['Collectibles','atlas-collectibles.html'],['My Garage','atlas93-garage.html'],['My Crew','my-crew.html'],['Vehicle 3D concept','atlas-vehicle-configurator.html'],['Atlas Passport','atlas-passport.html'],['Tracker & HQ','atlas81-hq.html'],['Cheat sheets','atlas-cheats.html'],['Guides','guides.html'],['Activities','atlas-activities.html'],['Your toolkit','atlas-toolkit.html']]},
+ {title:'HEISTS & MISSIONS',prefix:'heists',items:[['Heists HQ','heists.html'],['Cayo Perico heist','heist-cayo-perico.html'],['Diamond Casino','heist-diamond-casino.html'],['Doomsday Act I','heist-doomsday-act-1.html'],['Doomsday Act II','heist-doomsday-act-2.html'],['Doomsday Act III','heist-doomsday-act-3.html'],['Pacific Standard','heist-pacific-standard.html'],['Fleeca Job','heist-fleeca.html'],['Prison Break','heist-prison-break.html'],['Humane Labs','heist-humane-labs.html'],['Auto Shop','heist-auto-shop.html'],['Cluckin Bell','heist-cluckin-bell.html'],['Series A Funding','heist-series-a.html'],['Agency VIP Contract','heist-agency-vip.html'],['Salvage Yard','heist-salvage-yard.html'],['Kortz Center research','heist-kortz-center.html']]},
  {title:'RESEARCH & STUDIO',prefix:'research',items:[['GTA VI Research','atlas-research.html'],['Landmark Library','atlas98-landmarks.html'],['Newsroom','atlas-news.html'],['Daily Intel','atlas87-daily.html'],['Atlas Dispatch','atlas93-dispatch.html'],['Source Registry','atlas-source-registry.html'],['Evidence & Verification','atlas-verification.html'],['Credits & Rights','atlas-credits.html'],['Style Lab','atlas98-style-lab.html'],['Data Lab','atlas98-data-lab.html']]}
 ];
 const ALL=new Set(CATEGORIES.flatMap(x=>x.items.map(y=>y[1])));
 const safeHref=x=>/^[a-z0-9-]+\.html$/i.test(x);
-function pageLink(a){const l=document.createElement('a');l.href='./'+a[1];l.textContent=a[0];if(location.pathname.endsWith('/'+a[1])||(a[1]==='index.html'&&(location.pathname==='/'||location.pathname.endsWith('/index.html')))){l.setAttribute('aria-current','page')}return l}
+function pageLink(a){const l=document.createElement('a');l.href='./'+a[1];l.textContent=a[0];
+ const target=new URL(l.href),current=new URL(location.href);
+ const pathnameMatch=current.pathname===target.pathname||(a[1]==='index.html'&&(current.pathname==='/'||current.pathname.endsWith('/index.html')));
+ const scopedQuery=[...target.searchParams].every(([key,value])=>current.searchParams.get(key)===value);
+ const armoryMatches=!target.pathname.endsWith('/atlas90-weapons.html')||
+   (target.searchParams.get('world')==='story'?(current.searchParams.get('world')==='story'):(current.searchParams.get('world')!=='story'));
+ if(pathnameMatch&&scopedQuery&&armoryMatches)l.setAttribute('aria-current','page');
+ return l}
 function build(){
  if(document.querySelector('#j132-nav-toggle'))return;
  const wrap=document.createElement('div');wrap.className='j132-nav';
@@ -55,7 +62,7 @@ function build(){
  // the prominent categories under an honest "Other public pages" section.
  fetch('./atlas132-page-directory.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
    if(!data||!Array.isArray(data.pages))return;
-   const remainder=data.pages.filter(x=>x&&safeHref(x.path)&&!ALL.has(x.path)).map(x=>[String(x.title||x.path).replace(/\s*[|·].*$/,'').slice(0,80),x.path]);
+   const remainder=data.pages.filter(x=>x&&safeHref(x.path)&&!ALL.has(x.path)&&x.path!=='map-hub.html').map(x=>[String(x.title||x.path).replace(/\s*[|·].*$/,'').slice(0,80),x.path]);
    remainder.sort((a,b)=>a[0].localeCompare(b[0]));
    if(remainder.length)allCategories=[...CATEGORIES,{title:'OTHER PUBLIC WORKSPACES & ARCHIVE',prefix:'other',items:remainder}];
    render(input.value);

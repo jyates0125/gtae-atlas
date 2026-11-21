@@ -36,15 +36,15 @@ body.j128-map-chrome .sidebar .atlas-explorer-head{
 }
 body.j128-map-chrome[data-start-world="5"] .sidebar .atlas-explorer-head{
   background-image:linear-gradient(105deg,#1d0d2de8,#2e1648c4 74%,#170f29a9),
-                   url('./art/atlas93-los-santos.svg');
+                   url('./art/jura155-story.webp');
 }
 body.j128-map-chrome[data-start-world="online"] .sidebar .atlas-explorer-head{
   background-image:linear-gradient(105deg,#1d0d2de8,#2e1648c4 74%,#170f29a9),
-                   url('./art/atlas93-gta-online.svg');
+                   url('./art/jura155-online.webp');
 }
 body.j128-map-chrome[data-start-world="6"] .sidebar .atlas-explorer-head{
   background-image:linear-gradient(105deg,#1d0d2de8,#2e1648c4 74%,#170f29a9),
-                   url('./art/atlas93-leonida.svg');
+                   url('./art/jura155-vi.webp');
 }
 body.j128-map-chrome .sidebar .atlas-explorer-head h1{
   font-size:clamp(24px,2.4vw,35px);letter-spacing:-.025em;

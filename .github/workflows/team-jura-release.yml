@@ -38,6 +38,7 @@ jobs:
           python scripts/test_social_icons_131.py
           python scripts/test_atlas153_welcome_social.py
           python scripts/test_account_131.py
+          python scripts/test_atlas208_https_auth.py
           python scripts/test_atlas138_supabase.py
           python scripts/test_atlas141_leonida_research.py
           python scripts/test_atlas142_official_sources.py
@@ -91,6 +92,41 @@ jobs:
           python scripts/test_atlas158_premium_experiences.py
           python scripts/test_atlas161_quality_gate.py
           python scripts/test_atlas162_subject_heroes.py
+          python scripts/test_atlas163_premium_asset_ledger.py
+          python scripts/test_atlas164_heist_workspace.py
+          python scripts/test_atlas165_evidence_brand.py
+          python scripts/test_atlas166_release_status.py
+          python scripts/test_atlas167_heist_focus.py
+          python scripts/test_atlas168_heist_guides.py
+          python scripts/test_atlas169_heist_views.py
+          python scripts/test_atlas170_cayo_unified.py
+          python scripts/test_atlas171_cayo_board.py
+          python scripts/test_atlas180_cayo_flagship.py
+          python scripts/test_atlas181_cayo_hotspots.py
+          python scripts/test_atlas184_cayo_visible_symbols.py
+          python scripts/test_atlas185_cayo_polish.py
+          python scripts/test_atlas186_cayo_route.py
+          python scripts/test_atlas192_world_completion.py
+          python scripts/test_atlas207_policies.py
+          python scripts/test_atlas195_source_tags.py
+          node --check atlas195-source-tags.js
+          python scripts/test_atlas196_legacy_explorer.py
+          node --check atlas90-gallery.js
+          node --check atlas192-weapons6.js
+          node --check film/atlas192-storyboard.js
+          python scripts/test_atlas190_marker_parity.py
+          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py
+          node --check atlas-iv.js
+          node --check atlas190-sa-route.js
+          node --check atlas186-cayo-route.js
+          node --check atlas185-cayo-polish.js
+          node --check atlas171-cayo-board.js
+          node --check atlas180-cayo-flagship.js
+          node --check atlas181-cayo-hotspots.js
+          python scripts/test_atlas171_research_map.py
+          python scripts/test_atlas172_research_map.py
+          node --check atlas164-heist-workspace.js
+          node --check heist-pages.js
           python scripts/test_atlas152_art.py
           node --check atlas93-global.js
           node --check leonida-hq.js
@@ -110,6 +146,15 @@ jobs:
         env:
           ATLAS_BROWSER: chromium
         run: python scripts/browser_smoke.py
+      - name: Verify Cayo mission board and capture phone/desktop screenshots
+        env:
+          ATLAS_BROWSER: chromium
+        run: |
+          python scripts/test_atlas171_browser.py
+          python scripts/test_atlas186_route_browser.py
+          python scripts/test_atlas190_map_browser.py
+          python scripts/test_atlas201_squalo_browser.py
+          python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Chromium)
         if: always()
         continue-on-error: true
@@ -150,6 +195,18 @@ jobs:
         env:
           ATLAS_BROWSER: msedge
         run: python scripts/browser_smoke.py
+      - name: Verify Cayo mission board and capture phone/desktop screenshots
+        # Git Bash uses fail-fast (-e); PowerShell otherwise hides an earlier
+        # native Python failure when a later command exits successfully.
+        shell: bash
+        env:
+          ATLAS_BROWSER: msedge
+        run: |
+          python scripts/test_atlas171_browser.py
+          python scripts/test_atlas186_route_browser.py
+          python scripts/test_atlas190_map_browser.py
+          python scripts/test_atlas201_squalo_browser.py
+          python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Edge)
         if: always()
         continue-on-error: true
@@ -188,6 +245,7 @@ jobs:
         with:
           name: team-jura-atlas-cloudflare-validated-after-chromium-and-edge
           path: public/
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 21
       - name: Owner visual signoff — prevent artwork regression release

@@ -14,7 +14,7 @@ const state={schema:1,slots:Array.isArray(saved.slots)?saved.slots:[],capacities
 state.slots=state.slots.filter(s=>s&&validModel(s.model)&&typeof s.id==='string'&&s.id.length<=90).slice(0,4000).map(s=>({...s,garage:clean(s.garage,56),floor:clean(s.floor,32),bay:clean(s.bay,32),plate:clean(s.plate,20),notes:clean(s.notes,900)}));
 const knownModels=new Set(),names=new Map();
 let selectedGarage='',search='',importInput=null;
-function persist(){try{localStorage.setItem(KEY,JSON.stringify({...state,updated:new Date().toISOString()}));return true}catch{status('Browser storage unavailable. Export your records before closing.');return false}}
+function persist(next=state){try{localStorage.setItem(KEY,JSON.stringify({...next,updated:new Date().toISOString()}));return true}catch{status('Browser storage unavailable. Export your records before closing.');return false}}
 function garages(){const raw=parse(LEGACY,{garages:['Main Garage']});return [...new Set(['Main Garage',...(Array.isArray(raw.garages)?raw.garages:[])].filter(x=>typeof x==='string').map(x=>clean(x,56)).filter(Boolean))].slice(0,40)}
 function status(text){const target=$('j96-message');if(target)target.textContent=text}
 function options(select,values,selected){select.replaceChildren();for(const [name,label] of values)select.add(new Option(label,name));if(values.some(x=>x[0]===selected))select.value=selected}
@@ -39,7 +39,7 @@ function render(){addGarageOpts();report();const gs=garages(),g=$('j96-filter-ga
  const cap=150;for(const [i,s] of rows.slice(0,cap).entries()){
   const row=node('article','j96-row');const label=node('div');label.append(node('strong','',names.get(s.model)||s.model),node('small','',(s.garage||'Unassigned')+' · '+[s.floor,s.bay,s.plate].filter(Boolean).join(' · ')+(s.notes?' · '+s.notes:'')));
   const actions=node('div','j96-row-actions');const edit=node('button','','Edit');edit.type='button';edit.onclick=()=>{for(const [id,value] of [['j96-model',s.model],['j96-garage',s.garage],['j96-floor',s.floor],['j96-bay',s.bay],['j96-plate',s.plate],['j96-note',s.notes]])if($(id))$(id).value=value;
-    $('j96-save').dataset.editId=s.id;$('j96-save').textContent='Save parking record';$('j96-form').scrollIntoView({behavior:'smooth',block:'nearest'});status('Editing '+s.model+'. Changes are saved only when you press Save parking record.');};
+    $('j96-cancel').hidden=false;$('j96-save').dataset.editId=s.id;$('j96-save').textContent='Save parking record';$('j96-form').scrollIntoView({behavior:'smooth',block:'nearest'});status('Editing '+s.model+'. Changes are saved only when you press Save parking record.');};
   const del=node('button','','Remove');del.type='button';del.onclick=()=>{if(!confirm('Remove this parked instance? Model ownership and your 9.3 garage remain intact.'))return;state.slots=state.slots.filter(x=>x.id!==s.id);persist();render();status('Parked instance removed. Original model ownership preserved.');};actions.append(edit,del);row.append(label,actions);root.append(row)
  }
  if(rows.length>cap)root.append(node('p','j96-warning','Showing '+cap+' of '+rows.length+' matching instances. Refine search or export your records.'));
@@ -50,14 +50,23 @@ function park(){const m=$('j96-model').value;
  const entry={model:m,garage:clean($('j96-garage').value,56),floor:clean($('j96-floor').value,32),bay:clean($('j96-bay').value,32),plate:clean($('j96-plate').value,20),notes:clean($('j96-note').value,900)};
  if(entry.garage&&!garages().includes(entry.garage)){status('Choose a garage from your existing Garage Manager.');return}
  const id=$('j96-save').dataset.editId;
- if(id){const at=state.slots.findIndex(s=>s.id===id);if(at<0){status('Parking record missing; please try again.');return}state.slots[at]={...state.slots[at],...entry};delete $('j96-save').dataset.editId;$('j96-save').textContent='Park another vehicle';}
- else {if(state.slots.length>=4000){status('4,000 instance safety limit reached. Export before adding more.');return}
-  const next=globalThis.crypto?.randomUUID?.()||'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,8);state.slots.push({...entry,id:next,added:new Date().toISOString()});
+ const nextSlots=state.slots.slice();
+ if(id){
+  const at=nextSlots.findIndex(slot=>slot.id===id);
+  if(at<0){status('This parking record is unavailable. Cancel the edit to start another.');return}
+  nextSlots[at]={...nextSlots[at],...entry};
+ }else{
+  if(nextSlots.length>=4000){status('Parking is full. Remove a record before adding another.');return}
+  const next=globalThis.crypto?.randomUUID?.()||'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,8);
+  nextSlots.push({...entry,id:next,added:new Date().toISOString()});
  }
- const done=persist();if(!done)return;
+ if(!persist({...state,slots:nextSlots}))return;
+ state.slots=nextSlots;
+ delete $('j96-save').dataset.editId;
+ $('j96-save').textContent='Park another vehicle';$('j96-cancel').hidden=true;
  // Sync aggregate model ownership but NEVER delete it when removing a parking instance.
  const gallery=parse(OWN,{schema:1,owned:{},wishlist:{},note:{}});if(!gallery.owned||typeof gallery.owned!=='object')gallery.owned={};gallery.owned['vehicles5:'+m]=true;
- try{const json=JSON.stringify({...gallery,schema:1,updated:new Date().toISOString()});localStorage.setItem(OWN,json);window.dispatchEvent(new StorageEvent('storage',{key:OWN,newValue:json}));}catch{}
+ try{const json=JSON.stringify({...gallery,schema:1,updated:new Date().toISOString()});localStorage.setItem(OWN,json);window.dispatchEvent(new StorageEvent('storage',{key:OWN,newValue:json}));}catch{render();status('Parking record saved. Model ownership could not be saved on this device.');return}
  render();status('Saved a '+(names.get(m)||m)+' instance. Garage and model ownership are recorded locally.');
 }
 function legacyImport(){const old=parse(LEGACY,{vehicles:{}}),rows=Object.entries(old.vehicles||{}).filter(([id,r])=>validModel(id)&&r&&typeof r==='object'&&typeof r.garage==='string'&&r.garage&&knownModels.has(id));
@@ -75,7 +84,13 @@ function setup(){const main=document.querySelector('main.layout');if(!main)retur
  const actions=node('div','j96-buttons');const save=node('button','j96-primary','Park another vehicle');save.id='j96-save';save.type='button';save.onclick=park;
  const migrate=node('button','','Copy earlier assignments');migrate.type='button';migrate.onclick=legacyImport;const exportButton=node('button','','↓ Export parking slots');exportButton.type='button';exportButton.onclick=()=>download({schema:1,app:'team-jura-atlas96-parking',exportedAt:new Date().toISOString(),slots:state.slots,capacities:state.capacities},'team-jura-atlas96-parking-backup.json');
  const importLabel=node('label','','↑ Import parking backup');importLabel.style.display='block';importInput=node('input');importInput.type='file';importInput.accept='.json,application/json';importLabel.append(importInput);
- actions.append(save,migrate,exportButton,importLabel);form.append(actions);
+ const cancel=node('button','','Cancel edit');cancel.id='j96-cancel';cancel.type='button';cancel.hidden=true;
+ cancel.onclick=()=>{
+  delete save.dataset.editId;save.textContent='Park another vehicle';cancel.hidden=true;
+  for(const field of [garage,floor,bay,plate,note])field.value='';
+  model.focus();status('Parking edit discarded.');
+ };
+ actions.append(save,cancel,migrate,exportButton,importLabel);form.append(actions);
  const message=node('p','j96-message','Parking is local to this browser. Export before clearing device data.');message.id='j96-message';message.setAttribute('role','status');form.append(message);grid.append(form);
  const ledger=node('section','j96-ledger');ledger.append(node('h3','','Garage occupancy & parking ledger'));
  const capFields=node('div','j96-form-fields');const capLabel=node('label','','Garage');const capGarage=node('select');capGarage.id='j96-cap-garage';capLabel.append(capGarage);

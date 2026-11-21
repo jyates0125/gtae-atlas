@@ -1,0 +1,9 @@
+# Atlas 17.0: Same Cayo in-game island map, working pins, routes and info
+
+The owner requires the real game map to be the default interactive workspace, not a static second page without POIs. We now reuse the original game-island image already referenced in `atlas-cayo.html` as the Cayo heist's initial map. One viewport combines that basemap with Team Jura pointed pins, category filters, click-to-detail, saved scope progress, user-ordered route lines, zoom and Fit. The owner-approved Elario enhanced aerial map is still an optional view. User storage keys and cover art stay unchanged.
+
+**Source and rights:** island screenshot from GTA Wiki, `https://gta.fandom.com/wiki/Cayo_Perico`, game artwork © Rockstar Games / Take-Two. The upstream wiki describes its in-game screenshot treatment and linking requirements at `https://gta.fandom.com/wiki/GTA_Wiki:Copyright`. This does NOT imply blanket rights over GTADB/GTAMap/etc proprietary maps or tiles.
+
+**Position accuracy:** `islandLandmarks` contains approximate display-space placements for distinctive named fixed landmarks, NOT verified game coordinates. Exact calibration pending. No fake daily chest or variable loot locations are drawn in game-map mode; those research records are available in the enhanced planning data. Routes are planning order, not traversable navigation. External image host failure reverts to the enhanced map. Full source island page remains for comparison, not as a required POI tool.
+
+**QA:** run static and Chromium/Edge mobile+desktop checks. Compare rendered map geometry, marker placement, buttons, browser loading errors and progress preservation. Never call full parity achieved from this change alone.
