@@ -23,6 +23,8 @@ const worldLink=r=>r.scope==='classic'?'./'+(CLASSIC[r.game]||'maps.html'):
 const make=(tag,cl,value)=>{const n=document.createElement(tag);if(cl)n.className=cl;if(value!==undefined)n.textContent=value;return n};
 const srcSafe=url=>typeof url==='string' && /^https:\/\/[a-z0-9.-]+\//i.test(url) && url.length<600;
 const label=(r,local)=>local?'Original Elario cinematic world artwork · not a character portrait':
+ /^https:\/\/www\.rockstargames\.com\/VI\/_next\/static\/media\//i.test(r.image||'')?
+ 'Official Rockstar Games character screenshot · © Rockstar Games / Take-Two Interactive':
  'Reference character artwork · source linked where provided';
 function portraitMedia(r,profile=false){
  const media=make('div','j222-character-media'+(profile?' j222-profile-media':''));
