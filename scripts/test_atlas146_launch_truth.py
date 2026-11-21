@@ -18,5 +18,5 @@ assert 'Research · YANIS V18' in hq
 assert 'Rockstar' in hq and 'Official worldwide launch' in hq
 assert 'Out now · Rockstar confirmed GTA VI launched November 19, 2026' in countdown
 assert 'Official Rockstar Map' in (root/'atlas143-official-map-view.js').read_text() or 'Rockstar · Official Map' in (root/'atlas143-official-map-view.js').read_text()
-assert 'COMMUNITY RESEARCH · UNVERIFIED' in (root/'atlas-vi.html').read_text()
+assert 'GTA VI · OUT NOW · COMMUNITY COORDINATES PROVISIONAL' in (root/'atlas-vi.html').read_text()
 print('Atlas 14.6 Rockstar Nov 19 launch truth, V18 community research views and provisional status PASS')
