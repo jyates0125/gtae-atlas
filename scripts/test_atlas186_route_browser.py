@@ -25,8 +25,25 @@ try:
    browser=pw.chromium.launch(**args)
    ctx=browser.new_context(viewport=viewport,device_scale_factor=1)
    page=ctx.new_page()
+   errors=[]
+   page.on('pageerror',lambda error:errors.append(str(error)))
    page.goto(url,wait_until='domcontentloaded',timeout=50000)
-   page.locator('#j186-route').wait_for(state='visible',timeout=30000)
+   try:
+    page.locator('#j186-route').wait_for(state='visible',timeout=30000)
+   except Exception as exc:
+    diagnostic=page.evaluate("""() => ({
+      heist:document.body.dataset.heist,
+      source:!!document.querySelector('#j167-heist-map'),
+      world:!!document.querySelector('#j167-heist-map .j167-world'),
+      hotspots:!!document.querySelector('#j181-hotspots'),
+      chests:!!document.querySelector('.j180-chest-layer'),
+      stage:!!document.querySelector('.j180-stage'),
+      frame:!!document.querySelector('.j180-map-frame'),
+      routeScript:!!document.querySelector('script[src*="atlas186-cayo-route.js"]'),
+      routePanel:!!document.querySelector('#j186-route'),
+      routeApi:!!window.teamJuraCayoPinRoute
+    })""")
+    raise AssertionError(f'Cayo route did not initialize for {engine}/{kind}: {diagnostic} JS errors={errors[:5]}') from exc
    page.wait_for_function("document.querySelectorAll('.j180-chest').length===19",timeout=20000)
    assert page.locator('.j186-route-layer').count()==1,'Route must be drawn in the SAME map world'
    assert page.locator('.j186-filter').count()==14,'The route planner must match all 14 legend categories'
