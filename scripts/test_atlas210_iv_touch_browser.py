@@ -28,7 +28,7 @@ base = "http://127.0.0.1:%d/" % server.server_port
 engine = os.getenv("ATLAS_BROWSER", "chromium")
 
 def coords(text):
-    match = re.search(r"X (-?\\d+) · Y (-?\\d+) · ([\\d.]+)× view", text)
+    match = re.search(r"X (-?\d+) · Y (-?\d+) · ([\d.]+)× view", text)
     assert match, "Missing map coordinates/zoom status: " + text
     return tuple(float(item) for item in match.groups())
 
@@ -76,7 +76,7 @@ try:
         page.wait_for_function(
             """(initial)=> {
                 const t=document.querySelector('#coordStatus')?.textContent||'';
-                const m=t.match(/([\\d.]+)× view/);
+                const m=t.match(/([\d.]+)× view/);
                 return Boolean(m) && Number(m[1]) > initial + .5;
             }""",
             arg=before[2], timeout=10000,
@@ -93,7 +93,7 @@ try:
         page.wait_for_function(
             """(initial)=> {
                 const t=document.querySelector('#coordStatus')?.textContent||'';
-                const m=t.match(/X (-?\\d+) · Y (-?\\d+)/);
+                const m=t.match(/X (-?\d+) · Y (-?\d+)/);
                 return Boolean(m) && Math.abs(Number(m[1])-initial)>10;
             }""",
             arg=after[0], timeout=10000,
