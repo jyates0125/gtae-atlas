@@ -352,30 +352,42 @@
       "kind": "character",
       "name": "Lucia Caminos",
       "scope": "vi",
-      "game": "GTA VI",
+      "game": "GTA VI Story",
       "group": "Protagonist",
       "region": "Leonida",
-      "summary": "Featured in official GTA VI promotional material; gameplay details pending verification",
-      "verification": "Official-promo identity; further details unverified",
+      "summary": "One of GTA VI's two protagonists; Rockstar's published profile places Lucia in Leonida.",
+      "verification": "Rockstar official character profile · launch 2026-11-19",
       "image": "https://gtatr.com/img/vi/char/Lucia-Caminos.jpg",
       "imageCredit": "https://www.rockstargames.com/VI",
-      "sourceUrl": "https://www.rockstargames.com/VI",
-      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Lucia",
+        "Leonida",
+        "GTA 6",
+        "VI"
+      ]
     },
     {
       "id": "character:jason",
       "kind": "character",
       "name": "Jason Duval",
       "scope": "vi",
-      "game": "GTA VI",
+      "game": "GTA VI Story",
       "group": "Protagonist",
       "region": "Leonida",
-      "summary": "Featured in official GTA VI promotional material; gameplay details pending verification",
-      "verification": "Official-promo identity; further details unverified",
+      "summary": "One of GTA VI's two protagonists; Rockstar's published profile places Jason in Leonida.",
+      "verification": "Rockstar official character profile · launch 2026-11-19",
       "image": "https://gta6intel.com/image/item/9ed91681-4533-4b4f-bfff-d25aa664dad7/portrait?version=1748871422",
       "imageCredit": "https://www.rockstargames.com/VI",
-      "sourceUrl": "https://www.rockstargames.com/VI",
-      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Jason",
+        "Leonida",
+        "GTA 6",
+        "VI"
+      ]
     },
     {
       "id": "animal:alligator",
@@ -688,6 +700,252 @@
       "group": "Protagonist",
       "verification": "Source-checked game identity; original artwork credited individually",
       "imageRights": "Original game character illustration © Rockstar Games / Take-Two Interactive · independent non-commercial fan reference"
+    },
+    {
+      "id": "character:cal-hampton",
+      "kind": "character",
+      "name": "Cal Hampton",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Leonida Keys",
+      "summary": "Jason's friend, associated with Brian Heder.",
+      "aliases": [
+        "Cal",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Cal Hampton"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+    },
+    {
+      "id": "character:boobie-ike",
+      "kind": "character",
+      "name": "Boobie Ike",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Vice City",
+      "summary": "Vice City entrepreneur involved in property, nightlife and recording.",
+      "aliases": [
+        "Boobie",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Boobie Ike"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+    },
+    {
+      "id": "character:dre-quan-priest",
+      "kind": "character",
+      "name": "Dre'Quan Priest",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Vice City",
+      "summary": "Music entrepreneur working with Only Raw Records.",
+      "aliases": [
+        "DreQuan",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Dre'Quan Priest"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+    },
+    {
+      "id": "character:real-dimez",
+      "kind": "character",
+      "name": "Real Dimez",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Music duo",
+      "region": "Vice City",
+      "summary": "Rap duo Bae-Luxe and Roxy, signed to Only Raw Records.",
+      "aliases": [
+        "Bae-Luxe, Roxy",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Real Dimez"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+    },
+    {
+      "id": "character:raul-bautista",
+      "kind": "character",
+      "name": "Raul Bautista",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Leonida",
+      "summary": "Experienced robber described in Rockstar's character showcase.",
+      "aliases": [
+        "Raul",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Raul Bautista"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+    },
+    {
+      "id": "character:brian-heder",
+      "kind": "character",
+      "name": "Brian Heder",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Leonida Keys",
+      "summary": "Keys boat-yard operator and Jason's associate.",
+      "aliases": [
+        "Brian",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Brian Heder"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "imageRights": "No character portrait redistributed; Elario cinematic world art may be used as a labeled fallback"
+    },
+    {
+      "id": "place:vi:vice-city",
+      "kind": "landmark",
+      "name": "Vice City",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Coastal city and urban districts",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Vice City"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:leonida-keys",
+      "kind": "landmark",
+      "name": "Leonida Keys",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Southern island chain",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Leonida Keys"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:grassrivers",
+      "kind": "landmark",
+      "name": "Grassrivers",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Wetlands and wilderness",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Grassrivers"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:port-gellhorn",
+      "kind": "landmark",
+      "name": "Port Gellhorn",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Gulf Coast district",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Port Gellhorn"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:ambrosia",
+      "kind": "landmark",
+      "name": "Ambrosia",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Central Leonida industrial area",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Ambrosia"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:mount-kalaga",
+      "kind": "landmark",
+      "name": "Mount Kalaga",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Northern national park",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Mount Kalaga"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
     }
   ]
 }
