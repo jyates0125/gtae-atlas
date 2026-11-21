@@ -63,7 +63,7 @@ function showProfile(dialog,r){
  const facts=make('dl','j222-profile-facts');
  const fact=(key,value)=>{if(value)facts.append(make('dt','',key),make('dd','',value))};
  fact('Edition',r.game||worlds[r.scope]);fact('Character role',r.group);fact('Region',r.region);
- fact('Source confidence',r.verification||'Curated reference; review needed');
+ if(r.verification)fact('Source confidence',r.verification);else fact('Source confidence','Curated reference; review needed');
  if(r.attributes?.performer)fact('Credited performer(s)',r.attributes.performer);
  if(r.attributes?.affiliation)fact('Published connections',r.attributes.affiliation);
  fact('Image attribution',r.imageRights||'Original Elario illustrative world scene when no reference portrait is available');

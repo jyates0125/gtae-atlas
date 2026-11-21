@@ -52,7 +52,7 @@ body[data-atlas-kind="character"] .u-hero .u-hero-art{
 @media(max-width:600px){#j222-profile-dialog{max-height:calc(100dvh - 36px);border-radius:15px;padding:17px}#j222-profile-content .j222-card-actions{display:grid;grid-template-columns:1fr}#j222-profile-content .j222-action{justify-content:center;min-height:44px}}
 
 /* Atlas 22.4: clear Elario identity, cinematic profile and mobile provenance. */
-body[data-atlas-kind="character"] .u-worlds{display:none}
+/* Retain visible universe world controls: existing browser tests and the separate full database workspace use them. */
 body[data-atlas-kind="character"] .j224-brand-crest{width:44px;height:44px;object-fit:contain;float:left;margin:2px 11px 0 0;filter:drop-shadow(0 3px 9px #d7a25466)}
 .j222-profile-hero{display:grid;grid-template-columns:minmax(120px,40%) minmax(0,1fr);gap:18px;align-items:center;min-width:0}
 .j222-profile-hero .j222-profile-media{width:100%;min-height:180px;aspect-ratio:4/5;border-radius:13px;border:1px solid #bf83aa}
