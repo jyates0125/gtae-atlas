@@ -46,6 +46,14 @@ The owner accepted the high-quality 16:9 Elario GTAE homepage design mockup as t
 4. **Honest provenance and safety:** cite primary sources before community claims, identify speculative overlays and AI artwork, respect creators' licenses and users' private data, keep guest-first access and do not silently share backups. Preserve working features when redesigning, including accessible fallback for visitors who cannot use animations or visual map modes.
 5. **Product identity and governance:** Elario violet, gold and amber, E crest and "Many Crews. One Vision." identify the GTAE flagship, while later Elario product lines may have distinct audience-appropriate visual systems. Reuse battle-tested engineering components only after privacy/security and licensing review, not by copying character or game IP into unrelated education.
 
+## November 21, 2026 — Elario crest and publisher attribution placement (binding)
+
+**Elario Studios' original crowned E crest is the exclusive primary header/hero identity for GTAE and all original Elario products.** Never place Rockstar's stylized **R** or Take-Two's publisher logo in the upper-left brand slot or make an official game mark visually function as the site's own identity. The site's primary masthead is **ELARIO STUDIOS / GTAE / TEAM JURA** with the studio's approved violet, gold and amber design and motto **Many Crews. One Vision.**
+
+Use GTA/Rockstar titles and marks only where relevant to *identify a game, link directly to official media, or give attribution*, not to suggest affiliation or endorsement. Prominent game-specific sections may correctly name Grand Theft Auto VI, but Elario remains the clear publisher of the original website design and interactive experience. Place **Rockstar Games and Take-Two Interactive** credit in the credits/rights page, source panels, and contextual footer legal disclaimer with traceable links. A visitor should immediately distinguish **Elario's design/technology** from **Rockstar/Take-Two-owned game characters, trademarks and artwork**. Attribution is mandatory but **not** by itself a license to use another party's images/logos.
+
+When a generated design mockup depicts a GTA or Rockstar logo prominently, treat that logo as illustrative reference **not approval to reproduce a publisher brand as our masthead**. Replace it in implemented code with our approved Elario crest without changing the working navigation, search, credits or legitimate game identifiers.
+
 ## Design authority and creative license
 1. Treat `docs/ATLAS92-MASTER-SPEC.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md`, `docs/ATLAS98-LAUNCH-PARITY-AND-BRAND.md`, `docs/APPROVED-DESIGNED-BRAND-MASTER.png`, and later specifically approved reference art as the authoritative design and requirements material.
 2. Preserve the future-facing Elario violet / amber / gold visual identity, original E crest, accessibility, four featured destinations and all thirteen game maps.
