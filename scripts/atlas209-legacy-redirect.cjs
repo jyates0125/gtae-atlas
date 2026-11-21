@@ -17,22 +17,12 @@ function isOldRelease(env) {
        /^[a-z0-9-]+\.team-jura-atlas-preview\.pages\.dev$/.test(u.hostname));
   }catch(_){return false}
 }
-function writeRedirectSite(out) {
-  fs.rmSync(out,{recursive:true,force:true});
-  fs.mkdirSync(out,{recursive:true});
-  // 302 is intentional until deployed HTTP responses are independently checked.
-  fs.writeFileSync(path.join(out,'_redirects'),
-    '/ https://gtae-online.pages.dev/ 302\n' +
-    '/* https://gtae-online.pages.dev/:splat 302\n');
-  fs.writeFileSync(path.join(out,'index.html'),
-    '<!doctype html><html lang="en"><head><meta charset="utf-8">' +
-    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
-    '<meta name="robots" content="noindex">' +
-    '<link rel="canonical" href="https://gtae-online.pages.dev/">' +
-    '<meta http-equiv="refresh" content="0;url=https://gtae-online.pages.dev/">' +
-    '<title>Team Jura Atlas moved to GTAE Explorer</title></head><body>' +
-    '<main><h1>Team Jura Atlas has moved</h1>' +
-    '<p>Continue to <a href="https://gtae-online.pages.dev/">GTAE Explorer</a>.</p>' +
-    '</main></body></html>\n');
+function writeRedirectFile(out) {
+  // Only the public shared homepage redirects. Old users can still visit
+  // /atlas-account.html on the old origin to export locally stored progress
+  // before importing a backup at the canonical GTAE site.
+  const file=path.join(out,'_redirects');
+  if(fs.existsSync(file))throw Error('Refusing to overwrite an existing redirect file');
+  fs.writeFileSync(file,'/ https://gtae-online.pages.dev/ 302\n','utf8');
 }
-module.exports={isOldRelease,writeRedirectSite,LEGACY_HOST,PRIMARY};
+module.exports={isOldRelease,writeRedirectFile,LEGACY_HOST,PRIMARY};

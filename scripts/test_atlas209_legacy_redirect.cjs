@@ -6,7 +6,7 @@ const fs=require('node:fs');
 const os=require('node:os');
 const path=require('node:path');
 const cp=require('node:child_process');
-const {isOldRelease,writeRedirectSite,PRIMARY}=require('./atlas209-legacy-redirect.cjs');
+const {isOldRelease,writeRedirectFile,PRIMARY}=require('./atlas209-legacy-redirect.cjs');
 const base={CF_PAGES:'1',CF_PAGES_BRANCH:'development'};
 const old={...base,CF_PAGES_URL:'https://random123.team-jura-atlas-preview.pages.dev/'};
 const cases=[
@@ -28,21 +28,26 @@ const cases=[
 for(const [env,want] of cases) assert.equal(isOldRelease(env),want,JSON.stringify(env));
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'jura-redirect-test-'));
 try {
- writeRedirectSite(temp);
+ writeRedirectFile(temp);
  const output=fs.readFileSync(path.join(temp,'_redirects'),'utf8');
  assert.match(output,/^\/ https:\/\/gtae-online\.pages\.dev\/ 302$/m);
- assert.match(output,/^\/\* https:\/\/gtae-online\.pages\.dev\/:splat 302$/m);
- assert.deepEqual(fs.readdirSync(temp).sort(),['_redirects','index.html']);
- const html=fs.readFileSync(path.join(temp,'index.html'),'utf8');
- assert.ok(html.includes(PRIMARY));assert.ok(html.includes('noindex'));
+ assert.equal(output,'/ https://gtae-online.pages.dev/ 302\n');
+ assert.deepEqual(fs.readdirSync(temp).sort(),['_redirects']);
+ assert.equal(PRIMARY,'https://gtae-online.pages.dev/');
 }finally{fs.rmSync(temp,{recursive:true,force:true})}
 const root=path.resolve(__dirname,'..');
 try{
  const result=cp.execFileSync(process.execPath,[path.join(root,'scripts/build-cloudflare.cjs')],{
    cwd:root,env:{...process.env,...old},encoding:'utf8'
  });
- assert.match(result,/old Pages project/i);
- assert.deepEqual(fs.readdirSync(path.join(root,'public')).sort(),['_redirects','index.html']);
- assert.equal(fs.existsSync(path.join(root,'public','atlas.html')),false);
+ assert.match(result,/Old Pages project root redirects/i);
+ assert.equal(fs.readFileSync(path.join(root,'public','_redirects'),'utf8'),'/ https://gtae-online.pages.dev/ 302\n');
+ for(const name of ['index.html','atlas.html','atlas-account.html','atlas131-account.js','_headers','maps.html']) {
+   assert.equal(fs.existsSync(path.join(root,'public',name)),true,'Existing legacy guest site file must survive: '+name);
+ }
+ assert.ok(fs.readFileSync(path.join(root,'public','atlas-account.html'),'utf8').includes('j131Export'));
+ const manifest=JSON.parse(fs.readFileSync(path.join(root,'public','release-manifest.json'),'utf8'));
+ assert.ok(manifest.files.some(x=>x.path==='_redirects'));
+ assert.ok(manifest.files.some(x=>x.path==='atlas-account.html'));
 }finally{fs.rmSync(path.join(root,'public'),{recursive:true,force:true})}
-console.log('PASS Atlas 20.9: release-only old project redirect, no canonical or preview redirect, fallback noindex');
+console.log('PASS Atlas 20.9: old root redirects only on release build; legacy backups preserved; canonical and staging unaffected');
