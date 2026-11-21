@@ -31,14 +31,17 @@ try:
    page.locator('#j222-character-search').fill('Lucia')
    expect(cards).to_have_count(1,timeout=10000)
    assert 'q=Lucia' in page.url,'Gallery search should create a shareable URL'
+   assert 'Lucia Caminos' in cards.first.locator('h3').inner_text()
    cards.first.locator('a.j222-primary').click()
    modal=page.locator('#j222-profile-dialog')
    expect(modal).to_be_visible()
    expect(modal.locator('.j222-profile-media img')).to_have_count(1)
    expect(modal.locator('dt').filter(has_text='Source confidence')).to_have_count(1)
    expect(modal.locator('a').filter(has_text='View original source')).to_have_count(1)
+   assert 'profile=character%3Alucia' in page.url,'Opened character must have a shareable profile ID'
    page.keyboard.press('Escape')
    expect(modal).to_be_hidden()
+   assert 'profile=' not in page.url,'Close must clear selected profile from the URL'
    assert 'atlas-vi.html' in cards.first.locator('.j222-card-actions a').nth(1).get_attribute('href')
    page.locator('#j222-reset').click()
    assert cards.count()>=30,'Reset must restore all records'
@@ -64,9 +67,14 @@ try:
    out=R/'qa-evidence'/engine
    out.mkdir(parents=True,exist_ok=True)
    page.screenshot(path=str(out/('atlas222-characters-'+str(width)+'.png')),full_page=False,animations='disabled',timeout=20000)
-   page.goto(base+'atlas-characters.html?game=vi&q=Jason#mainCharacterEra',wait_until='domcontentloaded',timeout=60000)
+   page.goto(base+'atlas-characters.html?game=vi&q=Jason&profile=character%3Ajason#mainCharacterEra',wait_until='domcontentloaded',timeout=60000)
    expect(page.locator('#j222-character-grid .j222-character-card')).to_have_count(1,timeout=15000)
    assert 'Jason' in page.locator('#j222-character-grid h3').inner_text()
+   expect(page.locator('#j222-profile-dialog')).to_be_visible(timeout=15000)
+   assert page.locator('#j222-profile-dialog h2').inner_text()=='Jason Duval'
+   page.locator('#j222-profile-dialog .u-close').click()
+   expect(page.locator('#j222-profile-dialog')).to_be_hidden()
+   assert 'profile=' not in page.url,'Closing a shared character must leave the gallery usable'
    page.goto(base+'atlas-vi.html',wait_until='domcontentloaded',timeout=60000)
    hub=page.locator('#j217-vi-hub')
    hub.locator('summary').first.click(timeout=15000)

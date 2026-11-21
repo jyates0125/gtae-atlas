@@ -31,6 +31,7 @@ try:
    suggestion=page.locator('#j223-search-results a').filter(has_text='Lucia Caminos').first
    expect(suggestion).to_be_visible(timeout=25000)
    assert 'game=vi' in suggestion.get_attribute('href')
+   assert 'profile=character%3Alucia' in suggestion.get_attribute('href'),'Home search should open the selected profile directly'
    page.locator('#j223-search-input').fill('Trevor')
    suggestion=page.locator('#j223-search-results a').filter(has_text='Trevor Philips').first
    expect(suggestion).to_be_visible(timeout=15000)

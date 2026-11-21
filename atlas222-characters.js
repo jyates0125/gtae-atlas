@@ -17,7 +17,7 @@ const CLASSIC={
  'GTA The Ballad of Gay Tony':'map-hub.html?game=tbogt'
 };
 const worlds={story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story',classic:'Classic GTA'};
-const profileLink=r=>'./atlas-characters.html?game='+encodeURIComponent(r.scope)+'&q='+encodeURIComponent(r.name)+'#mainCharacterEra';
+const profileLink=r=>'./atlas-characters.html?game='+encodeURIComponent(r.scope)+'&q='+encodeURIComponent(r.name)+'&profile='+encodeURIComponent(r.id)+'#mainCharacterEra';
 const worldLink=r=>r.scope==='classic'?'./'+(CLASSIC[r.game]||'maps.html'):
  r.scope==='story'?'./atlas.html':r.scope==='online'?'./atlas-online.html':'./atlas-vi.html';
 const make=(tag,cl,value)=>{const n=document.createElement(tag);if(cl)n.className=cl;if(value!==undefined)n.textContent=value;return n};
@@ -76,7 +76,13 @@ function showProfile(dialog,r){
  if(srcSafe(r.sourceUrl)){const source=make('a','j222-action','View original source');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';links.append(source)}
  if(srcSafe(r.imageCredit)&&r.imageCredit!==r.sourceUrl){const credit=make('a','j222-action','Image credit');credit.href=r.imageCredit;credit.target='_blank';credit.rel='noopener noreferrer';links.append(credit)}
  const share=make('a','j222-action','Link to character');share.href=profileLink(r);links.append(share);
- content.append(links);dialog.showModal();
+ content.append(links);
+ const url=new URL(location.href);
+ if(url.searchParams.get('profile')!==r.id){
+  url.searchParams.set('profile',r.id);
+  history.replaceState(history.state,'',url);
+ }
+ dialog.showModal();
 }
 async function start(){
  const grid=$('j222-character-grid'),search=$('j222-character-search'),stat=$('j222-character-count');
@@ -97,8 +103,18 @@ async function start(){
  const syncDatabase=()=>{const el=$('filterGame');if(el&&el.value!==scope){el.value=scope;el.dispatchEvent(new Event('change',{bubbles:true}))}};
  const draw=()=>{
   const s=q.trim().toLocaleLowerCase();
-  const rows=data.filter(r=>(scope==='all'||r.scope===scope)&&(!s||[r.name,worlds[r.scope],r.game,r.group,r.summary,...(r.aliases||[])].join(' ').toLocaleLowerCase().includes(s)));
-  rows.sort((a,b)=>{const pri=x=>x.group==='Protagonist'?0:1;return pri(a)-pri(b)||a.name.localeCompare(b.name)});
+  const scoped=data.filter(r=>scope==='all'||r.scope===scope);
+  // A character-name or alias query is a direct lookup. Do not clutter it with
+  // other characters whose biography merely mentions that person's name.
+  const nameMatches=s?scoped.filter(r=>[r.name,...(r.aliases||[])].some(x=>String(x).toLocaleLowerCase().includes(s))):[];
+  const rows=!s?scoped:nameMatches.length?nameMatches:scoped.filter(r=>
+   [worlds[r.scope],r.game,r.group,r.region,r.summary].join(' ').toLocaleLowerCase().includes(s));
+  const rank=r=>{
+   const name=r.name.toLocaleLowerCase();
+   return name===s?0:name.startsWith(s)?1:name.includes(s)?2:3;
+  };
+  rows.sort((a,b)=>(s?rank(a)-rank(b):0)||
+    (a.group==='Protagonist'?0:1)-(b.group==='Protagonist'?0:1)||a.name.localeCompare(b.name));
   grid.replaceChildren();for(const r of rows)grid.append(card(r));
   if(!rows.length)grid.append(make('p','j222-empty','No characters matched. Try another world or search term.'));
   stat.textContent=rows.length+' of '+data.length+' indexed characters · '+(worlds[scope]||'All worlds');
@@ -113,8 +129,21 @@ async function start(){
   const rect=dialog.getBoundingClientRect();
   if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)dialog.close();
  });
+ dialog?.addEventListener('close',()=>{
+  const url=new URL(location.href);
+  if(url.searchParams.has('profile')){
+   url.searchParams.delete('profile');
+   history.replaceState(history.state,'',url);
+  }
+ });
  if(location.hash==='#results'&&q){history.replaceState(history.state,'',location.pathname+location.search+'#mainCharacterEra');$('mainCharacterEra')?.scrollIntoView({block:'start'})}
  draw();
+ const requested=args.get('profile');
+ if(requested&&dialog){
+  const hit=data.find(r=>r.id===requested&&(scope==='all'||r.scope===scope));
+  if(hit)showProfile(dialog,hit);
+  else{const url=new URL(location.href);url.searchParams.delete('profile');history.replaceState(history.state,'',url)}
+ }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

@@ -34,8 +34,10 @@ assert len(cast)==8,cast
 # The eight publisher-hosted references are source-linked images, not a rights grant.
 rockstar_media=[r for r in cast if r.get('image','').startswith('https://www.rockstargames.com/VI/_next/static/media/')]
 assert len(rockstar_media)==8,[(r['name'],r.get('image','')) for r in cast]
-assert all(r['imageCredit']=='https://www.rockstargames.com/VI/media/screenshots' for r in rockstar_media)
-assert all('not a commercial reuse license' in r['imageRights'] for r in rockstar_media)
+assert all(r['imageCredit']=='https://www.rockstargames.com/VI/only-in-leonida' for r in rockstar_media)
+assert all('reuse rights are not guaranteed' in r['imageRights'] for r in rockstar_media)
+assert all('/VI/_next/static/media/' in r['image'] for r in rockstar_media)
+assert len({r['image'] for r in rockstar_media})==8,'Character-specific Rockstar media URLs must not repeat'
 assert len({r['id'] for r in cast})==len(cast)
 names={r['name'] for r in cast}
 for name in ('Lucia Caminos','Jason Duval','Cal Hampton','Boobie Ike',
@@ -65,6 +67,7 @@ assert 'id="j222-profile-dialog"' in char and 'id="j222-profile-content"' in cha
 assert "let q=(args.get('q')||'').slice(0,120)" in ch_js, 'Deep links must populate character search'
 assert 'search.value=q' in ch_js and "'#mainCharacterEra'" in ch_js
 assert "details.addEventListener('click'" in ch_js and 'dialog.showModal()' in ch_js
+assert "nameMatches=s?" in ch_js and "profile='+encodeURIComponent(r.id)" in ch_js, 'Name-first lookup and shareable profile links are required'
 assert "if(r.verification)" in ch_js and "if(srcSafe(r.sourceUrl))" in ch_js
 assert 'map-hub.html?game=iii' in ch_js and 'atlas-online.html' in ch_js and 'atlas-vi.html' in ch_js
 assert 'CHARACTERS · SEARCH ALL WORLDS' in nav and 'x.aliases' not in nav
