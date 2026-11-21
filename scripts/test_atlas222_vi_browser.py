@@ -41,6 +41,7 @@ try:
    assert 'profile=character%3Alucia' in page.url,'Opened character must have a shareable profile ID'
    page.keyboard.press('Escape')
    expect(modal).to_be_hidden()
+   page.wait_for_function("!new URL(location.href).searchParams.has('profile')",timeout=5000)
    assert 'profile=' not in page.url,'Close must clear selected profile from the URL'
    assert 'atlas-vi.html' in cards.first.locator('.j222-card-actions a').nth(1).get_attribute('href')
    # Shared characters have distinct verified Story/Online records, not a merged world.
@@ -85,6 +86,7 @@ try:
    assert page.locator('#j222-profile-dialog h2').inner_text()=='Jason Duval'
    page.locator('#j222-profile-dialog .u-close').click()
    expect(page.locator('#j222-profile-dialog')).to_be_hidden()
+   page.wait_for_function("!new URL(location.href).searchParams.has('profile')",timeout=5000)
    assert 'profile=' not in page.url,'Closing a shared character must leave the gallery usable'
    page.goto(base+'atlas-vi.html',wait_until='domcontentloaded',timeout=60000)
    hub=page.locator('#j217-vi-hub')
