@@ -1,10 +1,22 @@
-# Elario Studios · Team Jura Atlas — active project guide (18 November 2026)
+# Elario Studios · Team Jura Atlas — current project guide (21 November 2026)
 
-**Current authority:** [Standing Project Charter](docs/TEAM-JURA-STANDING-CHARTER.md) · [Designed Brand Master](docs/ATLAS92-MASTER-SPEC.md) · [Site Completion Contract](docs/ATLAS-SITE-COMPLETION-CONTRACT.md) · [Credits & Notices](atlas-credits.html). The earlier release notes below are retained for historical context and **must not** override these current project rules.
+**Authoritative documentation:** [Standing Project Charter](docs/TEAM-JURA-STANDING-CHARTER.md) · [Canonical Repository & Deployment Plan](docs/TEAM-JURA-CANONICAL-REPO-AND-DEPLOYMENT.md) · [Designed Brand Master](docs/ATLAS92-MASTER-SPEC.md) · [Site Completion Contract](docs/ATLAS-SITE-COMPLETION-CONTRACT.md) · [Security Policy](SECURITY.md) · [Credits & Notices](atlas-credits.html).
 
-**Branch and visual truth:** `development` is the active **Cloudflare Pages website** and is where source-checked, browser-tested improvements are intentionally merged. `main` is the protected reference/release branch; the one-time owner-approved main update happened November 18, 2026, and **all subsequent merges to `main` require fresh confirmation**. Keep the pre-release main backup. All visitor-facing pages should be brought into the **same current original Elario Designed Brand**, not labeled as an obsolete public legacy website. Existing map data, local player progress and source/MIT/CC BY/Apache notices must remain intact. Full feature parity remains a goal, never a claim.
+## Current public release topology — read before any GitHub action
 
-**Next work:** Complete current-brand unification and visual QA; add source-cleared, game-specific in-app 2D flat maps and trustworthy game-mode coordinates; refine unique page-specific art and compare actual rendered pages against approved references. Preserve browser-local progress and GTADB/other license notices.
+- **Source repository:** `jyates0125/team-jura-atlas-preview`. Its old repository name does not determine the public brand or Cloudflare domain.
+- **Canonical GTAE public website:** `https://gtae-online.pages.dev/` (Cloudflare Pages project `gtae-online`), with **production branch = lowercase `development`**, as confirmed by the owner in Cloudflare's successful Atlas 22.0 production deployment.
+- **Two permanent roles:** lowercase `development` = PR-protected live website branch; lowercase `main` = separately PR-protected reference/release branch. Temporary `feature/...`, `fix/...` and safety branches remain valid. No direct pushes to either permanent branch or unreviewed auto-merges.
+- **Current Atlas 22.0 release SHA:** `development` `aa9940482a913505185dac2ce5de66b850df5fd8` and `main` `fcfda6a6ee3a227e43367f6effbfd49a6d5e7c08`, with identical release tree `713de3cae1a1f5d2ca604c1291cc8ce516ecf652`. Actual served website still requires real-device checks after each deployment.
+- **GitHub default-branch recovery action:** As of 21 November the GitHub default was accidentally renamed to uppercase `Main`, while `development` was restored at the tested SHA. The owner must use **Settings → General → Default branch**, selecting the existing lowercase `main` **without renaming any branch**. The active main ruleset currently targets GitHub's default and does not protect lowercase main until this correction is made. See the canonical deployment plan for full recovery/safety details.
+- **Cloudflare Git build:** framework `None`; root `.`, command `node scripts/build-cloudflare.cjs`, output directory `public`. **Never** use `.` for the output directory in this repository. The legacy `team-jura-atlas-preview.pages.dev` project is a distinct Cloudflare project and must not be deleted until its redirect and visitor progress-export path have been verified.
+- **Guest-first security:** Public sign-in/cloud sync are not live. No HTTP or framed account actions; passwords and credentials are not part of the static public site. Preserve current original violet/amber/gold Elario art, all modes/world separation, guest saves, existing source/license notices, and pending feature parity work.
+
+**Important:** Every release needs reviewed screenshots, source/provenance checks, Chromium/Edge mobile and desktop gates, Cloudflare output validation, the owner's explicit live-merge approval and a separately checked public deployment. Rename/delete/archive operations require their own safety review. See [GitHub issue #81](https://github.com/jyates0125/team-jura-atlas-preview/issues/81) for the operational release/recovery log.
+
+## Historical release notes
+
+The release notes below are kept as project history. Their old version labels, repositories, branch names, deployment directions and status assertions are **not** today's instructions. Use the current charter and canonical topology above.
 
 ---
 
