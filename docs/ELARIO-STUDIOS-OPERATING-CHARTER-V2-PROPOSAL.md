@@ -1,7 +1,19 @@
-# Elario Studios — Studio Operating Charter v2 (PROPOSAL)
-**Status:** Proposed for owner review; not yet the authoritative charter.
+# Elario Studios — Studio Operating Charter v2 (ADOPTED)
+**Status:** Owner-approved and adopted 2026-11-21 as the studio-wide master charter.
 **Prepared:** 2026-11-20 (America/Chicago) · **Home:** Elario Studios · **First project:** Team Jura Atlas.
 **Relationship:** Complements, never silently replaces, `docs/TEAM-JURA-STANDING-CHARTER.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md` and owner-approved Original Design Reference Pack.
+
+## The Elario 2150 Vision — permanent design and engineering north star
+**Owner-approved 2026-11-21.** Build experiences that feel as though they belong in the year **2150**: cinematic, imaginative, intelligent, deeply interactive, personal, fast, and strikingly original. This is a creative ambition, **not** a claim that speculative technology or unimplemented features already exist.
+
+1. **Beyond static pages:** prioritize real, connected tools over decoration—search, maps, personal collections, planning workspaces, configuration, progress, evidence and context should hand users seamlessly between relevant features.
+2. **Premium visual continuity:** one intentional modern design system per product; no old legacy templates, generic subject-mismatched art, broken images, unapproved mockups or unrelated character/vehicle silhouettes in a release candidate. Preserve approved originals and the Team Jura violet/gold/amber E crest identity where applicable.
+3. **Virtual first, truthful always:** build interactive 3D/2D previews and customizable experiences when suitable assets and performance allow; distinguish exact verified game models from original illustrative concepts. Vehicles must match their class, and a player's saved choices must remain consistent between the Garage, configurator and database.
+4. **Personal without intrusive:** guest-first collections, progress and customization with accessible export, restore and privacy safeguards. No speculative AI personalization presented as functioning; add intelligent features only after safe, testable implementations.
+5. **World-class usability:** polished entry pages, clear navigation, powerful but understandable search, touch/keyboard controls, responsive mobile-first layouts, reduced-motion alternatives, sensible performance budgets, and graceful failure/offline states.
+6. **Quality beyond competitors:** benchmark meaningful tasks against strong public references such as GTA Database and GTAWeb, then exceed them through original workflow integration, reliability and user experience where evidence supports it. Do not advertise superiority or parity without reproducible comparisons.
+7. **Future-proof foundation:** reusable components, clean data boundaries, measured performance, reversible migrations, secure architecture and documented source/asset rights. All 13 Atlas worlds and every public route must pass a page-by-page visual and functional release ledger before retiring legacy presentation.
+8. **Release discipline:** 2150 visual polish never overrides truth, licensing, accessibility, save integrity or owner-approved release gates. Verify on real browsers/devices before promoting staging.
 
 ## 1. Identity, product families and mission
 Elario Studios creates original interactive worlds, useful software, learning tools, and cinematic stories. The standard is to **build, package, test, refine and deliver** usable experiences—not a screenshot, placeholder, unfinished demo, or unverified claim presented as complete.
@@ -43,5 +55,5 @@ The status **implemented** means only the code exists; it is not **verified**. A
 - Prevent unnecessary CI churn: batch related changes, fix unit/static blockers, **freeze one candidate SHA**, execute required end-to-end suite, document failures, then accept/reject that SHA. Cosmetic changes during the frozen run require a new candidate/review.
 - Use existing scheduled reporting, not overlapping hourly check-ins: exception alerts for blocked releases, stale source-critical data or a complete evidence package needing an owner decision; otherwise milestone summaries.
 
-## 6. Adoption
-This document is a **proposed operational foundation**. It becomes binding only after a distinct owner approval. Until then the Standing Charter, Completion Contract, current PR-specific owner instructions and approved reference artwork remain authoritative. Keep a concise studio charter, separate product annexes, an append-only decisions register and machine-readable release-board evidence rather than indefinitely extending one document.
+## 6. Adoption and charter hierarchy
+**Owner decision, 2026-11-21:** Elario Studios Operating Charter v2 is adopted as the binding **studio-wide master**. Team Jura Atlas Standing Project Charter remains the binding **project-specific annex**, followed by the Site Completion Contract and approved Designed Brand Master / Original Design Reference Pack for detailed implementation and visual acceptance. The studio charter does **not** delete, weaken or silently supersede any existing Team Jura feature, design, source, QA or release safeguards. When provisions appear to conflict, preserve the stricter compatible safety/release requirement and record the precise conflict for owner resolution. A general adoption is not approval to publish PR #87 or any particular build. Maintain an append-only decisions register and SHA-specific release evidence.
