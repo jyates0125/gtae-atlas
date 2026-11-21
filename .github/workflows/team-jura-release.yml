@@ -31,6 +31,8 @@ jobs:
           python scripts/test_atlas125_media_cheats.py
           python scripts/test_social_preview_129.py
           python scripts/test_atlas209_discovery.py
+          node scripts/test_atlas209_legacy_redirect.cjs
+          node --check scripts/atlas209-legacy-redirect.cjs
           python scripts/test_launch_130.py
           python scripts/test_atlas134_events.py
           python scripts/test_atlas135_feed.py

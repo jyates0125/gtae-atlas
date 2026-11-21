@@ -8,6 +8,12 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'public');
+const legacy = require('./atlas209-legacy-redirect.cjs');
+if (legacy.isOldRelease(process.env)) {
+  legacy.writeRedirectSite(out);
+  console.log('Old Pages project release redirects to public GTAE; other projects/feature previews unaffected.');
+  process.exit(0);
+}
 const skipDirs = new Set(['.git','.github','.venv','node_modules','tests','tools','scripts','reference','reference-pack','optional','private-lab','atlas-lab-private','research-private','user-exports','qa-evidence','public','__pycache__','docs','.playwright','.cache']);
 const allowExt = new Set(['.html','.css','.js','.json','.csv','.svg','.png','.jpg','.jpeg','.webp','.gif','.ico','.woff','.woff2','.mp4','.webm','.mp3','.ogg','.wav','.bin','.txt','.md','.xml','.webmanifest','.wasm','.glb','.gltf','.avif']);
 const excludeNames = new Set(['MANIFEST-SHA256.txt','.env','.env.local','INSTALL-TO-DEVELOPMENT.ps1','package-lock.json','package.json']);

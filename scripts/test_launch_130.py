@@ -63,10 +63,10 @@ assert 'atlas98-approved-hero.webp' in style and 'atlas130-launch.css' in index
 for name,html in [('index.html',index),('atlas-dashboard.html',dash),('atlas-share.html',social),('one-last-ride.html',film)]:
  local_ok(name,html)
 robots=read('robots.txt')
-assert 'Sitemap: https://team-jura-atlas-preview.pages.dev/sitemap.xml' in robots
+assert 'Sitemap: https://gtae-online.pages.dev/sitemap.xml' in robots
 sitemap=ET.fromstring(read('sitemap.xml'))
 urls=[e.text for e in sitemap.iter() if e.tag.endswith('loc')]
 for suffix in ('/','/atlas-dashboard.html','/atlas-share.html','/one-last-ride.html','/maps.html'):
- assert 'https://team-jura-atlas-preview.pages.dev'+suffix in urls
+ assert 'https://gtae-online.pages.dev'+suffix in urls
 assert len(urls)==len(set(urls))
 print('PASS Atlas 13.0: welcome + preserved dashboard + cross-platform share + Last Ride + crawl discovery')
