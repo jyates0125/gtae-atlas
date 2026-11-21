@@ -946,6 +946,82 @@
       "verification": "Rockstar officially named region · map coordinate not claimed",
       "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
       "image": ""
+    },
+    {
+      "id": "vi:vehicle:1995-grotti-cheetah",
+      "kind": "vehicle",
+      "name": "'95 Grotti Cheetah",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official edition media",
+      "brand": "Grotti",
+      "summary": "Rockstar labels this vehicle in its Ultimate Edition media. Player ownership, spawn points, performance and standard-edition availability are not asserted.",
+      "verification": "Official Rockstar VI media naming · ownership and spawn unverified",
+      "sourceUrl": "https://www.rockstargames.com/VI/media",
+      "image": "",
+      "imageCredit": "",
+      "aliases": [
+        "Grotti Cheetah",
+        "1995 Grotti Cheetah",
+        "GTA 6 car"
+      ]
+    },
+    {
+      "id": "vi:vehicle:1955-vapid-stanier",
+      "kind": "vehicle",
+      "name": "'55 Vapid Stanier",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official edition media",
+      "brand": "Vapid",
+      "summary": "Rockstar labels this vehicle in its Vintage Vice City Pack media. Gameplay unlock conditions, purchase price and map spawns are not asserted.",
+      "verification": "Official Rockstar VI media naming · ownership and spawn unverified",
+      "sourceUrl": "https://www.rockstargames.com/VI/media",
+      "image": "",
+      "imageCredit": "",
+      "aliases": [
+        "Vapid Stanier",
+        "1955 Vapid Stanier",
+        "GTA 6 car"
+      ]
+    },
+    {
+      "id": "vi:business:only-raw-records",
+      "kind": "business",
+      "name": "Only Raw Records",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Officially named organization",
+      "region": "Vice City",
+      "summary": "Record label associated with Dre'Quan Priest and Real Dimez in Rockstar character profiles. Does not imply player ownership or a confirmed location marker.",
+      "verification": "Official Rockstar VI character profile · no gameplay mechanics claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "aliases": [
+        "Dre'Quan",
+        "Real Dimez",
+        "music label"
+      ]
+    },
+    {
+      "id": "vi:landmark:leonida-penitentiary",
+      "kind": "landmark",
+      "name": "Leonida Penitentiary",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Officially named place",
+      "region": "Leonida",
+      "summary": "Named in Lucia Caminos' official background; no exact map coordinate or visitability asserted.",
+      "verification": "Rockstar official character profile · position not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "aliases": [
+        "Lucia",
+        "prison",
+        "GTA VI"
+      ]
     }
   ]
 }
