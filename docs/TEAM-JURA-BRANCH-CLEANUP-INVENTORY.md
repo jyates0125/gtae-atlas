@@ -6,7 +6,7 @@ This is a **read-only inventory**, not a command to delete any branch. A branch 
 
 ## Immediate administrative repair
 
-1. In GitHub **Settings → General → Default branch**, select already existing lowercase `main`. **Do not rename a branch.**
+1. **Completed and verified on November 21:** GitHub's default is restored to already existing lowercase `main`, not uppercase `Main`. **Do not rename a branch** while reviewing cleanup.
 2. Verify **both** lowercase `main` and `development` show protected after the change. Don't disable, delete or rename the original rulesets.
 3. In Cloudflare **gtae-online**, ensure production Git branch remains lowercase `development`, with successful Atlas 22.0 deployment; inspect page on iPhone.
 4. **Do not delete uppercase `Main` yet.** After default/PR/CI/Cloudflare checks and owner approval, it may be removable because it pointed to the restored `development` commit at inventory time.
