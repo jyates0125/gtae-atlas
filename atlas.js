@@ -321,6 +321,48 @@ function renderServices(){
  if(filtered.length>120){const p=document.createElement('p');p.className='hint';p.textContent='Showing first 120 sites. Refine your search or use the map legend to find more.';root.append(p)}
  if(!filtered.length){const p=document.createElement('p');p.className='hint';p.textContent='No mapped service candidates found. Update GTADB data, or change your filters.';root.append(p)}
 }
+// Atlas 22.0: original, hand-drawn SVG silhouettes. Icons map only to the
+// existing category keys; no new records, scope changes or source claims.
+const ELARIO_LEGEND_SHAPES=Object.freeze({
+ collectible:'M5 8l4-5h6l4 5-7 13z M5 8h14 M9 8l3 13 3-13',
+ vehicle:'M5 15l2-7h10l2 7M4 15h16v4h-3v-2H7v2H4z M7 12h10',
+ property:'M3 11l9-7 9 7M6 10v10h12V10M10 20v-7h4v7',
+ weapon:'M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z',
+ activity:'M12 3l2.7 6 6.3.5-4.9 4.5 1.8 7-5.9-4-5.9 4 1.8-7L3 9.5 9.3 9z',
+ gunstore:'M4 8h13l3 4-4 3h-4v5H9v-5H4z M16 8v7',
+ modshop:'M15 4a5 5 0 0 0-7 6l-5 5 4 4 5-5a5 5 0 0 0 7-6l-4 4-3-3z',
+ dealer:'M4 16V9l4-3h8l4 3v7z M8 13h8 M6 18h2 M16 18h2',
+ fuel:'M5 20V5h11v15M5 11h11M16 9h2l3 3v6a2 2 0 0 1-4 0v-3',
+ safehouse:'M3 11l9-7 9 7M6 10v10h12V10M10 15v-2h4v2 M12 15v3',
+ marina:'M3 14l3 5h12l3-5z M12 4v10 M12 5l6 7h-6 M3 21q4-2 8 0t10 0',
+ garage_site:'M4 20V8l8-5 8 5v12 M7 20v-9h10v9 M7 14h10 M7 17h10',
+ business_site:'M4 21V5h16v16 M8 9h2m4 0h2M8 13h2m4 0h2M10 21v-4h4v4',
+ landmark:'M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z',
+ transport:'M4 18h9l-3-3 M13 18l-3 3 M5 7h14l-3-3 M19 7l-3 3',
+ shop:'M5 9V6h14v3M4 9h16l-1 12H5z M9 9V5a3 3 0 0 1 6 0v4',
+ food:'M5 3v8m3-8v8M3 3v6a4 4 0 0 0 7 0V3M7 12v9 M17 3q-4 6 0 10h2V3z M19 13v8',
+ hotel:'M3 19V8M3 15h18v4 M7 15v-4h6v4 M14 12h7v3',
+ nature:'M20 4C10 4 4 8 4 15a5 5 0 0 0 5 5c7 0 11-6 11-16z M5 19l10-10',
+ leisure:'M4 7h16v5a3 3 0 0 0 0 6H4a3 3 0 0 0 0-6z M12 7v11',
+ government:'M2 9l10-6 10 6z M4 10h16 M6 10v9M11 10v9M16 10v9M3 20h18',
+ office:'M5 21V4h14v17M8 8h2m4 0h2M8 12h2m4 0h2M8 16h2m4 0h2',
+ industry:'M3 21V10l6 4v-4l6 4V6h6v15z M6 18h2m3 0h2m3 0h2',
+ utility:'M13 2L5 13h6l-1 9 9-13h-6z',
+ other:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M9 9a3 3 0 1 1 4 3v2 M12 18h.01',
+ user:'M12 3l6 6v8l-6 4-6-4V9z M12 7v10 M8 12h8'
+});
+function elarioLegendGlyph(cat){
+ const ns='http://www.w3.org/2000/svg';
+ const svg=document.createElementNS(ns,'svg');
+ svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');
+ svg.setAttribute('focusable','false');svg.setAttribute('class','elario-legend-glyph');
+ const path=document.createElementNS(ns,'path');
+ path.setAttribute('d',ELARIO_LEGEND_SHAPES[cat]||ELARIO_LEGEND_SHAPES.other);
+ path.setAttribute('fill','none');path.setAttribute('stroke','currentColor');
+ path.setAttribute('stroke-width','1.85');path.setAttribute('stroke-linecap','round');
+ path.setAttribute('stroke-linejoin','round');svg.append(path);
+ return svg;
+}
 function renderLegend(){
  renderNamedLayers();
  const counts={};for(const r of records())counts[r.category]=(counts[r.category]||0)+1;
@@ -335,7 +377,7 @@ function renderLegend(){
     if(active[filterScope()].has(cat))active[filterScope()].delete(cat);else active[filterScope()].add(cat);
     showPins=true;page=0;render();announce(`${title} ${active[filterScope()].has(cat)?'shown':'hidden'} on map`);
    });toggle.className='legend-choice';toggle.setAttribute('aria-pressed',String(on));toggle.title=`${on?'Hide':'Show'} ${title} pins`;
-   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.background=color;dot.textContent=LEGEND_EMOJIS[cat]||'📍';toggle.prepend(dot);
+   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
    const only=btn('Only',()=>{active[filterScope()]=new Set([cat]);showPins=true;page=0;render();announce('Showing only '+title+' on map');},'legend-only');
    row.append(toggle,only);group.append(row);
   }root.append(group);
@@ -557,7 +599,37 @@ function atlas85CollectibleIcon(r){
  if(r.category!=='collectible'&&r.sourceId!=='story')return null;
  return symbols.find(([re])=>re.test(name))?.[1]||'◆';
 }
-function pin(x,y,color,highlight=false,number=null,category='landmark',plain=false,atlas85Icon=null){ctx.save();const r=highlight?13:plain?7.5:11;ctx.shadowColor='#000b';ctx.shadowBlur=7;ctx.shadowOffsetY=2;ctx.beginPath();ctx.moveTo(x,y+(plain?10:15));ctx.bezierCurveTo(x-r*1.03,y+2,x-r,y-r,x,y-r);ctx.bezierCurveTo(x+r,y-r,x+r*1.03,y+2,x,y+(plain?10:15));ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5c0':plain?'#f3f6fa':'#112736';ctx.lineWidth=highlight?2.8:plain?1.2:1.6;ctx.stroke();
+function pin(x,y,color,highlight=false,number=null,category='landmark',plain=false,atlas85Icon=null,completed=false,premium=false){
+ if(premium){
+  // Original pointed Elario gold/amber collectible crest with a deep violet
+  // enamel face. Keep collection-specific glyphs; completion adds a small tick.
+  ctx.save();const r=highlight?15:12;
+  ctx.shadowColor=highlight?'#ffe4a6':'#0b0616';
+  ctx.shadowBlur=highlight?16:7;ctx.shadowOffsetY=3;
+  const grad=ctx.createLinearGradient(x-r,y-r,x+r,y+r+7);
+  if(completed){grad.addColorStop(0,'#a47e94');grad.addColorStop(.55,'#573459');grad.addColorStop(1,'#311c42');}
+  else{grad.addColorStop(0,'#fff1b9');grad.addColorStop(.52,'#f8bb5d');grad.addColorStop(1,'#c97532');}
+  ctx.beginPath();ctx.moveTo(x,y+r+9);
+  ctx.bezierCurveTo(x-r*1.07,y+4,x-r*1.05,y-r,x,y-r);
+  ctx.bezierCurveTo(x+r*1.05,y-r,x+r*1.07,y+4,x,y+r+9);
+  ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+  ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5d2':completed?'#ebc58d':'#4d2348';
+  ctx.lineWidth=highlight?3:2;ctx.stroke();
+  ctx.beginPath();ctx.arc(x,y-1,r*.70,0,Math.PI*2);
+  ctx.fillStyle='#2b173b';ctx.fill();ctx.strokeStyle='#fbd58b';ctx.lineWidth=.9;ctx.stroke();
+  ctx.font=(highlight?'17px':'14px')+' "Apple Color Emoji","Segoe UI Emoji",system-ui,sans-serif';
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#ffe6a5';
+  ctx.fillText(atlas85Icon||'◆',x,y-2);
+  if(completed){
+   const bx=x+r*.67,by=y+r*.66;
+   ctx.beginPath();ctx.arc(bx,by,5.5,0,Math.PI*2);
+   ctx.fillStyle='#2c633e';ctx.fill();ctx.strokeStyle='#ffdf91';ctx.lineWidth=1.4;ctx.stroke();
+   ctx.strokeStyle='#fff7d7';ctx.lineWidth=1.5;
+   ctx.beginPath();ctx.moveTo(bx-2.7,by);ctx.lineTo(bx-.4,by+2.1);ctx.lineTo(bx+3.1,by-2.2);ctx.stroke();
+  }
+  ctx.restore();return;
+ }
+ ctx.save();const r=highlight?13:plain?7.5:11;ctx.shadowColor='#000b';ctx.shadowBlur=7;ctx.shadowOffsetY=2;ctx.beginPath();ctx.moveTo(x,y+(plain?10:15));ctx.bezierCurveTo(x-r*1.03,y+2,x-r,y-r,x,y-r);ctx.bezierCurveTo(x+r,y-r,x+r*1.03,y+2,x,y+(plain?10:15));ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5c0':plain?'#f3f6fa':'#112736';ctx.lineWidth=highlight?2.8:plain?1.2:1.6;ctx.stroke();
  if(plain&&!highlight&&!atlas85Icon){ctx.restore();return;}ctx.fillStyle='#17303d';ctx.font=(highlight?'bold 16px':'bold 13px')+' "Segoe UI Symbol",system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';if(atlas85Icon){ctx.font=(highlight?'17px':'14px')+' "Segoe UI Emoji","Apple Color Emoji",sans-serif';ctx.fillText(atlas85Icon,x,y-3)}else ctx.fillText(number!==null?String(number):CATEGORY_SYMBOLS[category]||'✦',x,y-3);ctx.restore()}
 
 function conditionForRecord(r,storeCache){
@@ -577,10 +649,10 @@ function drawMarkers(){hitRegions=[];if(!showPins&&!selected)return;
  for(const r of visible){const p=toScreen(r.x,r.y);if(p.x<-20||p.x>width+20||p.y<-20||p.y>height+20)continue;
   if(drawn>=20000)break;drawn++;
   const color=conditionPinColor(r,conditionCache);
-  pin(p.x,p.y,color,false,null,r.category,!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r));
+  pin(p.x,p.y,color,false,null,r.category,!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r),!!progress[doneKey(r)],r.category==='collectible'&&!r.activityId);
   hitRegions.push({x:p.x,y:p.y,r:12,record:r});
  }
- if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected));hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
+ if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected),!!progress[doneKey(selected)],selected.category==='collectible'&&!selected.activityId);hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
 }
 function drawCoordinateTarget(){if(!coordinateTarget||coordinateTarget.game!==game)return;const p=toScreen(coordinateTarget.x,coordinateTarget.y);if(p.x<-40||p.x>width+40||p.y<-40||p.y>height+40)return;
  ctx.save();ctx.strokeStyle='#fff9d2';ctx.lineWidth=3;ctx.shadowBlur=7;ctx.shadowColor='#000';ctx.beginPath();ctx.arc(p.x,p.y,16,0,Math.PI*2);ctx.moveTo(p.x-26,p.y);ctx.lineTo(p.x+26,p.y);ctx.moveTo(p.x,p.y-26);ctx.lineTo(p.x,p.y+26);ctx.stroke();ctx.restore();}
