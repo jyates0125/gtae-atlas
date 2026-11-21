@@ -82,8 +82,8 @@ assert 'j222-vi-categories' in vi and 'atlas222-vi-release.js?v=222' in vi
 assert 'atlas217-vi-world.js?v=217' in vi, 'The existing map engine must stay in place'
 assert 'atlas.js?v=191' in vi
 
-// Premium visual and vehicle-class integrity guards: these check source wiring,
-// not actual browser rendering, which remains a separate release requirement.
+# Premium visual and vehicle-class integrity guards: these check source wiring,
+# not actual browser rendering, which remains a separate release requirement.
 garage3d=(R/'atlas99-garage3d.js').read_text(encoding='utf-8')
 config=(R/'atlas101-configurator.js').read_text(encoding='utf-8')
 dbcss=(R/'atlas100-universe.css').read_text(encoding='utf-8')
