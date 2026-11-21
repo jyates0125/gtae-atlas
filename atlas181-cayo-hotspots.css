@@ -4,6 +4,10 @@
 body.j180-cayo.j181-map-hotspots .j167-pins{display:none!important}
 body.j180-cayo.j181-map-hotspots .j180-ref-layer{display:none!important}
 body.j180-cayo.j181-map-hotspots .j167-chips{display:none!important}
+/* The illustrated canvas is not a control. On Edge its painted box can
+   otherwise intercept taps meant for the actual colored Cayo hotspots.
+   Keep map gestures on the enclosing viewport and leave artwork untouched. */
+body.j180-cayo.j181-map-hotspots .j167-canvas{pointer-events:none!important}
 body.j180-cayo.j181-map-hotspots .j180-map-area .j167-toolbar{padding-right:58px!important}
 body.j180-cayo.j181-map-hotspots .j181-hotspots{
  position:absolute;inset:0;pointer-events:none;z-index:7
