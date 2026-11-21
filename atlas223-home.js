@@ -83,7 +83,7 @@ async function initData(){
    title:x.name,
    kind:'Character',
    keywords:[x.game,x.scope,x.group,x.region,x.summary,...(x.aliases||[])].filter(Boolean).join(' '),
-   href:'atlas-characters.html?game='+encodeURIComponent(x.scope)+'&q='+encodeURIComponent(x.name)+'#results'
+   href:'atlas-characters.html?game='+encodeURIComponent(x.scope)+'&q='+encodeURIComponent(x.name)+'#mainCharacterEra'
   }));
   catalog.push(...rows);
   for(const [title,href,keywords] of staticLinks){
@@ -94,7 +94,7 @@ async function initData(){
  host.replaceChildren();
  const chosen=castId.map(id=>characters.find(c=>c.id===id)).filter(Boolean);
  for(const c of chosen){
-  const a=make('a','');a.href='./atlas-characters.html?game='+encodeURIComponent(c.scope)+'&q='+encodeURIComponent(c.name)+'#results';
+  const a=make('a','');a.href='./atlas-characters.html?game='+encodeURIComponent(c.scope)+'&q='+encodeURIComponent(c.name)+'#mainCharacterEra';
   a.title='Search '+c.name+' · '+c.game;
   const img=make('img');
   img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';

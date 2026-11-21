@@ -50,3 +50,15 @@ body[data-atlas-kind="character"] .u-hero .u-hero-art{
 #j222-profile-content .j222-world-tag{color:#ffd495;font-size:12px}
 #j222-profile-content .j222-card-actions{margin-top:7px}
 @media(max-width:600px){#j222-profile-dialog{max-height:calc(100dvh - 36px);border-radius:15px;padding:17px}#j222-profile-content .j222-card-actions{display:grid;grid-template-columns:1fr}#j222-profile-content .j222-action{justify-content:center;min-height:44px}}
+
+/* Atlas 22.4: clear Elario identity, cinematic profile and mobile provenance. */
+body[data-atlas-kind="character"] .u-worlds{display:none}
+body[data-atlas-kind="character"] .j224-brand-crest{width:44px;height:44px;object-fit:contain;float:left;margin:2px 11px 0 0;filter:drop-shadow(0 3px 9px #d7a25466)}
+.j222-profile-hero{display:grid;grid-template-columns:minmax(120px,40%) minmax(0,1fr);gap:18px;align-items:center;min-width:0}
+.j222-profile-hero .j222-profile-media{width:100%;min-height:180px;aspect-ratio:4/5;border-radius:13px;border:1px solid #bf83aa}
+.j222-profile-intro{display:grid;gap:10px;min-width:0;align-content:center}
+.j222-profile-facts{display:grid;grid-template-columns:minmax(95px,.65fr) minmax(0,1.35fr);gap:9px 13px;min-width:0;margin:0;padding:14px 0;border-top:1px solid #9e718e;border-bottom:1px solid #9e718e}
+.j222-profile-facts dt{font:800 11px/1.45 system-ui;text-transform:uppercase;letter-spacing:.05em;color:#ffd99b}
+.j222-profile-facts dd{margin:0;min-width:0;overflow-wrap:anywhere;font:13px/1.5 system-ui;color:#f4eaf2}
+#j222-profile-content p.j222-profile-caution{font-size:12px;color:#edd2b6;border-left:3px solid #f6bd79;padding:5px 0 5px 11px}
+@media(max-width:600px){body[data-atlas-kind="character"] .j224-brand-crest{width:36px;height:36px;margin-right:8px}.j222-profile-hero{grid-template-columns:1fr;gap:12px}.j222-profile-hero .j222-profile-media{max-height:265px;min-height:0;aspect-ratio:7/4}.j222-profile-facts{grid-template-columns:1fr;gap:4px}.j222-profile-facts dd{margin:0 0 10px}}

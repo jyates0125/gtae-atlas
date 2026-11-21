@@ -81,7 +81,7 @@ function build(){
   const worlds={classic:'Classic GTA',story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story'};
   const items=data.records.filter(r=>r?.kind==='character'&&worlds[r.scope]).map(r=>[
    r.name+' · '+worlds[r.scope],
-   'atlas-characters.html?game='+encodeURIComponent(r.scope)+'&q='+encodeURIComponent(r.name)+'#results',
+   'atlas-characters.html?game='+encodeURIComponent(r.scope)+'&q='+encodeURIComponent(r.name)+'#mainCharacterEra',
    [r.game,r.group,r.region,...(r.aliases||[])].filter(Boolean).join(' ')
   ]).sort((a,b)=>a[0].localeCompare(b[0]));
   if(items.length)characterCategories=[{title:'CHARACTERS · SEARCH ALL WORLDS',prefix:'characters',items}];

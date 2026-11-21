@@ -24,20 +24,20 @@ const make=(tag,cl,value)=>{const n=document.createElement(tag);if(cl)n.classNam
 const srcSafe=url=>typeof url==='string' && /^https:\/\/[a-z0-9.-]+\//i.test(url) && url.length<600;
 const label=(r,local)=>local?'Original Elario cinematic world artwork · not a character portrait':
  'Reference character artwork · source linked where provided';
+function portraitMedia(r,profile=false){
+ const media=make('div','j222-character-media'+(profile?' j222-profile-media':''));
+ const img=make('img');img.loading=profile?'eager':'lazy';img.decoding='async';img.referrerPolicy='no-referrer';
+ let fallback=!srcSafe(r.image);
+ const scene='./'+(FALLBACKS[r.scope]||FALLBACKS.classic);
+ const credit=make('span','j222-art-credit',label(r,fallback));
+ img.alt=label(r,fallback)+' for '+r.name;img.src=fallback?scene:r.image;
+ img.addEventListener('error',()=>{if(fallback)return;fallback=true;img.src=scene;img.alt=label(r,true)+' for '+r.name;credit.textContent=label(r,true)},{once:true});
+ media.append(img,credit);return media;
+}
 function card(r){
  const el=make('article','j222-character-card');
  el.dataset.j222World=r.scope;
- const media=make('div','j222-character-media');
- const image=make('img');
- image.loading='lazy';image.decoding='async';image.referrerPolicy='no-referrer';
- const scene='./'+(FALLBACKS[r.scope]||FALLBACKS.classic);
- image.alt=label(r,!srcSafe(r.image))+' for '+r.name;
- image.src=srcSafe(r.image)?r.image:scene;
- let fallback=!srcSafe(r.image);
- const mediaStatus=make('span','j222-art-credit',label(r,fallback));
- const onError=()=>{if(fallback)return;fallback=true;image.src=scene;image.alt=label(r,true)+' for '+r.name;mediaStatus.textContent=label(r,true)};
- image.addEventListener('error',onError,{once:true});
- media.append(image,mediaStatus);
+ const media=portraitMedia(r);
  const box=make('div','j222-character-info');
  box.append(make('span','j222-world-tag',(worlds[r.scope]||r.scope)+' · '+(r.group||'Character')));
  const title=make('h3','',r.name);box.append(title);
@@ -55,14 +55,24 @@ function card(r){
 function showProfile(dialog,r){
  const content=$('j222-profile-content');if(!content)return;
  content.replaceChildren();
+ const hero=make('div','j222-profile-hero');hero.append(portraitMedia(r,true));
+ const intro=make('div','j222-profile-intro');
  const heading=make('h2','',r.name);heading.id='j222-profile-title';
- content.append(heading,make('p','j222-world-tag',(worlds[r.scope]||r.scope)+' · '+(r.game||'')));
- content.append(make('p','',r.summary||'No verified biography is available for this record.'));
- if(r.region)content.append(make('p','', 'Region: '+r.region));
- if(r.verification)content.append(make('p','', 'Evidence: '+r.verification));
+ intro.append(make('p','j222-world-tag',(worlds[r.scope]||r.scope)+' · '+(r.game||'')),heading,make('p','',r.summary||'No verified biography is available for this record.'));
+ hero.append(intro);content.append(hero);
+ const facts=make('dl','j222-profile-facts');
+ const fact=(key,value)=>{if(value)facts.append(make('dt','',key),make('dd','',value))};
+ fact('Edition',r.game||worlds[r.scope]);fact('Character role',r.group);fact('Region',r.region);
+ fact('Source confidence',r.verification||'Curated reference; review needed');
+ if(r.attributes?.performer)fact('Credited performer(s)',r.attributes.performer);
+ if(r.attributes?.affiliation)fact('Published connections',r.attributes.affiliation);
+ fact('Image attribution',r.imageRights||'Original Elario illustrative world scene when no reference portrait is available');
+ content.append(facts);
+ if(r.scope==='vi')content.append(make('p','j222-profile-caution','A confirmed character does not verify exact map coordinates, game statistics or spawn locations.'));
  const links=make('div','j222-card-actions');
  const map=make('a','j222-action j222-primary','Open world map');map.href=worldLink(r);links.append(map);
- if(srcSafe(r.sourceUrl)){const source=make('a','j222-action','View source');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';links.append(source)}
+ if(srcSafe(r.sourceUrl)){const source=make('a','j222-action','View original source');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';links.append(source)}
+ if(srcSafe(r.imageCredit)&&r.imageCredit!==r.sourceUrl){const credit=make('a','j222-action','Image credit');credit.href=r.imageCredit;credit.target='_blank';credit.rel='noopener noreferrer';links.append(credit)}
  const share=make('a','j222-action','Link to character');share.href=profileLink(r);links.append(share);
  content.append(links);dialog.showModal();
 }
@@ -77,18 +87,31 @@ async function start(){
  let scope=ALLOWED.has(args.get('game'))?args.get('game'):'all';
  let q=(args.get('q')||'').slice(0,120);
  search.value=q;
+ const persist=()=>{const u=new URL(location.href);
+  if(scope==='all')u.searchParams.delete('game');else u.searchParams.set('game',scope);
+  if(q.trim())u.searchParams.set('q',q.trim());else u.searchParams.delete('q');
+  history.replaceState(history.state,'',u);
+ };
+ const syncDatabase=()=>{const el=$('filterGame');if(el&&el.value!==scope){el.value=scope;el.dispatchEvent(new Event('change',{bubbles:true}))}};
  const draw=()=>{
   const s=q.trim().toLocaleLowerCase();
   const rows=data.filter(r=>(scope==='all'||r.scope===scope)&&(!s||[r.name,worlds[r.scope],r.game,r.group,r.summary,...(r.aliases||[])].join(' ').toLocaleLowerCase().includes(s)));
   rows.sort((a,b)=>{const pri=x=>x.group==='Protagonist'?0:1;return pri(a)-pri(b)||a.name.localeCompare(b.name)});
   grid.replaceChildren();for(const r of rows)grid.append(card(r));
   if(!rows.length)grid.append(make('p','j222-empty','No characters matched. Try another world or search term.'));
-  stat.textContent=rows.length+' of '+data.length+' searchable characters';
+  stat.textContent=rows.length+' of '+data.length+' indexed characters · '+(worlds[scope]||'All worlds');
   for(const b of buttons)b.setAttribute('aria-pressed',String(b.dataset.j222Scope===scope));
  };
- for(const b of buttons)b.addEventListener('click',()=>{scope=b.dataset.j222Scope;draw()});
- search.addEventListener('input',()=>{q=search.value.slice(0,120);draw()});
- $('j222-reset')?.addEventListener('click',()=>{scope='all';q='';search.value='';draw()});
+ for(const b of buttons)b.addEventListener('click',()=>{scope=b.dataset.j222Scope;draw();syncDatabase();persist()});
+ search.addEventListener('input',()=>{q=search.value.slice(0,120);draw();persist()});
+ $('j222-reset')?.addEventListener('click',()=>{scope='all';q='';search.value='';draw();syncDatabase();persist()});
+ const dialog=$('j222-profile-dialog');
+ dialog?.addEventListener('click',event=>{
+  if(event.target!==dialog)return;
+  const rect=dialog.getBoundingClientRect();
+  if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)dialog.close();
+ });
+ if(location.hash==='#results'&&q){history.replaceState(history.state,'',location.pathname+location.search+'#mainCharacterEra');$('mainCharacterEra')?.scrollIntoView({block:'start'})}
  draw();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
