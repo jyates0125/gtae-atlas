@@ -22,7 +22,7 @@ def require(path, *markers):
 
 # Character gallery: world isolation, deep-link state, actual profile controls.
 require("atlas222-characters.js", "j222-character-search", "search.value=q",
-        "dialog.showModal()", "worldLink(r)", "srcSafe(r.sourceUrl)")
+        "dialog.showModal()", "worldLink(r)", "srcSafe(r.sourceUrl)",\n        "j222-portrait-unavailable", "No character-specific image verified")
 require("atlas-characters.html", 'id="j222-profile-dialog"',
         'id="j222-profile-content"')
 
