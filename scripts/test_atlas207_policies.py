@@ -14,11 +14,11 @@ class Checker(HTMLParser):
   if 'id' in d:self.ids.add(d['id'])
   if tag=='a' and d.get('href','').startswith('./'):self.links.append(d['href'])
 p=Checker();p.feed(h)
-for ident in ('main','privacy','guest','deletion','terms','fan','rights','storage','age'):
+for ident in ('main','privacy','guest','deletion','terms','fan','rights','storage','age','disclaimers'):
  assert ident in p.ids,ident
 for phrase in ('We do not sell','14-day cancellation window','not a legal rule',
  'sign-in and automatic cloud syncing are not available','Clearing site data',
- 'not sponsored, endorsed','not automatically','not yet exist on the public site'):
+ 'not sponsored, endorsed','not automatically','as is','as available','independent backups','not yet exist on the public site'):
  assert phrase.lower() in h.lower(),phrase
 for link in p.links:assert (r/link[2:].split('?',1)[0]).is_file(),link
 assert 'Policies &amp; Disclaimers</a>' in c
