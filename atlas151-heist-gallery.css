@@ -1,0 +1,29 @@
+/* Atlas 15.1: mission-specific imagery on Heist HQ cards.
+   Uses the existing 15 individual local original Elario scenes.  These are
+   source-labeled illustrations, not verified game screenshots or gameplay maps.
+   Upgrade them to approved premium artworks without changing URLs/card layout. */
+body.j119-heists .card .j151-heist-cover{
+  display:block;
+  width:calc(100% + 34px);
+  max-width:calc(100% + 34px);
+  height:auto;
+  margin:-17px -17px 6px;
+  aspect-ratio:16/7.2;
+  object-fit:cover;
+  object-position:center;
+  background:#130b23;
+  border-bottom:1px solid #ac6bba;
+  box-shadow:0 6px 18px #09031555;
+}
+body.j119-heists .cards .card{isolation:isolate;min-width:0}
+body.j119-heists .cards .card:hover .j151-heist-cover{filter:brightness(1.1)}
+@media(max-width:580px){
+ body.j119-heists .card .j151-heist-cover{aspect-ratio:16/8.8}
+}
+
+.heist-finder{display:flex;align-items:center;flex-wrap:wrap;gap:.8rem 1.2rem;margin-bottom:1rem;padding:.9rem 1rem;color:#fff3e5;background:#291733;border:1px solid #82568c;border-radius:12px}
+.heist-finder label{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem}
+.heist-finder input[type=search]{width:min(16rem,100%);min-height:40px;border:1px solid #906398;border-radius:8px;background:#190f25;color:#fff;padding:.5rem}
+.heist-finder button{color:#ffe1aa;background:#422846;border:1px solid #ab83a4;border-radius:8px;padding:.5rem}
+.heist-finder[hidden],.heist-finder button[hidden],.cards .card[hidden]{display:none}
+.cards .card small:not([hidden]){display:block;color:#ffdb9e;margin-block:.45rem}

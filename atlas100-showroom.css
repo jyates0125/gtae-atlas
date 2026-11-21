@@ -32,3 +32,15 @@ body[data-gallery] .j90-card-links{border-top:1px solid #5d436a;padding-top:10px
 @media(max-width:700px){body[data-gallery] .j90-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}body[data-gallery] .j90-card-body{padding:11px}body[data-gallery] .j90-card h3{font-size:16px}body[data-gallery] .j90-photo img{padding:5px}.j100-showroom{padding:13px}}
 @media(max-width:370px){body[data-gallery] .j90-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){body[data-gallery] .j90-card:hover .j90-photo img{transform:none}}
+
+/* Atlas 20.2 — approved cinematic subjects, rather than repeating crew
+   portraits across unrelated galleries. The approved originals stay intact. */
+body[data-gallery="vehicles5"] .j90-hero-art{
+ background:linear-gradient(90deg,#24132e9e,transparent 58%),url('./art/jura161-vehicles.webp') center center/cover no-repeat;
+}
+body[data-gallery="vehicles6"] .j90-hero-art{
+ background:linear-gradient(90deg,#201532a6,transparent 60%),url('./art/jura161-vehicles6.webp') center center/cover no-repeat;
+}
+body[data-gallery="weapons"] .j90-hero-art{
+ background:linear-gradient(90deg,#22122c99,transparent 60%),url('./art/jura161-weapons.webp') center center/cover no-repeat;
+}

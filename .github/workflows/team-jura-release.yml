@@ -28,6 +28,39 @@ jobs:
         run: |
           python scripts/test_site_release_70.py
           python scripts/test_atlas_static.py
+          python scripts/test_atlas125_media_cheats.py
+          python scripts/test_social_preview_129.py
+          python scripts/test_atlas209_discovery.py
+          node scripts/test_atlas209_legacy_redirect.cjs
+          node --check scripts/atlas209-legacy-redirect.cjs
+          python scripts/test_launch_130.py
+          python scripts/test_atlas134_events.py
+          python scripts/test_atlas135_feed.py
+          python scripts/test_atlas136_status.py
+          python scripts/test_atlas139_nav_focus.py
+          python scripts/test_social_icons_131.py
+          python scripts/test_atlas153_welcome_social.py
+          python scripts/test_account_131.py
+          python scripts/test_atlas208_https_auth.py
+          python scripts/test_atlas138_supabase.py
+          python scripts/test_atlas141_leonida_research.py
+          python scripts/test_atlas142_official_sources.py
+          python scripts/test_atlas143_official_view.py
+          node --check atlas143-official-map-view.js
+          node --check atlas131-account.js
+          node --check atlas131-social-icons.js
+          node --check atlas130-share.js
+          python scripts/test_catalog_design_127.py
+          python scripts/test_hubs_103.py
+          python scripts/test_game_art_121.py
+          python scripts/test_map_chrome_128.py
+          python scripts/test_classic_flat_106.py
+          python scripts/test_atlas150_classic_slots.py
+          python scripts/test_atlas157_classic_zoom.py
+          node --check atlas103-hub.js
+          node --check atlas98-portal.js
+          node --check atlas98-worlds.js
+          node --check atlas100-universe.js
           python scripts/test_sync_gtadb_vi.py
           python tools/test_atlas96.py
           python tools/test_atlas97.py
@@ -39,6 +72,83 @@ jobs:
         run: |
           node --test tests/data-lab.test.cjs
           node --test tests/source-identity.test.cjs
+          node --test tests/atlas140-cloud-saves.test.cjs
+          node --test tests/atlas144-cloud-transfer.test.cjs
+          node --check atlas144-cloud-transfer.js
+          node --check atlas144-device-overview.js
+          python scripts/test_atlas144_account_review.py
+          python scripts/test_atlas145_map_ux.py
+          python scripts/test_atlas146_launch_truth.py
+          python scripts/test_atlas147_garage_mobile.py
+          python scripts/test_atlas148_local_covers.py
+          python scripts/test_atlas155_premium_art.py
+          python scripts/test_atlas157_cinematic_world_covers.py
+          python scripts/test_atlas155_art_review.py
+          python scripts/test_atlas157_directory.py
+          python scripts/test_atlas212_directory.py
+          python scripts/test_atlas158_browser_contract.py
+          python scripts/test_atlas159_duplicate_nav.py
+          python scripts/test_atlas149_leonida_toolbar.py
+          python scripts/test_atlas154_map_zoom.py
+          python scripts/test_atlas156_mobile_nav.py
+          python scripts/test_atlas151_heist_gallery.py
+          python scripts/test_atlas160_premium_headers.py
+          python scripts/test_atlas158_premium_experiences.py
+          python scripts/test_atlas161_quality_gate.py
+          python scripts/test_atlas162_subject_heroes.py
+          python scripts/test_atlas163_premium_asset_ledger.py
+          python scripts/test_atlas164_heist_workspace.py
+          python scripts/test_atlas165_evidence_brand.py
+          python scripts/test_atlas166_release_status.py
+          python scripts/test_atlas167_heist_focus.py
+          python scripts/test_atlas168_heist_guides.py
+          python scripts/test_atlas169_heist_views.py
+          python scripts/test_atlas170_cayo_unified.py
+          python scripts/test_atlas171_cayo_board.py
+          python scripts/test_atlas216_cayo_dock.py
+          python scripts/test_atlas180_cayo_flagship.py
+          python scripts/test_atlas181_cayo_hotspots.py
+          python scripts/test_atlas184_cayo_visible_symbols.py
+          python scripts/test_atlas185_cayo_polish.py
+          python scripts/test_atlas186_cayo_route.py
+          python scripts/test_atlas192_world_completion.py
+          python scripts/test_atlas207_policies.py
+          python scripts/test_atlas195_source_tags.py
+          node --check atlas195-source-tags.js
+          python scripts/test_atlas196_legacy_explorer.py
+          node --check atlas90-gallery.js
+          node --check atlas192-weapons6.js
+          node --check film/atlas192-storyboard.js
+          python scripts/test_atlas190_marker_parity.py
+          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py scripts/test_atlas210_iv_touch_browser.py scripts/test_atlas211_mobile_fit_browser.py scripts/test_atlas212_directory_browser.py scripts/test_atlas217_vi_world_browser.py scripts/test_atlas218_yanis_v18_browser.py
+          node --check atlas217-vi-world.js
+          node --check atlas172-research-map.js
+          node --check atlas-research.js
+          node --check atlas81-hq.js
+          node --check atlas-iv.js
+          node --check atlas190-sa-route.js
+          node --check atlas186-cayo-route.js
+          node --check atlas185-cayo-polish.js
+          node --check atlas171-cayo-board.js
+          node --check atlas180-cayo-flagship.js
+          node --check atlas181-cayo-hotspots.js
+          python scripts/test_atlas171_research_map.py
+          python scripts/test_atlas217_vi_world.py
+          python scripts/test_atlas172_research_map.py
+          python scripts/test_atlas218_yanis_v18.py
+          python scripts/test_atlas219_hq_premium.py
+          python scripts/test_atlas220_vi_mobile.py
+          node --check atlas220-vi-mobile.js
+          node --check atlas220-cayo-recovery.js
+          node --check atlas164-heist-workspace.js
+          node --check heist-pages.js
+          python scripts/test_atlas152_art.py
+          node --check atlas93-global.js
+          node --check leonida-hq.js
+          node --check atlas145-leonida-map-ux.js
+          node --check atlas145-mobile-map-entry.js
+      - name: Confirm four evidence workspaces use original page-specific artwork
+        run: python scripts/test_research_identity_127.py
       - name: Build only public, approved static files (no live imports)
         run: node scripts/build-cloudflare.cjs
       - name: Verify the actual Cloudflare deployment payload
@@ -46,11 +156,44 @@ jobs:
       - name: Install Playwright Chromium
         run: |
           python -m pip install 'playwright==1.58.0'
-          python -m playwright install --with-deps chromium
+          timeout 120s python -m playwright install --with-deps chromium || python -m playwright install chromium
       - name: Desktop and mobile browser QA on served production files
         env:
           ATLAS_BROWSER: chromium
         run: python scripts/browser_smoke.py
+      - name: Verify Cayo mission board and capture phone/desktop screenshots
+        env:
+          ATLAS_BROWSER: chromium
+        run: |
+          python scripts/test_atlas171_browser.py
+          python scripts/test_atlas186_route_browser.py
+          python scripts/test_atlas190_map_browser.py
+          python scripts/test_atlas210_iv_touch_browser.py
+          python scripts/test_atlas211_mobile_fit_browser.py
+          python scripts/test_atlas212_directory_browser.py
+          python scripts/test_atlas217_vi_world_browser.py
+          python scripts/test_atlas218_yanis_v18_browser.py
+          python scripts/test_atlas219_hq_browser.py
+          python scripts/test_atlas220_vi_mobile_browser.py
+          python scripts/test_atlas201_squalo_browser.py
+          python scripts/test_atlas191_first_visit_browser.py
+      - name: Independently capture designed-brand screenshots (Chromium)
+        if: success()
+        continue-on-error: true
+        env:
+          ATLAS_BROWSER: chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+          python scripts/capture_design_review.py
+      - name: Save Elario designed-brand review screenshots (Chromium)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: team-jura-atlas-design-review-chromium
+          path: qa-evidence/chromium/
+          if-no-files-found: warn
+          retention-days: 14
   microsoft-edge:
     runs-on: windows-latest
     timeout-minutes: 30
@@ -74,8 +217,140 @@ jobs:
         env:
           ATLAS_BROWSER: msedge
         run: python scripts/browser_smoke.py
+      - name: Verify Cayo mission board and capture phone/desktop screenshots
+        # Git Bash uses fail-fast (-e); PowerShell otherwise hides an earlier
+        # native Python failure when a later command exits successfully.
+        shell: bash
+        env:
+          ATLAS_BROWSER: msedge
+        run: |
+          python scripts/test_atlas171_browser.py
+          python scripts/test_atlas186_route_browser.py
+          python scripts/test_atlas190_map_browser.py
+          python scripts/test_atlas210_iv_touch_browser.py
+          python scripts/test_atlas211_mobile_fit_browser.py
+          python scripts/test_atlas212_directory_browser.py
+          python scripts/test_atlas217_vi_world_browser.py
+          python scripts/test_atlas218_yanis_v18_browser.py
+          python scripts/test_atlas219_hq_browser.py
+          python scripts/test_atlas220_vi_mobile_browser.py
+          python scripts/test_atlas201_squalo_browser.py
+          python scripts/test_atlas191_first_visit_browser.py
+      - name: Independently capture designed-brand screenshots (Edge)
+        if: success()
+        continue-on-error: true
+        env:
+          ATLAS_BROWSER: msedge
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install msedge
+          python scripts/capture_design_review.py
+      - name: Save Elario designed-brand review screenshots (Edge)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: team-jura-atlas-design-review-edge
+          path: qa-evidence/msedge/
+          if-no-files-found: warn
+          retention-days: 14
+  # Fast, isolated Atlas 22.0 gate. Finds phone popup regressions before the
+  # broader 80-page Chromium/Edge smoke and heist suites complete.
+  atlas22-focus-chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate category symbols and build exact staging payload
+        run: |
+          python scripts/test_atlas220_vi_mobile.py
+          node --check atlas.js
+          node --check atlas220-vi-mobile.js
+          node --check atlas220-cayo-recovery.js
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install focused Chromium
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install chromium
+      - name: Test VI pin details, viewport fit and legend at desktop/phone widths
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas220_vi_mobile_browser.py
+      - name: Verify Cayo marker detail geometry and map polish initialization
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas171_browser.py
+      - name: Verify Cayo route start survives slow dynamic map initialization
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas186_route_browser.py
+      - name: Verify approved Salvage Yard hero image decodes on real page
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas220_salvage_art_browser.py
+      - name: Save Atlas 22.0 focus screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas22-vi-focus-chromium
+          path: qa-evidence/chromium/
+          if-no-files-found: warn
+          retention-days: 14
+  atlas22-focus-edge:
+    runs-on: windows-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate category symbols and build exact staging payload
+        run: |
+          python scripts/test_atlas220_vi_mobile.py
+          node --check atlas.js
+          node --check atlas220-vi-mobile.js
+          node --check atlas220-cayo-recovery.js
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install focused Microsoft Edge
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install msedge
+      - name: Test VI pin details, viewport fit and legend at desktop/phone widths
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas220_vi_mobile_browser.py
+      - name: Verify Cayo marker detail geometry and map polish initialization
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas171_browser.py
+      - name: Verify Cayo route start survives slow dynamic map initialization
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas186_route_browser.py
+      - name: Verify approved Salvage Yard hero image decodes on real page
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas220_salvage_art_browser.py
+      - name: Save Atlas 22.0 focus screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas22-vi-focus-edge
+          path: qa-evidence/msedge/
+          if-no-files-found: warn
+          retention-days: 14
   validated-zip:
-    needs: [chromium-and-static, microsoft-edge]
+    needs: [chromium-and-static, microsoft-edge, atlas22-focus-chromium, atlas22-focus-edge]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -95,5 +370,8 @@ jobs:
         with:
           name: team-jura-atlas-cloudflare-validated-after-chromium-and-edge
           path: public/
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 21
+      - name: Owner visual signoff — prevent artwork regression release
+        run: python scripts/test_atlas151_visual_release.py

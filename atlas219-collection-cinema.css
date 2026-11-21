@@ -1,0 +1,60 @@
+/* Atlas 21.9 — premium Elario Collection HQ, presentation only. */
+body.j219-hq{--j219-gold:#ffcc91}
+body.j219-hq .j219-logo{display:block;width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 2px 12px #faab6866)}
+body.j219-hq #j89-shell{display:none!important} /* own accessible header navigation */
+body.j219-hq .sectionhead{min-height:215px;display:flex;flex-direction:column;justify-content:center;
+ position:relative;isolation:isolate;overflow:hidden;
+ background:linear-gradient(90deg,#21102ff4,#2c1640da 63%,#22132c9e),url('./art/jura155-map.webp') center/cover;
+ border:1px solid #d5a47b;box-shadow:0 14px 28px #0b061b7c}
+body.j219-hq #collections .sectionhead{background:linear-gradient(90deg,#21102ff4,#2c1640dc 60%,#28133699),url('./art/jura161-collectibles.webp') 50% 45%/cover}
+body.j219-hq #missions .sectionhead{background:linear-gradient(90deg,#1e0d2df3,#2b103fd8 60%,#22113691),url('./art/jura159-heist-hq.webp') center/cover}
+body.j219-hq #intel .sectionhead{background:linear-gradient(90deg,#20102df5,#2b1540d9 60%,#24153099),url('./art/atlas93-dispatch-hero.webp') center/cover}
+body.j219-hq #passport .sectionhead{background:linear-gradient(90deg,#1e1230f3,#281d40d5 60%,#25123291),url('./art/jura155-studio.webp') center/cover}
+body.j219-hq .sectionhead h1{color:#ffdda5;text-shadow:0 3px 13px #10051f;font-size:clamp(31px,4vw,55px)}
+body.j219-hq .sectionhead p{max-width:660px;color:#f8e8f4;text-shadow:0 2px 6px #0c0517;font-size:clamp(14px,1.4vw,17px)}
+body.j219-hq .sectionhead .eyebrow{color:#ffe0a3}
+body.j219-hq .j219-maptiles,body.j219-hq .j219-heist-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.j219-hq .j219-map-card,body.j219-hq .j219-heist-card,body.j219-hq #overview .j219-quick-card{
+ display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;
+ padding:0 0 15px;min-width:0;overflow:hidden;gap:9px;text-align:left;
+ border:1px solid #a970a5;border-radius:15px;background:linear-gradient(150deg,#341a46,#1c142c);
+ color:#f6e7f7;text-decoration:none;box-shadow:0 8px 20px #0c041d6e}
+body.j219-hq .j219-map-card:is(:hover,:focus-visible),
+body.j219-hq .j219-heist-card:is(:hover,:focus-visible),
+body.j219-hq #overview .j219-quick-card:is(:hover,:focus-visible){
+ border-color:#ffdfab;box-shadow:0 12px 24px #10051fb8;transform:translateY(-2px)}
+body.j219-hq .j219-map-card img,body.j219-hq .j219-heist-cover,body.j219-hq .j219-quick-cover{
+ width:100%;height:clamp(110px,13vw,170px);object-fit:cover;display:block;flex:0 0 auto;
+ background:#2d1840;border-bottom:1px solid #ac738f;margin:0}
+body.j219-hq .j219-map-card :is(strong,span,b),body.j219-hq .j219-heist-card :is(strong,span),
+body.j219-hq #overview .j219-quick-card :is(strong,small){
+ margin-left:15px;margin-right:15px;display:block;overflow-wrap:anywhere}
+body.j219-hq .j219-map-card strong,body.j219-hq .j219-heist-card strong{
+ font-size:clamp(15px,1.5vw,21px);color:#ffdda8;line-height:1.3}
+body.j219-hq .j219-map-card span,body.j219-hq .j219-heist-card span{
+ font-size:12px;line-height:1.5;color:#ead4e7}
+body.j219-hq .j219-map-card b,body.j219-hq .j219-heist-card span{
+ color:#ffd39a;font-weight:800;margin-top:auto;font-size:12px}
+body.j219-hq .j219-heist-grid .j219-heist-cover{height:160px}
+body.j219-hq #overview .j219-quick-card{gap:7px;min-height:190px!important}
+body.j219-hq #overview .j219-quick-cover{height:112px}
+body.j219-hq #overview .j219-quick-card>span{display:none}
+body.j219-hq #overview .j219-quick-card strong{font-size:15px;line-height:1.2}
+body.j219-hq #overview .j219-quick-card small{font-size:11px;line-height:1.4}
+body.j219-hq .j219-heist-lead a{display:inline-block;text-decoration:none;border:1px solid #ffcf89;
+ border-radius:9px;color:#ffdea9;background:#452255;padding:9px 13px;font-weight:800}
+body.j219-hq .notice{background:#302037;border-color:#f6c382;color:#f2dfea}
+@media(max-width:960px){
+ body.j219-hq .j219-maptiles,body.j219-hq .j219-heist-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ body.j219-hq .j219-logo{width:42px;height:42px}
+ body.j219-hq .sectionhead{min-height:175px;padding:20px 16px}
+ body.j219-hq .sectionhead p{font-size:14px}
+ body.j219-hq #overview .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.j219-hq .j219-map-card img,body.j219-hq .j219-heist-grid .j219-heist-cover{height:106px}
+ body.j219-hq .j219-map-card strong,body.j219-hq .j219-heist-card strong{font-size:14px}
+ body.j219-hq .j219-heist-card{min-height:195px}
+ body.j219-hq #overview .j219-quick-card{min-height:163px!important}
+ body.j219-hq #overview .j219-quick-cover{height:94px}
+}

@@ -1,0 +1,14 @@
+/* Elario Studios / Team Jura current identity, independent of any one game. */
+body.community-page .studio-hero.elario-hero{min-height:440px;background-size:cover!important;background-position:center!important;border:1px solid #efbb80;border-radius:22px;box-shadow:0 15px 38px #12051caf;position:relative;isolation:isolate;overflow:hidden}
+body.community-page .studio-hero.elario-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(96deg,#130a2bee,#1d0d36b3 54%,#120a291a);pointer-events:none;z-index:-1}
+body.community-page .studio-hero.elario-hero h1{font-size:clamp(37px,5vw,74px);line-height:1.06;letter-spacing:-.04em}
+body.community-page .studio-hero.elario-hero .hero-actions a{min-height:46px;display:inline-flex;align-items:center}
+body.community-page .portal-feature-grid .feature-card{min-height:212px;position:relative;overflow:hidden;border:1px solid #9b6cab;border-radius:17px;padding:clamp(17px,2vw,25px);background:radial-gradient(circle at 100% 2%,#8f3b9d6a,transparent 58%),linear-gradient(145deg,#2d1748,#161126);box-shadow:0 9px 25px #0a05157a}
+body.community-page .portal-feature-grid .feature-card::after{content:"";display:block;width:70%;height:2px;margin-top:20px;background:linear-gradient(90deg,#ffcc8b,transparent)}
+body.community-page .portal-feature-grid .feature-card h3{color:#ffe0a5;font-size:clamp(21px,2vw,27px)}
+body.community-page .portal-feature-grid .feature-card:nth-child(1){background:radial-gradient(circle at right top,#92386c78,transparent 62%),linear-gradient(145deg,#381b4b,#15102b)}
+body.community-page .portal-feature-grid .feature-card:nth-child(2){background:radial-gradient(circle at right top,#2d91b779,transparent 62%),linear-gradient(145deg,#1b2444,#16102b)}
+body.community-page .portal-feature-grid .feature-card:nth-child(3){background:radial-gradient(circle at right top,#c28a3a73,transparent 62%),linear-gradient(145deg,#372348,#16102b)}
+body.community-page .studio-vision{border:1px solid #aa7aab;border-radius:22px;overflow:hidden;padding:clamp(20px,4vw,44px);background:linear-gradient(120deg,#1c0e2b,#3b215c);gap:25px}
+body.community-page .studio-vision .studio-scenery{display:block;max-width:100%;width:min(100%,580px);height:auto;object-fit:cover;border-radius:14px;border:1px solid #ffb47c;box-shadow:0 10px 30px #050312a1}
+@media(max-width:720px){body.community-page .studio-hero.elario-hero{min-height:390px}body.community-page .studio-vision{padding:16px}body.community-page .portal-feature-grid .feature-card{min-height:165px}}

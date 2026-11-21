@@ -1,0 +1,42 @@
+/* Atlas 14.5: keep the original GTA VI map engine and controls, only move its
+   already-working view buttons into the dedicated Elario sidebar. */
+body.jura86-leonida #sidebar .j86-mapviews.j145-docked-view{
+ position:static!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;
+ transform:none!important;z-index:auto!important;width:auto!important;min-width:0!important;
+ max-width:100%!important;margin:11px 0 9px!important;padding:13px 12px!important;
+ border:1px solid #c38eaa;border-radius:13px;
+ background:linear-gradient(140deg,#3a214c,#21182f)!important;
+ box-shadow:0 7px 16px #14091e70;backdrop-filter:none;
+}
+body.jura86-leonida #sidebar .j145-docked-view .j86-view-title{
+ text-align:left;font-size:10px;letter-spacing:.10em;color:#ffdb9b;margin:0 0 10px;
+}
+body.jura86-leonida #sidebar .j145-docked-view .j86-view-row{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:7px!important;overflow:visible!important;
+}
+body.jura86-leonida #sidebar .j145-docked-view .j86-view-btn{
+ flex:none!important;min-width:0;max-width:100%;white-space:normal!important;
+ overflow-wrap:anywhere;line-height:1.35;padding:10px 8px;font-size:11px;text-align:center;
+ border:1px solid #9865a5;color:#fff1f9;background:#352243;border-radius:9px;
+}
+body.jura86-leonida #sidebar .j145-docked-view .j86-view-btn[aria-pressed="true"]{
+ background:linear-gradient(115deg,#ffd48f,#edab62);border-color:#ffe2aa;color:#2b1633;font-weight:900;
+}
+body.jura86-leonida #sidebar .j145-docked-view .j86-view-btn:focus-visible,
+body.jura86-leonida #sidebar .j145-open-map:focus-visible{
+ outline:3px solid #ffe0a0;outline-offset:3px;
+}
+body.jura86-leonida #sidebar .j145-open-map{
+ display:block;margin:7px 0 14px;padding:11px 12px;min-height:41px;
+ border:1px solid #c58caf;border-radius:10px;background:#40264c;
+ color:#ffe3ad;font:800 12px/1.4 system-ui,sans-serif;text-decoration:none;text-align:center;
+}
+body.jura86-leonida #sidebar .j145-open-map:hover{
+ border-color:#ffe3ad;background:#5a3561;color:#fff6dc;
+}
+@media(max-width:700px){
+ body.jura86-leonida #sidebar .j145-docked-view .j86-view-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.jura86-leonida #sidebar .j145-open-map{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){body.jura86-leonida #sidebar .j145-open-map{scroll-behavior:auto}}

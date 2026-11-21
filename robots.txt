@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gtae-online.pages.dev/sitemap.xml

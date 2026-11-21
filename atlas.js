@@ -30,7 +30,7 @@ const BOUNDS={
 };
 const LAYERS={
  '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid']],
- '6':[['scaly,view','Scaly · YANIS V18'],['yanis,18','YANIS V18 · Current'],['yanis,15','YANIS V15 · Archive'],['dupzor,51','Loki · DUPZOR V51']]
+ '6':[['scaly,view','Scaly · YANIS V18'],['yanis,18','YANIS V18 · Current'],['dupzor,51','Loki · DUPZOR V51'],['research,view','Research basemap · YANIS V18'],['yanis,15','YANIS V15 · Archive']]
 };
 /* Base views and published GTADB community add-on tiles.
  * The additional tile folders are *patches*, not complete independent worlds.
@@ -46,7 +46,7 @@ const PATCH_SET='aiwe,1,martipk,5,rickrick,3';
 function mapView(style,g=game){
  if(g==='6'&&style==='scaly,view')return{base:'yanis,18',overlay:false,filter:'saturate(1.15) contrast(1.06)'};
  if(g==='6'&&style==='loki,view')return{base:'dupzor,51',overlay:false,filter:'saturate(.88) contrast(1.13) brightness(.96)'};
- // Research is a content mode over the licensed YANIS V17 illustration, not a new GTADB tile source.
+ // Research is a dedicated labeled basemap option over licensed YANIS V18 tiles, not a separate tile source. GTA VI research records remain provisional.
  if(g==='6'&&style==='research,view')return{base:'yanis,18',overlay:false,filter:'none'};
  // The previous CYBER selection is retired: no cyber tiles are requested.
  return{base:style,overlay:false};
@@ -85,14 +85,22 @@ let researchOverlays=loadStore('jura99-research-overlays',{'5-story':true,'5-onl
 if(!researchOverlays||typeof researchOverlays!=='object'||Array.isArray(researchOverlays))researchOverlays={'5-story':true,'5-online':true,'6':true};
 const researchOn=()=>researchOverlays[filterScope()]!==false;
 let eventFocusIds=null;
-// Newly visiting players see the illustrated basemap with NO location pins.
-// Preferences are scoped per world and saved only when controls change.
+// Atlas 19.1: first-time explorers should not mistake a blank radar for
+// an empty Atlas. Begin with a small, honest selection of source categories,
+// never fabricated item spawns. Restore every returning visitor's own choice,
+// including an intentionally empty [] or the explicit 'all' preference.
+const FIRST_VISIT_CATEGORIES=Object.freeze({
+ '5-story':['landmark','transport','nature','collectible'],
+ '5-online':['landmark','transport','activity','collectible','shop'],
+ '6':['landmark','transport','food']
+});
 const PIN_PREF_KEY='jura101-visible-map-categories-v1';
 const pinPrefs=loadStore(PIN_PREF_KEY,{});
 function restoredCategories(scope){
  const value=pinPrefs&&typeof pinPrefs==='object'&&!Array.isArray(pinPrefs)?pinPrefs[scope]:undefined;
  if(value==='all')return null;
- return new Set(Array.isArray(value)?value.filter(key=>Object.prototype.hasOwnProperty.call(CATEGORIES,key)):[]);
+ if(Array.isArray(value))return new Set(value.filter(key=>Object.prototype.hasOwnProperty.call(CATEGORIES,key)));
+ return new Set(FIRST_VISIT_CATEGORIES[scope]||[]);
 }
 function savedCategoryMode(){
  const next={};
@@ -313,6 +321,49 @@ function renderServices(){
  if(filtered.length>120){const p=document.createElement('p');p.className='hint';p.textContent='Showing first 120 sites. Refine your search or use the map legend to find more.';root.append(p)}
  if(!filtered.length){const p=document.createElement('p');p.className='hint';p.textContent='No mapped service candidates found. Update GTADB data, or change your filters.';root.append(p)}
 }
+// Atlas 22.0: original, hand-drawn SVG silhouettes. Icons map only to the
+// existing category keys; no new records, scope changes or source claims.
+const ELARIO_LEGEND_SHAPES=Object.freeze({
+ collectible:'M5 8l4-5h6l4 5-7 13z M5 8h14 M9 8l3 13 3-13',
+ vehicle:'M5 15l2-7h10l2 7M4 15h16v4h-3v-2H7v2H4z M7 12h10',
+ property:'M3 11l9-7 9 7M6 10v10h12V10M10 20v-7h4v7',
+ weapon:'M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z',
+ activity:'M12 3l2.7 6 6.3.5-4.9 4.5 1.8 7-5.9-4-5.9 4 1.8-7L3 9.5 9.3 9z',
+ gunstore:'M4 8h13l3 4-4 3h-4v5H9v-5H4z M16 8v7',
+ modshop:'M15 4a5 5 0 0 0-7 6l-5 5 4 4 5-5a5 5 0 0 0 7-6l-4 4-3-3z',
+ dealer:'M4 16V9l4-3h8l4 3v7z M8 13h8 M6 18h2 M16 18h2',
+ fuel:'M5 20V5h11v15M5 11h11M16 9h2l3 3v6a2 2 0 0 1-4 0v-3',
+ safehouse:'M3 11l9-7 9 7M6 10v10h12V10M10 15v-2h4v2 M12 15v3',
+ marina:'M3 14l3 5h12l3-5z M12 4v10 M12 5l6 7h-6 M3 21q4-2 8 0t10 0',
+ garage_site:'M4 20V8l8-5 8 5v12 M7 20v-9h10v9 M7 14h10 M7 17h10',
+ business_site:'M4 21V5h16v16 M8 9h2m4 0h2M8 13h2m4 0h2M10 21v-4h4v4',
+ landmark:'M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z',
+ transport:'M4 18h9l-3-3 M13 18l-3 3 M5 7h14l-3-3 M19 7l-3 3',
+ shop:'M5 9V6h14v3M4 9h16l-1 12H5z M9 9V5a3 3 0 0 1 6 0v4',
+ food:'M5 3v8m3-8v8M3 3v6a4 4 0 0 0 7 0V3M7 12v9 M17 3q-4 6 0 10h2V3z M19 13v8',
+ hotel:'M3 19V8M3 15h18v4 M7 15v-4h6v4 M14 12h7v3',
+ nature:'M20 4C10 4 4 8 4 15a5 5 0 0 0 5 5c7 0 11-6 11-16z M5 19l10-10',
+ leisure:'M4 7h16v5a3 3 0 0 0 0 6H4a3 3 0 0 0 0-6z M12 7v11',
+ government:'M2 9l10-6 10 6z M4 10h16 M6 10v9M11 10v9M16 10v9M3 20h18',
+ office:'M5 21V4h14v17M8 8h2m4 0h2M8 12h2m4 0h2M8 16h2m4 0h2',
+ industry:'M3 21V10l6 4v-4l6 4V6h6v15z M6 18h2m3 0h2m3 0h2',
+ utility:'M13 2L5 13h6l-1 9 9-13h-6z',
+ other:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M9 9a3 3 0 1 1 4 3v2 M12 18h.01',
+ user:'M12 3l6 6v8l-6 4-6-4V9z M12 7v10 M8 12h8'
+});
+function elarioLegendGlyph(cat){
+ const ns='http://www.w3.org/2000/svg';
+ const svg=document.createElementNS(ns,'svg');
+ svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');
+ svg.setAttribute('focusable','false');svg.setAttribute('class','elario-legend-glyph');
+ const path=document.createElementNS(ns,'path');
+ path.setAttribute('d',ELARIO_LEGEND_SHAPES[cat]||ELARIO_LEGEND_SHAPES.other);
+ path.setAttribute('fill','none');path.setAttribute('stroke','currentColor');
+ path.setAttribute('stroke-width','1.85');path.setAttribute('stroke-linecap','round');
+ path.setAttribute('stroke-linejoin','round');svg.append(path);
+ return svg;
+}
+window.TeamJuraAtlasGlyph22=Object.freeze({create:elarioLegendGlyph});
 function renderLegend(){
  renderNamedLayers();
  const counts={};for(const r of records())counts[r.category]=(counts[r.category]||0)+1;
@@ -327,7 +378,7 @@ function renderLegend(){
     if(active[filterScope()].has(cat))active[filterScope()].delete(cat);else active[filterScope()].add(cat);
     showPins=true;page=0;render();announce(`${title} ${active[filterScope()].has(cat)?'shown':'hidden'} on map`);
    });toggle.className='legend-choice';toggle.setAttribute('aria-pressed',String(on));toggle.title=`${on?'Hide':'Show'} ${title} pins`;
-   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.background=color;dot.textContent=LEGEND_EMOJIS[cat]||'📍';toggle.prepend(dot);
+   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
    const only=btn('Only',()=>{active[filterScope()]=new Set([cat]);showPins=true;page=0;render();announce('Showing only '+title+' on map');},'legend-only');
    row.append(toggle,only);group.append(row);
   }root.append(group);
@@ -344,7 +395,15 @@ const VI_REGIONS=[
 function renderViRegions(){const box=$('viRegions');if(!box)return;box.classList.toggle('hidden',game!=='6');if(game!=='6'||box.dataset.ready)return;box.dataset.ready='true';
  const top=document.createElement('strong');top.textContent='🌴 Leonida · official named regions';const note=document.createElement('p');note.className='hint';note.textContent='Names confirmed by Rockstar. Boundaries and individual map pins are community estimates, not official GPS coordinates.';box.append(top,note);
  const grid=document.createElement('div');grid.className='vi-regions';for(const [name,description]of VI_REGIONS){const b=btn(name,()=>{$('search').value=name;$('districtFilter').value='';active[filterScope()]=null;page=0;showTab('Find');render();announce('Searching community-mapped landmarks for '+name+'. This does not verify coordinates.');});b.className='vi-region';const small=document.createElement('small');small.textContent=description;b.append(small);grid.append(b)}box.append(grid);
- const link=document.createElement('a');link.href='https://www.rockstargames.com/VI';link.target='_blank';link.rel='noopener noreferrer';link.textContent='Official Rockstar GTA VI information ↗';box.append(link);
+ const sourcePanel=document.createElement('div');sourcePanel.className='j142-official-sources';sourcePanel.setAttribute('aria-label','Rockstar GTA VI official reference sources');
+ const heading=document.createElement('strong');heading.textContent='Rockstar official sources · 19 Nov 2026';sourcePanel.append(heading);
+ const hint=document.createElement('p');hint.textContent='The game and region names are official. These community-map marker positions are not verified against Rockstar\u2019s published map; selecting a region searches research records rather than jumping to a claimed official coordinate.';sourcePanel.append(hint);
+ const links=[
+  ['Official Leonida screenshots','https://www.rockstargames.com/VI/media/screenshots'],
+  ['Rockstar GTA VI game information','https://www.rockstargames.com/VI']
+ ];
+ for(const [label,url]of links){const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=label+' ↗';sourcePanel.append(a)}
+ box.append(sourcePanel);
 }
 function choosePlace(place){selected=place;showPins=true;$('togglePins').textContent='📍 Pins on';$('togglePins').setAttribute('aria-pressed','true');
  camera.x=place.x;camera.y=place.y;camera.z=Math.max(3.4,camera.z);camera.z=clamp(camera.z,MIN_Z,MAX_Z);
@@ -455,7 +514,7 @@ const TILE_HOSTS=[UPSTREAM+'maps/tiles/']; // Read from GTADB's licensed GitHub 
 function sourceUrl(g,style,z,tx,ty,host=0){return `${TILE_HOSTS[host]}${g}/${style}/${z}/${z},${ty},${tx}.jpg`+(host?'?atlas_tiles=62':'');}
 function tileHealth(){const el=$('tileHealth');if(!el)return;const current=styles[game],all=[...tileStore.values()].filter(t=>t.game===game);const valid=new Set([mapView(current,game).base,...sourceTileStyles(current,0,1,1,game)]);const group=all.filter(t=>valid.has(t.path));const good=group.filter(t=>t.state==='ok').length,loading=group.filter(t=>t.state==='loading').length,bad=group.filter(t=>t.state==='error').length;
  el.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`:bad?'Map artwork unavailable · retry a different layer or connection':'Preparing artwork…';
- el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='Licensed GTADB community illustrations; Research uses YANIS V17 artwork with Atlas category and source tools. No official Rockstar map claims.';}
+ el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='Licensed GTADB community illustrations; Research uses YANIS V18 community artwork with Atlas category and source tools. No official Rockstar map claims.';}
 
 function within(style,z,x,y,g=game){const r=BOUNDS[mapView(style,g).base]?.[z];return !!r&&x>=r[0]&&x<=r[2]&&y>=r[1]&&y<=r[3]}
 function tileImage(style,z,x,y,g=game){
@@ -541,7 +600,37 @@ function atlas85CollectibleIcon(r){
  if(r.category!=='collectible'&&r.sourceId!=='story')return null;
  return symbols.find(([re])=>re.test(name))?.[1]||'◆';
 }
-function pin(x,y,color,highlight=false,number=null,category='landmark',plain=false,atlas85Icon=null){ctx.save();const r=highlight?13:plain?7.5:11;ctx.shadowColor='#000b';ctx.shadowBlur=7;ctx.shadowOffsetY=2;ctx.beginPath();ctx.moveTo(x,y+(plain?10:15));ctx.bezierCurveTo(x-r*1.03,y+2,x-r,y-r,x,y-r);ctx.bezierCurveTo(x+r,y-r,x+r*1.03,y+2,x,y+(plain?10:15));ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5c0':plain?'#f3f6fa':'#112736';ctx.lineWidth=highlight?2.8:plain?1.2:1.6;ctx.stroke();
+function pin(x,y,color,highlight=false,number=null,category='landmark',plain=false,atlas85Icon=null,completed=false,premium=false){
+ if(premium){
+  // Original pointed Elario gold/amber collectible crest with a deep violet
+  // enamel face. Keep collection-specific glyphs; completion adds a small tick.
+  ctx.save();const r=highlight?15:12;
+  ctx.shadowColor=highlight?'#ffe4a6':'#0b0616';
+  ctx.shadowBlur=highlight?16:7;ctx.shadowOffsetY=3;
+  const grad=ctx.createLinearGradient(x-r,y-r,x+r,y+r+7);
+  if(completed){grad.addColorStop(0,'#a47e94');grad.addColorStop(.55,'#573459');grad.addColorStop(1,'#311c42');}
+  else{grad.addColorStop(0,'#fff1b9');grad.addColorStop(.52,'#f8bb5d');grad.addColorStop(1,'#c97532');}
+  ctx.beginPath();ctx.moveTo(x,y+r+9);
+  ctx.bezierCurveTo(x-r*1.07,y+4,x-r*1.05,y-r,x,y-r);
+  ctx.bezierCurveTo(x+r*1.05,y-r,x+r*1.07,y+4,x,y+r+9);
+  ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+  ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5d2':completed?'#ebc58d':'#4d2348';
+  ctx.lineWidth=highlight?3:2;ctx.stroke();
+  ctx.beginPath();ctx.arc(x,y-1,r*.70,0,Math.PI*2);
+  ctx.fillStyle='#2b173b';ctx.fill();ctx.strokeStyle='#fbd58b';ctx.lineWidth=.9;ctx.stroke();
+  ctx.font=(highlight?'17px':'14px')+' "Apple Color Emoji","Segoe UI Emoji",system-ui,sans-serif';
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#ffe6a5';
+  ctx.fillText(atlas85Icon||'◆',x,y-2);
+  if(completed){
+   const bx=x+r*.67,by=y+r*.66;
+   ctx.beginPath();ctx.arc(bx,by,5.5,0,Math.PI*2);
+   ctx.fillStyle='#2c633e';ctx.fill();ctx.strokeStyle='#ffdf91';ctx.lineWidth=1.4;ctx.stroke();
+   ctx.strokeStyle='#fff7d7';ctx.lineWidth=1.5;
+   ctx.beginPath();ctx.moveTo(bx-2.7,by);ctx.lineTo(bx-.4,by+2.1);ctx.lineTo(bx+3.1,by-2.2);ctx.stroke();
+  }
+  ctx.restore();return;
+ }
+ ctx.save();const r=highlight?13:plain?7.5:11;ctx.shadowColor='#000b';ctx.shadowBlur=7;ctx.shadowOffsetY=2;ctx.beginPath();ctx.moveTo(x,y+(plain?10:15));ctx.bezierCurveTo(x-r*1.03,y+2,x-r,y-r,x,y-r);ctx.bezierCurveTo(x+r,y-r,x+r*1.03,y+2,x,y+(plain?10:15));ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5c0':plain?'#f3f6fa':'#112736';ctx.lineWidth=highlight?2.8:plain?1.2:1.6;ctx.stroke();
  if(plain&&!highlight&&!atlas85Icon){ctx.restore();return;}ctx.fillStyle='#17303d';ctx.font=(highlight?'bold 16px':'bold 13px')+' "Segoe UI Symbol",system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';if(atlas85Icon){ctx.font=(highlight?'17px':'14px')+' "Segoe UI Emoji","Apple Color Emoji",sans-serif';ctx.fillText(atlas85Icon,x,y-3)}else ctx.fillText(number!==null?String(number):CATEGORY_SYMBOLS[category]||'✦',x,y-3);ctx.restore()}
 
 function conditionForRecord(r,storeCache){
@@ -561,10 +650,10 @@ function drawMarkers(){hitRegions=[];if(!showPins&&!selected)return;
  for(const r of visible){const p=toScreen(r.x,r.y);if(p.x<-20||p.x>width+20||p.y<-20||p.y>height+20)continue;
   if(drawn>=20000)break;drawn++;
   const color=conditionPinColor(r,conditionCache);
-  pin(p.x,p.y,color,false,null,r.category,!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r));
+  pin(p.x,p.y,color,false,null,r.category,!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r),!!progress[doneKey(r)],r.category==='collectible'&&!r.activityId);
   hitRegions.push({x:p.x,y:p.y,r:12,record:r});
  }
- if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected));hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
+ if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected),!!progress[doneKey(selected)],selected.category==='collectible'&&!selected.activityId);hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
 }
 function drawCoordinateTarget(){if(!coordinateTarget||coordinateTarget.game!==game)return;const p=toScreen(coordinateTarget.x,coordinateTarget.y);if(p.x<-40||p.x>width+40||p.y<-40||p.y>height+40)return;
  ctx.save();ctx.strokeStyle='#fff9d2';ctx.lineWidth=3;ctx.shadowBlur=7;ctx.shadowColor='#000';ctx.beginPath();ctx.arc(p.x,p.y,16,0,Math.PI*2);ctx.moveTo(p.x-26,p.y);ctx.lineTo(p.x+26,p.y);ctx.moveTo(p.x,p.y-26);ctx.lineTo(p.x,p.y+26);ctx.stroke();ctx.restore();}
@@ -766,7 +855,25 @@ window.JuraAtlas85=Object.freeze({
   hideCompleted:(on)=>{const el=$('hideFound');el.checked=Boolean(on);el.dispatchEvent(new Event('change',{bubbles:true}))}
 });
 
-function init(){if(!ctx){$('mapStatus').textContent='This browser does not support the HTML canvas map.';return}
+let canvasBootRetries=0;
+function init(){
+ // Some mobile/Edge renderers temporarily refuse a 2D context during
+ // high memory pressure. Retry before deciding the browser lacks Canvas.
+ if(!ctx){
+  try{ctx=canvas?.getContext('2d')||null}catch{}
+  if(!ctx&&canvasBootRetries<6){
+   canvasBootRetries++;
+   const state=$('mapStatus');if(state)state.textContent='Preparing 2D map viewer…';
+   setTimeout(init,200+canvasBootRetries*125);
+   return;
+  }
+  if(!ctx){
+   const state=$('mapStatus');
+   if(state)state.textContent='The 2D map could not start on this device. Close other heavy tabs or refresh to retry.';
+   return;
+  }
+ }
+
  const photo=$('selectedPhoto'),figure=$('selectedPhotoFigure');if(photo&&figure){photo.onload=()=>{figure.hidden=false};photo.onerror=()=>{figure.hidden=true}};
 
  $('districtFilter').oninput=()=>{page=0;render()};$('findNearby').onclick=()=>{nearbyActive=true;renderNearby()};$('nearbyToRoute').onclick=addNearbyToRoute;$('nearbyRadius').onchange=()=>{if(nearbyActive)renderNearby()};$('nearbyOrigin').onchange=()=>{if(nearbyActive)renderNearby()};$('shareCoords').onclick=shareCoordinateLocation;$('useMapCenter').onclick=centerToCoordinates;
@@ -801,14 +908,24 @@ function init(){if(!ctx){$('mapStatus').textContent='This browser does not suppo
  $('exportData').onclick=exportBackup;$('importData').onclick=()=>$('importFile').click();$('importFile').onchange=e=>importBackup(e.target.files?.[0]);$('refresh').onclick=async()=>{dataNotice('Checking our GTA VI licensed data snapshot…');await loadDataset('6',true);render()};$('saveOffline').onclick=saveOffline;$('stopOffline').onclick=()=>{offlineStop=true;$('offlineStatus').textContent='Stopping after current tiles finish…'};
  document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||'')){e.preventDefault();$('search').focus()}if(e.key==='Escape'){selected=null;addPinMode=false;chooseRouteStartMode=false;updateSelected();schedulePaint()}});
  window.addEventListener('storage',e=>{if(e.key==='jura3-progress'){progress=loadStore('jura3-progress',{});render()}if(e.key==='jura-atlas-routes'){routes=loadStore('jura-atlas-routes',{'5':[],'6':[]});render()}});
- if(window.JuraNavigation)window.teamJuraNav=window.JuraNavigation.create(juraBridge);
+ if(window.JuraNavigation){
+  try{window.teamJuraNav=window.JuraNavigation.create(juraBridge)}
+  catch(error){
+   // Map browsing, pins and game-mode selection must survive a temporarily
+   // missing optional route-core script. Navigation can be retried by reload.
+   window.teamJuraNav=null;
+   const routeStatus=$('juraNavStatus');
+   if(routeStatus)routeStatus.textContent='Route navigation temporarily unavailable. Map browsing and saved pins still work; refresh to retry directions.';
+   console.warn('Team Jura optional route engine unavailable; keeping Atlas maps active.',error);
+  }
+ }
  const observer=new ResizeObserver(resize);observer.observe(canvas);window.addEventListener('resize',resize);const start=document.body.dataset.startWorld||new URLSearchParams(location.search).get('world')|| (location.hash==='#game6'?'6':location.hash==='#gameonline'?'online':'5');switchGame(['5','6','online'].includes(start)?start:'5');
  const params=new URLSearchParams(location.search);const q=params.get('search'),cat=params.get('category');
  if(!params.has('place')&&params.has('x')&&params.has('y')){const x=Number(params.get('x')),y=Number(params.get('y')),z=Number(params.get('zoom'));if(Number.isFinite(x)&&Number.isFinite(y)&&Math.abs(x)<=16384&&Math.abs(y)<=16384){$('coordinateX').value=String(x);$('coordinateY').value=String(y);goToCoordinates();if(Number.isFinite(z)&&z>=MIN_Z&&z<=MAX_Z){camera.z=z;schedulePaint()}}}
  if(q)$('search').value=q.slice(0,100);
  if(cat&&CATEGORIES[cat]){active[filterScope()]=new Set([cat]);showTab('Services')}
  if(q||cat)render();readPacks();renderSources();loadDataset('5');loadDataset('6');loadSources();
- if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=103-tiles',{scope:'./'}).catch(()=>{});
+ if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=191',{scope:'./'}).catch(()=>{});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

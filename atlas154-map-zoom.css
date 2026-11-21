@@ -1,0 +1,46 @@
+/* Atlas 15.4 · reliable, reachable premium mobile zoom controls.
+   UI-only: native GTA V, GTA Online and Leonida map engines own actual zoom. */
+body:has(#atlasCanvas) .map-wrap .zoom{
+  position:absolute!important;
+  z-index:55!important;
+  top:clamp(151px,19dvh,176px)!important;
+  right:calc(13px + env(safe-area-inset-right, 0px))!important;
+  display:grid!important;grid-template-columns:1fr!important;gap:6px!important;
+  padding:6px!important;border:1px solid #e8b47a!important;border-radius:16px!important;
+  background:linear-gradient(150deg,#29153ced,#120e25ee)!important;
+  box-shadow:0 11px 30px #000b,0 0 16px #e27bc52b!important;
+  backdrop-filter:blur(9px);pointer-events:auto!important;
+}
+body:has(#atlasCanvas) .map-wrap .zoom button{
+  appearance:none!important;
+  display:grid!important;place-items:center!important;
+  position:relative!important;z-index:1!important;
+  min-width:48px!important;width:48px!important;height:47px!important;min-height:47px!important;
+  border:1px solid #c694b9!important;border-radius:10px!important;
+  background:#3c2057!important;color:#fff5dc!important;
+  font:900 26px/1 system-ui,-apple-system,sans-serif!important;
+  touch-action:manipulation!important;pointer-events:auto!important;
+  -webkit-tap-highlight-color:transparent;
+}
+body:has(#atlasCanvas) .map-wrap .zoom button:hover,
+body:has(#atlasCanvas) .map-wrap .zoom button:focus-visible{
+  background:#774271!important;border-color:#ffe0a3!important;
+}
+body:has(#atlasCanvas) .map-wrap .zoom button:active{background:#ac6583!important;transform:scale(.96)}
+body:has(#atlasCanvas) .map-wrap .zoom #j154ZoomFit{
+  font-size:12px!important;letter-spacing:.035em;font-weight:850!important;color:#ffe1a2!important;
+}
+@media (max-width:700px){
+ body:has(#atlasCanvas) .map-wrap .zoom{
+   top:clamp(146px,21dvh,180px)!important;
+   right:calc(9px + env(safe-area-inset-right, 0px))!important;
+ }
+ body:has(#atlasCanvas) .map-wrap{min-height:430px}
+}
+@media (max-width:390px){
+ body:has(#atlasCanvas) .map-wrap .zoom{top:154px!important;padding:4px!important;gap:4px!important}
+ body:has(#atlasCanvas) .map-wrap .zoom button{width:45px!important;min-width:45px!important;height:45px!important;min-height:45px!important}
+}
+@media (prefers-reduced-motion:reduce){
+ body:has(#atlasCanvas) .map-wrap .zoom button{transition:none!important}
+}

@@ -8,3 +8,11 @@
 .j98b-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.j98b-actions>*{flex:1 1 auto}.j98b-actions .j98b-check{white-space:nowrap;font-size:12px}.j98b-actions button:disabled{opacity:.4;cursor:not-allowed}.j98b-counter{color:#ffd381;font-variant-numeric:tabular-nums;font-size:13px;font-weight:800}.j98b-actions a{color:#ffd481;font-size:12px}
 .j98b-route li{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid #fff2}.j98b-route li span{flex:1;min-width:0;overflow-wrap:anywhere}.j98b-route li button{padding:5px 7px;font-size:12px}.j98b-line{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}.j98b-line polyline{stroke:#ffe177;stroke-width:.65;fill:none;vector-effect:non-scaling-stroke;stroke-dasharray:4 3;filter:drop-shadow(0 1px 1px #000)}.j98b-line circle{fill:#ffb758;stroke:#26132f;stroke-width:.5}
 @media(min-width:680px){.j98b-number-grid{grid-template-columns:repeat(8,minmax(0,1fr))}}@media(max-width:450px){.j98b-progress,.j98b-route{padding:10px}.j98b-number-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+
+/* Atlas 15.0: two deliberate actions per slot, with touch-sized pin controls. */
+.j98b-number-grid .j150-slot{display:grid;grid-template-columns:minmax(0,1fr) 32px;gap:2px;min-width:0}
+.j98b-number-grid .j150-slot>button{min-height:38px}
+.j98b-number-grid .j150-slot .j150-place-pin{background:#3d284b;color:#ffdb91;border-color:#b48b6b;font-size:18px;padding:4px 0}
+.j98b-number-grid .j150-slot .j150-place-pin[data-mapped="true"]{color:#9df1c3;border-color:#67d1a2}
+.j98b-number-grid .j150-slot .j150-place-pin:focus-visible{outline:3px solid #ffde90;outline-offset:2px}
+@media(max-width:450px){.j98b-number-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}

@@ -5,7 +5,7 @@ Uses local HTTP so canvas fetch, video, and navigation share a genuine origin.
 No live Rockstar/GTADB feed or external network request is considered verified.
 """
 from __future__ import annotations
-import asyncio, functools, http.server, json, os, socketserver, threading
+import asyncio, base64, functools, http.server, io, json, os, threading, zipfile
 from pathlib import Path
 from playwright.async_api import async_playwright
 PROJECT=Path(__file__).resolve().parents[1]
@@ -14,15 +14,48 @@ if not (ROOT/'index.html').is_file():
     raise SystemExit('Production site missing. Run: node scripts/build-cloudflare.cjs')
 PORT=int(os.getenv('ATLAS_SMOKE_PORT','18765'))
 URL=f'http://127.0.0.1:{PORT}'
-PAGES=['atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+PAGES=['atlas-sa.html','atlas-stats.html','atlas-cheats.html','atlas-news.html','atlas-vehicle-configurator.html','atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html','index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas-research.html','atlas-iv.html','atlas-sa.html','atlas-cayo.html','atlas93-garage.html','atlas81-hq.html','atlas98-landmarks.html','atlas98-data-lab.html','atlas-source-registry.html','atlas-credits.html','project.html','atlas98b-test.html','atlas-activities.html?mode=story','atlas-activities.html?mode=online','atlas-activities.html?mode=vi','directory.html','discovery.html','leonida-hq.html','atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html','atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html','map-hub.html?game=vc','one-last-ride.html','elario.html','heists.html','heist-fleeca.html','heist-cayo-perico.html','atlas98-style-lab.html']
+
+CLASSIC_WORLDS={
+    'vc':('GTA Vice City','Properties'),
+    'iii':('GTA III · Liberty City','Unique stunt jumps'),
+    'vcs':('Vice City Stories','Red balloons'),
+    'lcs':('Liberty City Stories','Rampages'),
+    'ctw':('Chinatown Wars','Security cameras'),
+    'tlad':('The Lost and Damned','Gang wars'),
+    'tbogt':('The Ballad of Gay Tony','Base jumps'),
+}
+PAGES.extend('map-hub.html?game='+world for world in CLASSIC_WORLDS if world!='vc')
+HEIST_PAGES={p.name for p in ROOT.glob('heist-*.html')}
+if len(HEIST_PAGES)<15:
+    raise SystemExit('The release must contain all 15 heist planning pages')
+PAGES.extend(sorted(HEIST_PAGES.difference(PAGES)))
+# Separate Story Mode progression must be exercised as a real URL state.
+PAGES.append('atlas90-weapons.html?world=story')
+# Atlas 19.1: every deployable root HTML page must be covered, including
+# archive/secondary tools omitted from the earlier hand-maintained list.
+PAGES.extend(p.name for p in sorted(ROOT.glob('*.html')) if p.name not in PAGES)
+assert {p.name for p in ROOT.glob('*.html')} <= {p.split('?')[0] for p in PAGES}
+
+# Release-candidate completeness: do not let newly added/older public pages fall
+# through the cracks just because an earlier manual smoke list missed them.
+# Preserve explicit query-state scenarios, then append every other published
+# top-level HTML page exactly once for desktop + phone browser load checks.
+AUDITED_PAGE_NAMES={p.split('?',1)[0] for p in PAGES}
+PAGES.extend(sorted(p.name for p in ROOT.glob('*.html') if p.name not in AUDITED_PAGE_NAMES))
+assert {p.name for p in ROOT.glob('*.html')}.issubset({p.split('?',1)[0] for p in PAGES})
+
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
     def log_message(self,*args):pass
 
+class AssetServer(http.server.ThreadingHTTPServer):
+    request_queue_size=32
+
 async def smoke():
     results=[]
-    with socketserver.TCPServer(('127.0.0.1',PORT),Server) as http:
+    with AssetServer(('127.0.0.1',PORT),Server) as http:
         thread=threading.Thread(target=http.serve_forever,daemon=True);thread.start()
         try:
             async with async_playwright() as pw:
@@ -36,18 +69,407 @@ async def smoke():
                         ctx=await browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
                         for path in PAGES:
                             pg=await ctx.new_page()
+                            if width==390 and path=='atlas.html':
+                                # Simulate a transient mobile Canvas allocation failure.
+                                # The real 2D engine must recover without a page reload.
+                                await pg.add_init_script("""(() => {
+                                  const original=HTMLCanvasElement.prototype.getContext;
+                                  let missed=2;
+                                  HTMLCanvasElement.prototype.getContext=function(kind,...args){
+                                    if(this.id==='atlasCanvas' && kind==='2d' && missed>0){
+                                      missed--;return null;
+                                    }
+                                    return original.call(this,kind,...args);
+                                  };
+                                })()""")
                             errors=[];missing=[]
                             pg.on('pageerror',lambda err:errors.append((getattr(err,'stack',None) or str(err))[:700]))
                             pg.on('response',lambda r:missing.append(r.url) if r.status>=400 and r.url.startswith(URL+'/') else None)
                             response=await pg.goto(URL+'/'+path,wait_until='domcontentloaded',timeout=25000)
                             await pg.wait_for_timeout(800)
-                            info=await pg.evaluate('''() => ({title:document.title, h1:document.querySelector('h1')?.textContent?.trim(),scroll:document.documentElement.scrollWidth, width:window.innerWidth})''')
+                            # Record first-load scroll before Playwright scrolls into off-screen
+                            # sidebar and category controls further down this test.
+                            initial_map_scroll=await pg.evaluate('window.scrollY') if width==390 and path in ('atlas.html','atlas-online.html','atlas-vi.html') else 0
+                            info=await pg.evaluate('''() => {
+ const controls=[...document.querySelectorAll('button,input:not([type=hidden]),select,textarea,[role=button]')];
+ const unlabeled=controls.filter(el => {
+   const aria=el.getAttribute('aria-label')||el.getAttribute('aria-labelledby')||el.title||'';
+   const text=el.textContent?.trim()||el.value||'';
+   const wrapping=el.closest('label')?.textContent?.trim()||'';
+   return !(aria||text||wrapping||el.labels?.length);
+ }).map(el=>({tag:el.tagName,id:el.id||'',type:el.type||''})).slice(0,8);
+ return {title:document.title,h1:document.querySelector('h1')?.textContent?.trim(),
+   scroll:document.documentElement.scrollWidth,width:window.innerWidth,
+   controls:controls.length,unlabeledCount:unlabeled.length,unlabeled};
+}''')
                             failures=[]
                             if not response or response.status!=200:failures.append('HTTP page response not 200')
                             if not info.get('title') or not info.get('h1'):failures.append('Missing page title or heading')
                             if errors:failures.extend('JS: '+e for e in errors)
                             if missing:failures.extend('Missing local response: '+e for e in missing)
-                            if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
+                            # Guard the actual document width on every production route.
+                            if width==390 and info['scroll']>info['width']+1:
+                                offenders=await pg.evaluate("""() => {
+                                  const vw=innerWidth;
+                                  return [...document.body.querySelectorAll('*')].map(el=>{
+                                    const r=el.getBoundingClientRect();
+                                    return {tag:el.tagName.toLowerCase(),id:el.id||'',
+                                      cls:String(el.className?.baseVal||el.className||'').slice(0,65),
+                                      left:Math.round(r.left),right:Math.round(r.right)};
+                                  }).filter(x=>x.left<vw&&x.right>vw+8)
+                                    .sort((a,b)=>b.right-a.right).slice(0,6);
+                                }""")
+                                failures.append(f"Atlas 19.9 mobile horizontal overflow {path}: "
+                                                f"{info['scroll']}/{info['width']} offenders={offenders}")
+
+                            # Site-wide release candidate: the ONE universal page-directory
+                            # button must actually open, filter, and dismiss on *every*
+                            # published page. This is an interaction, not a source assertion.
+                            if not failures:
+                                try:
+                                    nav=pg.locator('#j132-nav-toggle')
+                                    await nav.wait_for(state='visible',timeout=4500)
+                                    await nav.click(timeout=4500)
+                                    drawer=pg.locator('#j132-nav-drawer')
+                                    if not await drawer.is_visible():
+                                        failures.append('All Pages button did not open navigation')
+                                    else:
+                                        if path.startswith('map-hub.html?game=') or path=='atlas93-garage.html':
+                                            active=drawer.locator('a[aria-current="page"]')
+                                            if await active.count()!=1 or await active.get_attribute('href')!='./'+path:
+                                                failures.append('Directory current destination does not match '+path)
+                                        await pg.locator('#j132-search').fill('My Garage')
+                                        if await drawer.locator('a[href="./atlas93-garage.html"]').count()!=1:
+                                            failures.append('All Pages search omitted My Garage')
+                                        await pg.keyboard.press('Escape')
+                                        if await drawer.is_visible():
+                                            failures.append('All Pages Escape did not dismiss navigation')
+                                        if await nav.get_attribute('aria-expanded')!='false':
+                                            failures.append('All Pages button did not reset aria-expanded')
+                                except Exception as ex:
+                                    failures.append('All Pages universal control failed: '+str(ex)[:200])
+
+                            # Release 19.1: actual player actions on the tool pages
+                            # that had previously escaped the page-by-page smoke list.
+                            # Every page has its own browser context; test data is not
+                            # sent to a user account or the shared canonical Atlas.
+                            if not failures and path in ('atlas90-vehicles5.html','atlas90-vehicles6.html','atlas90-weapons.html'):
+                                try:
+                                    await pg.locator('#j90Cards').wait_for(timeout=7000)
+                                    await pg.wait_for_function("document.querySelector('#j90Results')?.textContent?.includes('visible')",timeout=9000)
+                                    card=pg.locator('#j90Cards .j90-card').first
+                                    # An earlier Garage action can already own this model.
+                                    # Verify both directions from the actual saved state.
+                                    for off,on in (('+ Collect','✓ Collected'),('☆ Wishlist','★ Wanted'),('+ Compare','✓ Compare')):
+                                        inactive=card.get_by_role('button',name=off,exact=True)
+                                        active=card.get_by_role('button',name=on,exact=True)
+                                        before,after=(inactive,active) if await inactive.count() else (active,inactive)
+                                        original=await before.get_attribute('aria-pressed')
+                                        await before.click()
+                                        if await after.get_attribute('aria-pressed')==original:
+                                            failures.append('Gallery action did not toggle: '+off)
+                                        await after.click()
+                                        if await before.get_attribute('aria-pressed')!=original:
+                                            failures.append('Gallery action did not restore: '+off)
+                                    if path=='atlas90-vehicles6.html' and await card.locator('img').get_attribute('src')!='./art/jura161-vehicles6.webp':
+                                        failures.append('VI gallery displayed out-of-world imagery')
+                                    await pg.locator('#j90Search').fill('zzx-nonexistent-atlas-marker')
+                                    if '0 visible' not in await pg.locator('#j90Results').inner_text():
+                                        failures.append('Gallery search failed to apply an empty-result filter')
+                                    await pg.locator('#j90Search').fill('')
+                                    if 'zzx-nonexistent-atlas-marker' in await pg.locator('#j90Search').input_value():
+                                        failures.append('Gallery search did not clear')
+                                except Exception as err:
+                                    failures.append('Vehicle/weapon gallery search failed: '+str(err)[:190])
+                            if not failures and path=='my-crew.html':
+                                try:
+                                    await pg.locator('#crewName').fill('Team Jura QA')
+                                    await pg.locator('#crewForm button[type="submit"]').click()
+                                    if 'Team Jura QA' not in await pg.locator('#cardName').inner_text():
+                                        failures.append('My Crew save failed to update the visible crew card')
+                                    await pg.locator('#taskInput').fill('Test a private crew plan')
+                                    await pg.locator('#taskForm button[type="submit"]').click()
+                                    if await pg.locator('#taskList li').count()!=1:
+                                        failures.append('My Crew add-task action failed')
+                                    await pg.reload(wait_until='domcontentloaded')
+                                    if 'Team Jura QA' not in await pg.locator('#cardName').inner_text() or await pg.locator('#taskList li').count()!=1:
+                                        failures.append('My Crew browser refresh lost locally saved crew/task')
+                                except Exception as err:
+                                    failures.append('My Crew save and reload workflow failed: '+str(err)[:190])
+                            if not failures and path=='atlas-coverage.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#j195-status')?.textContent?.includes('unique landmark research entries')",timeout=12000)
+                                    await pg.locator('#j195-world').select_option('6')
+                                    expected_vi_count=json.loads((ROOT/'data/gtadb-6-manifest.json').read_text(encoding='utf-8'))['count']
+                                    if f'{expected_vi_count:,} unique' not in await pg.locator('#j195-status').inner_text():
+                                        failures.append('Local GTA VI research source count is inaccurate')
+                                    await pg.locator('#j195-search').fill('residential')
+                                    if await pg.locator('#j195-rows tr').count()<1:
+                                        failures.append('Source-tag filter failed')
+                                    if await pg.locator('#j195-export').is_disabled():
+                                        failures.append('Source-tag CSV export not interactive')
+                                except Exception as err:
+                                    failures.append('Local per-world source-tag audit: '+str(err)[:220])
+                            if not failures and path=='atlas93-dispatch.html':
+                                try:
+                                    await pg.locator('#dispatchCards article').first.wait_for(timeout=7000)
+                                    mark=pg.locator('#dispatchCards article button').first
+                                    await mark.click()
+                                    if 'Done today' not in await mark.inner_text():
+                                        failures.append('Dispatch card did not mark a task completed')
+                                    await pg.locator('#dispatchReset').click()
+                                    if 'Mark done' not in await pg.locator('#dispatchCards article button').first.inner_text():
+                                        failures.append('Dispatch reset did not clear the daily task flag')
+                                except Exception as err:
+                                    failures.append('Daily Dispatch actions failed: '+str(err)[:190])
+                            if not failures and path=='atlas-collectibles.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#universeStatus')?.textContent?.startsWith('Indexed ')",timeout=13000)
+                                    await pg.locator('#universeSearch').fill('zzx-nonexistent-atlas-marker')
+                                    await pg.locator('#clearFilters').click()
+                                    if await pg.locator('#universeSearch').input_value():
+                                        failures.append('Collectibles clear-filters action did not clear the search')
+                                    await pg.locator('#listView').click()
+                                    if await pg.locator('#listView').get_attribute('aria-pressed')!='true':
+                                        failures.append('Collectibles list-view action did not activate')
+                                except Exception as err:
+                                    failures.append('Collectibles search/list actions failed: '+str(err)[:190])
+
+                            # Atlas 19.2: actual game-separated weapon, garage and film
+                            # interactions, tested on desktop and on a phone-sized viewport.
+                            if not failures and path=='atlas90-weapons.html?world=story':
+                                try:
+                                    await pg.wait_for_function("document.querySelector('#j90Results')?.textContent?.includes('visible')",timeout=9000)
+                                    if await pg.locator('body').get_attribute('data-active-world')!='story':
+                                        failures.append('Story weapon page silently opened GTA Online mode')
+                                    if 'Story' not in await pg.locator('#j90Header').inner_text():
+                                        failures.append('Story armory heading lacks game identity')
+                                    await pg.locator('#j90Cards .j90-card button').first.click()
+                                    scoped=await pg.evaluate("""() => {
+                                     const x=JSON.parse(localStorage.getItem('team-jura-atlas90-collection-v1')||'{}');
+                                     return Object.keys(x.owned||{}).filter(k=>k.startsWith('weapons-story:')&&x.owned[k]).length
+                                    }""")
+                                    if scoped<1:
+                                        failures.append('GTA V Story tracking did not use a separate save key')
+                                except Exception as err:
+                                    failures.append('Story armory scope/collection failed: '+str(err)[:220])
+                            if not failures and path=='atlas90-weapons6.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelectorAll('#viWeaponCards .viweapon-card').length===7",timeout=10000)
+                                    if await pg.locator('#viWeaponClass option').count()<3:
+                                        failures.append('GTA VI weapon classes did not load from source evidence')
+                                    await pg.locator('#viWeaponSearch').fill('Girardi')
+                                    if await pg.locator('#viWeaponCards .viweapon-card').count()!=1:
+                                        failures.append('GTA VI armory search did not isolate Girardi evidence')
+                                    await pg.locator('#viWeaponCards .viweapon-note').click()
+                                    notes=await pg.evaluate("JSON.parse(localStorage.getItem('teamjura-vi-weapon-notes-v1')||'{}')")
+                                    if not notes.get('seen',{}).get('girardi-es9'):
+                                        failures.append('GTA VI weapon review did not persist to its own storage key')
+                                    await pg.reload(wait_until='domcontentloaded')
+                                    await pg.wait_for_function("document.querySelectorAll('#viWeaponCards .viweapon-card').length===7",timeout=10000)
+                                    await pg.locator('#viWeaponSearch').fill('Girardi')
+                                    if await pg.locator('.viweapon-note').get_attribute('aria-pressed')!='true':
+                                        failures.append('GTA VI weapon review lost on refresh')
+                                    if await pg.locator('#viWeaponCards img').count()!=0:
+                                        failures.append('GTA VI weapons unexpectedly display recycled GTA V archive images')
+                                except Exception as err:
+                                    failures.append('GTA VI armory interactive checks failed: '+str(err)[:220])
+                            if not failures and path=='atlas93-garage.html':
+                                try:
+                                    await pg.wait_for_function("Number(document.querySelector('#catalogCount')?.textContent.replace(/,/g,''))>10",timeout=10000)
+                                    await pg.locator('#showAll').click()
+                                    if await pg.locator('#garageCards .card').count()==0 and await pg.locator('#garageCards article').count()==0:
+                                        failures.append('Garage All models button did not show the picture catalog')
+                                    if await pg.locator('#garageClassFilter option').count()<3:
+                                        failures.append('Garage categories did not load')
+                                    await pg.locator('#j96-model').select_option('adder')
+                                    await pg.locator('#j96-plate').fill('JURA-QA')
+                                    await pg.locator('#j96-save').click()
+                                    row=pg.locator('#j96-ledger .j96-row').filter(has_text='JURA-QA')
+                                    await row.get_by_role('button',name='Edit').click()
+                                    await pg.locator('#j96-plate').fill('UNSAVED')
+                                    await pg.locator('#j96-cancel').click()
+                                    await row.get_by_role('button',name='Edit').click()
+                                    if await pg.locator('#j96-plate').input_value()!='JURA-QA':
+                                        failures.append('Cancel edit overwrote the saved parking record')
+                                    await pg.locator('#j96-plate').fill('JURA-OK')
+                                    await pg.locator('#j96-save').click()
+                                    await pg.reload(wait_until='domcontentloaded')
+                                    await pg.locator('#j96-ledger .j96-row').filter(has_text='JURA-OK').wait_for()
+                                    if await pg.locator('#j96-ledger .j96-row').count()!=1:
+                                        failures.append('Editing a parked vehicle added a duplicate instance')
+
+                                except Exception as err:
+                                    failures.append('Garage model browse checks failed: '+str(err)[:210])
+                            if not failures and path=='one-last-ride.html':
+                                try:
+                                    await pg.wait_for_function("document.querySelectorAll('#olrSceneList .olr-scene-btn').length===9",timeout=7000)
+                                    play=pg.locator('#olrStoryboardPlay')
+                                    await play.click()
+                                    if await play.get_attribute('aria-pressed')!='true':
+                                        failures.append('Guided storyboard did not start')
+                                    await pg.locator('#olrNext').click()
+                                    if await pg.locator('#olrStoryboardProgress').get_attribute('value')!='2':
+                                        failures.append('Storyboard did not track selected chapter')
+                                    await pg.locator('#olrStoryboardRestart').click()
+                                    if await pg.locator('#sceneCounter').inner_text()!='1 / 9':
+                                        failures.append('Storyboard reset did not restore first chapter')
+                                    if await play.get_attribute('aria-pressed')!='false':
+                                        failures.append('Storyboard reset kept background playback active')
+                                except Exception as err:
+                                    failures.append('One Last Ride storyboard controls failed: '+str(err)[:210])
+
+                            # Atlas 17.2: the separate Leonida Research page must be usable
+                            # on an actual mobile viewport, with a reversible full-size map.
+                            if path=='atlas-research.html' and not failures:
+                                try:
+                                    await pg.locator('#j172-research-tools').wait_for(timeout=7000)
+                                    await pg.locator('#j172-bright').click()
+                                    if await pg.locator('#j172-bright').get_attribute('aria-pressed')!='true':
+                                        failures.append('Research map brightness button did not toggle')
+                                    await pg.locator('#j172-expand').click()
+                                    if not await pg.locator('#maparea').evaluate("(n) => n.classList.contains('j172-full-map')"):
+                                        failures.append('Research map did not expand')
+                                    await pg.keyboard.press('Escape')
+                                    if await pg.locator('#maparea').evaluate("(n) => n.classList.contains('j172-full-map')"):
+                                        failures.append('Research map Escape did not restore view')
+                                except Exception as err:
+                                    failures.append('Research map display controls failed: '+str(err)[:180])
+                            
+                            # Atlas 19.5: the Cayo 18.6 island/route view replaces the
+                            # retired 16.4/16.9 panels. Test actual public controls;
+                            # separate focused Cayo acceptance covers route order, saves,
+                            # presets and every filter/pin interaction in two browsers.
+                            if path=='heist-cayo-perico.html' and not failures:
+                                try:
+                                    await pg.locator('#j186-route').wait_for(state='visible',timeout=14000)
+                                    if not await pg.locator('.j180-map-frame').is_visible():
+                                        failures.append('Current Cayo island workspace is not visible')
+                                    if await pg.locator('.j186-filter').count()!=14:
+                                        failures.append('Cayo map/route categories do not match all 14 legend filters')
+                                    if await pg.locator('.j181-hotspot').count()<12:
+                                        failures.append('Current Cayo island markers are missing')
+                                    if not await pg.evaluate("Boolean(window.teamJuraCayoPinRoute?.getState)"):
+                                        failures.append('Cayo route state API is unavailable')
+                                    if await pg.locator('.j186-route-layer').count()!=1:
+                                        failures.append('Cayo route overlay is detached from island map')
+                                    if await pg.locator('#j169-views').is_visible():
+                                        failures.append('Retired duplicate 16.9 Cayo view controls still visible')
+                                except Exception as err:
+                                    failures.append('Cayo active island/route UI: '+str(err)[:320])
+
+                            # Atlas 16.4: interactive mission map is user-triggered; plans are local
+                            # and must not change the existing mission checklist storage.
+                            if path=='heist-fleeca.html' and not failures:
+                                try:
+                                    await pg.locator('#j164-mission-map').wait_for(state='attached',timeout=7000)
+                                    mission=path.removeprefix('heist-').removesuffix('.html')
+                                    # Atlas 16.7: each heist must show its own focused mission map
+                                    # before the optional regional world-map iframe.
+                                    await pg.locator('#j167-heist-map').wait_for(timeout=9000)
+                                    # Atlas 16.9: view tabs are mission-specific, save-safe and functional.
+                                    await pg.locator('#j169-views').wait_for(timeout=9000)
+                                    if await pg.locator('#j169-views .j169-view').count()!=(4 if path=='heist-cayo-perico.html' else 3):
+                                        failures.append('Wrong mission view count')
+                                    await pg.locator('#j169-views .j169-view[data-view="objective"]').click()
+                                    if not await pg.locator('#j169-objective').is_visible():
+                                        failures.append('Mission objective reference did not open')
+                                    if await pg.locator('#j169-objective .j169-objective-card').count()<1:
+                                        failures.append('Missing interactive objective POI cards')
+                                    await pg.locator('#j169-objective .j169-objective-card').first.click()
+                                    if not await pg.locator('#j167-heist-map .j167-viewport').is_visible():
+                                        failures.append('Objective POI failed to return to map')
+                                    if path=='heist-cayo-perico.html':
+                                        await pg.locator('#j169-views .j169-view[data-view="original"]').click()
+                                        # Atlas 17.0: Cayo ORIGINAL basemap is now the SAME interactive
+                                        # map viewport with POI pins, routes and controls—not an iframe.
+                                        if await pg.locator('#j169-original').is_visible():
+                                            failures.append('Legacy separate Cayo source panel unexpectedly visible')
+                                        if await pg.locator('#j169-cayo-frame').get_attribute('src'):
+                                            failures.append('Legacy Cayo source iframe unexpectedly loaded')
+                                        if not await pg.locator('#j167-heist-map .j167-viewport').is_visible():
+                                            failures.append('Cayo original map with interactive pins is missing')
+                                        if not await pg.evaluate("Boolean(window.teamJuraHeistBaseMap?.setSource)"):
+                                            failures.append('Cayo original basemap switcher is unavailable')
+                                        if await pg.locator('#j169-views [data-view="original"]').get_attribute('aria-pressed')!='true':
+                                            failures.append('Cayo combined original map tab did not activate')
+                                    await pg.locator('#j169-views .j169-view[data-view="route"]').click()
+                                    if not await pg.locator('#j167-heist-map .j167-viewport').is_visible():
+                                        failures.append('Route planning map did not reopen')
+                                    await pg.locator('#j169-views .j169-view[data-view="enhanced"]').click()
+                                    # Atlas 16.8: the visible heist map and the source-informed
+                                    # five-question guide must coexist without changing older save keys.
+                                    await pg.locator('#j168-heist-guide').wait_for(timeout=9000)
+                                    if await pg.locator('#j168-heist-guide .j168-fields dt').all_inner_texts()!=['What','When','Where','Why','How']:
+                                        failures.append('Walkthrough does not explain What, When, Where, Why and How')
+                                    await pg.locator('#j168-heist-guide .j168-tab').filter(has_text='Preps').click()
+                                    if await pg.locator('#j168-heist-guide .j168-step').count()<1:
+                                        failures.append('Source-informed heist preparations missing')
+                                    else:
+                                        await pg.locator('#j168-heist-guide .j168-step').first.click()
+                                        await pg.locator('#j168-heist-guide .j168-done').click()
+                                        done=await pg.evaluate("""() => JSON.parse(localStorage.getItem('teamjura-heist-walkthrough-v1:'+document.body.dataset.heist)||'{}').done""")
+                                        if not isinstance(done,list) or not done:
+                                            failures.append('New heist walkthrough completion was not saved locally')
+                                        if await pg.locator('#j168-heist-guide .j168-map').count():
+                                            await pg.locator('#j168-heist-guide .j168-map').click()
+                                            field=await pg.locator('#j167-heist-map .j167-search').input_value()
+                                            if not field:
+                                                failures.append('Walkthrough map POI button did not filter the focused map')
+                                            # Restore all markers for the independent map-coverage checks below.
+                                            await pg.locator('#j167-heist-map .j167-search').fill('')
+                                    await pg.wait_for_function("""() => /jura167-map-|wikiassets/.test(getComputedStyle(document.querySelector('#j167-heist-map .j167-world')).backgroundImage)""",timeout=9000)
+                                    pins=pg.locator('#j167-heist-map .j167-pin')
+                                    if await pins.count()<5:
+                                        failures.append('Focused mission map has fewer than five accessible POI pins')
+                                    if await pg.locator('#j167-heist-map canvas.j167-canvas').count()!=1:
+                                        failures.append('Focused custom mission map canvas missing')
+                                    if await pg.locator('#j167-heist-map .j167-tool').count()<3:
+                                        failures.append('Mission map zoom and Fit controls missing')
+                                    await pg.locator('#j167-heist-map .j167-tool').filter(has_text='+').first.click()
+                                    z=await pg.locator('#j167-heist-map .j167-scale').inner_text()
+                                    if z.strip()=='1.0×':
+                                        failures.append('Focused mission zoom did not advance')
+                                    await pg.locator('#j167-heist-map .j167-tool').filter(has_text='Fit').click()
+                                    z=await pg.locator('#j167-heist-map .j167-scale').inner_text()
+                                    if z.strip()!='1.0×':
+                                        failures.append('Focused mission map Fit did not reset')
+                                    await pins.first.click()
+                                    await pg.locator('#j167-heist-map .j167-detail-actions .j167-primary').click()
+                                    route=await pg.evaluate("""() => JSON.parse(localStorage.getItem('teamjura-heist-focus-v1:'+document.body.dataset.heist)||'{}').route""")
+                                    if not route or len(route)<1:
+                                        failures.append('New mission-specific route did not save locally')
+                                    await pg.locator('#j167-heist-map .j167-detail-actions .j167-secondary').click()
+                                    scoped=await pg.evaluate("""() => JSON.parse(localStorage.getItem('teamjura-heist-focus-v1:'+document.body.dataset.heist)||'{}').scoped""")
+                                    if not scoped or len(scoped)<1:
+                                        failures.append('Mission-specific scoped POI did not persist')
+                                    if mission=='cayo-perico':
+                                        if await pg.locator('#j167-heist-map a[href="./atlas-cayo.html"]').count()!=1:
+                                            failures.append('Cayo island original-map and scoping source is not linked')
+                                    actual_art=await pg.locator('.mapbox > img').get_attribute('src')
+                                    mission=path.removeprefix('heist-').removesuffix('.html')
+                                    if actual_art!='./art/jura159-heist-'+mission+'.webp':
+                                        failures.append('Mission artwork regressed to legacy image: '+str(actual_art))
+                                    await pg.locator('.j164-notes textarea').first.fill('Atlas 16.4 real-browser saved test')
+                                    saved=await pg.evaluate("""() => localStorage.getItem('teamjura-heist-plan-v1:'+document.body.dataset.heist)""")
+                                    if not saved or 'real-browser saved test' not in saved:
+                                        failures.append('Heist personal note did not persist locally')
+                                    await pg.locator('.j164-main').click()
+                                    frame=pg.locator('#j164-map-frame')
+                                    if not await frame.is_visible():
+                                        failures.append('Embedded world map did not open')
+                                    expect='./atlas-cayo.html' if mission=='cayo-perico' else './atlas-online.html'
+                                    if await frame.get_attribute('src')!=expect:
+                                        failures.append('Wrong game map loaded in mission workspace')
+                                    await pg.locator('.j164-main').click()
+                                    if await frame.is_visible():
+                                        failures.append('Embedded map failed to close')
+                                    progress=await pg.evaluate("""() => localStorage.getItem('teamjura-heist-'+document.body.dataset.heist)""")
+                                    if progress is None:
+                                        failures.append('Existing checklist key was not preserved')
+                                except Exception as e:
+                                    failures.append('Heist real-map and local note UI: '+str(e)[:330])
+
                             if not failures and path in ('atlas-cheats.html','atlas-news.html'):
                                 try:
                                     await pg.wait_for_function("document.querySelector('#hubCount')?.textContent?.includes('snapshot ')",timeout=8000)
@@ -64,6 +486,34 @@ async def smoke():
                                         await pg.locator('#hubSearch').fill('')
                                         if await pg.locator('#hubCards .h-card').count()<6:
                                             failures.append('Classic San Andreas cheats missing')
+                                        # Every handheld world should load correct platform-specific codes.
+                                        await pg.locator('#hubGame').select_option('ctw')
+                                        if await pg.locator('#hubPlatform').input_value()!='nds':
+                                            failures.append('Chinatown Wars did not select Nintendo DS by default')
+                                        if await pg.locator('#hubCards .h-card').count()!=16:
+                                            failures.append('Chinatown Wars DS game-specific button codes missing')
+                                        ds_health=await pg.locator('#hubCards .h-card').filter(has_text='Restore health and armor').first.locator('code').inner_text()
+                                        if 'A' not in ds_health or 'B' not in ds_health:
+                                            failures.append('Chinatown Wars DS code uses wrong button alphabet')
+                                        await pg.locator('#hubPlatform').select_option('mobile')
+                                        if await pg.locator('#hubCards .h-card').count()!=15:
+                                            failures.append('Chinatown Wars mobile whiteboard codes missing')
+                                        if await pg.locator('#hubCards .h-card').filter(has_text='Restore health and armor').first.locator('code').inner_text()!='LIFEUP':
+                                            failures.append('Chinatown Wars whiteboard code mismatch')
+                                        await pg.locator('#hubGame').select_option('lcs')
+                                        if await pg.locator('#hubPlatform').input_value()!='psp':
+                                            failures.append('Liberty City Stories did not switch to PSP')
+                                        if await pg.locator('#hubCards .h-card').count()!=11:
+                                            failures.append('Liberty City Stories PSP codes missing')
+                                        await pg.locator('#hubGame').select_option('vcs')
+                                        if await pg.locator('#hubCards .h-card').count()!=11:
+                                            failures.append('Vice City Stories PSP codes missing')
+                                        await pg.locator('#hubPlatform').select_option('ps2')
+                                        if await pg.locator('#hubCards .h-card').count()!=11:
+                                            failures.append('Vice City Stories PS2 codes missing')
+                                        await pg.locator('#hubGame').select_option('story')
+                                        if await pg.locator('#hubPlatform').input_value()!='pc':
+                                            failures.append('Cheat platform did not reset from Stories to PC for GTA V')
                                     else:
                                         if await pg.locator('#hubCards .h-card').count()<3:
                                             failures.append('Official VI news sources not loaded')
@@ -120,6 +570,43 @@ async def smoke():
                                             failures.append('Individual record detail dialog failed to open')
                                         else:
                                             await pg.locator('#recordDialog .u-close').click()
+                                    if path=='atlas-collectibles.html':
+                                        await pg.locator('#universeSearch').fill('Spaceship Parts')
+                                        await pg.get_by_role('button',name='Spaceship Parts',exact=True).click()
+                                        collection_link=pg.get_by_role('link',name='Open collection on map')
+                                        href=await collection_link.get_attribute('href')
+                                        if href!='./atlas.html?collection=story-spaceship-parts':
+                                            failures.append('Collection detail did not point to the right Story set')
+                                        else:
+                                            target=await ctx.new_page()
+                                            try:
+                                                story_fixture=[{
+                                                    'id':i+1,'title':f'Fixture part {i+1}',
+                                                    'type':'Spaceship Part','lat':60,'lng':-125
+                                                } for i in range(276)]
+                                                async def serve_story_fixture(route):
+                                                    await route.fulfill(json=story_fixture,headers={'access-control-allow-origin':'*'})
+                                                await target.route('https://raw.githubusercontent.com/danharper/GTAV/master/locations.json',serve_story_fixture)
+                                                await target.goto(URL+'/'+href.removeprefix('./'),wait_until='domcontentloaded')
+                                                await target.wait_for_function(
+                                                    "() => document.querySelector('#j83-set')?.value==='story-spaceship-parts'",
+                                                    timeout=10000)
+                                                if not await target.locator('#j83-showset').is_enabled():
+                                                    failures.append('Mapped Spaceship Parts lost access to map pins')
+                                            finally:
+                                                await target.close()
+                                        await pg.locator('#recordDialog .u-close').click()
+                                    if path=='atlas-characters.html':
+                                        portrait=pg.locator('#recordGrid .u-card').first
+                                        if await portrait.locator('a.u-portrait-source').count()!=1:
+                                            failures.append('Character image source credit not visible on its card')
+                                        art=portrait.locator('.u-image-character')
+                                        if await art.locator('img').count():
+                                            await art.locator('img').first.evaluate("(el)=>el.dispatchEvent(new Event('error'))")
+                                        if await art.locator('.u-character-portrait').count()!=1:
+                                            failures.append('Character broken-image fallback must be original portrait, not initials')
+                                        if 'NOT GAME ART' not in (await art.locator('.u-image-note').inner_text()):
+                                            failures.append('Original character fallback does not disclose illustrative artwork')
                                     if path=='atlas-database.html':
                                         await pg.locator('#filterKind').select_option('vehicle')
                                         if await pg.locator('#recordGrid .u-card').count()<2:
@@ -136,32 +623,302 @@ async def smoke():
                                                         failures.append('Comparison panel failed to open')
                                                     await pg.locator('#compareDialog .u-close').click()
                                                 else:failures.append('Comparison selection did not enable Compare')
+                                        await pg.locator('[data-world="vi"]').click()
+                                        group_select=pg.locator('#filterGroup')
+                                        group=await group_select.locator('option').nth(1).get_attribute('value')
+                                        await group_select.select_option(group)
+                                        await pg.locator('#sortBy').select_option('name-desc')
+                                        await pg.locator('#researchOnly').check()
+                                        await pg.locator('#listView').click()
+                                        shared=await ctx.new_page()
+                                        try:
+                                            await shared.goto(pg.url,wait_until='domcontentloaded')
+                                            await shared.wait_for_function(
+                                                "() => document.querySelector('#recordGrid').classList.contains('u-list')")
+                                            state=await shared.evaluate("""() => [
+                                                document.querySelector('#filterGame').value,
+                                                document.querySelector('#filterGroup').value,
+                                                document.querySelector('#sortBy').value,
+                                                document.querySelector('#researchOnly').checked
+                                            ]""")
+                                            if state!=['vi',group,'name-desc',True]:
+                                                failures.append('Shared database URL did not restore world, group, sort and research filter')
+                                        finally:
+                                            await shared.close()
                                         await pg.locator('#universeSearch').fill('unlikely-jura-000000')
                                         if await pg.locator('#recordGrid .u-card').count()!=0:
                                             failures.append('Universe search did not filter results')
                                 except Exception as exc:
                                     failures.append('Universe catalog browser interaction failed: '+str(exc)[:450])
+                            if not failures and path=='atlas-vi.html':
+                                try:
+                                    docked=pg.locator('#sidebar .j86-mapviews')
+                                    if await docked.count()!=1:
+                                        failures.append('Leonida view controls must be in the existing left map sidebar')
+                                    else:
+                                        outer=await pg.locator('#sidebar').bounding_box()
+                                        inner=await docked.bounding_box()
+                                        if not outer or not inner or inner['x']<outer['x']-3 or inner['x']+inner['width']>outer['x']+outer['width']+3:
+                                            failures.append('Leonida map view control panel is clipped outside the sidebar')
+                                        if await docked.locator('button[data-view]').count()<5:
+                                            failures.append('Moving Leonida map controls lost native view switches')
+                                        names=await docked.locator('button[data-view]').all_inner_texts()
+                                        if len(names)!=len(set(names)):
+                                            failures.append('Leonida map view buttons contain indistinguishable duplicate labels')
+                                        if not any('Loki' in n for n in names) or not any('DUPZOR' in n and 'Source' in n for n in names):
+                                            failures.append('Styled Loki and original DUPZOR views must be distinguishable')
+                                    if await pg.locator('#sidebar .j145-open-map').count()!=1:
+                                        failures.append('Accessible jump to interactive Leonida map is missing')
+                                    # Initial mobile scroll is asserted above, before map controls are interacted with.
+                                    if await pg.locator('.mapcontrols .j141-official-flat').count()!=0:
+                                        failures.append('Duplicate Rockstar flat-link still competing with the functional map viewer')
+                                    # The VI source panel can legitimately include another link to the same
+                                    # Rockstar media page. Validate the dedicated source link, not total count.
+                                    if await pg.locator('#sidebar p.hint a[href="https://www.rockstargames.com/VI/media"]').count()!=1:
+                                        failures.append('Dedicated Rockstar printable-map source link missing from research sidebar')
+                                    official=pg.locator('#j143-official-button')
+                                    if await official.count()!=1:
+                                        failures.append('Official Rockstar map is not selectable inside the Leonida map')
+                                    else:
+                                        async def unexpected_poster_request(route):
+                                            failures.append('A cached Rockstar map made another network request')
+                                            await route.abort()
+                                        # The official printable ZIP contains a CMYK JPEG.
+                                        poster_jpeg=base64.b64decode('/9j/7gAOQWRvYmUAZAAAAAAA/9sAQwAIBgYHBgUIBwcHCQkICgwUDQwLCwwZEhMPFB0aHx4dGhwcICQuJyAiLCMcHCg3KSwwMTQ0NB8nOT04MjwuMzQy/8AAFAgABgAEBEMRAE0RAFkRAEsRAP/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/aAA4EQwBNAFkASwAAPwD2uu5r3+vda//Z')
+                                        zipped=io.BytesIO()
+                                        with zipfile.ZipFile(zipped,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+                                            archive.writestr('Leonida_Map_Poster_Printable.jpg',poster_jpeg)
+                                        official_zip='https://media-rockstargames-com.akamaized.net/VI/downloads/artwork_wallpapers/Leonida_Map_Poster_Printable.zip'
+                                        async def serve_official_zip(route):
+                                            await route.fulfill(status=200,headers={
+                                                'access-control-allow-origin':'*',
+                                                'content-type':'application/zip'},body=zipped.getvalue())
+                                        async def unavailable_poster(route):
+                                            await route.fulfill(status=503,headers={'access-control-allow-origin':'*'})
+                                        await pg.route(official_zip,unavailable_poster,times=1)
+                                        await official.click()
+                                        retry=pg.locator('[data-j143="fetch"]')
+                                        await retry.wait_for(state='visible',timeout=7000)
+                                        download=pg.locator('#j143-official-layer .j143-foot a',has_text='Download GTA VI map (ZIP)')
+                                        if await download.get_attribute('href')!=official_zip:
+                                            failures.append('Optional GTA VI download does not link to Rockstar’s printable map')
+                                        await pg.route(official_zip,serve_official_zip)
+                                        await retry.click()
+                                        await pg.wait_for_function(
+                                            "() => document.querySelector('.j143-status')?.textContent?.includes('Official map saved')"
+                                            " || document.querySelector('.j143-status')?.textContent?.includes('Map open for this visit')",
+                                            timeout=7000)
+                                        if not await pg.locator('.j143-poster').is_visible():
+                                            failures.append('Rockstar map did not load after retry')
+                                        restored=await ctx.new_page()
+                                        try:
+                                            cached='Official map saved' in await pg.locator('.j143-status').inner_text()
+                                            await restored.route('https://media-rockstargames-com.akamaized.net/VI/downloads/**',
+                                                                 unexpected_poster_request if cached else serve_official_zip)
+                                            await restored.goto(URL+'/atlas-vi.html?view=rockstar',wait_until='domcontentloaded')
+                                            await restored.locator('.j143-poster').wait_for(state='visible',timeout=7000)
+                                            await restored.locator('[data-j143="close"]').click()
+                                            if 'view=rockstar' in restored.url:
+                                                failures.append('Closing the linked poster left it selected in the URL')
+                                        finally:
+                                            await restored.close()
+                                        await pg.locator('#j143-official-layer [data-j143="forget"]').click()
+                                        await pg.locator('#j143-official-layer [data-j143="fetch"]').wait_for(state='visible',timeout=8000)
+                                        await pg.locator('.j143-empty input[type="file"]').set_input_files(
+                                            {'name':'invalid.jpg','mimeType':'image/jpeg','buffer':b'not an image'})
+                                        await pg.wait_for_function("""() => document.querySelector('.j143-status')
+                                            ?.textContent.includes('could not be displayed')""",timeout=7000)
+                                        if not await pg.locator('.j143-empty').is_visible():
+                                            failures.append('Invalid image hid the Rockstar download and retry controls')
+                                        await pg.locator('.j143-empty input[type="file"]').set_input_files(
+                                            {'name':'Leonida_Map_Poster_Printable.zip','mimeType':'application/zip','buffer':zipped.getvalue()})
+                                        await pg.wait_for_function("""() => {const img=document.querySelector('.j143-poster');
+                                            return img && !img.hidden && img.complete && img.naturalWidth > 0}""",timeout=9000)
+                                        if not await pg.locator('.j143-poster').is_visible():
+                                            failures.append('Rockstar ZIP file did not render inside our interactive map view')
+                                        await pg.locator('#j143-official-layer [data-j143="plus"]').click()
+                                        if 'scale(' not in (await pg.locator('.j143-poster').get_attribute('style') or ''):
+                                            failures.append('Official map zoom did not update image')
+                                        stage=pg.locator('.j143-stage')
+                                        await stage.press('0')
+                                        await stage.press('Equal')
+                                        if 'scale(1.3)' not in (await pg.locator('.j143-poster').get_attribute('style') or ''):
+                                            failures.append('Official map keyboard zoom did not update image')
+                                        if width==390:
+                                            await stage.press('0')
+                                            box=await stage.bounding_box()
+                                            cx=int(box['x']+box['width']/2)
+                                            cy=int(box['y']+box['height']/2)
+                                            touch=await ctx.new_cdp_session(pg)
+                                            await touch.send('Emulation.setTouchEmulationEnabled',{'enabled':True,'maxTouchPoints':2})
+                                            for event,spread in [('touchStart',22),('touchMove',60),('touchEnd',0)]:
+                                                points=[{'x':cx-spread,'y':cy,'id':1},{'x':cx+spread,'y':cy,'id':2}] if spread else []
+                                                await touch.send('Input.dispatchTouchEvent',{'type':event,'touchPoints':points})
+                                            await pg.wait_for_function("""() => new DOMMatrix(
+                                                getComputedStyle(document.querySelector('.j143-poster')).transform).a > 1.5""",timeout=5000)
+                                        await pg.locator('#j143-official-layer [data-j143="close"]').click()
+                                        if await pg.locator('#j143-official-layer').is_visible():
+                                            failures.append('Official map viewer cannot return to interactive map')
+                                        if not await pg.locator('#atlasCanvas').is_visible():
+                                            failures.append('Interactive GTA VI canvas was removed by official view')
+                                        await pg.evaluate("document.querySelector('#game5').click()")
+                                        if await official.is_visible():
+                                            failures.append('Official Leonida map button incorrectly shown in GTA V mode')
+                                        await pg.evaluate("document.querySelector('#game6').click()")
+                                        if not await official.is_visible():
+                                            failures.append('Official Leonida map button failed to return to GTA VI mode')
+                                except Exception as exc:
+                                    failures.append('Official Rockstar in-map view interaction failed: '+str(exc)[:350])
+                            if not failures and path in ('index.html','atlas-dashboard.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','atlas93-garage.html','atlas-share.html','one-last-ride.html'):
+                                icons=pg.locator('.j131-social-grid button[data-j131-platform]')
+                                try:
+                                    await pg.wait_for_function("document.querySelectorAll('.j131-social-grid button[data-j131-platform]').length===7",timeout=6000)
+                                except Exception:
+                                    failures.append('Seven clickable branded social icons did not render')
+                                if await icons.count()!=7:failures.append('Seven branded social icon buttons not present after ready')
+                                else:
+                                    actual=await icons.evaluate_all("(nodes)=>nodes.map(n=>n.getAttribute('data-j131-platform'))")
+                                    if actual!=['facebook','youtube','tiktok','instagram','discord','reddit','more']:failures.append('Social icon buttons use incorrect platform semantics')
+                                    if not await icons.first.is_visible():failures.append('Share icons not visible')
+                            if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html') and width==390:
+                                if await pg.locator('#sidebar .j145-open-map').count()!=1:
+                                    failures.append('Mobile explorer missing the visible Open interactive map shortcut')
+                                else:
+                                    if not await pg.locator('#sidebar .j145-open-map').is_visible():
+                                        failures.append('Mobile Open interactive map shortcut is not visible')
+                                    placed=await pg.locator('#sidebar .j145-open-map').evaluate(
+                                        """(link) => {
+                                            const heading=link.closest('#sidebar')?.querySelector('.atlas-explorer-head');
+                                            const games=link.closest('#sidebar')?.querySelector('.worlds');
+                                            return !!heading && !!games
+                                                && link.nextElementSibling===heading
+                                                && !!(games.compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING);
+                                        }""")
+                                    if not placed:
+                                        failures.append('Mobile Open interactive map shortcut must follow all game nav before explorer search')
+                                if initial_map_scroll>100:
+                                    failures.append('Mobile explorer opens scrolled into filters instead of showing the map: '+str(initial_map_scroll)+'px at initial load')
+                                nav=pg.locator('#j132-nav-toggle')
+                                if await nav.count()!=1 or not await nav.is_visible():failures.append('Mobile map all-pages navigation missing')
+                                else:
+                                    area=await nav.bounding_box()
+                                    if not area or area['width']<38:failures.append('Mobile map all-pages button lacks accessible size')
+                                    positioning=await nav.evaluate('(el)=>getComputedStyle(el.closest(".j132-nav")).position')
+                                    if positioning not in ('relative','static'):
+                                        failures.append('Mobile map all-pages control still floats above map content')
+                                    if path=='atlas.html':
+                                        maps=pg.locator('[data-j87-maps-link]')
+                                        if await maps.count()==1 and await maps.is_visible():
+                                            rect=await maps.bounding_box()
+                                            if rect and area and not (area['x']+area['width']<=rect['x'] or rect['x']+rect['width']<=area['x'] or area['y']+area['height']<=rect['y'] or rect['y']+rect['height']<=area['y']):
+                                                failures.append('Mobile map navigation overlaps All Maps shortcut')
+                                    await nav.click()
+                                    if not await pg.locator('#j132-nav-drawer').is_visible():failures.append('Map all-pages drawer did not open')
+                                    else:
+                                        await pg.locator('#j132-search').focus()
+                                        await pg.keyboard.press('Shift+Tab')
+                                        focus=await pg.evaluate("document.activeElement?.classList.contains('j132-close')")
+                                        if not focus:failures.append('Drawer focus did not cycle to Close on shift-tab')
+                                        await pg.keyboard.press('Escape')
+                                        if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Escape did not close map page drawer')
+                            if not failures and path in ('index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','one-last-ride.html'):
+                                global_nav=pg.locator('#j132-nav-toggle')
+                                if await global_nav.count()!=1:failures.append('Universal public page menu missing')
+                                else:
+                                    await global_nav.click()
+                                    if not await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot open')
+                                    await pg.locator('#j132-search').fill('garage')
+                                    if await pg.locator('#j132-groups a[href="./atlas93-garage.html"]').count()==0:failures.append('Universal page search did not find garage')
+                                    await pg.locator('.j132-close').click()
+                                    if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot close')
                             if not failures and path in ('index.html','maps.html'):
-                                start=pg.locator('a.j99-start-link[href="./atlas97-journey.html"]')
+                                dest='./atlas-dashboard.html' if path=='index.html' else './atlas97-journey.html'
+                                start=pg.locator('a.j99-start-link[href="'+dest+'"]')
                                 if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
                             if not failures and path=='index.html':
+                                if await pg.locator('a[href="./atlas-dashboard.html"]').count()==0:failures.append('Guest dashboard entry missing')
+                                if await pg.locator('[data-j130-action="share-page"]').count()==0:failures.append('Launch share action missing')
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Fewer than four flagship world cards')
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
+                            if not failures and path=='atlas-account.html':
+                                if await pg.locator('button[disabled]').count()<1:failures.append('Unconfigured sign-in must not collect credentials')
+                                if await pg.locator('#j131Export').count()!=1:failures.append('Atlas backup export missing')
+                                if await pg.locator('#j131Import').count()!=1:failures.append('Atlas backup restore input missing')
+                                try:
+                                    await pg.evaluate("localStorage.setItem('team-jura-passport-v74',JSON.stringify({test:3}))")
+                                    await pg.locator('#j131Export').click()
+                                    await pg.wait_for_function("document.querySelector('#j131ProgressStatus')?.textContent.includes('Backup exported')",timeout=2500)
+                                    before_review=await pg.evaluate("localStorage.getItem('team-jura-passport-v74')")
+                                    await pg.locator('#j144Review').click()
+                                    await pg.wait_for_function("document.querySelectorAll('#j144Entries li').length === 9",timeout=3000)
+                                    if await pg.locator('#j144Entries .j144-present').count()<1:
+                                        failures.append('Device progress review did not find saved Passport')
+                                    if 'No data was uploaded' not in await pg.locator('#j144Summary').inner_text():
+                                        failures.append('Device progress review must explicitly report no upload')
+                                    after_review=await pg.evaluate("localStorage.getItem('team-jura-passport-v74')")
+                                    if before_review!=after_review:
+                                        failures.append('Read-only local progress review modified stored data')
+                                except Exception as exc:
+                                    failures.append('Account backup export interaction failed: '+str(exc)[:300])
+                            if not failures and path=='atlas-dashboard.html':
+                                if await pg.locator('#featuredGrid a').count()<4:failures.append('Preserved dashboard missing four featured game cards')
+                                if await pg.locator('#progressCollections').count()!=1:failures.append('Dashboard progress tracker missing')
+                            if not failures and path=='atlas-share.html':
+                                if await pg.locator('.j130-share-stacks').count()!=0:failures.append('Legacy launch platform package is still present')
+                                if not await pg.locator('#shareCaptionText').input_value():failures.append('Launch caption not hydrated')
+                                await pg.locator('#shareCaptionText').fill('My own Team Jura launch caption')
+                                await pg.locator('[data-j130-action="copy-text"][data-kind="custom"]').click()
+                                try:
+                                    await pg.wait_for_function("!!document.querySelector('[data-j130-status]')?.textContent.trim()",timeout=3000)
+                                except Exception:
+                                    failures.append('Copy-caption interaction gave no feedback')
                             if not failures and path=='maps.html':
                                 if await pg.locator('#directoryFeatured a, #directoryAdditional a').count()!=13:failures.append('Directory should show exactly 13 worlds')
-                                covers=pg.locator('#directoryFeatured img,#directoryAdditional img')
-                                if await covers.count()!=13:failures.append('Map directory must render 13 distinct covers')
+                                covers=pg.locator('#directoryFeatured img.world-art-main,#directoryAdditional img.world-art-main')
+                                if await covers.count()!=13:failures.append('Map directory must render 13 distinct primary cover images')
                                 else:
-                                    await covers.evaluate_all("(imgs)=>imgs.forEach(x=>x.loading='eager')")
-                                    try:
-                                        await pg.wait_for_function("()=>[...document.querySelectorAll('#directoryFeatured img,#directoryAdditional img')].every(x=>x.complete&&x.naturalWidth>0)",timeout=14000)
-                                    except Exception:
-                                        failures.append('One or more Atlas cover assets did not decode on this device')
+                                    # Check each cover as the user scrolls through the directory.
+                                    for index in range(13):
+                                        cover=covers.nth(index)
+                                        try:
+                                            await cover.scroll_into_view_if_needed(timeout=6500)
+                                            await pg.wait_for_function("(i)=>{const el=document.querySelectorAll('#directoryFeatured img.world-art-main,#directoryAdditional img.world-art-main')[i];return !!el&&el.complete&&el.naturalWidth>0}",arg=index,timeout=8500)
+                                        except Exception as err:
+                                            src=await cover.get_attribute('src')
+                                            failures.append('Atlas cover failed to load on scroll: '+str(src)+' · '+str(err)[:115])
+                                            break
                                     urls=await covers.evaluate_all("(imgs)=>imgs.map(x=>x.getAttribute('src'))")
-                                    if len(set(urls))!=13:failures.append('Duplicate world cover used')
-                                    if len([x for x in urls if 'atlas106-' in x])!=7:
-                                        failures.append('Seven original classic-world artwork files not displayed')
+                                    if any(not u or not u.startswith('./art/') for u in urls):
+                                        failures.append('Map directory must load bundled source-cleared illustrations, not fragile third-party hotlinks')
+                                    # GTA IV and its two episodes legitimately share a Liberty City map;
+                                    # GTA V Story and Online similarly share the same game terrain.
+                                    # Ensure game-map imagery is loaded and not merely old placeholders.
+                                    if len(set(urls))<8:failures.append('Too few distinct game-world map artworks displayed')
+                                    if any('oldcity.svg' in x or 'sunset.svg' in x for x in urls):
+                                        failures.append('Legacy skyline artwork returned to map covers')
+                            if not failures and path=='atlas-sa.html':
+                                await pg.wait_for_function("document.querySelector('#mapped')?.textContent==='150'")
+                                for label in ['Graffiti Tags','Unique Stunt Jumps','Snapshots']:
+                                    await pg.locator('#categories button').filter(has_text=label).click()
+                                    status=pg.locator('#mapStatus')
+                                    if label=='Snapshots':
+                                        if '50 mapped' not in await status.inner_text():
+                                            failures.append('SA snapshot coverage count is incorrect')
+                                    elif '0 mapped' not in await status.inner_text() or await status.locator('a').count()!=1:
+                                        failures.append('SA guide-only collection lacks its coverage count or map reference')
+                            if not failures and path=='atlas-cayo.html':
+                                if await pg.locator('#j121Original').count()!=1 or await pg.locator('#j121Planner').count()!=1:
+                                    failures.append('Original Cayo game map and separate heist planning tabs missing')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
+                                header_hq=pg.locator('header.topbar nav a[href="./atlas81-hq.html"]')
+                                if await header_hq.count()!=1 or not await header_hq.first.is_visible():
+                                    failures.append('Map header must show exactly one Atlas HQ link')
+                                if not await pg.locator('body.j117-map-world').count():
+                                    failures.append('Current Elario flagship map brand missing')
+                                if await pg.locator('header.topbar img[src="./art/elario-crest.svg"]').count()!=1:
+                                    failures.append('Original Elario crest missing from active map')
+                                if 'ATLAS 9.3' in await pg.title():
+                                    failures.append('Retired map title presented as current Atlas')
                                 if await pg.locator('#atlasCanvas').count()==0:failures.append('Map canvas missing')
                                 try:
                                     await pg.wait_for_function("document.querySelector('#layer')?.options.length >= 2",timeout=6500)
@@ -185,17 +942,20 @@ async def smoke():
                                         first=pg.locator('#legend button.legend-choice').first
                                         await first.wait_for(state='visible',timeout=6500)
                                         await first.scroll_into_view_if_needed(timeout=6500)
-                                        if await first.get_attribute('aria-pressed')!='false':
-                                            failures.append('New visitor sees active marker categories by default')
+                                        # Keep owner-approved first-visit visible map categories.
+                                        # Toggle off and on; saved preferences must still work.
+                                        initial=await first.get_attribute('aria-pressed')
+                                        if initial!='true':
+                                            failures.append('New visitor is missing the default visible map category')
                                         else:
                                             await first.click(timeout=5000)
-                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='true':
-                                                failures.append('One-click category on did not change button state')
-                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
-                                                failures.append('One-click category on did not activate map pins')
-                                            await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
                                             if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='false':
-                                                failures.append('One-click category off did not disable pins')
+                                                failures.append('One-click category off did not disable selected category')
+                                            await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
+                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='true':
+                                                failures.append('One-click category on did not restore selected category')
+                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
+                                                failures.append('Restored category did not activate map pins')
                                     except Exception as exc:
                                         failures.append('Map legend could not be toggled: '+str(exc)[:700])
                                 toggle=pg.locator('#juraToggle3d')
@@ -223,26 +983,46 @@ async def smoke():
                                             failures.append('Native 2D map did not recover after 3D')
                                     except Exception as exc:
                                         failures.append('3D map control could not be used: '+str(exc)[:150])
-                            if not failures and path in ('heist-fleeca.html','heist-cayo-perico.html'):
+                            if not failures and path in HEIST_PAGES:
                                 scene=pg.locator('.mapbox > img')
                                 if await scene.count()!=1:failures.append('Heist illustration missing')
                                 else:
                                     image_src=await scene.get_attribute('src')
-                                    if not image_src or 'atlas93-heist-' not in image_src:
-                                        failures.append('Specific original heist art not selected')
-                                    await scene.evaluate("(el)=>el.loading='eager'")
+                                    expected_art='./art/jura159-heist-'+path.removeprefix('heist-').removesuffix('.html')+'.webp'
+                                    if image_src!=expected_art:
+                                        failures.append('Approved cinematic heist artwork regressed: expected '+expected_art+', got '+str(image_src))
+                                    await scene.evaluate("(el)=>{el.loading='eager';el.fetchPriority='high'}")
+                                    # Edge can defer decoding a background image on
+                                    # a long page until it is actually scrolled into
+                                    # view, even after loading=eager is assigned.
+                                    # Never replace the owner's approved asset with
+                                    # fallback artwork or waive decode verification.
+                                    if await scene.is_visible():
+                                        await scene.scroll_into_view_if_needed(timeout=5500)
                                     try:
-                                        await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=6000)
+                                        await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=14000)
                                     except Exception:
-                                        failures.append('Original heist illustration did not load')
-                            if not failures and path in ('heists.html','heist-fleeca.html','heist-cayo-perico.html'):
+                                        image_state=await scene.evaluate("""(x) => ({
+                                            src:x.getAttribute('src'),
+                                            complete:x.complete,
+                                            naturalWidth:x.naturalWidth,
+                                            naturalHeight:x.naturalHeight,
+                                            loading:x.loading,
+                                            currentSrc:x.currentSrc
+                                        })""")
+                                        failures.append('Original heist illustration did not load or decode: '+str(image_state)[:240])
+                            if not failures and (path=='heists.html' or (path in HEIST_PAGES and path!='heist-cayo-perico.html')):
                                 try:
                                     await pg.wait_for_selector('.sitebar .j104-logo',timeout=6000)
                                     if path=='heists.html':
                                         if await pg.locator('.cards .card[data-theme]').count()<10:
                                             failures.append('Heist HQ lacks operation-specific art classes')
                                     else:
-                                        await pg.wait_for_selector('#missionBrief .j104-brief-visual img',timeout=7000)
+                                        await pg.wait_for_selector('#missionBrief .j104-brief-visual figcaption',timeout=7000)
+                                        if await pg.locator('#missionBrief .j104-brief-visual img').count():
+                                            failures.append('Retired schematic image is still inserted above the real mission map')
+                                        if await pg.locator('#j164-mission-map .j164-main').count()!=1:
+                                            failures.append('Opt-in real Atlas map controls are missing from the heist workspace')
                                         if await pg.locator('#missionBrief .j104-mission-flow li').count()<1:
                                             failures.append('Heist planning sequence missing')
                                         if await pg.locator('.j104-heist-actions button').count()!=1:
@@ -258,12 +1038,16 @@ async def smoke():
                             if not failures and path.startswith('map-hub.html?game='):
                                 await pg.wait_for_selector('#classicFlatLink',timeout=7000)
                                 href=await pg.locator('#classicFlatLink').get_attribute('href')
-                                if href!='https://gtamap.io/gta-vice-city-map/':
+                                world=path.split('game=',1)[1]
+                                title,category=CLASSIC_WORLDS[world]
+                                if await pg.locator('#classicTitle').inner_text()!=title:
+                                    failures.append('Wrong classic workspace title for '+world)
+                                if world=='vc' and href!='https://gtamap.io/gta-vice-city-map/':
                                     failures.append('Wrong 1986 Vice City actual map reference: '+str(href))
                                 if await pg.locator('#classicMapBackground').count()!=1:
                                     failures.append('Existing personal map workbench missing')
 
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count()!=1:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Original Elario crest missing on classic world')
                                 try:
                                     # Use a generated original 16x8 image; never depend on a third-party map.
@@ -282,6 +1066,7 @@ async def smoke():
                                     await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
                                     await pg.locator('#classicAddPin').click()
                                     await pg.locator('#classicMapSurface').click(position={'x':bounds['width']/2,'y':bounds['height']/2})
+                                    await pg.locator('#markerCategory').select_option(label=category)
                                     await pg.locator('#markerName').fill('Local high-res marker test')
                                     await pg.locator('#markerSave').click()
                                     if await pg.locator('#pinCount').inner_text()!='1':
@@ -293,12 +1078,112 @@ async def smoke():
                                     await pg.locator('.classic-accordions details').nth(2).locator('summary').click()
                                     await pg.evaluate("window.confirm=()=>true")
                                     await pg.locator('#classicClearMap').click()
-                                    await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='original-art'",timeout=10000)
+                                    await pg.wait_for_function("['game-original','original-art'].includes(document.getElementById('classicViewport')?.dataset.mapImage)",timeout=10000)
                                     if await pg.locator('#pinCount').inner_text()!='1':
                                         failures.append('Removing an imported image deleted personal markers')
+                                    if await pg.locator('#classicMapSourceLink').count()!=1 or not await pg.locator('#classicMapSourceLink').get_attribute('href'):
+                                        failures.append('Classic game-map image provenance link missing')
+                                    if world=='vc':
+                                        await pg.locator('#classicRetryMap').click()
+                                        await pg.wait_for_function("document.getElementById('classicViewport')?.dataset.mapImage==='game-original'",timeout=10000)
+                                    async with pg.expect_download() as exported:
+                                        await pg.locator('#classicExport').evaluate('(button)=>button.click()')
+                                    download=await exported.value
+                                    backup=Path(await download.path()).read_bytes()
+                                    payload=json.loads(backup)
+                                    if payload['world']!=world or len(payload['markers'])!=1:
+                                        failures.append('Classic notebook exported incorrect world or marker count')
                                     await pg.locator('#classicClear').click()
+                                    await pg.locator('#classicImport').set_input_files(
+                                        {'name':'notebook.json','mimeType':'application/json','buffer':backup})
+                                    await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='1'",timeout=7000)
+                                    # Atlas 15.0: each of the seven classic worlds must connect
+                                    # a numbered checklist slot to a user-placed map-image pin.
+                                    if await pg.locator('#j98bGrid .j150-place-pin').count()==0:
+                                        failures.append('Classic checklist missing place-on-map actions: '+world)
+                                    else:
+                                        await pg.locator('#j98bGrid .j150-place-pin').first.click()
+                                        if await pg.locator('#classicAddPin').get_attribute('aria-pressed')!='true':
+                                            failures.append('Collectible slot did not enable map placement: '+world)
+                                        area=await pg.locator('#classicMapSurface').bounding_box()
+                                        if not area or area['width']<40 or area['height']<40:
+                                            failures.append('Slot placement has no usable map canvas')
+                                        else:
+                                            await pg.locator('#classicMapSurface').click(position={'x':area['width']*.27,'y':area['height']*.29})
+                                            if not await pg.locator('#classicEditor').is_visible():
+                                                failures.append('Image-relative pin editor did not open')
+                                            else:
+                                                await pg.locator('#markerSave').click()
+                                                pins=await pg.evaluate("""() => JSON.parse(localStorage.getItem('team-jura-atlas98-classic-'+new URLSearchParams(location.search).get('game')+'-v1')).markers""")
+                                                linked=[m for m in pins if m.get('collectionSlot')==1]
+                                                if len(linked)!=1 or linked[0].get('source')!='personal-image-percent':
+                                                    failures.append('Slot marker lost numbered link or personal-position provenance')
+                                                await pg.locator('#j98bGrid .j150-slot > button:first-child').first.click()
+                                                if await pg.locator('#classicMarkerLayer .classic-marker[data-slot-done="true"]').count()!=1:
+                                                    failures.append('Checklist completion did not update map pin state')
+                                                await pg.reload(wait_until='domcontentloaded')
+                                                await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='2'",timeout=7000)
+                                                if await pg.locator('#classicMarkerLayer .classic-marker[data-slot-done="true"]').count()!=1:
+                                                    failures.append('Numbered pin/completion relationship lost on reload')
                                 except Exception as exc:
                                     failures.append('Local classic high-resolution image regression: '+str(exc)[:300])
+                            if not failures and path.startswith('atlas-activities.html'):
+                                if not await pg.locator('body.j112-activities').count():
+                                    failures.append('Elario Activity Intelligence design missing')
+                                if not await pg.locator('.j112-activity-hero h1#headline').is_visible():
+                                    failures.append('Game-specific activity hero/title missing')
+                                try:
+                                    await pg.wait_for_function("() => Number(document.getElementById('ruleCount')?.textContent) >= 0 && Number(document.getElementById('resultTotal')?.textContent?.split(' ')[0]) >= 0", timeout=8500)
+                                    if await pg.locator('.rule-list .rule').count() == 0 and 'mode=vi' not in path:
+                                        failures.append('Activity cards did not render')
+                                    if 'mode=story' in path and not await pg.locator('#storyControls').is_visible():
+                                        failures.append('Story-only prerequisites not exposed')
+                                    if 'mode=online' in path and not await pg.locator('#onlineControls').is_visible():
+                                        failures.append('Online-only event filters not exposed')
+                                    if 'mode=vi' in path and not await pg.locator('#viControls').is_visible():
+                                        failures.append('VI research controls not exposed')
+                                except Exception as exc:
+                                    failures.append('Activities failed game-mode initialization: '+str(exc)[:250])
+                            if not failures and path in ('directory.html','discovery.html','leonida-hq.html'):
+                                if not await pg.locator('body.j112-unified').count():
+                                    failures.append('Older destination was not upgraded to the current Elario theme')
+                            if not failures and path in ('atlas-catalog.html','atlas-checklist.html','atlas-toolkit.html','atlas-passport.html','guides.html','team-jura.html','command-center.html','hunt-hq.html'):
+                                if not await pg.locator('body.j113-workspace').count():
+                                    failures.append('Atlas 11.3 current Elario workspace theme not present')
+                                if not await pg.locator('link[href^="./atlas113-workspaces.css"]').count():
+                                    failures.append('Modern workspace CSS link missing')
+                                if path=='atlas-catalog.html' and not await pg.locator('#dbSearch').count():
+                                    failures.append('Vehicle/location catalog search missing')
+                                if path=='atlas-checklist.html' and not await pg.locator('#setSearch').count():
+                                    failures.append('Game-scoped collectibles search missing')
+                                if path=='hunt-hq.html':
+                                    if not await pg.locator('#canvas').count():
+                                        failures.append('Research canvas missing after redesign')
+                                    if not await pg.locator('a[href="./atlas81-hq.html#collections"]').count():
+                                        failures.append('Canonical collection HQ link missing')
+                            if not failures and path in ('atlas-calibration.html','atlas-coverage.html','atlas-verification.html','atlas-test-center.html','atlas-pack-format.html','atlas-feature-audit.html','atlas-completion.html'):
+                                if not await pg.locator('body.j115-research').count():
+                                    failures.append('Elario research page does not use the current visual system')
+                                if not await pg.locator('.j115-source-head h1').count():
+                                    failures.append('Original research/verification hero is missing')
+                                if path=='atlas-calibration.html' and await pg.locator('body').get_by_text('2,335 / 3,401').count():
+                                    failures.append('Old VI landmark count still presented as current')
+                                if path=='atlas-verification.html' and not await pg.locator('img.j115-original-crest').count():
+                                    failures.append('Original Elario crest absent from the verification header')
+                                if path=='atlas-test-center.html' and not await pg.locator('#pass').count():
+                                    failures.append('QA controls missing after visual redesign')
+                            if not failures and path=='project.html':
+                                if not await pg.locator('body.j116-showcase').count():
+                                    failures.append('Current Elario showcase theme missing')
+                                if not await pg.locator('a[href="https://github.com/jyates0125/team-jura-atlas-preview"]').count():
+                                    failures.append('Showcase GitHub source link points to retired repository')
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count() == 0:
+                                    failures.append('Showcase missing original Elario crest')
+                            if not failures and path=='atlas98b-test.html':
+                                if await pg.locator('#qaRunCore').count()!=1 or await pg.locator('#qaRunAll').count()!=1:
+                                    failures.append('Atlas QA buttons missing')
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count() !=1:
+                                    failures.append('Atlas QA Elario crest missing')
                             if not failures and path=='atlas-credits.html':
                                 if await pg.locator('h1#pageTitle').count()!=1:
                                     failures.append('Canonical credits page title missing')
@@ -308,19 +1193,28 @@ async def smoke():
                                     failures.append('GTAMap.io original source disclaimer not linked')
                                 if await pg.locator('a[href="https://github.com/rolux/gtadb.org"]').count()<1:
                                     failures.append('GTADB source repository not credited')
-                                if await pg.locator('img[src="./art/elario-crest.svg"]').count()!=1:
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Original Elario crest missing on credits')
                                 if 'MANY CREWS' not in await pg.locator('header .brand').inner_text():
                                     failures.append('Community branding changed')
                                 if await pg.locator('a[href^="./atlas109-credits.css"]').count()>0:
                                     failures.append('Unexpected stylesheet link inside document anchor')
                                 try:
-                                    await pg.locator('details summary').first.click()
+                                    await pg.locator('details summary').filter(has_text='GTADB upstream MIT software notice').click()
                                     if not await pg.locator('details pre.license').first.is_visible():
                                         failures.append('GTADB MIT copyright notice cannot be expanded')
                                 except Exception as exc:
                                     failures.append('Credits MIT license UI did not work: '+str(exc)[:250])
                             if not failures and path=='atlas93-garage.html':
+                                if width==390:
+                                    garage_nav=pg.locator('.mast nav')
+                                    if await garage_nav.locator('a').count()!=8:
+                                        failures.append('Mobile Garage navigation must preserve all eight current destinations, including GTA VI vehicles')
+                                    metrics=await garage_nav.evaluate('(el)=>({height:el.getBoundingClientRect().height, scroll:el.scrollWidth,client:el.clientWidth,wrap:getComputedStyle(el).flexWrap})')
+                                    if metrics['height']>65 or metrics['wrap']!='nowrap':
+                                        failures.append('Garage mobile header navigation wraps into multiple rows')
+                                    if metrics['scroll']<=metrics['client']+20:
+                                        failures.append('Garage mobile navigation lacks horizontal scrolling for all destinations')
                                 await pg.locator('#showAll').click()
                                 buttons=pg.locator('#garageCards article.card button.primary')
                                 if await buttons.count()>0:
@@ -377,17 +1271,63 @@ async def smoke():
                                         failures.append('Individual sourced completion tracking missing')
                                 except Exception as exc:
                                     failures.append('San Andreas local base artwork could not load: '+str(exc)[:240])
+                            if not failures and path in ('heists.html','atlas-iv.html','atlas-research.html','atlas98-data-lab.html'):
+                                expected={'heists.html':'j119-heists','atlas-iv.html':'j119-iv','atlas-research.html':'j119-research','atlas98-data-lab.html':'j119-lab'}[path]
+                                if await pg.locator('body.'+expected).count()!=1:
+                                    failures.append('Current Elario workspace skin missing: '+expected)
+                                if await pg.locator('header img[src="./art/elario-crest.svg"]').count()!=1:
+                                    failures.append('Original Elario crest missing from workspace header')
+                                if path=='heists.html' and await pg.locator('.cards article.card').count()<10:
+                                    failures.append('Heist HQ has fewer than 10 dedicated job links')
+                                if path=='atlas-research.html' and await pg.locator('#showResearchPins').count()!=1:
+                                    failures.append('Research unverified marker toggle missing')
                             if not failures and path=='atlas-iv.html':
                                 if await pg.locator('#classicCanvas').count()==0:failures.append('GTA IV canvas missing')
                                 if await pg.locator('#classicLayer option').count()<2:failures.append('GTA IV layers missing')
-                                if 'source landmarks' not in await pg.locator('#recordStatus').inner_text():failures.append('Local GTA IV landmark snapshot did not load') 
+                                if 'licensed community landmarks' not in await pg.locator('#recordStatus').inner_text():
+                                    failures.append('Bundled GTA IV landmark snapshot did not load')
+                                if int((await pg.locator('#visibleCount').inner_text()).replace(',','') or '0')<2000:
+                                    failures.append('GTA IV landmark snapshot has fewer than 2,000 mapped records') 
                                 if await pg.locator('#classic3dToggle').count():
                                     failures.append('Older map incorrectly includes deferred 3D viewer')
                             if not failures and path=='atlas98-landmarks.html':
                                 if 'sourced landmarks shown' not in await pg.locator('#landmarkStatus').inner_text():failures.append('Bundled VI landmark library did not load')
                             if not failures and path=='one-last-ride.html':
+                                if not await pg.locator('body.j117-film').count():
+                                    failures.append('One Last Ride current film identity missing')
+                                if await pg.locator('header .portal-logo img[src="./art/elario-crest.svg"]').count()!=1:
+                                    failures.append('Film project Elario crest missing')
                                 if await pg.locator('video source[src*="one-last-ride-motion-preview.mp4"]').count()==0:failures.append('Film preview source missing')
-                            results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures})
+                                if await pg.locator('.olr-scene-btn').count()!=9:failures.append('One Last Ride nine film chapters missing')
+                                if await pg.locator('.j130-olr-share').count():failures.append('Discontinued film share kit still interrupts content')
+                                if await pg.locator('[data-j131-social-host] [data-j131-platform]').count()<4:
+                                    failures.append('Bottom-of-page community social buttons missing on film')
+                            # Generic, non-destructive UX checks after individual page tests.
+                            # Do not click destructive/financial/account/import actions automatically.
+                            if not failures:
+                                try:
+                                    disclosures=pg.locator('details > summary')
+                                    if path=='atlas-research.html':
+                                        # The map-first phone layout intentionally keeps
+                                        # research accordion filters inside the Filters /
+                                        # Results drawer, not behind the map canvas.
+                                        if width==390:
+                                            await pg.locator('#toggleRail').click(timeout=5500)
+                                            if not await pg.locator('#rail').evaluate("(e)=>e.classList.contains('open')"):
+                                                failures.append('Research Filters / Results drawer did not open')
+                                        disclosures=pg.locator('#rail > details > summary')
+                                    for d in (await disclosures.all())[:1]:
+                                        if await d.is_visible():
+                                            was=await d.evaluate('(e)=>e.parentElement.open')
+                                            await d.click(timeout=5500)
+                                            now=await d.evaluate('(e)=>e.parentElement.open')
+                                            if was==now:failures.append('Details disclosure did not respond')
+                                            break
+                                except Exception as exc:
+                                    failures.append('Details disclosure interaction: '+str(exc)[:230])
+                            results.append({'page':path,'viewport':width,'ok':not failures,'issues':failures,
+                              'controls':info['controls'],'unlabeledControls':info['unlabeledCount'],
+                              'unlabeledExamples':info['unlabeled']})
                             await pg.close()
                         await ctx.close()
                     ctx=await browser.new_context(viewport={'width':1366,'height':850})
@@ -402,6 +1342,29 @@ async def smoke():
                     records=(await pg.locator('#total').inner_text()).strip()
                     ready=await pg.locator('#mapPack').is_enabled()
                     results.append({'page':'Data Lab interactive CSV/pack export','viewport':1366,'ok':records=='2' and ready,'issues':[] if records=='2' and ready else [f'Unexpected validated total {records}, map pack enabled {ready}']})
+                    await ctx.close()
+                    # Simulate a failed optional route-core script in the real
+                    # 390px game-map viewer; core map and legend must still boot.
+                    ctx=await browser.new_context(viewport={'width':390,'height':844},reduced_motion='reduce')
+                    pg=await ctx.new_page()
+                    nav_errors=[]
+                    pg.on('pageerror',lambda e:nav_errors.append(str(e)[:300]))
+                    async def block_road_core(route):await route.abort()
+                    await pg.route('**/atlas-road-core.js*',block_road_core)
+                    await pg.goto(URL+'/atlas.html',wait_until='domcontentloaded',timeout=25000)
+                    degraded=[]
+                    try:
+                        await pg.wait_for_function("() => document.querySelector('#layer')?.options.length >= 2 && document.querySelector('#legend')?.children.length > 0",timeout=11000)
+                        status=await pg.locator('#juraNavStatus').inner_text()
+                        if 'Route navigation temporarily unavailable' not in status:
+                            degraded.append('No degraded-route guidance when road-core is missing')
+                        if await pg.evaluate("Boolean(window.teamJuraNav)"):
+                            degraded.append('Router incorrectly initialized without its required road core')
+                        if nav_errors:
+                            degraded.extend('Unhandled JS error: '+e for e in nav_errors)
+                    except Exception as e:
+                        degraded.append('Game map did not survive missing optional road-core: '+str(e)[:350])
+                    results.append({'page':'GTA V mobile map with blocked optional road-core','viewport':390,'ok':not degraded,'issues':degraded})
                     await ctx.close()
                 finally:await browser.close()
         finally:http.shutdown()

@@ -1,0 +1,7 @@
+/* Atlas 19.2 · Game-world weapon navigation; isolates Story, Online and VI. */
+body[data-gallery="weapons"] .j192-armory-worlds{display:flex;gap:8px;flex-wrap:wrap;margin:clamp(12px,2vw,25px) auto;max-width:1380px;padding:0 clamp(12px,2vw,26px)}
+body[data-gallery="weapons"] .j192-armory-worlds a{display:inline-flex;align-items:center;justify-content:center;flex:1 1 180px;min-height:45px;padding:9px 15px;border:1px solid #b18b9f;border-radius:11px;background:linear-gradient(130deg,#38224e,#2b193f);color:#f7eaf8;font:850 13px/1.3 system-ui;text-align:center;text-decoration:none}
+body[data-gallery="weapons"] .j192-armory-worlds a[aria-current="true"]{background:#f4cd92;color:#28152e;border-color:#fff0cd;box-shadow:0 0 0 1px #f4cd9255}
+body[data-gallery="weapons"] .j192-armory-worlds a:focus-visible{outline:3px solid #ffe1a0;outline-offset:3px}
+body[data-gallery="weapons"] .j192-world-caveat{max-width:1330px;margin:4px auto 20px;padding:10px 16px;border-left:3px solid #f0cb99;border-radius:8px;background:#21152f;color:#e9d5e8;font:650 12px/1.6 system-ui}
+@media(max-width:650px){body[data-gallery="weapons"] .j192-armory-worlds{gap:6px;padding:0 12px}body[data-gallery="weapons"] .j192-armory-worlds a{flex:1 1 100%;min-height:44px}body[data-gallery="weapons"] .j192-world-caveat{margin:8px 12px 18px;font-size:11px}}

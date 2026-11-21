@@ -18,6 +18,10 @@ assert data['vehicles']['squalo']['category']=='Boats & Watercraft'
 assert data['vehicles']['squalo']['topSpeedMph']==65.75
 assert data['vehicles']['squalo']['priceUSD']==196621
 assert data['vehicles']['squalo']['customizable'] is False
+assert data['vehicles']['squalo']['purchaseSite']=='DockTease'
+assert data['vehicles']['squalo']['storage']=='Pegasus vehicle'
+assert data['vehicles']['squalo']['delivery']=='Pegasus Concierge'
+assert data['vehicles']['squalo']['secondarySourceUrl'].startswith('https://www.gtabase.com/')
 assert data['vehicles']['alkonost']['category']=='Planes & Aircraft'
 assert data['vehicles']['akula']['category']=='Helicopters'
 assert data['vehicles']['adder']['category']=='Super'
@@ -28,9 +32,10 @@ assert "function modelInfo(id)" in js and "r.spec" in js
 assert "j104-intelligence" in js and "View individual GTADB vehicle facts" in js
 assert "j104-no-car" in js and "This '+r.type.toLowerCase()+' needs a craft-specific licensed mesh" in js
 assert "garageClassFilter" in js and 'id="garageClassFilter"' in html
-assert "atlas104-garage-intel.css?v=104" in html
+assert "atlas104-garage-intel.css?v=201" in html
 assert "team-jura-atlas90-collection-v1" in js
 assert "team-jura-atlas93-garage-v1" in js
+assert "new URLSearchParams(location.search).get('addModel')" in js
 assert (D/'art/elario-crest.svg').is_file()
 assert (D/'art/atlas104-heist-schematic.svg').is_file()
 assert (D/'atlas104-heist-experience.css').is_file()
@@ -45,7 +50,7 @@ for page in ('heists.html','heist-fleeca.html','heist-cayo-perico.html'):
     assert "./atlas93-global.js?v=93" in (D/page).read_text(encoding='utf-8')
 for page in ('atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'):
     text=(D/page).read_text(encoding='utf-8')
-    assert "atlas100-universe.css?v=104" in text and "atlas100-universe.js?v=104" in text
+    assert "atlas100-universe.css?v=130" in text and re.search(r"atlas100-universe\.js\?v=\d+", text)
 assert "document.body.dataset.activeWorld=game" in (D/'atlas100-universe.js').read_text(encoding='utf-8')
 assert "https://www.rockstargames.com/VI/media/screenshots" in (D/'atlas-animals.html').read_text(encoding='utf-8')
 print('PASS Atlas 10.4 source-checked craft specs, separate concepts, original E crest, dedicated heist ops and game-specific artwork')
