@@ -158,13 +158,19 @@ async def smoke():
                                     await pg.locator('#j90Cards').wait_for(timeout=7000)
                                     await pg.wait_for_function("document.querySelector('#j90Results')?.textContent?.includes('visible')",timeout=9000)
                                     card=pg.locator('#j90Cards .j90-card').first
-                                    for label in ('Collect','Wishlist','Compare'):
-                                        action=card.get_by_role('button',name=label,exact=False)
-                                        await action.click()
-                                        pressed=card.locator('button[aria-pressed="true"]').filter(has_text={'Collect':'Collected','Wishlist':'Wanted','Compare':'Compare'}[label])
-                                        if await pressed.count()!=1:
-                                            failures.append('Gallery action did not activate: '+label)
-                                        await pressed.click()
+                                    # An earlier Garage action can already own this model.
+                                    # Verify both directions from the actual saved state.
+                                    for off,on in (('+ Collect','✓ Collected'),('☆ Wishlist','★ Wanted'),('+ Compare','✓ Compare')):
+                                        inactive=card.get_by_role('button',name=off,exact=True)
+                                        active=card.get_by_role('button',name=on,exact=True)
+                                        before,after=(inactive,active) if await inactive.count() else (active,inactive)
+                                        original=await before.get_attribute('aria-pressed')
+                                        await before.click()
+                                        if await after.get_attribute('aria-pressed')==original:
+                                            failures.append('Gallery action did not toggle: '+off)
+                                        await after.click()
+                                        if await before.get_attribute('aria-pressed')!=original:
+                                            failures.append('Gallery action did not restore: '+off)
                                     if path=='atlas90-vehicles6.html' and await card.locator('img').get_attribute('src')!='./art/jura161-vehicles6.webp':
                                         failures.append('VI gallery displayed out-of-world imagery')
                                     await pg.locator('#j90Search').fill('zzx-nonexistent-atlas-marker')
