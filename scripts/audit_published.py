@@ -37,6 +37,8 @@ def main():
    nav_match=re.search(r'\./atlas132-nav\.js\?v=(\d+)',markup)
    if not nav_match or int(nav_match.group(1))<222 or './atlas132-nav.css?v=132' not in markup:
     errors.append('Global site menu is missing or stale on '+f.name)
+   if len(re.findall(r'\./atlas132-nav\.js\?v=\d+',markup))!=1:
+    errors.append('Duplicate global navigation script on '+f.name)
    if 'atlas131-social-icons.js' not in markup or 'atlas131-social-icons.css' not in markup:errors.append('Universal sharing footer is missing on '+f.name)
   p=Refs();p.feed(f.read_text(encoding='utf-8',errors='replace'))
   for ref in p.refs:
