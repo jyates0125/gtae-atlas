@@ -172,10 +172,21 @@ try:
    page.locator('#worldSearch').fill('no such destination')
    page.locator('#resetWorldSearch').click()
    expect(page.locator('.directory-card')).to_have_count(13)
-   page.goto(base+'heist-fleeca.html',wait_until='domcontentloaded')
-   # DOMContentLoaded can precede late heist enhancement/bootstrap hydration on
-   # Microsoft Edge. Wait until the REAL checklist handler has initialized.
-   expect(page.locator('#progress')).to_have_text('0 / 3 tracked',timeout=15000)
+   # When heavy tile/image requests are cancelled, Windows' local HTTP test
+   # server can abort a deferred script request. Retry ONE genuine page load
+   # if the first checklist controller did not initialize, not the saved data.
+   # A persistent initialization failure or a broken save still fails CI.
+   fleecaReady=False
+   for attempt in range(2):
+    response=page.goto(base+'heist-fleeca.html',wait_until='load',timeout=45000)
+    assert response and response.status==200,'Fleeca HTML did not load'
+    try:
+     expect(page.locator('#progress')).to_have_text('0 / 3 tracked',timeout=6500)
+     fleecaReady=True
+     break
+    except AssertionError:
+     print('Fleeca checklist controller absent on local load '+str(attempt+1)+'; '+('retrying once' if attempt==0 else 'failing'),flush=True)
+   assert fleecaReady,'Fleeca checklist controller unavailable after one real reload'
    page.locator('input[data-step]').first.check()
    # Cross-page progress must persist before the heist directory filters it.
    page.wait_for_function("""() => {
