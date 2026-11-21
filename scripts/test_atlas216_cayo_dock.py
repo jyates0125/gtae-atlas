@@ -8,7 +8,13 @@ assert './atlas216-cayo-nav.css?v=216' in html
 assert 'body.j120-heist-page[data-heist="cayo-perico"] #j89-shell' in css
 assert 'body.j120-heist-page[data-heist="cayo-perico"] #j98-flow' in css
 assert 'display:none!important' in css
-assert '.j132-nav' not in css and '#j132-nav-toggle' not in css
+# The modern menu stays searchable, but is mounted inline in the Cayo header.
+assert 'id="j216-inline-mount"' in html
+assert 'position:relative!important' in css
+assert '.j216-inline-nav .j132-nav' in css
+assert '.j216-inline-nav #j132-nav-drawer' in css
+assert "const cayoHost=document.getElementById('j216-inline-mount')" in (R/'atlas132-nav.js').read_text()
+assert 'else document.body.append(wrap)' in (R/'atlas132-nav.js').read_text()
 assert '#j89-shell' in (R/'scripts/test_atlas171_browser.py').read_text()
 assert '#j132-nav-toggle' in (R/'scripts/test_atlas171_browser.py').read_text()
 assert "atlas120-heist-worlds.css?v=120" in html

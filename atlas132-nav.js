@@ -57,7 +57,12 @@ function build(){
    else if(!e.shiftKey&&(document.activeElement===last||!drawer.contains(document.activeElement))){e.preventDefault();first.focus();}
  });
  document.addEventListener('pointerdown',e=>{if(!drawer.hidden&&!wrap.contains(e.target))close(false)});
- document.body.append(wrap);render();
+ // The Cayo heist keeps the searchable directory in its normal header flow.
+ // Other pages retain their already-tested global navigation placement.
+ const cayoHost=document.getElementById('j216-inline-mount');
+ if(cayoHost)cayoHost.append(wrap);
+ else document.body.append(wrap);
+ render();
  // Production builder records all public HTML pages; expose the ones not in
  // the prominent categories under an honest "Other public pages" section.
  fetch('./atlas132-page-directory.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
