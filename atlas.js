@@ -363,6 +363,7 @@ function elarioLegendGlyph(cat){
  path.setAttribute('stroke-linejoin','round');svg.append(path);
  return svg;
 }
+window.TeamJuraAtlasGlyph22=Object.freeze({create:elarioLegendGlyph});
 function renderLegend(){
  renderNamedLayers();
  const counts={};for(const r of records())counts[r.category]=(counts[r.category]||0)+1;
