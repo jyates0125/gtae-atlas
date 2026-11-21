@@ -173,8 +173,11 @@ try:
    page.locator('#resetWorldSearch').click()
    expect(page.locator('.directory-card')).to_have_count(13)
    page.goto(base+'heist-fleeca.html',wait_until='domcontentloaded')
+   # DOMContentLoaded can precede late heist enhancement/bootstrap hydration on
+   # Microsoft Edge. Wait until the REAL checklist handler has initialized.
+   expect(page.locator('#progress')).to_have_text('0 / 3 tracked',timeout=15000)
    page.locator('input[data-step]').first.check()
-   # Check persisted state on Edge before leaving the mission page.
+   # Cross-page progress must persist before the heist directory filters it.
    page.wait_for_function("""() => {
      try { return Object.values(JSON.parse(localStorage.getItem('teamjura-heist-fleeca') || '{}')).some(v=>v===true); }
      catch (_) { return false; }
