@@ -31,6 +31,7 @@ function build(){
   const q=query.trim().toLocaleLowerCase();list.replaceChildren();
   let shown=0;
   for(const group of allCategories){
+    if(!q&&group.prefix==='characters')continue; // Search-only results, not an extra 36-item navigation dump.
     const matches=group.items.filter(([label,url,keywords])=>(label+' '+url+' '+(keywords||'')).toLocaleLowerCase().includes(q));
     if(!matches.length)continue;
     const section=document.createElement('section');section.className='j132-group';
