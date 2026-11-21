@@ -26,7 +26,7 @@ const label=(r,local)=>local?'Original Elario cinematic world artwork · not a c
  'Reference character artwork · source linked where provided';
 function card(r){
  const el=make('article','j222-character-card');
- el.dataset.world=r.scope;
+ el.dataset.j222World=r.scope;
  const media=make('div','j222-character-media');
  const image=make('img');
  image.loading='lazy';image.decoding='async';image.referrerPolicy='no-referrer';
