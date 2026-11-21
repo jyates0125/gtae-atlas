@@ -41,6 +41,10 @@ try:
    assert any('online' in a.get_attribute('href').lower() for a in suggest.all())
    page.keyboard.press('Escape')
    assert page.locator('#j223-search-results').is_hidden()
+   for key,choice in (('official','official'),('community','community'),('unverified','unverified')):
+    card=page.locator('.j223-evidence-card[data-j223-evidence="%s"]'%key)
+    card.locator('button[data-j223-grade="%s"]'%choice).click()
+    assert card.locator('.j223-evidence-feedback').get_attribute('class').find('j223-correct')>=0
    assert not errors,errors
    if width<=390:
     overflow=page.evaluate('document.documentElement.scrollWidth-innerWidth')
