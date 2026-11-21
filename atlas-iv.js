@@ -113,6 +113,12 @@ async function loadBirds(){
 function setScope(which){
  if(!['landmarks','iv','tlad','tbogt'].includes(which))return;
  activeScope=which;
+ document.body.dataset.ivScope=which;
+ const episode={tlad:'The Lost and Damned',tbogt:'The Ballad of Gay Tony'}[which];
+ $('ivWorldName').textContent=episode||'Liberty City & Alderney';
+ $('ivWorldIntro').textContent=which==='landmarks'?'Search licensed landmarks, save favorites and plan a Liberty City route.':
+  (which==='iv'?'Track 200 Flying Rats':'Track 50 '+(which==='tlad'?'Lost and Damned':'Ballad of Gay Tony')+' seagulls')+' and plan a route from your chosen start.';
+
  records=which==='landmarks'?landmarkRecords:birdRecords[which];
  categories='all';onlyFav=false;selected=null;restoreRoute();
  $('classicSearch').value='';$('showFav').setAttribute('aria-pressed','false');

@@ -17,3 +17,12 @@
 .classic-route-fields label{display:grid;gap:.25rem;color:#ffe0b3;font-weight:700}
 .classic-route-fields select{width:100%;min-width:0;min-height:44px;color:#fff4ea;background:#20152f;border:1px solid #a27da4;border-radius:8px}
 .classic-stops .classic-stop{display:flex;align-items:center;justify-content:space-between;gap:.4rem;overflow-wrap:anywhere}
+
+body.j119-iv .classic-main .classic-head{
+ --iv-cover:url('./art/jura157-iv-cinematic.webp');
+ background:linear-gradient(100deg,rgba(28,12,42,.96),rgba(28,12,42,.77) 49%,rgba(28,12,42,.28)),var(--iv-cover) center 55%/cover;
+ flex-wrap:wrap;
+}
+body.j119-iv[data-iv-scope="tlad"] .classic-main .classic-head{--iv-cover:url('./art/jura157-tlad-cinematic.webp')}
+body.j119-iv[data-iv-scope="tbogt"] .classic-main .classic-head{--iv-cover:url('./art/jura157-tbogt-cinematic.webp')}
+.classic-head .classic-world-picker{background:#25152eda}

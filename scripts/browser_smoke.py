@@ -107,15 +107,8 @@ async def smoke():
                             if not info.get('title') or not info.get('h1'):failures.append('Missing page title or heading')
                             if errors:failures.extend('JS: '+e for e in errors)
                             if missing:failures.extend('Missing local response: '+e for e in missing)
-                            if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
-
-                            # Atlas 19.9: three observed viewport defects need a genuine
-                            # regression gate, not a body-level overflow mask.
-                            if width==390 and path in (
-                                'map-hub.html?game=tlad',
-                                'map-hub.html?game=tbogt',
-                                'atlas-feature-audit.html',
-                            ) and info['scroll']>info['width']+8:
+                            # Guard the actual document width on every production route.
+                            if width==390 and info['scroll']>info['width']+1:
                                 offenders=await pg.evaluate("""() => {
                                   const vw=innerWidth;
                                   return [...document.body.querySelectorAll('*')].map(el=>{
@@ -141,6 +134,10 @@ async def smoke():
                                     if not await drawer.is_visible():
                                         failures.append('All Pages button did not open navigation')
                                     else:
+                                        if path.startswith('map-hub.html?game=') or path=='atlas93-garage.html':
+                                            active=drawer.locator('a[aria-current="page"]')
+                                            if await active.count()!=1 or await active.get_attribute('href')!='./'+path:
+                                                failures.append('Directory current destination does not match '+path)
                                         await pg.locator('#j132-search').fill('My Garage')
                                         if await drawer.locator('a[href="./atlas93-garage.html"]').count()!=1:
                                             failures.append('All Pages search omitted My Garage')
@@ -160,6 +157,16 @@ async def smoke():
                                 try:
                                     await pg.locator('#j90Cards').wait_for(timeout=7000)
                                     await pg.wait_for_function("document.querySelector('#j90Results')?.textContent?.includes('visible')",timeout=9000)
+                                    card=pg.locator('#j90Cards .j90-card').first
+                                    for label in ('Collect','Wishlist','Compare'):
+                                        action=card.get_by_role('button',name=label,exact=False)
+                                        await action.click()
+                                        pressed=card.locator('button[aria-pressed="true"]').filter(has_text={'Collect':'Collected','Wishlist':'Wanted','Compare':'Compare'}[label])
+                                        if await pressed.count()!=1:
+                                            failures.append('Gallery action did not activate: '+label)
+                                        await pressed.click()
+                                    if path=='atlas90-vehicles6.html' and await card.locator('img').get_attribute('src')!='./art/jura161-vehicles6.webp':
+                                        failures.append('VI gallery displayed out-of-world imagery')
                                     await pg.locator('#j90Search').fill('zzx-nonexistent-atlas-marker')
                                     if '0 visible' not in await pg.locator('#j90Results').inner_text():
                                         failures.append('Gallery search failed to apply an empty-result filter')
