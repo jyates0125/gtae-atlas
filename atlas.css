@@ -178,3 +178,49 @@ body.jura-2d-only :is(#jura3d,#jura2d,#juraToggle3d,#threeDReference){display:no
   #sidebar .legend-group>summary,#sidebar .legend-choice{min-height:42px}
   #sidebar .legend-row{position:relative}
 }
+
+/* Atlas 22.0 — original vector category legend on Story, Online and Leonida.
+   Actual game category keys are unchanged; accessible toggle labels remain. */
+body.j128-map-chrome #legend{
+ border:1px solid #875696;background:linear-gradient(155deg,#22162f,#151827);
+ padding:8px;border-radius:13px;
+}
+body.j128-map-chrome #legend .legend-group>summary{
+ color:#ffe2aa;line-height:1.45;padding:10px 8px;
+}
+body.j128-map-chrome #legend .legend-row{gap:7px}
+body.j128-map-chrome #legend .legend-choice{
+ display:inline-flex;gap:8px;align-items:center;
+ min-height:44px;border:1px solid #83538b;border-radius:9px;
+ background:linear-gradient(110deg,#3b254e,#261d3d);
+ color:#faebfa;font:700 11px/1.35 system-ui;
+ overflow-wrap:anywhere;
+}
+body.j128-map-chrome #legend .legend-choice[aria-pressed=false]{
+ opacity:.66;background:#181427;color:#c9baca;
+}
+body.j128-map-chrome #legend .legend-choice[aria-pressed=true]{
+ border-color:#bf8aac;
+}
+body.j128-map-chrome #legend i.legend-symbol{
+ display:inline-flex;align-items:center;justify-content:center;
+ flex:0 0 30px;width:30px;height:30px;
+ background:linear-gradient(145deg,#45274e,#22162d);
+ color:#ffe0a0;border:1.5px solid #edbc70;border-radius:9px;
+ box-shadow:inset 0 1px 0 #ffffff1c,0 3px 8px #10061866;
+ font-style:normal;
+}
+body.j128-map-chrome #legend .elario-legend-glyph{
+ display:block;width:21px;height:21px;overflow:visible;
+}
+body.j128-map-chrome #legend .legend-only{
+ min-width:49px;min-height:44px;border-color:#996c95;
+ color:#ffe3ba;background:#382445;
+}
+body.j128-map-chrome #legend :is(button,summary):focus-visible{
+ outline:3px solid #ffdaa0;outline-offset:2px;
+}
+@media(max-width:390px){
+ body.j128-map-chrome #legend .legend-choice{font-size:11px;padding:6px}
+ body.j128-map-chrome #legend i.legend-symbol{flex-basis:28px;width:28px;height:28px}
+}
