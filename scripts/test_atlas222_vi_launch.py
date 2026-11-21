@@ -55,6 +55,11 @@ assert 'const DEFAULT_GAME=MODE===' in univ and "MODE==='character'?'all'" in un
 assert "r.scope==='vi'||/unverified" not in univ, 'GTA VI must not be unconditionally unverified'
 assert 'x.aliases||[]' in univ
 assert 'atlas-characters.html?game=' in ch_js and 'j222-character-search' in ch_js
+assert 'id="j222-profile-dialog"' in char and 'id="j222-profile-content"' in char
+assert "let q=(args.get('q')||'').slice(0,120)" in ch_js, 'Deep links must populate character search'
+assert 'search.value=q' in ch_js and "'#mainCharacterEra'" in ch_js
+assert "details.addEventListener('click'" in ch_js and 'dialog.showModal()' in ch_js
+assert "if(r.verification)" in ch_js and "if(srcSafe(r.sourceUrl))" in ch_js
 assert 'map-hub.html?game=iii' in ch_js and 'atlas-online.html' in ch_js and 'atlas-vi.html' in ch_js
 assert 'CHARACTERS · SEARCH ALL WORLDS' in nav and 'x.aliases' not in nav
 assert 'j222-vi-categories' in vi and 'atlas222-vi-release.js?v=222' in vi
