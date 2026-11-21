@@ -35,13 +35,13 @@ try:
    assert cards.count()>=30,'Reset must restore all records'
    page.locator('[data-j222-scope="vi"]').click()
    expect(cards).to_have_count(8,timeout=10000)
-   assert cards.first.get_attribute('data-world')=='vi'
+   assert cards.first.get_attribute('data-j222-world')=='vi'
    page.locator('[data-j222-scope="online"]').click()
    expect(cards).to_have_count(6,timeout=10000)
-   assert all(card.get_attribute('data-world')=='online' for card in cards.all())
+   assert all(card.get_attribute('data-j222-world')=='online' for card in cards.all())
    page.locator('[data-j222-scope="story"]').click()
    expect(cards).to_have_count(8,timeout=10000)
-   assert all(card.get_attribute('data-world')=='story' for card in cards.all())
+   assert all(card.get_attribute('data-j222-world')=='story' for card in cards.all())
    page.locator('[data-j222-scope="all"]').click()
    page.locator('#j132-nav-toggle').click()
    page.locator('#j132-search').fill('Jason')
