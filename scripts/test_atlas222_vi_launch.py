@@ -31,9 +31,9 @@ assert len({x['id'] for x in release['categories']})==len(release['categories'])
 
 cast=[r for r in profiles['records'] if r.get('kind')=='character' and r.get('scope')=='vi']
 assert len(cast)==8,cast
-# The seven publisher-hosted references are source-linked images, not a rights grant.
+# The eight publisher-hosted references are source-linked images, not a rights grant.
 rockstar_media=[r for r in cast if r.get('image','').startswith('https://www.rockstargames.com/VI/_next/static/media/')]
-assert len(rockstar_media)==7,[(r['name'],r.get('image','')) for r in cast]
+assert len(rockstar_media)==8,[(r['name'],r.get('image','')) for r in cast]
 assert all(r['imageCredit']=='https://www.rockstargames.com/VI/media/screenshots' for r in rockstar_media)
 assert all('not a commercial reuse license' in r['imageRights'] for r in rockstar_media)
 assert len({r['id'] for r in cast})==len(cast)
