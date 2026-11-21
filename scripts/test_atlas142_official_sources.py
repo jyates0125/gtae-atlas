@@ -18,5 +18,5 @@ assert "aria-label','Rockstar GTA VI official reference sources" in js
 assert "active[filterScope()]=null;page=0;showTab('Find');render()" in js
 assert "j142-official-sources" in style
 assert "j141-official-flat" not in page and "atlas141-leonida-views.css" in page
-assert "COMMUNITY RESEARCH · UNVERIFIED" in page
+assert "GTA VI · OUT NOW · COMMUNITY COORDINATES PROVISIONAL" in page
 print("Atlas 14.2 official source links, six Rockstar regions, map-research separation PASS")
