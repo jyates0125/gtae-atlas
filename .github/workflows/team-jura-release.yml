@@ -280,6 +280,10 @@ jobs:
         env:
           ATLAS_BROWSER: chromium
         run: python scripts/test_atlas220_vi_mobile_browser.py
+      - name: Verify Cayo route start survives slow dynamic map initialization
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas186_route_browser.py
       - name: Save Atlas 22.0 focus screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -314,6 +318,10 @@ jobs:
         env:
           ATLAS_BROWSER: msedge
         run: python scripts/test_atlas220_vi_mobile_browser.py
+      - name: Verify Cayo route start survives slow dynamic map initialization
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas186_route_browser.py
       - name: Save Atlas 22.0 focus screenshots
         if: always()
         uses: actions/upload-artifact@v4
