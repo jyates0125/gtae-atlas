@@ -6,12 +6,18 @@
  * globally shared maps or content data. Guest progress is private/local.
  */
 (()=>{'use strict';
-if(document.body.dataset.heist!=='cayo-perico'||document.getElementById('j186-route'))return;
+if(document.body.dataset.heist!=='cayo-perico')return;
+// Heist pages load the illustrated island and its clickable overlays through
+// several dynamic scripts. On a slower Edge startup, route code may arrive
+// before the last hotspot/chest layer. Retry once the prerequisites exist
+// instead of permanently abandoning the route workspace.
+function tryBuild(){
+ if(document.getElementById('j186-route'))return true;
 const focus=document.getElementById('j167-heist-map');
 const world=focus?.querySelector('.j167-world'),hotspots=world?.querySelector('#j181-hotspots');
 const chests=world?.querySelector('.j180-chest-layer'),stage=document.querySelector('.j180-stage');
 const frame=document.querySelector('.j180-map-frame');
-if(!focus||!world||!hotspots||!chests||!stage||!frame)return;
+if(!focus||!world||!hotspots||!chests||!stage||!frame)return false;
 document.body.classList.add('j186-cayo-routing');
 const SVG_NS='http://www.w3.org/2000/svg';
 const ns=(tag,attrs={})=>{const n=document.createElementNS(SVG_NS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));return n};
@@ -434,4 +440,14 @@ window.teamJuraCayoPinRoute={startFrom,setFinish,addStop,autoRoute,appendNearest
  reset:()=>{state=defaultState();choosingStart=false;pickStart.textContent='Pick starting pin';pickStart.setAttribute('aria-pressed','false');refreshFilters();mode.value=state.mode;limitSelect.value=String(state.limit);chestMode.value=state.chestMode;persist();render()},
  selectCategory:(cat)=>{if(!ALL_CATS.includes(cat))return false;state.categories=[cat];refreshFilters();persist();if(state.start)autoRoute();else render();return true}};
 refreshFilters();render();
+ return true;
+}
+if(tryBuild())return;
+const observer=new MutationObserver(()=>{
+ if(tryBuild())observer.disconnect();
+});
+observer.observe(document.body,{childList:true,subtree:true});
+// A permanently unavailable island workspace must not leave an observer alive.
+// This timeout does not alter or hide errors from the browser regression gate.
+setTimeout(()=>observer.disconnect(),20000);
 })();

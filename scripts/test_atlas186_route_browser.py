@@ -25,8 +25,25 @@ try:
    browser=pw.chromium.launch(**args)
    ctx=browser.new_context(viewport=viewport,device_scale_factor=1)
    page=ctx.new_page()
+   errors=[]
+   page.on('pageerror',lambda error:errors.append(str(error)))
    page.goto(url,wait_until='domcontentloaded',timeout=50000)
-   page.locator('#j186-route').wait_for(state='visible',timeout=30000)
+   try:
+    page.locator('#j186-route').wait_for(state='visible',timeout=30000)
+   except Exception as exc:
+    diagnostic=page.evaluate("""() => ({
+      heist:document.body.dataset.heist,
+      source:!!document.querySelector('#j167-heist-map'),
+      world:!!document.querySelector('#j167-heist-map .j167-world'),
+      hotspots:!!document.querySelector('#j181-hotspots'),
+      chests:!!document.querySelector('.j180-chest-layer'),
+      stage:!!document.querySelector('.j180-stage'),
+      frame:!!document.querySelector('.j180-map-frame'),
+      routeScript:!!document.querySelector('script[src*="atlas186-cayo-route.js"]'),
+      routePanel:!!document.querySelector('#j186-route'),
+      routeApi:!!window.teamJuraCayoPinRoute
+    })""")
+    raise AssertionError(f'Cayo route did not initialize for {engine}/{kind}: {diagnostic} JS errors={errors[:5]}') from exc
    page.wait_for_function("document.querySelectorAll('.j180-chest').length===19",timeout=20000)
    assert page.locator('.j186-route-layer').count()==1,'Route must be drawn in the SAME map world'
    assert page.locator('.j186-filter').count()==14,'The route planner must match all 14 legend categories'
@@ -206,5 +223,32 @@ try:
     assert not bad,'Phone route panel must not overflow horizontally'
    ctx.close();browser.close()
    print('PASS Cayo 18.6 route: '+kind+' start/presets/nearest/line/manual/visited/reload/chest')
+  # Recovery integration: deliberately fail the original Cayo focus module
+  # once. The static, Cayo-only loader must rebuild dependencies in order;
+  # no manual reload, no duplicate map/route, and no source/guest-save changes.
+  args={'headless':True}
+  if engine=='msedge':args['channel']='msedge'
+  browser=pw.chromium.launch(**args)
+  ctx=browser.new_context(viewport={'width':390,'height':844},reduced_motion='reduce')
+  page=ctx.new_page()
+  blocked=[]
+  def block_original(route):
+   if 'j220retry=' in route.request.url:
+    route.continue_()
+   else:
+    blocked.append(route.request.url)
+    route.abort()
+  page.route('**/atlas167-heist-focus.js*',block_original)
+  page.goto(url,wait_until='domcontentloaded',timeout=50000)
+  page.locator('#j186-route').wait_for(state='visible',timeout=30000)
+  page.wait_for_function("document.body.dataset.j220CayoRecovery==='ready'",timeout=30000)
+  assert blocked,'Missing-module simulation did not block original focus script'
+  assert 'atlas167-heist-focus.js' in page.evaluate('document.body.dataset.j220Recovered'),'Recovery did not reinitialize the focus module'
+  assert page.locator('#j167-heist-map').count()==1,'Recovery duplicated focus map'
+  assert page.locator('#j180-shell').count()==1,'Recovery duplicated flagship map'
+  assert page.locator('#j186-route').count()==1,'Recovery duplicated route planner'
+  assert page.locator('#j188-quickbar').count()==1,'Recovery lost synchronized map controls'
+  print('PASS Cayo 22.0 '+engine+': missing focus script recovered in order without duplicate map, route or filters',flush=True)
+  ctx.close();browser.close()
 finally:
  server.shutdown()

@@ -137,6 +137,9 @@ jobs:
           python scripts/test_atlas172_research_map.py
           python scripts/test_atlas218_yanis_v18.py
           python scripts/test_atlas219_hq_premium.py
+          python scripts/test_atlas220_vi_mobile.py
+          node --check atlas220-vi-mobile.js
+          node --check atlas220-cayo-recovery.js
           node --check atlas164-heist-workspace.js
           node --check heist-pages.js
           python scripts/test_atlas152_art.py
@@ -171,6 +174,7 @@ jobs:
           python scripts/test_atlas217_vi_world_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
           python scripts/test_atlas219_hq_browser.py
+          python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Chromium)
@@ -229,6 +233,7 @@ jobs:
           python scripts/test_atlas217_vi_world_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
           python scripts/test_atlas219_hq_browser.py
+          python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Edge)
@@ -248,8 +253,104 @@ jobs:
           path: qa-evidence/msedge/
           if-no-files-found: warn
           retention-days: 14
+  # Fast, isolated Atlas 22.0 gate. Finds phone popup regressions before the
+  # broader 80-page Chromium/Edge smoke and heist suites complete.
+  atlas22-focus-chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate category symbols and build exact staging payload
+        run: |
+          python scripts/test_atlas220_vi_mobile.py
+          node --check atlas.js
+          node --check atlas220-vi-mobile.js
+          node --check atlas220-cayo-recovery.js
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install focused Chromium
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install chromium
+      - name: Test VI pin details, viewport fit and legend at desktop/phone widths
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas220_vi_mobile_browser.py
+      - name: Verify Cayo marker detail geometry and map polish initialization
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas171_browser.py
+      - name: Verify Cayo route start survives slow dynamic map initialization
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas186_route_browser.py
+      - name: Verify approved Salvage Yard hero image decodes on real page
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas220_salvage_art_browser.py
+      - name: Save Atlas 22.0 focus screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas22-vi-focus-chromium
+          path: qa-evidence/chromium/
+          if-no-files-found: warn
+          retention-days: 14
+  atlas22-focus-edge:
+    runs-on: windows-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate category symbols and build exact staging payload
+        run: |
+          python scripts/test_atlas220_vi_mobile.py
+          node --check atlas.js
+          node --check atlas220-vi-mobile.js
+          node --check atlas220-cayo-recovery.js
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install focused Microsoft Edge
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install msedge
+      - name: Test VI pin details, viewport fit and legend at desktop/phone widths
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas220_vi_mobile_browser.py
+      - name: Verify Cayo marker detail geometry and map polish initialization
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas171_browser.py
+      - name: Verify Cayo route start survives slow dynamic map initialization
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas186_route_browser.py
+      - name: Verify approved Salvage Yard hero image decodes on real page
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas220_salvage_art_browser.py
+      - name: Save Atlas 22.0 focus screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas22-vi-focus-edge
+          path: qa-evidence/msedge/
+          if-no-files-found: warn
+          retention-days: 14
   validated-zip:
-    needs: [chromium-and-static, microsoft-edge]
+    needs: [chromium-and-static, microsoft-edge, atlas22-focus-chromium, atlas22-focus-edge]
     runs-on: ubuntu-latest
     permissions:
       contents: read

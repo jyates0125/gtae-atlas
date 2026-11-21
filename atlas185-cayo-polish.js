@@ -2,7 +2,12 @@
    No new map data, no copied marker art, and no changes to historic saves.
    This enhancement is scoped to the owner-approved Cayo map workspace. */
 (()=>{'use strict';
-if(document.body.dataset.heist!=='cayo-perico'||document.querySelector('#j185-polish'))return;
+if(document.body.dataset.heist!=='cayo-perico')return;
+// Cayo uses sequentially injected scripts whose DOM prerequisites may not
+// exist yet when Edge evaluates this module. Retry only until ready; never
+// duplicate controls, alter saved player state, or overwrite source artwork.
+function tryPolish(){
+ if(document.querySelector('#j185-polish'))return true;
 const focus=document.querySelector('#j167-heist-map');
 const controls=document.querySelector('.j180-map-controls');
 const frame=document.querySelector('.j180-map-frame');
@@ -11,7 +16,7 @@ const moveNative=focus?.querySelector('.j167-toolbar > .j167-tool');
 const legend=document.querySelector('.j180-legend');
 const rows=legend?.querySelector('.j180-legend-rows');
 const info=document.querySelector('.j180-pin-info');
-if(!focus||!controls||!frame||!viewport||!moveNative||!legend||!rows||!info)return;
+if(!focus||!controls||!frame||!viewport||!moveNative||!legend||!rows||!info)return false;
 document.body.classList.add('j185-cayo-polished');
 const marker=document.createElement('span');marker.id='j185-polish';marker.hidden=true;frame.append(marker);
 const makeButton=(cls,name,handler)=>{
@@ -161,4 +166,14 @@ world?.addEventListener('click',event=>{
  });
  presentNearby(visible);
 },true);
+ return true;
+}
+if(tryPolish())return;
+const observer=new MutationObserver(()=>{
+ if(tryPolish())observer.disconnect();
+});
+observer.observe(document.body,{childList:true,subtree:true});
+// Stop listening if the optional island map cannot load. Browser acceptance
+// tests still fail on a missing polish control instead of masking the issue.
+setTimeout(()=>observer.disconnect(),20000);
 })();

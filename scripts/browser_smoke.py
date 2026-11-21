@@ -991,11 +991,26 @@ async def smoke():
                                     expected_art='./art/jura159-heist-'+path.removeprefix('heist-').removesuffix('.html')+'.webp'
                                     if image_src!=expected_art:
                                         failures.append('Approved cinematic heist artwork regressed: expected '+expected_art+', got '+str(image_src))
-                                    await scene.evaluate("(el)=>el.loading='eager'")
+                                    await scene.evaluate("(el)=>{el.loading='eager';el.fetchPriority='high'}")
+                                    # Edge can defer decoding a background image on
+                                    # a long page until it is actually scrolled into
+                                    # view, even after loading=eager is assigned.
+                                    # Never replace the owner's approved asset with
+                                    # fallback artwork or waive decode verification.
+                                    if await scene.is_visible():
+                                        await scene.scroll_into_view_if_needed(timeout=5500)
                                     try:
-                                        await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=6000)
+                                        await pg.wait_for_function("() => { const x=document.querySelector('.mapbox > img'); return x && x.complete && x.naturalWidth > 0; }",timeout=14000)
                                     except Exception:
-                                        failures.append('Original heist illustration did not load')
+                                        image_state=await scene.evaluate("""(x) => ({
+                                            src:x.getAttribute('src'),
+                                            complete:x.complete,
+                                            naturalWidth:x.naturalWidth,
+                                            naturalHeight:x.naturalHeight,
+                                            loading:x.loading,
+                                            currentSrc:x.currentSrc
+                                        })""")
+                                        failures.append('Original heist illustration did not load or decode: '+str(image_state)[:240])
                             if not failures and (path=='heists.html' or (path in HEIST_PAGES and path!='heist-cayo-perico.html')):
                                 try:
                                     await pg.wait_for_selector('.sitebar .j104-logo',timeout=6000)
