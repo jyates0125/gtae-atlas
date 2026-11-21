@@ -24,4 +24,6 @@ assert 'canvas.addEventListener(\'pointerup\'' in code and 'p.multi' in code
 assert "close.click()" in code and 'selected=null' not in code
 assert 'overscroll-behavior:contain' in style and 'min-width:44px' in style
 assert 'body.j128-map-chrome #legend' in legend
+assert '#j171-map-tools' in style and '.atlas85-head>a' in style,'Phone tool and duplicate nav cleanups must remain'
+assert "j143-official-button" in code,'Compact accessible official map view button must remain'
 print('PASS Atlas 22.0: VI panel lifetime, pointer isolation, 26 original legend glyphs, scoped premium collectables and saved key preservation')
