@@ -45,11 +45,26 @@ function card(r){
  const actions=make('div','j222-card-actions');
  const details=make('a','j222-action j222-primary','View profile');
  details.href=profileLink(r);
+ details.addEventListener('click',event=>{const dialog=$('j222-profile-dialog');if(!dialog||typeof dialog.showModal!=='function')return;event.preventDefault();showProfile(dialog,r);});
  const map=make('a','j222-action','Open '+(r.scope==='vi'?'Leonida':'world')+' map');map.href=worldLink(r);
  actions.append(details,map);
  if(srcSafe(r.sourceUrl)){const source=make('a','j222-source','Source ↗');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';actions.append(source)}
  box.append(actions);el.append(media,box);
  return el;
+}
+function showProfile(dialog,r){
+ const content=$('j222-profile-content');if(!content)return;
+ content.replaceChildren();
+ const heading=make('h2','',r.name);heading.id='j222-profile-title';
+ content.append(heading,make('p','j222-world-tag',(worlds[r.scope]||r.scope)+' · '+(r.game||'')));
+ content.append(make('p','',r.summary||'No verified biography is available for this record.'));
+ if(r.region)content.append(make('p','', 'Region: '+r.region));
+ if(r.verification)content.append(make('p','', 'Evidence: '+r.verification));
+ const links=make('div','j222-card-actions');
+ const map=make('a','j222-action j222-primary','Open world map');map.href=worldLink(r);links.append(map);
+ if(srcSafe(r.sourceUrl)){const source=make('a','j222-action','View source');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';links.append(source)}
+ const share=make('a','j222-action','Link to character');share.href=profileLink(r);links.append(share);
+ content.append(links);dialog.showModal();
 }
 async function start(){
  const grid=$('j222-character-grid'),search=$('j222-character-search'),stat=$('j222-character-count');
