@@ -40,8 +40,14 @@ function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo')
  flags.append(el('span','',r.kind==='vehicles6'?'VI RESEARCH':r.kind==='weapons'?'WEAPON':'VEHICLE'));
  img.loading='lazy';
  function showConcept(){
-  img.onerror=null;img.src=imageFallback(r);img.alt='';
-  photo.classList.add('j90-fallback');flags.append(el('span','','Catalog concept art'));
+  img.alt='Original Elario '+(r.group==='Boats'?'watercraft':r.kind==='weapons'?'weapon showcase':'vehicle showcase')+' concept art; not an exact game render of '+r.name;
+  img.onerror=()=>{
+   img.onerror=null;img.remove();photo.classList.add('j90-image-unavailable');
+   const warning=el('span','j90-image-warning','Artwork unavailable · '+r.name);
+   warning.setAttribute('role','status');photo.append(warning);
+  };
+  img.src=imageFallback(r);
+  photo.classList.add('j90-fallback');flags.append(el('span','','Original Elario concept · illustrative'));
  }
  if(r.image&&r.kind!=='vehicles6'){
   img.alt='Archive reference for '+r.name;img.onerror=showConcept;img.src=r.image;

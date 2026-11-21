@@ -16,7 +16,9 @@ story=read('film/atlas192-storyboard.js')
 nav=read('atlas132-nav.js')
 assert 'data-gallery="weapons"' in html
 assert 'atlas192-armory-worlds.css?v=192' in html
-assert 'atlas90-gallery.js?v=192' in html
+assert 'atlas90-gallery.js?v=201' in html
+assert 'j90-image-warning' in gallery and 'Original Elario' in gallery
+assert 'not an exact game render' in gallery
 assert 'atlas90-weapons.html?world=story' in html
 assert 'atlas90-weapons.html?world=online' in html
 assert 'atlas90-weapons6.html' in html
