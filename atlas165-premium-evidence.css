@@ -23,3 +23,14 @@ body.j127-history code{background:#3a2550;color:#ffe4ac}
 body.j127-history .toplinks a,body.j127-coverage .links a{border:1px solid #d3a27c;background:#311f43;border-radius:10px;padding:11px 13px;color:#ffe2b3;min-height:43px;display:inline-flex;align-items:center}
 body.j127-history :is(.toplinks a,.j127-page-links a):focus-visible,body.j127-coverage :is(.links a,.j127-page-links a):focus-visible{outline:3px solid #ffe3aa;outline-offset:3px}
 @media(max-width:630px){.j165-feature-image img{max-height:300px;aspect-ratio:16/10}.j165-feature-image figcaption{font-size:11px}body.j127-coverage .toolbar{align-items:stretch}body.j127-coverage .toolbar :is(input,select,button){flex:1 1 150px}}
+
+/* Atlas 19.9 · historical research mobile width: unbroken provenance URLs
+   and audit cells must wrap or scroll INSIDE their section, never push the
+   whole page sideways. Keep detailed source URLs available to readers. */
+@media(max-width:630px){
+  body.j127-history main,body.j127-history .j115-source-head,
+  body.j127-history .j165-feature-image{min-width:0;max-width:100%}
+  body.j127-history :is(p,li,a,code,td,th,small,blockquote){overflow-wrap:anywhere;word-break:normal}
+  body.j127-history :is(pre,table){max-width:100%;overflow-x:auto}
+  body.j127-history .toplinks{min-width:0;max-width:100%}
+}

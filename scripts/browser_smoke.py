@@ -109,6 +109,26 @@ async def smoke():
                             if missing:failures.extend('Missing local response: '+e for e in missing)
                             if width==390 and path in ['index.html','maps.html','atlas98-data-lab.html','one-last-ride.html'] and info['scroll']>info['width']+35:failures.append(f"Mobile overflow {info['scroll']}/{info['width']}")
 
+                            # Atlas 19.9: three observed viewport defects need a genuine
+                            # regression gate, not a body-level overflow mask.
+                            if width==390 and path in (
+                                'map-hub.html?game=tlad',
+                                'map-hub.html?game=tbogt',
+                                'atlas-feature-audit.html',
+                            ) and info['scroll']>info['width']+8:
+                                offenders=await pg.evaluate("""() => {
+                                  const vw=innerWidth;
+                                  return [...document.body.querySelectorAll('*')].map(el=>{
+                                    const r=el.getBoundingClientRect();
+                                    return {tag:el.tagName.toLowerCase(),id:el.id||'',
+                                      cls:String(el.className?.baseVal||el.className||'').slice(0,65),
+                                      left:Math.round(r.left),right:Math.round(r.right)};
+                                  }).filter(x=>x.left<vw&&x.right>vw+8)
+                                    .sort((a,b)=>b.right-a.right).slice(0,6);
+                                }""")
+                                failures.append(f"Atlas 19.9 mobile horizontal overflow {path}: "
+                                                f"{info['scroll']}/{info['width']} offenders={offenders}")
+
                             # Site-wide release candidate: the ONE universal page-directory
                             # button must actually open, filter, and dismiss on *every*
                             # published page. This is an interaction, not a source assertion.
