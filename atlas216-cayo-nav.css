@@ -1,6 +1,6 @@
 /* Atlas 21.6: Cayo has its own visible, searchable All Pages directory.
  * Suppress two retired fixed-position docks *before* any deferred scripts
- * run. This is Cayo-only; the modern .j132-nav remains fully interactive.
+ * run. This is Cayo-only; the modern searchable directory stays interactive.
  * No changes to map gestures, basemap, legend, saved routes or artwork.
  */
 body.j120-heist-page[data-heist="cayo-perico"] #j89-shell,
