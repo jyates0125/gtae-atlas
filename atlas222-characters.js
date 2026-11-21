@@ -3,10 +3,6 @@
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const ALLOWED=new Set(['all','story','online','vi','classic']);
-const FALLBACKS={
- story:'art/jura155-story.webp',online:'art/jura155-online.webp',
- vi:'art/jura155-vi.webp',classic:'art/jura155-characters.webp'
-};
 const CLASSIC={
  'GTA III':'map-hub.html?game=iii','GTA Vice City':'map-hub.html?game=vc',
  'GTA San Andreas':'atlas-sa.html','GTA IV':'atlas-iv.html',
@@ -29,13 +25,26 @@ const label=(r,local)=>local?'Original Elario cinematic world artwork · not a c
  'Reference character artwork · source linked where provided';
 function portraitMedia(r,profile=false){
  const media=make('div','j222-character-media'+(profile?' j222-profile-media':''));
+ const credit=make('span','j222-art-credit');
+ // A world/ensemble illustration is not evidence of the named character.
+ // If a portrait cannot load, show a transparent identity state, never unrelated art.
+ const unavailable=()=>{
+  media.replaceChildren();
+  const identity=make('div','j222-portrait-unavailable');
+  identity.setAttribute('role','img');
+  identity.setAttribute('aria-label','Individual portrait unavailable for '+r.name);
+  const monogram=make('strong','j222-portrait-initials',r.name.split(/\\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase());
+  identity.append(monogram,make('span','',r.name),make('small','','Individual portrait pending verified source or original concept'));
+  credit.textContent='No character-specific image verified · not a depiction';
+  media.append(identity,credit);
+ };
+ if(!srcSafe(r.image)){unavailable();return media}
  const img=make('img');img.loading=profile?'eager':'lazy';img.decoding='async';img.referrerPolicy='no-referrer';
- let fallback=!srcSafe(r.image);
- const scene='./'+(FALLBACKS[r.scope]||FALLBACKS.classic);
- const credit=make('span','j222-art-credit',label(r,fallback));
- img.alt=label(r,fallback)+' for '+r.name;img.src=fallback?scene:r.image;
- img.addEventListener('error',()=>{if(fallback)return;fallback=true;img.src=scene;img.alt=label(r,true)+' for '+r.name;credit.textContent=label(r,true)},{once:true});
- media.append(img,credit);return media;
+ img.alt='Reference artwork attributed to '+r.name+'; see image source for provenance';
+ img.addEventListener('error',unavailable,{once:true});
+ credit.textContent=label(r,false);
+ media.append(img,credit);img.src=r.image;
+ return media;
 }
 function card(r){
  const el=make('article','j222-character-card');
