@@ -193,6 +193,9 @@ jobs:
           ATLAS_BROWSER: msedge
         run: python scripts/browser_smoke.py
       - name: Verify Cayo mission board and capture phone/desktop screenshots
+        # Git Bash uses fail-fast (-e); PowerShell otherwise hides an earlier
+        # native Python failure when a later command exits successfully.
+        shell: bash
         env:
           ATLAS_BROWSER: msedge
         run: |
