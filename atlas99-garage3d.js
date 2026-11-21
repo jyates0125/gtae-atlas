@@ -39,7 +39,20 @@ function mesh(color,kind){
   cuboid(cx+(cx>0?.184:-.184),cy,cz,.01,.085,.085,hub);
  }
  const aircraft=/plane|aircraft|jet|bomber|fighter|fixed.wing|alkonost|velum|hydra|lazer/i.test(kind||'');
+ const helicopter=/helicopter|chopper|buzzard|annihilator|frogger|maverick|swift|volatus|akula|hunter|savage|valkyrie|cargobob|sparrow/i.test(kind||'');
  const watercraft=/boat|yacht|dinghy|watercraft|submarine|squalo|speeder/i.test(kind||'');
+ if(helicopter){
+  // Class-correct original rotorcraft study; not an exact in-game mesh.
+  cuboid(0,-.28,0,5.9,.12,6.6,[.16,.095,.23]);
+  cuboid(0,.7,.6,1.15,.75,2.25,base); // cabin
+  cuboid(0,.83,-1.22,.22,.18,2.15,tint(base,.78)); // tail boom
+  cuboid(0,1.17,-2.14,.12,.65,.12,tint(base,.72)); // tail fin
+  cuboid(0,1.12,1.2,.95,.22,.76,[.15,.28,.38]); // cockpit glass
+  cuboid(0,1.18,.3,.12,.6,.12,tint(base,.7)); // rotor mast
+  cuboid(0,1.48,.3,4.5,.07,.18,tint(base,.86)); // main rotor
+  cuboid(0,.2,.6,1.8,.1,.12,tint(base,.75)); // landing skid
+  return new Float32Array(data);
+ }
  if(aircraft){
   // Illustrative fixed-wing silhouette: not an exact GTA mesh.
   cuboid(0,-.28,0,5.9,.12,6.6,[.16,.095,.23]);
