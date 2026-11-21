@@ -3,6 +3,7 @@
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const ALLOWED=new Set(['all','story','online','vi','classic']);
+const WORLD_SCENES={story:'art/jura155-story.webp',online:'art/jura155-online.webp',vi:'art/jura155-vi.webp',classic:'art/jura155-characters.webp'};
 const CLASSIC={
  'GTA III':'map-hub.html?game=iii','GTA Vice City':'map-hub.html?game=vc',
  'GTA San Andreas':'atlas-sa.html','GTA IV':'atlas-iv.html',
@@ -30,13 +31,18 @@ function portraitMedia(r,profile=false){
  // If a portrait cannot load, show a transparent identity state, never unrelated art.
  const unavailable=()=>{
   media.replaceChildren();
+  const scene=make('img','j222-world-scene');
+  scene.loading=profile?'eager':'lazy';scene.decoding='async';
+  scene.alt='Illustrative '+(worlds[r.scope]||r.game||'GTA')+' world artwork; not a portrait of '+r.name;
+  scene.src='./'+(WORLD_SCENES[r.scope]||WORLD_SCENES.classic);
+  scene.addEventListener('error',()=>{scene.remove();media.classList.add('j222-art-missing')},{once:true});
   const identity=make('div','j222-portrait-unavailable');
-  identity.setAttribute('role','img');
+  identity.setAttribute('role','group');
   identity.setAttribute('aria-label','Individual portrait unavailable for '+r.name);
   const monogram=make('strong','j222-portrait-initials',r.name.split(/\\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase());
-  identity.append(monogram,make('span','',r.name),make('small','','Individual portrait pending verified source or original concept'));
-  credit.textContent='No character-specific image verified · not a depiction';
-  media.append(identity,credit);
+  identity.append(monogram,make('span','',r.name),make('small','','World illustration · individual portrait pending'));
+  credit.textContent='Illustrative world artwork only · not a depiction of '+r.name;
+  media.append(scene,identity,credit);
  };
  if(!srcSafe(r.image)){unavailable();return media}
  const img=make('img');img.loading=profile?'eager':'lazy';img.decoding='async';img.referrerPolicy='no-referrer';
