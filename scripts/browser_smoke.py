@@ -545,7 +545,7 @@ async def smoke():
                             if not failures and path in ('atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'):
                                 try:
                                     await pg.wait_for_function("document.querySelector('#universeStatus')?.textContent?.startsWith('Indexed ')",timeout=8000)
-                                    expected_world={'atlas-database.html':'online','atlas-characters.html':'story','atlas-animals.html':'vi','atlas-collectibles.html':'story'}[path]
+                                    expected_world={'atlas-database.html':'online','atlas-characters.html':'all','atlas-animals.html':'vi','atlas-collectibles.html':'story'}[path]
                                     expected_kind={'atlas-database.html':'vehicle','atlas-characters.html':'character','atlas-animals.html':'animal','atlas-collectibles.html':'collectible'}[path]
                                     if await pg.locator('#filterGame').input_value()!=expected_world:
                                         failures.append('Unexpected default game scope on '+path)
@@ -603,10 +603,13 @@ async def smoke():
                                         art=portrait.locator('.u-image-character')
                                         if await art.locator('img').count():
                                             await art.locator('img').first.evaluate("(el)=>el.dispatchEvent(new Event('error'))")
-                                        if await art.locator('.u-character-portrait').count()!=1:
-                                            failures.append('Character broken-image fallback must be original portrait, not initials')
-                                        if 'NOT GAME ART' not in (await art.locator('.u-image-note').inner_text()):
-                                            failures.append('Original character fallback does not disclose illustrative artwork')
+                                        fallback=art.locator('img').first
+                                        if await fallback.count()!=1 or not (await fallback.get_attribute('src') or '').endswith('.webp'):
+                                            failures.append('Character broken-image fallback must be a bundled cinematic world illustration, not initials')
+                                        elif 'not an exact portrait' not in (await fallback.get_attribute('alt') or '').lower():
+                                            failures.append('Fallback image must disclose that the scene is not a character likeness')
+                                        if 'NOT A PORTRAIT' not in (await art.locator('.u-image-note').inner_text()):
+                                            failures.append('Character fallback must disclose that illustrative world art is not a portrait')
                                     if path=='atlas-database.html':
                                         await pg.locator('#filterKind').select_option('vehicle')
                                         if await pg.locator('#recordGrid .u-card').count()<2:
