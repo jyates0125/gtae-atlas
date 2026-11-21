@@ -18,6 +18,12 @@ assert 'data-gallery="weapons"' in html
 assert 'atlas192-armory-worlds.css?v=192' in html
 assert 'atlas90-gallery.js?v=201' in html
 assert 'j90-image-warning' in gallery and 'Original Elario' in gallery
+showroom=read('atlas100-showroom.css')
+for world,asset in (('vehicles5','jura161-vehicles.webp'),('vehicles6','jura161-vehicles6.webp'),('weapons','jura161-weapons.webp')):
+ assert f'body[data-gallery="{world}"] .j90-hero-art' in showroom
+ assert f"url('./art/{asset}')" in showroom
+ assert (ROOT/'art'/asset).is_file()
+
 assert 'not an exact game render' in gallery
 assert 'atlas90-weapons.html?world=story' in html
 assert 'atlas90-weapons.html?world=online' in html

@@ -25,6 +25,8 @@ try:
    # Force archive-image network failures: original Elario fallbacks must render instead of blanks.
    page.route('**/cdn.jsdelivr.net/**',lambda route:route.abort())
    page.goto(base+'atlas90-vehicles5.html',wait_until='domcontentloaded')
+   page.wait_for_function("getComputedStyle(document.querySelector('.j90-hero-art')).backgroundImage.includes('jura161-vehicles.webp')",timeout=10000)
+
    page.locator('#j90Search').fill('squalo')
    expect(page.locator('#j90Cards article.j90-card')).to_have_count(1,timeout=18000)
    concept=page.locator('#j90Cards .j90-photo.j90-fallback img')
