@@ -32,7 +32,7 @@ for name,(class_name,required) in specs.items():
     assert not [p for p in parsed.urls if p and not (ROOT/p).is_file()],name
     for need in required:assert need in (parsed.ids if not need.endswith('.html') else raw),(name,need)
     if name=='atlas-research.html':
-        assert 'community-provisional and not verified gameplay coordinates' in raw
+        assert 'Coordinates are not gameplay-verified' in raw and 'UNVERIFIED PINS' in raw
     if name=='atlas-iv.html':
         assert 'GTADB · CC BY 4.0' in raw
     if name=='heists.html':

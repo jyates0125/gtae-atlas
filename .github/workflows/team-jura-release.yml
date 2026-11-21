@@ -124,6 +124,7 @@ jobs:
           node --check atlas217-vi-world.js
           node --check atlas172-research-map.js
           node --check atlas-research.js
+          node --check atlas81-hq.js
           node --check atlas-iv.js
           node --check atlas190-sa-route.js
           node --check atlas186-cayo-route.js
@@ -135,6 +136,7 @@ jobs:
           python scripts/test_atlas217_vi_world.py
           python scripts/test_atlas172_research_map.py
           python scripts/test_atlas218_yanis_v18.py
+          python scripts/test_atlas219_hq_premium.py
           node --check atlas164-heist-workspace.js
           node --check heist-pages.js
           python scripts/test_atlas152_art.py
@@ -168,6 +170,7 @@ jobs:
           python scripts/test_atlas212_directory_browser.py
           python scripts/test_atlas217_vi_world_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
+          python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Chromium)
@@ -225,6 +228,7 @@ jobs:
           python scripts/test_atlas212_directory_browser.py
           python scripts/test_atlas217_vi_world_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
+          python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Edge)
