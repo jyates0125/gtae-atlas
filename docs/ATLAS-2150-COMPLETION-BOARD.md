@@ -59,3 +59,6 @@ The 2150 cross-product workflow currently checks **source contracts, JavaScript 
 5. Request owner visual and release approval only after blockers are closed; merge safely and verify live deployment.
 
 **Policy:** Progress claims must cite exact files, SHAs and rendered evidence. This board is an implementation checklist, not a declaration that any listed page is finished.
+
+## Owner decision — interim imagery (2026-11-21)
+Keep approved Elario cinematic world scenes as **clearly labeled interim backgrounds** when a named character portrait cannot be sourced or decoded. Do not leave a visually empty card, but never imply the scene depicts that named person. Prioritize correct individual portraits and unique model-accurate 3D representations in subsequent passes. The fallback is not visual completion. Relevant staging commits: `14cabe62` (character media), `96a1a1b4` (fallback styling), `c2ed1a84` (regression check). GTA VI is released; game-wide pre-release labels are obsolete, while per-record source verification remains mandatory.
