@@ -37,3 +37,16 @@ body[data-atlas-kind="character"] .u-hero .u-hero-art{
 @media(max-width:930px){.j222-character-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.j222-gallery{padding:14px;margin:12px 0 24px;border-radius:17px}.j222-character-grid{grid-template-columns:1fr;gap:12px}.j222-character-media{aspect-ratio:8/5}.j222-searchbox{grid-template-columns:1fr}.j222-searchbox button{width:100%}.j222-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.j222-tabs button{padding:8px 5px}.j222-character-info{padding:12px}}
 @media(prefers-reduced-motion:reduce){.j222-character-media img{transition:none!important}.j222-character-card:hover .j222-character-media img{transform:none}}
+
+/* Character detail: keyboard-native dialog, safe phone viewport and clear source hierarchy. */
+#j222-profile-dialog{box-sizing:border-box;width:min(620px,calc(100vw - 28px));max-height:min(85dvh,780px);overflow:auto;border:1px solid #d7a77b;border-radius:20px;padding:clamp(18px,3vw,30px);background:linear-gradient(150deg,#382044,#180d29 75%);color:#fff;box-shadow:0 24px 85px #090410d9}
+#j222-profile-dialog::backdrop{background:#090414c9;backdrop-filter:blur(5px)}
+#j222-profile-dialog>form{display:flex;justify-content:flex-end;margin:-7px -7px 6px 0}
+#j222-profile-dialog .u-close{min-width:44px;min-height:44px;border:1px solid #c99aaf;border-radius:12px;background:#3a234b;color:#fff;cursor:pointer;font-size:20px}
+#j222-profile-dialog .u-close:focus-visible,#j222-profile-dialog a:focus-visible{outline:3px solid #ffe09e;outline-offset:3px}
+#j222-profile-content{display:grid;gap:13px;min-width:0}
+#j222-profile-content h2{font:850 clamp(26px,4vw,39px)/1.12 system-ui;color:#ffe0a3;margin:0;overflow-wrap:anywhere}
+#j222-profile-content p{font:14px/1.6 system-ui;color:#eadbe9;margin:0;overflow-wrap:anywhere}
+#j222-profile-content .j222-world-tag{color:#ffd495;font-size:12px}
+#j222-profile-content .j222-card-actions{margin-top:7px}
+@media(max-width:600px){#j222-profile-dialog{max-height:calc(100dvh - 36px);border-radius:15px;padding:17px}#j222-profile-content .j222-card-actions{display:grid;grid-template-columns:1fr}#j222-profile-content .j222-action{justify-content:center;min-height:44px}}
