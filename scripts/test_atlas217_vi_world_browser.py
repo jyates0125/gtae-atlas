@@ -25,9 +25,9 @@ try:
    page=ctx.new_page()
    page.goto(base+'atlas-vi.html',wait_until='domcontentloaded',timeout=45000)
    panel=page.locator('#j217-vi-hub')
-   expect(panel.locator('summary')).to_be_visible(timeout=20000)
+   # The VI hub now contains a nested Rockstar launch directory <details>.\n   # Scope the toggle to the hub's direct child, not its nested summaries.\n   toggle=panel.locator(':scope > summary')\n   expect(toggle).to_have_count(1)\n   expect(toggle).to_be_visible(timeout=20000)
    assert not panel.evaluate('(e)=>e.open'),'World menu must start collapsed'
-   panel.locator('summary').click()
+   toggle.click()
    assert panel.evaluate('(e)=>e.open'),'Native world panel did not open'
    links=panel.locator('.j217-vi-grid a')
    assert links.count()==8,('Expected eight VI-specific destinations',links.count())
