@@ -28,6 +28,11 @@ assert 'j223-search-results' in page and 'role="search"' in page
 assert 'No account required' in welcome and 'atlas-dashboard.html' in welcome
 assert 'jura155-vi.webp' in css and 'j223-hero' in css
 assert 'j223-cast-rail' in js and 'atlas-universe-profiles.json' in js
+assert page.count('class="j223-evidence-card"')==3
+assert 'j223-evidence-lab' in page and 'evidenceExplanations' in js
+assert 'aria-live="polite"' in page and 'j223-evidence-cases' in css
+assert 'atlas-verification.html' in page and (R/'atlas-verification.html').exists()
+
 assert 'atlas152-era' not in page, 'Do not restore flat avatar art'
 assert 'data-j130-surface="dashboard"' in page
 for h,c in p.links:
