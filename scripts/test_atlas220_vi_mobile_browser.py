@@ -28,7 +28,7 @@ try:
    canvas=page.locator('#atlasCanvas')
    expect(canvas).to_be_visible(timeout=30000)
    expect(page.locator('#game6')).to_have_attribute('aria-pressed','true',timeout=25000)
-   assert page.locator('#legend .elario-legend-glyph').count()>0,'Visible category-specific original legend icons required'
+   # A user-created mapped record makes this independent of optional remote source latency.
    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1'),f'{width}px VI page horizontal overflow'
    if width<701:
     assert page.locator('.jura-quick-nav').evaluate('(el)=>getComputedStyle(el).display')=='none','Redundant phone map actions still cover canvas'
@@ -43,6 +43,8 @@ try:
    card=page.locator('#selectedCard')
    expect(card).to_be_visible(timeout=20000)
    expect(page.locator('#selectedName')).to_have_text('Atlas 22 First Pin')
+   page.locator('#legend .elario-legend-glyph').first.wait_for(state='attached',timeout=12000)
+   assert page.locator('#legend .elario-legend-glyph').count()>0,'Original category-specific legend icons required'
    close=page.locator('#closeSelected')
    expect(close).to_be_visible()
    assert close.bounding_box()['height']>=43,'Sticky Close must be touch sized'
