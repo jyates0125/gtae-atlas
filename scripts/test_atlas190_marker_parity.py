@@ -33,6 +33,12 @@ assert len(ids)==300
 gtadb=json.loads(read('data/gtadb-4-manifest.json'))
 assert gtadb['license']=='CC BY 4.0' and gtadb['count']==2650
 assert gtadb['mappedCount']==2648
+# Never discard positioned entries whose upstream source left the title blank.
+source_rows=json.loads(read('data/gtadb-4.json'))['records']
+untitled=[key for key,row in source_rows.items() if isinstance(row,list) and isinstance(row[0],str) and not row[0].strip()]
+assert len(untitled)==14 and len(source_rows)==2648
+assert 'Unnamed community landmark (source ${id})' in iv
+assert 'Source title unavailable' in iv
 assert 'Math.ceil(visible.length/400)' not in iv,'Old stride-based data omission returned'
 for token in ('hitTargets.push','const clustered=size>1','getComputedStyle' if False else 'j190-marker-status',
               "loadBirds()", "setScope(which)", "birdRecords={iv:[],tlad:[],tbogt:[]}",
