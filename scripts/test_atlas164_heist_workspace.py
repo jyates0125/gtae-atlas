@@ -29,7 +29,13 @@ for url in ('/atlas-online.html','/atlas-cayo.html'):
     assert '! X-Frame-Options' in section
     assert 'X-Frame-Options: SAMEORIGIN' in section
     assert "Content-Security-Policy: frame-ancestors 'self'" in section
-assert '/atlas-account.html' not in headers
+# Account pages may now have stricter cache/privacy headers, but MUST keep
+# the global DENY framing policy; only the two playable map frames are exempt.
+assert '/atlas-account.html' in headers
+account_headers=headers.split('/atlas-account.html\n',1)[1].split('\n\n',1)[0]
+assert 'Cache-Control: no-store' in account_headers
+assert 'Referrer-Policy: no-referrer' in account_headers
+assert '! X-Frame-Options' not in account_headers and 'X-Frame-Options: SAMEORIGIN' not in account_headers
 
 for id in ids:
     html=(p/('heist-'+id+'.html')).read_text()
