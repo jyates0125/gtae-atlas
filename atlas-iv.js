@@ -132,7 +132,26 @@ function setScope(which){
   url.searchParams.delete('loc');history.replaceState(null,'',url)}catch(_){}
  update();updateRoute();
 }
-function update(){const term=($('classicSearch').value||'').trim().toLowerCase();filtered=records.filter(r=>(activeScope==='landmarks'||!$('j190-iv-hide-found')?.checked||!birdFound.has(r.id))&&(categories==='all'||r.tags.includes(categories)||(categories==='other'&&!r.tags.length))&&(!onlyFav||favorites.has(r.id))&&(!term||[r.name,r.address,r.hint||'',r.region,r.tags.join(' ')].join(' ').toLowerCase().includes(term)));const sort=$('classicSort').value;filtered.sort((a,b)=>sort==='nearest'?Math.hypot(a.x-center.x,a.y-center.y)-Math.hypot(b.x-center.x,b.y-center.y):sort==='region'?a.region.localeCompare(b.region):a.name.localeCompare(b.name));$('resultCount').textContent=String(filtered.length);$('visibleCount').textContent=String(records.length);$('recordStatus').textContent=records.length+' '+(activeScope==='landmarks'?(source==='full'?'licensed community landmarks':'starter landmarks'):'MIT source collectible positions');const cat=$('categories');cat.replaceChildren();let tags=new Map([['all',records.length]]);for(const r of records){const t=r.tags.length?r.tags:['other'];for(const v of t)tags.set(v,(tags.get(v)||0)+1)}for(const [t,n]of tags){const b=document.createElement('button');b.type='button';b.textContent=`${t==='all'?'All':t==='other'?'Uncategorized':t} (${n})`;b.setAttribute('aria-pressed',String(categories===t));b.addEventListener('click',()=>{categories=t;update()});cat.append(b)}const list=$('classicResults');list.replaceChildren();if(!filtered.length){const p=document.createElement('p');p.className='microcopy';p.textContent='No matches. Try another search or category.';list.append(p)}for(const r of filtered.slice(0,80)){const b=document.createElement('button');b.type='button';b.className='classic-result';b.setAttribute('aria-current',String(selected?.id===r.id));const strong=document.createElement('strong');strong.textContent=r.name;const small=document.createElement('small');small.textContent=`${favorites.has(r.id)?'★ Favorite · ':''}${r.region}`;b.append(strong,small);b.onclick=()=>select(r,true);list.append(b)}render()}
+const perPage=80;
+let resultPage=0,previousFilter='';
+function update(){const term=($('classicSearch').value||'').trim().toLowerCase();filtered=records.filter(r=>(activeScope==='landmarks'||!$('j190-iv-hide-found')?.checked||!birdFound.has(r.id))&&(categories==='all'||r.tags.includes(categories)||(categories==='other'&&!r.tags.length))&&(!onlyFav||favorites.has(r.id))&&(!term||[r.name,r.address,r.hint||'',r.region,r.tags.join(' ')].join(' ').toLowerCase().includes(term)));const sort=$('classicSort').value;
+ const filterKey=JSON.stringify([activeScope,term,categories,onlyFav,sort,$('j190-iv-hide-found')?.checked]);
+ if(filterKey!==previousFilter){resultPage=0;previousFilter=filterKey}
+ filtered.sort((a,b)=>sort==='nearest'?Math.hypot(a.x-center.x,a.y-center.y)-Math.hypot(b.x-center.x,b.y-center.y):sort==='region'?a.region.localeCompare(b.region):a.name.localeCompare(b.name));$('resultCount').textContent=String(filtered.length);$('visibleCount').textContent=String(records.length);$('recordStatus').textContent=records.length+' '+(activeScope==='landmarks'?(source==='full'?'licensed community landmarks':'starter landmarks'):'MIT source collectible positions');const cat=$('categories');cat.replaceChildren();let tags=new Map([['all',records.length]]);for(const r of records){const t=r.tags.length?r.tags:['other'];for(const v of t)tags.set(v,(tags.get(v)||0)+1)}for(const [t,n]of tags){const b=document.createElement('button');b.type='button';b.textContent=`${t==='all'?'All':t==='other'?'Uncategorized':t} (${n})`;b.setAttribute('aria-pressed',String(categories===t));b.addEventListener('click',()=>{categories=t;update()});cat.append(b)}
+ paintResults();syncNearby();render();
+}
+function paintResults(){
+ resultPage=Math.max(0,Math.min(resultPage,Math.ceil(filtered.length/perPage)-1));
+ const offset=resultPage*perPage;
+ $('ivResultPager').hidden=filtered.length<=perPage;
+ $('ivPrev').disabled=resultPage===0;
+ $('ivNext').disabled=offset+perPage>=filtered.length;
+ $('ivRange').textContent=filtered.length?(offset+1)+'–'+Math.min(offset+perPage,filtered.length)+' of '+filtered.length:'0 matches';
+ const list=$('classicResults');list.replaceChildren();if(!filtered.length){const p=document.createElement('p');p.className='microcopy';p.textContent='No matches. Try another search or category.';list.append(p)}for(const r of filtered.slice(offset,offset+perPage)){const b=document.createElement('button');b.type='button';b.className='classic-result';b.setAttribute('aria-current',String(selected?.id===r.id));const strong=document.createElement('strong');strong.textContent=r.name;const small=document.createElement('small');small.textContent=`${favorites.has(r.id)?'★ Favorite · ':''}${r.region}`;b.append(strong,small);b.onclick=()=>select(r,true);list.append(b)}
+}
+for(const [id,step] of [['ivPrev',-1],['ivNext',1]]){
+ $(id).onclick=()=>{resultPage+=step;paintResults();$('classicResults').scrollTop=0};
+}
 function select(r,recenter=false){selected=r;$('detailIntro').hidden=true;$('detailContent').hidden=false;$('detailName').textContent=r.name;$('detailRegion').textContent=r.region;$('detailCategory').textContent=r.tags.join(' · ').toUpperCase()||'LANDMARK';$('detailAddress').textContent=r.isBird?(r.hint||'No source clue attached; use the XYZ position and game map.'):(r.address||'No matching real-world reference reported');
  $('detailSource').href=r.isBird?'https://github.com/whampson/pigeon-locator/blob/de21b7df7ec8b10dfe5abe7290d894efbfc1bd11/PigeonLocator/GameData/'+r.sourceFile:'https://github.com/rolux/gtadb.org';
  $('detailSource').textContent=r.isBird?'MIT source coordinates and clues ↗':'GTADB research source ↗';
@@ -174,7 +193,7 @@ function updateRoute(){
   };
   row.append(remove);list.append(row);
  });
- finish.value=finishId;
+ syncNearby();finish.value=finishId;
  start.disabled=finish.disabled=$('routeOrder').disabled=route.length<2;
  $('routeFit').disabled=$('routeCopy').disabled=$('routeClear').disabled=!route.length;
  $('stopCount').textContent=String(route.length);
@@ -194,15 +213,31 @@ $('routeFinish').onchange=e=>{
  if(i>0)route.push(route.splice(i,1)[0]);
  saveRoute();
 };
+function nearestIndex(last,remaining){
+ const distance=r=>(r.x-last.x)**2+(r.y-last.y)**2;
+ let index=0;
+ for(let i=1;i<remaining.length;i++)if(distance(remaining[i])<distance(remaining[index]))index=i;
+ return index;
+}
+function syncNearby(){
+ const used=new Set(route.map(r=>r.id));
+ $('ivNearby').disabled=!route.length||!filtered.some(r=>!used.has(r.id));
+}
+$('ivNearby').onclick=()=>{
+ if(!route.length)return;
+ const used=new Set(route.map(r=>r.id)),remaining=filtered.filter(r=>!used.has(r.id));
+ let index=route.length-(finishId?1:0);
+ for(let count=0;count<5&&remaining.length;count++){
+  const nearest=nearestIndex(route[index-1],remaining);
+  route.splice(index++,0,remaining.splice(nearest,1)[0]);
+ }
+ saveRoute();
+};
 $('routeOrder').onclick=()=>{
  if(route.length<2)return;
  const ordered=[route[0]],remaining=route.slice(1).filter(r=>r.id!==finishId);
  while(remaining.length){
-  const last=ordered[ordered.length-1];
-  const distance=r=>(r.x-last.x)**2+(r.y-last.y)**2;
-  let nearest=0;
-  for(let i=1;i<remaining.length;i++)if(distance(remaining[i])<distance(remaining[nearest]))nearest=i;
-  ordered.push(remaining.splice(nearest,1)[0]);
+  ordered.push(remaining.splice(nearestIndex(ordered[ordered.length-1],remaining),1)[0]);
  }
  if(finishId)ordered.push(route[route.length-1]);
  route=ordered;saveRoute();

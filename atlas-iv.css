@@ -26,3 +26,8 @@ body.j119-iv .classic-main .classic-head{
 body.j119-iv[data-iv-scope="tlad"] .classic-main .classic-head{--iv-cover:url('./art/jura157-tlad-cinematic.webp')}
 body.j119-iv[data-iv-scope="tbogt"] .classic-main .classic-head{--iv-cover:url('./art/jura157-tbogt-cinematic.webp')}
 .classic-head .classic-world-picker{background:#25152eda}
+
+.iv-pager{display:flex;gap:.35rem;align-items:center;justify-content:space-between;margin-block:.5rem}
+.iv-pager[hidden]{display:none}
+.iv-pager button{min-height:40px;background:#332941;color:#ffe0b3;border:1px solid #835979;border-radius:8px}
+.iv-pager span,.classic-route-fields small{font-size:.75rem;color:#e3cfdd}

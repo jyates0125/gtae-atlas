@@ -4,3 +4,7 @@
 .j192-garage-empty p{font:600 13px/1.55 system-ui;color:#f2e3ef;max-width:530px;margin:0}
 .j192-garage-empty button{margin-top:10px;min-height:46px;padding:11px 16px;background:#f6cf96;color:#201330;border:1px solid #ffecb9;border-radius:9px;font:850 12px system-ui}
 .j192-garage-empty button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+.jura-marine-art{position:relative;margin:0;max-width:100%;overflow:hidden;border-radius:.7rem}
+.jura-marine-art img{display:block;width:100%;height:auto}
+.jura-marine-art figcaption{padding:.4rem .65rem;background:#23142e;color:#ffe4b9;font-size:.76rem}

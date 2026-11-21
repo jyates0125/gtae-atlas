@@ -31,6 +31,12 @@ try:
    # Source tag categories must actually filter the map, not merely
    # change aria-pressed while resetting the category to All.
    total=int(page.locator('#visibleCount').inner_text())
+   first=page.locator('.classic-result').first.inner_text()
+   page.locator('#ivNext').click()
+   assert page.locator('.classic-result').first.inner_text()!=first
+   expect(page.locator('#ivRange')).to_have_text('81–160 of '+str(total))
+   page.locator('#ivPrev').click()
+   expect(page.locator('.classic-result').first).to_have_text(re.compile(re.escape(first.splitlines()[0])))
    labels=page.locator('#categories button').all_text_contents()
    filtered_choice=next(((i,int(m.group(1))) for i,label in enumerate(labels)
                         if i>0 and (m:=re.search(r'\((\d+)\)$',label))
@@ -92,8 +98,12 @@ try:
    ids=[item['id'] for item in expected+[finish]]
    actual=lambda: page.locator('#routeStart option').evaluate_all('(opts)=>opts.map(o=>o.value)')
    assert actual()==ids
+   page.locator('#ivNearby').click()
+   expanded=actual()
+   assert len(expanded)==len(set(expanded))==10 and expanded[:4]==ids[:4] and expanded[-1]==ids[-1]
+   ids=expanded
    page.reload(wait_until='domcontentloaded')
-   expect(page.locator('#stopCount')).to_have_text('5')
+   expect(page.locator('#stopCount')).to_have_text('10')
    assert actual()==ids and page.locator('#routeFinish').input_value()==finish['id']
    page.locator('#j190-iv-scope').select_option('tlad')
    page.wait_for_function("document.getElementById('visibleCount').textContent==='50'")
@@ -144,6 +154,32 @@ try:
    page.locator('#j190-iv-scope').select_option('iv')
    assert actual()==ids
    print('PASS Atlas 19.0 '+engine+' '+kind+': IV 200/50/50 scope, search, found, clusters, SA map route, classic episode links')
+   page.goto(base+'maps.html?q=tbogt&filter=gateway',wait_until='domcontentloaded')
+   expect(page.locator('#worldCount')).to_have_text('1 of 13 destinations')
+   expect(page.locator('.directory-card')).to_have_attribute('href','./map-hub.html?game=tbogt')
+   page.locator('#worldSearch').fill('no such destination')
+   page.locator('#resetWorldSearch').click()
+   expect(page.locator('.directory-card')).to_have_count(13)
+   page.goto(base+'heist-fleeca.html',wait_until='domcontentloaded')
+   page.locator('input[data-step]').first.check()
+   page.goto(base+'heists.html',wait_until='domcontentloaded')
+   page.locator('#heistStarted').check()
+   expect(page.locator('#heistCount')).to_have_text('1 of 15 workspaces')
+   expect(page.locator('.cards .card:visible h2')).to_have_text('The Fleeca Job')
+   page.locator('#heistReset').click()
+   expect(page.locator('.cards .card:visible')).to_have_count(15)
+   page.goto(base+'atlas90-vehicles5.html',wait_until='domcontentloaded')
+   for model in ('adder','akula'):
+    page.locator('#j90Search').fill(model)
+    page.get_by_role('button',name='+ Compare',exact=True).first.click()
+   expect(page.locator('#j90Compare article')).to_have_count(2)
+   expect(page.locator('#j90Compare')).to_contain_text('126.25 mph')
+   expect(page.locator('#j90Compare')).to_contain_text('157.25 mph')
+   page.get_by_role('button',name='Remove Adder from comparison').click()
+   expect(page.locator('#j90Compare article')).to_have_count(1)
+   if kind=='mobile':
+    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1')
+   print('PASS world directory, heist checklist recovery, comparison sources and nearby route extension',engine,kind)
    context.close();browser.close()
 finally:
  server.shutdown()

@@ -238,6 +238,7 @@ jobs:
         with:
           name: team-jura-atlas-cloudflare-validated-after-chromium-and-edge
           path: public/
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 21
       - name: Owner visual signoff — prevent artwork regression release
