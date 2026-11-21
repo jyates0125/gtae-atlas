@@ -16,6 +16,8 @@ for term in ('j181-hotspots','j181-hotspot','j180-legend-row','MutationObserver'
 assert "body.j180-cayo.j181-map-hotspots .j167-pins{display:none!important}" in css
 assert "body.j180-cayo.j181-map-hotspots .j180-ref-layer{display:none!important}" in css
 assert "body.j180-cayo.j181-map-hotspots .j167-chips{display:none!important}" in css
+# The illustrative (aria-hidden) 2D canvas must never swallow real Cayo taps.
+assert "body.j180-cayo.j181-map-hotspots .j167-canvas{pointer-events:none!important}" in css
 assert "j180-chest.j180-chest-active:after" in css
 assert "background:transparent!important" in css
 assert "width:clamp(19px" in css
