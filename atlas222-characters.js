@@ -17,7 +17,7 @@ const CLASSIC={
  'GTA The Ballad of Gay Tony':'map-hub.html?game=tbogt'
 };
 const worlds={story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story',classic:'Classic GTA'};
-const profileLink=r=>'./atlas-characters.html?game='+encodeURIComponent(r.scope)+'&q='+encodeURIComponent(r.name)+'#results';
+const profileLink=r=>'./atlas-characters.html?game='+encodeURIComponent(r.scope)+'&q='+encodeURIComponent(r.name)+'#mainCharacterEra';
 const worldLink=r=>r.scope==='classic'?'./'+(CLASSIC[r.game]||'maps.html'):
  r.scope==='story'?'./atlas.html':r.scope==='online'?'./atlas-online.html':'./atlas-vi.html';
 const make=(tag,cl,value)=>{const n=document.createElement(tag);if(cl)n.className=cl;if(value!==undefined)n.textContent=value;return n};
@@ -60,7 +60,8 @@ async function start(){
  const buttons=[...document.querySelectorAll('[data-j222-scope]')];
  const args=new URLSearchParams(location.search);
  let scope=ALLOWED.has(args.get('game'))?args.get('game'):'all';
- let q='';
+ let q=(args.get('q')||'').slice(0,120);
+ search.value=q;
  const draw=()=>{
   const s=q.trim().toLocaleLowerCase();
   const rows=data.filter(r=>(scope==='all'||r.scope===scope)&&(!s||[r.name,worlds[r.scope],r.game,r.group,r.summary,...(r.aliases||[])].join(' ').toLocaleLowerCase().includes(s)));
