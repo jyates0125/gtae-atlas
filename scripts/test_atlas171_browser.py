@@ -98,7 +98,21 @@ try:
         assert option.count()==1,'Crowded entry marker remains individually selectable'
         option.click()
         assert 'Airstrip infiltration' in page.locator('.j180-pin-info').inner_text(),'Chosen airstrip entry detail opens'
-        assert page.locator('.j180-pin-info').evaluate("(e)=>getComputedStyle(e).position==='fixed'"),'Marker details stay visible as map scrolls'
+        # The final polish is deferred until its dynamically generated map
+        # controls exist. Assert the actual module finished before CSS geometry.
+        page.locator('#j185-polish').wait_for(state='attached',timeout=12000)
+        position=page.locator('.j180-pin-info').evaluate("(e)=>getComputedStyle(e).position")
+        assert position=='fixed',(
+          'Marker details must stay visible while scrolling; '
+          +str(page.evaluate("""() => ({
+            position:getComputedStyle(document.querySelector('.j180-pin-info')).position,
+            classes:document.body.className,
+            polish:!!document.querySelector('#j185-polish'),
+            marker:!!document.querySelector('#j181-hotspots'),
+            map:!!document.querySelector('#j180-shell'),
+            controls:!!document.querySelector('.j180-map-controls')
+          })"""))
+        )
         page.keyboard.press('Escape')
         assert page.locator('.j180-pin-info').is_hidden(),'Escape closes marker details'
         page.locator('#j180-shell').screenshot(path=str(path/('cayo-180-map-'+kind+'.png')),animations='disabled',timeout=35000)
