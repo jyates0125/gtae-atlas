@@ -17,7 +17,7 @@ assert css.count('{')==css.count('}')
 for page,expected_title in (
     ('atlas.html','GTA V Story Map'),
     ('atlas-online.html','GTA Online Map'),
-    ('atlas-vi.html','GTA VI Leonida Research'),
+    ('atlas-vi.html','GTA VI Leonida Interactive World Map'),
     ('atlas-cayo.html','Cayo Perico Heist Planner'),
     ('one-last-ride.html','One Last Ride')):
     data=(ROOT/page).read_text(encoding='utf-8')

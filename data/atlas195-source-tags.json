@@ -268,16 +268,16 @@
       "source": "GTADB.ORG and contributors",
       "sourceUrl": "https://github.com/rolux/gtadb.org/tree/main/map/data/6",
       "license": "CC BY 4.0",
-      "sourceUpdated": "2026-11-15T10:33:17+00:00",
+      "sourceUpdated": "2026-11-21T07:45:07.666Z",
       "sourceCommit": null,
-      "records": 3425,
-      "mapped": 3334,
+      "records": 3754,
+      "mapped": 3663,
       "searchOnly": 91,
       "tags": [
         {
           "label": "unclassified",
-          "tagged": 1022,
-          "mapped": 1000,
+          "tagged": 1336,
+          "mapped": 1314,
           "searchOnly": 22
         },
         {
@@ -288,20 +288,20 @@
         },
         {
           "label": "enterable",
-          "tagged": 380,
-          "mapped": 379,
+          "tagged": 385,
+          "mapped": 384,
           "searchOnly": 1
         },
         {
           "label": "residential",
-          "tagged": 350,
-          "mapped": 343,
+          "tagged": 351,
+          "mapped": 344,
           "searchOnly": 7
         },
         {
           "label": "unconfirmed",
-          "tagged": 343,
-          "mapped": 325,
+          "tagged": 344,
+          "mapped": 326,
           "searchOnly": 18
         },
         {
@@ -329,21 +329,21 @@
           "searchOnly": 0
         },
         {
+          "label": "natural",
+          "tagged": 100,
+          "mapped": 100,
+          "searchOnly": 0
+        },
+        {
           "label": "demolished",
           "tagged": 99,
           "mapped": 97,
           "searchOnly": 2
         },
         {
-          "label": "natural",
-          "tagged": 99,
-          "mapped": 99,
-          "searchOnly": 0
-        },
-        {
           "label": "//pink",
-          "tagged": 96,
-          "mapped": 96,
+          "tagged": 95,
+          "mapped": 95,
           "searchOnly": 0
         },
         {
@@ -354,8 +354,8 @@
         },
         {
           "label": "l7",
-          "tagged": 89,
-          "mapped": 89,
+          "tagged": 92,
+          "mapped": 92,
           "searchOnly": 0
         },
         {
@@ -497,6 +497,18 @@
           "searchOnly": 1
         },
         {
+          "label": "#clothes",
+          "tagged": 9,
+          "mapped": 9,
+          "searchOnly": 0
+        },
+        {
+          "label": "#hair",
+          "tagged": 9,
+          "mapped": 9,
+          "searchOnly": 0
+        },
+        {
           "label": "//blue",
           "tagged": 7,
           "mapped": 7,
@@ -510,6 +522,18 @@
         },
         {
           "label": "#fence",
+          "tagged": 6,
+          "mapped": 6,
+          "searchOnly": 0
+        },
+        {
+          "label": "#food",
+          "tagged": 6,
+          "mapped": 6,
+          "searchOnly": 0
+        },
+        {
+          "label": "#guns",
           "tagged": 6,
           "mapped": 6,
           "searchOnly": 0
@@ -533,7 +557,7 @@
           "searchOnly": 0
         },
         {
-          "label": "#food",
+          "label": "#modshop",
           "tagged": 4,
           "mapped": 4,
           "searchOnly": 0
@@ -575,25 +599,19 @@
           "searchOnly": 0
         },
         {
-          "label": "#clothes",
-          "tagged": 3,
-          "mapped": 3,
-          "searchOnly": 0
-        },
-        {
-          "label": "#guns",
-          "tagged": 3,
-          "mapped": 3,
-          "searchOnly": 0
-        },
-        {
-          "label": "#hair",
+          "label": "#electronics",
           "tagged": 3,
           "mapped": 3,
           "searchOnly": 0
         },
         {
           "label": "#hospital",
+          "tagged": 3,
+          "mapped": 3,
+          "searchOnly": 0
+        },
+        {
+          "label": "#shoes",
           "tagged": 3,
           "mapped": 3,
           "searchOnly": 0
@@ -623,12 +641,6 @@
           "searchOnly": 0
         },
         {
-          "label": "#electronics",
-          "tagged": 2,
-          "mapped": 2,
-          "searchOnly": 0
-        },
-        {
           "label": "#fastfood",
           "tagged": 2,
           "mapped": 2,
@@ -636,12 +648,6 @@
         },
         {
           "label": "#jail",
-          "tagged": 2,
-          "mapped": 2,
-          "searchOnly": 0
-        },
-        {
-          "label": "#modshop",
           "tagged": 2,
           "mapped": 2,
           "searchOnly": 0
@@ -755,6 +761,12 @@
           "searchOnly": 0
         },
         {
+          "label": "//pink.#tattoos",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
           "label": "//possibly_reused_l712",
           "tagged": 1,
           "mapped": 1,
@@ -852,12 +864,6 @@
         },
         {
           "label": "#pharmacy",
-          "tagged": 1,
-          "mapped": 1,
-          "searchOnly": 0
-        },
-        {
-          "label": "#shoes",
           "tagged": 1,
           "mapped": 1,
           "searchOnly": 0

@@ -46,7 +46,7 @@ assert "./atlas-sw.js?v=191" in js, 'Service worker refresh missing'
 assert "team-jura-atlas-v191" in (D/'atlas-sw.js').read_text()
 for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
     assert "./atlas.js?v=191" in (D/page).read_text(), page
-assert "./atlas-research.js?v=103-tiles" in (D/'atlas-research.html').read_text()
+assert "./atlas-research.js?v=218-yanis18" in (D/'atlas-research.html').read_text()
 print('Atlas static regression PASS: licensed community VI views, navigation, legacy keys, links, sync plumbing')
 
 # Universe database, showroom and gallery integration regression.

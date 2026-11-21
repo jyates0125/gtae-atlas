@@ -8,7 +8,22 @@ function init(){
  controls.setAttribute('role','group');controls.setAttribute('aria-label','Research map display options');
  const make=(label,id)=>{const b=document.createElement('button');b.type='button';b.id=id;b.textContent=label;b.setAttribute('aria-pressed','false');return b};
  const size=make('⛶ Expand map','j172-expand'),light=make('☀ Brighten map','j172-bright');
- controls.append(size,light);page.append(controls);
+ const check=document.getElementById('showResearchPins');
+ const pins=make('📍 Show pins','j172-pins');
+ function syncPins(){
+  const on=!!check?.checked;
+  pins.textContent=on?'📍 Hide pins':'📍 Show pins';
+  pins.setAttribute('aria-pressed',String(on));
+ }
+ controls.append(size,light,pins);page.append(controls);
+ syncPins();
+ check?.addEventListener('change',syncPins);
+ pins.addEventListener('click',()=>{
+  if(!check)return;
+  check.checked=!check.checked;
+  check.dispatchEvent(new Event('change',{bubbles:true}));
+  syncPins();
+ });
  const onResize=()=>window.dispatchEvent(new Event('resize'));
  size.addEventListener('click',()=>{
   const active=page.classList.toggle('j172-full-map');

@@ -4,7 +4,7 @@
    No account access, scraping, or pretending to auto-post. */
 (()=>{'use strict';
 if(window.__juraUniversalSocialReady)return;window.__juraUniversalSocialReady=true;
-const URL='https://team-jura-atlas-preview.pages.dev/';
+const URL='https://gtae-online.pages.dev/';
 const artwork={
  facebook:'<path fill="currentColor" d="M13.2 4.1h4.4V0h-5C7.8 0 6 3 6 7.7V12H2v4.7h4V30h5.4V16.7h4.2L16.3 12h-4.9V8c0-2.1.5-3.9 1.8-3.9Z" transform="translate(7 1) scale(.93)"/>',
  youtube:'<rect x="2" y="7" width="30" height="20" rx="6" fill="currentColor"/><path d="M14 12.5v9l8-4.5-8-4.5Z" fill="#fff"/>',
@@ -20,7 +20,7 @@ const shareTarget=(key,url)=>{
  if(key==='reddit')return 'https://www.reddit.com/submit?url='+encodeURIComponent(url)+'&title='+encodeURIComponent('Team Jura Atlas · Public Preview');
  return null;
 };
-function currentShareURL(){const here=new URL(location.href);if(here.origin==='https://team-jura-atlas-preview.pages.dev')return here.href;return new URL(location.pathname+location.search,URL).href}
+function currentShareURL(){const here=new URL(location.href);if(here.origin==='https://gtae-online.pages.dev')return here.href;return new URL(location.pathname+location.search,URL).href}
 function status(container,text){let p=container.querySelector('.j131-social-status');if(p)p.textContent=text}
 async function copy(value){try{await navigator.clipboard.writeText(value);return true}catch(_){let input=document.createElement('textarea');input.value=value;input.style.position='fixed';input.style.left='-5000px';document.body.append(input);input.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}input.remove();return ok}}
 async function selected(key,container){

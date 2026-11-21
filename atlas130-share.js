@@ -1,7 +1,7 @@
 /* Team Jura Atlas 13.0 — transparent, user-initiated social sharing.
  * No tracking pixels, no server-side analytics, no auto-posting or account impersonation. */
 (function(){'use strict';
-const SITE='https://team-jura-atlas-preview.pages.dev/';
+const SITE='https://gtae-online.pages.dev/';
 const POST={
  title:'Team Jura Atlas | Explore the GTA Universe',
  text:'Explore 13 GTA destinations: maps, collectibles, heists, garages, and unverified Leonida research. Free public development preview by Elario Studios. Many Crews. One Vision.',

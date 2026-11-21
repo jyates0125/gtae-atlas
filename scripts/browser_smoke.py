@@ -200,7 +200,8 @@ async def smoke():
                                 try:
                                     await pg.wait_for_function("document.querySelector('#j195-status')?.textContent?.includes('unique landmark research entries')",timeout=12000)
                                     await pg.locator('#j195-world').select_option('6')
-                                    if '3,425 unique' not in await pg.locator('#j195-status').inner_text():
+                                    expected_vi_count=json.loads((ROOT/'data/gtadb-6-manifest.json').read_text(encoding='utf-8'))['count']
+                                    if f'{expected_vi_count:,} unique' not in await pg.locator('#j195-status').inner_text():
                                         failures.append('Local GTA VI research source count is inaccurate')
                                     await pg.locator('#j195-search').fill('residential')
                                     if await pg.locator('#j195-rows tr').count()<1:
