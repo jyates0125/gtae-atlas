@@ -17,7 +17,7 @@ engine=os.environ.get('ATLAS_BROWSER','chromium')
 try:
  with sync_playwright() as pw:
   browser=pw.chromium.launch(headless=True,**({'channel':'msedge'} if engine=='msedge' else {}))
-  for width,height in ((1440,900),(390,844)):
+  for width,height in ((1440,900),(390,844),(375,812)):
    context=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
    page=context.new_page()
    issues=[]
@@ -59,7 +59,7 @@ try:
    expect(hit.first).to_be_visible(timeout=15000)
    assert 'game=vi' in hit.first.get_attribute('href')
    page.locator('.j132-close').click()
-   if width==390:
+   if width<=390:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'Character page horizontal overflow'
    out=R/'qa-evidence'/engine
    out.mkdir(parents=True,exist_ok=True)
@@ -78,7 +78,7 @@ try:
    expect(page.locator('#j222-vi-regions a')).to_have_count(6)
    assert page.locator('a[href="./atlas-characters.html?game=vi#mainCharacterEra"]').count()>=1
    assert not issues,('page Javascript exceptions',issues)
-   if width==390:
+   if width<=390:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'VI page horizontal overflow'
    print('PASS Atlas 22.2 %s %s: All characters, 8 Rockstar VI profiles, world isolation, global search and 11-category launch hub'%(engine,width),flush=True)
    context.close()

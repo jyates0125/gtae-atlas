@@ -52,6 +52,7 @@ assert set(x['name'] for x in regions)=={r['name'] for r in release['regions']}
 assert all('coordinate not claimed' in x['verification'] for x in regions)
 
 assert 'j222-character-grid' in char and 'j222-character-search' in char
+assert 'href="./art/elario-crest.svg"' in char, 'Character page favicon must use approved crowned E'
 assert 'data-j222-scope="all"' in char
 for scope in ('classic','story','online','vi'):assert f'data-j222-scope="{scope}"' in char
 assert 'atlas152-era-iii.svg' not in char
