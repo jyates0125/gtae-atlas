@@ -50,4 +50,22 @@ try{
  assert.ok(manifest.files.some(x=>x.path==='_redirects'));
  assert.ok(manifest.files.some(x=>x.path==='atlas-account.html'));
 }finally{fs.rmSync(path.join(root,'public'),{recursive:true,force:true})}
+// Two independent Cloudflare site configurations deploy from this same repo.
+// Confirm the primary public site and legacy FEATURE preview cannot inherit redirects.
+for(const [label,env] of [
+  ['canonical', {...old,CF_PAGES_URL:'https://random123.gtae-online.pages.dev/'}],
+  ['legacy-feature-preview', {...old,CF_PAGES_BRANCH:'feature/atlas209-traffic-discovery'}],
+]) {
+ try {
+  cp.execFileSync(process.execPath,[path.join(root,'scripts/build-cloudflare.cjs')],{
+   cwd:root,env:{...process.env,...env},encoding:'utf8'
+  });
+  assert.equal(fs.existsSync(path.join(root,'public','_redirects')),false,
+    label+' must never inherit the public redirect');
+  const index=fs.readFileSync(path.join(root,'public','index.html'),'utf8');
+  assert.ok(index.includes('j132-poster-welcome'),label+' must preserve the approved public homepage');
+  for(const name of ['atlas-account.html','maps.html','art/atlas98-approved-hero.webp'])
+   assert.equal(fs.existsSync(path.join(root,'public',name)),true,label+' missing '+name);
+ }finally{fs.rmSync(path.join(root,'public'),{recursive:true,force:true})}
+}
 console.log('PASS Atlas 20.9: old root redirects only on release build; legacy backups preserved; canonical and staging unaffected');
