@@ -32,7 +32,7 @@ assert "function modelInfo(id)" in js and "r.spec" in js
 assert "j104-intelligence" in js and "View individual GTADB vehicle facts" in js
 assert "j104-no-car" in js and "This '+r.type.toLowerCase()+' needs a craft-specific licensed mesh" in js
 assert "garageClassFilter" in js and 'id="garageClassFilter"' in html
-assert "atlas104-garage-intel.css?v=104" in html
+assert "atlas104-garage-intel.css?v=201" in html
 assert "team-jura-atlas90-collection-v1" in js
 assert "team-jura-atlas93-garage-v1" in js
 assert "new URLSearchParams(location.search).get('addModel')" in js
