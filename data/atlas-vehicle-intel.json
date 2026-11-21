@@ -310,7 +310,11 @@
       "game": "GTA Online",
       "confidence": "Source-checked; gameplay availability/pricing may vary by update",
       "customizable": false,
-      "visualInspiration": "Chris-Craft Stinger 390x"
+      "visualInspiration": "Chris-Craft Stinger 390x",
+      "purchaseSite": "DockTease",
+      "storage": "Pegasus vehicle",
+      "delivery": "Pegasus Concierge",
+      "secondarySourceUrl": "https://www.gtabase.com/grand-theft-auto-v/vehicles/shitzu-squalo"
     }
   }
 }

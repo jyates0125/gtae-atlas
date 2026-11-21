@@ -18,6 +18,10 @@ assert data['vehicles']['squalo']['category']=='Boats & Watercraft'
 assert data['vehicles']['squalo']['topSpeedMph']==65.75
 assert data['vehicles']['squalo']['priceUSD']==196621
 assert data['vehicles']['squalo']['customizable'] is False
+assert data['vehicles']['squalo']['purchaseSite']=='DockTease'
+assert data['vehicles']['squalo']['storage']=='Pegasus vehicle'
+assert data['vehicles']['squalo']['delivery']=='Pegasus Concierge'
+assert data['vehicles']['squalo']['secondarySourceUrl'].startswith('https://www.gtabase.com/')
 assert data['vehicles']['alkonost']['category']=='Planes & Aircraft'
 assert data['vehicles']['akula']['category']=='Helicopters'
 assert data['vehicles']['adder']['category']=='Super'
@@ -31,6 +35,7 @@ assert "garageClassFilter" in js and 'id="garageClassFilter"' in html
 assert "atlas104-garage-intel.css?v=104" in html
 assert "team-jura-atlas90-collection-v1" in js
 assert "team-jura-atlas93-garage-v1" in js
+assert "new URLSearchParams(location.search).get('addModel')" in js
 assert (D/'art/elario-crest.svg').is_file()
 assert (D/'art/atlas104-heist-schematic.svg').is_file()
 assert (D/'atlas104-heist-experience.css').is_file()
