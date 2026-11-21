@@ -7,6 +7,22 @@ function init(){
  const close=document.getElementById('closeSelected');
  const canvas=document.getElementById('atlasCanvas');
  if(!card||!close||!canvas)return;
+ // Preserve official poster access, with a short phone label so the
+ // adjacent map controls do not wrap to three lines.
+ const official=document.getElementById('j143-official-button');
+ if(official){
+  const small=window.matchMedia('(max-width:700px)');
+  const syncOfficial=()=>{
+   official.textContent=small.matches?'▧ Rockstar map':'▧ Rockstar · Official Map';
+   official.setAttribute('aria-label',
+    official.getAttribute('aria-expanded')==='true'
+     ?'Close Rockstar map and return to interactive Leonida map'
+     :'Open Rockstar official Leonida map');
+  };
+  new MutationObserver(syncOfficial).observe(official,{attributes:true,attributeFilter:['aria-expanded']});
+  small.addEventListener?.('change',syncOfficial);
+  syncOfficial();
+ }
  close.textContent='Close details ×';
  close.setAttribute('aria-label','Close selected map marker details');
  close.title='Return to the interactive map';
