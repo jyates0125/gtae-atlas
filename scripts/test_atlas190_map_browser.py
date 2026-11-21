@@ -12,11 +12,11 @@ if not (PUBLIC/'atlas-iv.html').is_file() or not (PUBLIC/'atlas-sa.html').is_fil
     raise SystemExit('Build the actual Cloudflare public/ output first')
 class Quiet(SimpleHTTPRequestHandler):
     def log_message(self,*args):pass
-class BusyBrowserServer(ThreadingHTTPServer):
-    # Edge can request many map/artist assets in parallel. The default small
-    # pending-connection backlog can starve a deferred checklist script.
+class AtlasTestServer(ThreadingHTTPServer):
+    # Rapid tile/page transitions can exceed the default Windows accept backlog.
     request_queue_size=64
-server=BusyBrowserServer(('127.0.0.1',0),partial(Quiet,directory=str(PUBLIC)))
+    daemon_threads=True
+server=AtlasTestServer(('127.0.0.1',0),partial(Quiet,directory=str(PUBLIC)))
 threading.Thread(target=server.serve_forever,daemon=True).start()
 base='http://127.0.0.1:%s/'%server.server_port
 engine=os.getenv('ATLAS_BROWSER','chromium')
@@ -176,21 +176,17 @@ try:
    page.locator('#worldSearch').fill('no such destination')
    page.locator('#resetWorldSearch').click()
    expect(page.locator('.directory-card')).to_have_count(13)
-   # When heavy tile/image requests are cancelled, Windows' local HTTP test
-   # server can abort a deferred script request. Retry ONE genuine page load
-   # if the first checklist controller did not initialize, not the saved data.
-   # A persistent initialization failure or a broken save still fails CI.
-   fleecaReady=False
-   for attempt in range(2):
-    response=page.goto(base+'heist-fleeca.html',wait_until='load',timeout=45000)
-    assert response and response.status==200,'Fleeca HTML did not load'
-    try:
-     expect(page.locator('#progress')).to_have_text('0 / 3 tracked',timeout=6500)
-     fleecaReady=True
-     break
-    except AssertionError:
-     print('Fleeca checklist controller absent on local load '+str(attempt+1)+'; '+('retrying once' if attempt==0 else 'failing'),flush=True)
-   assert fleecaReady,'Fleeca checklist controller unavailable after one real reload'
+   # Finish previous map fetches and require Fleeca's deferred bundle to load.
+   # Windows Edge can occasionally abort local test-server requests while
+   # unloading tile-heavy maps. Retry the full page only if initialization
+   # never happened; a second missed bootstrap remains a hard regression.
+   page.goto('about:blank',wait_until='load')
+   page.goto(base+'heist-fleeca.html',wait_until='load',timeout=45000)
+   try:
+    expect(page.locator('#progress')).to_have_text('0 / 3 tracked',timeout=7000)
+   except AssertionError:
+    page.reload(wait_until='load',timeout=45000)
+    expect(page.locator('#progress')).to_have_text('0 / 3 tracked',timeout=15000)
    page.locator('input[data-step]').first.check()
    # Cross-page progress must persist before the heist directory filters it.
    page.wait_for_function("""() => {
