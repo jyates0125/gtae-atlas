@@ -89,7 +89,8 @@ assert "atlas.js" not in js, "Universe renderer must not rewrite map engine"
 gallery_versions=set()
 for page in ("atlas90-vehicles5.html", "atlas90-vehicles6.html", "atlas90-weapons.html"):
     h = (D / page).read_text(encoding="utf8")
-    assert "./atlas100-showroom.css?v=100a" in h
+    style=re.search(r'\./atlas100-showroom\.css\?v=(\w+)',h)
+    assert style and style.group(1) in ("202","100a"), "Missing current subject-specific showroom stylesheet"
     assert "./atlas100-showroom.js?v=100a" in h
     # These shared gallery pages intentionally version their script together.
     # Guard presence and a coherent cache version, not an obsolete literal.
