@@ -57,6 +57,20 @@ try:
    if width<701:
     bounds=card.bounding_box()
     assert bounds['y']>=box['y']-3 and bounds['y']+bounds['height']<=box['y']+box['height']+3,'Detail sheet extends beyond the map workspace'
+    assert box['y']<270,'Duplicate world nav is pushing the map off the first phone screen'
+    assert page.locator('.atlas85-head a').first.is_hidden(),'Redundant world nav still visible'
+    catalog=page.locator('#atlas90-catalog-shortcuts').bounding_box()
+    assert catalog and catalog['height']<72,'Equipment shortcut links wrap into duplicate rows'
+    assert page.locator('#j171-map-tools').is_hidden(),'Map visibility bar overlays marker detail actions'
+    close_rect=close.bounding_box()
+    assert close_rect and page.evaluate(
+     """point => {
+       const node=document.elementFromPoint(point.x,point.y);
+       return node===document.getElementById('closeSelected') ||
+         !!node?.closest('#closeSelected');
+     }""",
+     {'x':close_rect['x']+close_rect['width']/2,'y':close_rect['y']+close_rect['height']/2}
+    ),'Another map control is physically blocking the marker Close button'
    output=R/'qa-evidence'/engine
    output.mkdir(parents=True,exist_ok=True)
    page.screenshot(path=str(output/f'atlas220-vi-{width}.png'))
