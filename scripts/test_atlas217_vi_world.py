@@ -16,7 +16,7 @@ assert 'j217-vi-hub' in vi and 'j217-vi-panel' in vi and 'j217-vi-compass' in vi
 assert 'j217-vi-research' in research and 'atlas217-vi-world.css?v=217' in research
 assert '2026-11-19' in vi and '2026-11-19' in research
 for link in ('./atlas-vi.html?view=rockstar','./atlas90-vehicles6.html','./atlas90-weapons6.html',
-             './atlas-characters.html?game=vi#results','./atlas-animals.html?game=vi',
+             './atlas-characters.html?game=vi#mainCharacterEra','./atlas-animals.html?game=vi',
              './atlas-research.html','https://www.rockstargames.com/VI/media'):
  assert link in vi,link
 assert 'GTA VI · OUT NOW' in vi
