@@ -15,7 +15,7 @@ create table if not exists public.atlas_saves (
 alter table public.atlas_saves enable row level security;
 alter table public.atlas_saves force row level security;
 
-revoke all on table public.atlas_saves from public, anon;
+revoke all on table public.atlas_saves from public, anon, authenticated;
 grant select, insert, update, delete on table public.atlas_saves to authenticated;
 
 drop policy if exists atlas_saves_own_select on public.atlas_saves;
