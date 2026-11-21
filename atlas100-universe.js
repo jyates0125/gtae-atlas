@@ -29,7 +29,7 @@ function carGroup(id){
  if(/^(banshee|coquette|jester|kuruma|elegy|sultan|feltzer|comet|pariah|calico|euros|futo|vectre|remus|cypher|growler|zr350|schlagen|jugular|neon|komoda|sugoi|penumbra|ninef)/.test(id))return'Sports & Coupes';
  if(/^(dominator|gauntlet|buffalo|ruiner|tampa|phoenix|sabregt|vigero|dukes|ellie|impaler|deviant|blade|vamos|greenwood|hotknife)/.test(id))return'Muscle';
  return'Unclassified vehicle'}
-function index(profile,seed,catalog,sets){
+function index(profile,seed,catalog,sets,viWeapons){
  const result=[];
  for(const p of profile?.records||[])if(p.kind&&p.name)result.push({...p,verification:p.verification||'Curated index'});
  for(const r of catalog?.records||[]){if(!r?.name||!r?.kind)continue;const scope=r.game==='6'?'vi':r.mode==='story'?'story':r.mode==='both'?'both':'online';
@@ -38,6 +38,13 @@ function index(profile,seed,catalog,sets){
  for(const id of seed?.vehicles||[]){if(!/^[a-z0-9_]+$/.test(id))continue;result.push({id:'archive:vehicle:'+id,key:'vehicles5:'+id,model:id,name:nice(id),kind:'vehicle',scope:'online',group:carGroup(id),image:image('vehicle',id),imageCredit:ART_CREDIT,verification:'Community GTA V model archive',summary:'Vehicle archive render. Prices, performance and game availability are not verified by an image.'});}
  for(const [i,r] of (seed?.vi||[]).entries()){if(!r.name)continue;result.push({id:'research:vehicle:'+i+':'+slug(r.name),name:r.name,kind:'vehicle',scope:'vi',group:r.type||'Vehicles',brand:r.brand||'',image:'',imageCredit:'',verification:'Provisional / unverified',summary:'GTA VI community roster research. An image will appear only when a GTA VI-specific source and its reuse permission are confirmed. Any generic graphic is an original Team Jura concept, not the exact vehicle.'});}
  for(const s of sets?.sets||[]){if(!s.id||!s.name)continue;const scope=s.mode==='story'?'story':s.mode==='online'?'online':'vi';result.push({id:'set:'+s.id,collectionId:s.id,name:s.name,kind:'collectible',scope,group:s.cycle||'Collection',total:s.total,summary:s.note||'Collection tracker; exact map points may not be sourced.',sourceUrl:s.sourceUrl,verification:s.verification||'Published set index'});}
+ for(const r of viWeapons?.records||[]){
+  if(!r?.id||!r?.name||!r?.sourceUrl)continue;
+  result.push({id:'vi:weapon:'+r.id,kind:'weapon',scope:'vi',game:'GTA VI Story',
+   name:r.name,group:r.group||'Weapon',summary:r.description||r.evidence||'Curated GTA VI source reference.',
+   verification:r.grade||'Source-checked GTA VI weapon reference',sourceUrl:r.sourceUrl,
+   image:'',imageCredit:'',aliases:['GTA VI','GTA 6',r.group||'']});
+ }
  // Keep a pictured archive entry when a generic catalog index duplicates it; never merge Story into Online.
  const uniq=new Map();for(const r of result){const k=r.kind+'|'+slug(r.name)+'|'+r.scope;const old=uniq.get(k);
  if(old&&r.collectionId){uniq.set(k,{...old,collectionId:r.collectionId,total:r.total,sourceUrl:r.sourceUrl||old.sourceUrl});continue;}
@@ -159,7 +166,7 @@ async function init(){const args=new URLSearchParams(location.search);kind=MODE=
  $('researchOnly').checked=researchOnly;
  view=args.get('view')==='list'?'list':'grid';
  document.querySelectorAll('[data-world]').forEach(b=>b.addEventListener('click',()=>{game=b.dataset.world;group='all';page=0;$('filterGame').value=game;updateGroups();draw()}));
- const [profile,seed,catalog,sets]=await Promise.all(['data/atlas-universe-profiles.json?v=130','atlas90-seed.json','atlas-catalog.json','atlas-collections.json'].map(loadJSON));all=index(profile,seed,catalog,sets);updateGroups();
+ const [profile,seed,catalog,sets,viWeapons]=await Promise.all(['data/atlas-universe-profiles.json?v=222','atlas90-seed.json','atlas-catalog.json','atlas-collections.json','data/atlas192-vi-weapons.json?v=222'].map(loadJSON));all=index(profile,seed,catalog,sets,viWeapons);updateGroups();
  $('universeSearch').addEventListener('input',e=>{query=e.target.value.trim();page=0;draw()});paramsKind.addEventListener('change',e=>{kind=e.target.value;page=0;group='all';updateGroups();draw()});$('filterGame').addEventListener('change',e=>{game=e.target.value;group='all';page=0;updateGroups();draw()});
  $('filterGroup').addEventListener('change',e=>{group=e.target.value;page=0;draw()});$('sortBy').addEventListener('change',e=>{order=e.target.value;draw()});$('researchOnly').addEventListener('change',e=>{researchOnly=e.target.checked;page=0;draw()});
  $('gridView').onclick=()=>{view='grid';draw()};$('listView').onclick=()=>{view='list';draw()};$('clearFilters').onclick=()=>{kind=DEFAULT_KIND;game=DEFAULT_GAME;group='all';query='';researchOnly=false;page=0;order='name';$('universeSearch').value='';paramsKind.value=kind;$('filterGame').value=game;$('researchOnly').checked=false;$('sortBy').value='name';updateGroups();draw()};
