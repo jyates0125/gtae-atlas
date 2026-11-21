@@ -19,7 +19,7 @@
 ## GitHub protection — binding
 
 - Use **GitHub Settings → General → Default branch** to select existing lowercase `main`. Do **not** click **Rename branch**. The default branch governs GitHub navigation and default-branch targeting; it does not change Cloudflare's production-branch setting.
-- Keep ruleset **Protect Team Jura Atlas Main** (ID `27253290`) active for `main`; it currently targets `~DEFAULT_BRANCH`. It only protects lowercase `main` while lowercase `main` is the GitHub default. The owner must confirm settings after restoring default.
+- Keep ruleset **Protect Team Jura Atlas Main** (ID `27253290`) active for `main`; it currently targets `~DEFAULT_BRANCH`. It only protects lowercase `main` while lowercase `main` is the GitHub default. **Verified on 2026-11-21:** GitHub default is existing lowercase `main` and both lowercase `main` and `development` show protected. Recheck if settings change.
 - Keep **Protect Team Jura Dev Branch** (ID `27798960`) active and explicitly targeting `refs/heads/development`. Both rulesets should prevent deletion and force pushes and require a pull request; bypass lists empty; zero required reviewer approvals is an intentional solo-maintainer setting, **not** a waiver of actual owner acceptance or quality checks.
 - Do not enable **Restrict updates** or **Restrict creations** without designing the permissions; those settings can block all routine merges. Do not accidentally require linear history when merge commits are part of the release policy.
 - Before considering mandatory status-check branch rules, confirm the exact stable check names and that both Chromium and Edge, source audit, and validated artifact gates work on a new PR; avoid deadlocking deploys through names that do not exist.
@@ -34,14 +34,14 @@ Observed at documentation time:
 | Branch | Head | Observed condition |
 | --- | --- | --- |
 | `development` | `aa9940482a913505185dac2ce5de66b850df5fd8` | Restored, protected by explicit development ruleset; Cloudflare's last owner-confirmed GTAE production commit |
-| `main` | `fcfda6a6ee3a227e43367f6effbfd49a6d5e7c08` | Intended protected reference release; **temporarily unprotected while default branch remains `Main`** |
-| `Main` | `aa9940482a913505185dac2ce5de66b850df5fd8` | Accidental uppercase copy and current GitHub default; do not use as permanent branch |
+| `main` | `fcfda6a6ee3a227e43367f6effbfd49a6d5e7c08` | Protected reference/release; lowercase `main` has been restored as GitHub default |
+| `Main` | `aa9940482a913505185dac2ce5de66b850df5fd8` | Accidental uppercase copy, **not** the default anymore; hold until separately reviewed for safe deletion |
 | `safety/development-pre-atlas220-20261121` | `814a9876e95f36269960f009e0acfe3c49290320` | Recovery backup — preserve |
 | `safety/main-pre-atlas220-20261121` | `dd8c69d41ba14c982c04bf9d543e962422592726` | Recovery backup — preserve |
 
 The `main` and `development` release trees were verified byte-identical at `713de3cae1a1f5d2ca604c1291cc8ce516ecf652` at the Atlas 22.0 sync. Their commit hashes differ because their histories are separate.
 
-**Immediate order:** (1) change GitHub's default branch to existing `main` in **Settings**, without renaming anything; (2) verify both named branches protected, all open PR bases correct and GitHub Actions; (3) verify Cloudflare production project is still watching **development**, build command `node scripts/build-cloudflare.cjs`, output `public`; (4) check live browser behavior and older-site redirect; (5) only after these checks, consider removing the redundant uppercase `Main`, with explicit owner approval and a rollback reference. Never delete it while it is default.
+**Current order after owner recovery:** (1) **complete** — existing lowercase `main` is the GitHub default and both permanent branches report protected (API verified November 21); (2) confirm all active PR bases and CI remain correct, including Atlas 22.2/22.3 draft PR #87 and charter draft PR #86; (3) verify Cloudflare production is still watching **development**, build command `node scripts/build-cloudflare.cjs`, output `public`; (4) check real browser behavior and older-site redirect; (5) only after these checks, consider removing redundant uppercase `Main`, with explicit owner approval and a rollback reference. It is no longer the default and should not be renamed.
 
 ## Branch and repository cleanup policy
 
