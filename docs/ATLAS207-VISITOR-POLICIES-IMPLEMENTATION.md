@@ -11,7 +11,7 @@
 - Verify a real private rights/privacy contact channel and publish it, replacing the temporary statement that one is required.
 - Inventory service providers and server logs. Do not assume analytics or cookies are absent without auditing real production resources.
 - Verify secure HTTPS login, two-user isolation, backup restore, opt-in guest-to-cloud migration and actual data erasure across Auth, cloud-save tables, owned storage, logs and backups.
-- Proposed voluntary seven-day cancellation window for deletion, with immediate session gating and guaranteed job retry after window. Do not represent it as required by law or as evidence that backups vanish immediately.
+- Proposed voluntary 14-day cancellation window for deletion, with immediate session gating and guaranteed job retry after window. Do not represent it as required by law or as evidence that backups vanish immediately.
 - Publish deletion-specific request and processing SLAs, limited lawful retention exceptions, and data-subject request / escalation processes applicable to operating jurisdictions.
 - Re-review laws applicable to project scale; the Kentucky Consumer Data Protection Act took effect January 2026 but covered-entity thresholds matter. The California CCPA and COPPA also have separate applicability rules.
 - Future children's products must be separate and assessed for age, COPPA/parental consent, and special information practices.

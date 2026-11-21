@@ -16,7 +16,7 @@ class Checker(HTMLParser):
 p=Checker();p.feed(h)
 for ident in ('main','privacy','guest','deletion','terms','fan','rights','storage','age'):
  assert ident in p.ids,ident
-for phrase in ('We do not sell','seven-day cancellation window','not a legal rule',
+for phrase in ('We do not sell','14-day cancellation window','not a legal rule',
  'sign-in and automatic cloud syncing are not available','Clearing site data',
  'not sponsored, endorsed','not automatically','not yet exist on the public site'):
  assert phrase.lower() in h.lower(),phrase
