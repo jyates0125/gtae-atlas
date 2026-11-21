@@ -275,6 +275,23 @@ async def smoke():
                                         failures.append('Garage All models button did not show the picture catalog')
                                     if await pg.locator('#garageClassFilter option').count()<3:
                                         failures.append('Garage categories did not load')
+                                    await pg.locator('#j96-model').select_option('adder')
+                                    await pg.locator('#j96-plate').fill('JURA-QA')
+                                    await pg.locator('#j96-save').click()
+                                    row=pg.locator('#j96-ledger .j96-row').filter(has_text='JURA-QA')
+                                    await row.get_by_role('button',name='Edit').click()
+                                    await pg.locator('#j96-plate').fill('UNSAVED')
+                                    await pg.locator('#j96-cancel').click()
+                                    await row.get_by_role('button',name='Edit').click()
+                                    if await pg.locator('#j96-plate').input_value()!='JURA-QA':
+                                        failures.append('Cancel edit overwrote the saved parking record')
+                                    await pg.locator('#j96-plate').fill('JURA-OK')
+                                    await pg.locator('#j96-save').click()
+                                    await pg.reload(wait_until='domcontentloaded')
+                                    await pg.locator('#j96-ledger .j96-row').filter(has_text='JURA-OK').wait_for()
+                                    if await pg.locator('#j96-ledger .j96-row').count()!=1:
+                                        failures.append('Editing a parked vehicle added a duplicate instance')
+
                                 except Exception as err:
                                     failures.append('Garage model browse checks failed: '+str(err)[:210])
                             if not failures and path=='one-last-ride.html':
