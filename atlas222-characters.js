@@ -63,7 +63,7 @@ async function start(){
  let q='';
  const draw=()=>{
   const s=q.trim().toLocaleLowerCase();
-  const rows=data.filter(r=>(scope==='all'||r.scope===scope)&&(!s||[r.name,r.game,r.group,r.summary,...(r.aliases||[])].join(' ').toLocaleLowerCase().includes(s)));
+  const rows=data.filter(r=>(scope==='all'||r.scope===scope)&&(!s||[r.name,worlds[r.scope],r.game,r.group,r.summary,...(r.aliases||[])].join(' ').toLocaleLowerCase().includes(s)));
   rows.sort((a,b)=>{const pri=x=>x.group==='Protagonist'?0:1;return pri(a)-pri(b)||a.name.localeCompare(b.name)});
   grid.replaceChildren();for(const r of rows)grid.append(card(r));
   if(!rows.length)grid.append(make('p','j222-empty','No characters matched. Try another world or search term.'));
