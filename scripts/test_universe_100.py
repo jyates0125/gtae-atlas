@@ -86,12 +86,17 @@ assert "return'Unclassified vehicle'" in js, "Never guess unknown model classes"
 assert "function syncURL()" in js, "World filters must be shareable"
 
 assert "atlas.js" not in js, "Universe renderer must not rewrite map engine"
+gallery_versions=set()
 for page in ("atlas90-vehicles5.html", "atlas90-vehicles6.html", "atlas90-weapons.html"):
     h = (D / page).read_text(encoding="utf8")
     assert "./atlas100-showroom.css?v=100a" in h
     assert "./atlas100-showroom.js?v=100a" in h
-    version='192' if page=='atlas90-weapons.html' else '90'
-    assert f"./atlas90-gallery.js?v={version}" in h, "Gallery engine and ownership logic must remain present"
+    # These shared gallery pages intentionally version their script together.
+    # Guard presence and a coherent cache version, not an obsolete literal.
+    m=re.search(r'\./atlas90-gallery\.js\?v=(\d+)',h)
+    assert m and int(m.group(1))>=201, "Current gallery engine and cache-busting version required"
+    gallery_versions.add(m.group(1))
+assert len(gallery_versions)==1, "Vehicle and weapon galleries must use the same gallery engine version"
 assert "const STORE='team-jura-atlas90-collection-v1'" in (D/'atlas90-gallery.js').read_text(), "Preserve original gallery collection key"
 
 for page in ("index.html", "maps.html", "atlas93-garage.html", "atlas97-journey.html", "atlas81-hq.html"):
