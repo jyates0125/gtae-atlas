@@ -1,0 +1,113 @@
+/* GTAE 22.3 · Real homepage interactions, no screenshot-based controls.
+   Character/world searches are same-origin sourced; no credentials or mutable global state. */
+(()=>{'use strict';
+if(!document.body.classList.contains('j223-home'))return;
+const q=id=>document.getElementById(id), make=(tag,cls,txt)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(txt!==undefined)el.textContent=String(txt);return el};
+const staticLinks=[
+ ['Maps','maps.html','13 maps GTAV GTA online Leonida Liberty City San Andreas Vice City'],
+ ['GTA V Story','atlas.html','Michael Franklin Trevor Los Santos'],
+ ['GTA Online','atlas-online.html','Online multiplayer missions and collectibles'],
+ ['GTA VI · Leonida','atlas-vi.html','Lucia Jason GTA 6 Vice City Florida'],
+ ['GTA IV','atlas-iv.html','Niko Liberty City'],
+ ['San Andreas','atlas-sa.html','CJ Carl Johnson Grove Street'],
+ ['GTA III','map-hub.html?game=iii','Claude Liberty City'],
+ ['Vice City','map-hub.html?game=vc','Tommy Vercetti'],
+ ['Collectibles','atlas-collectibles.html','checklist collections'],
+ ['Heists','heists.html','Cayo Perico casino doomsday'],
+ ['GTA VI Vehicles','atlas90-vehicles6.html','cars Grotti Vapid'],
+ ['GTA VI Weapons','atlas90-weapons6.html','guns equipment pistol'],
+ ['All Characters','atlas-characters.html','protagonists NPC people cast'],
+ ['GTA VI Research','atlas-research.html','provisional community mapped research'],
+ ['My Garage','atlas93-garage.html','personal saved vehicles'],
+ ['All records','atlas-database.html?kind=all&game=all','database catalog'],
+ ['Guides','guides.html','walkthroughs'],
+ ['Activities','atlas-activities.html','events'],
+ ['Official Media','https://www.rockstargames.com/VI/media','trailer posters'],
+];
+const validLocal=x=>/^[a-z0-9][a-z0-9-]*\.html(?:\?[a-z0-9=&%._-]+)?(?:#[a-z0-9._-]+)?$/i.test(x);
+const toLink=x=>x.startsWith('https://www.rockstargames.com/')?x:validLocal(x)?'./'+x:null;
+let catalog=staticLinks.map(([title,href,keywords])=>({title,href,keywords,kind:'Atlas tool'}));
+const input=q('j223-search-input'),results=q('j223-search-results'),form=q('j223-search-form');
+function findRows(term){
+ const normalized=term.toLocaleLowerCase().trim();
+ if(!normalized)return [];
+ return catalog.filter(x=>(x.title+' '+x.keywords+' '+x.kind).toLocaleLowerCase().includes(normalized))
+ .sort((a,b)=>{
+  const score=x=>x.title.toLocaleLowerCase()===normalized?0:
+    x.title.toLocaleLowerCase().startsWith(normalized)?1:
+    x.kind==='Character'?2:3;
+  return score(a)-score(b)||a.title.localeCompare(b.title);
+ }).slice(0,9);
+}
+function show(term){
+ const rows=findRows(term);results.replaceChildren();
+ if(!term){results.hidden=true;input.setAttribute('aria-expanded','false');return rows}
+ if(!rows.length){results.append(make('p','','No direct matches. Press Search to explore all records.'))}
+ else for(const row of rows){
+  const href=toLink(row.href);if(!href)continue;
+  const a=make('a','',row.title),small=make('small','',row.kind+' · '+row.keywords.slice(0,75));
+  a.href=href;if(href.startsWith('https:')){a.target='_blank';a.rel='noopener noreferrer'}
+  a.append(small);results.append(a);
+ }
+ results.hidden=false;input.setAttribute('aria-expanded','true');return rows;
+}
+input?.addEventListener('input',()=>show(input.value.slice(0,120)));
+input?.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){show('');input.blur();return}
+ if(e.key==='ArrowDown'){const first=results.querySelector('a');if(first){e.preventDefault();first.focus()}}
+});
+results?.addEventListener('keydown',e=>{if(e.key==='Escape'){show('');input.focus()}});
+document.addEventListener('pointerdown',e=>{if(form&&!form.contains(e.target))show('')});
+form?.addEventListener('submit',e=>{
+ const text=input.value.trim().slice(0,120);
+ if(!text){e.preventDefault();input.focus();return}
+ const rows=findRows(text);
+ e.preventDefault();
+ const first=rows.find(x=>toLink(x.href));
+ if(first){location.assign(toLink(first.href));return}
+ location.assign('./atlas-database.html?kind=all&game=all&q='+encodeURIComponent(text));
+});
+const localFallback=s=>s==='vi'?'./art/jura155-vi.webp':
+ s==='online'?'./art/jura155-online.webp':
+ s==='story'?'./art/jura155-story.webp':'./art/jura155-characters.webp';
+const castId=['character:michael','character:franklin','character:trevor','character:lucia','character:jason'];
+async function initData(){
+ let characters=[];
+ try{
+  const res=await fetch('./data/atlas-universe-profiles.json?v=223',{cache:'no-cache'});
+  if(!res.ok)throw Error('No local character index');
+  characters=(await res.json()).records.filter(x=>x.kind==='character'&&['vi','story','online','classic'].includes(x.scope));
+ }catch{characters=[]}
+ if(characters.length){
+  const rows=characters.map(x=>({
+   title:x.name,
+   kind:'Character',
+   keywords:[x.game,x.scope,x.group,x.region,x.summary,...(x.aliases||[])].filter(Boolean).join(' '),
+   href:'atlas-characters.html?game='+encodeURIComponent(x.scope)+'&q='+encodeURIComponent(x.name)+'#results'
+  }));
+  catalog.push(...rows);
+  for(const [title,href,keywords] of staticLinks){
+   if(!catalog.some(x=>x.title===title&&x.href===href))catalog.push({title,href,keywords,kind:'Atlas tool'});
+  }
+ }
+ const host=q('j223-cast-rail');if(!host||!characters.length)return;
+ host.replaceChildren();
+ const chosen=castId.map(id=>characters.find(c=>c.id===id)).filter(Boolean);
+ for(const c of chosen){
+  const a=make('a','');a.href='./atlas-characters.html?game='+encodeURIComponent(c.scope)+'&q='+encodeURIComponent(c.name)+'#results';
+  a.title='Search '+c.name+' · '+c.game;
+  const img=make('img');
+  img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
+  let fallback=false;
+  if(typeof c.image==='string'&&/^https:\/\/[a-z0-9.-]+\//i.test(c.image)){img.src=c.image;img.alt='Sourced reference portrait of '+c.name}
+  else{fallback=true;img.src=localFallback(c.scope);img.alt='Original Elario world scene; not a likeness of '+c.name}
+  img.addEventListener('error',()=>{
+    if(fallback)return;
+    fallback=true;img.src=localFallback(c.scope);img.alt='Original Elario world scene; not a likeness of '+c.name;
+    a.title='Elario original world scene fallback, not a portrait of '+c.name;
+  },{once:true});
+  a.append(img,make('strong','',c.name.split(' ')[0]));host.append(a);
+ }
+}
+initData();
+})();
