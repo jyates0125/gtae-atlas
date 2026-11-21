@@ -36,10 +36,15 @@ try:
    # selection, card and local save, not the test harness.
    page.locator('#tabPins').click(timeout=20000)
    page.locator('#addPin').click(timeout=20000)
-   page.once('dialog',lambda d:d.accept('Atlas 22 First Pin'))
+   # Phone entry collapses the long sidebar and requests smooth scroll to map.
+   # Avoid stale absolute viewport coordinates while that scroll is settling.
+   if width<701:
+    expect(page.locator('#sidebar')).to_have_class('sidebar mobile-collapsed',timeout=6000)
+    page.evaluate("window.scrollTo({top:0,behavior:'instant'})")
    box=canvas.bounding_box()
    assert box and box['width']>200 and box['height']>250,'Map canvas not usable'
-   page.mouse.click(box['x']+box['width']*.52,box['y']+box['height']*.60)
+   page.once('dialog',lambda d:d.accept('Atlas 22 First Pin'))
+   canvas.click(position={'x':box['width']*.52,'y':box['height']*.60},timeout=20000)
    card=page.locator('#selectedCard')
    expect(card).to_be_visible(timeout=20000)
    expect(page.locator('#selectedName')).to_have_text('Atlas 22 First Pin')
@@ -59,7 +64,7 @@ try:
    expect(card).to_be_hidden(timeout=6000)
    assert card.get_attribute('aria-hidden')=='true'
    # Same marker must reopen after Close, then Escape must clear it via engine.
-   page.mouse.click(box['x']+box['width']*.50,box['y']+box['height']*.50)
+   canvas.click(position={'x':box['width']*.50,'y':box['height']*.50},timeout=12000)
    expect(card).to_be_visible(timeout=7000)
    page.keyboard.press('Escape')
    expect(card).to_be_hidden(timeout=6000)
