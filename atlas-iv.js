@@ -5,6 +5,8 @@
 ];
 const tiles=new Map();let layer='original',center={x:150,y:40},zoom=3.4,records=[],filtered=[],favorites=new Set(),route=[],selected=null,categories='all',onlyFav=false,showPins=true,source='starter';
 let landmarkRecords=[],birdRecords={iv:[],tlad:[],tbogt:[]},activeScope='landmarks';
+let finishId='';
+const routeKey=()=>'team-jura-iv-route-v1:'+activeScope;
 const birdKey='team-jura-iv-bird-progress-v1';
 let birdFound=new Set();try{const x=JSON.parse(localStorage.getItem(birdKey)||'[]');if(Array.isArray(x))birdFound=new Set(x.filter(v=>typeof v==='string'&&/^(iv|tlad|tbogt)-bird-\d{3}$/.test(v)).slice(0,300))}catch(_){}
 const saveBirds=()=>{try{localStorage.setItem(birdKey,JSON.stringify([...birdFound]))}catch(_){}};
@@ -50,7 +52,7 @@ if(showPins){
 }
 const pinNotice=$('j190-marker-status');
 if(pinNotice)pinNotice.textContent=showPins
- ? filtered.length.toLocaleString()+' matching landmark records · '+hitTargets.length.toLocaleString()+' map symbols (clusters represent all matching records). Tap a number to zoom into that area.'
+ ? filtered.length.toLocaleString()+' matching '+(activeScope==='landmarks'?'landmarks':'collectibles')+' · '+hitTargets.length.toLocaleString()+' map symbols (clusters represent all matching records). Tap a number to zoom into that area.'
  : 'Map symbols hidden · '+filtered.length.toLocaleString()+' searchable source records remain available.';if(route.length>=2){ctx.beginPath();route.forEach((r,i)=>{const p=point(r.x,r.y);if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y)});ctx.strokeStyle='#ffe9a6';ctx.lineWidth=3;ctx.setLineDash([7,5]);ctx.stroke();ctx.setLineDash([])}for(const [i,r]of route.entries()){const p=point(r.x,r.y);ctx.fillStyle='#18101f';ctx.strokeStyle='#ffd17f';ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,11,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillText(i+1,p.x,p.y+4)}const status=$('tileStatus');if(status)status.textContent=loadCount>0?`${source==='full'?'Licensed local':'Starter'} landmarks · ${loadCount} source map tiles loaded`:failCount?'Map tiles unavailable from both attributed sources · the native map and landmarks remain available':'Loading attributed GTADB map tiles…';const loc=$('coordStatus');if(loc)loc.textContent=`X ${Math.round(center.x)} · Y ${Math.round(center.y)} · ${Math.round(zoom*10)/10}× view`}
 function normalize(raw){
  const rows=raw&&typeof raw==='object'&&raw.records&&typeof raw.records==='object'?raw.records:raw;
@@ -112,7 +114,7 @@ function setScope(which){
  if(!['landmarks','iv','tlad','tbogt'].includes(which))return;
  activeScope=which;
  records=which==='landmarks'?landmarkRecords:birdRecords[which];
- categories='all';onlyFav=false;route=[];selected=null;
+ categories='all';onlyFav=false;selected=null;restoreRoute();
  $('classicSearch').value='';$('showFav').setAttribute('aria-pressed','false');
  $('detailIntro').hidden=false;$('detailContent').hidden=true;
  const pick=$('j190-iv-scope');if(pick)pick.value=which;
@@ -128,13 +130,83 @@ function update(){const term=($('classicSearch').value||'').trim().toLowerCase()
 function select(r,recenter=false){selected=r;$('detailIntro').hidden=true;$('detailContent').hidden=false;$('detailName').textContent=r.name;$('detailRegion').textContent=r.region;$('detailCategory').textContent=r.tags.join(' · ').toUpperCase()||'LANDMARK';$('detailAddress').textContent=r.isBird?(r.hint||'No source clue attached; use the XYZ position and game map.'):(r.address||'No matching real-world reference reported');
  $('detailSource').href=r.isBird?'https://github.com/whampson/pigeon-locator/blob/de21b7df7ec8b10dfe5abe7290d894efbfc1bd11/PigeonLocator/GameData/'+r.sourceFile:'https://github.com/rolux/gtadb.org';
  $('detailSource').textContent=r.isBird?'MIT source coordinates and clues ↗':'GTADB research source ↗';
- const done=$('j190-iv-found');if(done){done.hidden=!r.isBird;done.textContent=birdFound.has(r.id)?'✓ Mark uncollected':'◇ Mark found'};$('detailCoord').textContent=r.x.toFixed(2)+', '+r.y.toFixed(2)+(r.isBird?', Z '+r.z.toFixed(2):'');$('detailFavorite').textContent=favorites.has(r.id)?'★ Unfavorite':'☆ Favorite';$('detailRoute').textContent=route.some(x=>x.id===r.id)?'✓ On route':'+ Route';if(recenter){center={x:r.x,y:r.y};zoom=Math.max(zoom,3.4)}try{const url=new URL(location.href);url.searchParams.set('scope',activeScope);url.searchParams.set('loc',r.id);history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}update()};function addRoute(){if(!selected)return;if(!route.some(x=>x.id===selected.id))route.push(selected);updateRoute()};function updateRoute(){const p=$('classicStops');p.replaceChildren();route.forEach((r,i)=>{const div=document.createElement('div');div.textContent=`${i+1}. ${r.name}`;p.append(div)});$('stopCount').textContent=String(route.length);$('routeStatus').textContent=route.length<2?'Add two or more places.':'Straight-line preview only · not driving directions';if(selected)$('detailRoute').textContent=route.some(x=>x.id===selected.id)?'✓ On route':'+ Route';render()}
+ const done=$('j190-iv-found');if(done){done.hidden=!r.isBird;done.textContent=birdFound.has(r.id)?'✓ Mark uncollected':'◇ Mark found'};$('detailCoord').textContent=r.x.toFixed(2)+', '+r.y.toFixed(2)+(r.isBird?', Z '+r.z.toFixed(2):'');$('detailFavorite').textContent=favorites.has(r.id)?'★ Unfavorite':'☆ Favorite';$('detailRoute').textContent=route.some(x=>x.id===r.id)?'✓ On route':'+ Route';if(recenter){center={x:r.x,y:r.y};zoom=Math.max(zoom,3.4)}try{const url=new URL(location.href);url.searchParams.set('scope',activeScope);url.searchParams.set('loc',r.id);history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}update()};function restoreRoute(){
+ route=[];finishId='';
+ try{
+  const saved=JSON.parse(localStorage.getItem(routeKey()));
+  if(!Array.isArray(saved?.stops))return;
+  const byId=new Map(records.map(r=>[r.id,r]));
+  route=[...new Set(saved.stops)].map(id=>byId.get(id)).filter(Boolean);
+  if(route.slice(1).some(r=>r.id===saved.finish))finishId=saved.finish;
+ }catch{}
+}
+function saveRoute(){
+ let saved=true;
+ try{localStorage.setItem(routeKey(),JSON.stringify({stops:route.map(r=>r.id),finish:finishId}))}
+ catch{saved=false}
+ updateRoute();
+ if(!saved)$('routeStatus').textContent+=' Device storage unavailable for this change.';
+}
+function addRoute(){
+ if(!selected||route.some(r=>r.id===selected.id))return;
+ route.splice(finishId?route.length-1:route.length,0,selected);
+ saveRoute();
+}
+function updateRoute(){
+ const list=$('classicStops'),start=$('routeStart'),finish=$('routeFinish');
+ list.replaceChildren();start.replaceChildren();finish.replaceChildren(new Option('Anywhere',''));
+ route.forEach((r,i)=>{
+  start.add(new Option(r.name,r.id));
+  if(i)finish.add(new Option(r.name,r.id));
+  const row=document.createElement('div'),remove=document.createElement('button');
+  row.className='classic-stop';row.append((i+1)+'. '+r.name);
+  remove.type='button';remove.textContent='Remove';remove.setAttribute('aria-label','Remove '+r.name+' from route');
+  remove.onclick=()=>{
+   route=route.filter(stop=>stop.id!==r.id);
+   if(r.id===finishId||route.length<2)finishId='';
+   saveRoute();
+  };
+  row.append(remove);list.append(row);
+ });
+ finish.value=finishId;
+ start.disabled=finish.disabled=$('routeOrder').disabled=route.length<2;
+ $('routeFit').disabled=$('routeCopy').disabled=$('routeClear').disabled=!route.length;
+ $('stopCount').textContent=String(route.length);
+ $('routeStatus').textContent=route.length?'Straight-line preview only · not driving directions':'Add places to plan a route.';
+ if(selected)$('detailRoute').textContent=route.some(r=>r.id===selected.id)?'✓ On route':'+ Route';
+ render();
+}
+$('routeStart').onchange=e=>{
+ const i=route.findIndex(r=>r.id===e.target.value);
+ if(i<0)return;
+ if(route[i].id===finishId)finishId='';
+ route.unshift(route.splice(i,1)[0]);saveRoute();
+};
+$('routeFinish').onchange=e=>{
+ finishId=e.target.value;
+ const i=route.findIndex(r=>r.id===finishId);
+ if(i>0)route.push(route.splice(i,1)[0]);
+ saveRoute();
+};
+$('routeOrder').onclick=()=>{
+ if(route.length<2)return;
+ const ordered=[route[0]],remaining=route.slice(1).filter(r=>r.id!==finishId);
+ while(remaining.length){
+  const last=ordered[ordered.length-1];
+  const distance=r=>(r.x-last.x)**2+(r.y-last.y)**2;
+  let nearest=0;
+  for(let i=1;i<remaining.length;i++)if(distance(remaining[i])<distance(remaining[nearest]))nearest=i;
+  ordered.push(remaining.splice(nearest,1)[0]);
+ }
+ if(finishId)ordered.push(route[route.length-1]);
+ route=ordered;saveRoute();
+};
 $('j190-iv-scope')?.addEventListener('change',e=>setScope(e.target.value));
 $('j190-iv-hide-found')?.addEventListener('change',update);
 $('j190-iv-found')?.addEventListener('click',()=>{if(!selected?.isBird)return;
  if(birdFound.has(selected.id))birdFound.delete(selected.id);else birdFound.add(selected.id);
  saveBirds();select(selected,false);});
-$('classicSearch').addEventListener('input',update);$('classicSort').addEventListener('change',update);$('classicLayer').addEventListener('change',e=>{layer=e.target.value;loadCount=failCount=0;render()});$('showAll').onclick=()=>{onlyFav=false;categories='all';$('classicSearch').value='';$('showFav').setAttribute('aria-pressed','false');update()};$('showFav').onclick=()=>{onlyFav=!onlyFav;$('showFav').setAttribute('aria-pressed',String(onlyFav));update()};$('classicPins').onclick=()=>{showPins=!showPins;$('classicPins').setAttribute('aria-pressed',String(showPins));render()};$('classicFit').onclick=()=>{center={x:150,y:40};zoom=3.4;update()};$('classicPlus').onclick=()=>{zoom=Math.min(5,zoom+.5);render()};$('classicMinus').onclick=()=>{zoom=Math.max(.2,zoom-.5);render()};$('detailFavorite').onclick=()=>{if(!selected)return;if(favorites.has(selected.id))favorites.delete(selected.id);else favorites.add(selected.id);lsSave();update();$('detailFavorite').textContent=favorites.has(selected.id)?'★ Unfavorite':'☆ Favorite'};$('detailRoute').onclick=addRoute;$('routeFit').onclick=()=>{if(!route.length)return;const xs=route.map(r=>r.x),ys=route.map(r=>r.y);center={x:(Math.min(...xs)+Math.max(...xs))/2,y:(Math.min(...ys)+Math.max(...ys))/2};zoom=Math.max(.6,Math.min(5,Math.log2(Math.min(w/((Math.max(...xs)-Math.min(...xs)+350)/32),h/((Math.max(...ys)-Math.min(...ys)+350)/32)))));render()};$('routeClear').onclick=()=>{route=[];updateRoute()};$('routeCopy').onclick=async()=>{const str=route.map((r,i)=>`${i+1}. ${r.name}: ${r.x.toFixed(1)}, ${r.y.toFixed(1)}`).join('\n');try{await navigator.clipboard.writeText(str);$('routeStatus').textContent='Route stops copied.'}catch{$('routeStatus').textContent='Copy requires HTTPS. Select route text manually.'}};$('detailShare').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('loc',selected.id);try{await navigator.clipboard.writeText(url.href);$('detailShare').textContent='✓ Copied'}catch{$('detailShare').textContent='Use browser address bar'}};$('closeDetail').onclick=()=>{selected=null;$('detailIntro').hidden=false;$('detailContent').hidden=true;try{const url=new URL(location.href);url.searchParams.delete('loc');history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}update()};let dragging=null,moved=false;canvas.addEventListener('pointerdown',e=>{dragging={x:e.clientX,y:e.clientY,cx:center.x,cy:center.y};moved=false;canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-dragging.x,dy=e.clientY-dragging.y;if(Math.abs(dx)+Math.abs(dy)>5)moved=true;center.x=dragging.cx-dx/scale();center.y=dragging.cy+dy/scale();render()});canvas.addEventListener('pointerup',e=>{if(!dragging)return;dragging=null;if(moved)return;const box=canvas.getBoundingClientRect();const mx=e.clientX-box.left,my=e.clientY-box.top;let found=null,best=Infinity;
+$('classicSearch').addEventListener('input',update);$('classicSort').addEventListener('change',update);$('classicLayer').addEventListener('change',e=>{layer=e.target.value;loadCount=failCount=0;render()});$('showAll').onclick=()=>{onlyFav=false;categories='all';$('classicSearch').value='';$('showFav').setAttribute('aria-pressed','false');update()};$('showFav').onclick=()=>{onlyFav=!onlyFav;$('showFav').setAttribute('aria-pressed',String(onlyFav));update()};$('classicPins').onclick=()=>{showPins=!showPins;$('classicPins').setAttribute('aria-pressed',String(showPins));render()};$('classicFit').onclick=()=>{center={x:150,y:40};zoom=3.4;update()};$('classicPlus').onclick=()=>{zoom=Math.min(5,zoom+.5);render()};$('classicMinus').onclick=()=>{zoom=Math.max(.2,zoom-.5);render()};$('detailFavorite').onclick=()=>{if(!selected)return;if(favorites.has(selected.id))favorites.delete(selected.id);else favorites.add(selected.id);lsSave();update();$('detailFavorite').textContent=favorites.has(selected.id)?'★ Unfavorite':'☆ Favorite'};$('detailRoute').onclick=addRoute;$('routeFit').onclick=()=>{if(!route.length)return;const xs=route.map(r=>r.x),ys=route.map(r=>r.y);center={x:(Math.min(...xs)+Math.max(...xs))/2,y:(Math.min(...ys)+Math.max(...ys))/2};zoom=Math.max(.6,Math.min(5,Math.log2(Math.min(w/((Math.max(...xs)-Math.min(...xs)+350)/32),h/((Math.max(...ys)-Math.min(...ys)+350)/32)))));render()};$('routeClear').onclick=()=>{route=[];finishId='';saveRoute()};$('routeCopy').onclick=async()=>{const str=route.map((r,i)=>`${i+1}. ${r.name}: ${r.x.toFixed(1)}, ${r.y.toFixed(1)}`).join('\n');try{await navigator.clipboard.writeText(str);$('routeStatus').textContent='Route stops copied.'}catch{$('routeStatus').textContent='Copy requires HTTPS. Select route text manually.'}};$('detailShare').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('loc',selected.id);try{await navigator.clipboard.writeText(url.href);$('detailShare').textContent='✓ Copied'}catch{$('detailShare').textContent='Use browser address bar'}};$('closeDetail').onclick=()=>{selected=null;$('detailIntro').hidden=false;$('detailContent').hidden=true;try{const url=new URL(location.href);url.searchParams.delete('loc');history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}update()};let dragging=null,moved=false;canvas.addEventListener('pointerdown',e=>{dragging={x:e.clientX,y:e.clientY,cx:center.x,cy:center.y};moved=false;canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-dragging.x,dy=e.clientY-dragging.y;if(Math.abs(dx)+Math.abs(dy)>5)moved=true;center.x=dragging.cx-dx/scale();center.y=dragging.cy+dy/scale();render()});canvas.addEventListener('pointerup',e=>{if(!dragging)return;dragging=null;if(moved)return;const box=canvas.getBoundingClientRect();const mx=e.clientX-box.left,my=e.clientY-box.top;let found=null,best=Infinity;
  for(const hit of hitTargets){const d=Math.hypot(hit.x-mx,hit.y-my);if(d<=hit.radius&&d<best){best=d;found=hit}}
  if(!found)return;
  if(found.members.length===1){select(found.members[0],false);return}

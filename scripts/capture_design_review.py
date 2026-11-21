@@ -125,6 +125,9 @@ async def main():
         'expected':len(VIEWPORTS)*len(PAGES),
         'entries':records
     },indent=2)+'\n',encoding='utf-8')
+    for row in records:
+        if row.get('horizontalOverflowPixels',0)>1:
+            print('Viewport overflow',row['page'],row['viewport'],row['horizontalOverflowPixels'],row['horizontalOverflowCandidates'][:3])
     print('Design screenshots:',sum(bool(x['captured']) for x in records),'/',len(VIEWPORTS)*len(PAGES))
     # Review capture is advisory: never convert a flaky screenshot into a
     # failure of a fully independent map/data interaction test.

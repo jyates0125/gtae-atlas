@@ -12,3 +12,8 @@
 .classic-detail #j190-iv-found{background:linear-gradient(115deg,#286a67,#34395d);color:#e4ffed;border:1px solid #a5d9be}
 .classic-detail #j190-iv-found[hidden]{display:none}
 @media(max-width:720px){.j190-iv-collections{margin:8px 0;padding:9px}.classic-map-foot #j190-marker-status{font-size:9px}}
+
+.classic-route-fields{display:grid;gap:.6rem;margin-block:.75rem}
+.classic-route-fields label{display:grid;gap:.25rem;color:#ffe0b3;font-weight:700}
+.classic-route-fields select{width:100%;min-width:0;min-height:44px;color:#fff4ea;background:#20152f;border:1px solid #a27da4;border-radius:8px}
+.classic-stops .classic-stop{display:flex;align-items:center;justify-content:space-between;gap:.4rem;overflow-wrap:anywhere}

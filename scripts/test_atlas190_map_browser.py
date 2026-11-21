@@ -4,7 +4,7 @@ import os, re, threading
 from functools import partial
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
 PUBLIC=ROOT/'public'
@@ -46,7 +46,7 @@ try:
 
    page.locator('#j190-iv-scope').select_option('iv')
    page.wait_for_function("document.getElementById('visibleCount').textContent==='200'",timeout=15000)
-   assert page.locator('#j190-marker-status').inner_text().startswith('200 matching')
+   expect(page.locator('#j190-marker-status')).to_have_text(re.compile(r'^200 matching collectibles'))
    assert page.locator('.classic-result').count()>0
    page.locator('.classic-result').first.click()
    assert 'Flying Rat' in page.locator('#detailName').inner_text()
@@ -67,6 +67,34 @@ try:
    page.locator('#j190-iv-hide-found').check()
    assert page.locator('#resultCount').inner_text()=='199'
    assert page.locator('#visibleCount').inner_text()=='200'
+   # Use real licensed positions to check nearest-next ordering independently.
+   stops=[]
+   for i in range(5):
+    page.locator('.classic-result').nth(i).click()
+    stops.append(page.evaluate("""() => ({
+      id:new URL(location.href).searchParams.get('loc'),
+      xy:document.querySelector('#detailCoord').textContent.split(',').slice(0,2).map(Number)
+    })"""))
+    page.locator('#detailRoute').click()
+   planner=page.locator('details').filter(has=page.locator('#routeOrder'))
+   planner.locator('summary').click()
+   start,finish=stops[2],stops[0]
+   page.locator('#routeStart').select_option(start['id'])
+   page.locator('#routeFinish').select_option(finish['id'])
+   page.locator('#routeOrder').click()
+   expected=[start]
+   remaining=[item for item in stops if item not in (start,finish)]
+   while remaining:
+    x,y=expected[-1]['xy']
+    best=min(remaining,key=lambda item:(item['xy'][0]-x)**2+(item['xy'][1]-y)**2)
+    expected.append(best)
+    remaining.remove(best)
+   ids=[item['id'] for item in expected+[finish]]
+   actual=lambda: page.locator('#routeStart option').evaluate_all('(opts)=>opts.map(o=>o.value)')
+   assert actual()==ids
+   page.reload(wait_until='domcontentloaded')
+   expect(page.locator('#stopCount')).to_have_text('5')
+   assert actual()==ids and page.locator('#routeFinish').input_value()==finish['id']
    page.locator('#j190-iv-scope').select_option('tlad')
    page.wait_for_function("document.getElementById('visibleCount').textContent==='50'")
    assert page.locator('#j190-iv-scope').input_value()=='tlad'
@@ -75,7 +103,7 @@ try:
    page.locator('#classicPins').click()
    page.wait_for_function("document.querySelector('#j190-marker-status')?.textContent?.includes('Map symbols hidden')",timeout=10000)
    page.locator('#classicPins').click()
-   page.wait_for_function("document.querySelector('#j190-marker-status')?.textContent?.includes('matching landmark records')",timeout=10000)
+   page.wait_for_function("document.querySelector('#j190-marker-status')?.textContent?.includes('matching collectibles')",timeout=10000)
    proof=ROOT/'qa-evidence'/engine
    proof.mkdir(parents=True,exist_ok=True)
    page.locator('#classicMapShell').screenshot(path=str(proof/('atlas-190-iv-collectibles-'+kind+'.png')),animations='disabled',timeout=30000)
@@ -102,9 +130,19 @@ try:
     link=page.locator('#j190-episode-collectibles')
     link.wait_for(state='visible',timeout=15000)
     assert link.get_attribute('href')=='./atlas-iv.html?scope='+scope
-   if kind=='mobile':
-    for target in ('#j190-episode-collectibles',):
-     assert not page.locator(target).evaluate('(e)=>e.scrollWidth>e.clientWidth+4')
+    if kind=='mobile':
+     assert not link.evaluate('(e)=>e.scrollWidth>e.clientWidth+4')
+    link.click()
+    page.wait_for_function("document.getElementById('visibleCount')?.textContent==='50'")
+    assert page.locator('#j190-iv-scope').input_value()==scope and actual()==[]
+    page.locator('.classic-result').first.click()
+    assert 'loc='+scope+'-bird-' in page.url
+    page.locator('#detailRoute').click()
+    page.reload(wait_until='domcontentloaded')
+    expect(page.locator('#stopCount')).to_have_text('1')
+    assert actual()[0].startswith(scope+'-bird-')
+   page.locator('#j190-iv-scope').select_option('iv')
+   assert actual()==ids
    print('PASS Atlas 19.0 '+engine+' '+kind+': IV 200/50/50 scope, search, found, clusters, SA map route, classic episode links')
    context.close();browser.close()
 finally:
