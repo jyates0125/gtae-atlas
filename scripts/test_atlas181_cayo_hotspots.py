@@ -22,7 +22,7 @@ assert "j180-chest.j180-chest-active:after" in css
 assert "background:transparent!important" in css
 assert "width:clamp(19px" in css
 assert "atlas181-cayo-hotspots.js?v=191" in loader
-assert "atlas181-cayo-hotspots.css?v=181" in loader
+assert "atlas181-cayo-hotspots.css?v=202" in loader
 assert "if(heistId==='cayo-perico')" in loader
 assert "if(document.body.dataset.heist!=='cayo-perico'" in js
 assert "teamjura-heist-focus-v1:" not in js
