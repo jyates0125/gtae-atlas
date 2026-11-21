@@ -120,7 +120,8 @@ jobs:
           node --check atlas192-weapons6.js
           node --check film/atlas192-storyboard.js
           python scripts/test_atlas190_marker_parity.py
-          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py scripts/test_atlas210_iv_touch_browser.py scripts/test_atlas211_mobile_fit_browser.py scripts/test_atlas212_directory_browser.py
+          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py scripts/test_atlas210_iv_touch_browser.py scripts/test_atlas211_mobile_fit_browser.py scripts/test_atlas212_directory_browser.py scripts/test_atlas217_vi_world_browser.py
+          node --check atlas217-vi-world.js
           node --check atlas-iv.js
           node --check atlas190-sa-route.js
           node --check atlas186-cayo-route.js
@@ -129,6 +130,7 @@ jobs:
           node --check atlas180-cayo-flagship.js
           node --check atlas181-cayo-hotspots.js
           python scripts/test_atlas171_research_map.py
+          python scripts/test_atlas217_vi_world.py
           python scripts/test_atlas172_research_map.py
           node --check atlas164-heist-workspace.js
           node --check heist-pages.js
@@ -161,6 +163,7 @@ jobs:
           python scripts/test_atlas210_iv_touch_browser.py
           python scripts/test_atlas211_mobile_fit_browser.py
           python scripts/test_atlas212_directory_browser.py
+          python scripts/test_atlas217_vi_world_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Chromium)
@@ -216,6 +219,7 @@ jobs:
           python scripts/test_atlas210_iv_touch_browser.py
           python scripts/test_atlas211_mobile_fit_browser.py
           python scripts/test_atlas212_directory_browser.py
+          python scripts/test_atlas217_vi_world_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Edge)
