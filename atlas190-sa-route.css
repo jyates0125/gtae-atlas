@@ -1,0 +1,37 @@
+/* Atlas 19.0 — San Andreas collection route. In-map source symbols remain clickable. */
+#j190-sa-route{margin:12px;border:1px solid #dcaa7b;border-radius:13px;padding:clamp(11px,1.4vw,18px);background:linear-gradient(132deg,#372045,#20132e);color:#f5e9f6}
+.j190-sa-head{display:grid;gap:5px;border-bottom:1px solid #775c7d;margin-bottom:13px;padding-bottom:10px}
+.j190-sa-head strong{color:#ffd698;font:900 11px system-ui;letter-spacing:.08em}
+.j190-sa-head p{margin:0;color:#e9d5e7;font:550 12px/1.55 system-ui}
+.j190-sa-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.j190-sa-controls label{display:grid;gap:6px;min-width:0;color:#f5d8e7;font:750 11px system-ui}
+.j190-sa-controls select{width:100%;min-width:0;min-height:38px;border:1px solid #ab7fac;border-radius:8px;background:#2b1b3c;color:#fff7f0;padding:8px;font:650 12px system-ui}
+.j190-sa-controls .j190-sa-check{display:flex;gap:8px;align-items:center;margin:4px 0 8px;grid-column:1/-1}
+.j190-sa-check input{width:18px;height:18px;accent-color:#f3b66e;margin:0}
+.j190-sa-actions{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0 10px}
+.j190-sa-actions button{border:1px solid #e3ad78;border-radius:8px;padding:8px 12px;background:#4f2d60;color:#ffdeb2;font:800 12px system-ui;min-height:40px}
+.j190-sa-actions button:first-child{background:linear-gradient(135deg,#f7d293,#dba26f);color:#301736}
+.j190-sa-actions button[aria-pressed=true]{background:#a7f2df;color:#1d3031}
+.j190-sa-actions button:disabled{opacity:.46;cursor:not-allowed}
+.j190-sa-status{margin:7px 0 10px;padding:9px 12px;border-left:3px solid #e8af74;background:#392848;color:#fff0d9;font:650 11px/1.5 system-ui}
+.j190-sa-list{list-style:none;margin:9px 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));max-height:285px;overflow:auto;gap:7px}
+.j190-sa-stop{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0;padding:7px;border:1px solid #755777;border-radius:8px;background:#241c31}
+.j190-sa-index{font:900 10px system-ui;color:#ffe0a3;min-width:38px}
+.j190-sa-locate{flex:1;min-width:100px;text-align:left;border:0;background:none;color:#fff3e8;font:750 12px system-ui;cursor:pointer;overflow-wrap:anywhere}
+.j190-sa-stop small{flex-basis:100%;font:650 10px system-ui;color:#d7c4de}
+.j190-sa-collected{opacity:.57}
+.j190-sa-empty{font:600 12px system-ui;color:#e7d2eb}
+.j190-sa-foot{display:block;color:#e4c5dc;font:500 10px/1.6 system-ui}
+#mapContents>.j190-sa-overlay{position:absolute;inset:0;width:100%;height:100%;z-index:8;pointer-events:none;overflow:visible}
+.j190-sa-line{fill:none;stroke:#ffda86;stroke-width:33;stroke-dasharray:70 45;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 10px #251136b0)}
+.j190-sa-step circle{fill:#34223d;stroke:#ffe7a0;stroke-width:19}
+.j190-sa-step text{font:900 59px system-ui;fill:#ffebba;dominant-baseline:middle}
+.j190-sa-first circle{fill:#167d7c;stroke:#b9ffeb}
+.j190-sa-first text{fill:#fff}
+.j190-sa-last circle{fill:#8c466c;stroke:#ffd18e}
+#pinLayer .pin-source-projected.j190-sa-start{z-index:16;box-shadow:0 0 0 4px #baffdf,0 0 15px #4affb6}
+#pinLayer .pin-source-projected.j190-sa-finish{z-index:16;box-shadow:0 0 0 4px #ffe5a1,0 0 15px #ffba6e}
+#j190-sa-route :is(button,select,input):focus-visible{outline:3px solid #ffe5ae;outline-offset:2px}
+@media(max-width:680px){.j190-sa-controls{grid-template-columns:1fr 1fr}.j190-sa-controls label:first-child{grid-column:1/-1}.j190-sa-list{grid-template-columns:1fr;max-height:235px}}
+@media(max-width:420px){.j190-sa-controls{grid-template-columns:1fr}.j190-sa-controls label:first-child{grid-column:auto}.j190-sa-actions button{flex:1 1 44%}}
+@media(prefers-reduced-motion:reduce){#j190-sa-route{scroll-behavior:auto}}

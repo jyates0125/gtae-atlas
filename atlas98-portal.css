@@ -23,3 +23,41 @@
 
 /* Original Elario shield takes the place of the old generic crown glyph. */
 .brand-crown[src="./art/elario-crest.svg"]{width:42px;height:42px;object-fit:contain;flex:none;filter:drop-shadow(0 0 9px #e7a77b88)}
+
+/* Atlas 12.1: game-specific map imagery instead of temporary skyline covers. */
+.directory-grid .world-card img,.world-grid .world-card img{object-fit:cover;object-position:center;filter:saturate(1.08) contrast(1.03)}
+.directory-grid .world-card{overflow:hidden;box-shadow:0 9px 28px #08041677}
+.directory-grid .world-card img{border-bottom:1px solid #f3b6699c}
+.directory-grid .world-card .world-art-chip{background:#190d2de9;backdrop-filter:blur(6px)}
+
+/* Atlas 12.5 · Real game key art with a full-height poster and cinematic blurred extension.
+   Preserve the approved card layout while avoiding skyline placeholder covers. */
+.world-card .world-art-frame{display:block;position:relative;overflow:hidden;width:100%;aspect-ratio:16/10;background:linear-gradient(135deg,#341e47,#100820);isolation:isolate}
+.world-card .world-art-frame img{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:none;aspect-ratio:auto}
+.world-card .world-art-blur{object-fit:cover;filter:blur(20px) brightness(.56) saturate(1.28);transform:scale(1.20);z-index:0}
+.world-card .world-art-main{object-fit:contain;object-position:center center;z-index:1;filter:drop-shadow(0 5px 12px #000a)}
+.world-card .world-art-frame:after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(0deg,#130a25b3,transparent 35%,#130a2528)}
+.world-card[data-id="vi"] .world-art-frame{background:linear-gradient(120deg,#562954,#1e113a)}
+.world-card[data-id="cayo"] .world-art-frame{background:linear-gradient(120deg,#174f55,#142643)}
+.world-card .world-art-frame[data-cover="original-elario"] .world-art-main{object-fit:cover}
+@media(prefers-reduced-motion:reduce){.world-card{transition:none}}
+
+/* Atlas 15.1: on narrow iPhones the brand, Menu and Start Here occupy two
+   sticky header rows. Native #anchor links must leave the target heading
+   visible rather than jumping behind that header. */
+@media(max-width:470px){
+  html{scroll-padding-top:205px}
+  .world-section,
+  #mainWorlds,#otherWorlds,
+  #featured,#featuredGrid{scroll-margin-top:205px}
+}
+
+/* Atlas 15.5: fill featured cards with their own locally generated premium raster artwork; fallback remains intact. */
+.world-card .world-art-frame[data-cover="original-cinematic"] .world-art-main{object-fit:cover;object-position:center center;filter:none}
+.world-card .world-art-frame[data-cover="original-cinematic"] .world-art-blur{filter:blur(22px) brightness(.56) saturate(1.15)}
+.world-card .world-art-frame[data-cover="original-cinematic"]{background:#1a122e}
+
+/* Atlas 15.7 · remove repetitive tall directory-copy walls without concealing real availability. */
+.directory-card .world-copy .world-feature-summary{font-size:12px;line-height:1.43;color:#ddc7e7;margin:10px 0 6px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+.directory-card .world-copy .world-coverage-note{font-size:11px;line-height:1.45;color:#dcc9de;margin:4px 0 0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+.directory-card .world-copy{padding-bottom:16px}

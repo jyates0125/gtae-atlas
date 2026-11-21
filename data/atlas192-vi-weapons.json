@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "scope": "vi",
+  "kind": "weapon",
+  "reviewedAt": "2026-11-20",
+  "status": "Curated research sample, not the full release roster",
+  "disclaimer": "GTA VI weapon references are sourced by item. A name shown in official promotional material does not verify weapon performance, pricing, spawn locations or every edition. No GTA V archive art is repurposed as GTA VI in-game photography.",
+  "sources": [
+    {
+      "name": "Rockstar Games — GTA VI",
+      "url": "https://www.rockstargames.com/VI"
+    },
+    {
+      "name": "Rockstar Games — editions and bonuses",
+      "url": "https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions"
+    },
+    {
+      "name": "PC Gamer — named GTA VI weapons in official material (Oct 28)",
+      "url": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+    },
+    {
+      "name": "GTADB — GTA VI weapon reference and source distinctions",
+      "url": "https://gtadb.net/gta-6/weapons/"
+    }
+  ],
+  "records": [
+    {
+      "id": "girardi-es9",
+      "name": "Girardi ES9",
+      "group": "Handgun",
+      "evidence": "Named in published edition materials",
+      "grade": "Named official reference",
+      "description": "Jason's personalised sidearm is named in edition descriptions. Combat statistics and map coordinates are not claimed.",
+      "sourceName": "Rockstar Support — Editions",
+      "sourceUrl": "https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions"
+    },
+    {
+      "id": "klose-k17",
+      "name": "Klose K17",
+      "group": "Handgun",
+      "evidence": "Named in published edition materials",
+      "grade": "Named official reference",
+      "description": "Lucia's personalised sidearm is named in edition descriptions. Model stats and spawn locations are not established by this record.",
+      "sourceName": "Rockstar Support — Editions",
+      "sourceUrl": "https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions"
+    },
+    {
+      "id": "hawk-little-morgan",
+      "name": "Hawk & Little Morgan Revolvers",
+      "group": "Revolver",
+      "evidence": "Named in published edition materials",
+      "grade": "Named official reference",
+      "description": "Personalised revolvers are named with the Ultimate Edition items. No per-variant damage or inventory values are assumed.",
+      "sourceName": "Rockstar Support — Editions",
+      "sourceUrl": "https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions"
+    },
+    {
+      "id": "duke-556",
+      "name": "Duke 556 Assault Rifle",
+      "group": "Rifle",
+      "evidence": "Name read in published official gameplay material",
+      "grade": "Observed in official media",
+      "description": "Named in coverage of official gameplay footage; final model variants and technical statistics require direct game-source checking.",
+      "sourceName": "PC Gamer — GTA VI weapons",
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+    },
+    {
+      "id": "moreland-850",
+      "name": "Moreland 850",
+      "group": "Shotgun",
+      "evidence": "Name read in published official gameplay material",
+      "grade": "Observed in official media",
+      "description": "A named shotgun shown in official gameplay coverage; item pricing and pickup coordinates are not specified here.",
+      "sourceName": "PC Gamer — GTA VI weapons",
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+    },
+    {
+      "id": "nipper-38",
+      "name": "Nipper .38",
+      "group": "Handgun",
+      "evidence": "Label identified in official published artwork",
+      "grade": "Observed in official media",
+      "description": "Name is reported from Rockstar's published promotional artwork, not an independently verified game-menu specification.",
+      "sourceName": "PC Gamer — GTA VI weapons",
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+    },
+    {
+      "id": "mustang-357",
+      "name": "Mustang .357",
+      "group": "Revolver",
+      "evidence": "Name reported from official published artwork",
+      "grade": "Observed in official media",
+      "description": "A revolver identified from official imagery coverage. Attributes and spawn locations are not inferred.",
+      "sourceName": "PC Gamer — GTA VI weapons",
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+    }
+  ]
+}

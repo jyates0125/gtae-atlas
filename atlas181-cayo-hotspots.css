@@ -1,0 +1,312 @@
+/* Atlas 18.1: make the colorful EXISTING Cayo map pictograms interactive.
+   No replacement pin artwork. Transparent, keyboard-accessible hit regions
+   cover the source reference symbols; hover/focus shows a subtle halo only. */
+body.j180-cayo.j181-map-hotspots .j167-pins{display:none!important}
+body.j180-cayo.j181-map-hotspots .j180-ref-layer{display:none!important}
+body.j180-cayo.j181-map-hotspots .j167-chips{display:none!important}
+/* The illustrated canvas is not a control. On Edge its painted box can
+   otherwise intercept taps meant for the actual colored Cayo hotspots.
+   Keep map gestures on the enclosing viewport and leave artwork untouched. */
+body.j180-cayo.j181-map-hotspots .j167-canvas{pointer-events:none!important}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j167-toolbar{padding-right:58px!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspots{
+ position:absolute;inset:0;pointer-events:none;z-index:7
+}
+body.j180-cayo.j181-map-hotspots .j181-hotspot{
+ position:absolute;transform:translate(-50%,-50%);pointer-events:auto;
+ display:block;box-sizing:border-box;margin:0;padding:0!important;
+ width:clamp(19px,2.1vw,28px);height:clamp(19px,2.1vw,28px);
+ min-width:0;min-height:0;border:0!important;border-radius:50%!important;
+ background:transparent!important;color:transparent!important;
+ box-shadow:none!important;cursor:pointer;outline:0 solid transparent;
+ font-size:0!important;z-index:8;touch-action:manipulation
+}
+body.j180-cayo.j181-map-hotspots .j181-hotspot:hover,
+body.j180-cayo.j181-map-hotspots .j181-hotspot:focus-visible{
+ outline:2px solid #ffe6a7!important;outline-offset:2px!important;
+ box-shadow:0 0 0 6px #ffcd922e!important;background:#ffebaf19!important;
+ z-index:16
+}
+body.j180-cayo.j181-map-hotspots .j181-hotspot.j181-noted:not(:hover):not(:focus-visible){
+ box-shadow:inset 0 0 0 1px #76f1cc90!important
+}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[hidden]{display:none!important}
+/* The 18.0 chest buttons retain their map-daily logic and accessibility,
+   but now serve as transparent hit areas, not extra yellow generic dots.
+   Only an active chest gets a turquoise ring beside the EXISTING yellow art. */
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest{
+ position:absolute;pointer-events:auto!important;transform:translate(-50%,-50%);
+ width:clamp(19px,2.1vw,29px)!important;height:clamp(19px,2.1vw,29px)!important;
+ padding:0!important;margin:0;opacity:1!important;color:transparent!important;
+ text-shadow:none!important;background:transparent!important;border:0!important;
+ border-radius:50%!important;box-shadow:none!important;font-size:0!important;z-index:9
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active):hover,
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active):focus-visible{
+ outline:2px solid #ffe988!important;outline-offset:0!important;
+ background:#f4f66a27!important
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest.j180-chest-active{
+ background:transparent!important;border:0!important;
+ box-shadow:none!important;opacity:1!important;outline:none!important
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest.j180-chest-active:after{
+ content:'';position:absolute;inset:2px;border:3px solid #31fff0!important;
+ border-radius:50%;background:#3fffff17!important;
+ box-shadow:0 0 0 3px #00c7d952,0 0 11px #00eaffb5;
+ pointer-events:none
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest.j180-chest-active:focus-visible:after{
+ outline:2px solid #ffe4b6;outline-offset:4px
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest[hidden],
+body.j180-cayo.j181-map-hotspots .j181-hide-chests .j180-chest{display:none!important}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j180-glyph{
+ min-width:22px;color:#f4b3ed;text-align:center;
+ text-shadow:0 1px 4px #100d20;line-height:1
+}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-secondary,
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-gated{color:#43beff}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-exit,
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-drainage,
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-power,
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-chest{color:#faff5f}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-bolts{color:#ff655c}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-grapple{color:#dc6fff}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-truck{color:#31d58b}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-clothes{color:#efb78b}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-control{color:#f8e6e7}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j181-glyph-water{color:#3cffff}
+body.j180-cayo.j181-map-hotspots .j181-legend-row[aria-pressed=false]{opacity:.45}
+body.j180-cayo.j181-map-hotspots .j181-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+body.j180-cayo.j181-map-hotspots .j181-action{
+ background:#432b52!important;border:1px solid #efd39a!important;
+ border-radius:8px!important;color:#ffebd1!important;
+ padding:8px 10px!important;min-height:38px!important;
+ font:800 12px system-ui!important;cursor:pointer
+}
+body.j180-cayo.j181-map-hotspots .j181-qualifier{
+ padding:7px 0 3px;color:#f9d9b2!important;font-size:11px!important
+}
+@media(max-width:650px){
+ body.j180-cayo.j181-map-hotspots .j181-hotspot{
+  width:24px;height:24px
+ }
+ body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest{
+  width:24px!important;height:24px!important
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.j180-cayo.j181-map-hotspots .j181-hotspot{transition:none!important}
+}
+
+/* Atlas 18.2 correction: the current GTA Wiki basemap and local fallback do
+   NOT guarantee that source pictograms are baked into their pixels.
+   Render our OWN clickable category symbols; native 16.7 pins remain hidden
+   to avoid doubled icon layers. */
+body.j180-cayo.j181-map-hotspots .j181-hotspot{
+ width:24px!important;height:24px!important;
+ display:grid!important;place-items:center!important;
+ background:radial-gradient(circle at 35% 20%,#443046,#1c1828)!important;
+ border:1px solid #f4d49b!important;border-radius:50%!important;
+ box-shadow:0 3px 8px #0009,0 0 0 1px #180c2190!important;
+ color:#f8d89b!important;text-shadow:0 1px 3px #050608!important;
+ font-size:16px!important;font-weight:900!important;line-height:1!important;
+ z-index:8;
+}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="entry"]{color:#ec83f5!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="exit"],
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="drainage"]{color:#f2ef65!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="secondary"],
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="gated"]{color:#36beff!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="bolts"]{color:#ff776b!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="grapple"]{color:#d17cff!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="clothes"]{color:#ffe0a2!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="truck"]{color:#5beba5!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="power"]{color:#ffdd55!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="water"]{color:#48e8f6!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[data-category="powder"]{color:#fda37e!important}
+body.j180-cayo.j181-map-hotspots .j181-hotspot[hidden]{display:none!important}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest{
+ position:absolute!important;width:25px!important;height:25px!important;
+ display:block!important;background:transparent!important;border:0!important;
+ font-size:0!important;opacity:1!important;box-shadow:none!important;
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest::before{
+ content:'';display:block;position:absolute;left:50%;top:50%;
+ width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);
+ background:#ffef45;border:1px solid #3c3b1d;box-shadow:0 0 0 1px #fff59d7d,0 0 7px #ffd549b7;
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest.j180-chest-active::before{
+ width:15px;height:15px;background:#11f0e9;border:2px solid #f7ffba;
+ box-shadow:0 0 0 2px #11efff65,0 0 10px #00faff;
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest.j180-chest-active::after{
+ inset:1px;border:2px solid #36fff6!important;background:transparent!important;
+ box-shadow:0 0 8px #00faffb5!important;
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest[hidden],
+body.j180-cayo.j181-map-hotspots .j181-hide-chests .j180-chest{display:none!important}
+@media(max-width:590px){
+ body.j180-cayo.j181-map-hotspots .j181-hotspot{width:20px!important;height:20px!important;font-size:12px!important}
+}
+
+/* When the externally sourced raster is unavailable, our original vector
+   fallback has NO embedded colored symbols. Render the same small glyphs in
+   the transparent hit areas, rather than showing blank unclickable-looking
+   map positions or adding a second set of generic oversized pin badges.
+   For the sourced raster, these glyphs are always hidden. */
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot:after{
+ content:attr(data-glyph);display:grid;place-items:center;
+ position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ pointer-events:none;min-width:20px;min-height:20px;
+ font:bold 16px/1 "Segoe UI Symbol",system-ui,sans-serif!important;
+ color:#d57af5;text-shadow:0 1px 4px #090713,0 0 5px #090713;
+ background:transparent;border:0;border-radius:0;white-space:nowrap
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=entry]:after{color:#ee73e9}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=exit]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=drainage]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=power]:after{color:#f6f263}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=secondary]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=gated]:after{color:#30beff}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=bolts]:after{color:#fb6357}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=clothes]:after{color:#ffbd8f}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=truck]:after{color:#42d985}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=water]:after{color:#48f7f7}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-asset="local-trace"] .j181-hotspot[data-category=control]:after{color:#fff2e7}
+
+/* Atlas 18.3: owner requires legend-matched pictograms, NOT another generic circular pin family.
+   Only the category glyph is visible, directly interactive; the icon itself is the tap target.
+   Subtle focus halo appears only during interaction. */
+body.j180-cayo.j181-map-hotspots .j181-hotspot{
+ display:grid!important;place-items:center!important;
+ width:22px!important;height:22px!important;
+ background:transparent!important;border:0!important;
+ border-radius:0!important;box-shadow:none!important;
+ font-size:18px!important;line-height:1!important;
+ text-shadow:0 1px 3px #10121f,0 0 5px #030409!important;
+}
+body.j180-cayo.j181-map-hotspots .j181-hotspot:hover,
+body.j180-cayo.j181-map-hotspots .j181-hotspot:focus-visible{
+ border-radius:50%!important;
+ background:#fdde9526!important;
+ outline:2px solid #ffdf9c!important;
+ box-shadow:0 0 0 4px #f6ce8d40!important;
+}
+@media(max-width:590px){
+ body.j180-cayo.j181-map-hotspots .j181-hotspot{
+  width:20px!important;height:20px!important;font-size:15px!important;
+ }
+}
+
+/* Treasure chest reference locations use the user's tiny yellow-dot
+   iconography, NOT the removed generic heist pins. Position is registered to
+   the 19 published spots and visually checked against IMG_2782.jpeg.
+   Only the two dated/personal selections receive a cyan active outline. */
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active):after{
+ content:"";position:absolute;pointer-events:none;
+ width:8px;height:8px;left:50%;top:50%;transform:translate(-50%,-50%);
+ border:1px solid #131d1d;border-radius:50%;
+ background:#fff41e;box-shadow:0 0 0 1px #fffbb8bb,0 0 4px #f8ef4daa
+}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active):hover:after,
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active):focus-visible:after{
+ width:10px;height:10px;background:#fffca3
+}
+
+/* Final visual invariant: when the source game raster has icons embedded in it,
+   the hit area must not draw a SECOND icon. Text is kept for accessible naming
+   but visually hidden; the in-game source icon itself remains the visible art.
+   In offline and enhanced art, the :after glyph appears ONCE. */
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot{
+ font-size:0!important;color:transparent!important;text-shadow:none!important;
+ border:0!important;border-radius:0!important;background:transparent!important;
+ box-shadow:none!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot:hover,
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot:focus-visible{
+ outline:2px solid #ffe3aa!important;outline-offset:2px!important;
+ background:#f8cf9625!important;border-radius:50%!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot:after{
+ content:attr(data-glyph);display:grid;place-items:center;pointer-events:none;
+ position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+ font:bold 16px/1 "Segoe UI Symbol",system-ui,sans-serif!important;
+ color:#dc9cf7;text-shadow:0 1px 4px #080413;
+ min-width:19px;min-height:19px
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=bolts]:after{color:#ff7665}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=secondary]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=gated]:after{color:#53caff}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=exit]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=drainage]:after,
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=power]:after{color:#ffef54}
+body.j180-cayo.j181-map-hotspots #j167-heist-map[data-map-source="enhanced"] .j181-hotspot[data-category=truck]:after{color:#45e095}
+body.j180-cayo.j181-map-hotspots .j180-map-area .j180-chest:not(.j180-chest-active)::after{
+ content:none!important
+}
+
+/* Atlas 18.4 -- primary FLAT in-game map has a bare geographic raster.
+ * The prior hit-target-only style was leaving equipment and target symbols
+ * invisible (only chest dots visible). Render ONE original Team Jura SVG
+ * symbol per mapped POI on BOTH the in-game map and offline reconstruction.
+ * Icons match the legend; no large generic badge, border or shadow-disc. */
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:clamp(22px,2vw,28px)!important;height:clamp(22px,2vw,28px)!important;
+ min-width:0!important;min-height:0!important;
+ background:transparent!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;text-shadow:none!important;
+ padding:0!important;color:transparent!important;opacity:1!important;
+ z-index:12
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot .j183-svg{
+ display:block!important;width:20px!important;height:20px!important;
+ flex:none!important;overflow:visible!important;
+ color:var(--j183-color,#e686f6)!important;
+ filter:drop-shadow(0 1px 1.5px #0a101ae0) drop-shadow(0 0 2px #05070ad9);
+ pointer-events:none!important;opacity:1!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot::after{
+ content:none!important;display:none!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot[hidden]{
+ display:none!important
+}
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot:hover,
+body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot:focus-visible{
+ outline:2px solid #ffe4a2!important;outline-offset:2px!important;
+ border-radius:50%!important;background:#ffecb923!important
+}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j180-glyph{
+ display:grid;place-items:center;min-width:24px;height:24px
+}
+body.j180-cayo.j181-map-hotspots .j181-legend-row .j183-svg{
+ display:block;width:20px;height:20px;overflow:visible;
+ color:var(--j183-color,#e686f6)!important;pointer-events:none!important;
+ filter:drop-shadow(0 1px 1px #10101a)
+}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=entry],.j181-glyph-entry){--j183-color:#e978f3}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=exit],.j181-glyph-exit){--j183-color:#e7ec68}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=drainage],.j181-glyph-drainage){--j183-color:#f6e357}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=secondary],.j181-glyph-secondary){--j183-color:#26bfff}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=gated],.j181-glyph-gated){--j183-color:#3c99ff}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=bolts],.j181-glyph-bolts){--j183-color:#ff6059}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=grapple],.j181-glyph-grapple){--j183-color:#ba75fd}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=clothes],.j181-glyph-clothes){--j183-color:#ecb485}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=truck],.j181-glyph-truck){--j183-color:#34d891}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=control],.j181-glyph-control){--j183-color:#f4e6d3}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=power],.j181-glyph-power){--j183-color:#ffdc53}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=powder],.j181-glyph-powder){--j183-color:#f2a271}
+body.j180-cayo.j181-map-hotspots :is(.j181-hotspot[data-category=water],.j181-glyph-water){--j183-color:#34e5f5}
+body.j180-cayo.j181-map-hotspots .j181-glyph-chest{--j183-color:#f5ea35}
+body.j180-cayo.j181-map-hotspots .j181-glyph-chest .j183-svg{color:var(--j183-color)!important}
+@media(max-width:590px){
+ body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot{
+  width:23px!important;height:23px!important;
+ }
+ body.j180-cayo.j181-map-hotspots #j167-heist-map .j181-hotspot .j183-svg{
+  width:18px!important;height:18px!important
+ }
+}

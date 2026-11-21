@@ -1,0 +1,11 @@
+{
+  "schema": "elario-cayo-daily-chests-v1",
+  "windowStartUTC": "2026-11-20T06:00:00Z",
+  "windowEndUTC": "2026-11-21T06:00:00Z",
+  "land": 8,
+  "underwater": 14,
+  "confidence": "calculated_unconfirmed_in_game",
+  "source": "https://gtamap.io/gta-online/daily/treasure-chests/",
+  "sourceObservation": "Nov 19 dated page displayed Tomorrow: #8 (land) and #14 (underwater). Predicted Nov 20 selection, not a direct in-game confirmation.",
+  "expiresStrictly": true
+}

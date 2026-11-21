@@ -11,7 +11,18 @@ function init(){
  function choose(name){const lamp=lamps.find(l=>l[0]===name)||lamps[0];current=lamp[0];document.body.style.setProperty('--showroom-hue',String(lamp[1]));for(const button of spot.querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.lamp===current));try{localStorage.setItem('team-jura-showroom-light-v1',current)}catch{}}
  for(const [name]of lamps){const button=make('button','',name);button.type='button';button.dataset.lamp=name;button.onclick=()=>choose(name);spot.append(button)}
  const links=make('nav','j100-showroom-links');links.setAttribute('aria-label','Related Atlas database pages');
- for(const [label,href]of[['◎ Universe database','atlas-database.html'],['◆ Vehicle comparison','atlas-database.html?kind=vehicle'],['⚔ Weapon details','atlas-database.html?kind=weapon'],['♟ Characters','atlas-characters.html'],['✿ Animals','atlas-animals.html'],['◈ Collectibles','atlas-collectibles.html'],['▣ My Garage & 3D','atlas93-garage.html'],['◈ Original 3D configurator','atlas-vehicle-configurator.html']]){const a=make('a','',label);a.href='./'+href;links.append(a)}
+ const edition=document.body.dataset.gallery==='vehicles6'?'vi':document.body.dataset.gallery==='weapons'&&new URLSearchParams(location.search).get('world')==='story'?'story':'online';
+ const related=[
+ ['◎ Universe database','atlas-database.html?game='+edition],
+ ['◆ Vehicle comparison','atlas-database.html?kind=vehicle&game='+edition],
+ ['⚔ '+(edition==='vi'?'GTA VI Weapon Research':'World-specific weapon details'),edition==='vi'?'atlas90-weapons6.html':'atlas-database.html?kind=weapon&game='+edition],
+ ['♟ Characters','atlas-characters.html?game='+edition],
+ ['✿ Animals','atlas-animals.html?game='+edition],
+ ['◈ Collectibles','atlas-collectibles.html?game='+edition],
+ ['▣ '+(edition==='vi'?'GTA Online My Garage':'My Garage & 3D'),'atlas93-garage.html'],
+ ['◈ Original 3D configurator','atlas-vehicle-configurator.html']
+ ];
+ for(const [label,href]of related){const a=make('a','',label);a.href='./'+href;links.append(a)}
  panel.append(about,spot,links);tools.insertAdjacentElement('afterend',panel);
  choose(current);
 }

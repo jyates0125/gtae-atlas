@@ -80,7 +80,7 @@ function makeVIButtons(){
  const root=created('div','j86-mapviews');root.setAttribute('role','group');root.setAttribute('aria-label','Leonida illustration styles');
  const label=created('div','j86-view-title','MAP ARTWORK · CHOOSE VIEW');root.append(label);
  const bar=created('div','j86-view-row');root.append(bar);
- const viewNames={'scaly,view':'Scaly · YANIS','yanis,17':'Original YANIS','dupzor,51':'Original DUPZOR','uv2':'Illustrated UV','yanis,15':'Archive'};
+ const viewNames={'scaly,view':'Scaly · YANIS V18','yanis,18':'YANIS V18 · Current','dupzor,51':'DUPZOR V51 · Source','research,view':'Community Research · V18','yanis,15':'YANIS V15 · Archive'};
  let observed='';
  function sync(){if(!select.options.length)return;const signature=[...select.options].map(o=>o.value).join('|');if(signature!==observed){observed=signature;bar.replaceChildren();for(const opt of select.options){const btn=created('button','j86-view-btn',viewNames[opt.value]||opt.textContent);btn.type='button';btn.dataset.view=opt.value;btn.onclick=()=>{select.value=opt.value;select.dispatchEvent(new Event('change',{bubbles:true}));sync()};bar.append(btn)}}
  for(const btn of bar.children){const active=btn.dataset.view===select.value;btn.setAttribute('aria-pressed',String(active))}
@@ -117,7 +117,7 @@ function moveLegends(){
 function betterMapNav(){
  // Keep existing map links; add direct HQ to the primary header and keep its label explicit.
  const header=document.querySelector('header.topbar nav');if(!header)return;
- if(!header.querySelector('[data-j86-home]')){const a=created('a','j86-home-link','⌂ Atlas HQ');a.href='./atlas81-hq.html';a.dataset.j86Home='true';header.prepend(a)}
+ if(!header.querySelector('a[href="./atlas81-hq.html"]')){const a=created('a','j86-home-link','⌂ Atlas HQ');a.href='./atlas81-hq.html';a.dataset.j86Home='true';header.prepend(a)}
 }
 function init(){
  document.body.classList.add('jura86-designed-brand');

@@ -41,3 +41,36 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Heist-only cinematic mission planner; kept outside global map engines and save keys. */
 (()=>{const page=location.pathname.split('/').pop()||'';if(page==='heists.html'||/^heist-[a-z0-9-]+\.html$/.test(page)){const script=document.createElement('script');script.src='./atlas104-heist-experience.js?v=104';script.defer=true;document.head.append(script)}})();
+
+/* Atlas 16.0: unique original cinematic scene per heist. The archived
+   atlas152-heist- and atlas152-planning- SVGs are emergency fallbacks only;
+   never replace actual map engines or write to personal save data here. */
+(()=>{'use strict';
+ const allowed=new Set(["fleeca","prison-break","humane-labs","series-a","pacific-standard","doomsday-act-1","doomsday-act-2","doomsday-act-3","diamond-casino","cayo-perico","cluckin-bell","salvage-yard","auto-shop","agency-vip","kortz-center"]);
+ function apply(){
+  const id=document.body?.dataset?.heist;
+  if(id&&allowed.has(id)&&document.body.classList.contains('j120-heist-page')){
+   const url='./art/jura159-heist-'+id+'.webp';
+   document.body.style.setProperty('--j120-hero-image','url("'+url+'")');
+   const image=document.querySelector('.mapbox>img');
+   if(image&&image.getAttribute('src')!==url){
+    const fallback=image.getAttribute('src');
+    image.addEventListener('error',()=>{if(fallback)image.src=fallback},{once:true});
+    image.src=url;
+    image.alt='Original Elario Studios cinematic mission concept; not a verified gameplay map or route.';
+   }
+  }
+  if(location.pathname.endsWith('/heists.html')){
+   document.querySelectorAll('img.j151-heist-cover').forEach(img=>{
+    const m=(img.getAttribute('src')||'').match(/(?:atlas93-heist-|atlas152-heist-|jura159-heist-)([a-z0-9-]+)\.(?:svg|webp)$/);
+    if(!m||!allowed.has(m[1]))return;
+    const url='./art/jura159-heist-'+m[1]+'.webp';
+    if(img.getAttribute('src')===url)return;
+    const fallback=img.getAttribute('src');
+    img.addEventListener('error',()=>{if(fallback)img.src=fallback},{once:true});
+    img.src=url;img.alt='Original game-specific Elario Studios cinematic fan concept; not a gameplay screenshot.';
+   });
+  }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
+})();

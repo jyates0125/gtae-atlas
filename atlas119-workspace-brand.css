@@ -1,0 +1,62 @@
+/* Atlas 11.9 · original Elario Studios current Designed Brand.
+   Scoped to four established workspaces. No gameplay, maps, source, progress
+   or personal-state logic is changed by this stylesheet. */
+body.j119-heists{background:radial-gradient(ellipse at 82% -20%,#652168 0,transparent 42rem),#10091e;color:#fff5fd}
+body.j119-heists .sitebar{background:linear-gradient(112deg,#1e0d30,#3f1c48 65%,#25132b);border-bottom:2px solid #ffb25d}
+body.j119-heists .sitebar .brand{display:flex;align-items:center;gap:10px;font-size:clamp(16px,2vw,22px)}
+body.j119-heists .sitebar .brand img{width:43px;height:43px;object-fit:contain}
+body.j119-heists .sitebar .brand b{font-style:italic}
+body.j119-heists .sitebar .brand small{color:#ffe1a9;font-size:9px}
+body.j119-heists .sitebar nav a{border-color:#8a5796;background:#281933}
+body.j119-heists .sitebar nav a:hover{border-color:#ffc36e;background:#4a2858}
+body.j119-heists .hero{background:linear-gradient(95deg,#1a082cf0 0%,#31103ce0 45%,#2a1234a0 80%),url('./art/atlas93-heists.svg') center/cover;border-bottom:1px solid #d87eae;padding:clamp(25px,3vw,48px)}
+body.j119-heists .hero h1{max-width:800px;font-weight:950;font-style:italic;color:#fff2f9;text-shadow:0 4px 13px #100518}
+body.j119-heists .hero p{color:#f5dfed;max-width:760px}
+body.j119-heists .card{border-color:#95629e;background:linear-gradient(145deg,#30173c,#1d152c)}
+body.j119-heists .card h2{color:#ffdda1}
+body.j119-heists .card .btn{background:#492451;border-color:#af75ab;color:#fff}
+body.j119-heists .card .btn:hover{background:#73396f;border-color:#ffd58a}
+body.j119-heists :is(a,button):focus-visible{outline:3px solid #ffe0a0;outline-offset:3px}
+body.j119-iv .portal-top{background:linear-gradient(105deg,#261030,#381d44 65%,#211329);border-bottom:2px solid #efa85e}
+body.j119-iv .portal-logo img{width:43px;height:43px;object-fit:contain}
+body.j119-iv .portal-logo b{font-size:clamp(17px,1.8vw,23px);font-style:italic}
+body.j119-iv .portal-logo small{color:#ffda9f}
+body.j119-iv .top-caption{color:#eedce8}
+body.j119-iv .portal-rail{background:linear-gradient(#281635,#171125);border-right:1px solid #875798}
+body.j119-iv .classic-head{background:linear-gradient(100deg,#31173f,#1d172e);border:1px solid #925fa2;border-radius:17px;padding:clamp(14px,2vw,26px)}
+body.j119-iv .classic-head h1{color:#fff9fa}
+body.j119-iv .classic-head h1 span{color:#ffbc63}
+body.j119-iv .classic-workspace :is(.classic-sidebar,.classic-detail){background:#23182f;border-color:#855594}
+body.j119-iv .classic-map{border-color:#b178a3}
+body.j119-iv :is(a,button,input,select):focus-visible{outline:3px solid #ffe0a1;outline-offset:3px}
+body.j119-research{background:#120b21;color:#fff5fb}
+body.j119-research .top{background:linear-gradient(110deg,#21102d,#3a1947);border-bottom:2px solid #ffb465;height:auto;min-height:67px;flex-wrap:wrap;padding:9px 16px;position:relative;z-index:10;gap:10px}
+body.j119-research .top .brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:#fff}
+body.j119-research .top .brand img{width:39px;height:39px;object-fit:contain}
+body.j119-research .top .brand b{font-weight:950;font-style:italic;color:#fff;font-size:clamp(16px,2vw,21px)}
+body.j119-research .top .brand small{color:#ffdbac;display:block;letter-spacing:.08em;font-size:9px}
+body.j119-research .top>strong{color:#ffd392;letter-spacing:.1em}
+body.j119-research .top nav{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+body.j119-research .top nav a{padding:7px 9px;border:1px solid #8d5999;background:#2d1a3c;border-radius:8px;font-size:11px;color:#fcecf9}
+body.j119-research .top nav a:hover{background:#5b2b69;border-color:#ffca82}
+body.j119-research .workspace{height:calc(100dvh - 122px);min-height:430px}
+body.j119-research .rail{background:linear-gradient(#261731,#191428);border-right:1px solid #8f609d;scrollbar-color:#8c6499 transparent}
+body.j119-research .rail h1{color:#ffdb9a;font-size:clamp(23px,2.4vw,31px)}
+body.j119-research .eyebrow{color:#ffc57f}
+body.j119-research .rail .sub{color:#e2cfe4}
+body.j119-research :is(.top a,button,input,select):focus-visible{outline:3px solid #ffe1a0;outline-offset:3px}
+body.j119-research :is(button,input,select){border-color:#90669a;background:#30223c;color:#fff5f9}
+body.j119-research button:hover{background:#532f5f}
+body.j119-research .maparea{background:#23203c}
+body.j119-research .place{background:#25182fe8;border-color:#956eaa}
+body.j119-research .mapcredit{background:#27192ef0}
+body.j119-lab .mast{background:linear-gradient(110deg,#24102f,#381a45);border-bottom:2px solid #ffad59}
+body.j119-lab .mast .logo{display:flex;align-items:center;gap:9px;color:#fff;text-decoration:none}
+body.j119-lab .mast .logo img{width:40px;height:40px;object-fit:contain}
+body.j119-lab .mast .logo strong{color:#fff}
+body.j119-lab .mast .logo small{color:#ffdfa1}
+body.j119-lab .hero{background:linear-gradient(110deg,#281336,#361849);border-color:#af6fa9}
+body.j119-lab .hero h1{color:#fff5f9}
+body.j119-lab :is(a,button,input,select):focus-visible{outline:3px solid #ffe09d;outline-offset:3px}
+@media(max-width:870px){body.j119-research .top>strong{display:none}body.j119-research .top nav{margin-left:0}body.j119-research .workspace{height:auto;min-height:75dvh}}
+@media(max-width:650px){body.j119-research .top nav{overflow:auto;flex-wrap:nowrap;width:100%;padding-bottom:4px}body.j119-research .top nav a{white-space:nowrap}body.j119-heists .sitebar .brand img,body.j119-iv .portal-logo img{width:35px;height:35px}}
