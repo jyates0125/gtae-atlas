@@ -33,7 +33,18 @@ try:
    total=int(page.locator('#visibleCount').inner_text())
    labels=page.locator('#categories button').all_text_contents()
    filtered_choice=next(((i,int(m.group(1))) for i,label in enumerate(labels)
-                        if i>0 and (m:=re.search(r'\\((\\d+)\\)   page.locator('#j190-iv-scope').select_option('iv')
+                        if i>0 and (m:=re.search(r'\((\d+)\)$',label))
+                        and 0<int(m.group(1))<total),None)
+   assert filtered_choice is not None,'No nontrivial licensed GTA IV category found'
+   choice_index,expected_count=filtered_choice
+   page.locator('#categories button').nth(choice_index).click()
+   assert page.locator('#resultCount').inner_text()==str(expected_count),(
+       'GTA IV category click did not actually filter the source records')
+   assert page.locator('#categories button').nth(choice_index).get_attribute('aria-pressed')=='true'
+   page.locator('#categories button').first.click()
+   assert page.locator('#resultCount').inner_text()==str(total)
+
+   page.locator('#j190-iv-scope').select_option('iv')
    page.wait_for_function("document.getElementById('visibleCount').textContent==='200'",timeout=15000)
    assert page.locator('#j190-marker-status').inner_text().startswith('200 matching')
    assert page.locator('.classic-result').count()>0
