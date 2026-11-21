@@ -288,6 +288,10 @@ jobs:
         env:
           ATLAS_BROWSER: chromium
         run: python scripts/test_atlas186_route_browser.py
+      - name: Verify approved Salvage Yard hero image decodes on real page
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas220_salvage_art_browser.py
       - name: Save Atlas 22.0 focus screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -330,6 +334,10 @@ jobs:
         env:
           ATLAS_BROWSER: msedge
         run: python scripts/test_atlas186_route_browser.py
+      - name: Verify approved Salvage Yard hero image decodes on real page
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas220_salvage_art_browser.py
       - name: Save Atlas 22.0 focus screenshots
         if: always()
         uses: actions/upload-artifact@v4
