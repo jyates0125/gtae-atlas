@@ -105,6 +105,7 @@ jobs:
           python scripts/test_atlas169_heist_views.py
           python scripts/test_atlas170_cayo_unified.py
           python scripts/test_atlas171_cayo_board.py
+          python scripts/test_atlas216_cayo_dock.py
           python scripts/test_atlas180_cayo_flagship.py
           python scripts/test_atlas181_cayo_hotspots.py
           python scripts/test_atlas184_cayo_visible_symbols.py
