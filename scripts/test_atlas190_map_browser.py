@@ -12,7 +12,11 @@ if not (PUBLIC/'atlas-iv.html').is_file() or not (PUBLIC/'atlas-sa.html').is_fil
     raise SystemExit('Build the actual Cloudflare public/ output first')
 class Quiet(SimpleHTTPRequestHandler):
     def log_message(self,*args):pass
-server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(PUBLIC)))
+class BusyBrowserServer(ThreadingHTTPServer):
+    # Edge can request many map/artist assets in parallel. The default small
+    # pending-connection backlog can starve a deferred checklist script.
+    request_queue_size=64
+server=BusyBrowserServer(('127.0.0.1',0),partial(Quiet,directory=str(PUBLIC)))
 threading.Thread(target=server.serve_forever,daemon=True).start()
 base='http://127.0.0.1:%s/'%server.server_port
 engine=os.getenv('ATLAS_BROWSER','chromium')
