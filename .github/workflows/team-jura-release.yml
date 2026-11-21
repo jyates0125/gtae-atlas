@@ -143,6 +143,10 @@ jobs:
           node --check atlas164-heist-workspace.js
           node --check heist-pages.js
           python scripts/test_atlas152_art.py
+          python scripts/test_atlas222_vi_launch.py
+          node --check atlas132-nav.js
+          node --check atlas222-characters.js
+          node --check atlas222-vi-release.js
           node --check atlas93-global.js
           node --check leonida-hq.js
           node --check atlas145-leonida-map-ux.js
