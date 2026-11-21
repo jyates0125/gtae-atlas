@@ -76,7 +76,7 @@ try:
    expect(cards6).to_have_count(11,timeout=15000)
    assert page.locator('#j222-vi-categories a').filter(has_text='Open in Atlas').count()==11,'Every category must have a real Atlas link'
    expect(page.locator('#j222-vi-regions a')).to_have_count(6)
-   assert page.locator('a[href="./atlas-characters.html?game=vi#results"]').count()>=1
+   assert page.locator('a[href="./atlas-characters.html?game=vi#mainCharacterEra"]').count()>=1
    assert not issues,('page Javascript exceptions',issues)
    if width==390:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'VI page horizontal overflow'

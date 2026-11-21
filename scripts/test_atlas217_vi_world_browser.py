@@ -25,7 +25,11 @@ try:
    page=ctx.new_page()
    page.goto(base+'atlas-vi.html',wait_until='domcontentloaded',timeout=45000)
    panel=page.locator('#j217-vi-hub')
-   # The VI hub now contains a nested Rockstar launch directory <details>.\n   # Scope the toggle to the hub's direct child, not its nested summaries.\n   toggle=panel.locator(':scope > summary')\n   expect(toggle).to_have_count(1)\n   expect(toggle).to_be_visible(timeout=20000)
+   # The VI hub now contains a nested Rockstar launch directory <details>.
+   # Scope the toggle to the hub's direct child, not its nested summaries.
+   toggle=panel.locator(':scope > summary')
+   expect(toggle).to_have_count(1)
+   expect(toggle).to_be_visible(timeout=20000)
    assert not panel.evaluate('(e)=>e.open'),'World menu must start collapsed'
    toggle.click()
    assert panel.evaluate('(e)=>e.open'),'Native world panel did not open'
@@ -34,7 +38,7 @@ try:
    assert panel.locator('a[href="./atlas-vi.html?view=rockstar"]').count()==1
    assert panel.locator('a[href="./atlas90-vehicles6.html"]').count()==1
    assert panel.locator('a[href="./atlas90-weapons6.html"]').count()==1
-   assert panel.locator('a[href="./atlas-characters.html?game=vi#results"]').count()==1
+   assert panel.locator('a[href="./atlas-characters.html?game=vi#mainCharacterEra"]').count()==1
    assert panel.locator('a[href="./atlas-research.html"]').count()==1
    assert page.locator('#atlasCanvas').count()==1
    if width==390:
