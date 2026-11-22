@@ -4,6 +4,7 @@ on:
     branches: [development]
     paths:
       - 'atlas93-garage.js'
+      - 'atlas93-garage.html'
       - 'atlas254-garage-merge.js'
       - 'atlas147-garage-mobile.css'
       - 'tests/atlas293-garage-share.test.cjs'
