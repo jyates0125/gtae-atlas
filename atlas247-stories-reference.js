@@ -40,7 +40,7 @@ const calControls=E('div');calControls.className='j240-controls';calControls.app
 calibration.append(calControls,calStatus,anchorList);sources.after(calibration);
 const layer=E('div');layer.id='j249-pins';layer.className='j241-source-pins';layer.hidden=true;surface.append(layer);
 const markerInfo=E('section');markerInfo.id='j249-selected';markerInfo.hidden=true;markerInfo.setAttribute('aria-label','Selected source location');viewport.after(markerInfo);
-const hidePins=E('button','Hide aligned source pins');hidePins.type='button';hidePins.disabled=true;hidePins.setAttribute('aria-pressed','false');calControls.append(hidePins);
+const hidePins=E('button','Hide aligned source pins');hidePins.type='button';hidePins.disabled=true;hidePins.setAttribute('aria-pressed','false');controls.prepend(hidePins);
 let pinsHidden=false;
 hidePins.onclick=()=>{pinsHidden=!pinsHidden;hidePins.textContent=pinsHidden?'Show aligned source pins':'Hide aligned source pins';hidePins.setAttribute('aria-pressed',String(pinsHidden));if(pinsHidden)markerInfo.hidden=true;drawAligned()};
 const getImage=()=>viewport.dataset.mapImage!=='original-art'&&bg.classList.contains('has-image')?bg.style.backgroundImage:'';
