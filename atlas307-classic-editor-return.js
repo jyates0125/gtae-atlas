@@ -26,7 +26,7 @@ function init(){
  const finish=()=>{
   cancel.click();
   if(!editor.hidden)return;
-  map.scrollIntoView({block:'center',behavior:'instant'});
+  map.scrollIntoView({block:'center',behavior:'auto'});
   map.focus({preventScroll:true});
   if(status)status.textContent='Back on this map. Saved personal pins and progress are unchanged.';
  };
