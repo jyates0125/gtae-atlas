@@ -34,6 +34,36 @@ function init(){
   if(heading)heading.insertAdjacentElement('beforebegin',open);
   else (sidebar.querySelector('.j83-worldnav')||sidebar.querySelector('.worlds')||views).insertAdjacentElement('afterend',open);
  }
+ // Source-cleared Day tiles are an explicit opt-in until VI community pins are
+ // calibrated against that basemap. Reuse the existing map engine's layer picker;
+ // do not create another marker layer, reset progress or crop source imagery.
+ const layer=document.getElementById('layer');
+ const shortcut=sidebar.querySelector('.j145-open-map');
+ if(layer&&shortcut&&!sidebar.querySelector('#j294-day-map')){
+  const day=document.createElement('button');
+  day.type='button';day.id='j294-day-map';
+  day.className='j145-open-map j294-day-map';
+  day.setAttribute('aria-label','Switch the GTA VI map between in-game Day tiles and the existing Scaly view');
+  day.setAttribute('aria-pressed','false');
+  day.title='GTADB in-game Day tiles are optional. Community pins remain provisional and may not align precisely.';
+  shortcut.insertAdjacentElement('afterend',day);
+  const sync=()=>{
+   const active=layer.value==='day';
+   day.disabled=!layer.querySelector('option[value="day"]');
+   day.textContent=active?'◇ Return to Scaly view':'◇ Try in-game Day map';
+   day.setAttribute('aria-pressed',String(active));
+  };
+  layer.addEventListener('change',sync);
+  new MutationObserver(sync).observe(layer,{childList:true});
+  day.addEventListener('click',()=>{
+   if(day.disabled)return;
+   layer.value=layer.value==='day'?'scaly,view':'day';
+   layer.dispatchEvent(new Event('change',{bubbles:true}));
+   if(matchMedia('(max-width:700px)').matches)sidebar.classList.add('mobile-collapsed');
+   map.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  });
+  sync();
+ }
  // VI is a map-first destination. The map engine may update the URL fragment
  // to #game6; that must not make the mobile first screen jump into the sidebar.
  // Preserve incoming deep links or explicit coordinate navigation instead.

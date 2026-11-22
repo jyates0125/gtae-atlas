@@ -54,6 +54,7 @@ jobs:
       - name: Test interacting components in real browser
         run: |
           python scripts/test_atlas290_vi_day_browser.py
+          python scripts/test_atlas294_day_switch_browser.py
           python scripts/test_atlas290_poster_browser.py
           python scripts/test_atlas293_garage_forge_browser.py
           python scripts/test_atlas293_character_portraits_browser.py
