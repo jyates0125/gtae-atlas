@@ -81,6 +81,10 @@ function mount(){
   zoomAt(zoom*factor,rect.left+rect.width/2,rect.top+rect.height/2);
  }
  async function showFile(file,notice){
+  const priorHash=panel.dataset.j290Hash||'';
+  // While switching image bytes, immediately hide previous-image pins.
+  panel.removeAttribute('data-j290-hash');
+  window.dispatchEvent(new Event('jura:poster:clear'));
   const nextUrl=URL.createObjectURL(file);
   try{
    img.src=nextUrl;
@@ -89,6 +93,7 @@ function mount(){
    URL.revokeObjectURL(nextUrl);
    if(objectUrl)img.src=objectUrl;
    else img.removeAttribute('src');
+   if(priorHash){panel.dataset.j290Hash=priorHash;window.dispatchEvent(new CustomEvent('jura:poster:ready',{detail:{sha256:priorHash}}));}
    throw Error('This image could not be displayed. Try the official Rockstar download again.');
   }
   if(objectUrl)URL.revokeObjectURL(objectUrl);
