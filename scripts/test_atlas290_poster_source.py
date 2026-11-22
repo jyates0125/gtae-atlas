@@ -27,6 +27,8 @@ assert "jura:poster:ready" in notebook and "jura:poster:clear" in notebook
 assert "input.fingerprint!==fingerprint" in notebook
 assert "validCoordinate(xy)" in notebook and "game:'6'" in notebook
 assert 'MAX_PINS=500' in notebook and 'MAX_RESULTS=30' in notebook
+assert 'if(!fingerprint||!records.size)return;' in notebook, 'Do not misidentify unloaded source references as corrupt guest backups'
+assert 'if(!records.size)return message(' in notebook and "if(!records.size)throw Error(" in notebook, 'Wait for landmark data before exporting or restoring'
 assert 'No Rockstar art copied into the deployable package' in poster
 assert 'The official image stays in the player' in notebook
 assert 'Never' in notebook or 'NEVER projected' in notebook

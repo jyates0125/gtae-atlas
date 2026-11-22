@@ -30,7 +30,7 @@ function safeMarks(input,strict){
 }
 function restore(){
  placed={};
- if(!fingerprint)return;
+ if(!fingerprint||!records.size)return;
  try{const raw=localStorage.getItem(storageKey());if(raw)placed=safeMarks(JSON.parse(raw),true);}
  catch{placed={};message('Saved placements could not be restored. Other Atlas progress was not changed.');}
 }
@@ -156,6 +156,7 @@ function ready(event){
 function clear(){fingerprint='';placed={};pickup('');selected='';ui.hidden=true;overlay.replaceChildren();overlay.hidden=true;}
 function exportBackup(){
  if(!fingerprint)return message('Open your poster image first.');
+ if(!records.size)return message('Landmark index is still loading. Export your pins when the source list is ready.');
  const bytes=JSON.stringify({schema:1,game:'6',fingerprint,source:'GTADB CC BY 4.0; private user poster placement',items:placed},null,2)+'\n';
  const url=URL.createObjectURL(new Blob([bytes],{type:'application/json'}));
  const a=elt('a');a.href=url;a.download='team-jura-leonida-private-poster-pins.json';document.body.append(a);a.click();a.remove();
@@ -163,6 +164,7 @@ function exportBackup(){
  message('Private poster placement backup downloaded. No map image or account information is included.');
 }
 async function importBackup(file){
+ if(!records.size)throw Error('Landmark index is still loading. Retry once the source list is ready.');
  if(!file||file.size>1000000)throw Error('Choose a poster placement JSON under 1 MB.');
  const input=JSON.parse(await file.text()),fresh=safeMarks(input,true);
  const merged={...placed};

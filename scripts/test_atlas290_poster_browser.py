@@ -122,6 +122,10 @@ try:
    expect(page.locator('.j290-pin')).to_have_count(1)
    if width==390 or height<500:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'Poster notebook causes horizontal overflow'
+   # Capture rendered desktop/portrait/landscape UI for independent human visual review.
+   evidence=R/'qa-evidence'/engine/'leonida-dual'
+   evidence.mkdir(parents=True,exist_ok=True)
+   page.screenshot(path=str(evidence/f'poster-{width}x{height}.png'),animations='disabled',full_page=False,timeout=25000)
    print('PASS Atlas 29.0 '+engine+' '+str(width)+': source search, manual poster placement, show/hide, private backup, image SHA isolation and restore',flush=True)
    context.close()
   browser.close()
