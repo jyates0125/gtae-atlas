@@ -15,7 +15,9 @@ required=(
  "atlas292-shortcuts.yml","atlas293-garage-forge.yml","atlas294-integrated-staging.yml",
  "atlas295-garage-preservation.yml","atlas296-forge-collections.yml",
  "atlas297-heist-resume.yml","atlas298-heist-landmark-links.yml",
- "atlas298-heist-map-kit.yml","atlas2150-cross-product.yml"
+ "atlas298-heist-map-kit.yml","atlas2150-cross-product.yml",
+ "atlas299-heist-backup.yml","atlas301-heist-checklists.yml","atlas302-cayo-rescue.yml",
+ "atlas302-classic-notebook.yml","atlas303-thirteen-worlds.yml"
 )
 for path in required:
  source=(workflow/path).read_text(encoding="utf-8")
@@ -37,6 +39,11 @@ cases={
  "atlas296-forge-collections.yml":(["atlas263-forge-collections.js"],["heist-pages.js"]),
  "atlas-navigation-focused.yml":(["atlas-dashboard.html"],["atlas167-heist-focus.js"]),
  "atlas2150-cross-product.yml":(["atlas101-configurator.js"],["atlas298-heist-map-kit.js"]),
+ "atlas299-heist-backup.yml":(["atlas299-heist-backup.js"],["atlas98-portal.js"]),
+ "atlas301-heist-checklists.yml":(["heist-pages.js"],["atlas98-classic.js"]),
+ "atlas302-cayo-rescue.yml":(["atlas302-cayo-legacy-rescue.js"],["atlas98-portal.js"]),
+ "atlas302-classic-notebook.yml":(["atlas98-classic.js"],["heist-pages.js"]),
+ "atlas303-thirteen-worlds.yml":(["atlas98-portal.js"],["heist-pages.js"]),
 }
 for file,(yes,no) in cases.items():
  pats=mod.parse_patterns((workflow/file).read_text())
@@ -78,7 +85,7 @@ for file in required:
             assert "steps.scope.outputs.run" in str(step.get("if","")),(file,job_name,step.get("name") or step.get("run","")[:60])
             total_steps+=1
         total_jobs+=1
-assert total_jobs>=14 and total_steps>=45,(total_jobs,total_steps)
+assert total_jobs>=19 and total_steps>=65,(total_jobs,total_steps)
 integrated=(workflow/"atlas294-integrated-staging.yml").read_text()
 assert "'scripts/test_atlas29*.py'" not in integrated
 assert "'scripts/test_atlas298*.py'" not in integrated
