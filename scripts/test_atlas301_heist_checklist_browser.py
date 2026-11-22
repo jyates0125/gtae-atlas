@@ -38,7 +38,13 @@ try:
     page.goto(base+'heist-'+id+'.html',wait_until='domcontentloaded',timeout=45000)
     checks=page.locator('input[data-step]')
     expect(checks.first).to_be_visible(timeout=20000)
-    expect(page.locator('#j301-checklist-status')).to_be_visible()
+    # Cayo's flagship mission board hides the legacy checklist container.
+    # Its handler/status must still exist, without forcing a second UI over it.
+    if id=='cayo-perico':
+     expect(page.locator('#j301-checklist-status')).to_have_count(1)
+     expect(page.locator('#j301-checklist-status')).to_contain_text('Checklist updates')
+    else:
+     expect(page.locator('#j301-checklist-status')).to_be_visible()
     assert page.evaluate('key=>localStorage.getItem(key)',key) is None,(
       id,'Merely visiting a heist page wrote a checklist key')
     assert not checks.first.is_disabled()
