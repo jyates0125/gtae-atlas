@@ -33,7 +33,20 @@ function kind(id){
 }
 function saveOwners(){persist();text('ownedCount',Object.keys(gallery.owned).filter(x=>x.startsWith('vehicles5:')&&gallery.owned[x]).length)}
 function vehicle(id){return meta.vehicles[id]||{garage:'',paint:'Graphite',secondary:'Midnight',note:'',favorite:false,plate:''}}
-function setVehicle(id,v){meta.vehicles[id]={...vehicle(id),...v};return persist()}
+function setVehicle(id,v){
+ // Forge and Garage may be open in different tabs. Merge the newest saved model
+ // rather than writing the stale Garage tab's entire collection back to storage.
+ try{
+  const raw=localStorage.getItem(META),latest=raw===null?meta:JSON.parse(raw);
+  if(!latest||typeof latest!=='object'||Array.isArray(latest)||!latest.vehicles||typeof latest.vehicles!=='object'||Array.isArray(latest.vehicles))throw Error('Invalid Garage storage');
+  const previous=latest.vehicles[id];
+  if(previous!==undefined&&(!previous||typeof previous!=='object'||Array.isArray(previous)))throw Error('Invalid saved vehicle');
+  const next={...latest,vehicles:{...latest.vehicles,[id]:{...(previous||vehicle(id)),...v}},schema:1,updated:new Date().toISOString()};
+  localStorage.setItem(META,JSON.stringify(next));
+  meta=next;
+  return true;
+ }catch(e){notice('Garage save blocked: stored data could not be read safely. Export your backup before retrying.');return false}
+}
 function modelInfo(id){const stat=intel[id];return {id,name:stat?.displayName||nice(id),type:kind(id),spec:stat||null,image:BASE+encodeURIComponent(id)+'.webp'}}
 function getPhoto(r){const img=document.createElement('img');img.loading='lazy';img.decoding='async';img.alt='GTA V archive reference render: '+r.name;img.src=r.image;img.onerror=()=>{img.onerror=null;img.src=r.type==='Boats & Watercraft'?'./art/elario-watercraft-showroom.webp':'./art/jura161-vehicles.webp';img.alt='Original Elario vehicle-showroom concept; a verified model-specific reference render is not available for '+r.name};return img}
 function paintColor(name){return typeof name==='string'&&/^#[0-9a-f]{6}$/i.test(name)?name:PAINTS.find(([n])=>n===name)?.[1]||'#5b6270'}
