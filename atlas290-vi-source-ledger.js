@@ -91,7 +91,15 @@ async function load(){
   status.textContent='The source index is unavailable. The main map and existing saved progress are unchanged. Try reopening this panel while connected.';
  }finally{loading=false}
 }
-box.addEventListener('toggle',()=>{if(box.open)load()});
+function followActiveWorld(){
+ // The VI page can temporarily switch its shared Atlas engine into V/Online.
+ // Keep this VI-only index out of those worlds without resetting private data.
+ const active=window.JuraDualLegendAPI?.state?.()?.game;
+ if(active)box.hidden=active!=='6';
+}
+document.addEventListener('jura:legend-updated',followActiveWorld);
+box.addEventListener('toggle',()=>{if(box.open&&!box.hidden)load()});
+followActiveWorld();
 for(const input of [search,kind,tagSelect])input.addEventListener(input===search?'input':'change',()=>{page=0;render()});
 prev.addEventListener('click',()=>{if(page>0){page--;render()}});
 next.addEventListener('click',()=>{if((page+1)*LIMIT<filtered.length){page++;render()}});
