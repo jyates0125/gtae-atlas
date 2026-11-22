@@ -83,6 +83,13 @@ try:
    page.keyboard.press('Escape')
    assert page.locator('#j223-search-results').is_hidden(),'Escape did not dismiss search results'
    assert page.locator('#j223-search-input').evaluate('(el) => document.activeElement === el'),'Escape did not return focus to search'
+   # A new query must replace stale suggestions rather than leaving old
+   # result links or an invalid active-descendant reference behind.
+   page.locator('#j223-search-input').fill('Lucia')
+   expect(page.locator('#j223-search-results a').filter(has_text='Lucia Caminos')).to_have_count(1)
+   page.locator('#j223-search-input').fill('Trevor')
+   expect(page.locator('#j223-search-results a').filter(has_text='Lucia Caminos')).to_have_count(0)
+   assert page.locator('#j223-search-input').get_attribute('aria-activedescendant') is None
    page.locator('#j223-search-input').fill('Trevor')
    suggestion=page.locator('#j223-search-results a').filter(has_text='Trevor Philips').first
    expect(suggestion).to_be_visible(timeout=15000)
