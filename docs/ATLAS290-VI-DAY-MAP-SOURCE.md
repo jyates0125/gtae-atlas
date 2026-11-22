@@ -37,3 +37,14 @@ The source rendering origin is `zeroX=zeroY=16384` on a 32768-unit canvas, same 
 - Cloudflare GTAE production = `development`. Old Team Jura Pages project is retained for historical redirect/export. Neither project is changed by staging this PR.
 
 **Not finished by this change:** complete VI gameplay marker calibration, native road routing, all collectibles, exact vehicle positions and real-device Safari or owner visual signoff.
+
+## Latest complete landmark dataset comparison
+
+2026-11-22 direct upstream-vs-local comparison through GitHub connector:
+- Upstream `rolux/gtadb.org` `map/data/6/landmarks.json` blob: `46790ac3766e067beb88e6e40ce04308d8ee5d48`.
+- Existing GTAE `data/gtadb-6.json` blob: `bfe4c8880654d39adc665c0a9b525857a9ea64c7` (different wrapper format, intentionally).
+- **Exact per-record array equality:** 3,754 records upstream and local, **0 added, 0 removed, 0 changed**. Of these, 3,663 have two usable map X/Y values and 91 have none. There is **no legitimate bulk synchronization to make at this point**; importing duplicates would be a regression.
+- New VI sidebar **Complete Leonida source index** displays all entries safely via the already-bundled local CC BY 4.0 snapshot. It offers text/area/tag/ID search, mapped versus coordinate-less filtering, paginated record access, and map links *only* for positioned records.
+- This is **landmark/reference coverage**, NOT 3,663 verified collectibles, active activities, businesses, vehicle spawns, entrances or missions. Claims about those require independently observed gameplay, provenance, source version and owner review.
+- A Rockstar printable poster has its own image proportions and no reliable coordinate transformation just because it looks similar. Keep Rockstar's official poster view separate from the source-georeferenced GTADB in-game Day tiling until a tested calibration exists.
+- New index asset JS/CSS are included in the offline app shell; map scripts register the same service-worker revision across the base maps and classic map hub. Existing progress, private image fingerprints and cache entries are not purged.
