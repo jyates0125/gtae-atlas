@@ -9,3 +9,7 @@
 .j223-shortcuts-menu .j223-shortcuts{margin:0;padding:12px;border-top:1px solid #805283}
 @media(max-width:660px){.j223-shortcuts-menu>summary{gap:4px 10px}.j223-shortcuts-hint{width:100%;order:3}.j223-shortcuts-menu .j223-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}.j223-shortcuts-menu .j223-shortcuts a{min-height:62px}}
 @media(prefers-reduced-motion:reduce){.j223-shortcuts-menu>summary:after{transition:none}}
+
+/* Distinguish official poster from community map, without moving map pins. */
+.j291-map-note{font:600 12px/1.5 system-ui;color:#f1dbea;margin:8px 0 3px}
+.j223-map-actions a{white-space:normal;text-align:center;padding:7px 9px}
