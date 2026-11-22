@@ -13,6 +13,30 @@ const bar=node('div','j164-buttons');
 const load=node('button','j164-main','Load interactive map');load.type='button';load.setAttribute('aria-expanded','false');load.setAttribute('aria-controls','j164-map-frame');
 const open=node('a','j164-other','Open full-size map ↗');open.href=map;
 bar.append(load,open);section.append(bar);
+// Source-graded GTADB.org V landmarks, NOT heist entrance/loot positions.
+// IDs below are verified against our attributed local data/gtadb-5.json.
+// No x/y duplicated and no false claim of exact finale position.
+const atlasSites={
+ 'fleeca':[['Fleeca Bank · Chumash','L697']],
+ 'prison-break':[['Bolingbroke Penitentiary','L508']],
+ 'humane-labs':[['Humane Labs and Research','L553']],
+ 'pacific-standard':[['Pacific Standard bank','L2013']],
+ 'cluckin-bell':[['Cluckin’ Bell Farms factory','L1596']],
+ 'kortz-center':[['Kortz Center','L139']]
+};
+if(atlasSites[id]){
+ const sites=node('div','j298-mission-sites');sites.id='j298-mission-sites';
+ sites.append(node('h4','','Find this mission site on the live Los Santos map'));
+ const links=node('div','j298-site-links');
+ for(const [label,record] of atlasSites[id]){
+  const u=new URL(map,document.baseURI);u.searchParams.set('place','gtadb-5-'+record);
+  const a=node('a','j298-site-link','◎ '+label+' · inspect source pin');a.href=u.href;
+  a.setAttribute('aria-label','Open '+label+' in the interactive GTA Online map');
+  links.append(a);
+ }
+ sites.append(links,node('p','j298-source-note','GTADB.org community landmarks · CC BY 4.0. These are named site references only: pin locations, photos, entrances, mission routes and objectives are not automatically verified heist positions.'));
+ section.append(sites);
+}
 const frame=node('iframe','j164-frame');frame.id='j164-map-frame';frame.hidden=true;frame.loading='lazy';frame.title='Atlas '+(id==='cayo-perico'?'Cayo Perico':'GTA Online')+' interactive game map';frame.referrerPolicy='same-origin';section.append(frame);
 const feedback=node('p','j164-msg','Map is off until you request it; saves data and memory on phones.');feedback.setAttribute('role','status');section.append(feedback);
 load.addEventListener('click',()=>{
