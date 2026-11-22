@@ -53,6 +53,12 @@ try:
    expect(place).to_be_visible(timeout=10000)
    place.click()
    expect(page.locator('.j290-status')).to_contain_text('Tap')
+   expect(page.locator('.j290-map-hint')).to_be_visible()
+   page.keyboard.press('Escape')
+   expect(page.locator('#j143-official-layer')).to_be_visible()
+   expect(page.locator('.j290-map-hint')).to_be_hidden()
+   place.click()
+   expect(page.locator('.j290-map-hint')).to_be_visible()
    size=page.locator('.j143-stage').bounding_box()
    assert size and size['width']>100 and size['height']>100,(width,size)
    page.locator('.j143-stage').click(position={'x':size['width']/2,'y':size['height']/2})
@@ -100,8 +106,11 @@ try:
    expect(page.locator('.j290-selected')).to_contain_text('Vice Regal',timeout=25000)
    expect(page.locator('.j290-pin')).to_have_count(1)
    assert 'view=rockstar' in page.url and 'landmark=L1' in page.url
-   if width>=900 and height<500:
-    expect(page.locator('[data-j143="close"]')).to_be_visible()
+   expect(page.locator('[data-j143="close"]')).to_be_visible()
+   page.locator('[data-j143="close"]').click()
+   expect(page.locator('#j143-official-layer')).to_be_hidden()
+   page.locator('#j143-official-button').click()
+   expect(page.locator('#j143-official-layer')).to_be_visible()
    if width==390 or height<500:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'Poster notebook causes horizontal overflow'
    print('PASS Atlas 29.0 '+engine+' '+str(width)+': source search, manual poster placement, show/hide, private backup, image SHA isolation and restore',flush=True)
