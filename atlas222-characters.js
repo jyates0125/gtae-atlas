@@ -3,6 +3,7 @@
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const ALLOWED=new Set(['all','story','online','vi','classic']);
+const searchText=value=>String(value??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 const WORLD_SCENES={story:'art/jura155-story.webp',online:'art/jura155-online.webp',vi:'art/jura155-vi.webp',classic:'art/jura155-characters.webp'};
 const CLASSIC={
  'GTA III':'map-hub.html?game=iii','GTA Vice City':'map-hub.html?game=vc',
@@ -69,13 +70,13 @@ function card(r){
  el.dataset.j226Edition=r.game||'';
  const media=portraitMedia(r);
  const box=make('div','j222-character-info');
- box.append(make('span','j222-world-tag',(worlds[r.scope]||r.scope)+' · '+(r.group||'Character')));
+ box.append(make('span','j222-world-tag',(r.scope==='classic'?r.game:(worlds[r.scope]||r.scope))+' · '+(r.group||'Character')));
  const title=make('h3','',r.name);box.append(title);
  const summary=make('p','',r.summary||'Explore the original game or official character source.');box.append(summary);
  const actions=make('div','j222-card-actions');
  const details=make('a','j222-action j222-primary','View profile');
  details.href=profileLink(r);
- details.addEventListener('click',event=>{const dialog=$('j222-profile-dialog');if(!dialog||typeof dialog.showModal!=='function')return;event.preventDefault();showProfile(dialog,r,true);});
+ details.addEventListener('click',event=>{const dialog=$('j222-profile-dialog');if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0)return;if(!dialog||typeof dialog.showModal!=='function')return;event.preventDefault();showProfile(dialog,r,true);});
  const map=make('a','j222-action','Open '+(r.scope==='vi'?'Leonida':'world')+' map');map.href=worldLink(r);
  actions.append(details,map);
  if(srcSafe(r.sourceUrl)){const source=make('a','j222-source','Source ↗');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';actions.append(source)}
@@ -164,16 +165,16 @@ async function start(){
  };
  const syncDatabase=()=>{const el=$('filterGame');if(el&&el.value!==scope){el.value=scope;el.dispatchEvent(new Event('change',{bubbles:true}))}};
  const draw=()=>{
-  const s=q.trim().toLocaleLowerCase();
+  const s=searchText(q);
   const scoped=data.filter(r=>(scope==='all'||r.scope===scope)&&(scope!=='classic'||edition==='all'||r.game===edition));
   editionLabel.hidden=scope!=='classic';
   // A character-name or alias query is a direct lookup. Do not clutter it with
   // other characters whose biography merely mentions that person's name.
-  const nameMatches=s?scoped.filter(r=>[r.name,...(r.aliases||[])].some(x=>String(x).toLocaleLowerCase().includes(s))):[];
+  const nameMatches=s?scoped.filter(r=>[r.name,...(r.aliases||[])].some(x=>searchText(x).includes(s))):[];
   const rows=!s?scoped:nameMatches.length?nameMatches:scoped.filter(r=>
-   [worlds[r.scope],r.game,r.group,r.region,r.summary,r.attributes?.affiliation,r.attributes?.performer].join(' ').toLocaleLowerCase().includes(s));
+   searchText([worlds[r.scope],r.game,r.group,r.region,r.summary,r.attributes?.affiliation,r.attributes?.performer].join(' ')).includes(s));
   const rank=r=>{
-   const name=r.name.toLocaleLowerCase();
+   const name=searchText(r.name);
    return name===s?0:name.startsWith(s)?1:name.includes(s)?2:3;
   };
   rows.sort((a,b)=>(s?rank(a)-rank(b):0)||
