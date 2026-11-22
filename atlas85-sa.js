@@ -28,8 +28,12 @@ function renderPins(){const layer=$('pinLayer');layer.replaceChildren();if(!map|
 function renderItems(){const list=$('items');list.replaceChildren();let shown=0;const q=$('search').value.toLowerCase().trim();const hide=$('hideComplete').checked,only=$('onlyMapped').checked;
  for(let i=1;i<=set.total;i++){const r=record(i),p=positions.find(p=>p.set===set.id&&p.slot===i);if(hide&&r.done)continue;if(only&&!p)continue;const label=p?.label||set.name+' '+String(i).padStart(3,'0');if(q&&!`${label} ${r.note||''} ${i}`.toLowerCase().includes(q))continue;
  const card=document.createElement('div');card.className='item';card.id='item-'+i;const line=document.createElement('label');line.className='itemTop';const box=document.createElement('input');box.type='checkbox';box.checked=!!r.done;box.setAttribute('aria-label','Collected '+label);box.onchange=()=>{state.items[id(i)]={...record(i),done:box.checked};persist();render()};const title=document.createElement('strong');title.textContent=set.icon+' '+label;line.append(box,title);card.append(line);
- const hint=document.createElement('small');hint.textContent=p?(builtIn?(set.id==='tags'?'Source-backed tag object position · approximate vector alignment, not gameplay verified.':'Source-backed SA 1.0 US game position · 2D icon approximately projected; not an exact visual alignment.'):('Imported coordinate pack · '+(p.source||'source not supplied'))):'Unmapped tracking slot. No location claimed.';card.append(hint);
+ const hint=document.createElement('small');hint.textContent=p?(builtIn?(set.id==='tags'?'Source-backed tag object position · approximate vector alignment, not gameplay verified.':set.id==='jumps'?'Source-backed airborne trigger-zone center; not a ramp or verified driving path.':'Source-backed SA 1.0 US game position · 2D icon approximately projected; not an exact visual alignment.'):('Imported coordinate pack · '+(p.source||'source not supplied'))):'Unmapped tracking slot. No location claimed.';card.append(hint);
  if(p&&builtIn&&set.id==='tags'){const source=document.createElement('a');source.href=p.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';source.textContent='Prineside coordinate source ↗';card.append(source);const warning=document.createElement('small');warning.textContent=(p.directSourceChecked?'Direct source export matched.':'Attributed transcription; direct export not rechecked.')+' Atlas numbering may differ from older checklist guides.';card.append(warning)}
+ if(p&&builtIn&&set.id==='jumps'){
+ const coords=document.createElement('small');coords.textContent='Airborne trigger center X '+p.worldX.toFixed(1)+' / Y '+p.worldY.toFixed(1)+' / Z '+p.worldZ.toFixed(1)+' · Landing zone center X '+p.landingCenter[0].toFixed(1)+' / Y '+p.landingCenter[1].toFixed(1)+' / Z '+p.landingCenter[2].toFixed(1)+'. Source-save order; not necessarily guide numbering.';
+ const link=document.createElement('a');link.href=p.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Reference save coordinate source ↗';card.append(coords,link);
+ }
  if(p){const show=document.createElement('button');show.className='showPin';show.textContent='◎ Locate on map';show.onclick=()=>{
    const box=$('mapContainer');box.scrollIntoView({block:'center',behavior:'smooth'});
    if(map&&mapHasArtwork){transform.scale=Math.max(2.2,transform.scale);transform.x=box.clientWidth*(.5-(p.x/map.width)*transform.scale);transform.y=box.clientHeight*(.5-(p.y/map.height)*transform.scale);updateTransform()}
@@ -76,12 +80,13 @@ async function loadAtlasSourcePins(){
   }
   if(['snapshots','horseshoes','oysters'].some(cat=>verified.filter(x=>x.set===cat).length!==50))throw Error('Collection incomplete');
   if(customMap||customPack||!mapHasArtwork||!activeMapLabel.includes('Toliak'))return;
-  let tags=[];try{tags=await window.TeamJuraSATags?.load()||[]}catch{}
+  const extra=await Promise.allSettled([window.TeamJuraSATags?.load()||[],window.TeamJuraSAJumps?.load()||[]]);
+  const tags=extra[0].status==='fulfilled'?extra[0].value:[],jumps=extra[1].status==='fulfilled'?extra[1].value:[];
   if(customMap||customPack||!mapHasArtwork||!activeMapLabel.includes('Toliak'))return;
-  positions=[...verified,...tags];builtIn=true;
+  positions=[...verified,...tags,...jumps];builtIn=true;
   // Default to a sourced collection so the site does not appear to have an empty map.
   if(!categoryChosen&&set.id==='tags')set=sets[1];
-  render();message(positions.length+' sourced San Andreas locations: 50 snapshots, 50 horseshoes, 50 oysters'+(tags.length?', 100 graffiti tag placements':' · tag source unavailable')+'. Approximate SVG placement; original XYZ and attribution in credits.');
+  render();message(positions.length+' sourced San Andreas locations: 50 snapshots, 50 horseshoes, 50 oysters'+(tags.length?', 100 graffiti tag placements':' · tag source unavailable')+(jumps.length?', 70 stunt jump trigger zones':' · jump source unavailable')+'. Approximate SVG placement; original XYZ and attribution in credits.');
  }catch(err){message('Bundled locations unavailable: '+err.message+'; manual source packs still work.')}
 }
 window.TeamJuraSAArtwork=Object.freeze({

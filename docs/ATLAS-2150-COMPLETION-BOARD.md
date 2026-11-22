@@ -78,3 +78,9 @@ GitHub compare `main...development` reports `development` behind by 18 commits, 
 - Prior 22.8 full Chromium found mobile file-upload overflow in seven classic gateways; 23.1 implements a correction and direct viewport assertions. Do not call the defect closed until exact-head browser proof.
 - Next batch: temporary Online event focus preserves category/named-layer preferences, text search and Story/Online isolation; evidence refresh does not cancel focus. Source-level changes and synthetic local-only regression fixture; no new live locations or game coordinates claimed.
 - Pending: all exact-head tests, local individual artwork for remaining character appearances, source-backed missing map data, approved visual review, real phone and owner release approval. No production branch changes.
+
+
+## Atlas 23.9 — all-world source improvement
+- Exact prior staging head a8d3c75fca4cf9b216402360212ebfab1cea517e: all five production jobs succeeded (focused Chromium/Edge, full Chromium/Edge, validated ZIP); cross-product and Cayo passed. No owner sign-off inferred.
+- Next-batch San Andreas expansion: 320 source-backed records across all five collections, including 70 unique save-derived start/landing boxes. New integration/browser validation required. Existing map projection approximate; no ramp placement or gameplay claim.
+- Source review policy now explicitly covers all 13 destinations. See docs/ATLAS-ALL-WORLD-SOURCE-REVIEW.md. Other unfinished map/data/art work remains open.

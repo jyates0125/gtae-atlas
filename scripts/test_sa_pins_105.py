@@ -27,9 +27,9 @@ assert 'Copyright (c) 2026 Flentric' in license and 'MIT License' in license
 assert (D/'art/atlas-sa-vector.svg').is_file() and (D/'art/atlas-sa-vector.LICENSE.txt').is_file()
 js=(D/'atlas85-sa.js').read_text(encoding='utf8')
 html=(D/'atlas-sa.html').read_text(encoding='utf8')
-for required in ('loadAtlasSourcePins','atlas-sa-150-sourced-pins.json','builtIn=true','positions=[...verified,...tags]','set=sets[1]','customMap=true','customPack=true',"KEY='team-jura-sa-v1'"):
+for required in ('loadAtlasSourcePins','atlas-sa-150-sourced-pins.json','builtIn=true','positions=[...verified,...tags,...jumps]','set=sets[1]','customMap=true','customPack=true',"KEY='team-jura-sa-v1'"):
     assert required in js,required
-assert '250 source-backed approximate locations' in html
+assert '320 source-backed approximate locations' in html
 assert 'atlas105-sa-pins.css?v=105' in html
 assert 'atlas85-sa.js?v=157' in html
 assert 'id="pinLayer"' in html

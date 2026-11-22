@@ -95,3 +95,17 @@ for p in tags['records']:
  assert p['sourceUrl'].startswith('https://dev.prineside.com/en/gtasa_samp_model_id/model/')
 assert 'TeamJuraSATags' in sa and 'TeamJuraSATags' in saplan
 print('PASS attributed 100 tag object positions; 61 direct export matches, 39 transcription-only')
+
+jumps=json.loads(read('data/atlas-sa-70-jump-zones.json'))
+assert jumps['sourceRevision']=='6611e3cf21422bdd530a38743c1d15178d5d5df2' and jumps['sourceValidation']['checksum']==14857859
+assert jumps['counts']=={'jumps':70} and len(jumps['records'])==70 and jumps['gameplayVerified'] is False
+assert {p['slot'] for p in jumps['records']}==set(range(1,71))
+assert len({tuple(p['startZone']) for p in jumps['records']})==70
+for p in jumps['records']:
+ for zone in (p['startZone'],p['landingZone']):
+  assert len(zone)==6 and all(-3000<=v<=3000 for v in zone)
+  assert all(zone[i]<=zone[i+3] for i in range(3))
+ assert all(abs((p['startZone'][i]+p['startZone'][i+3])/2-v)<.001 for i,v in enumerate((p['worldX'],p['worldY'],p['worldZ'])))
+ assert abs(p['x']-p['worldX']-3000)<.001 and abs(p['y']+p['worldY']-3000)<.001
+assert 'TeamJuraSAJumps' in sa and 'TeamJuraSAJumps' in saplan
+print('PASS 320 SA source records across five sets; 70 bounded jump zones')
