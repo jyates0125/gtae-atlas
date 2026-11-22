@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Focused real-browser character QA for Lamar, Agent 14, CJ and Claude."""
 from functools import partial
+import re
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
@@ -14,6 +15,17 @@ class Quiet(SimpleHTTPRequestHandler):
 server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(public)))
 Thread(target=server.serve_forever,daemon=True).start()
 base=f'http://127.0.0.1:{server.server_port}/'
+
+def close_profile_and_settle_history(page, modal):
+    """Wait for the asynchronous history.back() before the next navigation.
+
+    Profile clicks add an in-document history entry. Escape closes the dialog,
+    and its close handler pops that entry asynchronously. Starting page.goto()
+    during that pop may abort the navigation even when the site is correct.
+    """
+    page.keyboard.press('Escape')
+    expect(modal).to_be_hidden()
+    expect(page).not_to_have_url(re.compile(r'[?&]profile='), timeout=10000)
 try:
     with sync_playwright() as pw:
         browser=pw.chromium.launch(headless=True)
@@ -55,8 +67,7 @@ try:
                 modal=page.locator('#j222-profile-dialog')
                 expect(modal).to_be_visible()
                 assert modal.locator('img.jura-concept-portrait').count()==1
-                page.keyboard.press('Escape')
-                expect(modal).to_be_hidden()
+                close_profile_and_settle_history(page, modal)
             # A shared appearance link must open its exact character even if the
             # incoming URL still carries a conflicting world filter.
             page.goto(base+'atlas-characters.html?game=online&profile=character%3Alamar-story',wait_until='domcontentloaded')
@@ -64,13 +75,11 @@ try:
             expect(modal).to_be_visible(timeout=20000)
             expect(modal.locator('#j222-profile-title')).to_have_text('Lamar Davis')
             expect(page.locator('[data-j222-scope="story"]')).to_have_attribute('aria-pressed','true')
-            page.keyboard.press('Escape')
-            expect(modal).to_be_hidden()
+            close_profile_and_settle_history(page, modal)
             page.goto(base+'atlas-characters.html?game=story&profile=character%3Alamar',wait_until='domcontentloaded')
             expect(modal).to_be_visible(timeout=20000)
             expect(page.locator('[data-j222-scope="online"]')).to_have_attribute('aria-pressed','true')
-            page.keyboard.press('Escape')
-            expect(modal).to_be_hidden()
+            close_profile_and_settle_history(page, modal)
             assert not errors,errors
             page.close()
         browser.close()
