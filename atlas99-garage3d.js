@@ -20,10 +20,17 @@ function mount(target,opts={}){
  const fields=E('div');fields.className='j256-fields';styling.append(fields);
  let design=forge?.normalize(opts.design)||{},paint=opts.paint||'#586478',gl=null,program=null,buffer=null,count=0,dead=false,raf=0,observer=null,drag=null;
  let yaw=.7,pitch=.30,distance=7.9,profile=forge?.classify(opts.type,opts.model)||'touring';
- target.dataset.forgeClass=profile;target.dataset.forgeStatus='pending';
+ let environment=forge?.defaultTheme?.(profile)||'signature';
+ target.dataset.forgeClass=profile;target.dataset.forgeStatus='pending';target.dataset.forgeEnvironment=environment;
  function control(label,element){const l=E('label',label);l.append(element);fields.append(l);return element}
  function select(label,values,key){const s=E('select');s.dataset.forgeControl=key;for(const [v,l] of values){const o=E('option',l);o.value=v;s.append(o)}s.value=design[key];s.onchange=()=>change({[key]:s.value});control(label,s);return s}
  function change(patch){if(!forge)return;design=forge.normalize({...design,...patch});opts.onDesign?.({...design});rebuild()}
+ if(forge?.themes){
+  const scene=E('select');scene.dataset.forgeControl='environment';
+  for(const [key,theme] of Object.entries(forge.themes)){const o=E('option',theme.label);o.value=key;scene.append(o)}
+  scene.value=environment;scene.onchange=()=>{environment=forge.themeFor(scene.value);target.dataset.forgeEnvironment=environment;hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();rebuild()};control('Showroom environment',scene);
+  hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();
+ }
  const finish=select('Surface finish',[['metallic','Metallic'],['satin','Satin'],['stealth','Stealth']], 'finish');
  const accent=E('input');accent.type='color';accent.value=design.accent||'#eab56a';accent.dataset.forgeControl='accent';accent.oninput=()=>change({accent:accent.value});control('Accent RGB',accent);
  const road=['sport','touring','utility'].includes(profile);
@@ -51,12 +58,12 @@ function mount(target,opts={}){
   if(dead||!gl||!program)return;
   const dpr=Math.min(root.devicePixelRatio||1,1.75),w=Math.max(1,Math.round(canvas.clientWidth*dpr)),h=Math.max(1,Math.round(canvas.clientHeight*dpr));
   if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}
-  gl.viewport(0,0,w,h);gl.clearColor(.057,.031,.095,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+  gl.viewport(0,0,w,h);gl.clearColor(...(forge?.themes?.[environment]?.background||[.057,.031,.095]),1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
   for(const [name,offset] of [['aPos',0],['aColor',12]]){const k=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(k);gl.vertexAttribPointer(k,3,gl.FLOAT,false,24,offset)}
   for(const [name,value] of [['uYaw',yaw],['uPitch',pitch],['uDist',distance],['uAspect',w/h]])gl.uniform1f(gl.getUniformLocation(program,name),value);
   gl.drawArrays(gl.TRIANGLES,0,count);
  }
- function rebuild(){if(!gl||dead||!forge)return;const model=forge.build(opts.type,opts.model,paint,design);count=model.vertices.length/6;target.dataset.forgeTriangles=String(count/3);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,model.vertices,gl.STATIC_DRAW);render()}
+ function rebuild(){if(!gl||dead||!forge)return;const model=forge.build(opts.type,opts.model,paint,design,environment);count=model.vertices.length/6;target.dataset.forgeTriangles=String(count/3);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,model.vertices,gl.STATIC_DRAW);render()}
  function dispose(){if(dead)return;dead=true;if(raf)cancelAnimationFrame(raf);raf=0;observer?.disconnect();if(gl){if(buffer)gl.deleteBuffer(buffer);if(program)gl.deleteProgram(program);gl.getExtension('WEBGL_lose_context')?.loseContext()}gl=null}
  const instance={dispose,paint(color){paint=color;rebuild()},getDesign(){return {...design}},reset(){changeCamera(.7,.30)}};
  current=instance;
