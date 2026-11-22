@@ -1,0 +1,54 @@
+name: Atlas 30.2 - Cayo legacy recovery and heist loader
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas302-cayo-legacy-rescue.js'
+      - 'atlas302-cayo-legacy-rescue.css'
+      - 'heist-cayo-perico.html'
+      - 'heist-pages.js'
+      - 'scripts/test_atlas302_cayo_rescue.py'
+      - 'scripts/test_atlas302_cayo_rescue_browser.py'
+      - '.github/workflows/atlas302-cayo-rescue.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas302-cayo-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  cayo-legacy-recovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check Cayo recovery and unique map-loader source contracts
+        run: |
+          python scripts/test_atlas302_cayo_rescue.py
+          node --check heist-pages.js
+          node --check atlas302-cayo-legacy-rescue.js
+          python -m py_compile scripts/test_atlas302_cayo_rescue_browser.py
+      - name: Build actual Cloudflare payload and audit
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install focused Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test Cayo emergency recovery plus single Fleeca phase loader
+        run: python scripts/test_atlas302_cayo_rescue_browser.py
+      - name: Save evidence for the affected Cayo page only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas302-cayo-legacy-recovery-phone-desktop
+          path: qa-evidence/chromium/atlas302-cayo-emergency-*.png
+          if-no-files-found: warn
+          retention-days: 14
