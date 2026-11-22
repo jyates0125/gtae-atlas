@@ -29,7 +29,7 @@ The source rendering origin is `zeroX=zeroY=16384` on a 32768-unit canvas, same 
 ## Implementation and regression guard
 
 - Add `day` to GTA VI selectable base views and introduce its own z=6 tile extent; preserve V/Online layer sets, `scaly,view` (YANIS V18), YANIS archive, `dupzor,51` (Loki), Community Research and separate Rockstar official poster.
-- Default new VI viewers to Day. Keep existing guest progress, favorites, pins, route IDs and GTA V/Online distinctions. No sign-in, coordinates, map downloads or unapproved art mirror.
+- Preserve the existing Scaly/YANIS V18 view as the first-visit default until exact landmark alignment against launched-game imagery is independently verified. The new Day view is a clearly labeled, player-selectable enhancement, not an untested default replacement. Keep existing guest progress, favorites, pins, route IDs and GTA V/Online distinctions. No sign-in, coordinates, map downloads or unapproved art mirror.
 - Existing GTADB remote map tile fetch and GitHub raw fallback only. No third-party proprietary site copy.
 - Revision the map script URL and offline shell cache only; **do not delete old map tile caches or guest progress data**.
 - Run new source contract (`scripts/test_atlas290_vi_day.py`) and browser (`scripts/test_atlas290_vi_day_browser.py`) alongside full release gates for Chromium and Edge, mobile/desktop.
