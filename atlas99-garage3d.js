@@ -12,6 +12,7 @@ function mount(target,opts={}){
  const title=E('strong','ELARIO 2150 · FORGE SHOWROOM');
  const study=forge?.modelProfile?.(opts.type,opts.model);
  const note=E('small',study?'Elario original model-targeted concept · '+study.label+'. Approximate visual study; not a verified likeness, exact game mesh or modification catalog.':'Original class-based design for '+String(opts.name||'vehicle')+'. Not an exact game model or a verified modification catalogue.');
+ const rights=E('p','Original Elario concept — not a scanned or official model. Not an exact game mesh or a verified in-game customization.');rights.className='j256-rights';
  target.dataset.forgeFidelity=study?'model-study':'class-concept';
  const wrap=E('div');wrap.className='j99-3d-stage j256-stage';
  const canvas=E('canvas');canvas.tabIndex=0;canvas.setAttribute('aria-label','Original 3D vehicle concept. Arrow keys rotate; plus and minus zoom. Drag to rotate.');wrap.append(canvas);
@@ -48,7 +49,7 @@ function mount(target,opts={}){
   function tick(t){if(dead||!target.isConnected){instance.dispose();return}if(previous)yaw+=Math.min(40,t-previous)*.00035;previous=t;render();raf=requestAnimationFrame(tick)}
   raf=requestAnimationFrame(tick);
  });spin.setAttribute('aria-pressed','false');controls.append(spin);
- target.append(title,note,wrap,controls,styling);
+ target.append(title,note,rights,wrap,controls,styling);
  function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
  function init(){
   gl=canvas.getContext('webgl',{alpha:false,antialias:true,preserveDrawingBuffer:false});if(!gl)throw Error('WebGL unavailable');
