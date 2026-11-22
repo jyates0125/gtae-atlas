@@ -1,0 +1,60 @@
+/* Atlas 30.2 · readable, reachable map detail dismissal, including short phones. */
+.map-wrap .selected-card{
+ box-sizing:border-box;
+ max-height:min(68dvh,calc(100% - 112px));
+ overflow-y:auto;
+ overscroll-behavior:contain;
+ -webkit-overflow-scrolling:touch;
+ scrollbar-gutter:stable;
+}
+.map-wrap .selected-card .j302-return-bar{
+ position:sticky;top:0;z-index:3;
+ display:flex;justify-content:flex-start;
+ margin:-9px 0 8px;padding:4px 46px 5px 0;
+ background:linear-gradient(105deg,#11293b,#17364e);
+ border-bottom:1px solid #946d93;
+}
+.map-wrap .selected-card #j302-back-to-map{
+ box-sizing:border-box;
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:44px;min-width:132px;
+ padding:8px 13px;
+ border:1px solid #e9bd82;border-radius:9px;
+ background:linear-gradient(115deg,#6d3674,#43254c);
+ color:#fff0c9;font:800 13px/1.35 system-ui,sans-serif;
+ cursor:pointer;
+}
+.map-wrap .selected-card #j302-back-to-map:hover{background:#86508d}
+.map-wrap .selected-card #j302-back-to-map:focus-visible,
+.map-wrap .selected-card #closeSelected:focus-visible{
+ outline:3px solid #ffdda3;outline-offset:2px;
+}
+.map-wrap .selected-card #closeSelected{
+ z-index:5;min-height:44px;min-width:44px;
+ top:4px;right:5px;
+ border:1px solid #8d9aa7;border-radius:9px;
+ background:#261837;color:#ffe8ce;
+}
+@media(max-width:700px){
+ .map-wrap .selected-card{
+  right:8px;bottom:76px;
+  width:min(380px,calc(100% - 16px));
+  max-width:none;
+  max-height:min(65dvh,calc(100% - 100px));
+  padding:11px;
+ }
+ .map-wrap .selected-card .j302-return-bar{margin:-5px 0 8px}
+}
+@media(max-height:540px) and (min-width:701px){
+ /* Landscape iPhones render a desktop-width page with a very short viewport.
+    Keep marker controls visible instead of stranding the card below the fold. */
+ .map-wrap .selected-card{
+  position:fixed;right:max(10px,env(safe-area-inset-right));
+  top:max(62px,env(safe-area-inset-top));bottom:8px;
+  max-height:calc(100dvh - 72px);
+  width:min(360px,calc(100vw - 24px));
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ .map-wrap .selected-card{scroll-behavior:auto}
+}
