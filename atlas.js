@@ -26,11 +26,13 @@ const BOUNDS={
  'cyber,1':[[0,0,2,3],[1,1,4,6],[2,2,9,12],[5,5,19,24],[10,10,39,49],[21,21,79,99]],
  'dupzor,51':[[0,0,2,2],[0,1,4,5],[0,2,9,11],[0,4,19,23],[0,8,38,47],[0,17,77,94]],
  'yanis,15':[[0,0,2,2],[0,1,4,5],[0,2,9,11],[0,4,19,23],[0,8,38,47],[0,17,77,95]],
- 'yanis,18':[[0,0,3,3],[1,1,6,6],[2,2,12,12],[5,5,25,24],[10,10,51,49],[21,21,103,99]]
+ 'yanis,18':[[0,0,3,3],[1,1,6,6],[2,2,12,12],[5,5,25,24],[10,10,51,49],[21,21,103,99]],
+ // GTA VI launch in-game day tiles, sourced from GTADB maps/maps.js, CC BY 4.0 contribution; original game art © Rockstar.
+ day:[[0,0,2,3],[1,1,5,6],[2,2,10,12],[4,4,20,25],[8,8,41,51],[17,17,83,103],[34,34,167,206]]
 };
 const LAYERS={
  '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid']],
- '6':[['scaly,view','Scaly · YANIS V18'],['yanis,18','YANIS V18 · Current'],['dupzor,51','Loki · DUPZOR V51'],['research,view','Research basemap · YANIS V18'],['yanis,15','YANIS V15 · Archive']]
+ '6':[['day','In-game Day · GTADB map'],['scaly,view','Scaly · YANIS V18'],['yanis,18','YANIS V18 · Current'],['dupzor,51','Loki · DUPZOR V51'],['research,view','Research basemap · YANIS V18'],['yanis,15','YANIS V15 · Archive']]
 };
 /* Base views and published GTADB community add-on tiles.
  * The additional tile folders are *patches*, not complete independent worlds.
@@ -531,7 +533,7 @@ const TILE_HOSTS=[UPSTREAM+'maps/tiles/','https://raw.githubusercontent.com/rolu
 function sourceUrl(g,style,z,tx,ty,host=0){return `${TILE_HOSTS[host]}${g}/${style}/${z}/${z},${ty},${tx}.jpg`+(host?'?atlas_tiles=62':'');}
 function tileHealth(){const el=$('tileHealth');if(!el)return;const current=styles[game],all=[...tileStore.values()].filter(t=>t.game===game);const valid=new Set([mapView(current,game).base,...sourceTileStyles(current,0,1,1,game)]);const group=all.filter(t=>valid.has(t.path));const good=group.filter(t=>t.state==='ok').length,loading=group.filter(t=>t.state==='loading').length,bad=group.filter(t=>t.state==='error').length;
  el.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`:bad?'Map artwork unavailable · retry a different layer or connection':'Preparing artwork…';
- el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='Licensed GTADB community illustrations; Research uses YANIS V18 community artwork with Atlas category and source tools. No official Rockstar map claims.';}
+ el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='GTADB CC BY 4.0 sourced map tiles; GTA VI Day uses in-game map imagery © Rockstar, while Scaly/Loki are historic community reconstructions. Atlas markers still require independent verification.';}
 
 function within(style,z,x,y,g=game){const r=BOUNDS[mapView(style,g).base]?.[z];return !!r&&x>=r[0]&&x<=r[2]&&y>=r[1]&&y<=r[3]}
 function tileImage(style,z,x,y,g=game){
@@ -573,7 +575,7 @@ function schedulePaint(){if(paintPending)return;paintPending=true;requestAnimati
 function resize(){const rect=canvas.getBoundingClientRect();if(!rect.width||!rect.height)return;const oldW=width,oldH=height;width=rect.width;height=rect.height;dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);if(!oldW||!oldH)fitGame();schedulePaint()}
 function fallbackTile(z,x,y,dx,dy,size){for(let p=z-1;p>=0;p--){const factor=2**(z-p),xx=Math.floor(x/factor),yy=Math.floor(y/factor),parent=imageFor(styles[game],p,xx,yy);if(parent?.state!=='ok')continue;
   const src=256/factor,originX=(x-xx*factor)*src,originY=(y-yy*factor)*src;ctx.drawImage(parent.img,originX,originY,src,src,dx,dy,size+.5,size+.5);return true}return false}
-function drawTiles(){const z=Math.min(5,Math.ceil(camera.z)),s=scale(),tile=256*2**(camera.z-z),offsetX=width/2-(camera.x+16384)*s,offsetY=height/2-(16384-camera.y)*s,style=styles[game],view=mapView(style),range=BOUNDS[view.base][z];
+function drawTiles(){const style=styles[game],view=mapView(style),z=Math.min(view.base==='day'?6:5,Math.ceil(camera.z)),s=scale(),tile=256*2**(camera.z-z),offsetX=width/2-(camera.x+16384)*s,offsetY=height/2-(16384-camera.y)*s,range=BOUNDS[view.base][z];
  const minX=Math.max(range[0],Math.floor(-offsetX/tile)-1),maxX=Math.min(range[2],Math.ceil((width-offsetX)/tile)+1),minY=Math.max(range[1],Math.floor(-offsetY/tile)-1),maxY=Math.min(range[3],Math.ceil((height-offsetY)/tile)+1);
  ctx.save();if(view.filter)ctx.filter=view.filter;
  for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){let dx=offsetX+x*tile,dy=offsetY+y*tile,entry=imageFor(style,z,x,y);
@@ -1024,7 +1026,7 @@ function init(){
   setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
   window.addEventListener('storage',e=>{if(['jura68-rotation-feed','jura68-conditions-online','jura68-online-hour'].includes(e.key))refresh()});
  }
- if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=277',{scope:'./'}).catch(()=>{});
+ if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=290',{scope:'./'}).catch(()=>{});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

@@ -1,0 +1,41 @@
+name: Atlas 29.3 - Garage to Forge handoff
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas93-garage.js'
+      - 'atlas101-configurator.js'
+      - 'atlas-vehicle-configurator.html'
+      - 'scripts/test_atlas293_garage_forge_handoff.py'
+      - 'scripts/test_atlas293_garage_forge_browser.py'
+      - 'scripts/test_atlas293_lamar_appearances.py'
+      - 'scripts/test_atlas293_character_portraits_browser.py'
+      - '.github/workflows/atlas293-garage-forge.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  garage-forge:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python scripts/test_atlas293_garage_forge_handoff.py
+      - run: python scripts/test_atlas293_lamar_appearances.py
+      - run: python scripts/test_atlas2150_product_contracts.py
+      - run: node --check atlas93-garage.js
+      - run: node --check atlas101-configurator.js
+      - run: node scripts/build-cloudflare.cjs
+      - run: python scripts/audit_published.py
+      - name: Focused real Chromium Garage-to-Forge journey
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+          python scripts/test_atlas293_garage_forge_browser.py
+          python scripts/test_atlas293_character_portraits_browser.py

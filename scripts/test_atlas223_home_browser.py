@@ -24,6 +24,50 @@ try:
    page.goto(base+'atlas-dashboard.html',wait_until='domcontentloaded',timeout=60000)
    expect(page.locator('.j223-world-card')).to_have_count(7,timeout=20000)
    expect(page.locator('.j223-shortcuts a')).to_have_count(13)
+   # The 13 tools must be accessible but not overwhelm the initial phone view.
+   menu=page.locator('.j223-shortcuts-menu')
+   expect(menu).to_have_count(1)
+   assert menu.get_attribute('open') is None,'Shortcuts should start collapsed'
+   assert not page.locator('.j223-shortcuts a').first.is_visible(),'Collapsed shortcuts must not be visible'
+   menu.locator('summary').click()
+   expect(page.locator('.j223-shortcuts a').first).to_be_visible()
+   assert menu.get_attribute('open') is not None,'Shortcuts did not expand'
+   assert page.locator('.j223-shortcuts a').count()==13
+   menu.locator('summary').click()
+   assert menu.get_attribute('open') is None,'Shortcuts did not collapse'
+   # Keyboard-only visitors must be able to reopen the menu and activate
+   # each tool without a pointer or hidden/offscreen focus trap.
+   menu.locator('summary').focus()
+   page.keyboard.press('Enter')
+   expect(page.locator('.j223-shortcuts a').first).to_be_visible()
+   page.keyboard.press('Tab')
+   assert page.evaluate('document.activeElement?.id === "juraShortcutFilter"'),'Tab did not reach tool finder'
+   page.keyboard.type('Garage')
+   expect(page.locator('#juraShortcutCount')).to_contain_text('1 of 13 tools found')
+   assert page.locator('.j223-shortcuts a:visible').count()==1,'Tool filter should show one Garage link'
+   page.keyboard.press('Escape')
+   expect(page.locator('#juraShortcutCount')).to_contain_text('13 tools available')
+   assert page.locator('.j223-shortcuts a:visible').count()==13,'Escape did not restore tools'
+   page.keyboard.press('Tab')
+   assert page.evaluate('document.activeElement?.closest(".j223-shortcuts") !== null'),'Tab did not enter opened shortcuts'
+   page.keyboard.press('Shift+Tab')
+   assert page.evaluate('document.activeElement?.id === "juraShortcutFilter"'),'Shift+Tab did not return to finder'
+   page.keyboard.press('Shift+Tab')
+   assert menu.locator('summary').evaluate('(el) => document.activeElement === el'),'Shift+Tab did not return to menu summary'
+   page.keyboard.press('Enter')
+   assert menu.get_attribute('open') is None,'Keyboard could not collapse shortcuts'
+   assert page.locator('.j223-map-actions a[href="./atlas-vi.html?view=rockstar"]').count()>=1,'Missing official VI poster action'
+   assert page.locator('.j223-map-actions a[href="./atlas-vi.html"]').count()>=1,'Missing separate interactive VI map action'
+   if width==1440:
+    # Verify that each of the 13 tools and seven featured world destinations
+    # actually returns a built HTML page, without executing unrelated workspaces.
+    hrefs=page.locator('.j223-shortcuts a, .j223-world-card').evaluate_all('(links) => links.map(a => a.getAttribute("href"))')
+    assert len(hrefs)==20,('Dashboard route count',len(hrefs))
+    for href in dict.fromkeys(hrefs+['./atlas-vi.html?view=rockstar']):
+     response=page.request.get(base+href.removeprefix('./'),timeout=15000)
+     assert response.status==200,('Dashboard destination not served',href,response.status)
+     assert '<html' in response.text().lower()[:3000],('Dashboard destination is not HTML',href)
+    print('PASS dashboard route smoke: 13 tools, 7 worlds and official VI map',flush=True)
    expect(page.locator('.j223-feature-panel')).to_have_count(4)
    expect(page.locator('#j223-hero-brief')).to_have_count(0) # correct aside is a class, not duplicate ID
    assert page.locator('.j223-hero-brief .j223-brief-button').get_attribute('href')=='./atlas-vi.html'
@@ -33,6 +77,29 @@ try:
    expect(suggestion).to_be_visible(timeout=25000)
    assert 'game=vi' in suggestion.get_attribute('href')
    assert 'profile=character%3Alucia' in suggestion.get_attribute('href'),'Home search should open the selected profile directly'
+   # Arrow keys must navigate real results, and Escape must return focus.
+   page.locator('#j223-search-input').fill('GTA')
+   expect(page.locator('#j223-search-results a').first).to_be_visible()
+   page.locator('#j223-search-input').press('ArrowDown')
+   assert page.locator('#j223-search-results a').first.evaluate('(el) => document.activeElement === el'),'ArrowDown did not focus first result'
+   page.keyboard.press('End')
+   assert page.locator('#j223-search-results a').last.evaluate('(el) => document.activeElement === el'),'End did not focus last result'
+   page.keyboard.press('Home')
+   assert page.locator('#j223-search-results a').first.evaluate('(el) => document.activeElement === el'),'Home did not focus first result'
+   page.keyboard.press('ArrowDown')
+   assert page.locator('#j223-search-results a').nth(1).evaluate('(el) => document.activeElement === el'),'ArrowDown did not advance'
+   page.keyboard.press('ArrowUp')
+   assert page.locator('#j223-search-results a').first.evaluate('(el) => document.activeElement === el'),'ArrowUp did not reverse'
+   page.keyboard.press('Escape')
+   assert page.locator('#j223-search-results').is_hidden(),'Escape did not dismiss search results'
+   assert page.locator('#j223-search-input').evaluate('(el) => document.activeElement === el'),'Escape did not return focus to search'
+   # A new query must replace stale suggestions rather than leaving old
+   # result links or an invalid active-descendant reference behind.
+   page.locator('#j223-search-input').fill('Lucia')
+   expect(page.locator('#j223-search-results a').filter(has_text='Lucia Caminos')).to_have_count(1)
+   page.locator('#j223-search-input').fill('Trevor')
+   expect(page.locator('#j223-search-results a').filter(has_text='Lucia Caminos')).to_have_count(0)
+   assert page.locator('#j223-search-input').get_attribute('aria-activedescendant') is None
    page.locator('#j223-search-input').fill('Trevor')
    suggestion=page.locator('#j223-search-results a').filter(has_text='Trevor Philips').first
    expect(suggestion).to_be_visible(timeout=15000)
@@ -67,6 +134,9 @@ try:
    assert not errors,errors
    if width<=390:
     overflow=page.evaluate('document.documentElement.scrollWidth-innerWidth')
+    if overflow>1:
+     offenders=page.evaluate("""() => [...document.querySelectorAll('body *')].map(el=>({tag:el.tagName,cls:String(el.className).slice(0,90),width:Math.round(el.getBoundingClientRect().width),right:Math.round(el.getBoundingClientRect().right)})).filter(x=>x.right>innerWidth+2&&x.width>0).sort((a,b)=>b.right-a.right).slice(0,12)""")
+     print('OVERFLOW DIAGNOSTICS',width,offenders,flush=True)
     assert overflow<=1,('Dashboard horizontal overflow',width,overflow)
     assert page.locator('.menu-toggle').is_visible()
     page.locator('.menu-toggle').click()

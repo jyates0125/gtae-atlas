@@ -2,6 +2,14 @@ name: Team Jura Atlas 2150 - cross-product acceptance
 on:
   pull_request:
     branches: [development]
+    paths:
+      - 'atlas222-characters.js'
+      - 'atlas99-garage3d.js'
+      - 'atlas101-configurator.js'
+      - 'atlas93-garage.js'
+      - 'scripts/test_atlas2150_product_contracts.py'
+      - 'docs/ATLAS-2150-COMPLETION-BOARD.md'
+      - '.github/workflows/atlas2150-cross-product.yml'
   workflow_dispatch:
 permissions:
   contents: read

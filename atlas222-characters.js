@@ -224,8 +224,19 @@ async function start(){
   if(!dialog)return;
   const url=new URL(location.href);
   const requested=url.searchParams.get('profile');
-  const hit=requested && data.find(r=>r.id===requested&&(scope==='all'||r.scope===scope)&&(scope!=='classic'||edition==='all'||r.game===edition));
-  if(hit){showProfile(dialog,hit);return}
+  // A direct character URL is authoritative: an old world/edition filter must
+  // never silently discard a valid profile, especially from shared links.
+  const hit=requested && data.find(r=>r.id===requested);
+  if(hit){
+   if(scope!=='all'&&scope!==hit.scope){scope=hit.scope;syncDatabase()}
+   if(hit.scope==='classic'&&edition!=='all'&&edition!==hit.game){edition=hit.game;editionSelect.value=edition}
+   // A shared link should not open a modal above an empty filtered grid.
+   // Preserve a useful name lookup only when the current search excludes it.
+   const term=searchText(q);
+   const matchesName=[hit.name,...(hit.aliases||[])].some(x=>identityMatch(x,term));
+   if(term&&!matchesName){q=hit.name;search.value=q}
+   draw();persist();showProfile(dialog,hit);return
+  }
   if(requested){url.searchParams.delete('profile');history.replaceState(history.state,'',url)}
   if(dialog.open)dialog.close();
  }

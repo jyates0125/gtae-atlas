@@ -1,9 +1,7 @@
 name: Team Jura Atlas - validate production website
 on:
-  push:
-    branches: [development, main]
-  pull_request:
-    branches: [development, main]
+  # Full cross-browser / Cayo / ZIP suite is a manual pre-merge release gate.
+  # Feature PRs use path-filtered focused workflows instead.
   workflow_dispatch:
 permissions:
   contents: read
@@ -47,6 +45,9 @@ jobs:
           python scripts/test_atlas142_official_sources.py
           python scripts/test_atlas143_official_view.py
           node --check atlas143-official-map-view.js
+          python scripts/test_atlas290_poster_source.py
+          python scripts/test_atlas291_dual_leonida.py
+          node --check atlas290-official-landmarks.js
           node --check atlas131-account.js
           node --check atlas131-social-icons.js
           node --check atlas130-share.js
@@ -136,6 +137,8 @@ jobs:
           python scripts/test_atlas217_vi_world.py
           python scripts/test_atlas172_research_map.py
           python scripts/test_atlas218_yanis_v18.py
+          python scripts/test_atlas290_vi_day.py
+          python -m py_compile scripts/test_atlas290_vi_day_browser.py
           python scripts/test_atlas219_hq_premium.py
           python scripts/test_atlas220_vi_mobile.py
           node --check atlas220-vi-mobile.js
@@ -148,6 +151,7 @@ jobs:
           node --check atlas223-home.js
           node --check atlas132-nav.js
           node --check atlas222-characters.js
+          node --check atlas290-vi-source-ledger.js
           node --check atlas222-vi-release.js
           node --check atlas93-global.js
           node --check leonida-hq.js
@@ -163,6 +167,14 @@ jobs:
         run: |
           python -m pip install 'playwright==1.58.0'
           timeout 120s python -m playwright install --with-deps chromium || python -m playwright install chromium
+      - name: Leonida in-game Day and official poster targeted browser preflight
+        # Fail early on VI regressions before the 190-page sweep and Cayo suite.
+        shell: bash
+        env:
+          ATLAS_BROWSER: chromium
+        run: |
+          python scripts/test_atlas290_vi_day_browser.py
+          python scripts/test_atlas290_poster_browser.py
       - name: Desktop and mobile browser QA on served production files
         env:
           ATLAS_BROWSER: chromium
@@ -222,6 +234,13 @@ jobs:
         run: |
           python -m pip install playwright==1.58.0
           python -m playwright install msedge
+      - name: Leonida in-game Day and official poster targeted browser preflight (Edge)
+        shell: bash
+        env:
+          ATLAS_BROWSER: msedge
+        run: |
+          python scripts/test_atlas290_vi_day_browser.py
+          python scripts/test_atlas290_poster_browser.py
       - name: Microsoft Edge desktop/mobile functional smoke tests
         env:
           ATLAS_BROWSER: msedge

@@ -1339,6 +1339,17 @@ async def smoke():
                             if not failures:
                                 try:
                                     disclosures=pg.locator('details > summary')
+                                    if path=='atlas-vi.html' and width==390:
+                                        # After the detailed legend smoke has scrolled the
+                                        # off-canvas sidebar, the generic disclosure probe
+                                        # must exercise a *map-visible* control, not the
+                                        # sidebar's offscreen source-index summary.
+                                        # Dedicated Atlas 29.0 browser acceptance separately
+                                        # opens Map Tools and tests that source index end-to-end.
+                                        side=pg.locator('#sidebar')
+                                        if await side.count() and not await side.evaluate("(e)=>e.classList.contains('mobile-collapsed')"):
+                                            await pg.locator('#mobileTools').click(timeout=5500)
+                                        disclosures=pg.locator('#j217-vi-hub > summary')
                                     if path=='atlas-research.html':
                                         # The map-first phone layout intentionally keeps
                                         # research accordion filters inside the Filters /

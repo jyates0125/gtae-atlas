@@ -74,7 +74,13 @@ try:
    expect(page.locator('#garageDetails textarea')).to_have_value('Squalo berth / personal QA notes')
    assert page.evaluate("""()=>{const m=JSON.parse(localStorage.getItem('team-jura-atlas93-garage-v1'));return m.vehicles.adder.paint==='#ffaa33'&&m.vehicles.squalo.paint==='#13a9ce'&&m.garages.includes('New berth')}""")
    page.locator('#garageDetails a.j99-studio-link').click()
-   expect(page.locator('#paintColor')).to_have_value('#aa3344',timeout=20000)
+   # Explicit Garage handoff loads the saved Garage working copy, not the independent Studio preset.
+   expect(page.locator('#paintColor')).to_have_value('#13a9ce',timeout=20000)
+   expect(page.locator('#builderStatus')).to_contain_text('saved Garage build')
+   # The separately saved Studio preset is still accessible without changing Garage storage.
+   page.locator('#loadBuild').click()
+   expect(page.locator('#paintColor')).to_have_value('#aa3344')
+   expect(page.locator('#buildName')).to_have_value('Separate Studio idea')
    expect(page.locator('#concept3d')).to_have_attribute('data-forge-class','marine')
    expect(page.locator('#concept3d [data-forge-control="finish"]')).to_have_value('metallic')
    page.locator('#concept3d [data-forge-control="finish"]').select_option('stealth')
@@ -97,6 +103,11 @@ try:
    page.locator('#concept3d [data-forge-control="lights"]').uncheck()
    page.locator('#saveBuild').click()
    page.reload(wait_until='domcontentloaded')
+   # The URL still says source=garage, so reload correctly restores the Garage working copy.
+   # Explicitly load the independent Studio preset to verify its saved finish persists.
+   expect(page.locator('#paintColor')).to_have_value('#13a9ce',timeout=20000)
+   page.locator('#loadBuild').click()
+   expect(page.locator('#paintColor')).to_have_value('#aa3344')
    expect(page.locator('#concept3d [data-forge-control="finish"]')).to_have_value('satin',timeout=20000)
    expect(page.locator('#concept3d [data-forge-control="accent"]')).to_have_value('#10abcf')
    expect(page.locator('#concept3d [data-forge-control="kit"]')).to_have_value('track')

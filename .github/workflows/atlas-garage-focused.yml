@@ -1,0 +1,27 @@
+name: Atlas Garage — focused sharing checks
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas93-garage.js'
+      - 'atlas93-garage.html'
+      - 'atlas254-garage-merge.js'
+      - 'atlas147-garage-mobile.css'
+      - 'tests/atlas293-garage-share.test.cjs'
+      - 'tests/atlas294-forge-backup.test.cjs'
+      - '.github/workflows/atlas-garage-focused.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  garage-sharing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas93-garage.js
+      - run: node tests/atlas293-garage-share.test.cjs
+      - run: node tests/atlas294-forge-backup.test.cjs
