@@ -15,7 +15,7 @@ const CLASSIC={
 };
 const worlds={story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story',classic:'Classic GTA'};
 let indexedCharacters=[];
-const profileLink=r=>'./atlas-characters.html?game='+encodeURIComponent(r.scope)+'&q='+encodeURIComponent(r.name)+'&profile='+encodeURIComponent(r.id)+'#mainCharacterEra';
+const profileLink=r=>'./atlas-characters.html?game='+encodeURIComponent(r.scope)+(r.scope==='classic'?'&edition='+encodeURIComponent(r.game):'')+'&q='+encodeURIComponent(r.name)+'&profile='+encodeURIComponent(r.id)+'#mainCharacterEra';
 const worldLink=r=>r.scope==='classic'?'./'+(CLASSIC[r.game]||'maps.html'):
  r.scope==='story'?'./atlas.html':r.scope==='online'?'./atlas-online.html':'./atlas-vi.html';
 const make=(tag,cl,value)=>{const n=document.createElement(tag);if(cl)n.className=cl;if(value!==undefined)n.textContent=value;return n};
