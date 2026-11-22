@@ -20,7 +20,7 @@ controls.append(cat,q,start,order,exportButton);
 const list=E('ol');list.id='j240-rows';
 const source=E('a','Original source and author ↗');source.href=config.source;source.target='_blank';source.rel='noopener noreferrer';
 root.append(heading,note,status,controls,list,source);target.after(root);
-let rows=[],planned=[],selectedId='';
+let rows=[],planned=[],selectedId='',progress=null,selectedRecord=null;
 const viewport=document.getElementById('classicViewport'),surface=document.getElementById('classicMapSurface');
 const projected=E('div');projected.id='j241-source-pins';projected.className='j241-source-pins';
 const detail=E('section');detail.id='j241-source-detail';detail.className='j241-source-detail';detail.hidden=true;detail.setAttribute('aria-live','polite');
@@ -30,8 +30,8 @@ viewport.after(detail,alignment);surface.append(projected);controls.prepend(togg
 let enabled=true;
 function compatible(){return viewport.dataset.mapImage==='game-original'&&viewport.dataset.sourceImage===config.image&&viewport.dataset.sourceWidth==='1024'&&viewport.dataset.sourceHeight==='1024'}
 function selectRecord(r){
- selectedId=r.id;detail.hidden=false;detail.replaceChildren(E('strong',r.name),E('p','World X '+r.x.toFixed(3)+' · Y '+r.y.toFixed(3)+' · Z '+formatZ(r.z)+' · source reference, not individually gameplay verified.'));
- const link=E('a','Coordinate source ↗');link.href=r.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';const close=E('button','Close detail');close.type='button';close.onclick=()=>{selectedId='';detail.hidden=true;drawMap()};detail.append(link,close);drawMap();
+ selectedId=r.id;selectedRecord=r;detail.hidden=false;detail.replaceChildren(E('strong',r.name),E('p','World X '+r.x.toFixed(3)+' · Y '+r.y.toFixed(3)+' · Z '+formatZ(r.z)+' · source reference, not individually gameplay verified.'));
+ const link=E('a','Coordinate source ↗');link.href=r.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';const close=E('button','Close detail');close.type='button';close.onclick=()=>{selectedId='';detail.hidden=true;drawMap()};detail.append(link);if(progress)detail.append(progress.button(r));detail.append(close);drawMap();
 }
 function drawMap(){
  projected.replaceChildren();
@@ -44,14 +44,14 @@ function drawMap(){
   const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('aria-hidden','true');svg.setAttribute('class','j241-source-route');const line=document.createElementNS(ns,'polyline');line.setAttribute('points',planned.map(r=>r.imageX+','+r.imageY).join(' '));svg.append(line);projected.append(svg);
  }
  for(const r of selected){
-  const pin=E('button',/jump/i.test(r.category)?'🏁':r.category==='Hidden packages'?'📦':'◆');pin.type='button';pin.className='j241-source-pin';pin.dataset.sourceId=r.id;pin.style.left=r.imageX+'%';pin.style.top=r.imageY+'%';pin.title=r.name;pin.setAttribute('aria-label','Sourced '+r.name);pin.setAttribute('aria-pressed',String(r.id===selectedId));pin.onclick=e=>{e.stopPropagation();selectRecord(r)};projected.append(pin);
+  const pin=E('button',/jump/i.test(r.category)?'🏁':r.category==='Hidden packages'?'📦':'◆');pin.type='button';pin.className='j241-source-pin';pin.dataset.sourceId=r.id;pin.dataset.found=String(progress?.isDone(r)||false);pin.style.left=r.imageX+'%';pin.style.top=r.imageY+'%';pin.title=r.name;pin.setAttribute('aria-label','Sourced '+r.name);pin.setAttribute('aria-pressed',String(r.id===selectedId));pin.onclick=e=>{e.stopPropagation();selectRecord(r)};projected.append(pin);
  }
 }
 toggle.onclick=()=>{enabled=!enabled;toggle.textContent=enabled?'Hide sourced pins':'Show sourced pins';toggle.setAttribute('aria-pressed',String(enabled));drawMap()};
 window.addEventListener('team-jura:classic-map-image-change',drawMap);
 const option=(value,label)=>{const o=E('option',label);o.value=value;return o};
-function visible(){const s=q.value.trim().toLowerCase();return rows.filter(r=>r.category===cat.value&&(!s||(r.id+' '+r.name).toLowerCase().includes(s)))}
-function display(items){list.replaceChildren();for(const r of items){const li=E('li'),label=E('strong',r.name),detail=E('small','X '+r.x.toFixed(3)+' · Y '+r.y.toFixed(3)+' · Z '+formatZ(r.z));li.dataset.id=r.id;const locate=E('button','Locate reference');locate.type='button';locate.onclick=()=>{selectRecord(r);if(compatible()&&enabled)viewport.scrollIntoView({block:'center',behavior:'smooth'});else detail.hidden=false};li.append(label,detail,locate);list.append(li)}}
+function visible(){const s=q.value.trim().toLowerCase();return rows.filter(r=>(!progress||progress.visible(r))&&r.category===cat.value&&(!s||(r.id+' '+r.name).toLowerCase().includes(s)))}
+function display(items){list.replaceChildren();for(const r of items){const li=E('li'),label=E('strong',r.name),detail=E('small','X '+r.x.toFixed(3)+' · Y '+r.y.toFixed(3)+' · Z '+formatZ(r.z));li.dataset.id=r.id;const locate=E('button','Locate reference');locate.type='button';locate.onclick=()=>{selectRecord(r);if(compatible()&&enabled)viewport.scrollIntoView({block:'center',behavior:'smooth'});else detail.hidden=false};li.append(label,detail,locate);if(progress)li.append(progress.button(r));list.append(li)}}
 function reset(){planned=[];exportButton.disabled=true;const selected=start.value,items=visible();start.replaceChildren(option('','Choose origin…'),...items.map(r=>option(r.id,r.name)));if(items.some(r=>r.id===selected))start.value=selected;order.disabled=!start.value;display(items);status.textContent=items.length+' references shown · '+config.count+' total · source-matched radar projection.'+(iii&&cat.value==='Rampages'?' 20 objectives; 2 possible spawns each.':'');drawMap()}
 q.oninput=reset;cat.onchange=reset;start.onchange=()=>{order.disabled=!start.value;planned=[];exportButton.disabled=true;display(visible());drawMap()};
 order.onclick=()=>{
@@ -78,6 +78,6 @@ fetch(config.file).then(r=>{if(!r.ok)throw Error('source unavailable');return r.
   seen.add(r.id);
  }
  for(const [category,count] of Object.entries(config.cats)){if(d.records.filter(r=>r.category===category).length!==count)throw Error('category count mismatch');cat.append(option(category,category+' · '+count))}
- rows=d.records;reset()
+ rows=d.records;progress=window.JuraSourceProgress.create(window,{scope:config.world+'-classic',revision:config.revision,rows,identity:r=>iii&&r.category==='Rampages'?'rampage:'+r.slot:r.id,host:root,onChange:()=>{const current=selectedRecord;reset();if(current&&visible().some(r=>r.id===current.id)&&enabled&&compatible())selectRecord(current)}});reset()
 }).catch(e=>{status.textContent='Reference index unavailable: '+e.message;cat.disabled=q.disabled=start.disabled=true});
 })();
