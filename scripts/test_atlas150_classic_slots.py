@@ -32,5 +32,9 @@ assert '.j150-slot' in pc and '.j150-place-pin' in pc
 assert '.classic-marker[data-slot-done="true"]' in cc
 assert 'team-jura-atlas98-classic-'+'' in c
 assert 'team-jura-atlas98b-items-' in p, 'Checklist key must not be renamed'
+assert 'existing' in p.lower() and 'const prior=new Set' in p and 'state=merged' in p
+route=(R/'atlas98b-route.js').read_text(encoding='utf8')
+assert 'team-jura-classic-route-v1' in route and 'input.world!==game' in route
+assert 'existing.has(id)' in route and 'j228RouteImport' in route and 'j228RouteExport' in route
 assert 'team-jura-atlas98-classic-'+'' in c, 'Marker key must not be renamed'
 print('PASS Atlas 15.0: linked classic-world slots, preserved old save keys, explicit personal image coordinates')

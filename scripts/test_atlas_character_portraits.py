@@ -152,7 +152,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
 
             page.goto(base + "map-hub.html?game=iii",wait_until="domcontentloaded")
             page.evaluate("""() => {
-              const markers = [[10,10],[80,80],[11,11]].map(([x,y],i)=>({
+              const markers = [[10,10],[80,80],[11,11],[50,50]].map(([x,y],i)=>({
                 id:String(i), name:'Test pin '+i, x,y, category:'Note'
               }));
               localStorage.setItem('team-jura-atlas98-classic-iii-v1',JSON.stringify({
@@ -169,8 +169,35 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             expect(page.locator("#j98bRouteStops li span")).to_have_text(expected)
             page.reload(wait_until="domcontentloaded")
             expect(page.locator("#j98bRouteStops li span")).to_have_text(expected)
+            route_backup={"schema":"team-jura-classic-route-v1","world":"iii","stops":["1","3","unknown"]}
+            page.locator("#j228RouteImport").set_input_files({"name":"route.json","mimeType":"application/json","buffer":json.dumps(route_backup).encode()})
+            expect(page.locator("#j98bRouteStatus")).to_contain_text("1 route stop(s) added; 1 unavailable")
+            expect(page.locator("#j98bRouteStops li span")).to_have_text(expected+["4. Test pin 3"])
+            route_backup["world"]="vc"
+            page.locator("#j228RouteImport").set_input_files({"name":"wrong-world.json","mimeType":"application/json","buffer":json.dumps(route_backup).encode()})
+            expect(page.locator("#j98bRouteStatus")).to_contain_text("Restore refused:")
+            expect(page.locator("#j98bRouteStops li span")).to_have_text(expected+["4. Test pin 3"])
             page.goto(base + "map-hub.html?game=vc",wait_until="domcontentloaded")
             expect(page.locator("#j98bRouteStops li span")).to_have_count(0)
+            # Seven classic-world checklists use merge-only, game-scoped restores.
+            worlds=("iii","vc","vcs","lcs","ctw","tlad","tbogt")
+            for world in worlds if width==390 else ("iii","tlad"):
+                page.goto(base+"map-hub.html?game="+world,wait_until="domcontentloaded")
+                slots=page.locator("#j98bGrid .j150-slot button[data-done]")
+                expect(slots.first).to_be_visible(timeout=15000)
+                category=page.locator("#j98bSet").input_value()
+                slots.nth(0).click()
+                check_backup={"schema":"team-jura-atlas98b-items-v1","game":world,"done":{category:[2,9999]}}
+                page.locator("#j98bImport").set_input_files({"name":"collection.json","mimeType":"application/json","buffer":json.dumps(check_backup).encode()})
+                expect(page.locator("#j98bStatus")).to_contain_text("1 completed slot(s) added.")
+                expect(slots.nth(0)).to_have_attribute("data-done","true")
+                expect(slots.nth(1)).to_have_attribute("data-done","true")
+                check_backup["game"]="another"
+                page.locator("#j98bImport").set_input_files({"name":"wrong.json","mimeType":"application/json","buffer":json.dumps(check_backup).encode()})
+                expect(page.locator("#j98bStatus")).to_contain_text("Restore refused:")
+                page.reload(wait_until="domcontentloaded")
+                expect(slots.nth(0)).to_have_attribute("data-done","true",timeout=15000)
+                expect(slots.nth(1)).to_have_attribute("data-done","true")
 
             # Studio restore must preserve both a conflicting existing idea and Garage ownership.
             page.goto(base+"atlas-vehicle-configurator.html?model=adder",wait_until="domcontentloaded")
