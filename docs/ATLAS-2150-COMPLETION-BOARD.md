@@ -208,3 +208,10 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Marker CRUD, category progress, JSON import and personal map image actions avoid claiming success after failed notebook saves. Cache revisions `v=302` prevent browsers using outdated Classic notebook logic.
 - **TEST:** `scripts/test_atlas302_classic_safe.py`, `scripts/test_atlas302_classic_browser.py` and `atlas302-classic-notebook.yml`. Real Chromium built-site checks for seven classic worlds at 390px/1440px, no load overwrite, corrupt export, intentional recovery and stale-tab preservation. Exact-head CI not claimed until confirmed.
 - **HOLD:** Source/location alignment gaps, complete classic-world data/media, manual full browser/ZIP release validation, real Safari and owner approval remain. See `docs/ATLAS302-CLASSIC-NOTEBOOK-RECOVERY.md`.
+
+
+## Atlas 30.2 — Mobile marker exit and safe map return (staging)
+- **SOURCE:** GTA V Story / GTA Online / GTA VI map detail cards now have a sticky, 44px **Back to map** button, 44px existing × and focus return to the map canvas after closing. Scrolling tall media/text no longer strands the exit below an overflowing overlay. Short iPhone landscape receives a bounded fixed panel.
+- **SOURCE:** Closing keeps world, map camera/zoom, marker sources, user routes, progress and browser history unchanged. Original Elario violet/gold styling and approved imagery remain intact.
+- **TEST:** `scripts/test_atlas302_map_marker_exit.py`, `scripts/test_atlas302_map_marker_exit_browser.py` and focused `atlas302-map-marker-exit.yml` cover all three map pages at 375×667, 390×844, 844×390 and 1440×900; confirm exact-head CI before accepting.
+- **HOLD:** Actual iPhone Safari signoff, complete 13-world navigation/device QA, final Chromium/Edge/ZIP and owner-approved release remain outstanding. See `docs/ATLAS302-MAP-DETAIL-EXIT-ACCEPTANCE.md`.
