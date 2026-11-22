@@ -3,6 +3,7 @@ on:
   pull_request:
     branches: [development]
     paths:
+      - 'atlas222-characters.css'
       - 'atlas222-characters.js'
       - 'atlas-characters.html'
       - 'tests/atlas292-character-deeplinks.test.cjs'
@@ -16,10 +17,20 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas-characters-focused.yml
       - name: Check character JavaScript syntax
+        if: steps.scope.outputs.run == 'true'
         run: node --check atlas222-characters.js
       - name: Check profile deep links and browser-history contract
+        if: steps.scope.outputs.run == 'true'
         run: node tests/atlas292-character-deeplinks.test.cjs
