@@ -86,13 +86,25 @@ const localFallback=s=>s==='vi'?'./art/jura155-vi.webp':
  s==='online'?'./art/jura155-online.webp':
  s==='story'?'./art/jura155-story.webp':'./art/jura155-characters.webp';
 const castId=['character:michael','character:franklin','character:trevor','character:lucia','character:jason'];
-async function initData(){
- let characters=[];
- try{
+// Exact identities and local concept image paths copied from the bundled source profiles.
+// Keep featured navigation available when the larger local JSON is still loading or offline.
+const featuredFallback=[
+ {id:'character:michael',name:'Michael De Santa',scope:'story',game:'GTA V',conceptPortrait:'art/jura221-michael-cinematic.webp'},
+ {id:'character:franklin',name:'Franklin Clinton',scope:'story',game:'GTA V',conceptPortrait:'art/jura221-franklin-cinematic.webp'},
+ {id:'character:trevor',name:'Trevor Philips',scope:'story',game:'GTA V',conceptPortrait:'art/jura221-trevor-cinematic.webp'},
+ {id:'character:lucia',name:'Lucia Caminos',scope:'vi',game:'GTA VI Story',conceptPortrait:'art/jura221-lucia-cinematic.webp'},
+ {id:'character:jason',name:'Jason Duval',scope:'vi',game:'GTA VI Story',conceptPortrait:'art/jura221-jason-cinematic.webp'},
+ {id:'character:cj',name:'Carl Johnson',scope:'classic',game:'GTA San Andreas',aliases:['CJ','Carl CJ Johnson']},
+ {id:'character:dre-quan-priest',name:"Dre'Quan Priest",scope:'vi',game:'GTA VI Story',aliases:['DreQuan',"Dre'Quan Priest"]}
+];
+catalog.push(...featuredFallback.map(c=>({title:c.name,kind:'Character',keywords:[c.game,c.scope,...(c.aliases||[])].join(' '),record:c,href:characterHref(c)})));
+async function initData(useFallback=false){
+ let characters=featuredFallback;
+ if(!useFallback)try{
   const res=await fetch('./data/atlas-universe-profiles.json?v=223',{cache:'no-cache'});
   if(!res.ok)throw Error('No local character index');
   characters=(await res.json()).records.filter(x=>x.kind==='character'&&['vi','story','online','classic'].includes(x.scope));
- }catch{characters=[]}
+ }catch{characters=featuredFallback}
  if(characters.length){
   const rows=characters.map(x=>({
    title:x.name,
@@ -101,7 +113,7 @@ async function initData(){
    record:x,
    href:characterHref(x)
   }));
-  catalog.push(...rows);
+  catalog=catalog.filter(x=>x.kind!=='Character');catalog.push(...rows);
   // The user may already have typed while the local character index was loading.
   if(input&&document.activeElement===input&&input.value.trim())show(input.value.slice(0,120));
   for(const [title,href,keywords] of staticLinks){
@@ -149,5 +161,5 @@ document.querySelectorAll('.j223-evidence-card').forEach(card=>{
   feedback.classList.toggle('j223-correct',choice===answer);
  });
 });
-initData();
+initData(true);initData();
 })();

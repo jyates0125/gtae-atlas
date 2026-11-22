@@ -19,6 +19,7 @@ try:
   for width,height in ((1440,900),(390,844),(375,812)):
    ctx=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
    page=ctx.new_page();errors=[]
+   if width==1440:page.route('**/data/atlas-universe-profiles.json*',lambda route:route.abort()) # Prove offline featured search/cast fallback
    page.on('pageerror',lambda ex:errors.append(str(ex)))
    page.goto(base+'atlas-dashboard.html',wait_until='domcontentloaded',timeout=60000)
    expect(page.locator('.j223-world-card')).to_have_count(7,timeout=20000)
