@@ -62,7 +62,8 @@ try:
             expect(layer.locator('option[value="scaly,view"]')).to_have_count(1)
             expect(layer.locator('option[value="yanis,18"]')).to_have_count(1)
             expect(layer.locator('option[value="dupzor,51"]')).to_have_count(1)
-            layer.select_option("day")
+            with page.expect_request(lambda req: "/tiles/6/day/" in req.url, timeout=25000):
+                layer.select_option("day")
             assert layer.input_value() == "day", "Opt-in Day map must be selectable"
             page.wait_for_function(
                 "() => /Illustration: [1-9][0-9]* tiles/.test(document.querySelector('#tileHealth')?.textContent || '')",
