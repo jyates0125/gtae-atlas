@@ -16,5 +16,11 @@
   if(!Number.isFinite(error)||error>1)throw Error('Independent check differs by '+error.toFixed(2)+'% of image dimensions; choose more accurate anchors');
   return{project,error};
  }
- return Object.freeze({fit});
+ // Only restore a private calibration against the exact same image bytes and source revision.
+ function restore(record,world,revision,fingerprint,rows){
+  if(!record||record.schema!==1||record.world!==world||record.revision!==revision||!/^sha256:[a-f0-9]{64}$/.test(fingerprint)||record.fingerprint!==fingerprint||!Array.isArray(record.anchors)||record.anchors.length!==4)throw Error('Calibration image or source mismatch');
+  const seen=new Set(),anchors=record.anchors.map(a=>{const row=rows.find(r=>r.id===a.id);if(!row||seen.has(a.id))throw Error('Unknown or duplicate alignment landmark');seen.add(a.id);return {...row,u:a.u,v:a.v}});
+  return {anchors,transform:fit(anchors)};
+ }
+ return Object.freeze({fit,restore});
 });
