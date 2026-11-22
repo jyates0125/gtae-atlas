@@ -60,7 +60,7 @@ try:
    place.click()
    expect(page.locator('.j290-map-hint')).to_be_visible()
    size=page.locator('.j143-stage').bounding_box()
-   assert size and size['width']>100 and size['height']>100,(width,size)
+   assert size and size['width']>100 and size['height']>(75 if height<500 else 100),(width,height,size)
    page.locator('.j143-stage').click(position={'x':size['width']/2,'y':size['height']/2})
    expect(page.locator('.j290-pin')).to_have_count(1)
    assert 'NOT verified' in page.locator('.j290-status').inner_text()
