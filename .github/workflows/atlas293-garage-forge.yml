@@ -5,6 +5,7 @@ on:
     paths:
       - 'atlas93-garage.js'
       - 'atlas101-configurator.js'
+      - 'atlas-vehicle-configurator.html'
       - 'scripts/test_atlas293_garage_forge_handoff.py'
       - 'scripts/test_atlas293_garage_forge_browser.py'
       - 'scripts/test_atlas293_lamar_appearances.py'
