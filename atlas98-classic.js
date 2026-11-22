@@ -89,6 +89,13 @@ function renderBackground(){
 function loadOriginalWorldMap(){
  // Keep the game/era unchanged across every fallback; don't redirect fans to generic city artwork.
  const origins=mapOrigins[id],choices=[{url:w.map,...origins},...(mapAlternates[id]||[])];
+ // Personal pins use image percentages, not world coordinates. Keep a stable
+ // source across visits when personal pins exist; never silently prefer a
+ // different higher-resolution image over the user's previous reference.
+ const sourceKey='team-jura-classic-image-source-v1:'+id;
+ let previousSource='';try{previousSource=localStorage.getItem(sourceKey)||''}catch{}
+ const previous=choices.findIndex(c=>c.url===previousSource);
+ if(state.markers.length&&previous>0)choices.unshift(...choices.splice(previous,1));
  const credit=$('#classicMapAttribution'),source=$('#classicMapSourceLink');
  let index=0;
  function showSource(item){
@@ -109,10 +116,16 @@ function loadOriginalWorldMap(){
    if(!image.naturalWidth||!image.naturalHeight){next();return}
    originalMapReady=true;originalMapSize={width:image.naturalWidth,height:image.naturalHeight};
    activeMapUrl=current.url;
+   if(!highResUrl&&!state.background){
+    if(state.markers.length&&previousSource&&previousSource!==current.url){
+     // Existing image-relative marker values are intentionally not moved.
+     status('Alternate map loaded. Existing personal pins may require alignment review.');
+    }else try{localStorage.setItem(sourceKey,current.url)}catch{}
+   }
    showSource(current);
    if(!highResUrl&&!state.background){
     renderBackground();
-    status(w.name+' game-map image ready · '+image.naturalWidth+' × '+image.naturalHeight+' px. Personal notes are not calibrated coordinates.');
+    status(w.name+' game-map image ready · '+image.naturalWidth+' × '+image.naturalHeight+' px. '+(state.markers.length&&previousSource&&previousSource!==current.url?'Alternate artwork: review personal pin alignment. ':'')+'Personal notes are not calibrated coordinates.');
    }
   };
   image.onerror=next;

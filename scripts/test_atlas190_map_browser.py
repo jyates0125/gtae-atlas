@@ -222,6 +222,9 @@ try:
    for game,count in [('lcs',52),('vcs',51)]:
     page.goto(base+'map-hub.html?game='+game,wait_until='domcontentloaded',timeout=45000)
     expect(page.locator('#j247-results li')).to_have_count(count,timeout=15000)
+    expect(page.locator('#j248-map-sources a')).to_have_count(2)
+    expect(page.locator('#j248-map-sources a').first).to_have_attribute('href','https://gtamap.io/gta-'+('liberty-city-stories' if game=='lcs' else 'vice-city-stories')+'-map/')
+    expect(page.locator('#j248-map-sources a').last).to_have_attribute('href','https://www.rockstargames.com/newswire/article/25o2411819oo5k/download-high-res-maps-for-liberty-city-stories-and-vice-city-st.html?hl=en-US')
     expect(page.locator('#j241-source-pins')).to_have_count(0)
     page.locator('#j247-origin').select_option(game+'-ref-1')
     page.get_by_role('button',name='Preview reference route').click()
