@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Atlas 21.9 premium HQ browser acceptance in desktop/mobile Chromium and Edge."""
-import os,threading
+import os,threading,json
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
@@ -51,6 +51,25 @@ try:
    expect(page.locator('#collections')).to_be_visible(timeout=12000)
    assert page.locator('#modeStory').count()==1 and page.locator('#modeOnline').count()==1
    assert page.locator('#exportAll').count()==1 and page.locator('#importAll').count()==1
+   page.goto(url+'?collection=online-playing-cards#collections',wait_until='domcontentloaded',timeout=45000)
+   expect(page.locator('#selectedTitle')).to_have_text('Playing Cards',timeout=15000)
+   page.evaluate("""() => localStorage.setItem('team-jura-atlas81-hq-v1',JSON.stringify({schema:1,items:{
+     'online-playing-cards:1':{done:true,queue:false,note:'Keep my note'},
+     'story-letter-scraps:1':{done:true,queue:false,note:'Story private'}
+   }}))""")
+   page.reload(wait_until='domcontentloaded')
+   expect(page.locator('#selectedTitle')).to_have_text('Playing Cards',timeout=15000)
+   backup={"schema":1,"items":{
+     "online-playing-cards:1":{"done":False,"queue":True,"note":"Old note"},
+     "online-playing-cards:2":{"done":True,"queue":False,"note":"Restored second"},
+     "online-playing-cards:999":{"done":True},"online-playing-cards:01":{"done":True},"online-playing-cards:3:bad":{"done":True}}}
+   page.locator('#backupFile').set_input_files({"name":"hq.json","mimeType":"application/json","buffer":json.dumps(backup).encode()})
+   expect(page.locator('#feedback')).to_contain_text('2 item(s) merged; 1 existing note conflict(s) kept; 3 invalid entries skipped.')
+   saved=page.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas81-hq-v1')).items")
+   assert saved['online-playing-cards:1']=={"done":True,"queue":True,"note":"Keep my note"}
+   assert saved['online-playing-cards:2']['done'] and saved['story-letter-scraps:1']['note']=='Story private'
+   page.reload(wait_until='domcontentloaded')
+   expect(page.locator('#selectedCount')).to_have_text('2 / 54',timeout=15000)
    print('PASS Atlas 21.9 '+engine+' '+str(width)+': HQ art, six map cards, 15 heist-specific entries, saves accessible',flush=True)
    ctx.close()
   browser.close()

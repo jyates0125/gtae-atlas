@@ -248,6 +248,36 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             expect(page.locator("#modeOnline")).to_have_attribute("aria-pressed","true")
             page.reload(wait_until="domcontentloaded")
             expect(page.locator("#selectedTitle")).to_contain_text("Snowmen")
+            # Verify the new coverage dashboard uses exact world-specific checklists.
+            page.goto(base+"atlas-coverage.html",wait_until="domcontentloaded")
+            evidence_rows=page.locator("#j229-collection-rows tr[data-set]")
+            expect(evidence_rows).to_have_count(20,timeout=15000)
+            page.locator("#j229-collection-world").select_option("story")
+            expect(evidence_rows).to_have_count(11)
+            expect(page.locator("#j229-collection-status")).to_contain_text("377 numbered reference slots")
+            page.locator("#j229-collection-world").select_option("online")
+            expect(evidence_rows).to_have_count(9)
+            expect(page.locator("#j229-collection-status")).to_contain_text("578 numbered reference slots")
+            page.locator("#j229-collection-search").fill("snowmen")
+            expect(evidence_rows).to_have_count(1)
+            expect(evidence_rows.locator("a").first).to_have_attribute("href","./atlas81-hq.html?collection=online-snowmen#collections")
+            # Restore Leonida-only notes with exact IDs, leaving conflicting local notes intact.
+            page.goto(base+"atlas90-weapons6.html",wait_until="domcontentloaded")
+            expect(page.locator(".viweapon-card")).to_have_count(7,timeout=15000)
+            page.evaluate("""() => localStorage.setItem('teamjura-vi-weapon-notes-v1',JSON.stringify({schema:1,notes:{'girardi-es9':'Current note'},seen:{'girardi-es9':true}}))""")
+            page.reload(wait_until="domcontentloaded")
+            expect(page.locator(".viweapon-card")).to_have_count(7,timeout=15000)
+            vi_backup={"schema":1,"app":"team-jura-vi-weapons","scope":"vi","notes":{"girardi-es9":"Do not replace","klose-k17":"Restored field note","unknown":"Ignore"},"seen":{"girardi-es9":False,"klose-k17":True}}
+            page.locator("#viWeaponImport").set_input_files({"name":"vi-notes.json","mimeType":"application/json","buffer":json.dumps(vi_backup).encode()})
+            expect(page.locator("#viWeaponStatus")).to_contain_text("2 note/review value(s) restored; 1 note conflict(s) kept; 1 invalid entries skipped")
+            vi_saved=page.evaluate("JSON.parse(localStorage.getItem('teamjura-vi-weapon-notes-v1'))")
+            assert vi_saved["notes"]["girardi-es9"]=="Current note" and vi_saved["seen"]["girardi-es9"] is True
+            assert vi_saved["notes"]["klose-k17"]=="Restored field note" and vi_saved["seen"]["klose-k17"] is True
+            vi_backup["scope"]="online"
+            page.locator("#viWeaponImport").set_input_files({"name":"wrong.json","mimeType":"application/json","buffer":json.dumps(vi_backup).encode()})
+            expect(page.locator("#viWeaponStatus")).to_contain_text("Import rejected:")
+            page.reload(wait_until="domcontentloaded")
+            expect(page.locator('[data-weapon-id="klose-k17"] textarea')).to_have_value("Restored field note",timeout=15000)
             # Check all 14 non-Cayo route workspaces at phone width and a representative
             # set of three other missions at each remaining viewport. Cayo retains its own planner.
             heist_ids=("fleeca","prison-break","humane-labs","series-a","pacific-standard","doomsday-act-1","doomsday-act-2","doomsday-act-3","diamond-casino","cluckin-bell","salvage-yard","auto-shop","agency-vip","kortz-center")

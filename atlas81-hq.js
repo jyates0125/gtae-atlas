@@ -4,9 +4,9 @@ const defaultState=()=>({schema:1,items:{},updated:null});let state=defaultState
 const mappedNames={'Spaceship Part':'story-spaceship-parts','Letter Scrap':'story-letter-scraps','Nuclear Waste':'story-nuclear-waste','Stunt Jump':'story-stunt-jumps','Under the Bridge':'story-under-bridges','Knife Flight':'story-knife-flights','Epsilon Tract':'story-epsilon-tracts'};
 const heists=[['The Fleeca Job','heist-fleeca.html'],['Prison Break','heist-prison-break.html'],['Humane Labs Raid','heist-humane-labs.html'],['Series A Funding','heist-series-a.html'],['Pacific Standard','heist-pacific-standard.html'],['Doomsday Act I','heist-doomsday-act-1.html'],['Doomsday Act II','heist-doomsday-act-2.html'],['Doomsday Act III','heist-doomsday-act-3.html'],['Diamond Casino','heist-diamond-casino.html'],['Cayo Perico','heist-cayo-perico.html'],['Auto Shop','heist-auto-shop.html'],['Agency VIP','heist-agency-vip.html'],['Salvage Yard','heist-salvage-yard.html'],['Cluckin Bell','heist-cluckin-bell.html'],['Kortz Center','heist-kortz-center.html']];
 function entry(k){if(state.items[k])return state.items[k];const mapped=mappedLookup.get(k);if(mapped){try{const p=JSON.parse(localStorage.getItem('jura3-progress')||'{}');if(typeof p[mapped.id]==='boolean')return{done:p[mapped.id],queue:false,note:''}}catch{}}return{done:false,queue:false,note:''}}
-function syncMapped(k,done){const r=mappedLookup.get(k);if(!r)return;try{const p=JSON.parse(localStorage.getItem('jura3-progress')||'{}');p[r.id]=done;localStorage.setItem('jura3-progress',JSON.stringify(p))}catch{feedback('Map progress could not sync. Export a backup.')}}function key(set,n){return set.id+':'+n}function allowedKey(k){const [id,n]=k.split(':');const set=sets.find(s=>s.id===id);return !!(set&&/^\d+$/.test(n)&&Number(n)>0&&Number(n)<=set.total)}
+function syncMapped(k,done){const r=mappedLookup.get(k);if(!r)return;try{const p=JSON.parse(localStorage.getItem('jura3-progress')||'{}');p[r.id]=done;localStorage.setItem('jura3-progress',JSON.stringify(p))}catch{feedback('Map progress could not sync. Export a backup.')}}function key(set,n){return set.id+':'+n}function allowedKey(k){const parts=k.split(':');if(parts.length!==2)return false;const [id,n]=parts,set=sets.find(s=>s.id===id);return !!(set&&/^[1-9]\d*$/.test(n)&&Number(n)<=set.total)}
 function load(){try{const raw=JSON.parse(localStorage.getItem(STORAGE)||'null');if(raw?.schema===1&&raw.items&&typeof raw.items==='object'&&!Array.isArray(raw.items))state={schema:1,items:raw.items,updated:raw.updated||null}}catch{}}
-function persist(){state.updated=new Date().toISOString();try{localStorage.setItem(STORAGE,JSON.stringify(state));feedback('Saved locally.')}catch{feedback('Storage unavailable. Export a backup now.')}}function feedback(s){$('feedback').textContent=s}
+function persist(){state.updated=new Date().toISOString();try{localStorage.setItem(STORAGE,JSON.stringify(state));feedback('Saved locally.');return true}catch{feedback('Storage unavailable. Export a backup now.');return false}}function feedback(s){$('feedback').textContent=s}
 function counts(set){let n=0,q=0;for(let i=1;i<=set.total;i++){const e=entry(key(set,i));if(e.done)n++;if(e.queue)q++}return{done:n,queue:q,total:set.total,known:Object.keys(evidence[set.id]||{}).length}}
 function allStats(){const all=sets.map(counts),done=all.reduce((n,s)=>n+s.done,0),q=all.reduce((n,s)=>n+s.queue,0);$('statSets').textContent=sets.length||'—';$('statCollected').textContent=done.toLocaleString();$('statQueued').textContent=q.toLocaleString();$('statMapped').textContent=sourceRecords?sourceRecords.length.toLocaleString()+'*':'—';}
 function nav(id){if(!$(id))id='overview';document.querySelectorAll('.view').forEach(s=>s.hidden=s.id!==id);document.querySelectorAll('.mainnav [data-view]').forEach(a=>{if(a.dataset.view===id)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});$('nav').classList.remove('open');$('menu').setAttribute('aria-expanded','false');window.scrollTo(0,0);if(id==='collections')render();}
@@ -30,10 +30,43 @@ const frag=document.createDocumentFragment();for(const i of items)frag.append(ca
 function render(){if(!sets.length)return;const list=sets.filter(s=>s.mode===mode),s=list.find(s=>s.id===selected)||list[0];if(!s)return;selected=s.id;const c=counts(s),mappedCount=[...mappedLookup.keys()].filter(k=>k.startsWith(s.id+':')).length,tot=list.reduce((o,s)=>{const x=counts(s);o.done+=x.done;o.total+=x.total;o.known+=x.known;o.queue+=x.queue;return o},{done:0,total:0,known:0,queue:0});$('collGame').textContent=mode==='story'?'Story Mode':'Online';$('collDone').textContent=tot.done+' / '+tot.total;$('collIdentified').textContent=tot.known+' / '+tot.total;$('collQueue').textContent=tot.queue;$('selectedMode').textContent=mode==='story'?'GTA V STORY':'GTA ONLINE';$('selectedTitle').textContent=s.name;$('selectedNote').textContent=s.note;$('selectedPct').textContent=Math.round(c.done/c.total*100)+'%';$('selectedCount').textContent=c.done+' / '+c.total;$('progressFill').style.width=(c.done/c.total*100)+'%';$('collectionGuide').href=s.sourceUrl;$('collectionMap').href=s.mode==='story'?'./atlas.html':'./atlas-online.html';$('storyPins').hidden=mode!=='story';$('collectionConfidence').textContent=`${c.known} of ${c.total} items have source-specific text hints; ${mappedCount} match existing community-mapped Story Mode pins. Mapped pins are not equivalent to independently gameplay-verified pickups. Online items without coordinates open their collection guide instead.`;renderSetList();renderItems(s);allStats();}
 function forSelected(fn){const s=sets.find(s=>s.id===selected);if(!s)return;for(let i=1;i<=s.total;i++)fn(key(s,i),i,s);persist();render()}
 function download(name,obj){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
-function exportState(){download('team-jura-atlas81-backup.json',{...state,exportedAt:new Date().toISOString(),origin:'Team Jura Atlas 8.1'});feedback('Backup downloaded. Keep it safe.')}
+function exportState(){
+ const items={};
+ for(const set of sets)for(let n=1;n<=set.total;n++){const k=key(set,n),e=entry(k);if(e.done||e.queue||e.note||Object.hasOwn(state.items,k))items[k]={done:e.done===true,queue:e.queue===true,note:typeof e.note==='string'?e.note.slice(0,600):''}}
+ download('team-jura-atlas81-backup.json',{...state,items,exportedAt:new Date().toISOString(),origin:'Team Jura Atlas 8.1'});feedback('Backup downloaded. Keep it safe.')
+}
 function exportQueue(){const a=[];for(const s of sets)for(let i=1;i<=s.total;i++){const k=key(s,i),e=entry(k);if(e.queue)a.push({id:k,game:s.mode,collection:s.name,number:i,done:!!e.done,description:(evidence[s.id]||{})[i]||null,note:e.note||''})}download('team-jura-hunt-queue.json',{schema:1,scope:'Planning queue, not verified item positions',items:a});feedback(a.length+' queued targets exported.')}
 function importLegacy(){let raw;try{raw=JSON.parse(localStorage.getItem(LEGACY)||'null')}catch{}if(!raw?.checked){feedback('No legacy checklist found on this browser and domain.');return}const keys=Object.keys(raw.checked).filter(k=>allowedKey(k)&&raw.checked[k]===true);if(!confirm('Import '+keys.length+' old checkmarks? WARNING: legacy slot numbers do not necessarily match source-listed location numbering. Export a backup first if needed.'))return;for(const k of keys)state.items[k]={...entry(k),done:true};persist();render();feedback('Legacy checks copied; verify item identities.')}
-async function importBackup(file){if(!file)return;try{if(file.size>3000000)throw Error('File exceeds 3 MB');const data=JSON.parse(await file.text());if(data.schema!==1||!data.items||typeof data.items!=='object'||Array.isArray(data.items))throw Error('Incompatible backup');const clean={};for(const [k,e] of Object.entries(data.items)){if(!allowedKey(k)||!e||typeof e!=='object')continue;clean[k]={done:e.done===true,queue:e.queue===true,note:typeof e.note==='string'?e.note.slice(0,600):''}}if(!confirm('Replace Atlas 8.1 progress with '+Object.keys(clean).length+' backup records? Back up your current progress first.'))return;state={schema:1,items:clean,updated:new Date().toISOString()};persist();render();feedback('Backup restored.')}catch(err){feedback('Backup rejected: '+err.message)}}
+async function importBackup(file){
+ if(!file)return;
+ try{
+  if(!sets.length)throw Error('Wait for the collection catalog');
+  if(file.size>3000000)throw Error('File exceeds 3 MB');
+  const data=JSON.parse(await file.text());
+  if(!data||data.schema!==1||!data.items||typeof data.items!=='object'||Array.isArray(data.items))throw Error('Incompatible backup');
+  const clean={};let skipped=0;
+  for(const [k,e] of Object.entries(data.items)){
+   if(!allowedKey(k)||!e||typeof e!=='object'||Array.isArray(e)){skipped++;continue}
+   clean[k]={done:e.done===true,queue:e.queue===true,note:typeof e.note==='string'?e.note.slice(0,600):''};
+  }
+  if(!Object.keys(clean).length){feedback('No matching collection records to restore. '+skipped+' invalid entries skipped.');return}
+  // Existing local notes and true completion marks take precedence. Import never clears a slot.
+  load();
+  const changed=[],newlyDone=[];let notesKept=0;
+  for(const [k,e] of Object.entries(clean)){
+   const prior=entry(k),localNote=typeof prior.note==='string'?prior.note:'';
+   const merged={done:prior.done===true||e.done,queue:prior.queue===true||e.queue,note:localNote.trim()?localNote:e.note};
+   if(localNote.trim()&&e.note.trim()&&localNote!==e.note)notesKept++;
+   if(merged.done!==prior.done||merged.queue!==prior.queue||merged.note!==localNote){
+    state.items[k]=merged;changed.push(k);if(merged.done&&!prior.done)newlyDone.push(k);
+   }
+  }
+  const ok=changed.length?persist():true;
+  if(ok)for(const k of newlyDone)syncMapped(k,true);
+  render();
+  feedback(changed.length+' item(s) merged; '+notesKept+' existing note conflict(s) kept; '+skipped+' invalid entries skipped.'+(ok?' Existing progress preserved.':' Storage unavailable; export the merged backup before leaving.'));
+ }catch(err){feedback('Backup rejected: '+err.message)}
+}
 function heistList(){
  const frag=document.createDocumentFragment();
  for(const [name,path] of heists){

@@ -25,6 +25,11 @@ assert 'function heistList()' in j and "jura159-heist-" in j
 assert 'premiumHQOverview();' in j
 assert 'localStorage.getItem(STORAGE)' in j and 'localStorage.setItem(STORAGE' in j
 assert 'jura3-progress' in j
+assert 'prior.done===true||e.done' in j and 'localNote.trim()?localNote:e.note' in j
+assert 'parts.length!==2' in j and 'j230-hq-restore' in h
+vi=(R/'atlas192-weapons6.js').read_text(encoding='utf-8')
+assert "payload.scope!=='vi'" in vi and "payload.app!=='team-jura-vi-weapons'" in vi
+assert 'known.has(id)' in vi and 'viWeaponImport' in (R/'atlas90-weapons6.html').read_text(encoding='utf-8')
 assert 'body.j219-hq #j89-shell{display:none!important}' in css
 assert '#collections .sectionhead' in css and '#missions .sectionhead' in css
 assert css.count('{')==css.count('}')
