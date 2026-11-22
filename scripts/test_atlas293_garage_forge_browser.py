@@ -67,6 +67,21 @@ try:
         assert preserved['jetmax']['garage']=='Marina'
         assert preserved['jetmax']['plate']=='KEEP'
         assert preserved['sultan']=={'favorite':True,'paint':'Graphite'}
+        # Corrupt Garage JSON must be preserved byte-for-byte; a save must fail safely.
+        page.evaluate("g => localStorage.setItem(g, '{broken-json')",garage_key)
+        page.locator('#saveToGarage').click()
+        expect(page.locator('#builderStatus')).to_contain_text('Garage was not changed')
+        assert page.evaluate("g => localStorage.getItem(g)",garage_key)=='{broken-json'
+        # An invalid vehicle record must also fail without silently wiping unrelated data.
+        page.evaluate("""g => localStorage.setItem(g,JSON.stringify({
+          schema:1,vehicles:{jetmax:'invalid',sultan:{favorite:true}}
+        }))""",garage_key)
+        invalid_before=page.evaluate("g => localStorage.getItem(g)",garage_key)
+        page.locator('#saveToGarage').click()
+        expect(page.locator('#builderStatus')).to_contain_text('Existing vehicle record is invalid')
+        assert page.evaluate("g => localStorage.getItem(g)",garage_key)==invalid_before
+        # Restore the valid snapshot for GTA VI isolation.
+        page.evaluate("([g,v]) => localStorage.setItem(g,JSON.stringify(v))",[garage_key,{'schema':1,'vehicles':preserved}])
         # VI must not expose the GTA V Garage write control.
         page.goto(base+'/atlas-vehicle-configurator.html?world=vi',wait_until='domcontentloaded')
         expect(page.locator('#saveToGarage')).to_be_hidden()
