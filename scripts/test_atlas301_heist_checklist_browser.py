@@ -125,6 +125,29 @@ try:
    assert page.evaluate('key=>JSON.parse(localStorage.getItem(key)).approach',notes)=='Keep notes'
    assert page.evaluate('key=>JSON.parse(localStorage.getItem(key)).route',focus)==['m1']
    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+2'),width
+
+   # Cayo hides its old checklist behind the modern island board; a malformed
+   # legacy key must still have an actually VISIBLE recovery interface.
+   page.goto(base+'heist-cayo-perico.html',wait_until='domcontentloaded')
+   cayo_key='teamjura-heist-cayo-perico'
+   cayo_route='teamjura-heist-focus-v1:cayo-perico'
+   page.evaluate("""([k,r])=>{
+     localStorage.setItem(k,'{broken-cayo-legacy');
+     localStorage.setItem(r,JSON.stringify({schema:1,route:['m0'],scoped:['m1']}));
+   }""",[cayo_key,cayo_route])
+   page.reload(wait_until='domcontentloaded')
+   cayo_recovery=page.locator('#j301-cayo-recovery')
+   expect(cayo_recovery).to_be_visible(timeout=20000)
+   expect(cayo_recovery.locator('h2')).to_have_text('Recover your Cayo checklist')
+   expect(cayo_recovery.locator('#j301-rescue-reset')).to_be_disabled()
+   with page.expect_download() as event:
+     cayo_recovery.locator('#j301-rescue-download').click()
+   assert Path(event.value.path()).read_text(encoding='utf-8')=='{broken-cayo-legacy'
+   cayo_recovery.locator('#j301-rescue-reset').click()
+   assert page.evaluate("key=>localStorage.getItem(key)",cayo_key)=='{}'
+   expect(cayo_recovery).to_have_count(0)
+   assert page.evaluate("key=>JSON.parse(localStorage.getItem(key)).route",cayo_route)==['m0']
+   assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+2'),width
    ctx.close()
   browser.close()
 finally:
