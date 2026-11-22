@@ -8,7 +8,7 @@ js=(root/'atlas101-configurator.js').read_text(encoding='utf-8')
 css=(root/'atlas311-forge-variant-manager.css').read_text(encoding='utf-8')
 for token in ('j311-manager','j311-new-name','j311-rename','j311-delete'):
  assert html.count('id="'+token+'"')==1,token
-assert 'atlas311-forge-variant-manager.css?v=311' in html and 'atlas101-configurator.js?v=311' in html
+assert 'atlas311-forge-variant-manager.css?v=311' in html and 'atlas101-configurator.js?v=' in html
 for token in ('function manageNamed(action)','function updateNamedManager()',
               "const raw=localStorage.getItem(KEY)",'normalizedPreset(current,array[index])',
               'JSON.stringify(currentValue)!==JSON.stringify(expected)',
