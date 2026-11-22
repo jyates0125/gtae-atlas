@@ -10,7 +10,7 @@ pages=set(re.findall(r'href="\./heist-([a-z0-9-]+)\.html"',html))
 assert len(pages)==15,(len(pages),sorted(pages))
 for id in pages:
  page=(root/('heist-'+id+'.html')).read_text(encoding='utf-8')
- assert 'src="./heist-pages.js"' in page,id
+ assert re.search(r'src="\\./heist-pages\\.js(?:\\?v=\\d+)?"',page),id
  assert 'data-heist="'+id+'"' in page,id
 for key in [
  'function readChecklist()',
