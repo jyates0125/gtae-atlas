@@ -322,6 +322,9 @@ function juraSwitchMap(mode){
  }return true;
 }
 window.teamJuraHeistBaseMap={setSource:juraSwitchMap,getSource:()=>juraMapMode};
+// Read-only source inventory for phase map and device-only route transfer.
+// Exposes neither user notes nor numeric schematic coordinates.
+if(advancedRoutes)window.teamJuraHeistManifest=Object.freeze({heist:id,points:()=>points.map(p=>({id:p.id,name:p.name,category:p.cat}))});
 if(id==='cayo-perico')window.teamJuraCayoRoute={setRoute(names){
  if(!Array.isArray(names))return 0;
  const order=names.map(name=>points.find(p=>p.name.toLowerCase()===String(name).toLowerCase())).filter(Boolean);
