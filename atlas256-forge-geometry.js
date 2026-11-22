@@ -13,8 +13,17 @@
   if(/sport|super|coupe/.test(t))return 'sport';
   return 'touring';
  }
- function build(type,model,paint,settings){
+ const themes=Object.freeze({
+  signature:Object.freeze({label:'Elario Signature',background:[.057,.031,.095],floor:[.10,.055,.17],deck:[.13,.09,.20],trim:[.30,.18,.42]}),
+  marina:Object.freeze({label:'Leonida Marina',background:[.025,.08,.105],floor:[.035,.12,.16],deck:[.14,.15,.17],trim:[.10,.55,.68]}),
+  hangar:Object.freeze({label:'Aviation Hangar',background:[.065,.075,.095],floor:[.12,.14,.17],deck:[.19,.20,.23],trim:[.85,.68,.34]}),
+  workshop:Object.freeze({label:'Midnight Workshop',background:[.045,.042,.047],floor:[.09,.09,.10],deck:[.16,.14,.15],trim:[.68,.27,.10]})
+ });
+ function themeFor(name){return Object.hasOwn(themes,name)?name:'signature'}
+ function defaultTheme(kind){return kind==='marine'?'marina':kind==='air'||kind==='rotor'?'hangar':kind==='utility'?'workshop':'signature'}
+ function build(type,model,paint,settings,environment){
   const kind=classify(type,model),d=normalize(settings),base=hex(paint),accent=hex(d.accent),glass=[.12,.24,.34],dark=[.07,.085,.13],rubber=[.045,.05,.065],chrome=[.56,.64,.73],data=[];
+  const theme=themes[themeFor(environment||defaultTheme(kind))];
   const tint=(c,k)=>c.map(v=>clamp(v*k,0,1));
   const blend=(a,b,f)=>a.map((v,i)=>v*(1-f)+b[i]*f);
   function tri(a,b,c,col,emissive=false){
@@ -40,7 +49,20 @@
   const circle=(n)=>Array.from({length:n},(_,i)=>[Math.cos(i*2*Math.PI/n),Math.sin(i*2*Math.PI/n)]);
   function disc(y,r,col){const c=circle(64);for(let i=0;i<c.length;i++){const a=c[i],b=c[(i+1)%c.length];tri([0,y,0],[a[0]*r,y,a[1]*r],[b[0]*r,y,b[1]*r],col,true)}}
   function ring(y,r,w,col){const c=circle(64);for(let i=0;i<c.length;i++){const a=c[i],b=c[(i+1)%c.length];quad([a[0]*r,y,a[1]*r],[b[0]*r,y,b[1]*r],[b[0]*(r-w),y,b[1]*(r-w)],[a[0]*(r-w),y,a[1]*(r-w)],col,true)}}
-  disc(-.06,3.42,[.10,.055,.17]);disc(-.035,3.28,[.13,.09,.20]);ring(-.025,3.27,.025,accent);ring(-.02,2.93,.012,[.30,.18,.42]);ring(-.015,2.31,.012,[.23,.13,.34]);
+  disc(-.06,3.42,theme.floor);disc(-.035,3.28,theme.deck);ring(-.025,3.27,.025,accent);ring(-.02,2.93,.024,theme.trim);ring(-.015,2.31,.012,tint(theme.trim,.65));
+  // Original low-profile set dressing: visible from orbit and top cameras without occluding the vehicle.
+  const env=themeFor(environment||defaultTheme(kind));
+  if(env==='marina'){
+   for(const x of [-2.85,2.85]){box(x,.025,0,.42,.10,2.7,theme.deck);for(const z of [-1.1,0,1.1]){box(x,.10,z,.16,.21,.16,chrome);box(x,.22,z,.18,.035,.18,theme.trim,true)}}
+   for(let n=-3;n<=3;n++){box(n*.36,-.01,2.92,.22,.012,.07,theme.trim,true);box(n*.36,-.01,-2.92,.22,.012,.07,theme.trim,true)}
+  }else if(env==='hangar'){
+   for(const x of [-2.97,2.97])for(const z of [-.95,0,.95])box(x,.015,z,.12,.045,.54,theme.trim,true);
+   for(const z of [-3.04,3.04])box(0,.008,z,1.65,.025,.08,theme.trim,true);
+  }else if(env==='workshop'){
+   for(const x of [-2.88,2.88])for(const z of [-1,0,1]){box(x,.025,z,.27,.08,.52,dark);box(x,.07,z,.21,.025,.42,theme.trim,true)}
+  }else{
+   for(let i=0;i<8;i++){const a=i*Math.PI/4;box(Math.cos(a)*3.1,.018,Math.sin(a)*3.1,.16,.05,.16,theme.trim,true)}
+  }
   for(let n=-3;n<=3;n++){const len=Math.sqrt(Math.max(0,3.15**2-(n*.75)**2));box(n*.75,-.012,0,.009,.004,2*len,[.22,.13,.31]);box(0,-.011,n*.75,2*len,.004,.009,[.22,.13,.31])}
   const shell=d.finish==='stealth'?blend(base,[.11,.12,.17],.48):d.finish==='satin'?tint(base,.80):blend(base,[.58,.64,.78],.11);
   const lamp=d.lights?[.73,.94,1]:[.20,.23,.27],tail=d.lights?[1,.12,.24]:[.32,.09,.12];
@@ -89,5 +111,5 @@
   }
   return{kind,vertices:new Float32Array(data),settings:d};
  }
- return Object.freeze({normalize,classify,build});
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme});
 });
