@@ -53,14 +53,19 @@ function mount(){
  const fetchButton=panel.querySelector('[data-j143="fetch"]');
  const forgetButton=panel.querySelector('[data-j143="forget"]');
  const fileInput=panel.querySelector('input[type="file"]');
+ // Manual poster selection always overrides a slow or blocked official download.
+ let posterOperation=0,pendingPosterFetch=null;
  function setBusy(busy){
-  for(const control of [fetchButton,forgetButton,fileInput])control.disabled=busy;
+  for(const control of [fetchButton,forgetButton])control.disabled=busy;
+  fileInput.disabled=false;
  }
- async function runOperation(operation){
-  if(fetchButton.disabled)return;
+ async function runOperation(operation,{manual=false}={}){
+  if(fetchButton.disabled&&!manual)return;
+  if(manual&&pendingPosterFetch)pendingPosterFetch.abort();
+  const serial=++posterOperation;
   setBusy(true);
-  try{await operation()}
-  finally{setBusy(false)}
+  try{await operation(serial)}
+  finally{if(serial===posterOperation)setBusy(false)}
  }
  let zoom=1,dx=0,dy=0,objectUrl=null,loaded=false;
  const pointers=new Map();
@@ -80,7 +85,8 @@ function mount(){
   const rect=stage.getBoundingClientRect();
   zoomAt(zoom*factor,rect.left+rect.width/2,rect.top+rect.height/2);
  }
- async function showFile(file,notice){
+ async function showFile(file,notice,serial=posterOperation){
+  if(serial!==posterOperation)return;
   const priorHash=panel.dataset.j290Hash||'';
   // While switching image bytes, immediately hide previous-image pins.
   panel.removeAttribute('data-j290-hash');
@@ -89,8 +95,10 @@ function mount(){
   try{
    img.src=nextUrl;
    await img.decode();
+   if(serial!==posterOperation){URL.revokeObjectURL(nextUrl);return;}
   }catch{
    URL.revokeObjectURL(nextUrl);
+   if(serial!==posterOperation)return;
    if(objectUrl)img.src=objectUrl;
    else img.removeAttribute('src');
    if(priorHash){panel.dataset.j290Hash=priorHash;window.dispatchEvent(new CustomEvent('jura:poster:ready',{detail:{sha256:priorHash}}));}
@@ -104,9 +112,11 @@ function mount(){
   try{
    const digest=await crypto.subtle.digest('SHA-256',await file.arrayBuffer());
    const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+   if(serial!==posterOperation)return;
    panel.dataset.j290Hash=hash;
    window.dispatchEvent(new CustomEvent('jura:poster:ready',{detail:{sha256:hash}}));
   }catch{
+   if(serial!==posterOperation)return;
    panel.removeAttribute('data-j290-hash');
    window.dispatchEvent(new Event('jura:poster:clear'));
   }
@@ -150,24 +160,31 @@ function mount(){
   const type=/\.png$/i.test(name)?'image/png':/\.webp$/i.test(name)?'image/webp':'image/jpeg';
   return new File([blob],name.split('/').pop(),{type});
  }
- async function onFile(file){
+ async function onFile(file,serial=posterOperation){
+  if(serial!==posterOperation)return;
   if(file.type==='application/zip'||/\.zip$/i.test(file.name)){
    status.textContent='Opening the Rockstar map archive locally…';
    file=await imageFromZip(file);
   }
+  if(serial!==posterOperation)return;
   if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Use the official map ZIP, JPEG, PNG or WebP file.');
   if(file.size>80*1024*1024)throw Error('This image is over 80 MB. Use a smaller JPEG or WebP copy.');
-  await showFile(file,'Official map opened in this browser. Community pins are hidden on the poster view.');
-  try{await stored('put',file);status.textContent='Official map saved in this browser for future visits. No upload performed.'}
-  catch{status.textContent='Map open for this visit only; this browser could not save the image offline.'}
+  await showFile(file,'Official map opened in this browser. Community pins are hidden on the poster view.',serial);
+  if(serial!==posterOperation)return;
+  try{
+   await stored('put',file);
+   if(serial===posterOperation)status.textContent='Official map saved in this browser for future visits. No upload performed.';
+  }catch{
+   if(serial===posterOperation)status.textContent='Map open for this visit only; this browser could not save the image offline.';
+  }
  }
  fileInput.addEventListener('change',()=>{
   const file=fileInput.files?.[0];
   fileInput.value='';
-  if(file)runOperation(async()=>{
-   try{await onFile(file)}
-   catch(err){status.textContent=err.message}
-  });
+  if(file)runOperation(async serial=>{
+   try{await onFile(file,serial)}
+   catch(err){if(serial===posterOperation)status.textContent=err.message}
+  },{manual:true});
  });
  function updateViewUrl(open){
   const url=new URL(location.href);
@@ -176,25 +193,36 @@ function mount(){
   else return;
   if(url.href!==location.href)history.replaceState(history.state,'',url);
  }
- async function loadRockstarMap(){
+ async function loadRockstarMap(serial=posterOperation){
+   if(serial!==posterOperation)return;
    fetchButton.hidden=true;
    let file;
+   const controller=new AbortController();
+   pendingPosterFetch=controller;
    try{
-    status.textContent='Loading Rockstar’s official map…';
-    const response=await fetch(DIRECT_ZIP,{mode:'cors',credentials:'omit',signal:AbortSignal.timeout(90000)});
+    status.textContent='Loading Rockstar’s official map… You can open a downloaded image instead.';
+    const signal=typeof AbortSignal.any==='function'
+     ?AbortSignal.any([controller.signal,AbortSignal.timeout(90000)])
+     :controller.signal;
+    const response=await fetch(DIRECT_ZIP,{mode:'cors',credentials:'omit',signal});
     if(!response.ok)throw Error('Rockstar download was not available');
     const announced=Number(response.headers.get('content-length')||0);
     if(announced>90*1024*1024)throw Error('File size exceeds allowed limit');
     file=await response.blob();
     if(file.size>90*1024*1024)throw Error('File size exceeds allowed limit');
    }catch{
+    if(controller.signal.aborted||serial!==posterOperation)return;
     fetchButton.hidden=false;
     status.textContent='Rockstar did not allow automatic loading in this browser. Expand “Map not loading? Other options” to open the official download here.';
     panel.querySelector('.j143-advanced').open=true;
     return;
+   }finally{
+    if(pendingPosterFetch===controller)pendingPosterFetch=null;
    }
-   try{await onFile(new File([file],'Leonida_Map_Poster_Printable.zip',{type:'application/zip'}))}
+   if(controller.signal.aborted||serial!==posterOperation)return;
+   try{await onFile(new File([file],'Leonida_Map_Poster_Printable.zip',{type:'application/zip'}),serial)}
    catch(err){
+    if(serial!==posterOperation)return;
     fetchButton.hidden=false;
     status.textContent=err.message;
     panel.querySelector('.j143-advanced').open=true;
@@ -205,21 +233,25 @@ function mount(){
   panel.hidden=false;button.setAttribute('aria-expanded','true');
   button.setAttribute('aria-pressed','true');
   if(focus)panel.querySelector('[data-j143="close"]').focus();
-  if(!loaded)runOperation(async()=>{
+  if(!loaded)runOperation(async serial=>{
    try{
     const file=await stored('get');
+    if(serial!==posterOperation)return;
     if(file instanceof Blob){
-     await showFile(file,'Official map restored from this browser; no upload performed.');
+     await showFile(file,'Official map restored from this browser; no upload performed.',serial);
      return;
     }
    }catch{
     // An unavailable or unreadable cache should fall back to Rockstar.
    }
-   if(!panel.hidden)await loadRockstarMap();
+   if(serial===posterOperation&&!panel.hidden)await loadRockstarMap(serial);
   });
  }
  function closeView(){
   updateViewUrl(false);
+  if(pendingPosterFetch)pendingPosterFetch.abort();
+  ++posterOperation;
+  setBusy(false);
   panel.hidden=true;button.setAttribute('aria-expanded','false');button.setAttribute('aria-pressed','false');
   // Tell optional personal-poster tools to disarm pending placement on exit.
   window.dispatchEvent(new CustomEvent('jura:poster:visibility',{detail:{open:false}}));

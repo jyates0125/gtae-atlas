@@ -22,6 +22,9 @@ assert 'atlas290-official-landmarks.js?v=291' in html and 'atlas290-official-lan
 assert 'atlas290-official-landmarks.js' not in (root/'atlas.html').read_text()
 assert 'atlas290-official-landmarks.js' not in (root/'atlas-online.html').read_text()
 assert "crypto.subtle.digest('SHA-256'" in poster
+assert 'fileInput.disabled=false' in poster, 'Manual poster file input must remain usable during official download'
+assert 'if(manual&&pendingPosterFetch)pendingPosterFetch.abort()' in poster
+assert "if(serial!==posterOperation)return" in poster, 'Stale remote download must not overwrite a manually loaded poster'
 assert "jura:poster:ready" in poster and "jura:poster:clear" in poster
 assert "jura:poster:ready" in notebook and "jura:poster:clear" in notebook
 assert "input.fingerprint!==fingerprint" in notebook

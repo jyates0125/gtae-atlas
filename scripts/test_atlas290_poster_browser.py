@@ -33,7 +33,9 @@ try:
    context=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
    page=context.new_page()
    errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-   page.route('**/Leonida_Map_Poster_Printable.zip',lambda r:r.abort())
+   # Keep automatic Rockstar fetching unresolved: local manual choice must still win.
+   # No Rockstar network or map image is needed by this deterministic test.
+   page.route('**/Leonida_Map_Poster_Printable.zip',lambda route:None)
    page.goto(url,wait_until='domcontentloaded',timeout=60000)
    expect(page.locator('#j143-official-button')).to_be_visible(timeout=25000)
    page.locator('#j143-official-button').click()
