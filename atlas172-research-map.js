@@ -15,7 +15,15 @@ function init(){
   pins.textContent=on?'📍 Hide pins':'📍 Show pins';
   pins.setAttribute('aria-pressed',String(on));
  }
- controls.append(size,light,pins);page.append(controls);
+ const back=make('← Back','j172-back');
+ back.setAttribute('aria-label','Close expanded research map, close filters, or return to Leonida');
+ controls.append(back,size,light,pins);page.append(controls);
+ back.addEventListener('click',()=>{
+  if(page.classList.contains('j172-full-map')){size.click();return}
+  const rail=document.getElementById('rail');
+  if(rail?.classList.contains('open')){rail.classList.remove('open');return}
+  window.location.assign('./atlas-vi.html');
+ });
  syncPins();
  check?.addEventListener('change',syncPins);
  pins.addEventListener('click',()=>{

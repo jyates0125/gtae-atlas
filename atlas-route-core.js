@@ -23,17 +23,39 @@
   const candidates=places.length>max?places.slice().sort((a,b)=>distance(origin,a)-distance(origin,b)).slice(0,max):places.slice();
   const remaining=candidates.slice(),ordered=[];let previous=origin;
   while(remaining.length){let index=0,best=Infinity;for(let i=0;i<remaining.length;i++){const d=(previous.x-remaining[i].x)**2+(previous.y-remaining[i].y)**2;if(d<best){best=d;index=i;}}const next=remaining.splice(index,1)[0];ordered.push(next);previous=next;}
-  // Bounded open-path 2-opt improvement, with the chosen origin anchored.
+  const result=improveOrder(origin,ordered);
+  ordered.splice(0,ordered.length,...result.stops);
+  return{stops:ordered,omitted:places.length-ordered.length,units:Math.round(length(origin,ordered)),method:'Nearest neighbor + bounded 2-opt; straight-line distance'};
+ }
+ function improveOrder(origin,locations,finish=null){
+  if(!valid(origin)||!Array.isArray(locations)||locations.length>300||locations.some(p=>!valid(p))||(finish!==null&&!valid(finish)))throw Error('Valid origin, optional finish and up to 300 coordinates required');
+  const cost=items=>length(origin,finish?[...items,finish]:items);
+  const ordered=locations.slice(),baseline=cost(ordered);
+  // Bounded 2-opt improvement, with the chosen origin and optional finish anchored.
   for(let pass=0;pass<3;pass++){let improved=false;
    for(let i=0;i<ordered.length-1;i++)for(let j=i+1;j<ordered.length;j++){
-    const a=i?ordered[i-1]:origin,b=ordered[i],c=ordered[j],d=ordered[j+1];
+    const a=i?ordered[i-1]:origin,b=ordered[i],c=ordered[j],d=ordered[j+1]||finish;
     const before=distance(a,b)+(d?distance(c,d):0);
     const after=distance(a,c)+(d?distance(b,d):0);
     if(after+0.0001<before){for(let l=i,r=j;l<r;l++,r--)[ordered[l],ordered[r]]=[ordered[r],ordered[l]];improved=true;}
    }
    if(!improved)break;
   }
-  return{stops:ordered,omitted:places.length-ordered.length,units:Math.round(length(origin,ordered)),method:'Nearest neighbor + bounded 2-opt; straight-line distance'};
+
+  const optimized=cost(ordered);
+  // Return the previous order on a tie or any floating-point regression.
+  return optimized+0.0001<baseline?{stops:ordered,baseline,units:optimized,improved:true}:{stops:locations.slice(),baseline,units:baseline,improved:false};
  }
- return Object.freeze({MAX_STOPS,plan,distance,length});
+ // Preserve selected endpoints and compare against a nearest-next baseline.
+ function planEndpoints(locations,startId,finishId=null){
+  if(!Array.isArray(locations)||locations.length>MAX_STOPS||locations.some(p=>!valid(p)||typeof p.id!=='string'||!p.id))throw Error('Valid route stops required');
+  const ids=new Set(locations.map(p=>p.id));if(ids.size!==locations.length)throw Error('Duplicate route stops');
+  const start=locations.find(p=>p.id===startId),finish=finishId===null||finishId===''?null:locations.find(p=>p.id===finishId);
+  if(!start||(finishId&&(!finish||finish.id===start.id)))throw Error('Choose distinct available route endpoints');
+  const pending=locations.filter(p=>p.id!==startId&&p.id!==finish?.id),baseline=[];let from=start;
+  while(pending.length){let next=0;for(let i=1;i<pending.length;i++)if(distance(from,pending[i])<distance(from,pending[next]))next=i;from=pending.splice(next,1)[0];baseline.push(from)}
+  const result=improveOrder(start,baseline,finish);
+  return {...result,stops:[start,...result.stops,...(finish?[finish]:[])]};
+ }
+ return Object.freeze({MAX_STOPS,plan,distance,length,improveOrder,planEndpoints});
 });

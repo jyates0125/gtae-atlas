@@ -23,7 +23,18 @@ let saved={scoped:[],route:[],awards:[]};
 try{const s=JSON.parse(localStorage.getItem(storage)||'{}');if(s&&typeof s==='object'){
  for(const k of ['scoped','route','awards'])if(Array.isArray(s[k]))saved[k]=s[k].filter(v=>typeof v==='string').slice(0,100);
 }}catch(_){}
-const persist=()=>{try{localStorage.setItem(storage,JSON.stringify({schema:1,updatedAt:new Date().toISOString(),...saved}))}catch(_){}};
+const persist=()=>{try{localStorage.setItem(storage,JSON.stringify({schema:1,updatedAt:new Date().toISOString(),...saved}));return true}catch(_){return false}};
+const advancedRoutes=id!=='cayo-perico';
+if(advancedRoutes){const known=new Set(points.map(p=>p.id));saved.route=[...new Set(saved.route.filter(k=>known.has(k)))];}
+function closestSequence(ids){
+ const order=[...ids];if(order.length<3)return order;
+ const positions=new Map(points.map(p=>[p.id,p]));
+ const result=[order.shift()];
+ while(order.length){const from=positions.get(result[result.length-1]);let nearest=0,best=Infinity;
+  for(let i=0;i<order.length;i++){const to=positions.get(order[i]);const d=(from.x-to.x)**2*1100**2+(from.y-to.y)**2*660**2;if(d<best){best=d;nearest=i;}}
+  result.push(order.splice(nearest,1)[0]);
+ }return result;
+}
 const el=(tag,cls,content)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(content!==undefined)n.textContent=content;return n;};
 const sec=el('section','j167-focus');sec.id='j167-heist-map';sec.setAttribute('aria-labelledby','j167-title');
 const head=el('header','j167-head');
@@ -86,7 +97,29 @@ list.append(note);
 const itemList=el('div','j167-items');list.append(itemList);
 const side=el('aside','j167-side');const routeTitle=el('h3','','My planning route');side.append(routeTitle);
 const routeList=el('ol','j167-route');side.append(routeList);
-const clearRoute=btn('Clear route','j167-secondary',()=>{saved.route=[];persist();paint()});side.append(clearRoute);
+const routeStatus=el('p','j167-note j227-route-status','');routeStatus.setAttribute('role','status');
+const routeTools=el('div','j227-route-tools');
+const orderRoute=btn('Nearest next','j167-secondary',()=>{
+ if(saved.route.length<3)return;
+ saved.route=closestSequence(saved.route);commitRoute('Reordered by schematic distance from your first stop.');
+});
+const reverseRoute=btn('Reverse order','j167-secondary',()=>{
+ if(saved.route.length<2)return;saved.route.reverse();commitRoute('Planning order reversed.');
+});
+const clearRoute=btn('Clear route','j167-secondary',()=>{
+ if(advancedRoutes&&saved.route.length&&!window.confirm('Clear this mission planning route? Scoped points, challenges and notes are kept.'))return;
+ saved.route=[];if(advancedRoutes)commitRoute('Planning route cleared. Other progress unchanged.');else{persist();paint()}
+});
+function commitRoute(message,pointId,action){
+ const ok=persist();paint();
+ if(current){const p=points.find(x=>x.id===current);if(p)detailFor(p)}
+ routeStatus.textContent=message+(ok?' Saved on this device.':' Browser storage unavailable; this order is not saved.');
+ if(pointId&&action){const row=[...routeList.querySelectorAll('[data-route-point]')].find(x=>x.dataset.routePoint===pointId);const control=row?.querySelector('[data-route-action="'+action+'"]');if(control&&!control.disabled)control.focus();else row?.querySelector('[data-route-action="remove"]')?.focus();}
+}
+if(advancedRoutes){
+ const help=el('p','j167-note','Set your starting point, move stops or sort by nearest next on this illustrative diagram. Not a verified road or walking route.');
+ routeTools.append(orderRoute,reverseRoute,clearRoute);side.append(help,routeTools,routeStatus);
+}else side.append(clearRoute);
 const challengeHeading=el('h3','','Challenges & progress');side.append(challengeHeading);
 const challengeText=el('p','j167-note','Personal tracking only. Career Progress tiers and exact Elite conditions must be checked in the current game menu; this is not linked to Rockstar progress.');
 side.append(challengeText);
@@ -225,8 +258,27 @@ function paint(){
  if(!visible.length)itemList.append(el('p','j167-note','No points match those filters.'));
  routeList.replaceChildren();
  for(const [i,pointid] of saved.route.entries()){const p=points.find(x=>x.id===pointid);if(!p)continue;
-  const row=el('li','',p.name);const b=btn('×','j167-route-remove',()=>{saved.route=saved.route.filter(x=>x!==p.id);persist();paint()});b.setAttribute('aria-label','Remove '+p.name+' from route');row.append(b);routeList.append(row)}
+  const row=el('li',advancedRoutes?'j227-route-row':'',advancedRoutes?undefined:p.name);
+  if(advancedRoutes){
+   row.dataset.routePoint=p.id;
+   row.append(el('span','j227-route-name',p.name));
+   const group=el('div','j227-route-actions');
+   const control=(label,action,disabled,handler)=>{
+    const b=btn(label,'j227-route-button',handler);b.dataset.routeAction=action;b.disabled=disabled;
+    b.setAttribute('aria-label',({start:'Set as start',up:'Move earlier',down:'Move later',remove:'Remove from route'}[action])+' · '+p.name);
+    group.append(b);return b;
+   };
+   control(i===0?'Start ✓':'Start','start',i===0,()=>{saved.route.splice(i,1);saved.route.unshift(p.id);commitRoute('Starting point updated.',p.id,'start')});
+   control('↑','up',i===0,()=>{[saved.route[i-1],saved.route[i]]=[saved.route[i],saved.route[i-1]];commitRoute('Stop moved earlier.',p.id,'up')});
+   control('↓','down',i===saved.route.length-1,()=>{[saved.route[i+1],saved.route[i]]=[saved.route[i],saved.route[i+1]];commitRoute('Stop moved later.',p.id,'down')});
+   control('×','remove',false,()=>{saved.route=saved.route.filter(k=>k!==p.id);commitRoute('Stop removed.');});
+   row.append(group);
+  }else{
+   const b=btn('×','j167-route-remove',()=>{saved.route=saved.route.filter(x=>x!==p.id);persist();paint()});b.setAttribute('aria-label','Remove '+p.name+' from route');row.append(b);
+  }
+  routeList.append(row)}
  if(!saved.route.length)routeList.append(el('li','j167-route-empty','Select a marker to create your route.'));
+ if(advancedRoutes){orderRoute.disabled=saved.route.length<3;reverseRoute.disabled=saved.route.length<2;clearRoute.disabled=!saved.route.length;}
 }
 search.addEventListener('input',paint);
 const juraSource=new Image();

@@ -48,12 +48,24 @@ try:
    assert page.evaluate("localStorage.getItem('jura101-research-pins-visible')")=='false'
    page.locator('#zoomIn').click()
    assert page.evaluate("window.TeamJuraResearch95.camera().z")>1
+   # Verify the phone toolbar never blocks native map controls.
+   assert page.locator('#j172-back').is_visible()
+   if width==390:
+    assert page.locator('#home').evaluate("""e => {
+     const r=e.getBoundingClientRect(), t=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
+     return t===e || e.contains(t);
+    }"""),'Yanis toolbar intercepts Reset map button'
    page.locator('#home').click()
    assert page.evaluate('window.TeamJuraResearch95.camera()')=={'x':-4000,'y':2000,'z':1}
    page.locator('#j172-bright').click()
    assert 'brightness(1.12)' in page.locator('#map').evaluate('(e)=>getComputedStyle(e).filter')
    page.locator('#j172-bright').click()
    assert page.locator('#map').evaluate('(e)=>getComputedStyle(e).filter')=='none'
+   page.locator('#j172-expand').click()
+   assert 'j172-full-map' in page.locator('#maparea').get_attribute('class')
+   # The explicit Back control must exit expanded mode without navigation.
+   page.locator('#j172-back').click()
+   assert 'j172-full-map' not in page.locator('#maparea').get_attribute('class')
    page.locator('#j172-expand').click()
    assert 'j172-full-map' in page.locator('#maparea').get_attribute('class')
    page.keyboard.press('Escape')

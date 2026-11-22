@@ -61,3 +61,5 @@
 .directory-card .world-copy .world-feature-summary{font-size:12px;line-height:1.43;color:#ddc7e7;margin:10px 0 6px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
 .directory-card .world-copy .world-coverage-note{font-size:11px;line-height:1.45;color:#dcc9de;margin:4px 0 0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
 .directory-card .world-copy{padding-bottom:16px}
+
+.j277-offline{margin:12px 0;padding:14px;min-width:0;overflow-wrap:anywhere}.j277-offline h3{color:var(--gold)}.j277-offline button{min-height:44px;max-width:100%;white-space:normal}.j277-offline p{line-height:1.5}

@@ -26,6 +26,25 @@ function init(){
  close.textContent='Close details ×';
  close.setAttribute('aria-label','Close selected map marker details');
  close.title='Return to the interactive map';
+ // Persistent mobile escape hatch: the canvas consumes touch gestures, so
+ // users must never need to swipe to the page bottom to leave the workspace.
+ const back=document.createElement('button');
+ back.type='button';back.id='j220-map-back';back.className='j220-map-back';
+ back.textContent='← Back';back.setAttribute('aria-label','Back out of the GTA VI map or close the current panel');
+ document.body.append(back);
+ back.addEventListener('click',()=>{
+  const siteDrawer=document.getElementById('j132-nav-drawer');
+  if(siteDrawer&&!siteDrawer.hidden){siteDrawer.querySelector('.j132-close')?.click();return}
+  if(!card.classList.contains('hidden')){close.click();return}
+  const nav=document.getElementById('juraNavPanel');
+  if(nav&&!nav.hidden){document.getElementById('juraCloseNav')?.click();return}
+  const hub=document.getElementById('j217-vi-hub');
+  if(hub?.open){hub.open=false;return}
+  const official=document.getElementById('j143-official-button');
+  if(official?.getAttribute('aria-expanded')==='true'){official.click();return}
+  // Use the real Atlas directory, never rely on a browser gesture to escape.
+  window.location.assign('./maps.html');
+ });
  const isOpen=()=>!card.classList.contains('hidden');
  const signature=()=>[
   document.getElementById('selectedName')?.textContent||'',

@@ -1,114 +1,84 @@
-/* Team Jura Atlas 9.9 · original interactive WebGL garage concept.
- * The geometry is our own generic car silhouette, NOT a GTA vehicle model.
- * No downloaded meshes, Rockstar models, telemetry, external libraries, or save-key changes.
+/* Elario 2150 Forge · original interactive vehicle concepts.
+ * NOT a GTA vehicle model. No game meshes, tracking or external libraries.
  */
 (function(root){'use strict';
-let gl=null, canvas=null, section=null, program=null, buffer=null, count=0, yaw=.5, pitch=.32, distance=6.6, active=false,raf=0,drag=null,paint='#586478';
-const $=id=>document.getElementById(id);
-function hexColor(hex){
- const matched=/^#([0-9a-f]{6})$/i.exec(hex||'');
- return matched?[0,2,4].map(i=>parseInt(matched[1].slice(i,i+2),16)/255):[.38,.42,.53];
-}
-function tint(color,shade){return color.map(c=>Math.max(0,Math.min(1,c*shade)))}
-function mesh(color,kind){
- const data=[];const base=hexColor(color);
- function tri(p,q,r,c){for(const v of [p,q,r])data.push(v[0],v[1],v[2],c[0],c[1],c[2]);}
- function face(a,b,c,d,col){tri(a,b,c,col);tri(a,c,d,col)}
- function cuboid(x,y,z,w,h,l,c){
-  const x0=x-w/2,x1=x+w/2,y0=y-h/2,y1=y+h/2,z0=z-l/2,z1=z+l/2;
-  face([x0,y1,z0],[x1,y1,z0],[x1,y1,z1],[x0,y1,z1],tint(c,1.19));
-  face([x0,y0,z1],[x1,y0,z1],[x1,y0,z0],[x0,y0,z0],tint(c,.57));
-  face([x1,y0,z0],[x1,y0,z1],[x1,y1,z1],[x1,y1,z0],tint(c,.8));
-  face([x0,y0,z1],[x0,y0,z0],[x0,y1,z0],[x0,y1,z1],tint(c,.66));
-  face([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],tint(c,.92));
-  face([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],tint(c,.82));
+let current=null;
+function mount(target,opts={}){
+ if(!target)return;
+ current?.dispose();current=null;
+ const forge=root.JuraForge;
+ const E=(tag,str)=>{const e=document.createElement(tag);if(str!==undefined)e.textContent=str;return e};
+ target.replaceChildren();target.classList.add('j256-forge');
+ const title=E('strong','ELARIO 2150 · FORGE SHOWROOM');
+ const study=forge?.modelProfile?.(opts.type,opts.model);
+ const note=E('small',study?'Elario original model-targeted concept · '+study.label+'. Approximate visual study; not a verified likeness, exact game mesh or modification catalog.':'Original class-based design for '+String(opts.name||'vehicle')+'. Not an exact game model or a verified modification catalogue.');
+ const rights=E('p','Original Elario concept — not a scanned or official model. Not an exact game mesh or a verified in-game customization.');rights.className='j256-rights';
+ target.dataset.forgeFidelity=study?'model-study':'class-concept';
+ const wrap=E('div');wrap.className='j99-3d-stage j256-stage';
+ const canvas=E('canvas');canvas.tabIndex=0;canvas.setAttribute('aria-label','Original 3D vehicle concept. Arrow keys rotate; plus and minus zoom. Drag to rotate.');wrap.append(canvas);
+ const hud=E('div');hud.className='j256-hud';hud.setAttribute('aria-hidden','true');hud.textContent='FORGE / LIVE CONCEPT';wrap.append(hud);
+ const controls=E('div');controls.className='j99-3d-controls';
+ const button=(label,fn)=>{const b=E('button',label);b.type='button';b.onclick=fn;return b};
+ const styling=E('details');styling.className='j256-style';styling.open=true;styling.append(E('summary','Design lab · concept styling'));
+ const fields=E('div');fields.className='j256-fields';styling.append(fields);
+ let design=forge?.normalize(opts.design)||{},paint=opts.paint||'#586478',gl=null,program=null,buffer=null,count=0,dead=false,raf=0,observer=null,drag=null;
+ let yaw=.7,pitch=.30,distance=7.9,profile=forge?.classify(opts.type,opts.model)||'touring';
+ let environment=forge?.resolveTheme?.(profile,design.environment)||forge?.defaultTheme?.(profile)||'signature';
+ target.dataset.forgeClass=profile;target.dataset.forgeStatus='pending';target.dataset.forgeEnvironment=environment;
+ function control(label,element){const l=E('label',label);l.append(element);fields.append(l);return element}
+ function select(label,values,key){const s=E('select');s.dataset.forgeControl=key;for(const [v,l] of values){const o=E('option',l);o.value=v;s.append(o)}s.value=design[key];s.onchange=()=>change({[key]:s.value});control(label,s);return s}
+ function change(patch){if(!forge)return;design=forge.normalize({...design,...patch});opts.onDesign?.({...design});rebuild()}
+ if(forge?.themes){
+  const scene=E('select');scene.dataset.forgeControl='environment';
+  const auto=E('option','Automatic · vehicle class');auto.value='auto';scene.append(auto);
+  for(const [key,theme] of Object.entries(forge.themes)){const o=E('option',theme.label);o.value=key;scene.append(o)}
+  scene.value=design.environment||'auto';scene.onchange=()=>{design=forge.normalize({...design,environment:scene.value});environment=forge.resolveTheme(profile,design.environment);target.dataset.forgeEnvironment=environment;hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();opts.onDesign?.({...design});rebuild()};control('Showroom environment',scene);
+  hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();
  }
- function wheel(cx,cy,cz){
-  const N=20,r=.36,half=.17;
-  const tread=[.11,.12,.15],rim=[.62,.66,.74],hub=[.23,.28,.36];
-  for(let k=0;k<N;k++){let a=k*2*Math.PI/N,b=(k+1)*2*Math.PI/N;
-    const ya=cy+Math.cos(a)*r,za=cz+Math.sin(a)*r,yb=cy+Math.cos(b)*r,zb=cz+Math.sin(b)*r;
-    face([cx-half,ya,za],[cx-half,yb,zb],[cx+half,yb,zb],[cx+half,ya,za],tread);
-    for(const side of [-half,half]){
-      const x=cx+side;
-      tri([x,cy,cz],[x,ya,za],[x,yb,zb],tread);
-      const rr=.245;
-      tri([x+(side>0?.003:-.003),cy,cz],[x+(side>0?.003:-.003),cy+Math.cos(a)*rr,cz+Math.sin(a)*rr],[x+(side>0?.003:-.003),cy+Math.cos(b)*rr,cz+Math.sin(b)*rr],rim);
-    }
-  }
-  cuboid(cx+(cx>0?.184:-.184),cy,cz,.01,.085,.085,hub);
- }
- const truck=/truck|pickup|commercial|van/i.test(kind||'');
- const sport=/super|sport|coupe/i.test(kind||'');
- const bodyLength=truck?4.45:sport?4.0:4.25;
- const bodyHeight=sport?.59:.8;
- // Raised dark turntable gives depth without representing any copyrighted in-game garage.
- cuboid(0,-.22,0,4.4,.12,5.95,[.16,.095,.23]);
- cuboid(0,-.34,0,4.75,.09,6.25,[.35,.22,.38]);
- // Forward is +Z
- cuboid(0,.67,0,2.04,bodyHeight,bodyLength,base);
- const windshield=[.16,.25,.31],glass=[.19,.29,.37];
- if(truck){
-   cuboid(0,1.31,-.62,1.83,.77,1.78,tint(base,.9));
-   cuboid(0,1.33,.31,1.86,.53,.24,glass);
- }else{
-   cuboid(0,sport?1.14:1.29,-.40,1.80,sport?.50:.67,2.38,tint(base,.88));
-   cuboid(0,sport?1.15:1.33,.66,1.65,sport?.35:.46,.13,windshield);
- }
- // Color-coded lamps; never a purported exact vehicle render.
- cuboid(-.73,.77,bodyLength/2+.018,.36,.17,.07,[.94,.91,.7]);
- cuboid(.73,.77,bodyLength/2+.018,.36,.17,.07,[.94,.91,.7]);
- cuboid(-.73,.77,-bodyLength/2-.018,.36,.17,.07,[.92,.18,.21]);
- cuboid(.73,.77,-bodyLength/2-.018,.36,.17,.07,[.92,.18,.21]);
- cuboid(0,.32,bodyLength/2,.95,.16,.15,[.1,.11,.13]);
- cuboid(0,.32,-bodyLength/2,.95,.16,.15,[.1,.11,.13]);
- for(const x of [-1.0,1.0])for(const z of [-1.22,1.22])wheel(x,.30,z);
- return new Float32Array(data);
-}
-function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s)||'3D shader unavailable');return s}
-function initGL(){
- if(gl)return true;
- try{
-  gl=canvas.getContext('webgl',{alpha:false,antialias:true,preserveDrawingBuffer:false});
-  if(!gl)return false;
-  const vertex='attribute vec3 aPos; attribute vec3 aColor; varying vec3 vColor; uniform float uYaw,uPitch,uDist,uAspect; void main(){float cy=cos(uYaw),sy=sin(uYaw); vec3 p=vec3(cy*aPos.x+sy*aPos.z,aPos.y,-sy*aPos.x+cy*aPos.z); float cp=cos(uPitch),sp=sin(uPitch); p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z); p.z-=uDist; float f=2.35; float z=-p.z; gl_Position=vec4(p.x*f/uAspect,p.y*f,((z-0.1)/(25.0-0.1))*z,z);vColor=aColor;}';
-  const fragment='precision mediump float; varying vec3 vColor; void main(){gl_FragColor=vec4(vColor,1.0);}';
-  program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vertex));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fragment));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
+ const finish=select('Surface finish',[['metallic','Metallic'],['satin','Satin'],['stealth','Stealth']], 'finish');
+ const accent=E('input');accent.type='color';accent.value=design.accent||'#eab56a';accent.dataset.forgeControl='accent';accent.oninput=()=>change({accent:accent.value});control('Accent RGB',accent);
+ const road=['sport','touring','utility'].includes(profile);
+ if(road)select('Ride height',[['street','Street'],['low','Low'],['raised','Raised']], 'stance');
+ if(road||profile==='marine')select(road?'Aero styling':'Deck styling',[['clean','Clean'],['sport','Sport'],['track','Track']], 'kit');
+ const lights=E('input');lights.type='checkbox';lights.checked=design.lights!==false;lights.dataset.forgeControl='lights';lights.onchange=()=>change({lights:lights.checked});control('Concept lighting',lights);
+ const changeCamera=(a,b,d=7.9)=>{yaw=a;pitch=b;distance=d;render()};
+ const zoom=d=>{distance=Math.max(5.9,Math.min(14,distance+d));render()};
+ controls.append(button('3/4 view',()=>changeCamera(.7,.30)),button('Front',()=>changeCamera(0,.16)),button('Side',()=>changeCamera(Math.PI/2,.16)),button('Top',()=>changeCamera(0,1.48,9.3)),button('＋ Zoom',()=>zoom(-.6)),button('− Zoom',()=>zoom(.6)));
+ const spin=button('Auto rotate',()=>{if(raf){cancelAnimationFrame(raf);raf=0;spin.textContent='Auto rotate';spin.setAttribute('aria-pressed','false');return}
+  spin.textContent='Stop rotation';spin.setAttribute('aria-pressed','true');let previous=0;
+  function tick(t){if(dead||!target.isConnected){instance.dispose();return}if(previous)yaw+=Math.min(40,t-previous)*.00035;previous=t;render();raf=requestAnimationFrame(tick)}
+  raf=requestAnimationFrame(tick);
+ });spin.setAttribute('aria-pressed','false');controls.append(spin);
+ target.append(title,note,rights,wrap,controls,styling);
+ function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
+ function init(){
+  gl=canvas.getContext('webgl',{alpha:false,antialias:true,preserveDrawingBuffer:false});if(!gl)throw Error('WebGL unavailable');
+  const vertex='attribute vec3 aPos,aColor;varying vec3 vColor;uniform float uYaw,uPitch,uDist,uAspect;void main(){float cy=cos(uYaw),sy=sin(uYaw),cp=cos(uPitch),sp=sin(uPitch);vec3 p=vec3(aPos.x,aPos.y-.42,aPos.z);p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);float z=uDist-p.z;float f=2.35*min(1.0,uAspect);gl_Position=vec4(p.x*f/uAspect,p.y*f,1.008032*z-.2008032,z);vColor=aColor;}';
+  const fragment='precision mediump float;varying vec3 vColor;void main(){gl_FragColor=vec4(vColor,1.0);}';
+  program=gl.createProgram();const vs=shader(gl.VERTEX_SHADER,vertex),ss=shader(gl.FRAGMENT_SHADER,fragment);gl.attachShader(program,vs);gl.attachShader(program,ss);gl.linkProgram(program);gl.deleteShader(vs);gl.deleteShader(ss);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
   buffer=gl.createBuffer();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
-  return true;
- }catch(e){console.warn('Original 3D preview disabled:',e.message);return false}
+ }
+ function render(){
+  if(dead||!gl||!program)return;
+  const dpr=Math.min(root.devicePixelRatio||1,1.75),w=Math.max(1,Math.round(canvas.clientWidth*dpr)),h=Math.max(1,Math.round(canvas.clientHeight*dpr));
+  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}
+  gl.viewport(0,0,w,h);gl.clearColor(...(forge?.themes?.[environment]?.background||[.057,.031,.095]),1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+  for(const [name,offset] of [['aPos',0],['aColor',12]]){const k=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(k);gl.vertexAttribPointer(k,3,gl.FLOAT,false,24,offset)}
+  for(const [name,value] of [['uYaw',yaw],['uPitch',pitch],['uDist',distance],['uAspect',w/h]])gl.uniform1f(gl.getUniformLocation(program,name),value);
+  gl.drawArrays(gl.TRIANGLES,0,count);
+ }
+ function rebuild(){if(!gl||dead||!forge)return;const model=forge.build(opts.type,opts.model,paint,design,environment);count=model.vertices.length/6;target.dataset.forgeTriangles=String(count/3);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,model.vertices,gl.STATIC_DRAW);render()}
+ function dispose(){if(dead)return;dead=true;if(raf)cancelAnimationFrame(raf);raf=0;observer?.disconnect();if(gl){if(buffer)gl.deleteBuffer(buffer);if(program)gl.deleteProgram(program);gl.getExtension('WEBGL_lose_context')?.loseContext()}gl=null}
+ const instance={dispose,paint(color){paint=color;rebuild()},getDesign(){return {...design}},reset(){changeCamera(.7,.30)}};
+ current=instance;
+ try{if(!forge)throw Error('Forge module unavailable');init();rebuild();target.dataset.forgeStatus='ready';if(root.ResizeObserver){observer=new ResizeObserver(render);observer.observe(canvas)}}catch(e){target.dataset.forgeStatus='fallback';wrap.hidden=true;controls.hidden=true;note.textContent='WebGL preview unavailable on this device. Reference image and private design settings remain usable.'}
+ canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();if(dead)return;target.dataset.forgeStatus='fallback';wrap.hidden=true;controls.hidden=true;note.textContent='3D context lost. Reopen this vehicle to restore the preview.';if(raf)cancelAnimationFrame(raf);raf=0});
+ canvas.addEventListener('pointerdown',e=>{drag={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture?.(e.pointerId)});
+ canvas.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;yaw+=(e.clientX-drag.x)*.012;pitch=Math.max(-.25,Math.min(1.48,pitch+(e.clientY-drag.y)*.009));drag.x=e.clientX;drag.y=e.clientY;render()});
+ for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,()=>drag=null);
+ canvas.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY>0?.45:-.45)},{passive:false});
+ canvas.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')yaw-=.18;else if(e.key==='ArrowRight')yaw+=.18;else if(e.key==='ArrowUp')pitch=Math.min(1.48,pitch+.1);else if(e.key==='ArrowDown')pitch=Math.max(-.25,pitch-.1);else if(e.key==='+'||e.key==='=')zoom(-.5);else if(e.key==='-')zoom(.5);else return;e.preventDefault();render()});
+ return instance;
 }
-function render(){
- if(!gl||!active)return;
- const dpr=Math.min(window.devicePixelRatio||1,2),w=Math.max(1,Math.round(canvas.clientWidth*dpr)),h=Math.max(1,Math.round(canvas.clientHeight*dpr));
- if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}
- gl.viewport(0,0,w,h);gl.clearColor(.07,.036,.12,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
- gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
- for(const [name,size,offset]of [['aPos',3,0],['aColor',3,12]]){const loc=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,24,offset)}
- for(const [name,val]of [['uYaw',yaw],['uPitch',pitch],['uDist',distance],['uAspect',w/h]])gl.uniform1f(gl.getUniformLocation(program,name),val);
- gl.drawArrays(gl.TRIANGLES,0,count);
-}
-function rebuild(kind){if(!gl)return;const data=mesh(paint,kind);count=data.length/6;gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);render()}
-function mount(target,opts){
- if(!target||!opts)return;
- active=false;cancelAnimationFrame(raf);
- section=target;section.replaceChildren();const title=document.createElement('strong');title.textContent='3D CONCEPT SHOWROOM · ORIGINAL TEAM JURA GEOMETRY';
- const note=document.createElement('small');note.textContent='Interactive 3D shape for paint visualization; not a scanned or official model of '+String(opts.name||'the vehicle')+'. The archive image above identifies the actual vehicle.';
- const canvasWrap=document.createElement('div');canvasWrap.className='j99-3d-stage';canvas=document.createElement('canvas');canvas.setAttribute('aria-label','Interactive original car concept. Drag to rotate; use the zoom buttons.');canvas.width=520;canvas.height=270;canvasWrap.append(canvas);
- const controls=document.createElement('div');controls.className='j99-3d-controls';
- const left=document.createElement('button');left.type='button';left.textContent='⟲ Rotate';
- const zoomIn=document.createElement('button');zoomIn.type='button';zoomIn.textContent='＋ Zoom';
- const zoomOut=document.createElement('button');zoomOut.type='button';zoomOut.textContent='− Zoom';
- controls.append(left,zoomIn,zoomOut);
- section.append(title,note,canvasWrap,controls);
- gl=null;program=null;buffer=null;const ok=initGL();if(!ok){canvasWrap.hidden=true;controls.hidden=true;note.textContent='WebGL 3D is unavailable on this device. Your genuine vehicle-reference image above remains available.';return}
- paint=opts.paint||'#586478';yaw=.55;pitch=.32;distance=6.6;active=true;
- const kind=opts.type||'';section.dataset.profile=kind;rebuild(kind);
- let last=null;canvas.addEventListener('pointerdown',e=>{last={x:e.clientX,y:e.clientY,id:e.pointerId};canvas.setPointerCapture?.(e.pointerId)});
- canvas.addEventListener('pointermove',e=>{if(!last||last.id!==e.pointerId)return;yaw+=(e.clientX-last.x)*.010;pitch=Math.max(-.12,Math.min(1.05,pitch+(e.clientY-last.y)*.008));last.x=e.clientX;last.y=e.clientY;render()});
- for(const n of ['pointerup','pointercancel'])canvas.addEventListener(n,()=>{last=null});
- canvas.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(4.9,Math.min(11,distance+(e.deltaY>0?.45:-.45)));render()},{passive:false});
- left.onclick=()=>{yaw+=Math.PI/4;render()};zoomIn.onclick=()=>{distance=Math.max(4.9,distance-.6);render()};zoomOut.onclick=()=>{distance=Math.min(11,distance+.6);render()};
-}
-root.TeamJuraGarage3D=Object.freeze({mount,paint(color){paint=color;rebuild(section?.dataset.profile||'')}});
+root.TeamJuraGarage3D=Object.freeze({mount,paint(c){current?.paint(c)},reset(){current?.reset()},dispose(){current?.dispose();current=null},getDesign(){return current?.getDesign()}});
 })(window);

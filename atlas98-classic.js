@@ -5,9 +5,9 @@
 const worlds={
  iii:{name:'GTA III · Liberty City',desc:'The original 3D-era Liberty City. Track personal map notes and collections.',art:'atlas106-gta3.svg',map:'./art/atlas128-gta3-radar.png',sets:['Hidden packages','Unique stunt jumps','Rampages','Missions','Safehouses']},
  vc:{name:'GTA Vice City',desc:'Ocean Beach, Downtown, Little Havana and the classic neon coastline.',art:'atlas106-vice-city.svg',map:'./art/atlas128-vice-city-radar.png',sets:['Hidden packages','Rampages','Stunt jumps','Properties','Missions']},
- vcs:{name:'Vice City Stories',desc:'Explore the earlier Vice City era with your personal research notes.',art:'atlas106-vcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/ViceCity-GTAVCS-map.png',sets:['Red balloons','Rampages','Empire sites','Stunt jumps','Missions','Safehouses']},
- lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-map.jpg',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
- ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'atlas106-chinatown-wars.svg',map:'https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg',sets:['Security cameras','Rampages','Unique jumps','Collectibles','Missions','Safehouses','Drug dealer locations']},
+ vcs:{name:'Vice City Stories',desc:'Explore the earlier Vice City era with your personal research notes.',art:'atlas106-vcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/ViceCity-GTAVCS-map.png',sets:['Red balloons','Rampages','Empire sites','Stunt jumps','Missions','Safehouses','Rampages (PS2)','Stunt jumps (PS2)']},
+ lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',map:'https://wikiassets.net/gta-vi-1c4e11/images/5019685d9fa05493b4cea714ca968bf1.webp',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
+ ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'atlas106-chinatown-wars.svg',map:'https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg',sets:['Security cameras','Rampages','Unique jumps','Collectibles','Missions','Safehouses','Drug dealer locations','Rampages (PSP)','Riding Shotguns','Riding Shotguns (PSP)','Lions of Fo']},
  tlad:{name:'The Lost and Damned',desc:'Liberty City motorcycle-club episode; notes stay separate from GTA IV.',art:'atlas106-lost-damned.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Gang wars','Motorcycle missions','Races','Activities']},
  tbogt:{name:'The Ballad of Gay Tony',desc:'Liberty City nightlife episode; nightclub missions and activities.',art:'atlas106-gay-tony.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Drug wars','Base jumps','Nightclub missions','Activities']}
 };
@@ -20,7 +20,7 @@ const mapAlternates={
  ],
  lcs:[
   {url:'https://www.igrandtheftauto.com/content/images/1932-gtalcs-full-map.jpg',name:'Liberty City Stories · independent fan archive',page:'https://www.igrandtheftauto.com/gtalcs/images/1932-gtalcs-full-map'},
-  {url:'https://wikiassets.net/gta-vi-1c4e11/images/5019685d9fa05493b4cea714ca968bf1.webp',name:'Liberty City Stories · wiki image reference',page:'https://gta.fandom.com/wiki/File:LibertyCity-GTALCS-MapFull-ExceptUpstate.png'}
+  {url:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-map.jpg',name:'Liberty City Stories · previous original reference',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTALCS-map.jpg'}
  ],
  ctw:[
   {url:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTACW-map.png',name:'Chinatown Wars · GTASeries.com neighborhood map adapted from GTA IV artwork',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTACW-map.png'},  
@@ -31,7 +31,7 @@ const mapOrigins={
  iii:{name:'GTA III radar · XiaoNiaoa/noiseXYZ (game art: Rockstar)',page:'https://github.com/XiaoNiaoa/vc_lc'},
  vc:{name:'Vice City radar · XiaoNiaoa/noiseXYZ (game art: Rockstar)',page:'https://github.com/XiaoNiaoa/vc_lc'},
  vcs:{name:'Vice City Stories · original game-map reference (Rockstar)',page:'https://www.grandtheftwiki.com/File:ViceCity-GTAVCS-map.png'},
- lcs:{name:'Liberty City Stories · game map (© Rockstar; Grand Theft Wiki archive)',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTALCS-map.jpg'}, 
+ lcs:{name:'Liberty City Stories · clean in-game road image (Rockstar / GTA Wiki reference)',page:'https://grandtheftauto6wiki.com/wiki/liberty-city-3d-universe/'}, 
  ctw:{name:'Chinatown Wars · original game-era map (Rockstar), archived by iGrandTheftAuto',page:'https://www.igrandtheftauto.com/gtacw/setting'},  
  tlad:{name:'GTA IV map · GTADB.ORG contributors, CC BY 4.0 (game world: Rockstar)',page:'https://github.com/rolux/gtadb.org/blob/main/LICENSE-DATA'},
  tbogt:{name:'GTA IV map · GTADB.ORG contributors, CC BY 4.0 (game world: Rockstar)',page:'https://github.com/rolux/gtadb.org/blob/main/LICENSE-DATA'}
@@ -51,9 +51,23 @@ const alias={'vice-city':'vc','gta-iii':'iii','vice-city-stories':'vcs','liberty
 const $=q=>document.querySelector(q),E=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
 const params=new URLSearchParams(location.search),raw=(params.get('game')||params.get('world')||'iii').toLowerCase();const id=worlds[raw]?raw:(alias[raw]||'iii'),w=worlds[id];
 const key='team-jura-atlas98-classic-'+id+'-v1';const blank=()=>({schema:'team-jura-atlas98-classic-v1',world:id,markers:[],completed:[],background:null});
+function mergeNotebook(existing,incoming,world,sets,collections){
+ if(!incoming||incoming.schema!=='team-jura-atlas98-classic-v1'||incoming.world!==world||!Array.isArray(incoming.markers)||incoming.markers.length>1000)throw Error('Invalid world schema');
+ const markers=existing.markers.slice(),ids=new Set(markers.map(m=>m.id)),linked=new Set(markers.filter(m=>Number.isInteger(m.collectionSlot)&&m.collectionSet).map(m=>m.collectionSet+':'+m.collectionSlot));let added=0,kept=0,skipped=0;
+ for(const m of incoming.markers){
+  if(!m||typeof m.id!=='string'||!m.id.trim()||m.id.length>80||typeof m.name!=='string'||!m.name.trim()||!sets.includes(m.category)||!Number.isFinite(m.x)||!Number.isFinite(m.y)||m.x<0||m.x>100||m.y<0||m.y>100){skipped++;continue}
+  const validLink=Object.hasOwn(collections,m.collectionSet||'')&&collections[m.collectionSet].count>=m.collectionSlot&&Number.isInteger(m.collectionSlot)&&m.collectionSlot>0&&m.collectionSet===m.category;
+  const slot=validLink?m.collectionSet+':'+m.collectionSlot:null;
+  if(ids.has(m.id)||(slot&&linked.has(slot))){kept++;continue}
+  if(markers.length>=1000){skipped++;continue}
+  markers.push({id:m.id,name:m.name.slice(0,100),category:m.category,note:String(m.note||'').slice(0,300),x:m.x,y:m.y,source:'personal-image-percent',...(validLink?{collectionSet:m.collectionSet,collectionSlot:m.collectionSlot}:{})});ids.add(m.id);if(slot)linked.add(slot);added++;
+ }
+ const completed=[...new Set([...(Array.isArray(existing.completed)?existing.completed:[]),...(Array.isArray(incoming.completed)?incoming.completed:[])].filter(x=>sets.includes(x)))];
+ return{state:{...existing,markers,completed},added,kept,skipped};
+}
 function read(){try{const data=JSON.parse(localStorage.getItem(key)||'null');if(data&&data.schema==='team-jura-atlas98-classic-v1'&&data.world===id&&Array.isArray(data.markers))return data}catch{}return blank()}
-let state=read(),adding=false,editing=null,pendingSlot=null,scale=1,dx=0,dy=0,dragged=false;
-let highResUrl=null,highResSize=null; // personal map raster is stored separately
+let state=read(),adding=false,editing=null,pendingSlot=null,scale=1,dx=0,dy=0,dragged=false,notebookHidden=false;
+let highResUrl=null,highResSize=null,highResFingerprint=''; // personal map raster is stored separately
 let originalMapReady=false,originalMapSize=null,activeMapUrl=null; // source-backed map image, not a world coordinate transform
 const status=message=>{if($('#classicMessage'))$('#classicMessage').textContent=message};
 function persist(){try{localStorage.setItem(key,JSON.stringify(state));window.dispatchEvent(new CustomEvent('team-jura:classic-change',{detail:{world:id}}));return true}catch(e){status('This browser could not save all records. Export a backup, or remove an oversized map image.');return false}}
@@ -82,11 +96,27 @@ function renderBackground(){
  b.classList.toggle('has-image',!!img);
  b.querySelector('span').hidden=true;b.querySelector('small').hidden=true;
  const viewport=$('#classicViewport');if(viewport)viewport.dataset.mapImage=highResUrl?'local-highres':state.background?'legacy-local':originalMapReady?'game-original':'original-art';
+ if(viewport){viewport.dataset.imageFingerprint=highResUrl?highResFingerprint:'';if(own)viewportSourceMismatch(false);viewport.dataset.sourceImage=!own&&originalMapReady?activeMapUrl||'':'';viewport.dataset.sourceWidth=!own&&originalMapReady?String(originalMapSize?.width||0):'';viewport.dataset.sourceHeight=!own&&originalMapReady?String(originalMapSize?.height||0):'';}
  fitClassicImage();
+ window.dispatchEvent(new CustomEvent('team-jura:classic-map-image-change',{detail:{game:id}}));
 }
+function viewportSourceMismatch(mismatch){
+ const v=$('#classicViewport');if(v)v.dataset.personalImageMismatch=String(!!mismatch);
+ const layer=$('#classicMarkerLayer');if(layer)layer.hidden=!!mismatch||notebookHidden;updateNotebookToggle();
+}
+function updateNotebookToggle(){const b=$('#classicTogglePins'),layer=$('#classicMarkerLayer'),viewport=$('#classicViewport');if(layer)layer.hidden=notebookHidden||viewport?.dataset.personalImageMismatch==='true';if(b){b.textContent=notebookHidden?'Show my pins':'Hide my pins';b.setAttribute('aria-label',(notebookHidden?'Show':'Hide')+' my personal notebook pins');b.setAttribute('aria-pressed',String(notebookHidden))}}
 function loadOriginalWorldMap(){
  // Keep the game/era unchanged across every fallback; don't redirect fans to generic city artwork.
  const origins=mapOrigins[id],choices=[{url:w.map,...origins},...(mapAlternates[id]||[])];
+ // Personal pins use image percentages, not world coordinates. Keep a stable
+ // source across visits when personal pins exist; never silently prefer a
+ // different higher-resolution image over the user's previous reference.
+ const sourceKey='team-jura-classic-image-source-v1:'+id;
+ let previousSource='';try{previousSource=localStorage.getItem(sourceKey)||''}catch{}
+ // Older saved LCS markers without a source key were made on the former first-choice artwork.
+ if(id==='lcs'&&state.markers.length&&!previousSource)previousSource='https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-map.jpg';
+ const previous=choices.findIndex(c=>c.url===previousSource);
+ if(state.markers.length&&previous>0)choices.unshift(...choices.splice(previous,1));
  const credit=$('#classicMapAttribution'),source=$('#classicMapSourceLink');
  let index=0;
  function showSource(item){
@@ -107,10 +137,16 @@ function loadOriginalWorldMap(){
    if(!image.naturalWidth||!image.naturalHeight){next();return}
    originalMapReady=true;originalMapSize={width:image.naturalWidth,height:image.naturalHeight};
    activeMapUrl=current.url;
+   if(!highResUrl&&!state.background){
+    if(state.markers.length&&previousSource&&previousSource!==current.url){
+     // Preserve old coordinates and origin, but flag the mismatching artwork.
+     viewportSourceMismatch(true);
+    }else{viewportSourceMismatch(false);try{localStorage.setItem(sourceKey,current.url)}catch{}}
+   }
    showSource(current);
    if(!highResUrl&&!state.background){
     renderBackground();
-    status(w.name+' game-map image ready · '+image.naturalWidth+' × '+image.naturalHeight+' px. Personal notes are not calibrated coordinates.');
+    status(w.name+' game-map image ready · '+image.naturalWidth+' × '+image.naturalHeight+' px. '+(state.markers.length&&previousSource&&previousSource!==current.url?'Alternate artwork: review personal pin alignment. ':'')+'Personal notes are not calibrated coordinates.');
    }
   };
   image.onerror=next;
@@ -121,7 +157,8 @@ function loadOriginalWorldMap(){
 
 function activateLocalMap(blob,width,height){
  if(highResUrl)URL.revokeObjectURL(highResUrl);
- highResUrl=URL.createObjectURL(blob);highResSize={width,height};scale=1;dx=0;dy=0;applyTransform();renderBackground();
+ highResUrl=URL.createObjectURL(blob);highResSize={width,height};highResFingerprint='';scale=1;dx=0;dy=0;applyTransform();renderBackground();
+ const active=highResUrl;if(globalThis.crypto?.subtle)blob.arrayBuffer().then(bytes=>crypto.subtle.digest('SHA-256',bytes)).then(hash=>{if(highResUrl!==active)return;highResFingerprint='sha256:'+Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');renderBackground()}).catch(()=>{});
 }
 function measureLegacyMap(){
  if(highResUrl||!state.background)return;
@@ -140,6 +177,7 @@ async function restoreStoredMap(){
 }
 function categoryList(){const list=$('#classicCategories');list.replaceChildren();for(const name of w.sets){const row=E('div','classic-category');const count=window.TeamJuraClassicCollections?.[id]?.[name];if(count){
  const open=E('button','',name+' · '+count.count+' items');open.type='button';open.setAttribute('aria-label','Open individual '+name+' checklist');open.addEventListener('click',()=>{const panel=$('#j98b-progress');if(panel){panel.scrollIntoView?.({behavior:'smooth',block:'start'});const choice=$('#j98bSet');if(choice){choice.value=name;choice.dispatchEvent(new Event('change'))}}});row.append(open);const legacy=state.completed.includes(name)?' · prior whole-set flag preserved':'';row.append(E('small','',String(state.markers.filter(m=>m.category===name).length)+' personal notes'+legacy));
+ }else if(id==='ctw'&&name==='Drug dealer locations'){const open=E('button','','Drug dealer locations · 80 named contacts');open.type='button';open.setAttribute('aria-label','Open named Chinatown Wars dealer tracker');open.addEventListener('click',()=>{const choice=$('#j274-collection'),panel=$('#j273-camera');if(!choice?.querySelector('option[value="dealers"]')||!panel){status('Named dealer references are still loading. Please try again.');return}choice.value='dealers';choice.dispatchEvent(new Event('change'));panel.scrollIntoView?.({behavior:'smooth',block:'start'})});row.append(open,E('small','','80 required contacts; historical bonus Sean tracked separately. '+(state.completed.includes(name)?'Prior whole-set flag preserved separately. ':'')+state.markers.filter(m=>m.category===name).length+' personal notes.'));
  }else{const label=E('label');const check=E('input');check.type='checkbox';check.checked=state.completed.includes(name);check.addEventListener('change',()=>{state.completed=check.checked?[...new Set([...state.completed,name])]:state.completed.filter(x=>x!==name);persist();status(name+(check.checked?' marked complete.':' marked in progress.'))});label.append(check,' '+name);row.append(label,E('small','',String(state.markers.filter(m=>m.category===name).length)+' personal notes'));}list.append(row)}}
 function renderMarkers(){const layer=$('#classicMarkerLayer'),list=$('#classicPinList');layer.replaceChildren();list.replaceChildren();const query=($('#classicSearch')?.value||'').toLowerCase();let n=0;
  let completed={};try{const record=JSON.parse(localStorage.getItem('team-jura-atlas98b-items-'+id+'-v1')||'null');if(record?.game===id&&record.done&&typeof record.done==='object')completed=record.done}catch{}
@@ -150,7 +188,7 @@ function renderMarkers(){const layer=$('#classicMarkerLayer'),list=$('#classicPi
  const pin=E('button','classic-marker',iconFor(m.category));pin.dataset.slotDone=String(!!complete);pin.type='button';pin.style.left=m.x+'%';pin.style.top=m.y+'%';pin.title=m.name+' — '+m.category+(linked?' · slot #'+m.collectionSlot+(complete?' · collected':' · not yet collected'):' · personal note');pin.setAttribute('aria-label','Open marker '+pin.title);pin.setAttribute('aria-current',String(editing===m.id));pin.addEventListener('click',e=>{e.stopPropagation();openEditor(m.id)});layer.append(pin);
  const row=E('div','classic-pin-row');row.append(E('strong','',m.name));const edit=E('button','','Edit');edit.type='button';edit.addEventListener('click',()=>openEditor(m.id));row.append(edit,E('small','',m.category+(linked?' · #'+m.collectionSlot+(complete?' · ✓ collected':' · to collect'):'')+' · '+(m.note||'Personal image-relative location')));list.append(row)
  }
- if($('#pinCount'))$('#pinCount').textContent=String(state.markers.length);if(n===0)list.append(E('p','panel-note',query?'No notes match your search.':'No personal markers yet. Add one on the map.'));
+ if($('#pinCount'))$('#pinCount').textContent=String(state.markers.length);if(n===0)list.append(E('p','panel-note',query?'No notes match your search.':'No personal markers yet. Add one on the map.'));updateNotebookToggle();
  }
  function draw(){categoryList();renderMarkers();renderBackground()}
 function openEditor(pinId,position){editing=pinId;const m=state.markers.find(x=>x.id===pinId);const edit=$('#classicEditor');edit.hidden=false;const link=pendingSlot||(m?.collectionSet&&m?.collectionSlot?{set:m.collectionSet,slot:m.collectionSlot}:null);
@@ -163,7 +201,9 @@ function createOrEdit(){const name=$('#markerName').value.trim(),category=$('#ma
  else state.markers.push({id:globalThis.crypto?.randomUUID?.()||'p'+Date.now()+Math.random().toString(36).slice(2),name:name.slice(0,100),category,note:note.slice(0,300),x,y,source:'personal-image-percent',...(link?{collectionSet:link.set,collectionSlot:link.slot}:{})});
  if(state.markers.length>1000){state.markers.pop();status('Limit reached (1000 markers per world).');return}persist();closeEditor();draw();status('Saved personal marker to this browser.')}
 function coords(e){const s=$('#classicMapSurface').getBoundingClientRect();if(!s.width||!s.height||e.clientX<s.left||e.clientX>s.right||e.clientY<s.top||e.clientY>s.bottom)return null;return {x:clamp((e.clientX-s.left)/s.width*100,0,100),y:clamp((e.clientY-s.top)/s.height*100,0,100)}}
+function notebookMapReference(){return highResUrl||state.background?{kind:'private-image'}:originalMapReady&&activeMapUrl?{kind:'source',url:activeMapUrl}:{kind:'illustrative'};}
 function bindMap(){const viewport=$('#classicViewport');
+ $('#classicTogglePins')?.addEventListener('click',()=>{notebookHidden=!notebookHidden;updateNotebookToggle();status(notebookHidden?'Your personal notebook pins are hidden; notes and collections are unchanged.':'Your personal notebook pins are visible again.')});
  // Atlas 15.7: multitouch mobile controls and zoom-at-anchor, preserving all world data.
  const pointers=new Map();
  let pan=null,pinch=null;
@@ -243,13 +283,29 @@ function bindMap(){const viewport=$('#classicViewport');
   try{
    await window.TeamJuraLocalMap?.remove(id);state.background=null;
    if(highResUrl)URL.revokeObjectURL(highResUrl);
-   highResUrl=null;highResSize=null;scale=1;dx=0;dy=0;persist();applyTransform();renderBackground();
+   highResUrl=null;highResSize=null;highResFingerprint='';scale=1;dx=0;dy=0;persist();applyTransform();renderBackground();
    status('Personal map image removed. Markers and collection progress remain saved.');
   }catch(error){status('Could not remove local map: '+String(error?.message||error))}
  });
- $('#classicExport').addEventListener('click',()=>{const copy={...state,exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(copy,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+id+'-my-map.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);status(highResUrl?'Markers and progress exported. Your high-resolution map image is stored separately; keep the original PNG/JPEG/WebP file.':'World markers, checked categories and earlier embedded image exported.')});
- $('#classicImport').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2500000){status('Import too large; maximum 2.5 MB.');return}const rd=new FileReader();rd.onload=()=>{try{const obj=JSON.parse(rd.result);if(obj.schema!=='team-jura-atlas98-classic-v1'||obj.world!==id||!Array.isArray(obj.markers)||obj.markers.length>1000)throw Error('Invalid world schema');const clean=[];for(const m of obj.markers){if(typeof m.name!=='string'||!Number.isFinite(m.x)||!Number.isFinite(m.y)||m.x<0||m.x>100||m.y<0||m.y>100)throw Error('Invalid marker');const validLink=window.TeamJuraClassicCollections?.[id]?.[m.collectionSet]?.count>=m.collectionSlot&&Number.isInteger(m.collectionSlot)&&m.collectionSlot>0&&m.collectionSet===m.category;
- clean.push({id:String(m.id).slice(0,80),name:m.name.slice(0,100),category:w.sets.includes(m.category)?m.category:w.sets[0],note:String(m.note||'').slice(0,300),x:m.x,y:m.y,source:'personal-image-percent',...(validLink?{collectionSet:m.collectionSet,collectionSlot:m.collectionSlot}:{})})}state={schema:'team-jura-atlas98-classic-v1',world:id,markers:clean,completed:Array.isArray(obj.completed)?obj.completed.filter(x=>w.sets.includes(x)):[],background:(typeof obj.background==='string'&&(/^data:image\/(png|jpeg|webp);base64,/.test(obj.background))&&obj.background.length<1700000)?obj.background:null};persist();closeEditor();draw();status('World-specific personal data restored.')}catch(err){status('Import refused: invalid file or different GTA world.')}};rd.onerror=()=>status('Could not read JSON.');rd.readAsText(f)});
+ $('#classicExport').addEventListener('click',()=>{const copy={...state,mapReference:notebookMapReference(),exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(copy,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+id+'-my-map.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);status(highResUrl?'Markers and progress exported. Your high-resolution map image is stored separately; keep the original PNG/JPEG/WebP file.':'World markers, checked categories and earlier embedded image exported.')});
+ $('#classicImport').addEventListener('change',async e=>{
+  const f=e.target.files?.[0];e.target.value='';if(!f)return;
+  if(f.size>2500000){status('Import too large; maximum 2.5 MB.');return}
+  try{
+   const obj=JSON.parse(await f.text()),currentMap=notebookMapReference();
+   const result=mergeNotebook(state,obj,id,w.sets,window.TeamJuraClassicCollections?.[id]||{});
+   if(result.added){
+    const other=obj.mapReference;
+    const same=other?.kind==='source'&&currentMap.kind==='source'&&other.url===currentMap.url;
+    const embeddedMatch=typeof obj.background==='string'&&obj.background===state.background&&!!state.background&&!highResUrl;
+    if(!same&&!embeddedMatch&&!window.confirm('This backup does not establish the same map image as the current notebook. Positions are image-relative. Merge the markers only if you accept that their alignment may need adjustment?')){status('Import canceled. Your notebook is unchanged.');return}
+   }
+   const before=state;state=result.state;
+   if(!persist()){state=before;status('Import not saved. Existing notebook kept; export and try again.');return}
+   closeEditor();draw();status(result.added+' marker(s) added; '+result.kept+' existing or linked slots kept; '+result.skipped+' invalid or over-limit skipped. Existing notes, checked categories and map image preserved.');
+  }catch(err){status('Import refused: invalid file or different GTA world.')}
+ });
+
  $('#classicClear').addEventListener('click',()=>{if(!window.confirm('Delete your personal markers for '+w.name+'? Export first if needed.'))return;state.markers=[];persist();closeEditor();draw();status('Personal markers cleared. Collection checkboxes and map illustration preserved.')});
 }
 function init(){

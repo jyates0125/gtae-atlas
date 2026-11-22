@@ -120,7 +120,7 @@ jobs:
           node --check atlas192-weapons6.js
           node --check film/atlas192-storyboard.js
           python scripts/test_atlas190_marker_parity.py
-          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py scripts/test_atlas210_iv_touch_browser.py scripts/test_atlas211_mobile_fit_browser.py scripts/test_atlas212_directory_browser.py scripts/test_atlas217_vi_world_browser.py scripts/test_atlas218_yanis_v18_browser.py
+          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py scripts/test_atlas210_iv_touch_browser.py scripts/test_atlas211_mobile_fit_browser.py scripts/test_atlas212_directory_browser.py scripts/test_atlas217_vi_world_browser.py scripts/test_atlas222_vi_browser.py scripts/test_atlas223_home_browser.py scripts/test_atlas218_yanis_v18_browser.py
           node --check atlas217-vi-world.js
           node --check atlas172-research-map.js
           node --check atlas-research.js
@@ -143,6 +143,12 @@ jobs:
           node --check atlas164-heist-workspace.js
           node --check heist-pages.js
           python scripts/test_atlas152_art.py
+          python scripts/test_atlas222_vi_launch.py
+          python scripts/test_atlas223_home.py
+          node --check atlas223-home.js
+          node --check atlas132-nav.js
+          node --check atlas222-characters.js
+          node --check atlas222-vi-release.js
           node --check atlas93-global.js
           node --check leonida-hq.js
           node --check atlas145-leonida-map-ux.js
@@ -168,10 +174,13 @@ jobs:
           python scripts/test_atlas171_browser.py
           python scripts/test_atlas186_route_browser.py
           python scripts/test_atlas190_map_browser.py
+          python scripts/test_atlas278_offline_browser.py
           python scripts/test_atlas210_iv_touch_browser.py
           python scripts/test_atlas211_mobile_fit_browser.py
           python scripts/test_atlas212_directory_browser.py
           python scripts/test_atlas217_vi_world_browser.py
+          python scripts/test_atlas222_vi_browser.py
+          python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
           python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas220_vi_mobile_browser.py
@@ -227,10 +236,13 @@ jobs:
           python scripts/test_atlas171_browser.py
           python scripts/test_atlas186_route_browser.py
           python scripts/test_atlas190_map_browser.py
+          python scripts/test_atlas278_offline_browser.py
           python scripts/test_atlas210_iv_touch_browser.py
           python scripts/test_atlas211_mobile_fit_browser.py
           python scripts/test_atlas212_directory_browser.py
           python scripts/test_atlas217_vi_world_browser.py
+          python scripts/test_atlas222_vi_browser.py
+          python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
           python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas220_vi_mobile_browser.py
@@ -278,6 +290,10 @@ jobs:
         run: |
           python -m pip install playwright==1.58.0
           python -m playwright install chromium
+      - name: Test character portraits, world navigation and private routes
+        env:
+          ATLAS_BROWSER: chromium
+        run: python scripts/test_atlas_character_portraits.py
       - name: Test VI pin details, viewport fit and legend at desktop/phone widths
         env:
           ATLAS_BROWSER: chromium
@@ -325,6 +341,10 @@ jobs:
         run: |
           python -m pip install playwright==1.58.0
           python -m playwright install msedge
+      - name: Test character portraits, world navigation and private routes
+        env:
+          ATLAS_BROWSER: msedge
+        run: python scripts/test_atlas_character_portraits.py
       - name: Test VI pin details, viewport fit and legend at desktop/phone widths
         env:
           ATLAS_BROWSER: msedge

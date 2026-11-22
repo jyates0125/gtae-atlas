@@ -11,9 +11,12 @@ for model,row in data['vehicles'].items():
     assert model in seed['vehicles'],f'Model {model} not in source archive'
     assert row['model']==model and row['sourceUrl'].startswith('https://gtadb.net/gta-online/vehicles/')
     assert row['category'] and row['description'] and (row['manufacturer'] is None or isinstance(row['manufacturer'],str))
-    assert isinstance(row['seats'],int) and row['seats']>0
+    assert row['seats'] is None or (type(row['seats']) is int and row['seats']>0)
+    if row['seats'] is None:
+        assert 'conflict' in row['confidence'].lower() and row.get('secondarySourceUrl'),model
     assert row['priceUSD'] is None or (isinstance(row['priceUSD'],int) and row['priceUSD']>=0)
     assert row['topSpeedMph'] is None or (isinstance(row['topSpeedMph'],(int,float)) and row['topSpeedMph']>0)
+assert data['vehicles']['jetmax']['seats'] is None, 'Do not invent a seat count when sources disagree'
 assert data['vehicles']['squalo']['category']=='Boats & Watercraft'
 assert data['vehicles']['squalo']['topSpeedMph']==65.75
 assert data['vehicles']['squalo']['priceUSD']==196621
