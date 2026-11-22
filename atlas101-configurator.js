@@ -44,8 +44,61 @@ function mergeVariants(existing,incoming,known){
  return {merged,added};
 }
 function variantsFor(id){return mergeVariants(storage.variants,null,null).merged[id]||[]}
-function refreshVariants(){const select=$('forgeVariant');if(!select)return;const previous=select.value;select.replaceChildren(new Option('Choose a named build',''));for(const item of variantsFor(current))select.add(new Option(item.name,item.name));if([...select.options].some(o=>o.value===previous))select.value=previous;$('loadVariant').disabled=!current||!variantsFor(current).length}
-function saveVariant(){if(!current){status('Choose a vehicle first.');return}mergeLatest();const name=$('buildName').value.trim().slice(0,72);if(!name){status('Enter a design name before saving a named build.');return}const items=variantsFor(current);if(items.some(x=>variantName(x)===name.toLowerCase())){status('That build name already exists. Choose a different name to preserve it.');return}if(items.length>=VARIANT_LIMIT){status('Eight named builds already saved for this vehicle. Export your collection before managing further builds.');return}const entry={model:current,paint,body:$('bodyStyle').value,name,note:$('buildNote').value.trim().slice(0,800),design:window.JuraForge?.normalize(design)||{},updated:new Date().toISOString()};storage.variants=mergeVariants(storage.variants,{[current]:[entry]},new Set(models)).merged;refreshVariants();$('forgeVariant').value=name;status(persist()?'Named build saved. Your primary design is unchanged.':'Storage unavailable. Export your working collection before closing.')}
+function refreshVariants(){const select=$('forgeVariant');if(!select)return;const previous=select.value;select.replaceChildren(new Option('Choose a named build',''));for(const item of variantsFor(current))select.add(new Option(item.name,item.name));if([...select.options].some(o=>o.value===previous))select.value=previous;$('loadVariant').disabled=!current||!variantsFor(current).length;updateNamedManager()}
+
+/* Atlas 31.1: irreversible actions only after re-reading the exact local key.
+   Never normalize/merge and rewrite other vehicles or owners during rename/delete. */
+function updateNamedManager(){
+ const selected=$('forgeVariant').value;
+ const exists=!!current&&variantsFor(current).some(x=>x.name===selected);
+ for(const id of ['j311-rename','j311-delete']){const button=$(id);if(button)button.disabled=!exists}
+ const input=$('j311-new-name');if(input)input.value=exists?selected:'';
+}
+function manageNamed(action){
+ if(!current||!models.includes(current)){status('Choose a valid vehicle before managing saved versions.');return}
+ const selected=$('forgeVariant').value;
+ const expected=variantsFor(current).find(v=>v.name===selected);
+ if(!expected){status('Select an existing named version first. No saved design was changed.');return}
+ const newName=action==='rename'?$('j311-new-name').value.trim().slice(0,72):'';
+ if(action==='rename'&&!newName){status('Enter a new non-empty name for this version.');return}
+ if(action==='rename'&&newName===selected){status('This version already has that name.');return}
+ if(action==='delete'&&!window.confirm('Delete the named design "'+selected+'" for '+title(current)+'? This cannot be undone without an exported backup. Other builds, primary ideas, Garage records and ownership remain unchanged.'))return;
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(raw===null)throw Error('No saved Forge record is available');
+  const latest=JSON.parse(raw);
+  if(!plain(latest)||latest.schema!==1||!plain(latest.builds)||!plain(latest.variants)||
+     !Array.isArray(latest.variants[current])||latest.variants[current].length>VARIANT_LIMIT)
+   throw Error('Forge storage needs recovery');
+  const array=latest.variants[current];
+  if(array.some(v=>!normalizedPreset(current,v)||!variantName(v))||
+     new Set(array.map(v=>variantName(v))).size!==array.length)
+   throw Error('The selected vehicle has invalid or duplicate saved versions');
+  const index=array.findIndex(v=>v.name===selected);
+  if(index<0)throw Error('This version no longer exists; reopen the model');
+  const currentValue=normalizedPreset(current,array[index]);
+  if(JSON.stringify(currentValue)!==JSON.stringify(expected))
+   throw Error('Another tab changed this design; reopen the model before editing it');
+  if(action==='rename'&&array.some((v,i)=>i!==index&&variantName(v)===newName.toLowerCase()))
+   throw Error('Another version already uses that name');
+  if(localStorage.getItem(KEY)!==raw)throw Error('A newer Forge save arrived; no change made');
+  const nextArray=action==='delete'?array.filter((_,i)=>i!==index):
+    array.map((v,i)=>i===index?{...v,name:newName,updated:new Date().toISOString()}:v);
+  const next={...latest,variants:{...latest.variants,[current]:nextArray}};
+  localStorage.setItem(KEY,JSON.stringify(next));
+  storage=next;
+  refreshVariants();
+  $('forgeVariant').value=action==='rename'?newName:'';
+  updateNamedManager();
+  updateConceptUrl(current,action==='rename'?newName:'');
+  status(action==='rename'?'Renamed '+selected+' to '+newName+'. Paint, concept, notes, other models and Garage remain unchanged.':
+   'Deleted only the selected named build '+selected+'. Your primary design, Garage and other saved versions remain unchanged.');
+ }catch(error){
+  status('Named design NOT changed: '+String(error.message||error)+'. Your stored Forge bytes were preserved.');
+ }
+}
+
+function saveVariant(){if(!current){status('Choose a vehicle first.');return}mergeLatest();const name=$('buildName').value.trim().slice(0,72);if(!name){status('Enter a design name before saving a named build.');return}const items=variantsFor(current);if(items.some(x=>variantName(x)===name.toLowerCase())){status('That build name already exists. Choose a different name to preserve it.');return}if(items.length>=VARIANT_LIMIT){status('Eight named builds already saved for this vehicle. Export your collection before managing further builds.');return}const entry={model:current,paint,body:$('bodyStyle').value,name,note:$('buildNote').value.trim().slice(0,800),design:window.JuraForge?.normalize(design)||{},updated:new Date().toISOString()};storage.variants=mergeVariants(storage.variants,{[current]:[entry]},new Set(models)).merged;refreshVariants();$('forgeVariant').value=name;updateNamedManager();status(persist()?'Named build saved. Your primary design is unchanged.':'Storage unavailable. Export your working collection before closing.')}
 function updateConceptUrl(model,variant=''){try{const url=new URL(location.href);url.searchParams.set('model',model);url.searchParams.delete('variant');if(variant)url.hash='variant='+encodeURIComponent(variant);else if(url.hash.startsWith('#variant='))url.hash='';history.replaceState(null,'',url)}catch{}}
 function requestedConceptVariant(){const hash=location.hash||'';if(hash.startsWith('#variant=')){try{return decodeURIComponent(hash.slice(9))}catch{return null}}return new URLSearchParams(location.search).get('variant')}
 function loadVariant(){mergeLatest();const name=$('forgeVariant').value;const entry=variantsFor(current).find(x=>x.name===name);if(!entry){status('Choose a named build first.');return}loadWorking(entry);updateConceptUrl(current,entry.name);status('Loaded named concept '+entry.name+'. Saved designs are unchanged.')}
@@ -144,7 +197,7 @@ async function importBuilds(event){
  finally{event.target.value=''}
 }
 function loadSelected(){mergeLatest();if(!current||!selectedPreset()){status('No saved idea for the selected model. Your working editor is unchanged.');return}selectModel(current)}
-async function init(){load();paintButtons();initDivisions();$('saveVariant').addEventListener('click',saveVariant);$('loadVariant').addEventListener('click',loadVariant);if(VI){$('addToGarage').hidden=true;$('addToGarage').style.display='none';$('loadGarageBuild').hidden=true;$('saveToGarage').hidden=true;$('modelSearch').placeholder='Cheetah, Squalo, Stanier…';$('builderStatus').textContent='Loading GTA VI official visual reference names…';}$('importBuilds').addEventListener('change',importBuilds);$('loadBuild').addEventListener('click',loadSelected);$('loadGarageBuild').addEventListener('click',loadGarageWorking);$('saveToGarage').addEventListener('click',saveToGarage);window.addEventListener('storage',e=>{if(e.key==='team-jura-atlas93-garage-v1')$('loadGarageBuild').disabled=!current||!garagePreset()});$('modelSearch').addEventListener('input',showModels);$('modelSelect').addEventListener('change',e=>selectModel(e.target.value));$('paintColor').addEventListener('input',e=>chooseColor(e.target.value));$('bodyStyle').addEventListener('change',repaint);$('saveBuild').addEventListener('click',save);$('resetBuild').addEventListener('click',reset);$('resetCamera').addEventListener('click',()=>window.TeamJuraGarage3D?.reset());$('exportBuilds').addEventListener('click',exportBuilds);
+async function init(){load();paintButtons();initDivisions();$('saveVariant').addEventListener('click',saveVariant);$('loadVariant').addEventListener('click',loadVariant);$('forgeVariant').addEventListener('change',updateNamedManager);$('j311-rename').addEventListener('click',()=>manageNamed('rename'));$('j311-delete').addEventListener('click',()=>manageNamed('delete'));if(VI){$('addToGarage').hidden=true;$('addToGarage').style.display='none';$('loadGarageBuild').hidden=true;$('saveToGarage').hidden=true;$('modelSearch').placeholder='Cheetah, Squalo, Stanier…';$('builderStatus').textContent='Loading GTA VI official visual reference names…';}$('importBuilds').addEventListener('change',importBuilds);$('loadBuild').addEventListener('click',loadSelected);$('loadGarageBuild').addEventListener('click',loadGarageWorking);$('saveToGarage').addEventListener('click',saveToGarage);window.addEventListener('storage',e=>{if(e.key==='team-jura-atlas93-garage-v1')$('loadGarageBuild').disabled=!current||!garagePreset()});$('modelSearch').addEventListener('input',showModels);$('modelSelect').addEventListener('change',e=>selectModel(e.target.value));$('paintColor').addEventListener('input',e=>chooseColor(e.target.value));$('bodyStyle').addEventListener('change',repaint);$('saveBuild').addEventListener('click',save);$('resetBuild').addEventListener('click',reset);$('resetCamera').addEventListener('click',()=>window.TeamJuraGarage3D?.reset());$('exportBuilds').addEventListener('click',exportBuilds);
  try{if(VI){intel=VI_RECORDS;models=Object.keys(VI_RECORDS).sort((a,b)=>title(a).localeCompare(title(b)))}else{const source=await fetch('./data/atlas-vehicle-intel.json').then(r=>r.ok?r.json():{}).catch(()=>({}));intel=source.vehicles||{};const response=await fetch('./atlas90-seed.json',{cache:'no-cache'});if(!response.ok)throw Error('HTTP '+response.status);const data=await response.json();models=[...new Set((data.vehicles||[]).filter(m=>typeof m==='string'&&/^[a-z0-9_]{2,75}$/.test(m)))].sort((a,b)=>title(a).localeCompare(title(b)))}if(!models.length)throw Error('No suitable vehicle IDs');const selected=new URLSearchParams(location.search).get('model');$('modelSelect').replaceChildren();for(const m of models)$('modelSelect').add(new Option(title(m),m));const requestedVariant=requestedConceptVariant();const garageHandoff=!VI&&new URLSearchParams(location.search).get('source')==='garage'&&models.includes(selected);selectModel(models.includes(selected)?selected:models[0]);if(garageHandoff){const incoming=garagePreset();if(incoming){loadWorking(incoming);status('Opened the saved Garage build as a private Forge working copy. Existing named Forge presets and Garage records are unchanged until you explicitly save.')}else status('This model has no saved Garage build yet. The Forge editor is ready for a new concept.');}const named=models.includes(selected)&&requestedVariant&&variantsFor(current).find(x=>x.name===requestedVariant);if(named&&!garageHandoff){$('forgeVariant').value=named.name;loadWorking(named);updateConceptUrl(current,named.name);status('Opened saved named concept '+named.name+'. Existing saved designs are unchanged.')}else if(!garageHandoff&&!selectedPreset()&&!garagePreset())status(models.length+(VI?' official GTA VI screenshot-title references.':' community GTA V model references available.')+' Viewer uses original concept geometry, not exact GTA meshes.')}
  catch(e){status('Vehicle source catalog unavailable: '+e.message+'. You can still use My Garage.');$('concept3d').textContent='Catalog unavailable: no source model to show.'}
 }
