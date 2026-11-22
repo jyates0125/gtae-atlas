@@ -42,7 +42,7 @@ assert 'id="cover-art"' in credits and 'id="reuse"' in credits
 for p in ("index.html","maps.html","map-hub.html","atlas98-style-lab.html"):
     html=source(p)
     for asset in ("atlas98-portal.js","atlas98-worlds.js","atlas98-portal.css"):
-        pattern = r'(?:src|href)\\s*=\\s*["\\\']\\./' + re.escape(asset) + r'\\?v=([1-9]\\d*)["\\\']'
+        pattern = r"""(?:src|href)\s*=\s*["']\./""" + re.escape(asset) + r"""\?v=([1-9]\d*)["']"""
         versions=re.findall(pattern,html)
         assert len(versions)==1,(p,asset,"missing or duplicate versioned local reference",versions)
         assert (ROOT/asset).is_file(),(p,asset,"missing local asset")
