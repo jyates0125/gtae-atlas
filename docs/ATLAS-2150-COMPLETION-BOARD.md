@@ -1,6 +1,6 @@
 # Team Jura Atlas — 2150 completion and release board
 **Created:** 2026-11-21 · **Status:** staging working board, not release certification
-**Canonical repository:** `jyates0125/team-jura-atlas-preview` · **Staging PR:** #87 targeting `development`
+**Canonical repository:** `jyates0125/team-jura-atlas-preview` · **Staging PR:** #88 targeting `development`
 **Studio authority:** `docs/ELARIO-STUDIOS-OPERATING-CHARTER-V2-PROPOSAL.md` (contents adopted)
 **Project authority:** `docs/TEAM-JURA-STANDING-CHARTER.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md`, approved Designed Brand Master and Original Design Reference Pack.
 
@@ -71,3 +71,10 @@ Keep approved Elario cinematic world scenes as **clearly labeled interim backgro
 
 ## Main/development history versus content (2026-11-21)
 GitHub compare `main...development` reports `development` behind by 18 commits, **but zero changed files**. Directly fetched `index.html` and `_headers` have identical blob SHAs on both branches. A different commit SHA does not by itself mean different website files. Do **not** force-push or merge unfinished staging simply to equalize commit counts. Staging adds `.github/workflows/atlas2150-branch-parity.yml` to check tracked-file parity whenever `main` or `development` is pushed, once that workflow is merged. Production Cloudflare project must explicitly select `development` as production branch; its exact deployment SHA, build output, cache headers and URL must be checked independently. Old deployment/cache can look stale even when Git branches contain identical files.
+
+
+## Atlas 23.2 development continuation
+- Frozen Atlas 23.1 PR head `40151e8a6ea9b1a60f03d651ecbd25bad9338222`: cross-product source checks passed; exact-head full browser validation in progress when this batch was written.
+- Prior 22.8 full Chromium found mobile file-upload overflow in seven classic gateways; 23.1 implements a correction and direct viewport assertions. Do not call the defect closed until exact-head browser proof.
+- Next batch: temporary Online event focus preserves category/named-layer preferences, text search and Story/Online isolation; evidence refresh does not cancel focus. Source-level changes and synthetic local-only regression fixture; no new live locations or game coordinates claimed.
+- Pending: all exact-head tests, local individual artwork for remaining character appearances, source-backed missing map data, approved visual review, real phone and owner release approval. No production branch changes.

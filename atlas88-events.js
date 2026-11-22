@@ -45,7 +45,7 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
   const bridge=window.JuraAtlasEventLocations;
   if(!bridge){focused.textContent='The map is still loading its sources. Use the map search or try again.';return}
   const result=bridge.focus(r);
-  if(result.count){focused.textContent=`Showing ${result.count} sourced research marker${result.count===1?'':'s'} for ${r.name}. A mapped possibility does not prove it is active today.`;clear.hidden=false;const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true}
+  if(result.count){focused.textContent=`Showing ${result.count} sourced research marker${result.count===1?'':'s'} for ${r.name}. A mapped possibility does not prove it is active today. Your regular map filters are preserved.`;clear.hidden=false;const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true}
   else{focused.textContent=`No reusable mapped positions for ${r.name} are currently loaded. The event rule and source reference remain available, but we will not invent pins.`;clear.hidden=true}
  }
 
@@ -55,7 +55,8 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
   const st=statusFor(r),card=mk('article','j88-event-card'),top=mk('div','j88-event-top'),symbol=mk('span','j88-emoji',icon(r)),name=mk('strong','',r.name),badge=mk('span','j88-status j88-'+st.status,human(st.status));top.append(symbol,name,badge);card.append(top);
   const desc=mk('small','',st.reason||'Status currently unavailable');card.append(desc);const actions=mk('div','j88-actions'),map=mk('button','','Find on map'),source=mk('a','','Source ↗');map.type='button';map.onclick=()=>locate(r);source.href=r.source||'./atlas-credits.html';if(/^https?:/.test(source.href)){source.target='_blank';source.rel='noopener noreferrer'}actions.append(map,source);card.append(actions);results.append(card);num++;
  }if(!num)results.append(mk('p','j88-note','No matching event rules.'));}
- const redrawMap=()=>{if(mapPage){const mapSearch=$('search');if(mapSearch)mapSearch.dispatchEvent(new Event('input',{bubbles:true}))}};
+ const redrawMap=()=>{if(mapPage)window.JuraAtlasEventLocations?.refresh()};
+ document.addEventListener('jura:event-focus-cleared',()=>{clear.hidden=true;focused.textContent='Returned to your usual map filters.'});
  search.oninput=render;refresh.onclick=()=>{render();redrawMap()};hour.onchange=()=>{try{localStorage.setItem('jura68-online-hour',JSON.stringify(hour.value))}catch{}render();redrawMap()};checkbox.onchange=()=>{if(checkbox.disabled)return;let state=C.safeState(read('jura68-conditions-online',{}));state.events.halloween=checkbox.checked;try{localStorage.setItem('jura68-conditions-online',JSON.stringify(state))}catch{}render();redrawMap()};
  window.addEventListener('storage',e=>{if(['jura68-conditions-online','jura68-online-hour','jura68-rotation-feed'].includes(e.key)){render();redrawMap()}});
  let lastEvidence='';function refreshEvidence(){

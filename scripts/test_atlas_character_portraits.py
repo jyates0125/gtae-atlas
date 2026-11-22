@@ -250,6 +250,35 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             expect(page.locator("#modeOnline")).to_have_attribute("aria-pressed","true")
             page.reload(wait_until="domcontentloaded")
             expect(page.locator("#selectedTitle")).to_contain_text("Snowmen")
+            # A synthetic, local-only source pack tests temporary event focus without
+            # introducing any claimed real game coordinates into the published catalog.
+            page.goto(base+"atlas-online.html",wait_until="domcontentloaded")
+            page.evaluate("""() => {
+              localStorage.setItem('jura-atlas-v5-packs',JSON.stringify({qa:{records:[
+                {id:'qa-event-only',game:'5',scope:'online',x:100,y:100,name:'Gun Van QA fixture',category:'activity',source:'QA synthetic fixture',tags:[],uncertain:true},
+                {id:'qa-story-only',game:'5',scope:'story',x:101,y:101,name:'Gun Van story QA fixture',category:'activity',source:'QA synthetic fixture',tags:[],uncertain:true}
+              ]}}));
+              localStorage.setItem('jura101-visible-map-categories-v1',JSON.stringify({'5-story':['landmark'],'5-online':[],'6':['landmark']}));
+              localStorage.setItem('jura62-named-layers',JSON.stringify({'5-online':['activity']}));
+            }""")
+            page.reload(wait_until="domcontentloaded")
+            page.wait_for_function("window.JuraAtlasEventLocations?.count(window.JuraConditions.BY_ID['gun-van'])>0",timeout=20000)
+            page.locator("#search").fill("my previous search")
+            before=page.evaluate("JSON.stringify([localStorage.getItem('jura101-visible-map-categories-v1'),localStorage.getItem('jura62-named-layers')])")
+            found=page.evaluate("window.JuraAtlasEventLocations.focus(window.JuraConditions.BY_ID['gun-van']).count")
+            assert found>=1
+            expect(page.locator("#j232-event-focus-notice")).to_contain_text("Temporary event focus")
+            expect(page.locator("#search")).to_have_value("my previous search")
+            page.evaluate("window.JuraAtlasEventLocations.refresh()")
+            assert page.evaluate("window.JuraAtlasEventLocations.focused()")
+            assert page.evaluate("JSON.stringify([localStorage.getItem('jura101-visible-map-categories-v1'),localStorage.getItem('jura62-named-layers')])")==before
+            expect(page.locator("#results")).to_contain_text("Gun Van QA fixture")
+            expect(page.locator("#results")).not_to_contain_text("Gun Van story QA fixture")
+            page.evaluate("window.JuraAtlasEventLocations.clear()")
+            expect(page.locator("#j232-event-focus-notice")).to_be_hidden()
+            expect(page.locator("#search")).to_have_value("my previous search")
+            assert page.evaluate("JSON.stringify([localStorage.getItem('jura101-visible-map-categories-v1'),localStorage.getItem('jura62-named-layers')])")==before
+            page.evaluate("localStorage.removeItem('jura-atlas-v5-packs')")
             # Verify the new coverage dashboard uses exact world-specific checklists.
             page.goto(base+"atlas-coverage.html",wait_until="domcontentloaded")
             evidence_rows=page.locator("#j229-collection-rows tr[data-set]")

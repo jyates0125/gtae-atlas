@@ -23,6 +23,12 @@ assert "loadReviewedRotations();" in js
 assert "seasonExpired" in src("atlas88-events.js")
 assert "checkbox.disabled=true" in src("atlas88-events.js")
 assert "Import dated position JSON" not in src("atlas87-daily.html")
+mapjs=src("atlas.js")
+assert "if(eventFocusIds)return records().filter" in mapjs
+assert "Temporary event focus:" in mapjs and "jura:event-focus-cleared" in mapjs
+focus=mapjs.split("window.JuraAtlasEventLocations=Object.freeze({",1)[1].split("window.JuraDualLegendAPI",1)[0]
+assert "active[filterScope()]=" not in focus and "hiddenNamed[namedScope()]=" not in focus
+assert "JuraAtlasEventLocations?.refresh()" in src("atlas88-events.js")
 node=r"""
 const assert=require('node:assert/strict');
 const C=require('./atlas-conditions.js');
