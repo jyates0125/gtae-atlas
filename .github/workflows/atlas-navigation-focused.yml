@@ -6,6 +6,9 @@ on:
       - 'atlas-dashboard.html'
       - 'atlas291-shortcuts.css'
       - 'tests/atlas291-shortcuts.test.cjs'
+      - 'scripts/test_atlas223_home_browser.py'
+      - 'atlas223-home.js'
+      - 'atlas223-home.css'
       - '.github/workflows/atlas-navigation-focused.yml'
   workflow_dispatch:
 permissions:
