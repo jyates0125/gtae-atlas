@@ -1,0 +1,45 @@
+name: Atlas 30.5 - named Forge versions in My Garage
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas305-garage-variants.js'
+      - 'atlas305-garage-variants.css'
+      - 'atlas93-garage.js'
+      - 'atlas93-garage.html'
+      - 'tests/atlas305-garage-variants.test.cjs'
+      - 'scripts/test_atlas305_garage_variants_browser.py'
+      - '.github/workflows/atlas305-garage-variants.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas305-garage-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  named-variants:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check variant identity, syntax and private storage contracts
+        run: |
+          node --check atlas93-garage.js
+          node --check atlas305-garage-variants.js
+          node tests/atlas305-garage-variants.test.cjs
+      - name: Build audited published payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test named handoff on real built site
+        run: python scripts/test_atlas305_garage_variants_browser.py

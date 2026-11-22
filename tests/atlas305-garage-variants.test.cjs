@@ -1,0 +1,23 @@
+// Atlas 30.5: Forge named-variant reader is read-only, identity-scoped, fail-closed.
+const assert=require('node:assert/strict');
+const {list,validModel}=require('../atlas305-garage-variants.js');
+const a={model:'jetmax',paint:'#12AB34',body:'auto',name:'Marina Night',note:'Dock C',design:{environment:'marina'}};
+const b={model:'jetmax',paint:'#BC2211',body:'sports',name:'Dock Run',note:'Second build',design:{finish:'satin'}};
+const store={schema:1,builds:{jetmax:{}},variants:{jetmax:[a,b,{...a,name:'marina night'}, {...a,model:'adder',name:'Wrong world'}],adder:[{...a,model:'adder'}]}};
+const raw=JSON.stringify(store),old=structuredClone(store);
+const results=list(raw,'jetmax');
+assert.deepEqual(results.map(x=>x.name),['Marina Night','Dock Run']);
+assert.equal(results[0].paint,'#12ab34');
+assert.equal(results[0].design.environment,'marina');
+assert.equal(store.variants.jetmax.length,4);
+assert.deepEqual(store,old);
+assert.deepEqual(list(raw,'adder').map(x=>x.model),['adder']);
+assert.deepEqual(list(raw,'missing'),[]);
+assert.equal(list('{broken','jetmax'),null);
+assert.equal(list(JSON.stringify({schema:1,builds:{},variants:{jetmax:'broken'}}),'jetmax'),null);
+assert.equal(list(JSON.stringify({schema:4,builds:{}}),'jetmax'),null);
+assert.deepEqual(list(null,'jetmax'),[]);
+assert.deepEqual(list(raw,'__proto__'),[]);
+assert(!validModel('__proto__'));
+assert.deepEqual(list(JSON.stringify({schema:1,builds:{},variants:{jetmax:Array.from({length:12},(_,i)=>({...a,name:'Variant '+i}))}}),'jetmax').length,8);
+console.log('Atlas 30.5 Forge named Garage working-copy reader contracts passed');
