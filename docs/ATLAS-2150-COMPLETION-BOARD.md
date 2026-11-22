@@ -172,3 +172,11 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Links contain only the public model identity, never saved notes, ownership or personalized design contents. Viewing/searching is read-only; no signup, upload or production database writes.
 - **TEST:** `tests/atlas296-forge-collections.test.cjs` and `scripts/test_atlas296_forge_collections_browser.py`; scope-limited workflow `atlas296-forge-collections.yml`. Screenshots planned at 390px and 1440px on actual built Cloudflare files.
 - **GATES:** Exact-head focused test pass, real iPhone Safari and owner visual approval still pending; this is one Garage/Forge charter step, not the entire Elario 2150 showroom. See `docs/ATLAS296-FORGE-COLLECTIONS-CHECKPOINT.md`.
+
+
+## Atlas 29.8 — mission-specific map stages and portable briefing (staging)
+- **SOURCE:** Fourteen non-Cayo heist maps receive purpose-built Recon & Setup / Finale & Escape / All Points layer controls, live visible-POI/route counts and mobile accessible tap targets. Existing source-informed, schematic POI positions and approved Elario visuals are preserved; no invented geographic coordinates or proprietary map copies.
+- **SOURCE:** Per-heist route/scoped/award export and non-destructive restore (same-mission validation, historical-point preservation, latest-record reread, explicit reload). Existing mission notes, crew, checklist, other game data and Cayo remain independent.
+- **SOURCE:** Kortz Center release context links the official Rockstar Art Studio/heist announcement instead of implying the mission is unreleased; precise interior geometry remains labeled illustrative.
+- **TEST:** `tests/atlas298-heist-map-kit.test.cjs`, `scripts/test_atlas298_heist_map_kit_browser.py`, and path-scoped `atlas298-heist-map-kit.yml`. Tests inspect all fourteen maps at 390px/1440px, import/export and privacy. Exact-head results must still be checked; do not infer a pass from source existence.
+- **GATE:** Real iPhone Safari, full final browser + ZIP validation, sourced exact in-game map geometry, complete charter content and owner approval remain open. More detail: `docs/ATLAS298-HEIST-MAP-KIT-ACCEPTANCE.md`.
