@@ -94,3 +94,5 @@ GitHub compare `main...development` reports `development` behind by 18 commits, 
 
 ## Atlas 25.4 — Garage ownership and exact-color build continuity
 Import older backups using a strict non-destructive merge: preserve existing builds including later edits, union garage names within capacity, add only known model IDs, accept boolean ownership/wishlist flags, preserve notes and warn on conflicts. Re-read latest cross-tab keys and attempt rollback on storage failure. Garage and studio now round-trip exact custom RGB, concept name/body metadata without replacing existing saved studio presets or representing custom colors as confirmed in-game paint. Tests added for conflicting builds, scope validation, original objects untouched, exact hex and ownership retention. Browser evidence pending. Map 25.3 candidate remains saved.
+
+25.4 independent unit evidence: retrieved exact Garage merge core (Git blob 75abb87fcaa03b3f85eca32ff828c2b7348f2fb7, verified local hash) and executed 13 core assertions plus 5 capacity/prototype rejection assertions in Node, all passing. This verifies the merge helper only; browser UI and storage behavior remain subject to CI.
