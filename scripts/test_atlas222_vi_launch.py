@@ -95,4 +95,11 @@ assert 'body[data-atlas-kind="all"] .u-hero-art' in dbcss
 assert "url('./art/atlas98-approved-hero.webp')" in dbcss
 assert (R/'art/atlas98-approved-hero.webp').is_file()
 
+# Leonida category markers must match the legend instead of anonymous dots.
+mapjs=(R/'atlas.js').read_text(encoding='utf-8')
+assert "if(game==='6'&&!atlas85Icon&&typeof Path2D==='function')" in mapjs
+assert "ELARIO_LEGEND_SHAPES[category]||ELARIO_LEGEND_SHAPES.other" in mapjs
+assert "ctx.stroke(new Path2D(shape))" in mapjs
+assert "r.category==='collectible'&&!r.activityId" in mapjs
+
 print('PASS Atlas 22.2: 8 verified VI profile groups, 6 official regions, 11 source-labeled categories, global character search and isolated world routes')
