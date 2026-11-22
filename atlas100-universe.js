@@ -66,7 +66,7 @@ function index(profile,seed,catalog,sets,viWeapons){
 }
 function badge(r){const id=r.id.split(':').pop().replace(/-vi|-v$/,'');if(r.kind==='animal')return WILDLIFE[id]||'✿';if(r.kind==='character')return r.name.split(' ').slice(0,2).map(x=>x[0]).join('');if(r.kind==='collectible')return /pumpkin/i.test(r.name)?'🎃':/snow/i.test(r.name)?'☃':/cards?/i.test(r.name)?'🃏':'◈';return SYMBOLS[r.kind]||'✦'}
 function elarioCharacterPortrait(r,area,allowConcept=true){
- if(allowConcept && r.conceptPortrait){
+ if(allowConcept && typeof r.conceptPortrait==='string' && /^art\/[a-z0-9-]+\.(?:webp|png|jpe?g)$/i.test(r.conceptPortrait)){
   const img=make('img');
   img.loading='lazy';img.decoding='async';
   img.alt='Elario Studios fan concept of '+r.name;
@@ -90,9 +90,15 @@ function elarioCharacterPortrait(r,area,allowConcept=true){
  /Liberty City Stories/.test(game)?'jura157-lcs-cinematic.webp':'jura157-iv-cinematic.webp';
  const art=r.scope==='vi'?'jura155-vi.webp':r.scope==='online'?'jura155-online.webp':
  r.scope==='story'?'jura155-story.webp':classic;
- const img=make('img');img.src='./art/'+art;img.alt='Original Elario '+world(r.scope)+' scene, not an exact portrait of '+r.name;
- img.loading='lazy';img.decoding='async';area.append(img);area.dataset.artStatus='world-scene';
- const tag=area.querySelector('.u-image-note');if(tag)tag.textContent='ELARIO CINEMATIC SCENE · NOT A PORTRAIT';
+ const img=make('img');img.alt='Original Elario '+world(r.scope)+' scene, not an exact portrait of '+r.name;
+ img.loading='lazy';img.decoding='async';
+ img.addEventListener('error',()=>img.remove(),{once:true});
+ const identity=make('div','u-portrait-pending');
+ identity.setAttribute('role','group');identity.setAttribute('aria-label','Individual portrait unavailable for '+r.name);
+ identity.append(make('strong','',r.name),make('small','','Individual portrait pending'));
+ area.append(img,identity);area.dataset.artStatus='world-scene';
+ const tag=area.querySelector('.u-image-note')||make('span','u-image-note');
+ tag.textContent='ELARIO CINEMATIC SCENE · NOT A PORTRAIT';area.append(tag);img.src='./art/'+art;
 }
 function artwork(r){
  const area=make('div','u-image u-image-'+r.kind);let hue=0;
@@ -101,10 +107,10 @@ function artwork(r){
  if(r.kind==='character'&&r.preferConceptPortrait===true&&r.conceptPortrait){
   elarioCharacterPortrait(r,area);
  }else if(r.image){
-  const img=make('img');img.src=r.image;img.alt='Sourced reference image for '+r.name;
+  const img=make('img');img.alt='Sourced reference image for '+r.name;
   img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
   img.addEventListener('error',()=>{img.remove();if(r.kind==='character')elarioCharacterPortrait(r,area);else area.append(make('span','u-symbol',badge(r)))},{once:true});
-  area.append(img);
+  area.append(img);img.src=r.image;
  }else if(r.kind==='character')elarioCharacterPortrait(r,area);
  else area.append(make('span','u-symbol',badge(r)));
  if(!area.querySelector('.u-image-note') && isUnverified(r))area.append(make('span','u-image-note','UNVERIFIED RESEARCH'));

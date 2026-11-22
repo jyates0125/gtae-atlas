@@ -8,6 +8,10 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
 
 root = Path(os.environ.get("ATLAS_TEST_ROOT", "public")).resolve()
+roster = [r for r in json.loads((root / "data/atlas-universe-profiles.json").read_text(encoding="utf-8"))["records"] if r["kind"] == "character"]
+local_roster = [r for r in roster if r.get("conceptPortrait")]
+assert len(roster) == 40 and len(local_roster) >= 13
+assert all(r.get("preferConceptPortrait") is True for r in local_roster)
 
 class QuietHandler(SimpleHTTPRequestHandler):
     def log_message(self, *args):
@@ -23,8 +27,32 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             page = browser.new_page(reduced_motion="reduce", viewport={"width": width, "height": 812})
             errors = []
             page.on("pageerror", lambda error: errors.append(str(error)))
+            # Check local-first selection before blocking any network requests.
+            exterior = []
+            page.on("request", lambda request: exterior.append(request.url) if request.url.startswith("https://") else None)
             page.route("https://**/*", lambda route: route.abort())
             page.goto(base + "atlas-characters.html", wait_until="domcontentloaded")
+            all_cards = page.locator("#j222-character-grid .j222-character-card")
+            expect(all_cards).to_have_count(len(roster),timeout=15000)
+            for entry in local_roster:
+                # Filter by record ID, including exact edition; duplicate names must stay distinct.
+                portrait_card=page.locator(f'#j222-character-grid [data-character-id="{entry["id"]}"]')
+                expect(portrait_card.locator(".j222-character-media")).to_have_attribute("data-art-status","character-concept")
+                portrait=portrait_card.locator("img.jura-concept-portrait")
+                expect(portrait).to_have_attribute("src","./"+entry["conceptPortrait"])
+                portrait.scroll_into_view_if_needed()
+                portrait.evaluate("el => el.decode()")
+                assert portrait.evaluate("el => el.naturalWidth>0 && new URL(el.src).origin===location.origin")
+                expect(portrait_card.locator(".j222-art-credit")).to_have_text("Elario Studios · illustrated character concept")
+            # Shared reference URLs may belong to a different appearance (e.g. Franklin Online).
+            only_local_urls = {r.get("image") for r in local_roster} - {r.get("image") for r in roster if not r.get("conceptPortrait")} - {None, ""}
+            assert not only_local_urls.intersection(exterior), "Local-first portraits made exterior image requests"
+            for entry in (r for r in roster if not r.get("conceptPortrait")):
+                pending=page.locator(f'#j222-character-grid [data-character-id="{entry["id"]}"]')
+                pending.scroll_into_view_if_needed()
+                expect(pending.locator(".j222-character-media")).to_have_attribute("data-art-status","portrait-pending",timeout=15000)
+                expect(pending.get_by_role("group",name="Individual portrait unavailable for "+entry["name"])).to_be_visible()
+                expect(pending.locator(".j222-art-credit")).to_contain_text("not a depiction")
             concepts = page.locator("#j222-character-grid img[src*='jura221-']")
             # CJ is an approved local primary image, not dependent on a remote host.
             cj_card=page.locator(".j222-character-card").filter(has=page.get_by_role("heading",name="Carl Johnson",exact=True))

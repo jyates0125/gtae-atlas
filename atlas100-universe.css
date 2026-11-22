@@ -113,3 +113,9 @@ body[data-atlas-kind="all"] .u-hero p:not(.u-eyebrow){color:#fff1f9;text-shadow:
  min-width: 44px;
  min-height: 44px;
 }
+
+/* Honest named state if a character portrait fails, not a replacement likeness. */
+.u-image-character[data-art-status="world-scene"] img{filter:brightness(.38) saturate(.65);object-fit:cover;padding:0}
+.u-portrait-pending{position:absolute;inset:0 0 24px;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(180deg,#20132e44,#20132ebd);padding:9px;text-align:center;color:#fff1dd;overflow-wrap:anywhere}
+.u-portrait-pending strong{font:800 clamp(12px,2vw,18px)/1.2 system-ui}
+.u-portrait-pending small{font:600 11px/1.3 system-ui;color:#f6cfaa}

@@ -36,10 +36,12 @@ const label=(r,local)=>local?'Original Elario cinematic world artwork · not a c
 function portraitMedia(r,profile=false){
  const media=make('div','j222-character-media'+(profile?' j222-profile-media':''));
  const credit=make('span','j222-art-credit');
+ const safeConcept=typeof r.conceptPortrait==='string'&&/^art\/[a-z0-9-]+\.(?:webp|png|jpe?g)$/i.test(r.conceptPortrait);
  // A world/ensemble illustration is not evidence of the named character.
  // If a portrait cannot load, show a transparent identity state, never unrelated art.
  const unavailable=()=>{
   media.replaceChildren();
+  media.dataset.artStatus='portrait-pending';
   const scene=make('img','j222-world-scene');
   scene.loading=profile?'eager':'lazy';scene.decoding='async';
   scene.alt='Illustrative '+(worlds[r.scope]||r.game||'GTA')+' world artwork; not a portrait of '+r.name;
@@ -54,7 +56,8 @@ function portraitMedia(r,profile=false){
   media.append(scene,identity,credit);
  };
  const showFallback=()=>{
-  if(!r.conceptPortrait){unavailable();return}
+  if(!safeConcept){unavailable();return}
+  media.dataset.artStatus='character-concept';
   const portrait=make('img','jura-concept-portrait');
   portrait.loading=profile?'eager':'lazy';
   portrait.decoding='async';
@@ -64,7 +67,8 @@ function portraitMedia(r,profile=false){
   media.replaceChildren(portrait,credit);
   portrait.src='./'+r.conceptPortrait;
  };
- if((r.preferConceptPortrait===true&&r.conceptPortrait)||!srcSafe(r.image)){showFallback();return media}
+ if((r.preferConceptPortrait===true&&safeConcept)||!srcSafe(r.image)){showFallback();return media}
+ media.dataset.artStatus='reference';
  const img=make('img');img.loading=profile?'eager':'lazy';img.decoding='async';img.referrerPolicy='no-referrer';
  img.alt='Reference artwork attributed to '+r.name+'; see image source for provenance';
  img.addEventListener('error',showFallback,{once:true});
@@ -75,6 +79,7 @@ function portraitMedia(r,profile=false){
 function card(r){
  const el=make('article','j222-character-card');
  el.dataset.j222World=r.scope;
+ el.dataset.characterId=r.id;
  el.dataset.j226Edition=r.game||'';
  const media=portraitMedia(r);
  const box=make('div','j222-character-info');

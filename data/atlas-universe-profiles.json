@@ -5,6 +5,7 @@
     {
       "id": "character:michael",
       "conceptPortrait": "art/jura221-michael-cinematic.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Michael De Santa",
       "scope": "story",
@@ -21,6 +22,7 @@
     {
       "id": "character:franklin",
       "conceptPortrait": "art/jura221-franklin-cinematic.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Franklin Clinton",
       "scope": "story",
@@ -37,6 +39,7 @@
     {
       "id": "character:trevor",
       "conceptPortrait": "art/jura221-trevor-cinematic.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Trevor Philips",
       "scope": "story",
@@ -173,6 +176,7 @@
     {
       "id": "character:agent14",
       "conceptPortrait": "art/elario-agent14-portrait.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Agent 14",
       "scope": "online",
@@ -204,6 +208,7 @@
     {
       "id": "character:agatha-baker",
       "conceptPortrait": "art/elario-agatha-baker-portrait.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Agatha Baker",
       "scope": "online",
@@ -220,6 +225,7 @@
     {
       "id": "character:niko",
       "conceptPortrait": "art/jura221-niko-cinematic.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Niko Bellic",
       "scope": "classic",
@@ -299,6 +305,7 @@
     {
       "id": "character:bigsmoke",
       "conceptPortrait": "art/elario-bigsmoke-portrait.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Big Smoke",
       "scope": "classic",
@@ -315,6 +322,7 @@
     {
       "id": "character:tommy",
       "conceptPortrait": "art/jura221-tommy-cinematic.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Tommy Vercetti",
       "scope": "classic",
@@ -346,6 +354,7 @@
     {
       "id": "character:claude",
       "conceptPortrait": "art/jura221-claude-cinematic.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Claude",
       "scope": "classic",
@@ -362,6 +371,7 @@
     {
       "id": "character:lucia",
       "conceptPortrait": "art/jura221-lucia-cinematic.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Lucia Caminos",
       "scope": "vi",
@@ -391,6 +401,7 @@
     {
       "id": "character:jason",
       "conceptPortrait": "art/jura221-jason-cinematic.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Jason Duval",
       "scope": "vi",
@@ -687,6 +698,7 @@
     {
       "id": "character:huang-lee",
       "conceptPortrait": "art/elario-huang-lee-portrait.webp",
+      "preferConceptPortrait": true,
       "name": "Huang Lee",
       "game": "GTA Chinatown Wars",
       "region": "Liberty City",

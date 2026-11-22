@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Atlas 15.2: artwork integration contract, staging only."""
 from pathlib import Path
+import json
 from html.parser import HTMLParser
 from urllib.parse import urlsplit
 root=Path(__file__).resolve().parents[1]
@@ -28,6 +29,13 @@ assert 'jura155-characters.webp' in css
 assert 'j222-character-media' in gallery_css
 assert 'character' in gallery and 'jura155-vi.webp' in gallery
 assert (root/'art'/'jura155-characters.webp').is_file()
+roster=json.loads((root/'data/atlas-universe-profiles.json').read_text(encoding='utf-8'))['records']
+local=[record for record in roster if record.get('kind')=='character' and record.get('conceptPortrait')]
+assert len(local)>=13
+for record in local:
+ assert record.get('preferConceptPortrait') is True, record['id']
+ assert (root/record['conceptPortrait']).is_file(), record['id']
+ assert (root/record['conceptPortrait']).read_bytes()[:4]==b'RIFF', record['id']
 elario=(root/'elario.html').read_text()
 assert 'atlas152-studio.css' in elario and 'atlas152-studio-future.svg' in elario
 assert 'ATLAS 9.3</em>' not in elario
