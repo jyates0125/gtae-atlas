@@ -54,7 +54,9 @@ try:
    page.locator('#worldSearch').fill('leonida')
    expect(cards).to_have_count(1)
    assert cards.first.get_attribute('data-id')=='vi'
-   page.locator('#resetWorldSearch').click()
+   expect(page.locator('#clearWorldSearch')).to_be_visible()
+   page.locator('#clearWorldSearch').click()
+   expect(page.locator('#clearWorldSearch')).to_be_hidden()
    expect(cards).to_have_count(13)
    assert page.locator('#worldSearch').input_value()==''
    # A normal tap records an allowlisted recent world and supports Back.
