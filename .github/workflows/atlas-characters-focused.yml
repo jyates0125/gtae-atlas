@@ -1,0 +1,25 @@
+name: Atlas characters — focused deep-link checks
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas222-characters.js'
+      - 'atlas-characters.html'
+      - 'tests/atlas292-character-deeplinks.test.cjs'
+      - '.github/workflows/atlas-characters-focused.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  character-links:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check character JavaScript syntax
+        run: node --check atlas222-characters.js
+      - name: Check profile deep links and browser-history contract
+        run: node tests/atlas292-character-deeplinks.test.cjs
