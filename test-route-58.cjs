@@ -41,3 +41,15 @@ for(const category of ['snapshots','horseshoes','oysters','tags','jumps']){
  }
 }
 console.log('Atlas fixed-endpoint route checks: '+samples+' real collection samples, '+improved+' improved; no regression');
+
+// Exercise the shared endpoint planner with both open and fixed-destination routes.
+const {planEndpoints}=require('./atlas-route-core.js');
+let endpointCases=0;
+for(let seed=0;seed<60;seed++){
+ const rows=Array.from({length:2+seed%20},(_,i)=>({id:'p'+i,x:Math.sin(i*3.17+seed)*300,y:Math.cos(i*2.21+seed)*500})),original=JSON.stringify(rows);
+ for(const finish of [null,rows.at(-1).id]){const result=planEndpoints(rows,rows[0].id,finish);assert.equal(result.stops[0].id,rows[0].id);if(finish)assert.equal(result.stops.at(-1).id,finish);assert.equal(new Set(result.stops.map(x=>x.id)).size,rows.length);assert.ok(result.units<=result.baseline+1e-8);assert.equal(JSON.stringify(rows),original);endpointCases++}
+}
+assert.throws(()=>planEndpoints([{id:'a',x:0,y:0},{id:'b',x:1,y:1}],'a','a'));
+assert.throws(()=>planEndpoints([{id:'a',x:0,y:0}],'a','missing'));
+assert.throws(()=>planEndpoints([{id:'a',x:0,y:0},{id:'a',x:1,y:1}],'a'));
+console.log('PASS '+endpointCases+' endpoint preservation scenarios and invalid endpoint safeguards');
