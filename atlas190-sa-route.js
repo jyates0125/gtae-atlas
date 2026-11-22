@@ -10,8 +10,8 @@ if(!host||!map||!pinLayer||!mapFrame||document.getElementById('j190-sa-route'))r
 const E=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=String(txt);return n};
 const B=(txt,fn)=>{const b=E('button','',txt);b.type='button';b.addEventListener('click',fn);return b};
 const key='team-jura-sa-map-route-v1',progressKey='team-jura-sa-v1';
-const TYPES=['snapshots','horseshoes','oysters'],LIMITS=[5,10,15,25,50];
-const safePoint=id=>typeof id==='string'&&/^(snapshots|horseshoes|oysters):([1-9]|[1-4][0-9]|50)$/.test(id);
+const TYPES=['snapshots','horseshoes','oysters','tags'],LIMITS=[5,10,15,25,50,100];
+const safePoint=id=>typeof id==='string'&&(/^(snapshots|horseshoes|oysters):([1-9]|[1-4][0-9]|50)$/.test(id)||/^tags:([1-9]|[1-9][0-9]|100)$/.test(id));
 let state={schema:1,set:'snapshots',start:null,finish:null,limit:15,skipCollected:true};
 try{const v=JSON.parse(localStorage.getItem(key)||'null');if(v?.schema===1){
  if(TYPES.includes(v.set))state.set=v.set;
@@ -63,7 +63,7 @@ actions.append(pickOnMap,recalc,clear,copy);panel.append(actions);
 const status=E('p','j190-sa-status','Waiting for the bundled source map and collectible positions…');
 status.id='j190-sa-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');panel.append(status);
 const list=E('ol','j190-sa-list');list.id='j190-sa-list';panel.append(list);
-const foot=E('small','j190-sa-foot','Sourced locations: Flentric/SA.MapCollectibles (MIT), San Andreas 1.0 US script. Base art: Toliak vector (Apache-2.0). The 6000px 2D projection is approximate. Graffiti tags and stunt jumps remain tracking-only until sourced positions are available.');
+const foot=E('small','j190-sa-foot','Sourced locations: Flentric/SA.MapCollectibles (MIT), San Andreas 1.0 US script. Base art: Toliak vector (Apache-2.0). The 6000px 2D projection is approximate. Graffiti tag positions: Prineside DevTools / therainycat, attributed coordinate transcription. Stunt jumps remain tracking-only.');
 panel.append(foot);
 host.insertBefore(panel,mapFrame);
 const ns='http://www.w3.org/2000/svg';
@@ -130,14 +130,14 @@ function draw(route){
  }
 }
 function render(message){
- const set=activeSet();ready=sourceReady()&&points.length===150;
+ const set=activeSet();ready=sourceReady()&&(points.length===150||points.length===250)&&points.some(p=>p.set===set);
  const legitimate=!!set&&TYPES.includes(set);
  syncControls(legitimate?set:null);
  const usable=ready&&legitimate;
  [startPick,finishPick,limitPick,check,pickOnMap,recalc,copy].forEach(c=>{c.disabled=!usable});
  clear.disabled=!state.start&&!state.finish;
  if(!usable){lastRoute=[];overlay.replaceChildren();list.replaceChildren();
-  status.textContent='Route unavailable until the bundled Toliak map and its 150 matched collectible points load. Personal images are never overlaid with unmatched coordinates.';return}
+  status.textContent='Route unavailable until the bundled Toliak map and the selected sourced collection load. Personal images are never overlaid with unmatched coordinates.';return}
  if(!safeChoice(state.start,set))state.start=null;
  if(!safeChoice(state.finish,set)||state.finish===state.start)state.finish=null;
  startPick.value=state.start||'';finishPick.value=state.finish||'';
@@ -202,6 +202,7 @@ async function load(){
    unique.add(id);
    return{id,set:p.set,slot:p.slot,label:String(p.label||id).slice(0,120),x:p.x,y:p.y,worldX:p.worldX,worldY:p.worldY};
   });
+  try{const tags=await window.TeamJuraSATags?.load()||[];points.push(...tags.map(p=>({...p,id:'tags:'+p.slot})))}catch{}
   byId=new Map(points.map(p=>[p.id,p]));
   render();
  }catch(err){status.textContent='Source-backed routes unavailable: '+err.message;overlay.replaceChildren();}

@@ -30,7 +30,7 @@ async function load(spec){
  if(spec.kind==='sa'){
   if(data.records?.length!==150||data.counts?.snapshots!==50||data.counts?.horseshoes!==50||data.counts?.oysters!==50)
    throw Error('Incomplete licensed San Andreas coordinate pack');
-  return{description:'50 Snapshots · 50 Horseshoes · 50 Oysters',note:'150 sourced XYZ positions approximately placed on vector artwork. 100 Tags and 70 Jumps still lack bundled, checked positions.',date:data.checkedAt||'Snapshot date unknown'};
+  return{description:'50 Snapshots · 50 Horseshoes · 50 Oysters',note:'150 sourced XYZ positions approximately placed on vector artwork. A separate attributed tag-object placement pack adds 100 positions; 70 Jumps remain unmapped.',date:data.checkedAt||'Snapshot date unknown'};
  }
  throw Error('Unrecognized data source');
 }

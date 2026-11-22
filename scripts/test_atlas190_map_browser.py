@@ -151,6 +151,14 @@ try:
    page.wait_for_function("(id)=>!window.TeamJuraSARoute.getRoute().includes(id)",arg=one,timeout=10000)
    assert page.locator('#j190-sa-list .j190-sa-stop').count()==15
    page.locator('#mapContainer').screenshot(path=str(proof/('atlas-190-sa-route-'+kind+'.png')),animations='disabled',timeout=30000)
+   page.locator('#categories button').filter(has_text='Graffiti Tags').click()
+   expect(page.locator('.pin-source-projected')).to_have_count(100,timeout=15000)
+   expect(page.locator('#mapped')).to_have_text('250')
+   page.locator('#j190-sa-start').select_option('tags:1')
+   page.locator('#j190-sa-finish').select_option('tags:100')
+   tag_route=page.evaluate("window.TeamJuraSARoute.getRoute()")
+   assert tag_route[0]=='tags:1' and tag_route[-1]=='tags:100' and all(p.startswith('tags:') for p in tag_route)
+   expect(page.locator('#item-1 a')).to_have_attribute('href','https://dev.prineside.com/en/gtasa_samp_model_id/model/1490-tag_01/')
    for scope in ('tlad','tbogt'):
     page.goto(base+'map-hub.html?game='+scope,wait_until='domcontentloaded',timeout=45000)
     link=page.locator('#j190-episode-collectibles')

@@ -82,3 +82,16 @@ for bundle, count, revision in ((pack,150,'77dcc3d65e86df7a3806d4e1607445aacfda1
     assert 'Permission is hereby granted' in bundle['coordinateSourceLicenseText']
     assert revision in bundle['sourceUrl'] and revision in bundle['licenseUrl']
 print('PASS Atlas 23.7: pinned coordinate provenance and retained MIT notices (audit evidence, not gameplay certification)')
+
+# New separate tag placement pack, leaving all previous SA source IDs untouched.
+tags=json.loads(read('data/atlas-sa-100-tag-placements.json'))
+assert len(tags['records'])==100 and tags['counts']=={'tags':100}
+assert tags['directSourceMatches']==sum(p['directSourceChecked'] for p in tags['records'])==61
+assert tags['transcriptionOnly']==39 and tags['gameplayVerified'] is False
+assert len({(p['worldX'],p['worldY'],p['worldZ']) for p in tags['records']})==100
+assert {p['slot'] for p in tags['records']}==set(range(1,101))
+for p in tags['records']:
+ assert p['set']=='tags' and abs(p['x']-(p['worldX']+3000))<.001 and abs(p['y']-(3000-p['worldY']))<.001
+ assert p['sourceUrl'].startswith('https://dev.prineside.com/en/gtasa_samp_model_id/model/')
+assert 'TeamJuraSATags' in sa and 'TeamJuraSATags' in saplan
+print('PASS attributed 100 tag object positions; 61 direct export matches, 39 transcription-only')
