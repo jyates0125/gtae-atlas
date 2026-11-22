@@ -1136,7 +1136,7 @@ async def smoke():
                                                 if await pg.locator('#classicMarkerLayer .classic-marker[data-slot-done="true"]').count()!=1:
                                                     failures.append('Checklist completion did not update map pin state')
                                                 await pg.reload(wait_until='domcontentloaded')
-                                                await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='2'",timeout=7000)
+                                                await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==="+json.dumps('3' if world=='vc' else '2'),timeout=7000)
                                                 if await pg.locator('#classicMarkerLayer .classic-marker[data-slot-done="true"]').count()!=1:
                                                     failures.append('Numbered pin/completion relationship lost on reload')
                                 except Exception as exc:
