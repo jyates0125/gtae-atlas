@@ -112,10 +112,14 @@ try:
    expect(page.locator('.j290-pin')).to_have_count(1)
    assert 'view=rockstar' in page.url and 'landmark=L1' in page.url
    expect(page.locator('[data-j143="close"]')).to_be_visible()
+   page.locator('.j290-selected [data-place-id="L1"]').click()
+   expect(page.locator('.j290-map-hint')).to_be_visible()
    page.locator('[data-j143="close"]').click()
    expect(page.locator('#j143-official-layer')).to_be_hidden()
    page.locator('#j143-official-button').click()
    expect(page.locator('#j143-official-layer')).to_be_visible()
+   expect(page.locator('.j290-map-hint')).to_be_hidden()
+   expect(page.locator('.j290-pin')).to_have_count(1)
    if width==390 or height<500:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'Poster notebook causes horizontal overflow'
    print('PASS Atlas 29.0 '+engine+' '+str(width)+': source search, manual poster placement, show/hide, private backup, image SHA isolation and restore',flush=True)
