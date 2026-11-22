@@ -1,0 +1,49 @@
+name: Atlas 29.7 - non-Cayo Heist HQ resume
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'heist-directory.js'
+      - 'heists.html'
+      - 'atlas151-heist-gallery.css'
+      - 'heist-pages.js'
+      - 'atlas164-heist-workspace.js'
+      - 'atlas167-heist-focus.js'
+      - 'atlas168-heist-guides.js'
+      - 'atlas169-heist-views.js'
+      - 'scripts/test_atlas297_heist_resume.py'
+      - 'scripts/test_atlas297_heist_resume_browser.py'
+      - '.github/workflows/atlas297-heist-resume.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas297-heists-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  non-cayo-heists:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect 15 heist routes and device-only saved progress
+        run: |
+          python scripts/test_atlas297_heist_resume.py
+          python scripts/test_atlas164_heist_workspace.py
+          node --check heist-directory.js
+      - name: Build actual Cloudflare files and audit
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install --with-deps chromium
+      - name: Exercise 14 non-Cayo heist pages on phone and desktop
+        run: python scripts/test_atlas297_heist_resume_browser.py
