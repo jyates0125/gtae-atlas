@@ -32,6 +32,7 @@ assert "data-step" in s and 'check.dataset.step' in s
 assert 'j301-checklist-notice[hidden]' in styling
 assert 'atlas298-heist-map-kit.js' in s and 'atlas299-heist-backup.js' in s
 assert "heistId!=='cayo-perico'" in s
+assert 'src="./heist-pages.js?v=301"' in (root/'heist-cayo-perico.html').read_text(encoding='utf-8'), 'Cayo must fetch new checklist script'
 result=subprocess.run(['node','--check',str(root/'heist-pages.js')],capture_output=True,text=True)
 assert result.returncode==0,result.stderr
 print('Atlas 30.1 source guard: all fifteen heists, no load write, scoped saves, history and backups passed')
