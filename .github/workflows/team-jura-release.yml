@@ -48,6 +48,7 @@ jobs:
           python scripts/test_atlas143_official_view.py
           node --check atlas143-official-map-view.js
           python scripts/test_atlas290_poster_source.py
+          python scripts/test_atlas291_dual_leonida.py
           node --check atlas290-official-landmarks.js
           node --check atlas131-account.js
           node --check atlas131-social-icons.js
