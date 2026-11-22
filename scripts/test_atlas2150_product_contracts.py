@@ -6,6 +6,7 @@ rendered Chromium/Edge, Safari, or owner visual acceptance.
 """
 from pathlib import Path
 import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -34,7 +35,22 @@ require("atlas93-garage.js", "atlas-vehicle-configurator.html?model=",
 require("atlas101-configurator.js", "Aircraft / Plane concept",
         "Boat / Watercraft concept", "Helicopter concept", "sceneType()",
         "prepareImport", "Object.hasOwn(merged,id)", "classLocked")
-require("atlas99-garage3d.js", "const aircraft=", "const watercraft=", "const helicopter=")
+require("atlas99-garage3d.js", "forge.build(opts.type,opts.model,paint,design,environment)", "forgeStatus")
+require("atlas-vehicle-configurator.html", "atlas256-forge-geometry.js", 'id="forgeVariant"', 'id="saveVariant"', 'id="loadVariant"')
+require("atlas101-configurator.js", "mergeVariants", "VARIANT_LIMIT=8", "saveVariant", "loadVariant")
+# Exercise the replacement geometry engine, not retired renderer variable names.
+subprocess.run(["node", "-e", """
+const assert = require('node:assert/strict');
+const forge = require('./atlas256-forge-geometry.js');
+const cases = [["Aircraft / Plane concept","lazer","air"],["Boat / Watercraft concept","jetmax","marine"],["Helicopter concept","akula","rotor"],["Sports concept","adder","sport"],["Truck / Utility concept","bison","utility"],["Touring concept","regina","touring"]];
+for (const [type,id,kind] of cases) {
+  const model=forge.build(type,id,'#4473c2',{});
+  assert.equal(model.kind,kind,id);
+  assert.ok(model.vertices.length>0 && model.vertices.length%18===0,id+' triangles');
+  assert.ok(model.vertices.every(Number.isFinite),id+' finite geometry');
+}
+console.log('PASS six original Forge geometry classes');
+"""], cwd=ROOT, check=True)
 
 # World and heist navigation: these pages must remain in the release.
 for path in ("index.html", "atlas-dashboard.html", "maps.html",
