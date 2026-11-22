@@ -1,0 +1,49 @@
+name: Atlas 31.1 - safe Forge named version management
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas101-configurator.js'
+      - 'atlas-vehicle-configurator.html'
+      - 'atlas311-forge-variant-manager.css'
+      - 'scripts/test_atlas311_forge_management.py'
+      - 'scripts/test_atlas311_forge_management_browser.py'
+      - '.github/workflows/atlas311-forge-management.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  named-versions:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check source contracts and existing Garage variant reader
+        run: |
+          python scripts/test_atlas311_forge_management.py
+          node tests/atlas305-garage-variants.test.cjs
+          node tests/atlas296-forge-collections.test.cjs
+      - name: Build and audit Cloudflare static payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Verify V and VI private build mutation at three viewports
+        run: python scripts/test_atlas311_forge_management_browser.py
+      - name: Save phone Forge management evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas311-forge-named-version-manager
+          path: qa-evidence/chromium/atlas311-forge-*-phone.png
+          if-no-files-found: warn
+          retention-days: 14
