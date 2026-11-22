@@ -35,6 +35,17 @@ try:
    assert page.locator('.j223-shortcuts a').count()==13
    menu.locator('summary').click()
    assert menu.get_attribute('open') is None,'Shortcuts did not collapse'
+   # Keyboard-only visitors must be able to reopen the menu and activate
+   # each tool without a pointer or hidden/offscreen focus trap.
+   menu.locator('summary').focus()
+   page.keyboard.press('Enter')
+   expect(page.locator('.j223-shortcuts a').first).to_be_visible()
+   page.keyboard.press('Tab')
+   assert page.evaluate('document.activeElement?.closest(".j223-shortcuts") !== null'),'Tab did not enter opened shortcuts'
+   page.keyboard.press('Shift+Tab')
+   assert menu.locator('summary').evaluate('(el) => document.activeElement === el'),'Shift+Tab did not return to menu summary'
+   page.keyboard.press('Enter')
+   assert menu.get_attribute('open') is None,'Keyboard could not collapse shortcuts'
    assert page.locator('.j223-map-actions a[href="./atlas-vi.html?view=rockstar"]').count()>=1,'Missing official VI poster action'
    assert page.locator('.j223-map-actions a[href="./atlas-vi.html"]').count()>=1,'Missing separate interactive VI map action'
    if width==1440:
