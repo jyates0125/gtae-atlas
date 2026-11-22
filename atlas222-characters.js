@@ -230,7 +230,6 @@ async function start(){
   if(hit){
    if(scope!=='all'&&scope!==hit.scope){scope=hit.scope;syncDatabase()}
    if(hit.scope==='classic'&&edition!=='all'&&edition!==hit.game){edition=hit.game;editionSelect.value=edition}
-   if(scope==='classic'&&edition!=='all'&&edition!==hit.game){edition=hit.game;editionSelect.value=edition}
    draw();persist();showProfile(dialog,hit);return
   }
   if(requested){url.searchParams.delete('profile');history.replaceState(history.state,'',url)}
