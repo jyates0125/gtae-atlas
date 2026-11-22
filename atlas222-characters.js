@@ -46,7 +46,7 @@ function portraitMedia(r,profile=false){
  };
  const showFallback=()=>{
   if(!r.conceptPortrait){unavailable();return}
-  const portrait=make('img');
+  const portrait=make('img','jura-concept-portrait');
   portrait.loading=profile?'eager':'lazy';
   portrait.decoding='async';
   portrait.alt='Elario Studios fan concept of '+r.name;
@@ -88,7 +88,8 @@ function showProfile(dialog,r,pushEntry=false){
  const hero=make('div','j222-profile-hero');hero.append(portraitMedia(r,true));
  const intro=make('div','j222-profile-intro');
  const heading=make('h2','',r.name);heading.id='j222-profile-title';
- intro.append(make('p','j222-world-tag',(worlds[r.scope]||r.scope)+' · '+(r.game||'')),heading,make('p','',r.summary||'No verified biography is available for this record.'));
+ const edition=r.scope==='classic'?r.game:(worlds[r.scope]||r.game);
+ intro.append(make('p','j222-world-tag',edition),heading,make('p','',r.summary||'No verified biography is available for this record.'));
  hero.append(intro);content.append(hero);
  const facts=make('dl','j222-profile-facts');
  const fact=(key,value)=>{if(value)facts.append(make('dt','',key),make('dd','',value))};

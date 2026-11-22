@@ -95,3 +95,11 @@ body[data-atlas-kind="character"] .j224-brand-crest{width:44px;height:44px;objec
 .j222-portrait-unavailable{box-sizing:border-box;min-height:0;padding:12px 12px 42px}
 .j222-character-media:has(.j222-world-scene) .j222-portrait-unavailable{min-height:0}
 .j222-character-media:has(.j222-world-scene) .j222-art-credit{position:absolute}
+
+.j222-character-media .jura-concept-portrait { object-position: center top; }
+@media (max-width:600px) {
+ .j222-profile-hero .j222-profile-media:has(.jura-concept-portrait) {
+  max-height: none;
+  aspect-ratio: 4 / 3;
+ }
+}
