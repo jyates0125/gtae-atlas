@@ -15,3 +15,6 @@
 
 /* Source progress is separate from personal guide slots. */
 .j271-source-progress{margin:12px 0;padding:12px;border:1px solid #936ca4;border-radius:12px;background:#301b41;color:#f6e9ff;min-width:0}.j271-source-progress>strong{color:#ffdf9f}.j271-source-progress label{display:block;line-height:1.5}.j271-source-progress .j240-controls{margin-top:10px}.j271-source-progress input[type=file]{width:100%;max-width:100%;font:inherit;box-sizing:border-box}.j271-mark{min-height:44px;max-width:100%;white-space:normal;overflow-wrap:anywhere}.j271-mark[aria-pressed=true]{background:#225643!important;color:#fff4d9!important;border-color:#9ac9a3!important}.j241-source-pin[data-found=true]{background:#225643;color:#f7ffda;border-color:#9ac9a3}.j241-source-pin[data-found=true]::after{border-color:#9ac9a3}
+
+/* Player-placed CTW map pins remain visually distinct from source-aligned references. */
+#j273-camera-pins .j241-source-pin[data-personal="true"]{background:#653474;border-color:#ffe08d;box-shadow:0 0 0 2px #211126,0 0 10px #ffce69ab}#j283-toggle-pins{font-weight:760}#j273-camera-list li button{min-height:40px}
