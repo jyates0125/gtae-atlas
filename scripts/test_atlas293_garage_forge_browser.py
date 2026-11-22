@@ -22,7 +22,8 @@ forge_key = 'team-jura-atlas101-concept-presets-v1'
 try:
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
-        page = browser.new_page(viewport={'width': 390, 'height': 844})
+        context = browser.new_context(viewport={'width': 390, 'height': 844})
+        page = context.new_page()
         page.goto(base + '/atlas-dashboard.html', wait_until='domcontentloaded')
         page.evaluate("""([g, f]) => {
             localStorage.setItem(g, JSON.stringify({schema:1,vehicles:{jetmax:{
@@ -68,7 +69,7 @@ try:
         assert preserved['jetmax']['plate']=='KEEP'
         assert preserved['sultan']=={'favorite':True,'paint':'Graphite'}
         # A second tab must see the latest saved Garage build, not a stale in-memory snapshot.
-        second=page.context.new_page()
+        second=context.new_page()
         second.goto(base+'/atlas-vehicle-configurator.html?model=jetmax&source=garage',wait_until='domcontentloaded')
         expect(second.locator('#modelSelect')).to_have_value('jetmax',timeout=30000)
         expect(second.locator('#buildName')).to_have_value('Refit Two')
@@ -103,6 +104,7 @@ try:
         page.goto(base+'/atlas-vehicle-configurator.html?world=vi',wait_until='domcontentloaded')
         expect(page.locator('#saveToGarage')).to_be_hidden()
         assert page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.studioName",garage_key)=='Refit Three'
+        context.close()
         browser.close()
 finally:
     server.shutdown()
