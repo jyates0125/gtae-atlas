@@ -63,3 +63,10 @@
 .directory-card .world-copy{padding-bottom:16px}
 
 .j277-offline{margin:12px 0;padding:14px;min-width:0;overflow-wrap:anywhere}.j277-offline h3{color:var(--gold)}.j277-offline button{min-height:44px;max-width:100%;white-space:normal}.j277-offline p{line-height:1.5}
+
+/* Atlas 30.3 — always reachable finder reset, only shown for active query/filter. */
+body[data-page="maps"] .j303-world-reset{display:inline-flex;align-items:center;justify-content:center;align-self:end;min-height:45px;padding:9px 12px;border:1px solid #f2c081;border-radius:9px;background:linear-gradient(115deg,#65366d,#382347);color:#ffecc9;font:800 12px/1.3 system-ui;cursor:pointer;white-space:nowrap}
+body[data-page="maps"] .j303-world-reset[hidden]{display:none!important}
+body[data-page="maps"] .j303-world-reset:hover{background:#805181}
+body[data-page="maps"] .j303-world-reset:focus-visible{outline:3px solid #ffe5aa;outline-offset:3px}
+@media(max-width:600px){body[data-page="maps"] .directory-controls{gap:9px}body[data-page="maps"] .j303-world-reset{min-height:44px;width:100%;max-width:100%;white-space:normal}}
