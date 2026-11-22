@@ -21,28 +21,40 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Skip unrelated PR synchronization commits
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas302-classic-notebook.yml
       - name: Verify classic storage integrity and JavaScript syntax
+        if: steps.scope.outputs.run == 'true'
         run: |
           python scripts/test_atlas302_classic_safe.py
           python -m py_compile scripts/test_atlas302_classic_browser.py
       - name: Build real Cloudflare payload and asset audit
+        if: steps.scope.outputs.run == 'true'
         run: |
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
       - name: Install Chromium for affected classic map notebooks only
+        if: steps.scope.outputs.run == 'true'
         run: |
           python -m pip install 'playwright==1.58.0'
           python -m playwright install chromium
       - name: Verify seven game worlds at 390px and 1440px with stale/corrupt saves
+        if: steps.scope.outputs.run == 'true'
         run: python scripts/test_atlas302_classic_browser.py
       - name: Retain original mobile and desktop recovery UI
-        if: always()
+        if: always() && steps.scope.outputs.run == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: atlas302-classic-notebook-390-1440
