@@ -148,8 +148,8 @@ function showProfile(dialog,r,pushEntry=false){
      {...history.state,juraCharacterProfile:next.id}:history.state;
     history.replaceState(state,'',u);
     showProfile(dialog,next);
-    button.textContent=labelText;
-    browse.querySelector('[data-j304-next]')?.focus({preventScroll:true});
+    const selector=delta===1?'[data-j304-next]':'[data-j304-previous]';
+    dialog.querySelector(selector)?.focus({preventScroll:true});
    });
    if(delta===1)button.dataset.j304Next='';else button.dataset.j304Previous='';
    return button;
