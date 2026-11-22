@@ -1234,8 +1234,27 @@ async def smoke():
                                 if await buttons.count()>0:
                                     await buttons.first.click()
                                     if await pg.locator('#garageDetails .j99-showroom canvas').count()!=1:failures.append('3D concept preview missing from selected Garage vehicle')
-                                    if await pg.locator('#garageDetails .j99-3d-controls button').count()!=3:failures.append('Showroom interaction controls missing')
-                                    if 'not a scanned or official model' not in (await pg.locator('#garageDetails .j99-showroom').inner_text()).lower():failures.append('3D concept rights disclaimer missing')
+                                    showroom=pg.locator('#garageDetails .j99-showroom')
+                                    camera_buttons=showroom.locator('.j99-3d-controls button')
+                                    expected_controls={'3/4 view','Front','Side','Top','＋ Zoom','− Zoom','Auto rotate'}
+                                    if set(await camera_buttons.all_text_contents())!=expected_controls:
+                                        failures.append('Current Forge camera or rotation controls missing')
+                                    if not await showroom.locator('.j256-rights').is_visible() or 'not a scanned or official model' not in (await showroom.locator('.j256-rights').inner_text()).lower():
+                                        failures.append('3D concept rights disclaimer missing')
+                                    forge_status=await showroom.get_attribute('data-forge-status')
+                                    if forge_status=='ready':
+                                        await camera_buttons.filter(has_text='Top').click()
+                                        await camera_buttons.filter(has_text='Auto rotate').click()
+                                        if await camera_buttons.filter(has_text='Stop rotation').get_attribute('aria-pressed')!='true':
+                                            failures.append('Forge rotation control did not activate')
+                                        await camera_buttons.filter(has_text='Stop rotation').click()
+                                    elif forge_status=='fallback':
+                                        if await showroom.locator('.j99-3d-stage').is_visible() or await showroom.locator('.j99-3d-controls').is_visible():
+                                            failures.append('Unavailable WebGL controls still presented as usable')
+                                        if not await showroom.locator('.j256-style').is_visible():
+                                            failures.append('Design controls missing in WebGL fallback')
+                                    else:
+                                        failures.append('Unknown Forge renderer status: '+str(forge_status))
                                 else:failures.append('Garage vehicle catalogue did not load')
                                 await pg.locator('#garageSearch').fill('squalo')
                                 await pg.locator('#garageClassFilter').select_option('Boats & Watercraft')
@@ -1249,6 +1268,19 @@ async def smoke():
                                         failures.append('Squalo boat facts did not load')
                                     if await pg.locator('#garageDetails .j99-showroom canvas').count()!=0:
                                         failures.append('Boat incorrectly represented as generic 3D car')
+                                    else:
+                                        launch=pg.locator('#garageDetails .j256-launch')
+                                        if await launch.count()!=1:
+                                            failures.append('Class-specific marine concept launch missing')
+                                        else:
+                                            await launch.click()
+                                            marine=pg.locator('#garageDetails .j256-forge')
+                                            if await marine.get_attribute('data-forge-class')!='marine':
+                                                failures.append('Squalo must use marine geometry, never a road car')
+                                            if await marine.get_attribute('data-forge-status') not in ('ready','fallback'):
+                                                failures.append('Marine renderer did not initialize or provide fallback')
+                                            if not await marine.locator('.j256-rights').is_visible():
+                                                failures.append('Marine model disclaimer missing')
                                 await pg.locator('#garageClassFilter').select_option('all')
                                 await pg.locator('#garageSearch').fill('')
                             if not failures and path=='atlas-research.html':
