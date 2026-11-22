@@ -11,7 +11,7 @@ assert "'6':[['day','In-game Day · GTADB map'],['scaly,view','Scaly · YANIS V1
 assert "['yanis,18','YANIS V18 · Current']" in engine and "['dupzor,51','Loki · DUPZOR V51']" in engine
 assert "view.base==='day'?6:5" in engine, "Native Day zoom 6 must not force mismatched community zoom"
 assert "const APP='team-jura-atlas-v41'" in engine, "Never invalidate personal save namespace"
-assert "https://raw.githubusercontent.com/rolux/gtadb.org/main/" in engine and "maps.gtadb.org/tiles/" in engine
+assert "https://raw.githubusercontent.com/rolux/gtadb.org/main/" in engine and "const TILE_HOSTS=[UPSTREAM+'maps/tiles/'" in engine
 assert 'GTA VI' in vi and 'in-game Day tiles' in vi
 assert "Rockstar's separate official printable poster view" in vi
 assert 'GTADB GTA VI in-game Day tile family' in credits
