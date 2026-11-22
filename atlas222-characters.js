@@ -39,7 +39,7 @@ function portraitMedia(r,profile=false){
   const identity=make('div','j222-portrait-unavailable');
   identity.setAttribute('role','group');
   identity.setAttribute('aria-label','Individual portrait unavailable for '+r.name);
-  const monogram=make('strong','j222-portrait-initials',r.name.split(/\\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase());
+  const monogram=make('strong','j222-portrait-initials',r.name.split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase());
   identity.append(monogram,make('span','',r.name),make('small','','World illustration · individual portrait pending'));
   credit.textContent='Illustrative world artwork only · not a depiction of '+r.name;
   media.append(scene,identity,credit);
@@ -121,16 +121,30 @@ async function start(){
  const args=new URLSearchParams(location.search);
  let scope=ALLOWED.has(args.get('game'))?args.get('game'):'all';
  let q=(args.get('q')||'').slice(0,120);
+ const editions=[...new Set(data.filter(r=>r.scope==='classic').map(r=>r.game))].sort();
+ let edition=editions.includes(args.get('edition'))?args.get('edition'):'all';
+ const editionLabel=make('label','j226-edition-label','Classic game edition ');
+ const editionSelect=make('select','j226-edition-select');
+ editionSelect.setAttribute('aria-label','Classic game edition');
+ for(const value of ['all',...editions]){
+  const option=make('option','',value==='all'?'All classic games':value);
+  option.value=value;editionSelect.append(option);
+ }
+ editionSelect.value=edition;
+ editionLabel.append(editionSelect);
+ buttons[0]?.parentElement?.after(editionLabel);
  search.value=q;
  const persist=()=>{const u=new URL(location.href);
   if(scope==='all')u.searchParams.delete('game');else u.searchParams.set('game',scope);
+  if(scope==='classic'&&edition!=='all')u.searchParams.set('edition',edition);else u.searchParams.delete('edition');
   if(q.trim())u.searchParams.set('q',q.trim());else u.searchParams.delete('q');
   history.replaceState(history.state,'',u);
  };
  const syncDatabase=()=>{const el=$('filterGame');if(el&&el.value!==scope){el.value=scope;el.dispatchEvent(new Event('change',{bubbles:true}))}};
  const draw=()=>{
   const s=q.trim().toLocaleLowerCase();
-  const scoped=data.filter(r=>scope==='all'||r.scope===scope);
+  const scoped=data.filter(r=>(scope==='all'||r.scope===scope)&&(scope!=='classic'||edition==='all'||r.game===edition));
+  editionLabel.hidden=scope!=='classic';
   // A character-name or alias query is a direct lookup. Do not clutter it with
   // other characters whose biography merely mentions that person's name.
   const nameMatches=s?scoped.filter(r=>[r.name,...(r.aliases||[])].some(x=>String(x).toLocaleLowerCase().includes(s))):[];
@@ -147,9 +161,10 @@ async function start(){
   stat.textContent=rows.length+' of '+data.length+' indexed characters · '+(worlds[scope]||'All worlds');
   for(const b of buttons)b.setAttribute('aria-pressed',String(b.dataset.j222Scope===scope));
  };
+ editionSelect.addEventListener('change',()=>{edition=editionSelect.value;draw();persist()});
  for(const b of buttons)b.addEventListener('click',()=>{scope=b.dataset.j222Scope;draw();syncDatabase();persist()});
  search.addEventListener('input',()=>{q=search.value.slice(0,120);draw();persist()});
- $('j222-reset')?.addEventListener('click',()=>{scope='all';q='';search.value='';draw();syncDatabase();persist()});
+ $('j222-reset')?.addEventListener('click',()=>{scope='all';edition='all';editionSelect.value='all';q='';search.value='';draw();syncDatabase();persist()});
  const dialog=$('j222-profile-dialog');
  dialog?.addEventListener('click',event=>{
   if(event.target!==dialog)return;
