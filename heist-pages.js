@@ -45,12 +45,28 @@ function draw(){
  if(progress)progress.textContent=done+' / '+checks.length+' tracked';
  if(bar)bar.style.width=(checks.length?done/checks.length*100:0)+'%';
 }
+function ensureCayoRecovery(){
+ // The modern Cayo board hides main.wrap > .layout, which includes the old
+ // checklist. Place recovery outside that hidden layout only when needed.
+ if(heistId!=='cayo-perico'||badRaw===null)return;
+ let wrapper=document.getElementById('j301-cayo-recovery');
+ if(!wrapper){
+  wrapper=document.createElement('section');wrapper.id='j301-cayo-recovery';
+  wrapper.className='j301-cayo-recovery';wrapper.setAttribute('aria-label','Cayo Perico checklist recovery');
+  const heading=document.createElement('h2');heading.textContent='Recover your Cayo checklist';
+  const help=document.createElement('p');help.textContent='An older local checklist could not be read. Your live Cayo island map and newer mission board remain available. Download the raw checklist before choosing an optional reset.';
+  wrapper.append(heading,help);
+  (document.querySelector('footer.foot')||document.body).before(wrapper);
+ }
+ wrapper.append(status,rescue);
+}
 function unlock(){
  locked=false;badRaw=null;downloaded=false;
  checks.forEach(x=>x.disabled=false);
  if(reset)reset.disabled=false;
  if(exportProgress)exportProgress.disabled=false;
  rescue.hidden=true;repair.disabled=true;
+ document.getElementById('j301-cayo-recovery')?.remove();
 }
 function lock(message){
  locked=true;
@@ -60,6 +76,7 @@ function lock(message){
  rescue.hidden=badRaw===null;
  repair.disabled=!downloaded;
  status.textContent=message||'Saved checklist is unreadable. Nothing has been overwritten. Download a raw copy before choosing an explicit reset.';
+ ensureCayoRecovery();
 }
 function loadReadOnly(){
  try{
