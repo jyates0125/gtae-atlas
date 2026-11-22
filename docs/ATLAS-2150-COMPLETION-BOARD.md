@@ -276,3 +276,7 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Forge Collections named-design links now expose only public model ID and world, never personal saved design names. A one-time same-tab session-only handoff selects the requested private named design. Legacy title-bearing links remain readable but have their name scrubbed from URL history after load. My Garage and Forge storage are unchanged; no server or third-party requests.
 - **TEST:** Related source/node and actual same-origin Chromium collection→Forge handoff across V/Online and VI with name privacy, stale record fallbacks and storage isolation; exact-head CI mandatory.
 - **HOLD:** Device Safari, owner visual acceptance, full Chromium+Edge+ZIP and new art/real-world 3D source rights.
+
+## Atlas 31.3b — integrated acceptance contract refresh for private Forge handoff (staging)
+- **TEST FIX:** The old Atlas 2150 product integration assertion required a personally named Forge title in a shareable URL hash, contrary to the binding privacy requirement. It now requires one-use privateVariant identity, world/model public link and the absence of the private name in URLs; actual V/VI browser handoff was already verified in Atlas 31.3.
+- **GATE:** Related integrated staging, cross-product and Garage-to-Forge checks must pass on exact head before considering the combined stage fully green. This changes no live runtime behavior or saved data.
