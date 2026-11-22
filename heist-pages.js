@@ -12,7 +12,142 @@ if(scene && /^[a-z0-9-]+$/.test(heistId)){
  scene.fetchPriority='high'; // Prioritize the approved local cinematic cover over deferred accessories.
  scene.decoding='async';
 }
-const key='teamjura-heist-'+(document.body.dataset.heist||'unknown');const checks=[...document.querySelectorAll('[data-step]')];let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}const update=()=>{const done=checks.filter(x=>x.checked).length;const p=document.getElementById('progress');if(p)p.textContent=done+' / '+checks.length+' tracked';const b=document.getElementById('progressBar');if(b)b.style.width=(checks.length?done/checks.length*100:0)+'%';try{localStorage.setItem(key,JSON.stringify(Object.fromEntries(checks.map(x=>[x.dataset.step,x.checked]))))}catch(e){}};checks.forEach(x=>{x.checked=!!saved[x.dataset.step];x.addEventListener('change',update)});update();document.getElementById('resetProgress')?.addEventListener('click',()=>{if(!confirm('Clear this heist checklist?'))return;checks.forEach(x=>x.checked=false);update()});document.getElementById('exportProgress')?.addEventListener('click',()=>{const payload=JSON.stringify({heist:document.body.dataset.heist,steps:Object.fromEntries(checks.map(x=>[x.dataset.step,x.checked]))},null,2);const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([payload],{type:'application/json'}));a.download='team-jura-'+document.body.dataset.heist+'-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});const search=document.getElementById('stepSearch');search?.addEventListener('input',()=>{const q=search.value.toLowerCase();checks.forEach(x=>x.closest('.step').classList.toggle('hide',!x.dataset.step.toLowerCase().includes(q)))});// The approved cinematic scenes remain in this page. Add the real map and notes
+// Atlas 30.1 — keep guest checklist loads read-only and isolate step edits.
+// The other two progress keys (mission notes and schematic route) are untouched.
+const key='teamjura-heist-'+(document.body.dataset.heist||'unknown');
+const checks=[...document.querySelectorAll('[data-step]')];
+const valid=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
+const reset=document.getElementById('resetProgress');
+const exportProgress=document.getElementById('exportProgress');
+const progress=document.getElementById('progress');
+const bar=document.getElementById('progressBar');
+const status=document.createElement('p');status.id='j301-checklist-status';
+status.className='j301-checklist-status';status.setAttribute('role','status');
+status.textContent='Checklist updates save locally; simply opening a page never rewrites saved steps.';
+const rescue=document.createElement('div');rescue.className='j301-rescue';rescue.hidden=true;
+const downloadRaw=document.createElement('button');downloadRaw.type='button';
+downloadRaw.id='j301-rescue-download';downloadRaw.textContent='Download raw rescue copy';
+const repair=document.createElement('button');repair.type='button';repair.id='j301-rescue-reset';
+repair.textContent='Reset damaged checklist';repair.disabled=true;
+rescue.append(downloadRaw,repair);
+(bar?.parentElement||progress)?.after(status,rescue);
+const style=document.createElement('link');style.rel='stylesheet';style.href='./atlas301-heist-checklist.css?v=301';document.head.append(style);
+const readChecklist=()=>{
+ const raw=localStorage.getItem(key);
+ if(raw===null)return{raw:null,value:{}};
+ const value=JSON.parse(raw);
+ if(!valid(value))throw Error('Saved checklist has an unsupported shape');
+ return{raw,value};
+};
+let badRaw=null,downloaded=false,locked=false;
+function draw(){
+ const done=checks.filter(x=>x.checked).length;
+ if(progress)progress.textContent=done+' / '+checks.length+' tracked';
+ if(bar)bar.style.width=(checks.length?done/checks.length*100:0)+'%';
+}
+function unlock(){
+ locked=false;badRaw=null;downloaded=false;
+ checks.forEach(x=>x.disabled=false);
+ if(reset)reset.disabled=false;
+ if(exportProgress)exportProgress.disabled=false;
+ rescue.hidden=true;repair.disabled=true;
+}
+function lock(message){
+ locked=true;
+ checks.forEach(x=>x.disabled=true);
+ if(reset)reset.disabled=true;
+ if(exportProgress)exportProgress.disabled=true;
+ rescue.hidden=badRaw===null;
+ repair.disabled=!downloaded;
+ status.textContent=message||'Saved checklist is unreadable. Nothing has been overwritten. Download a raw copy before choosing an explicit reset.';
+}
+function loadReadOnly(){
+ try{
+  const state=readChecklist().value;
+  unlock();
+  for(const item of checks)item.checked=state[item.dataset.step]===true;
+ }catch(error){
+  try{badRaw=localStorage.getItem(key)}catch{badRaw=null}
+  lock('Saved checklist cannot be read. Your original bytes are preserved; download the raw rescue copy before resetting this checklist.');
+ }
+ draw();
+}
+for(const item of checks){
+ item.addEventListener('change',()=>{
+  if(locked)return;
+  const requested=item.checked;
+  try{
+   // Re-read the newest per-heist record; preserve unknown and concurrent steps.
+   const latest=readChecklist().value;
+   const next={...latest,[item.dataset.step]:requested};
+   localStorage.setItem(key,JSON.stringify(next));
+   for(const other of checks)other.checked=next[other.dataset.step]===true;
+   status.textContent='Saved only this mission’s checklist change on this device.';
+  }catch(error){
+   try{badRaw=localStorage.getItem(key)}catch{badRaw=null}
+   lock('Checklist save blocked; existing storage was not overwritten. Reload or recover the saved checklist before editing.');
+  }
+  draw();
+ });
+}
+loadReadOnly();
+window.addEventListener('storage',event=>{
+ if(event.key!==key&&event.key!==null)return;
+ loadReadOnly();
+ if(!locked)status.textContent='Checklist synchronized with another tab without rewriting saved data.';
+});
+reset?.addEventListener('click',()=>{
+ if(locked)return;
+ if(!confirm('Clear this heist checklist? Your notes, route and other mission progress will remain saved.'))return;
+ try{
+  const latest=readChecklist().value;
+  const next={...latest};
+  for(const item of checks)next[item.dataset.step]=false;
+  localStorage.setItem(key,JSON.stringify(next));
+  checks.forEach(item=>item.checked=false);
+  status.textContent='Checklist cleared. Your other heist notes and routes were preserved.';
+ }catch(error){
+  try{badRaw=localStorage.getItem(key)}catch{badRaw=null}
+  lock('Checklist reset blocked; no existing progress was replaced.');
+ }
+ draw();
+});
+exportProgress?.addEventListener('click',()=>{
+ if(locked)return;
+ try{
+  const latest=readChecklist().value;
+  const steps=Object.fromEntries(checks.map(x=>[x.dataset.step,latest[x.dataset.step]===true]));
+  const payload=JSON.stringify({heist:heistId,steps},null,2);
+  const url=URL.createObjectURL(new Blob([payload],{type:'application/json'}));
+  const link=document.createElement('a');link.href=url;link.download='team-jura-'+heistId+'-progress.json';
+  document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status.textContent='Exported current saved checklist, including newer changes from other tabs.';
+ }catch(error){
+  try{badRaw=localStorage.getItem(key)}catch{badRaw=null}
+  lock('Checklist export blocked; no saved progress was modified.');
+ }
+});
+downloadRaw.addEventListener('click',()=>{
+ if(badRaw===null)return;
+ const url=URL.createObjectURL(new Blob([badRaw],{type:'text/plain;charset=utf-8'}));
+ const link=document.createElement('a');link.href=url;link.download='team-jura-'+heistId+'-raw-checklist-recovery.txt';
+ document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ downloaded=true;repair.disabled=false;
+ status.textContent='Raw recovery copy downloaded. An optional reset will only affect this mission’s damaged checklist, after confirmation.';
+});
+repair.addEventListener('click',()=>{
+ if(!locked||!downloaded||badRaw===null)return;
+ if(!confirm('Replace this heist’s unreadable checklist with an empty checklist? Your raw rescue copy is saved; notes, routes and other heists stay intact.'))return;
+ try{
+  if(localStorage.getItem(key)!==badRaw)throw Error('Changed since backup');
+  localStorage.setItem(key,'{}');
+  loadReadOnly();
+  status.textContent='Damaged checklist reset after your confirmation. Other heist progress was preserved.';
+ }catch(error){
+  status.textContent='Repair blocked: the saved record changed or storage is unavailable. No reset completed.';
+ }
+});
+const search=document.getElementById('stepSearch');search?.addEventListener('input',()=>{const q=search.value.toLowerCase();checks.forEach(x=>x.closest('.step').classList.toggle('hide',!x.dataset.step.toLowerCase().includes(q)))});// The approved cinematic scenes remain in this page. Add the real map and notes
 // as a separate opt-in enhancement so checklist keys and art never change.
 if(document.body.classList.contains('j120-heist-page')){
  // One file for guest checklist, notes and personal route; older saves stay in place.
