@@ -137,6 +137,7 @@ jobs:
           python scripts/test_atlas172_research_map.py
           python scripts/test_atlas218_yanis_v18.py
           python scripts/test_atlas290_vi_day.py
+          python -m py_compile scripts/test_atlas290_vi_day_browser.py
           python scripts/test_atlas219_hq_premium.py
           python scripts/test_atlas220_vi_mobile.py
           node --check atlas220-vi-mobile.js
@@ -149,6 +150,7 @@ jobs:
           node --check atlas223-home.js
           node --check atlas132-nav.js
           node --check atlas222-characters.js
+          node --check atlas290-vi-source-ledger.js
           node --check atlas222-vi-release.js
           node --check atlas93-global.js
           node --check leonida-hq.js
