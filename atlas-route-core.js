@@ -46,5 +46,16 @@
   // Return the previous order on a tie or any floating-point regression.
   return optimized+0.0001<baseline?{stops:ordered,baseline,units:optimized,improved:true}:{stops:locations.slice(),baseline,units:baseline,improved:false};
  }
- return Object.freeze({MAX_STOPS,plan,distance,length,improveOrder});
+ // Preserve selected endpoints and compare against a nearest-next baseline.
+ function planEndpoints(locations,startId,finishId=null){
+  if(!Array.isArray(locations)||locations.length>MAX_STOPS||locations.some(p=>!valid(p)||typeof p.id!=='string'||!p.id))throw Error('Valid route stops required');
+  const ids=new Set(locations.map(p=>p.id));if(ids.size!==locations.length)throw Error('Duplicate route stops');
+  const start=locations.find(p=>p.id===startId),finish=finishId===null||finishId===''?null:locations.find(p=>p.id===finishId);
+  if(!start||(finishId&&(!finish||finish.id===start.id)))throw Error('Choose distinct available route endpoints');
+  const pending=locations.filter(p=>p.id!==startId&&p.id!==finish?.id),baseline=[];let from=start;
+  while(pending.length){let next=0;for(let i=1;i<pending.length;i++)if(distance(from,pending[i])<distance(from,pending[next]))next=i;from=pending.splice(next,1)[0];baseline.push(from)}
+  const result=improveOrder(start,baseline,finish);
+  return {...result,stops:[start,...result.stops,...(finish?[finish]:[])]};
+ }
+ return Object.freeze({MAX_STOPS,plan,distance,length,improveOrder,planEndpoints});
 });
