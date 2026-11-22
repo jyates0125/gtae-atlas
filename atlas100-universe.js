@@ -11,6 +11,19 @@ const DEFAULT_GAME=MODE==='animal'?'vi':MODE==='character'?'all':MODE==='collect
 let all=[],filtered=[],page=0,kind=DEFAULT_KIND,game=DEFAULT_GAME,group='all',query='',order='name',researchOnly=false,view='grid',compare=[],failed=[];
 const make=(tag,cls,s)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(s!==undefined)e.textContent=String(s);return e};
 const normalize=s=>String(s??'').trim(),slug=s=>normalize(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const searchText=value=>String(value??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+const identityMatch=(value,s)=>{
+ const n=searchText(value);
+ if(!s||!n)return false;
+ if(n.includes(s)||n.replace(/ /g,'')===s.replace(/ /g,''))return true;
+ const words=s.split(' ');
+ return words.length>1&&words.every(word=>n.split(' ').some(part=>part.startsWith(word)));
+};
+const recordKey=r=>String(r.id||'').split(':').pop();
+const characterMatch=(r,s)=>!!s&&([r.name,...(r.aliases||[])].some(x=>identityMatch(x,s))||
+ searchText(recordKey(r)).replace(/ /g,'')===s.replace(/ /g,''));
+const encodeQuery=value=>encodeURIComponent(value).replace(/[!'()*]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
+const characterHref=r=>'atlas-characters.html?game='+encodeQuery(r.scope)+(r.scope==='classic'?'&edition='+encodeQuery(r.game):'')+'&q='+encodeQuery(r.name)+'&profile='+encodeQuery(r.id)+'#mainCharacterEra';
 const nice=s=>normalize(s).replace(/_mk(\d+)/g,' Mk $1').replace(/_([a-z])/g,(_,a)=>' '+a.toUpperCase()).replace(/([a-z])(\d)/g,'$1 $2').replace(/\b[a-z]/g,x=>x.toUpperCase());
 const world=s=>({story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story',classic:'Classic GTA',both:'GTA V + Online'})[s]||'Reference';
 const isUnverified=r=>/unverified|provisional|community-tracked|pending/i.test(r.verification||'');
@@ -46,7 +59,7 @@ function index(profile,seed,catalog,sets,viWeapons){
    image:'',imageCredit:'',aliases:['GTA VI','GTA 6',r.group||'']});
  }
  // Keep a pictured archive entry when a generic catalog index duplicates it; never merge Story into Online.
- const uniq=new Map();for(const r of result){const k=r.kind+'|'+slug(r.name)+'|'+r.scope;const old=uniq.get(k);
+ const uniq=new Map();for(const r of result){const k=r.kind+'|'+slug(r.name)+'|'+r.scope+(r.kind==='character'&&r.scope==='classic'?'|'+slug(r.game):'');const old=uniq.get(k);
  if(old&&r.collectionId){uniq.set(k,{...old,collectionId:r.collectionId,total:r.total,sourceUrl:r.sourceUrl||old.sourceUrl});continue;}
  if(!old||(!old.image&&r.image)||(!old.key&&r.key))uniq.set(k,{...old,...r,sourceUrl:r.sourceUrl||old?.sourceUrl,attributes:r.attributes||old?.attributes});}
  return [...uniq.values()].sort((a,b)=>a.name.localeCompare(b.name));
@@ -101,13 +114,19 @@ function artwork(r){
 function own(){try{return JSON.parse(localStorage.getItem(STORE)||'{}')||{}}catch{return{}}}
 function toggleOwned(r,which){if(!r.key)return false;const data=own();data.schema=1;for(const key of ['owned','wishlist','note'])if(!data[key]||typeof data[key]!=='object')data[key]={};if(data[which][r.key])delete data[which][r.key];else{data[which][r.key]=true;delete data[which==='owned'?'wishlist':'owned'][r.key]}try{localStorage.setItem(STORE,JSON.stringify(data));return true}catch{return false}}
 function scopeMatch(r){return game==='all'||r.scope===game||(r.scope==='both'&&(game==='story'||game==='online'))}
-function match(){const q=query.toLowerCase();let r=all.filter(x=>(kind==='all'||x.kind===kind)&&scopeMatch(x)&&(group==='all'||x.group===group)&&(!researchOnly||isUnverified(x))&&(!q||[x.name,world(x.scope),x.group,x.brand,x.kind,x.summary,x.game,...(x.aliases||[])].join(' ').toLowerCase().includes(q)));
+function match(){const q=query.toLowerCase(),s=searchText(query);
+ const scoped=all.filter(x=>(kind==='all'||x.kind===kind)&&scopeMatch(x)&&(group==='all'||x.group===group)&&(!researchOnly||isUnverified(x)));
+ const direct=kind==='character'&&s?scoped.filter(x=>characterMatch(x,s)):[];
+ let r=direct.length?direct:scoped.filter(x=>!q||
+  (x.kind==='character'&&characterMatch(x,s))||
+  [x.name,world(x.scope),x.group,x.brand,x.kind,x.summary,x.game,...(x.aliases||[])].join(' ').toLowerCase().includes(q));
  const compareBy=order==='kind'?((a,b)=>a.kind.localeCompare(b.kind)||a.name.localeCompare(b.name)):order==='game'?((a,b)=>a.scope.localeCompare(b.scope)||a.name.localeCompare(b.name)):order==='name-desc'?((a,b)=>b.name.localeCompare(a.name)):((a,b)=>a.name.localeCompare(b.name));return r.sort(compareBy)}
 function updateGroups(){const sel=$('filterGroup');const values=[...new Set(all.filter(x=>(kind==='all'||x.kind===kind)&&(game==='all'||x.scope===game||(x.scope==='both'&&['story','online'].includes(game)))).map(x=>x.group))].filter(Boolean).sort();sel.replaceChildren(new Option('All groups','all'));for(const v of values)sel.add(new Option(v,v));if(!values.includes(group))group='all';sel.value=group}
 function link(label,href){const a=make('a','u-linkbutton',label);a.href=href.startsWith('https:')?href:'./'+href;if(href.startsWith('https:')){a.target='_blank';a.rel='noopener noreferrer'}return a}
-function card(r){const node=make('article','u-card');node.append(artwork(r));const body=make('div','u-card-copy');body.append(make('p','u-card-eyebrow',(LABELS[r.kind]||'Record').toUpperCase()+' · '+world(r.scope)));
+function card(r){const node=make('article','u-card');node.append(artwork(r));const body=make('div','u-card-copy');body.append(make('p','u-card-eyebrow',(LABELS[r.kind]||'Record').toUpperCase()+' · '+(r.kind==='character'&&r.scope==='classic'?r.game:world(r.scope))));
  const title=make('h3');const open=make('button','u-card-title',r.name);open.type='button';open.onclick=()=>details(r,true);title.append(open);body.append(title);body.append(make('p','u-card-group',(r.brand?r.brand+' · ':'')+(r.group||'Reference')));body.append(make('p','u-card-desc',r.summary||'Open the reference for more information.'));
  const actions=make('div','u-card-actions');const b=make('button','u-action','View details');b.type='button';b.onclick=()=>details(r,true);actions.append(b);
+ if(r.kind==='character'&&r.id.startsWith('character:')&&WORLD_CODES.has(r.scope))actions.append(link('Open character profile',characterHref(r)));
  if(r.kind==='vehicle'&&r.model&&r.scope!=='vi')actions.append(link('▣ Garage','atlas93-garage.html?addModel='+encodeURIComponent(r.model)));
  if(r.kind==='vehicle'||r.kind==='weapon'){const cmp=make('button','u-action u-muted-action',compare.some(x=>x.id===r.id)?'✓ Selected':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.some(x=>x.id===r.id)));cmp.disabled=compare.length>=3&&!compare.some(x=>x.id===r.id);if(cmp.disabled)cmp.textContent='Compare limit reached';cmp.onclick=()=>selectCompare(r);actions.append(cmp)}
  body.append(actions);if(r.kind==='character'&&r.imageCredit&&r.imageCredit.startsWith('https://')){const credit=link('Portrait source ↗',r.imageCredit);credit.className='u-portrait-source';body.append(credit)}node.append(body);return node}
@@ -148,6 +167,7 @@ function actionsFor(r,box){if(r.kind==='vehicle'){if(r.model&&r.scope!=='vi')box
   if(r.collectionId)box.append(link('Open collection on map',map+'?collection='+encodeURIComponent(r.collectionId)));
   else box.append(link('Open relevant map',map));
  }
+ if(r.kind==='character'&&r.id.startsWith('character:')&&WORLD_CODES.has(r.scope))box.append(link('Open character profile',characterHref(r)));
  if(r.kind==='animal'||r.kind==='character'){const classics={'GTA III':'map-hub.html?game=iii','GTA Vice City':'map-hub.html?game=vc','GTA San Andreas':'atlas-sa.html','GTA IV':'atlas-iv.html','GTA Vice City Stories':'map-hub.html?game=vcs','GTA Liberty City Stories':'map-hub.html?game=lcs','GTA Chinatown Wars':'map-hub.html?game=ctw','GTA The Lost and Damned':'map-hub.html?game=tlad','GTA The Ballad of Gay Tony':'map-hub.html?game=tbogt'};box.append(link('Explore correct world map',r.scope==='vi'?'atlas-vi.html':r.scope==='online'?'atlas-online.html':r.scope==='classic'?(classics[r.game]||'maps.html'):'atlas.html'));}
  if(r.sourceUrl&&r.sourceUrl.startsWith('https://'))box.append(link('Source ↗',r.sourceUrl));if(r.creditsUrl&&r.creditsUrl.startsWith('https://www.rockstargames.com/'))box.append(link('Rockstar cast credits ↗',r.creditsUrl));if(r.imageCredit)box.append(link('Artwork credits ↗',r.imageCredit));
  if(r.key){const state=own();for(const [key,word] of [['owned','Mark owned'],['wishlist','Wishlist']]){const b=make('button','u-action',state[key]?.[r.key]?'✓ '+word:word);b.type='button';b.onclick=()=>{if(toggleOwned(r,key))details(r,false);else alert('Storage unavailable; export your garage before clearing this device.');};box.append(b)}}

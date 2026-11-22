@@ -85,6 +85,7 @@ body.j223-home .j223-hero .hero-attribution{position:absolute;right:15px;bottom:
 .j223-cast-rail>a{min-width:0;display:flex;flex-direction:column;overflow:hidden;border:1px solid #d4a2c9;border-radius:9px;background:#412450;text-decoration:none;color:#fff;min-height:95px}
 .j223-cast-rail img{display:block;width:100%;aspect-ratio:3/4;min-height:82px;object-fit:cover;object-position:center 22%;background:#1d102d}
 .j223-cast-rail strong{font:750 9px/1.2 system-ui;display:block;padding:5px 3px;text-align:center;overflow-wrap:anywhere;color:#ffe0b5}
+.j223-cast-credit{font:600 9px/1.2 system-ui;display:block;text-align:center;padding:0 2px 4px;color:#f5dfeb;overflow-wrap:anywhere}
 .j223-cast-rail>a:hover{border-color:#ffe5bd}
 .j223-existing-title{margin:22px 0 15px;padding:12px 14px;border-left:3px solid #e9ae65;background:#211032b8;border-radius:8px}
 .j223-existing-title h2{margin:0 0 5px;font-size:clamp(19px,1.8vw,27px);color:#ffe0b2}

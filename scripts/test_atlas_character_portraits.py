@@ -63,6 +63,18 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             dialog.get_by_role("button", name="Close character profile").click()
             expect(dialog).to_be_hidden()
             page.wait_for_function("!new URL(location.href).searchParams.has('profile')")
+            # The underlying database must share the archive's canonical lookup
+            # and link the actual classic game rather than a generic classic page.
+            page.goto(base+"atlas-database.html?kind=character&game=all&q=CJ",wait_until="domcontentloaded")
+            record=page.locator("#recordGrid .u-card")
+            expect(record).to_have_count(1,timeout=15000)
+            expect(record.locator("h3")).to_have_text("Carl Johnson")
+            expect(record.locator(".u-card-eyebrow")).to_contain_text("GTA San Andreas")
+            profile_link=record.get_by_role("link",name="Open character profile")
+            assert "edition=GTA%20San%20Andreas" in profile_link.get_attribute("href")
+            record.get_by_role("button",name="View details").click()
+            expect(page.locator("#recordDialog").get_by_role("link",name="Open character profile")).to_have_attribute("href",profile_link.get_attribute("href"))
+            page.locator("#recordDialog").get_by_role("button",name="Close details").click()
             for world, url in (("vi","atlas90-weapons6.html"),("online","atlas90-weapons.html?world=online")):
                 page.goto(base + "atlas-database.html?kind=weapon&game=" + world, wait_until="domcontentloaded")
                 page.get_by_role("button",name="View details").first.click()
