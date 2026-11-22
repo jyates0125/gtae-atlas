@@ -42,6 +42,7 @@ function init(){
   if(hub?.open){hub.open=false;return}
   const official=document.getElementById('j143-official-button');
   if(official?.getAttribute('aria-expanded')==='true'){official.click();return}
+  // Use the real Atlas directory, never rely on a browser gesture to escape.
   window.location.assign('./maps.html');
  });
  const isOpen=()=>!card.classList.contains('hidden');
