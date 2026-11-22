@@ -226,7 +226,7 @@ with AtlasTestServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as
                 "zentorno":{"model":"zentorno","paint":"#aabbcc","body":"sports","name":"Restored Zentorno","note":"Saved offline"},
                 "invalid_unknown":{"model":"invalid_unknown","paint":"#ffffff","body":"auto","name":"Ignore","note":""}}}
             page.locator("#importBuilds").set_input_files({"name":"concepts.json","mimeType":"application/json","buffer":json.dumps(preset_backup).encode()})
-            expect(page.locator("#builderStatus")).to_contain_text("1 new preset(s) imported; 1 existing kept; 1 invalid or unknown skipped")
+            expect(page.locator("#builderStatus")).to_contain_text("1 new preset(s), 0 named build(s) imported; 1 existing kept; 1 invalid or unknown skipped")
             page.locator("#loadBuild").click()
             expect(page.locator("#buildName")).to_have_value("Keep my Adder")
             page.locator("#modelSelect").select_option("zentorno")
