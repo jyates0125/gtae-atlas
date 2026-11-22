@@ -93,7 +93,7 @@ try:
      expect(page.locator('#classicViewport')).to_be_visible(timeout=20000)
      if game=='tlad':expect(page.locator('#classicTitle')).to_contain_text('Lost and Damned')
      if game=='tbogt':expect(page.locator('#classicTitle')).to_contain_text('Ballad')
-     assert 'team-jura-atlas98-classic-'+game+'-v1' in page.locator('script[src*="atlas98-classic.js"]').get_attribute('src') if False else True
+     assert page.locator('script[src*="atlas98-classic.js"]').count()==1
     else:raise AssertionError('Unknown game '+game)
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),(game,width,'horizontal overflow')
     assert page.locator('a[href="./maps.html"]').count()>0,(game,width,'Missing return-to-directory link')
