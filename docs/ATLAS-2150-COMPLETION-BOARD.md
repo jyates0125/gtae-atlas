@@ -222,3 +222,9 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Closing keeps world, map camera/zoom, marker sources, user routes, progress and browser history unchanged. Original Elario violet/gold styling and approved imagery remain intact.
 - **TEST:** `scripts/test_atlas302_map_marker_exit.py`, `scripts/test_atlas302_map_marker_exit_browser.py` and focused `atlas302-map-marker-exit.yml` cover all three map pages at 375×667, 390×844, 844×390 and 1440×900; confirm exact-head CI before accepting.
 - **HOLD:** Actual iPhone Safari signoff, complete 13-world navigation/device QA, final Chromium/Edge/ZIP and owner-approved release remain outstanding. See `docs/ATLAS302-MAP-DETAIL-EXIT-ACCEPTANCE.md`.
+
+## Atlas 30.4 — honest character portrait coverage and accessible roster browsing (staging)
+- **SOURCE:** Archive now distinguishes all **40 appearances**, **13 listed original local character concepts** and **27 reference/pending appearances** with filtering, independent Story/Online/VI/classic scopes, classic title selection, search and shareable `art` query state. A shared profile clears an incompatible art filter rather than disappearing.
+- **SOURCE:** In-profile previous/next stays within the current result set and uses a single replaceable modal history entry; short phone landscape keeps the close and content reachable. No extra image licenses, remote downloads, altered character facts or guest storage writes.
+- **TEST:** `scripts/test_atlas304_character_archive.py`, `scripts/test_atlas304_character_archive_browser.py` and path-scoped `atlas304-character-archive.yml`; exact-head CI pending until reported green.
+- **HOLD:** Original Lamar Story/Online portrait art, owner likeness review of CJ/Claude/Agent 14, remaining subject-specific concept portrait work, real iPhone Safari, complete rights audit, final Chromium/Edge/ZIP and release approval. See `docs/ATLAS304-CHARACTER-ARCHIVE-ACCEPTANCE.md`.
