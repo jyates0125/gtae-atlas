@@ -379,8 +379,9 @@ function bindMap(){const viewport=$('#classicViewport');
   try{
    status('Checking your local map image…');
    const dims=await window.TeamJuraLocalMap.inspect(file);
+   if(storageIssue||localStorage.getItem(key)!==lastStoredRaw){storageIssue={kind:'stale',raw:localStorage.getItem(key)};showRecovery();status('Another tab updated your notebook; map image import stopped.');return}
    await window.TeamJuraLocalMap.save(id,file,dims);
-   state.background=null;persist();activateLocalMap(file,dims.width,dims.height);
+   state.background=null;if(!persist()){status('Map image stored locally but notebook metadata was not saved; reload and review before adding markers.');return}activateLocalMap(file,dims.width,dims.height);
    status('Local map saved privately · '+dims.width+' × '+dims.height+' px. Marker positions have not been changed. Keep your original image for backups.');
   }catch(error){status('Map unchanged: '+(error?.message||'Image storage failed')+'. Personal markers are safe.')}
  });
@@ -388,9 +389,10 @@ function bindMap(){const viewport=$('#classicViewport');
   if(storageIssue){showRecovery();status('Map removal blocked while this notebook needs recovery.');return}
   if(!window.confirm('Remove your personal map image from this browser? Your markers will remain, but they may no longer align with the new background.'))return;
   try{
+   if(localStorage.getItem(key)!==lastStoredRaw){storageIssue={kind:'stale',raw:localStorage.getItem(key)};showRecovery();status('Another tab updated your notebook; map removal stopped.');return}
    await window.TeamJuraLocalMap?.remove(id);state.background=null;
    if(highResUrl)URL.revokeObjectURL(highResUrl);
-   highResUrl=null;highResSize=null;highResFingerprint='';scale=1;dx=0;dy=0;persist();applyTransform();renderBackground();
+   highResUrl=null;highResSize=null;highResFingerprint='';scale=1;dx=0;dy=0;if(!persist()){status('Map image was removed, but notebook metadata was not saved; reload and review.');return}applyTransform();renderBackground();
    status('Personal map image removed. Markers and collection progress remain saved.');
   }catch(error){status('Could not remove local map: '+String(error?.message||error))}
  });
