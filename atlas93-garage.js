@@ -23,10 +23,23 @@ function readChecked(key,fallback,valid){
  if(!valid(value))throw Error('Invalid saved collection');
  return value;
 }
+// Older guest saves may omit optional fields; preserve them without accepting
+// malformed arrays, nulls or corrupt JSON as an empty collection.
+function readLiveMeta(){
+ const latest=readChecked(META,{schema:1,garages:['Main Garage'],vehicles:{}},x=>
+  plain(x)&&(x.garages===undefined||Array.isArray(x.garages))&&
+  (x.vehicles===undefined||plain(x.vehicles)&&Object.values(x.vehicles).every(plain)));
+ return {...latest,garages:latest.garages??['Main Garage'],vehicles:latest.vehicles??{}};
+}
+function readLiveGallery(){
+ const latest=readChecked(S,{schema:1,owned:{},wishlist:{},note:{}},x=>
+  plain(x)&&(x.owned===undefined||plain(x.owned))&&
+  (x.wishlist===undefined||plain(x.wishlist))&&(x.note===undefined||plain(x.note)));
+ return {...latest,owned:latest.owned??{},wishlist:latest.wishlist??{},note:latest.note??{}};
+}
 function saveOwnedMark(id,shouldOwn){
  try{
-  const latest=readChecked(S,{schema:1,owned:{},wishlist:{},note:{}},x=>
-   plain(x)&&plain(x.owned)&&plain(x.wishlist)&&(x.note===undefined||plain(x.note)));
+  const latest=readLiveGallery();
   const owned={...latest.owned},key='vehicles5:'+id;
   if(shouldOwn)owned[key]=true;else delete owned[key];
   const next={...latest,owned,schema:1,updated:new Date().toISOString()};
@@ -40,7 +53,7 @@ function saveOwnedMark(id,shouldOwn){
 }
 function saveGarageName(name,remove=false){
  try{
-  const latest=readChecked(META,meta,x=>plain(x)&&Array.isArray(x.garages)&&plain(x.vehicles));
+  const latest=readLiveMeta();
   if(Object.values(latest.vehicles).some(v=>!plain(v)))throw Error('Malformed vehicle entry');
   let names=[...new Set(latest.garages.filter(x=>typeof x==='string').map(x=>x.trim()).filter(Boolean))];
   if(remove){
@@ -85,7 +98,7 @@ function setVehicle(id,v){
  // Forge and Garage may be open in different tabs. Merge the newest saved model
  // rather than writing the stale Garage tab's entire collection back to storage.
  try{
-  const raw=localStorage.getItem(META),latest=raw===null?meta:JSON.parse(raw);
+  const latest=readLiveMeta();
   if(!latest||typeof latest!=='object'||Array.isArray(latest)||!latest.vehicles||typeof latest.vehicles!=='object'||Array.isArray(latest.vehicles))throw Error('Invalid Garage storage');
   const previous=latest.vehicles[id];
   if(previous!==undefined&&(!previous||typeof previous!=='object'||Array.isArray(previous)))throw Error('Invalid saved vehicle');
@@ -161,8 +174,7 @@ $('addGarage').onclick=()=>{const name=f($('newGarage').value).slice(0,56);if(!n
 $('exportGarage').onclick=()=>{
  try{
   // A Forge tab may have written a newer design before this Garage tab repaints.
-  const liveMeta=readChecked(META,meta,x=>plain(x)&&Array.isArray(x.garages)&&plain(x.vehicles)&&Object.values(x.vehicles).every(plain));
-  const liveGallery=readChecked(S,gallery,x=>plain(x)&&plain(x.owned)&&plain(x.wishlist)&&(x.note===undefined||plain(x.note)));
+  const liveMeta=readLiveMeta(),liveGallery=readLiveGallery();
   download({schema:1,app:'team-jura-atlas93-garage',exported:new Date().toISOString(),garage:liveMeta,collection:{owned:liveGallery.owned,wishlist:liveGallery.wishlist}},'team-jura-my-garage-backup.json');
  }catch(e){notice('Garage backup not exported: saved data needs recovery before exporting.')}
 };
@@ -171,8 +183,7 @@ $('importGarage').onchange=async e=>{const file=e.target.files?.[0];if(!file)ret
  if(!records.length)throw Error('Wait for the vehicle catalog before importing');
  const payload=JSON.parse(await file.text()),allowed=new Set(records.map(r=>r.id));
  // Re-read both keys to preserve updates made in another tab.
- const latestMeta=readChecked(META,meta,x=>plain(x)&&Array.isArray(x.garages)&&plain(x.vehicles)&&Object.values(x.vehicles).every(plain));
- const latestGallery=readChecked(S,gallery,x=>plain(x)&&plain(x.owned)&&plain(x.wishlist)&&(x.note===undefined||plain(x.note)));
+ const latestMeta=readLiveMeta(),latestGallery=readLiveGallery();
  const result=window.JuraGarageMerge.merge(payload,latestMeta,latestGallery,allowed);
  if(!result.added&&!result.addedGarages&&!result.marks){notice('No new Garage data: '+result.kept+' existing builds retained; '+result.skipped+' skipped.');return}
  const originalMeta=localStorage.getItem(META),originalGallery=localStorage.getItem(S);
