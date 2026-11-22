@@ -40,6 +40,10 @@ assert.equal(vehicleLink('vi','vi_squalo','My Look'),'./atlas-vehicle-configurat
 // Garage-only saved builds must appear even without any ownership collection.
 const only=collect({garage:{schema:1,vehicles:{jetmax:{note:'Saved boat'}}}}, {});
 assert.equal(only.length,1);
+const legacy=collect({garage:{vehicles:{adder:{garage:'Main Garage'}}},owned:{schema:1,owned:{'vehicles5:adder':true}}}, {});
+assert.equal(legacy.length,1,'Legacy schema-less Garage records remain readable');
+assert.equal(legacy[0].subtitle,'Main Garage');
+assert.equal(collect({garage:{schema:999,vehicles:{adder:{note:'unsupported'}}}},{}).length,0,'Explicit unknown schema remains unsupported');
 assert.equal(only[0].model,'jetmax');
 assert.match(only[0].detail,/not marked owned/);
 
