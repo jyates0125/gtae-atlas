@@ -256,7 +256,7 @@ try:
     expect(page.locator('#j249-calibrate')).to_have_count(1)
     expect(page.locator('#j249-pins')).to_be_hidden()
     # Synthetic local map alignment: avoid remote imagery availability.
-    page.evaluate("""() => {const v=document.getElementById('classicViewport'),b=document.getElementById('classicMapBackground');v.dataset.mapImage='local-highres';b.classList.add('has-image');b.style.backgroundImage='linear-gradient(#203040,#506070)';window.dispatchEvent(new CustomEvent('team-jura:classic-map-image-change'));}""")
+    page.evaluate("""() => {const v=document.getElementById('classicViewport'),b=document.getElementById('classicMapBackground');v.dataset.mapImage='local-highres';v.dataset.imageFingerprint='sha256:'+'a'.repeat(64);b.classList.add('has-image');b.style.backgroundImage='linear-gradient(#203040,#506070)';window.dispatchEvent(new CustomEvent('team-jura:classic-map-image-change'));}""")
     page.locator('#j249-calibrate summary').click()
     result=page.evaluate("""async(game)=>{const d=await (await fetch('./data/atlas-'+game+'-psp-reference.json')).json();const order=game==='lcs'?[0,20,41,15]:[0,20,38,50];return order.map(i=>d.records[i])}""",game)
     for r in result:
@@ -264,12 +264,18 @@ try:
      page.get_by_role('button',name='Pick point on map').click()
      page.evaluate("""(r)=>{const v=document.getElementById('classicViewport'),s=document.getElementById('classicMapSurface').getBoundingClientRect(),x=s.left+(r.x+2000)/4000*s.width,y=s.top+(2000-r.y)/4000*s.height;for(const type of ['pointerdown','pointerup'])v.dispatchEvent(new PointerEvent(type,{bubbles:true,pointerId:7,clientX:x,clientY:y}))}""",r)
     expect(page.locator('#j249-status')).to_contain_text('alignment accepted')
+    # A synthetic fingerprint isolates logic from third-party raster loading; real bytes are hashed by the browser.
+    expect(page.locator('#j249-status')).to_contain_text('Saved privately for this exact image')
+    page.reload(wait_until='domcontentloaded')
+    expect(page.locator('#j247-results li')).to_have_count(count,timeout=15000)
+    page.evaluate("""() => {const v=document.getElementById('classicViewport'),b=document.getElementById('classicMapBackground');v.dataset.mapImage='local-highres';v.dataset.imageFingerprint='sha256:'+'a'.repeat(64);b.classList.add('has-image');b.style.backgroundImage='linear-gradient(#203040,#506070)';window.dispatchEvent(new CustomEvent('team-jura:classic-map-image-change'));}""")
+    expect(page.locator('#j249-status')).to_contain_text('Saved private alignment restored')
     expect(page.locator('#j249-pins button')).to_have_count(count)
     page.get_by_role('button',name='Hide aligned source pins').click()
     expect(page.locator('#j249-pins')).to_be_hidden()
     page.get_by_role('button',name='Show aligned source pins').click()
     expect(page.locator('#j249-pins button')).to_have_count(count)
-    page.evaluate("""() => {document.getElementById('classicMapBackground').style.backgroundImage='linear-gradient(#304050,#607080)';window.dispatchEvent(new CustomEvent('team-jura:classic-map-image-change'))}""")
+    page.evaluate("""() => {document.getElementById('classicViewport').dataset.imageFingerprint='sha256:'+'b'.repeat(64);document.getElementById('classicMapBackground').style.backgroundImage='linear-gradient(#304050,#607080)';window.dispatchEvent(new CustomEvent('team-jura:classic-map-image-change'))}""")
     expect(page.locator('#j249-pins')).to_be_hidden()
     expect(page.locator('#j248-map-sources a')).to_have_count(2)
     expect(page.locator('#j248-map-sources a').first).to_have_attribute('href','https://gtamap.io/gta-'+('liberty-city-stories' if game=='lcs' else 'vice-city-stories')+'-map/')
