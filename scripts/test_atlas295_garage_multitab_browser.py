@@ -123,6 +123,23 @@ try:
         assert page.evaluate("s => localStorage.getItem(s)", S) == '{damaged-collection'
         expect(page.locator('#garageNotice')).to_contain_text('Ownership not saved')
         assert page.evaluate("g => localStorage.getItem(g)", G) == '{damaged-meta'
+
+        # Legacy guest keys may omit wishlist, note or locations. This is
+        # recoverable schema evolution, distinct from corrupted JSON.
+        page.evaluate("""([g,s]) => {
+          localStorage.setItem(g,JSON.stringify({schema:1,vehicles:{jetmax:{paint:'#112233',note:'Legacy model'}}}));
+          localStorage.setItem(s,JSON.stringify({schema:1,owned:{'vehicles5:sultan':true}}));
+        }""",[G,S])
+        page.locator('#garageDetails input[type=checkbox]').first.check()
+        legacy_marks=page.evaluate("s => JSON.parse(localStorage.getItem(s))",S)
+        assert legacy_marks['owned']['vehicles5:jetmax'] is True
+        assert legacy_marks['owned']['vehicles5:sultan'] is True
+        assert legacy_marks['wishlist']=={} and legacy_marks['note']=={}
+        page.locator('#newGarage').fill('Legacy Bay')
+        page.locator('#addGarage').click()
+        legacy_meta=page.evaluate("g => JSON.parse(localStorage.getItem(g))",G)
+        assert legacy_meta['garages']==['Main Garage','Legacy Bay']
+        assert legacy_meta['vehicles']['jetmax']['note']=='Legacy model'
         context.close()
         browser.close()
 finally:
