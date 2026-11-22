@@ -8,7 +8,7 @@ const safeId=id=>typeof id==='string'&&/^[a-z0-9_-]{2,75}$/.test(id)&&!['__proto
 const nice=id=>id.replace(/_mk(\d+)/g,' Mk $1').replace(/[_-]/g,' ').replace(/([a-z])([0-9])/g,'$1 $2').replace(/\b[a-z]/g,c=>c.toUpperCase());
 const label=(value,fallback)=>typeof value==='string'&&value.trim()?value.trim().slice(0,72):fallback;
 const color=value=>typeof value==='string'&&/^#[a-f0-9]{6}$/i.test(value)?value:'#b99ad5';
-function vehicleLink(world,id,variant){return './atlas-vehicle-configurator.html?'+(world==='vi'?'world=vi&':'')+'model='+encodeURIComponent(id)+(variant?'&variant='+encodeURIComponent(variant):'')}
+function vehicleLink(world,id,variant){return './atlas-vehicle-configurator.html?'+(world==='vi'?'world=vi&':'')+'model='+encodeURIComponent(id)+(variant?'#variant='+encodeURIComponent(variant):'')}
 function modelOK(world,id){return safeId(id)&&(world==='vi'?Object.hasOwn(viNames,id):!id.startsWith('vi_'))}
 function collect(stores,weaponNames={}){
  const rows=[];
