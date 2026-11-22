@@ -194,3 +194,10 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Malformed or unreadable checklist storage is never replaced with empty progress; accessible error status and a raw JSON recovery export protect guest data. No new account or server storage.
 - **TEST:** `scripts/test_atlas301_heist_checklist.py`, `scripts/test_atlas301_heist_checklist_browser.py` and `atlas301-heist-checklists.yml` cover all 15 mission pages at 390px/1440px, cross-tab updates, historical data, reset and corrupt export. Check exact-head results before claiming automated proof.
 - **HOLD:** Production release, exact-head full suite, user iPhone Safari, design review, source rights and owner approval remain mandatory. See `docs/ATLAS301-HEIST-CHECKLIST-PRESERVATION.md`.
+
+
+## Atlas 30.2 — accessible Cayo corrupted guest-checklist rescue and single map mount
+- **SOURCE:** The fully tested Atlas 30.1 checklist code in draft PR #98 remains authoritative. If a historical Cayo checklist is malformed, a small branded recovery panel now appears outside the Cayo flagship's intentionally hidden legacy layout. It offers an exact-raw-byte download, then separate confirmation to reset **only that old checklist**; modern island map, mission notes, daily chest data and every other saved key remain intact.
+- **SOURCE:** One duplicate shared Atlas 29.8 mission-phase script/CSS injection was removed; all 14 non-Cayo heists mount their phase map once. Cayo and the 29.9 complete backup stay independent.
+- **TEST:** Scoped `scripts/test_atlas302_cayo_rescue.py` and `scripts/test_atlas302_cayo_rescue_browser.py` run through `atlas302-cayo-rescue.yml`, with 390px/1440px Cayo recovery and Fleeca phase screenshots, malformed and concurrently changed JSON, upload-free safe reset, and payload audit.
+- **GATES:** Exact-head CI result, final release browser/ZIP and actual iPhone/Safari/owner visual approval are separate. See `docs/ATLAS302-CAYO-RECOVERY-ACCEPTANCE.md`. Duplicate earlier PR #104 remains closed, not merged.
