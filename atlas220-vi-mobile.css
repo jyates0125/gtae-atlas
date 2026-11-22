@@ -167,3 +167,21 @@ body[data-start-world="6"] #selectedCard .selected-actions :is(button,a){
  }
  body[data-start-world="6"] #selectedCard{z-index:120!important}
 }
+
+/* Always-visible map escape on phones: canvas gestures must not trap visitors. */
+body[data-start-world="6"] .j220-map-back{display:none}
+@media(max-width:700px){
+ body[data-start-world="6"] .j220-map-back{
+  display:inline-flex;position:fixed;left:12px;
+  bottom:max(14px,env(safe-area-inset-bottom));
+  z-index:240;align-items:center;justify-content:center;
+  min-width:88px;min-height:48px;padding:10px 15px;
+  border:2px solid #f1c47a;border-radius:15px;
+  background:#2c193e;color:#ffe1a5;
+  font:800 14px/1.1 system-ui,sans-serif;
+  box-shadow:0 5px 18px #10071dbb;cursor:pointer;
+ }
+ body[data-start-world="6"] .j220-map-back:focus-visible{
+  outline:3px solid #fff;outline-offset:3px;
+ }
+}
