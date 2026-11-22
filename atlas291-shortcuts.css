@@ -1,0 +1,11 @@
+/* Atlas mobile shortcuts: progressive-enhancement native disclosure. */
+.j223-shortcuts-menu{margin:14px 0 16px;border:1px solid #e8b581;border-radius:14px;background:linear-gradient(135deg,#35183f,#190d2b);color:#fff;overflow:hidden}
+.j223-shortcuts-menu>summary{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-height:56px;padding:13px 17px;cursor:pointer;color:#ffdcaa;font:850 clamp(14px,1.3vw,19px)/1.3 system-ui;list-style:none}
+.j223-shortcuts-menu>summary::-webkit-details-marker{display:none}
+.j223-shortcuts-menu>summary:after{content:'⌄';margin-left:auto;font-size:22px;transition:transform .15s}
+.j223-shortcuts-menu[open]>summary:after{transform:rotate(180deg)}
+.j223-shortcuts-menu>summary:focus-visible{outline:3px solid #ffe4b2;outline-offset:-4px}
+.j223-shortcuts-hint{color:#ead4e7;font:600 12px/1.4 system-ui}
+.j223-shortcuts-menu .j223-shortcuts{margin:0;padding:12px;border-top:1px solid #805283}
+@media(max-width:660px){.j223-shortcuts-menu>summary{gap:4px 10px}.j223-shortcuts-hint{width:100%;order:3}.j223-shortcuts-menu .j223-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}.j223-shortcuts-menu .j223-shortcuts a{min-height:62px}}
+@media(prefers-reduced-motion:reduce){.j223-shortcuts-menu>summary:after{transition:none}}
