@@ -271,3 +271,8 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Visible damaged-save panel only when a GTA V/Online or Leonida Forge record is invalid. Exact raw bytes downloadable before reset; separate confirm and double current-byte check required to fresh-create only this world's Forge key. No auto-write on opening and no writes to the other world, Garage or ownership.
 - **TEST:** Focused source and real built Chromium for both worlds, broken JSON/schema, raw export, concurrent newer-tab refusal and safe reset. Exact-head CI pending.
 - **HOLD:** Actual Safari device/owner review, licensed meshes/art and full release browser/ZIP.
+
+## Atlas 31.3 — private device handoff for named Forge designs (staging)
+- **SOURCE:** Forge Collections named-design links now expose only public model ID and world, never personal saved design names. A one-time same-tab session-only handoff selects the requested private named design. Legacy title-bearing links remain readable but have their name scrubbed from URL history after load. My Garage and Forge storage are unchanged; no server or third-party requests.
+- **TEST:** Related source/node and actual same-origin Chromium collection→Forge handoff across V/Online and VI with name privacy, stale record fallbacks and storage isolation; exact-head CI mandatory.
+- **HOLD:** Device Safari, owner visual acceptance, full Chromium+Edge+ZIP and new art/real-world 3D source rights.

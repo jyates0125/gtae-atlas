@@ -35,7 +35,12 @@ assert(garage.every(x=>x.href==='./atlas93-garage.html?addModel='+encodeURICompo
 assert(!rows.some(x=>x.href.includes('Private')||x.href.includes('Watercraft%20concept')),'Share only model identity');
 assert.equal(rows.filter(x=>x.kind==='vehicle'&&x.world==='v').length,1);
 assert.equal(rows.filter(x=>x.kind==='vehicle'&&x.world==='vi').length,1,'VI concept remains world-isolated');
-assert.equal(vehicleLink('vi','vi_squalo','My Look'),'./atlas-vehicle-configurator.html?world=vi&model=vi_squalo#variant=My%20Look');
+assert.equal(vehicleLink('vi','vi_squalo','My Look'),'./atlas-vehicle-configurator.html?world=vi&model=vi_squalo&source=collection');
+assert(!rows.some(x=>x.href.includes('#variant=')||x.href.includes('Studio%20V')||x.href.includes('My%20Look')));
+const titled=collect({v:{schema:1,builds:{},variants:{sultan:[{model:'sultan',name:'Family private nickname',paint:'#cc11aa'}]}}});
+assert.equal(titled[0].href,'./atlas-vehicle-configurator.html?model=sultan&source=collection');
+assert.equal(titled[0].privateVariant.name,'Family private nickname');
+assert(!titled[0].href.includes('Family'));
 
 // Garage-only saved builds must appear even without any ownership collection.
 const only=collect({garage:{schema:1,vehicles:{jetmax:{note:'Saved boat'}}}}, {});

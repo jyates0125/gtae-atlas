@@ -8,7 +8,8 @@ const safeId=id=>typeof id==='string'&&/^[a-z0-9_-]{2,75}$/.test(id)&&!['__proto
 const nice=id=>id.replace(/_mk(\d+)/g,' Mk $1').replace(/[_-]/g,' ').replace(/([a-z])([0-9])/g,'$1 $2').replace(/\b[a-z]/g,c=>c.toUpperCase());
 const label=(value,fallback)=>typeof value==='string'&&value.trim()?value.trim().slice(0,72):fallback;
 const color=value=>typeof value==='string'&&/^#[a-f0-9]{6}$/i.test(value)?value:'#b99ad5';
-function vehicleLink(world,id,variant){return './atlas-vehicle-configurator.html?'+(world==='vi'?'world=vi&':'')+'model='+encodeURIComponent(id)+(variant?'#variant='+encodeURIComponent(variant):'')}
+const HANDOFF='team-jura-forge-private-handoff-v1';
+function vehicleLink(world,id,variant){return './atlas-vehicle-configurator.html?'+(world==='vi'?'world=vi&':'')+'model='+encodeURIComponent(id)+(variant?'&source=collection':'')}
 function modelOK(world,id){return safeId(id)&&(world==='vi'?Object.hasOwn(viNames,id):!id.startsWith('vi_'))}
 function collect(stores,weaponNames={}){
  const rows=[];
@@ -19,7 +20,7 @@ function collect(stores,weaponNames={}){
    for(const [id,raw] of Object.entries(source)){
     if(!modelOK(world,id))continue;
     const entries=kind==='named'?(Array.isArray(raw)?raw.slice(0,8):[]):[raw],seen=new Set();
-    for(const entry of entries){if(!object(entry)||entry.model!==id||!/^#[a-f0-9]{6}$/i.test(entry.paint||''))continue;const name=label(entry.name,kind==='primary'?'Primary design':'');if(!name||seen.has(name.toLowerCase()))continue;seen.add(name.toLowerCase());rows.push({world,kind:'vehicle',model:id,title:name,subtitle:world==='vi'?viNames[id]:nice(id),detail:kind==='primary'?'Primary design':'Named build',paint:color(entry.paint),href:vehicleLink(world,id,kind==='named'?name:'')})}
+    for(const entry of entries){if(!object(entry)||entry.model!==id||!/^#[a-f0-9]{6}$/i.test(entry.paint||''))continue;const name=label(entry.name,kind==='primary'?'Primary design':'');if(!name||seen.has(name.toLowerCase()))continue;seen.add(name.toLowerCase());rows.push({world,kind:'vehicle',model:id,title:name,subtitle:world==='vi'?viNames[id]:nice(id),detail:kind==='primary'?'Primary design':'Named build',paint:color(entry.paint),href:vehicleLink(world,id,kind==='named'?name:''),privateVariant:kind==='named'?{world,model:id,name}:null})}
    }
   }
  }
@@ -66,7 +67,18 @@ function start(w){const d=w.document;async function init(){
  let names={},rows=[],unavailable=false;
  const read=key=>{try{return JSON.parse(w.localStorage.getItem(key)||'null')}catch{unavailable=true;return null}};
  try{const res=await w.fetch('./data/atlas192-vi-weapons.json');if(res.ok){const data=await res.json();if(data.scope==='vi'&&data.kind==='weapon'&&Array.isArray(data.records))for(const item of data.records)if(safeId(item.id)&&typeof item.name==='string')names[item.id]=item.name}}catch{}
- function render(){const term=search.value.trim().toLowerCase();const matches=rows.filter(x=>(world.value==='all'||x.world===world.value)&&(kind.value==='all'||x.kind===kind.value)&&(!term||[x.title,x.subtitle,x.detail,x.model].join(' ').toLowerCase().includes(term)));count.textContent=matches.length+' of '+rows.length+' saved entries'+(unavailable?' · Some local data unavailable':'');root.replaceChildren();for(const row of matches){const card=make('article',undefined,'fc-entry'),swatch=make('span',undefined,'fc-swatch');swatch.style.setProperty('--fc-paint',row.paint);swatch.setAttribute('aria-hidden','true');card.append(swatch,make('p',worldNames[row.world]+' · '+row.detail,'eyebrow'),make('h3',row.title),make('p',row.subtitle));const a=make('a','Open in '+(row.kind==='armory'?'Armory':row.kind==='garage'?'My Garage':'Forge Studio'));a.href=row.href;card.append(a);root.append(card)}if(!matches.length)root.append(make('p',rows.length?'No saved entries match these filters.':'Your collection is ready. Save a vehicle concept or display a virtual item in Armory to see it here.','fc-empty'))}
+ function render(){const term=search.value.trim().toLowerCase();const matches=rows.filter(x=>(world.value==='all'||x.world===world.value)&&(kind.value==='all'||x.kind===kind.value)&&(!term||[x.title,x.subtitle,x.detail,x.model].join(' ').toLowerCase().includes(term)));count.textContent=matches.length+' of '+rows.length+' saved entries'+(unavailable?' · Some local data unavailable':'');root.replaceChildren();for(const row of matches){const card=make('article',undefined,'fc-entry'),swatch=make('span',undefined,'fc-swatch');swatch.style.setProperty('--fc-paint',row.paint);swatch.setAttribute('aria-hidden','true');card.append(swatch,make('p',worldNames[row.world]+' · '+row.detail,'eyebrow'),make('h3',row.title),make('p',row.subtitle));const a=make('a','Open in '+(row.kind==='armory'?'Armory':row.kind==='garage'?'My Garage':'Forge Studio'));a.href=row.href;
+ if(row.privateVariant){
+  a.addEventListener('click',event=>{
+   try{
+    const selected=row.privateVariant;
+    w.sessionStorage.setItem(HANDOFF,JSON.stringify(selected));
+   }catch{
+    event.preventDefault();count.textContent='Private browser handoff unavailable. Open Forge Studio and load the named design manually; your saved builds are unchanged.';
+   }
+  });
+ }
+ card.append(a);root.append(card)}if(!matches.length)root.append(make('p',rows.length?'No saved entries match these filters.':'Your collection is ready. Save a vehicle concept or display a virtual item in Armory to see it here.','fc-empty'))}
  function refresh(){unavailable=false;const stores={};for(const [name,key] of Object.entries(keys))stores[name]=read(key);rows=collect(stores,names);render()}
  search.addEventListener('input',render);world.addEventListener('change',render);kind.addEventListener('change',render);d.getElementById('forgeCollectionRefresh').addEventListener('click',refresh);w.addEventListener('storage',e=>{if(!e.key||Object.values(keys).includes(e.key))refresh()});w.addEventListener('pageshow',refresh);refresh();
  }if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',init,{once:true});else init()}
