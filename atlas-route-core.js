@@ -23,6 +23,13 @@
   const candidates=places.length>max?places.slice().sort((a,b)=>distance(origin,a)-distance(origin,b)).slice(0,max):places.slice();
   const remaining=candidates.slice(),ordered=[];let previous=origin;
   while(remaining.length){let index=0,best=Infinity;for(let i=0;i<remaining.length;i++){const d=(previous.x-remaining[i].x)**2+(previous.y-remaining[i].y)**2;if(d<best){best=d;index=i;}}const next=remaining.splice(index,1)[0];ordered.push(next);previous=next;}
+  const result=improveOrder(origin,ordered);
+  ordered.splice(0,ordered.length,...result.stops);
+  return{stops:ordered,omitted:places.length-ordered.length,units:Math.round(length(origin,ordered)),method:'Nearest neighbor + bounded 2-opt; straight-line distance'};
+ }
+ function improveOrder(origin,locations){
+  if(!valid(origin)||!Array.isArray(locations)||locations.length>300||locations.some(p=>!valid(p)))throw Error('Valid origin and up to 300 coordinates required');
+  const ordered=locations.slice(),baseline=length(origin,ordered);
   // Bounded open-path 2-opt improvement, with the chosen origin anchored.
   for(let pass=0;pass<3;pass++){let improved=false;
    for(let i=0;i<ordered.length-1;i++)for(let j=i+1;j<ordered.length;j++){
@@ -33,7 +40,10 @@
    }
    if(!improved)break;
   }
-  return{stops:ordered,omitted:places.length-ordered.length,units:Math.round(length(origin,ordered)),method:'Nearest neighbor + bounded 2-opt; straight-line distance'};
+
+  const optimized=length(origin,ordered);
+  // Return the previous order on a tie or any floating-point regression.
+  return optimized+0.0001<baseline?{stops:ordered,baseline,units:optimized,improved:true}:{stops:locations.slice(),baseline,units:baseline,improved:false};
  }
- return Object.freeze({MAX_STOPS,plan,distance,length});
+ return Object.freeze({MAX_STOPS,plan,distance,length,improveOrder});
 });

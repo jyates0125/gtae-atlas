@@ -66,3 +66,38 @@ assert sum(numbered.values())==255
 assert 'mappedProgress[mapped.id]' in (r/'atlas81-hq.js').read_text(encoding='utf-8')
 assert 'routes[\'5\']=[...current,...additions]' in (r/'atlas-completion.js').read_text(encoding='utf-8')
 print('PASS seven Story sets with 255 source-number-matched coordinates')
+
+# Execute the real shared JavaScript route optimizer against the pinned source.
+import subprocess
+node = r"""
+const assert=require('node:assert/strict');
+const planner=require('./atlas-route-core.js');
+const source=require('./data/atlas-story-source-snapshot.json');
+const rows=source.records.map(r=>({id:String(r.id),type:r.type,x:103.22126231*r.lng+12851.6855908,y:5913.52505828*Math.log(Math.tan(Math.PI/4+r.lat*Math.PI/360))-10162.16009065}));
+function nearest(origin,locations){
+ const pending=locations.slice(),out=[];let last=origin;
+ while(pending.length){
+  let index=0,best=Infinity;
+  for(let i=0;i<pending.length;i++){const d=(last.x-pending[i].x)**2+(last.y-pending[i].y)**2;if(d<best){index=i;best=d}}
+  last=pending.splice(index,1)[0];out.push(last);
+ }
+ return out;
+}
+for(const type of [...new Set(rows.map(r=>r.type)),'All']){
+ const points=type==='All'?rows:rows.filter(r=>r.type===type);
+ let before=0,after=0;
+ for(const origin of [points[0],{x:0,y:0},points.at(-1)]){
+  const baseline=nearest(origin,points),snapshot=baseline.map(p=>p.id);
+  const next=planner.improveOrder(origin,baseline);
+  assert.deepEqual(baseline.map(p=>p.id),snapshot,'Mutation');
+  assert.deepEqual(next.stops.map(p=>p.id).sort(),snapshot.slice().sort(),'Missing stop');
+  assert.ok(next.units<=next.baseline+1e-8,'Longer route');
+  if(!next.improved)assert.deepEqual(next.stops.map(p=>p.id),snapshot,'Tie changed route');
+  before+=next.baseline;after+=next.units;
+ }
+ console.log(type,points.length,((1-after/before)*100).toFixed(2)+'%');
+ if(type==='All')assert.ok(after<before*0.95);
+}
+assert.equal(planner.MAX_STOPS,250);
+"""
+subprocess.run(['node','-e',node],cwd=r,check=True)

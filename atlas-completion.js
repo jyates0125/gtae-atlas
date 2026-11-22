@@ -19,7 +19,7 @@ function filtered(){const q=$('search').value.trim().toLowerCase(),type=$('categ
 function render(){const done=records.filter(isDone).length;$('total').textContent=records.length;$('done').textContent=done;$('remaining').textContent=records.length-done;
  $('bar').style.width=records.length?(done/records.length*100)+'%':'0%';const rows=filtered();$('resultTitle').textContent=rows.length.toLocaleString()+' locations shown';
  const frag=document.createDocumentFragment();for(const r of rows.slice(0,300)){const card=document.createElement('article');card.className='item'+(isDone(r)?' done':'');
- const label=document.createElement('label'),cb=document.createElement('input');cb.type='checkbox';cb.checked=isDone(r);cb.setAttribute('aria-label','Completed '+r.name);cb.onchange=()=>{setDone(r,cb.checked);render()};
+ const label=document.createElement('label'),cb=document.createElement('input');cb.type='checkbox';cb.checked=isDone(r);cb.setAttribute('aria-label','Completed '+r.name);cb.onchange=()=>{setDone(r,cb.checked);invalidateRoute();render()};
  const title=document.createElement('span');title.textContent=r.name;label.append(cb,title);
  const desc=document.createElement('small');desc.textContent=(r.collectionType||'Other')+' · X '+r.x.toFixed(1)+' / Y '+r.y.toFixed(1)+' · Community position';
  const link=document.createElement('a');link.href=mapUrl(r);link.textContent='Open exact location on map ↗';card.append(label,desc,link);frag.append(card)}$('items').replaceChildren(frag);}
@@ -28,10 +28,15 @@ let lastRoute=[];
 function plan(){let rows=filtered().filter(r=>!isDone(r));if(!rows.length)return status('There are no unfinished locations in that filter.');
  const x=$('x').value===''?rows[0].x:Number($('x').value),y=$('y').value===''?rows[0].y:Number($('y').value);
  if(!Number.isFinite(x)||!Number.isFinite(y))return status('Enter valid starting coordinates.');
- const max=Math.min(rows.length,300);lastRoute=nearest(rows.slice(0,max),x,y);
+ const max=Math.min(rows.length,300),origin={x,y};
+ const originalOrder=nearest(rows.slice(0,max),x,y);
+ // Same selected stops and same origin; upgrade only when geometric distance strictly improves.
+ const result=window.JuraRoutePlanner?.improveOrder(origin,originalOrder);
+ lastRoute=result?.stops||originalOrder;
  const frag=document.createDocumentFragment();for(const [i,r] of lastRoute.entries()){const a=document.createElement('a');a.href=mapUrl(r);a.textContent=(i+1)+'. '+r.name+' · X '+r.x.toFixed(0)+' / Y '+r.y.toFixed(0);frag.append(a)}
  $('routeList').replaceChildren(frag);$('routePanel').hidden=false;$('routePanel').scrollIntoView({behavior:'smooth',block:'start'});
- status('Route prepared for '+lastRoute.length+' unfinished positions. Straight-line order, not street directions.');}
+ const report=result?.improved?' · '+((1-result.units/result.baseline)*100).toFixed(1)+'% shorter than nearest-next order':result?' · Existing nearest-next order retained (no shorter candidate)':' · Nearest-next fallback';
+ status('Route prepared for '+lastRoute.length+' unfinished positions'+report+'. Straight-line order, not street directions.');}
 function sendRoute(){if(!lastRoute.length){plan();if(!lastRoute.length)return}const routes=storeRead(ROUTES_KEY,{'5':[],'6':[]});const current=Array.isArray(routes['5'])?routes['5']:[];const additions=lastRoute.map(r=>r.id).filter(id=>!current.includes(id));if(!confirm('Append '+additions.length+' missing Story stops to your existing '+current.length+'-stop route? Current order and other game routes remain unchanged.'))return;routes['5']=[...current,...additions];
  try{localStorage.setItem(ROUTES_KEY,JSON.stringify(routes));location.href='./atlas.html?world=5&viewroute=1';}catch{status('Storage unavailable. Export a backup and try a different browser.')}}
 function exportData(){const blob=new Blob([JSON.stringify({release:'5.7',progress,checklist:legacy,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='team-jura-collectibles-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),2000)}
@@ -46,7 +51,8 @@ async function load(refresh=false){status('Loading open-licensed calibrated GTA 
  const sel=$('category');const previous=sel.value;sel.replaceChildren(new Option('All categories',''));for(const name of [...new Set(records.map(r=>r.collectionType))].sort())sel.add(new Option(name,name));if([...sel.options].some(o=>o.value===(previous||requestedCategory)))sel.value=previous||requestedCategory;
  render();status(records.length+' source records loaded'+(data.bundled?' from the bundled snapshot':data.cache?' from offline cache':'')+'. Locations are community mapped, not all individually gameplay-verified.');}
  catch(e){status('Source unavailable: '+e.message+'. Try Reload source when connected.')}}
-for(const id of ['search','category','status','sort','x','y'])$(id).addEventListener(id==='search'||id==='x'||id==='y'?'input':'change',render);
+function invalidateRoute(){lastRoute=[];$('routePanel').hidden=true;$('routeList').replaceChildren()}
+for(const id of ['search','category','status','sort','x','y'])$(id).addEventListener(id==='search'||id==='x'||id==='y'?'input':'change',()=>{invalidateRoute();render()});
 $('route').onclick=plan;$('sendToMap').onclick=sendRoute;$('export').onclick=exportData;$('reload').onclick=()=>load(true);
 $('importProgress').onclick=()=>$('importFile').click();$('importFile').onchange=e=>importData(e.target.files?.[0]);
 window.addEventListener('storage',e=>{if(e.key===PROGRESS_KEY||e.key===CHECK_KEY){progress=storeRead(PROGRESS_KEY,{});legacy=storeRead(CHECK_KEY,{schema:1,checked:{}});render()}});
