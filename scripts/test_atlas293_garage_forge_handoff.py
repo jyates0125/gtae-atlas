@@ -18,4 +18,12 @@ assert "window.JuraForge?.normalize(existing?.design)" in forge
 assert "studioDesign:window.JuraForge?.normalize(studioDesign)" in garage
 assert "localStorage.setItem(KEY" in forge, 'Existing explicit Forge save remains intact'
 assert "localStorage.setItem(META" in garage, 'Existing Garage save remains intact'
+html=(root/'atlas-vehicle-configurator.html').read_text(encoding='utf-8')
+assert 'id="saveToGarage"' in html
+assert 'function saveToGarage()' in forge
+assert "if(VI){status('GTA VI concepts remain separate" in forge
+assert "const raw=localStorage.getItem(key)" in forge
+assert "vehicles:{...previous.vehicles,[current]:updated}" in forge
+assert "'saveToGarage').addEventListener('click',saveToGarage)" in forge
+assert "'saveToGarage').hidden=true" in forge
 print('Atlas 29.3 Garage / Forge handoff source contracts passed')
