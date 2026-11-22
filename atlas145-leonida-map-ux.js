@@ -59,7 +59,7 @@ function init(){
    if(day.disabled)return;
    layer.value=layer.value==='day'?'scaly,view':'day';
    layer.dispatchEvent(new Event('change',{bubbles:true}));
-   if(matchMedia('(max-width:700px)').matches)sidebar.classList.add('mobile-collapsed');
+   // Keep the Day/Scaly control reachable after switching on narrow phones.
    map.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   });
   sync();
