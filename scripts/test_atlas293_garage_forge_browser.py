@@ -53,6 +53,13 @@ try:
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2"), f'Forge horizontal overflow at {width}px'
             assert garage_link.is_visible(),f'Garage return link hidden at {width}px'
         page.set_viewport_size({'width':390,'height':844})
+        # The mobile visitor must be able to reach the bottom controls without a trapped scroll.
+        page.locator('#saveToGarage').scroll_into_view_if_needed()
+        assert page.locator('#saveToGarage').is_visible()
+        assert page.locator('#saveToGarage').evaluate("""el => {
+          const r=el.getBoundingClientRect();
+          return r.top>=0&&r.bottom<=innerHeight&&r.left>=0&&r.right<=innerWidth+2;
+        }"""), 'Forge save control is clipped or unreachable on phone'
         # Reverse journey: editing in Forge must update only this model's Garage concept.
         page.locator('#buildName').fill('Marina Refit')
         page.locator('#buildNote').fill('New dock')
