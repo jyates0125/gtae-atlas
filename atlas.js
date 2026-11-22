@@ -652,7 +652,8 @@ function drawMarkers(){hitRegions=[];if(!showPins&&!selected)return;
   // Keep original colored pins intact; tone down ONLY the default gold landmarks.
   // Explicit source marker colors and event/collectible colors take precedence.
   const color=game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId?'#49315e':conditionPinColor(r,conditionCache);
-  pin(p.x,p.y,color,false,null,r.category,!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r),!!progress[doneKey(r)],r.category==='collectible'&&!r.activityId);
+  const compactViLandmark=game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId;
+  pin(p.x,p.y,color,false,null,r.category,compactViLandmark||!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r),!!progress[doneKey(r)],r.category==='collectible'&&!r.activityId);
   hitRegions.push({x:p.x,y:p.y,r:12,record:r});
  }
  if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected),!!progress[doneKey(selected)],selected.category==='collectible'&&!selected.activityId);hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
