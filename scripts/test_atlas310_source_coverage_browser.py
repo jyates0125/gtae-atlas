@@ -36,7 +36,7 @@ try:
    page.locator('#j310-world').select_option('iii')
    page.locator('#j310-kind').select_option('all')
    expect(page.locator('#j310-rows tr')).to_have_count(3)
-   ramp=page.locator('#j310-rows tr').filter(has_text='Rampages')
+   ramp=page.locator('#j310-rows tr').filter(has=page.locator('th span',has_text='Rampages'))
    expect(ramp).to_have_count(1)
    assert ramp.locator('td').nth(0).inner_text()=='40'
    assert ramp.locator('td').nth(2).inner_text()=='20'
