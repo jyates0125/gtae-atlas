@@ -10,7 +10,9 @@ function mount(target,opts={}){
  const E=(tag,str)=>{const e=document.createElement(tag);if(str!==undefined)e.textContent=str;return e};
  target.replaceChildren();target.classList.add('j256-forge');
  const title=E('strong','ELARIO 2150 · FORGE SHOWROOM');
- const note=E('small','Original class-based design for '+String(opts.name||'vehicle')+'. Not an exact game model or a verified modification catalogue.');
+ const study=forge?.modelProfile?.(opts.type,opts.model);
+ const note=E('small',study?'Elario original model-targeted concept · '+study.label+'. Approximate visual study; not a verified likeness, exact game mesh or modification catalog.':'Original class-based design for '+String(opts.name||'vehicle')+'. Not an exact game model or a verified modification catalogue.');
+ target.dataset.forgeFidelity=study?'model-study':'class-concept';
  const wrap=E('div');wrap.className='j99-3d-stage j256-stage';
  const canvas=E('canvas');canvas.tabIndex=0;canvas.setAttribute('aria-label','Original 3D vehicle concept. Arrow keys rotate; plus and minus zoom. Drag to rotate.');wrap.append(canvas);
  const hud=E('div');hud.className='j256-hud';hud.setAttribute('aria-hidden','true');hud.textContent='FORGE / LIVE CONCEPT';wrap.append(hud);
