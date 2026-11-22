@@ -8,9 +8,10 @@ const MAX_PINS=500, MAX_RESULTS=30, KEY='team-jura-vi-official-poster-pins-v1:';
 const ID=/^L[1-9]\d{0,6}$/i, SHA=/^[a-f0-9]{64}$/i, $=(x)=>document.querySelector(x);
 if(document.body && document.body.dataset.startWorld!=='6')return;
 let stage,poster,panel,ui,overlay,drawer,query,category,results,notice,meta,selected;
-let dataset=[],records=new Map(),fingerprint='',placed={},picking='',visible=true,drag=null;
+let dataset=[],records=new Map(),fingerprint='',placed={},picking='',visible=true,drag=null,mapHint;
 function elt(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n;}
 function message(value){if(notice)notice.textContent=value;}
+function pickup(id){picking=id||'';if(mapHint){mapHint.hidden=!picking;mapHint.textContent=picking?'Tap the poster to place '+labelOf(picking)+' · Escape to cancel':'';}}
 function storageKey(){return KEY+fingerprint;}
 function validCoordinate(p){return Array.isArray(p)&&p.length===2&&p.every(n=>typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=1);}
 function safeMarks(input,strict){
@@ -107,6 +108,7 @@ function select(id){
  detail.append(elt('strong','',r.label),elt('small','',id+' · '+r.tags.join(', ')+' · source status: community-provisional'));
  const controls=elt('div','j290-inline');
  const relocate=elt('button','','Place / move');relocate.type='button';relocate.dataset.placeId=id;controls.append(relocate);
+ const cancel=elt('button','','Cancel placement');cancel.type='button';cancel.dataset.j290='cancel';cancel.hidden=!picking;controls.append(cancel);
  if(Object.hasOwn(placed,id)){
   const remove=elt('button','','Remove pin');remove.type='button';remove.dataset.removeId=id;controls.append(remove);
  }
@@ -141,12 +143,12 @@ function ready(event){
  const hash=event?.detail?.sha256||panel.dataset.j290Hash||'';
  if(!SHA.test(hash))return;
  fingerprint=hash.toLowerCase();
- ui.hidden=false;picking='';selected='';
+ ui.hidden=false;pickup('');selected='';
  ui.querySelector('.j290-selected').replaceChildren();
  restore();layout();render();list();
  if(!dataset.length)loadRecords();
 }
-function clear(){fingerprint='';placed={};picking='';selected='';ui.hidden=true;overlay.replaceChildren();overlay.hidden=true;}
+function clear(){fingerprint='';placed={};pickup('');selected='';ui.hidden=true;overlay.replaceChildren();overlay.hidden=true;}
 function exportBackup(){
  if(!fingerprint)return message('Open your poster image first.');
  const bytes=JSON.stringify({schema:1,game:'6',fingerprint,source:'GTADB CC BY 4.0; private user poster placement',items:placed},null,2)+'\n';
@@ -171,6 +173,7 @@ function mount(){
  if(!panel||!stage||!poster)return;
  overlay=elt('div','j290-pins');overlay.hidden=true;overlay.setAttribute('aria-label','Personally placed landmarks, not official Rockstar pin locations');
  stage.append(overlay);
+ mapHint=elt('div','j290-map-hint');mapHint.hidden=true;mapHint.setAttribute('role','status');stage.append(mapHint);
  ui=elt('section','j290-ui');ui.hidden=true;ui.setAttribute('aria-label','GTADB landmark lookup for the personal Rockstar poster');
  ui.innerHTML='<button class="j290-open" type="button" aria-expanded="false">⌖ Landmarks · place community entries</button><div class="j290-drawer" hidden><p class="j290-warning">3,754 community landmarks are research references, NOT Rockstar pins. Select an entry and tap its correct spot on your private poster. Nothing is automatically projected or uploaded.</p><label>Find landmark<input class="j290-search" type="search" placeholder="Name, district or source ID" autocomplete="off"></label><label>Source category<select class="j290-category"><option value="">All source tags</option></select></label><div class="j290-meta" role="status"></div><div class="j290-results"></div><div class="j290-selected" aria-live="polite"></div><div class="j290-inline"><button type="button" data-j290="toggle-pins" aria-pressed="true">Hide placed pins</button><button type="button" data-j290="export">Export private pins</button><label class="j290-import">Merge backup<input type="file" accept=".json,application/json"></label></div><p class="j290-status" role="status" aria-live="polite">Open the poster image to begin.</p><p class="j290-warning">Data: <a href="https://github.com/rolux/gtadb.org/tree/main/map/data/6" target="_blank" rel="noopener noreferrer">GTADB contributors</a> (CC BY 4.0). Rockstar artwork remains © Rockstar Games. Your placement is a personal note, not source verification.</p></div>';
  panel.insertBefore(ui,panel.querySelector('.j143-foot'));
@@ -182,10 +185,11 @@ function mount(){
   const open=e.target.closest('.j290-open');
   if(open){drawer.hidden=!drawer.hidden;open.setAttribute('aria-expanded',String(!drawer.hidden));return;}
   const id=e.target.closest('[data-place-id]')?.dataset.placeId;
-  if(id&&records.has(id)){picking=id;select(id);message('Tap the corresponding position on your official poster to place '+labelOf(id)+'.');return;}
+  if(id&&records.has(id)){pickup(id);select(id);message('Tap the corresponding position on your official poster to place '+labelOf(id)+'. Press Escape or Cancel to exit placement.');return;}
   const remove=e.target.closest('[data-remove-id]')?.dataset.removeId;
   if(remove&&Object.hasOwn(placed,remove)){delete placed[remove];save();render();list();select(remove);return;}
   const action=e.target.closest('[data-j290]')?.dataset.j290;
+  if(action==='cancel'){pickup('');select(selected);message('Placement cancelled. Your existing pins are unchanged.');return;}
   if(action==='toggle-pins'){visible=!visible;render();}
   if(action==='export')exportBackup();
  });
@@ -205,10 +209,11 @@ function mount(){
   const coords=pointAt(ev);if(!coords){message('Tap inside the actual poster image, not its margins.');return;}
   const id=picking;
   if(!Object.hasOwn(placed,id)&&Object.keys(placed).length>=MAX_PINS){message('Poster pin limit reached ('+MAX_PINS+'). Export or remove older pins first.');return;}
-  placed[id]=coords;picking='';save();render();list();select(id);
+  placed[id]=coords;pickup('');save();render();list();select(id);
   message('Pin saved at your selected poster position. This placement is NOT verified gameplay data.');
  });
  stage.addEventListener('pointercancel',()=>{drag=null;},true);
+ document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&picking){pickup('');ev.preventDefault();ev.stopImmediatePropagation();message('Placement cancelled; poster remains open.');}},true);
  const sync=new MutationObserver(layout);sync.observe(poster,{attributes:true,attributeFilter:['style','src','hidden']});
  if(typeof ResizeObserver!=='undefined')new ResizeObserver(layout).observe(stage);
  window.addEventListener('jura:poster:ready',ready);
