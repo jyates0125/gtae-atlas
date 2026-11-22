@@ -84,3 +84,9 @@ GitHub compare `main...development` reports `development` behind by 18 commits, 
 - Exact prior staging head a8d3c75fca4cf9b216402360212ebfab1cea517e: all five production jobs succeeded (focused Chromium/Edge, full Chromium/Edge, validated ZIP); cross-product and Cayo passed. No owner sign-off inferred.
 - Next-batch San Andreas expansion: 320 source-backed records across all five collections, including 70 unique save-derived start/landing boxes. New integration/browser validation required. Existing map projection approximate; no ramp placement or gameplay claim.
 - Source review policy now explicitly covers all 13 destinations. See docs/ATLAS-ALL-WORLD-SOURCE-REVIEW.md. Other unfinished map/data/art work remains open.
+
+
+## Atlas 25.3 — classic source expansion and route/save repair
+- New staged development includes all five SA sets (320 coordinate records), GTA III 160 source locations (140 objectives), VC 51 classic projected points and 171 edition-isolated DE coordinate references, 103 LCS/VCS PSP named destinations, original pointed source pins, optional high-detail viewer and four-point private alignment.
+- Native VCS/CTW basemap replacement and genuine collectible location inventory for Stories/CTW are still unresolved. External viewer is not equivalent to native integration. Reserve owner review for actual branded rendering and release.
+- Prior 25.1 exact head 268c40d89a1ed9e3bf995ca11a6717856ebac9b1 static failure: obsolete literal atlas98-classic.js?v=190 assertion; updated version checks, current LCS reference assertion and SA source identity namespace. Shared fixed-endpoint route core exact blob independently executed with 60 deterministic synthetic cases passing. CI must still validate all source and browser scenarios. No release approval inferred.
