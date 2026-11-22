@@ -67,6 +67,23 @@ try:
         assert preserved['jetmax']['garage']=='Marina'
         assert preserved['jetmax']['plate']=='KEEP'
         assert preserved['sultan']=={'favorite':True,'paint':'Graphite'}
+        # A second tab must see the latest saved Garage build, not a stale in-memory snapshot.
+        second=page.context.new_page()
+        second.goto(base+'/atlas-vehicle-configurator.html?model=jetmax&source=garage',wait_until='domcontentloaded')
+        expect(second.locator('#modelSelect')).to_have_value('jetmax',timeout=30000)
+        expect(second.locator('#buildName')).to_have_value('Refit Two')
+        expect(second.locator('#paintColor')).to_have_value('#12ab34')
+        second.locator('#buildNote').fill('From second tab')
+        second.locator('#saveToGarage').click()
+        expect(second.locator('#builderStatus')).to_contain_text('Saved Jetmax concept to My Garage')
+        assert page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.note",garage_key)=='From second tab'
+        # First tab must preserve changes made by the second tab when it saves again.
+        page.locator('#buildName').fill('Refit Three')
+        page.locator('#saveToGarage').click()
+        assert page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.studioName",garage_key)=='Refit Three'
+        assert page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.sultan.favorite",garage_key) is True
+        second.close()
+        preserved=page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles",garage_key)
         # Corrupt Garage JSON must be preserved byte-for-byte; a save must fail safely.
         page.evaluate("g => localStorage.setItem(g, '{broken-json')",garage_key)
         page.locator('#saveToGarage').click()
@@ -85,7 +102,7 @@ try:
         # VI must not expose the GTA V Garage write control.
         page.goto(base+'/atlas-vehicle-configurator.html?world=vi',wait_until='domcontentloaded')
         expect(page.locator('#saveToGarage')).to_be_hidden()
-        assert page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.studioName",garage_key)=='Refit Two'
+        assert page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.studioName",garage_key)=='Refit Three'
         browser.close()
 finally:
     server.shutdown()
