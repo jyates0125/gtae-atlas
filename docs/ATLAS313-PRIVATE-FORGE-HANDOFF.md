@@ -1,0 +1,9 @@
+# Atlas 31.3 — Private named Forge handoff
+
+**Draft staging only.** Previous Forge Collections links to named vehicle designs appended a personally chosen build title in the URL fragment (`#variant=...`), potentially copied or shared. The existing link contract was incompatible with our documented user-private collection rule.
+
+New same-tab navigation emits public model/world only plus a generic `source=collection` marker. A click writes a one-use model/world/name selection to the current browser tab's sessionStorage (not a server or URL), the destination consumes and deletes that ephemeral handoff, verifies the exact game world and vehicle model, and loads the saved named version as an unsaved working copy. If sessionStorage cannot be used, it safely refuses handoff without modifying private saved data. A legacy pasted `#variant=...` deep link remains readable but its personal fragment is scrubbed from the browser URL on selection. The link contains no private design title, note or Garage name.
+
+Original `team-jura-atlas101-concept-presets-v1`, `team-jura-forge-vi-concept-presets-v1` and all Garage/ownership stores are unchanged. The design display and Elario 3D prototype remain illustrative, not official game meshes.
+
+Focused acceptance recomputes source/test contracts, checks existing Garage/Forge reader and recovery scripts, and runs real built Chromium at 390px phone, 844px landscape and 1440px desktop. Verifies collection listing and named design load in V and VI, no name in `href` or `location.href`, consumed session handoff, old named bookmarks, unchanged saved JSON and no horizontal overflow. Path-scoped workflow `atlas313-private-forge.yml`. Actual iPhone Safari, final release Chromium/Edge/ZIP, source rights, owner design and public release approval remain pending.
