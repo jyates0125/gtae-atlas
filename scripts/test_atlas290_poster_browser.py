@@ -29,7 +29,7 @@ engine=os.getenv('ATLAS_BROWSER','chromium')
 try:
  with sync_playwright() as playwright:
   browser=playwright.chromium.launch(headless=True,**({'channel':'msedge'} if engine=='msedge' else {}))
-  for width,height in ((1440,900),(390,844)):
+  for width,height in ((1440,900),(390,844),(926,428)):
    context=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
    page=context.new_page()
    errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
@@ -44,6 +44,10 @@ try:
    page.wait_for_function("document.querySelector('#j143-official-layer')?.dataset?.j290Hash?.length===64",timeout=30000)
    page.locator('.j290-open').click()
    expect(page.locator('.j290-meta')).to_contain_text('3754',timeout=20000)
+   if width==1440:
+    map_box=page.locator('.j143-stage').bounding_box()
+    panel_box=page.locator('.j290-ui').bounding_box()
+    assert map_box and panel_box and panel_box['x']>=map_box['x']+map_box['width']-3,'Desktop search must sit beside the official poster'
    page.locator('.j290-search').fill('Vice Regal, Washington Beach, Vice Beach')
    place=page.locator('.j290-result [data-place-id="L1"]')
    expect(place).to_be_visible(timeout=10000)
@@ -82,7 +86,23 @@ try:
    page.wait_for_function("""hash => document.querySelector('#j143-official-layer')?.dataset?.j290Hash===hash""",arg=saved['fingerprint'],timeout=30000)
    expect(page.locator('.j290-pin')).to_have_count(1)
    assert not any('atlas290-' in e for e in errors),errors
-   if width==390:
+   # The source index and the poster notebook must form one connected workflow.
+   page.goto(url,wait_until='domcontentloaded',timeout=45000)
+   page.locator('#j290-vi-ledger').evaluate('(el)=>el.open=true')
+   expect(page.locator('#j290-count')).to_contain_text('3,754',timeout=20000)
+   page.locator('#j290-search').fill('Vice Regal, Washington Beach, Vice Beach')
+   poster_link=page.locator('.j290-entry a[href*="view=rockstar&landmark=L1"]')
+   expect(poster_link).to_have_count(1,timeout=10000)
+   poster_link.click()
+   expect(page.locator('#j143-official-layer')).to_be_visible(timeout=20000)
+   expect(page.locator('.j290-ui')).to_be_visible(timeout=25000)
+   expect(page.locator('.j290-search')).to_have_value('L1',timeout=25000)
+   expect(page.locator('.j290-selected')).to_contain_text('Vice Regal',timeout=25000)
+   expect(page.locator('.j290-pin')).to_have_count(1)
+   assert 'view=rockstar' in page.url and 'landmark=L1' in page.url
+   if width>=900 and height<500:
+    expect(page.locator('[data-j143="close"]')).to_be_visible()
+   if width==390 or height<500:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'Poster notebook causes horizontal overflow'
    print('PASS Atlas 29.0 '+engine+' '+str(width)+': source search, manual poster placement, show/hide, private backup, image SHA isolation and restore',flush=True)
    context.close()
