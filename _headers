@@ -29,3 +29,14 @@
   Cache-Control: no-store
   Referrer-Policy: no-referrer
 
+
+# Avoid stale legacy UI after a new Cloudflare deployment. Preserve browser
+# revalidation rather than forcing no-store on large maps or user data.
+/*.js
+  Cache-Control: no-cache
+
+/*.css
+  Cache-Control: no-cache
+
+/atlas132-page-directory.json
+  Cache-Control: no-cache

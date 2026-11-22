@@ -13,7 +13,14 @@ if not (OUT/'heist-cayo-perico.html').is_file():
  raise SystemExit('Build the actual public Cloudflare files first')
 class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args): pass
-server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(OUT)))
+# Modern Chromium/Edge can open many local asset requests before the route
+# script hydrates; the default 5-connection backlog can return an empty
+# browser document on busy Windows runners. Keep the test strict, serve reliably.
+class StableStaticServer(ThreadingHTTPServer):
+ request_queue_size=64
+ daemon_threads=True
+ allow_reuse_address=True
+server=StableStaticServer(('127.0.0.1',0),partial(Quiet,directory=str(OUT)))
 threading.Thread(target=server.serve_forever,daemon=True).start()
 url=f'http://127.0.0.1:{server.server_port}/heist-cayo-perico.html'
 engine=os.getenv('ATLAS_BROWSER','chromium')
@@ -27,7 +34,10 @@ try:
    page=ctx.new_page()
    errors=[]
    page.on('pageerror',lambda error:errors.append(str(error)))
-   page.goto(url,wait_until='domcontentloaded',timeout=50000)
+   response=page.goto(url,wait_until='domcontentloaded',timeout=50000)
+   assert response is not None and response.status==200, (
+    f'Built Cayo workspace request failed for {engine}/{kind}: '
+    f'{response.status if response else "no response"} {page.url}')
    try:
     page.locator('#j186-route').wait_for(state='visible',timeout=30000)
    except Exception as exc:

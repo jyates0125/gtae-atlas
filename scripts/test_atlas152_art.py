@@ -4,12 +4,19 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[1]
 char=(root/'atlas-characters.html').read_text()
 css=(root/'atlas152-characters.css').read_text()
-assert 'id="mainCharacterEra"' in char and 'a152-grid' in char
-for era in ['iii','vc','sa','iv','v','vi']:
- assert f'art/atlas152-era-{era}.svg' in char
- assert (root/'art'/f'atlas152-era-{era}.svg').is_file()
-assert (root/'art/atlas152-era-ensemble.svg').is_file()
-assert 'atlas152-era-ensemble.svg' in css
+gallery=(root/'atlas222-characters.js').read_text()
+gallery_css=(root/'atlas222-characters.css').read_text()
+assert 'id="mainCharacterEra"' in char and 'id="j222-character-grid"' in char
+assert 'id="j222-character-search"' in char
+assert 'data-j222-scope="all"' in char and 'data-j222-scope="vi"' in char
+assert 'atlas222-characters.css?v=222' in char
+assert 'atlas222-characters.js?v=222' in char
+assert 'atlas152-era-iii.svg' not in char, 'Old flat artwork remains public'
+assert 'atlas152-era-ensemble.svg' not in css
+assert 'jura155-characters.webp' in css
+assert 'j222-character-media' in gallery_css
+assert 'character' in gallery and 'jura155-vi.webp' in gallery
+assert (root/'art'/'jura155-characters.webp').is_file()
 elario=(root/'elario.html').read_text()
 assert 'atlas152-studio.css' in elario and 'atlas152-studio-future.svg' in elario
 assert 'ATLAS 9.3</em>' not in elario
@@ -24,4 +31,4 @@ film=(root/'one-last-ride.html').read_text()
 assert '<section class="j130-olr-share"' not in film, 'Obsolete large social launch kit panel remains'
 assert 'Social launch kit' not in film, 'Old posting kit link remains'
 assert 'id="watch"' in film and 'one-last-ride-motion-preview.mp4' in film
-print('Atlas 15.2 six game-specific art groups, studio, 15 heist/map pairs and uncluttered film entrance: PASS')
+print('Atlas 22.2: 15.2 compatibility, no legacy flat character gallery, studio, 15 heist/map pairs and film entrance: PASS')

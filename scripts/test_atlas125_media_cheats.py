@@ -45,11 +45,16 @@ for p in ("index.html","maps.html","map-hub.html","atlas98-style-lab.html"):
 
 profiles=json.loads(source("data/atlas-universe-profiles.json"))
 characters=[r for r in profiles["records"] if r["kind"]=="character"]
-assert len(characters)==30
-assert all(r.get("image","").startswith("https://") for r in characters)
-assert all(r.get("imageCredit","").startswith("https://") for r in characters)
+assert len(characters)>=36, "Public VI launch characters extend the original 30-person roster"
+original_portraits=[r for r in characters if r.get("image")]
+assert len(original_portraits)>=30, "Existing sourced character images must not be erased"
+assert all(r["image"].startswith("https://") for r in original_portraits)
+assert all(r.get("imageCredit","").startswith("https://") for r in original_portraits)
+for r in characters:
+    if not r.get("image"):
+        assert r["scope"]=="vi" and r["sourceUrl"]=="https://www.rockstargames.com/VI/only-in-leonida",r
 assert {"character:vic-vance","character:toni-cipriani","character:huang-lee","character:johnny-klebitz","character:luis-lopez"}.issubset({c["id"] for c in characters})
-assert "data/atlas-universe-profiles.json?v=130" in source("atlas100-universe.js")
+assert "data/atlas-universe-profiles.json?v=222" in source("atlas100-universe.js")
 assert "elarioCharacterPortrait" in source("atlas100-universe.js")
 assert "Portrait source" in source("atlas100-universe.js")
 assert ".u-character-portrait" in source("atlas100-universe.css")

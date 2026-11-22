@@ -25,17 +25,23 @@ try:
    page=ctx.new_page()
    page.goto(base+'atlas-vi.html',wait_until='domcontentloaded',timeout=45000)
    panel=page.locator('#j217-vi-hub')
-   expect(panel.locator('summary')).to_be_visible(timeout=20000)
+   # The VI hub now contains a nested Rockstar launch directory <details>.
+   # Scope the toggle to the hub's direct child, not its nested summaries.
+   toggle=panel.locator(':scope > summary')
+   expect(toggle).to_have_count(1)
+   expect(toggle).to_be_visible(timeout=20000)
    assert not panel.evaluate('(e)=>e.open'),'World menu must start collapsed'
-   panel.locator('summary').click()
+   toggle.click()
    assert panel.evaluate('(e)=>e.open'),'Native world panel did not open'
    links=panel.locator('.j217-vi-grid a')
+   # The nested launch directory can legitimately repeat or expand destinations.
+   # Validate the canonical eight-link world grid, not all descendant links.
    assert links.count()==8,('Expected eight VI-specific destinations',links.count())
-   assert panel.locator('a[href="./atlas-vi.html?view=rockstar"]').count()==1
-   assert panel.locator('a[href="./atlas90-vehicles6.html"]').count()==1
-   assert panel.locator('a[href="./atlas90-weapons6.html"]').count()==1
-   assert panel.locator('a[href="./atlas-characters.html?game=vi#results"]').count()==1
-   assert panel.locator('a[href="./atlas-research.html"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas-vi.html?view=rockstar"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas90-vehicles6.html"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas90-weapons6.html"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas-characters.html?game=vi#mainCharacterEra"]').count()==1
+   assert panel.locator('.j217-vi-grid a[href="./atlas-research.html"]').count()==1
    assert page.locator('#atlasCanvas').count()==1
    if width==390:
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1'),'VI workspace document overflows phone'

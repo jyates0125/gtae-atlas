@@ -24,6 +24,10 @@ assert "filter:none" in css
 assert "brightness(1.12)" in css and "brightness(1.38)" not in css
 assert "top:125px;bottom:auto" in css
 assert "j172-pins" in ui and "check.dispatchEvent(new Event('change'" in ui
+assert "j172-back" in ui
+assert "window.location.assign('./atlas-vi.html')" in ui
+assert "page.classList.contains('j172-full-map')" in ui
+assert "#j172-back" in css
 assert "localStorage" not in ui  # toggle reuses existing saved checkbox
 assert "atlas218" not in (r/'atlas.html').read_text()
 assert "atlas218" not in (r/'atlas-online.html').read_text()

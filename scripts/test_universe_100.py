@@ -76,7 +76,9 @@ assert "selectCompare" in js and "showCompare" in js
 assert "filterGame" in js and "researchOnly" in js
 assert "UNVERIFIED" in js, "Provisional entries must be visibly marked"
 assert "const DEFAULT_KIND=MODE==='all'?'vehicle':MODE" in js, "Universe may not mix record types by default"
-assert "const DEFAULT_GAME=MODE==='animal'?'vi':MODE==='character'||MODE==='collectible'?'story':'online'" in js
+assert "const DEFAULT_GAME=MODE==='animal'?'vi':MODE==='character'?'all':MODE==='collectible'?'story':'online'" in js, "Character Atlas must show All worlds by default"
+assert 'x.aliases||[]' in js, "Names and aliases must both be searchable"
+assert "r.scope==='vi'||/unverified" not in js, "Official GTA VI records must not be labeled unverified by default"
 assert "WORLD_CODES.has(args.get('game'))" in js, "World-specific URL not supported"
 assert "document.querySelectorAll('[data-world]')" in js, "World buttons are not wired"
 assert "elarioCharacterPortrait" in js and "Portrait source" in js and "img.referrerPolicy" in js

@@ -352,30 +352,56 @@
       "kind": "character",
       "name": "Lucia Caminos",
       "scope": "vi",
-      "game": "GTA VI",
+      "game": "GTA VI Story",
       "group": "Protagonist",
       "region": "Leonida",
-      "summary": "Featured in official GTA VI promotional material; gameplay details pending verification",
-      "verification": "Official-promo identity; further details unverified",
-      "image": "https://gtatr.com/img/vi/char/Lucia-Caminos.jpg",
-      "imageCredit": "https://www.rockstargames.com/VI",
-      "sourceUrl": "https://www.rockstargames.com/VI",
-      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
+      "summary": "Rockstar introduces Lucia as a fighter whose family-first choices brought her to Leonida Penitentiary. Newly free, she pursues a better life in Leonida with Jason.",
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "image": "https://www.rockstargames.com/VI/_next/static/media/mobile.01e24lvhdu677.jpg",
+      "imageCredit": "https://www.rockstargames.com/VI/only-in-leonida",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Publisher-hosted image link from Rockstar's official GTA VI character page © Rockstar Games / Take-Two Interactive; direct image decoding and reuse rights are not guaranteed",
+      "aliases": [
+        "Lucia",
+        "Leonida",
+        "GTA 6",
+        "VI",
+        "Manni L. Perez"
+      ],
+      "attributes": {
+        "performer": "Manni L. Perez",
+        "affiliation": "Jason Duval; family in Leonida",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "character:jason",
       "kind": "character",
       "name": "Jason Duval",
       "scope": "vi",
-      "game": "GTA VI",
+      "game": "GTA VI Story",
       "group": "Protagonist",
       "region": "Leonida",
-      "summary": "Featured in official GTA VI promotional material; gameplay details pending verification",
-      "verification": "Official-promo identity; further details unverified",
-      "image": "https://gta6intel.com/image/item/9ed91681-4533-4b4f-bfff-d25aa664dad7/portrait?version=1748871422",
-      "imageCredit": "https://www.rockstargames.com/VI",
-      "sourceUrl": "https://www.rockstargames.com/VI",
-      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference"
+      "summary": "A former Army recruit who grew up among grifters and criminals. Rockstar places Jason in the Keys, working for local runners and trying to find a new path with Lucia.",
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "image": "https://www.rockstargames.com/VI/_next/static/media/mobile.0jzys13fkqnae.jpg",
+      "imageCredit": "https://www.rockstargames.com/VI/only-in-leonida",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Publisher-hosted image link from Rockstar's official GTA VI character page © Rockstar Games / Take-Two Interactive; direct image decoding and reuse rights are not guaranteed",
+      "aliases": [
+        "Jason",
+        "Leonida",
+        "GTA 6",
+        "VI",
+        "Dylan Rourke"
+      ],
+      "attributes": {
+        "performer": "Dylan Rourke",
+        "affiliation": "Lucia Caminos; Cal Hampton; Brian Heder",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
     },
     {
       "id": "animal:alligator",
@@ -688,6 +714,451 @@
       "group": "Protagonist",
       "verification": "Source-checked game identity; original artwork credited individually",
       "imageRights": "Original game character illustration © Rockstar Games / Take-Two Interactive · independent non-commercial fan reference"
+    },
+    {
+      "id": "character:cal-hampton",
+      "kind": "character",
+      "name": "Cal Hampton",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Leonida Keys",
+      "summary": "Jason's friend and Brian's associate. His official character profile emphasizes Coast Guard radio monitoring, internet theories and a low-key lifestyle in Leonida.",
+      "aliases": [
+        "Cal",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Cal Hampton",
+        "Bobby Moynihan"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "https://www.rockstargames.com/VI/_next/static/media/poster.0-ev6i8jbkd19.jpg",
+      "imageCredit": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Publisher-hosted image link from Rockstar's official GTA VI character page © Rockstar Games / Take-Two Interactive; direct image decoding and reuse rights are not guaranteed",
+      "attributes": {
+        "performer": "Bobby Moynihan",
+        "affiliation": "Jason Duval; Brian Heder",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:boobie-ike",
+      "kind": "character",
+      "name": "Boobie Ike",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Vice City",
+      "summary": "A prominent Vice City operator with interests in real estate, nightlife and a recording studio. Rockstar highlights his partnership with Dre'Quan at Only Raw Records.",
+      "aliases": [
+        "Boobie",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Boobie Ike",
+        "Mike Forbs"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "https://www.rockstargames.com/VI/_next/static/media/poster.0fhh.f~4df8kw.jpg",
+      "imageCredit": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Publisher-hosted image link from Rockstar's official GTA VI character page © Rockstar Games / Take-Two Interactive; direct image decoding and reuse rights are not guaranteed",
+      "attributes": {
+        "performer": "Mike Forbs",
+        "affiliation": "Only Raw Records; Dre'Quan Priest",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:dre-quan-priest",
+      "kind": "character",
+      "name": "Dre'Quan Priest",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Vice City",
+      "summary": "An aspiring Vice City music-business leader working with Boobie Ike at Only Raw Records. His Rockstar profile says he has signed the rap duo Real Dimez.",
+      "aliases": [
+        "DreQuan",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Dre'Quan Priest",
+        "Naiqui Macabroad"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "https://www.rockstargames.com/VI/_next/static/media/poster.0dgzn0invq.yx.jpg",
+      "imageCredit": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Publisher-hosted image link from Rockstar's official GTA VI character page © Rockstar Games / Take-Two Interactive; direct image decoding and reuse rights are not guaranteed",
+      "attributes": {
+        "performer": "Naiqui Macabroad",
+        "affiliation": "Only Raw Records; Boobie Ike; Real Dimez",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:real-dimez",
+      "kind": "character",
+      "name": "Real Dimez",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Music duo",
+      "region": "Vice City",
+      "summary": "Bae-Luxe and Roxy make up the Vice City rap duo Real Dimez. Rockstar describes their social-media success and their record deal with Only Raw Records.",
+      "aliases": [
+        "Bae-Luxe, Roxy",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Real Dimez",
+        "Hood Brat (Bae-Luxe)",
+        "Krissy Celess (Roxy Rashad)"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "https://www.rockstargames.com/VI/_next/static/media/poster.0fw301vbqh4~b.jpg",
+      "imageCredit": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Publisher-hosted image link from Rockstar's official GTA VI character page © Rockstar Games / Take-Two Interactive; direct image decoding and reuse rights are not guaranteed",
+      "attributes": {
+        "performer": "Hood Brat (Bae-Luxe); Krissy Celess (Roxy Rashad)",
+        "affiliation": "Bae-Luxe and Roxy; Only Raw Records; Dre'Quan Priest",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:raul-bautista",
+      "kind": "character",
+      "name": "Raul Bautista",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Leonida",
+      "summary": "A confident, experienced bank robber introduced by Rockstar as someone hunting for ambitious collaborators. His featured profile doesn't provide exact mission or map coordinates.",
+      "aliases": [
+        "Raul",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Raul Bautista",
+        "Manny Perez"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "https://www.rockstargames.com/VI/_next/static/media/poster.0ntc_0yu6jyg..jpg",
+      "imageCredit": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Publisher-hosted image link from Rockstar's official GTA VI character page © Rockstar Games / Take-Two Interactive; direct image decoding and reuse rights are not guaranteed",
+      "attributes": {
+        "performer": "Manny Perez",
+        "affiliation": "Experienced heist planner",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:brian-heder",
+      "kind": "character",
+      "name": "Brian Heder",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Supporting",
+      "region": "Leonida Keys",
+      "summary": "A veteran smuggler in the Leonida Keys who runs business through his boat yard. Rockstar describes Jason as living at one of Brian's properties.",
+      "aliases": [
+        "Brian",
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Brian Heder",
+        "Stephen Root"
+      ],
+      "verification": "Rockstar official character profile · launch 2026-11-19",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "https://www.rockstargames.com/VI/_next/static/media/poster.02s1e65vr67eq.jpg",
+      "imageCredit": "https://www.rockstargames.com/VI/only-in-leonida",
+      "imageRights": "Publisher-hosted image link from Rockstar's official GTA VI character page © Rockstar Games / Take-Two Interactive; direct image decoding and reuse rights are not guaranteed",
+      "attributes": {
+        "performer": "Stephen Root",
+        "affiliation": "Jason Duval; Cal Hampton; Lori Heder",
+        "profileOrigin": "Official Rockstar profile and published main cast credits"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "place:vi:vice-city",
+      "kind": "landmark",
+      "name": "Vice City",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Coastal city and urban districts",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Vice City"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:leonida-keys",
+      "kind": "landmark",
+      "name": "Leonida Keys",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Southern island chain",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Leonida Keys"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:grassrivers",
+      "kind": "landmark",
+      "name": "Grassrivers",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Wetlands and wilderness",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Grassrivers"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:port-gellhorn",
+      "kind": "landmark",
+      "name": "Port Gellhorn",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Gulf Coast district",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Port Gellhorn"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:ambrosia",
+      "kind": "landmark",
+      "name": "Ambrosia",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Central Leonida industrial area",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Ambrosia"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "place:vi:mount-kalaga",
+      "kind": "landmark",
+      "name": "Mount Kalaga",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official region",
+      "region": "Leonida",
+      "summary": "Northern national park",
+      "aliases": [
+        "GTA 6",
+        "Leonida",
+        "GTA VI",
+        "Mount Kalaga"
+      ],
+      "verification": "Rockstar officially named region · map coordinate not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": ""
+    },
+    {
+      "id": "vi:vehicle:1995-grotti-cheetah",
+      "kind": "vehicle",
+      "name": "'95 Grotti Cheetah",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official edition media",
+      "brand": "Grotti",
+      "summary": "Rockstar labels this vehicle in its Ultimate Edition media. Player ownership, spawn points, performance and standard-edition availability are not asserted.",
+      "verification": "Rockstar officially named item in published VI media · gameplay traits not established",
+      "sourceUrl": "https://www.rockstargames.com/VI/media",
+      "image": "",
+      "imageCredit": "",
+      "aliases": [
+        "Grotti Cheetah",
+        "1995 Grotti Cheetah",
+        "GTA 6 car"
+      ]
+    },
+    {
+      "id": "vi:vehicle:1955-vapid-stanier",
+      "kind": "vehicle",
+      "name": "'55 Vapid Stanier",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Official edition media",
+      "brand": "Vapid",
+      "summary": "Rockstar labels this vehicle in its Vintage Vice City Pack media. Gameplay unlock conditions, purchase price and map spawns are not asserted.",
+      "verification": "Rockstar officially named item in published VI media · gameplay traits not established",
+      "sourceUrl": "https://www.rockstargames.com/VI/media",
+      "image": "",
+      "imageCredit": "",
+      "aliases": [
+        "Vapid Stanier",
+        "1955 Vapid Stanier",
+        "GTA 6 car"
+      ]
+    },
+    {
+      "id": "vi:business:only-raw-records",
+      "kind": "business",
+      "name": "Only Raw Records",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Officially named organization",
+      "region": "Vice City",
+      "summary": "Record label associated with Dre'Quan Priest and Real Dimez in Rockstar character profiles. Does not imply player ownership or a confirmed location marker.",
+      "verification": "Official Rockstar VI character profile · no gameplay mechanics claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "aliases": [
+        "Dre'Quan",
+        "Real Dimez",
+        "music label"
+      ]
+    },
+    {
+      "id": "vi:landmark:leonida-penitentiary",
+      "kind": "landmark",
+      "name": "Leonida Penitentiary",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "group": "Officially named place",
+      "region": "Leonida",
+      "summary": "Named in Lucia Caminos' official background; no exact map coordinate or visitability asserted.",
+      "verification": "Rockstar official character profile · position not claimed",
+      "sourceUrl": "https://www.rockstargames.com/VI/only-in-leonida",
+      "image": "",
+      "imageCredit": "",
+      "aliases": [
+        "Lucia",
+        "prison",
+        "GTA VI"
+      ]
+    },
+    {
+      "id": "character:lamar-story",
+      "kind": "character",
+      "name": "Lamar Davis",
+      "scope": "story",
+      "game": "GTA V Story",
+      "group": "Supporting",
+      "region": "Los Santos",
+      "summary": "Franklin Clinton's friend and repossession partner in GTA V Story, including the early Franklin and Lamar mission.",
+      "verification": "Community GTA V Story mission index · Story appearance; no precise spawn data",
+      "image": "https://cdn.gracza.pl/i_gp/h/22/349641291.jpg",
+      "imageCredit": "https://gta.fandom.com/wiki/Lamar_Davis",
+      "sourceUrl": "https://gta.wiki/w/Missions_in_GTA_V",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Lamar",
+        "Franklin and Lamar",
+        "Repossession"
+      ]
+    },
+    {
+      "id": "character:lester-story",
+      "kind": "character",
+      "name": "Lester Crest",
+      "scope": "story",
+      "game": "GTA V Story",
+      "group": "Heist planner",
+      "region": "Los Santos",
+      "summary": "Michael's longtime associate and an organizer of heists during GTA V Story.",
+      "verification": "Community GTA V Story character index · Story appearance; no precise spawn data",
+      "image": "https://img.consolepulse.com/uploads/franchises/gta/characters/Lester-Crest-2.webp",
+      "imageCredit": "https://gta.fandom.com/wiki/Lester_Crest",
+      "sourceUrl": "https://gta.wiki/w/Characters_in_GTA_V",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Lester",
+        "GTA V Story heists"
+      ]
+    },
+    {
+      "id": "character:franklin-online",
+      "kind": "character",
+      "name": "Franklin Clinton",
+      "scope": "online",
+      "game": "GTA Online",
+      "group": "Agency contact",
+      "region": "Los Santos",
+      "summary": "Returns in GTA Online: The Contract as the founder of F. Clinton and Partner, an Agency business for the Online player.",
+      "verification": "Rockstar Newswire · GTA Online The Contract · December 15, 2021",
+      "image": "https://www.igta5.com/images/official-artwork-franklin-families.jpg",
+      "imageCredit": "https://www.igta5.com/official-artwork",
+      "sourceUrl": "https://www.rockstargames.com/newswire/article/ak759k91592728/gta-online-the-contract-out-now",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Franklin",
+        "F. Clinton and Partner",
+        "The Contract",
+        "Agency"
+      ]
+    },
+    {
+      "id": "character:chop-online",
+      "kind": "character",
+      "name": "Chop",
+      "scope": "online",
+      "game": "GTA Online",
+      "group": "Companion",
+      "region": "Los Santos",
+      "summary": "Franklin's dog appears with the Agency cast in GTA Online: The Contract.",
+      "verification": "Rockstar Newswire · GTA Online The Contract · December 15, 2021",
+      "image": "https://img6.gram.pl/120130916172316.jpg",
+      "imageCredit": "https://www.rockstargames.com/V/",
+      "sourceUrl": "https://www.rockstargames.com/newswire/article/ak759k91592728/gta-online-the-contract-out-now",
+      "imageRights": "Rockstar Games / Take-Two Interactive · gameplay image or original game artwork · unofficial fan reference",
+      "aliases": [
+        "Chop",
+        "Agency",
+        "The Contract"
+      ]
     }
   ]
 }

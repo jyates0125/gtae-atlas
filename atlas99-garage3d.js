@@ -38,6 +38,38 @@ function mesh(color,kind){
   }
   cuboid(cx+(cx>0?.184:-.184),cy,cz,.01,.085,.085,hub);
  }
+ const aircraft=/plane|aircraft|jet|bomber|fighter|fixed.wing|alkonost|velum|hydra|lazer/i.test(kind||'');
+ const helicopter=/helicopter|chopper|buzzard|annihilator|frogger|maverick|swift|volatus|akula|hunter|savage|valkyrie|cargobob|sparrow/i.test(kind||'');
+ const watercraft=/boat|yacht|dinghy|watercraft|submarine|squalo|speeder/i.test(kind||'');
+ if(helicopter){
+  // Class-correct original rotorcraft study; not an exact in-game mesh.
+  cuboid(0,-.28,0,5.9,.12,6.6,[.16,.095,.23]);
+  cuboid(0,.7,.6,1.15,.75,2.25,base); // cabin
+  cuboid(0,.83,-1.22,.22,.18,2.15,tint(base,.78)); // tail boom
+  cuboid(0,1.17,-2.14,.12,.65,.12,tint(base,.72)); // tail fin
+  cuboid(0,1.12,1.2,.95,.22,.76,[.15,.28,.38]); // cockpit glass
+  cuboid(0,1.18,.3,.12,.6,.12,tint(base,.7)); // rotor mast
+  cuboid(0,1.48,.3,4.5,.07,.18,tint(base,.86)); // main rotor
+  cuboid(0,.2,.6,1.8,.1,.12,tint(base,.75)); // landing skid
+  return new Float32Array(data);
+ }
+ if(aircraft){
+  // Illustrative fixed-wing silhouette: not an exact GTA mesh.
+  cuboid(0,-.28,0,5.9,.12,6.6,[.16,.095,.23]);
+  cuboid(0,.64,0,.9,.65,4.8,base); // fuselage
+  cuboid(0,.72,.15,5.5,.12,1.08,tint(base,.86)); // main wings
+  cuboid(0,.77,-1.75,2.5,.11,.55,tint(base,.78)); // tailplane
+  cuboid(0,1.12,-1.94,.12,.9,.7,tint(base,.72)); // vertical stabilizer
+  cuboid(0,.95,1.45,.68,.12,1.15,[.16,.26,.36]); // cockpit
+  return new Float32Array(data);
+ }
+ if(watercraft){
+  cuboid(0,-.28,0,4.6,.12,6.4,[.16,.095,.23]);
+  cuboid(0,.45,0,1.65,.55,4.65,base); // hull concept
+  cuboid(0,.82,-.55,1.1,.36,1.8,tint(base,.83)); // cabin
+  cuboid(0,1.03,.15,.98,.2,.18,[.15,.28,.38]); // windshield
+  return new Float32Array(data);
+ }
  const truck=/truck|pickup|commercial|van/i.test(kind||'');
  const sport=/super|sport|coupe/i.test(kind||'');
  const bodyLength=truck?4.45:sport?4.0:4.25;
@@ -94,7 +126,7 @@ function mount(target,opts){
  active=false;cancelAnimationFrame(raf);
  section=target;section.replaceChildren();const title=document.createElement('strong');title.textContent='3D CONCEPT SHOWROOM · ORIGINAL TEAM JURA GEOMETRY';
  const note=document.createElement('small');note.textContent='Interactive 3D shape for paint visualization; not a scanned or official model of '+String(opts.name||'the vehicle')+'. The archive image above identifies the actual vehicle.';
- const canvasWrap=document.createElement('div');canvasWrap.className='j99-3d-stage';canvas=document.createElement('canvas');canvas.setAttribute('aria-label','Interactive original car concept. Drag to rotate; use the zoom buttons.');canvas.width=520;canvas.height=270;canvasWrap.append(canvas);
+ const canvasWrap=document.createElement('div');canvasWrap.className='j99-3d-stage';canvas=document.createElement('canvas');canvas.setAttribute('aria-label','Interactive original vehicle-class concept. Drag to rotate; use the zoom buttons.');canvas.width=520;canvas.height=270;canvasWrap.append(canvas);
  const controls=document.createElement('div');controls.className='j99-3d-controls';
  const left=document.createElement('button');left.type='button';left.textContent='⟲ Rotate';
  const zoomIn=document.createElement('button');zoomIn.type='button';zoomIn.textContent='＋ Zoom';
@@ -103,7 +135,7 @@ function mount(target,opts){
  section.append(title,note,canvasWrap,controls);
  gl=null;program=null;buffer=null;const ok=initGL();if(!ok){canvasWrap.hidden=true;controls.hidden=true;note.textContent='WebGL 3D is unavailable on this device. Your genuine vehicle-reference image above remains available.';return}
  paint=opts.paint||'#586478';yaw=.55;pitch=.32;distance=6.6;active=true;
- const kind=opts.type||'';section.dataset.profile=kind;rebuild(kind);
+ const kind=[opts.type||'',opts.name||''].join(' ');section.dataset.profile=kind;rebuild(kind);
  let last=null;canvas.addEventListener('pointerdown',e=>{last={x:e.clientX,y:e.clientY,id:e.pointerId};canvas.setPointerCapture?.(e.pointerId)});
  canvas.addEventListener('pointermove',e=>{if(!last||last.id!==e.pointerId)return;yaw+=(e.clientX-last.x)*.010;pitch=Math.max(-.12,Math.min(1.05,pitch+(e.clientY-last.y)*.008));last.x=e.clientX;last.y=e.clientY;render()});
  for(const n of ['pointerup','pointercancel'])canvas.addEventListener(n,()=>{last=null});
