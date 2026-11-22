@@ -7,4 +7,6 @@ assert.doesNotMatch(js,/share\.href[^;]*JSON\.stringify/,'Do not expose personal
 assert.match(js,/v\.studioDesign&&Object\.keys\(v\.studioDesign\)\.length/,'Forge design-only builds must count');
 assert.match(css,/\.j293-share-actions/,'Model share controls need responsive styling');
 assert.match(css,/min-height:44px/,'Model share actions need touch targets');
+assert.match(js,/querySelector\('\.j226-garage-back'\)\?\.focus\(\{preventScroll:true\}\)/,'Mobile details selection should receive keyboard focus');
+assert.match(js,/\(trigger\|\|\$\('garageSearch'\)\)\.focus\(\{preventScroll:true\}\)/,'Back should restore focus to model card or search');
 console.log('Atlas 29.3 Garage sharing and Forge saved-build contracts passed');
