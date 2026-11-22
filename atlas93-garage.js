@@ -164,6 +164,43 @@ primary.addEventListener('change',()=>{exact.value=paintColor(primary.value)});
 const plate=document.createElement('input');plate.maxLength=20;plate.value=v.plate||'';labelText('License plate / build label (personal notes)',plate);
 const note=document.createElement('textarea');note.maxLength=1200;note.value=v.note||'';note.placeholder=r.type==='Boats & Watercraft'?'Dock, delivery, favorite routes, and crew memories…':'Upgrades, armor, wheels, performance, where you stored this ride…';labelText('Vehicle build notes',note);
 if(preset&&/^#[0-9a-f]{6}$/i.test(preset.paint||'')){const apply=part('button','j226-apply-preset','Use studio concept in build editor');apply.type='button';apply.onclick=()=>{addCustom(primary,preset.paint);primary.value=preset.paint;primary.dispatchEvent(new Event('change'));studioBody=['auto','sports','truck','standard'].includes(preset.body)?preset.body:'auto';studioName=f(preset.name).slice(0,72);studioDesign=window.JuraForge?.normalize(preset.design)||{};const host=showroom.querySelector('.j256-forge')||(showroom.classList.contains('j256-forge')?showroom:null);if(host){previewOpts.paint=preset.paint;previewOpts.design=studioDesign;window.TeamJuraGarage3D?.mount(host,previewOpts)}const add=[preset.name,preset.note,'Studio concept RGB: '+preset.paint].filter(Boolean).join('\n');if(!note.value.includes(add)&&note.value.length+add.length+2<=1200)note.value=[note.value,add].filter(Boolean).join('\n\n');notice('Exact concept RGB loaded. Existing notes preserved; review and press Save custom build. Personal concept color is not a verified GTA paint option.');};}
+
+// Atlas 30.5 — named Forge concepts are private working copies, never writes on load.
+// Recheck the latest Forge store at the moment of selection, so another tab's
+// changes are not silently replaced by a stale named build.
+{
+ const variantsKey='team-jura-atlas101-concept-presets-v1';
+ const source=part('section','j305-variants');
+ const header=document.createElement('h3');header.textContent='Saved Forge versions for this vehicle';
+ const description=document.createElement('p');description.textContent='Load one of up to eight named Forge designs into this working editor. Paint and concept shape preview only; Garage location, ownership, plate, favorites, other builds and Forge presets are not modified until you explicitly save the Garage build.';
+ source.append(header,description);
+ const read=()=>window.JuraGarageVariants?.list(localStorage.getItem(variantsKey),r.id);
+ const available=read();
+ const status=document.createElement('p');status.className='j305-variant-status';status.setAttribute('role','status');
+ if(available===null){status.textContent='Saved Forge data cannot be read safely. Your existing files are untouched; export or recover them in Forge.';source.append(status)}
+ else if(!available?.length){status.textContent='No additional named Forge designs saved for this vehicle yet.';source.append(status)}
+ else {
+  const select=document.createElement('select');select.id='j305-variant-choice';select.setAttribute('aria-label','Saved named Forge design');
+  for(const entry of available)select.add(new Option(entry.name+' · '+entry.paint,entry.name));
+  const action=document.createElement('button');action.type='button';action.id='j305-load-variant';action.textContent='Load named design · working copy';
+  action.onclick=()=>{
+   const fresh=read();
+   if(fresh===null){status.textContent='Forge data is unreadable; the current editor was not changed.';return}
+   const item=fresh?.find(x=>x.name===select.value);
+   if(!item){status.textContent='That named design changed in another tab. Reopen this vehicle to refresh the list.';return}
+   addCustom(primary,item.paint);primary.value=item.paint;primary.dispatchEvent(new Event('change'));
+   studioBody=item.body;studioName=item.name;
+   studioDesign=window.JuraForge?.normalize(item.design)||{};
+   const host=showroom.querySelector('.j256-forge')||(showroom.classList.contains('j256-forge')?showroom:null);
+   if(host){previewOpts.paint=item.paint;previewOpts.design=studioDesign;window.TeamJuraGarage3D?.mount(host,previewOpts)}
+   status.textContent='Working copy loaded: '+item.name+' ('+item.paint+'). Forge originals and saved Garage data are unchanged. Press Save custom build only if you want this version applied in My Garage.';
+  };
+  source.append(select,action,status);
+ }
+ const forgeLink=document.createElement('a');forgeLink.href='./atlas-vehicle-configurator.html?model='+encodeURIComponent(r.id);
+ forgeLink.textContent='Open named Forge collection for this model';
+ source.append(forgeLink);
+}
 const fav=document.createElement('input');fav.type='checkbox';fav.checked=!!v.favorite;labelText('★ Favorite ride',fav);
 const save=part('button','save','Save custom build');save.type='button';save.onclick=()=>{const saved=setVehicle(r.id,{garage:place.value,paint:primary.value,secondary:secondary.value,plate:f(plate.value),note:f(note.value),favorite:fav.checked,studioDesign:window.JuraForge?.normalize(studioDesign)||{},...(studioBody?{studioBody}:{}),...(studioName?{studioName}:{})});garages();paint();if(saved)notice('Saved '+r.name+' on this device.')};
 const link=part('a','','↗ Research vehicle info at GTADB');link.href=data?.sourceUrl?.startsWith('https://gtadb.net/')?data.sourceUrl:'https://gtadb.net/vehicles/';link.target='_blank';link.rel='noopener noreferrer';part('p','status','Save notes to keep these settings after refreshing.');}
