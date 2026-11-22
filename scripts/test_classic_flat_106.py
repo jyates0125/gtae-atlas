@@ -53,3 +53,7 @@ assert "j106-flat-reference" in css
 assert "team-jura-atlas98-classic-" in js
 assert "state.background" in js and "state.markers" in js
 print('PASS Atlas 10.8: seven accurate reference links plus browser-local 2D map image controls')
+
+# Classic source and personal pin layers must be independently hideable.
+assert 'id="classicTogglePins"' in (ROOT/'map-hub.html').read_text(encoding='utf-8')
+assert 'updateNotebookToggle' in (ROOT/'atlas98-classic.js').read_text(encoding='utf-8')

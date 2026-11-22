@@ -66,7 +66,7 @@ function mergeNotebook(existing,incoming,world,sets,collections){
  return{state:{...existing,markers,completed},added,kept,skipped};
 }
 function read(){try{const data=JSON.parse(localStorage.getItem(key)||'null');if(data&&data.schema==='team-jura-atlas98-classic-v1'&&data.world===id&&Array.isArray(data.markers))return data}catch{}return blank()}
-let state=read(),adding=false,editing=null,pendingSlot=null,scale=1,dx=0,dy=0,dragged=false;
+let state=read(),adding=false,editing=null,pendingSlot=null,scale=1,dx=0,dy=0,dragged=false,notebookHidden=false;
 let highResUrl=null,highResSize=null,highResFingerprint=''; // personal map raster is stored separately
 let originalMapReady=false,originalMapSize=null,activeMapUrl=null; // source-backed map image, not a world coordinate transform
 const status=message=>{if($('#classicMessage'))$('#classicMessage').textContent=message};
@@ -102,8 +102,9 @@ function renderBackground(){
 }
 function viewportSourceMismatch(mismatch){
  const v=$('#classicViewport');if(v)v.dataset.personalImageMismatch=String(!!mismatch);
- const layer=$('#classicMarkerLayer');if(layer)layer.hidden=!!mismatch;
+ const layer=$('#classicMarkerLayer');if(layer)layer.hidden=!!mismatch||notebookHidden;updateNotebookToggle();
 }
+function updateNotebookToggle(){const b=$('#classicTogglePins'),layer=$('#classicMarkerLayer'),viewport=$('#classicViewport');if(layer)layer.hidden=notebookHidden||viewport?.dataset.personalImageMismatch==='true';if(b){b.textContent=notebookHidden?'Show my pins':'Hide my pins';b.setAttribute('aria-label',(notebookHidden?'Show':'Hide')+' my personal notebook pins');b.setAttribute('aria-pressed',String(notebookHidden))}}
 function loadOriginalWorldMap(){
  // Keep the game/era unchanged across every fallback; don't redirect fans to generic city artwork.
  const origins=mapOrigins[id],choices=[{url:w.map,...origins},...(mapAlternates[id]||[])];
@@ -187,7 +188,7 @@ function renderMarkers(){const layer=$('#classicMarkerLayer'),list=$('#classicPi
  const pin=E('button','classic-marker',iconFor(m.category));pin.dataset.slotDone=String(!!complete);pin.type='button';pin.style.left=m.x+'%';pin.style.top=m.y+'%';pin.title=m.name+' — '+m.category+(linked?' · slot #'+m.collectionSlot+(complete?' · collected':' · not yet collected'):' · personal note');pin.setAttribute('aria-label','Open marker '+pin.title);pin.setAttribute('aria-current',String(editing===m.id));pin.addEventListener('click',e=>{e.stopPropagation();openEditor(m.id)});layer.append(pin);
  const row=E('div','classic-pin-row');row.append(E('strong','',m.name));const edit=E('button','','Edit');edit.type='button';edit.addEventListener('click',()=>openEditor(m.id));row.append(edit,E('small','',m.category+(linked?' · #'+m.collectionSlot+(complete?' · ✓ collected':' · to collect'):'')+' · '+(m.note||'Personal image-relative location')));list.append(row)
  }
- if($('#pinCount'))$('#pinCount').textContent=String(state.markers.length);if(n===0)list.append(E('p','panel-note',query?'No notes match your search.':'No personal markers yet. Add one on the map.'));
+ if($('#pinCount'))$('#pinCount').textContent=String(state.markers.length);if(n===0)list.append(E('p','panel-note',query?'No notes match your search.':'No personal markers yet. Add one on the map.'));updateNotebookToggle();
  }
  function draw(){categoryList();renderMarkers();renderBackground()}
 function openEditor(pinId,position){editing=pinId;const m=state.markers.find(x=>x.id===pinId);const edit=$('#classicEditor');edit.hidden=false;const link=pendingSlot||(m?.collectionSet&&m?.collectionSlot?{set:m.collectionSet,slot:m.collectionSlot}:null);
@@ -202,6 +203,7 @@ function createOrEdit(){const name=$('#markerName').value.trim(),category=$('#ma
 function coords(e){const s=$('#classicMapSurface').getBoundingClientRect();if(!s.width||!s.height||e.clientX<s.left||e.clientX>s.right||e.clientY<s.top||e.clientY>s.bottom)return null;return {x:clamp((e.clientX-s.left)/s.width*100,0,100),y:clamp((e.clientY-s.top)/s.height*100,0,100)}}
 function notebookMapReference(){return highResUrl||state.background?{kind:'private-image'}:originalMapReady&&activeMapUrl?{kind:'source',url:activeMapUrl}:{kind:'illustrative'};}
 function bindMap(){const viewport=$('#classicViewport');
+ $('#classicTogglePins')?.addEventListener('click',()=>{notebookHidden=!notebookHidden;updateNotebookToggle();status(notebookHidden?'Your personal notebook pins are hidden; notes and collections are unchanged.':'Your personal notebook pins are visible again.')});
  // Atlas 15.7: multitouch mobile controls and zoom-at-anchor, preserving all world data.
  const pointers=new Map();
  let pan=null,pinch=null;
