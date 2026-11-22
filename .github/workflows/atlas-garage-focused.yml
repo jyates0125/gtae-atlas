@@ -4,8 +4,10 @@ on:
     branches: [development]
     paths:
       - 'atlas93-garage.js'
+      - 'atlas254-garage-merge.js'
       - 'atlas147-garage-mobile.css'
       - 'tests/atlas293-garage-share.test.cjs'
+      - 'tests/atlas294-forge-backup.test.cjs'
       - '.github/workflows/atlas-garage-focused.yml'
   workflow_dispatch:
 permissions:
@@ -21,3 +23,4 @@ jobs:
           node-version: '22'
       - run: node --check atlas93-garage.js
       - run: node tests/atlas293-garage-share.test.cjs
+      - run: node tests/atlas294-forge-backup.test.cjs
