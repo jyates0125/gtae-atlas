@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Atlas 11.7: original E crest and current-game branding on flagship worlds."""
 from pathlib import Path
+import re
 from html.parser import HTMLParser
 ROOT=Path(__file__).resolve().parents[1]
+worker_version=re.search(r'\./atlas-sw\.js\?v=(\d+)',(ROOT/'atlas.js').read_text(encoding='utf-8'))
+assert worker_version, 'Core map worker version missing'
 class Probe(HTMLParser):
     def __init__(self):super().__init__();self.ids=set();self.images=[];self.refs=[]
     def handle_starttag(self,tag,attrs):
@@ -34,7 +37,7 @@ for page,expected_title in (
         assert 'j117-map-world' in data,page
         for name in ('layer','atlasCanvas','legend','sidebar'):
             assert name in p.ids,(page,name)
-        assert './atlas.js?v=191' in data, 'Keep the original Atlas map engine linked on each game workspace; current cache revision must match'
+        assert ('./atlas.js?v='+worker_version[1]) in data, 'Keep the original Atlas map engine linked on each game workspace; current cache revision must match'
     if page=='atlas-cayo.html':
         assert 'j117-cayo' in data and 'Illustrative schematic:' in data
     if page=='one-last-ride.html':

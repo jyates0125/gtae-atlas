@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Map shell regression: preserve controls and the current approved cinematic art."""
 from pathlib import Path
+import re
 ROOT=Path(__file__).resolve().parents[1]
+worker_version=re.search(r'\./atlas-sw\.js\?v=(\d+)',(ROOT/'atlas.js').read_text(encoding='utf-8'))
+assert worker_version, 'Core map worker version missing'
 css=(ROOT/"atlas128-map-chrome.css").read_text(encoding="utf-8")
 worlds={
  "atlas.html":("5","jura155-story.webp"),
@@ -14,7 +17,7 @@ for page,(mode,art) in worlds.items():
  assert './atlas128-map-chrome.css?v=128' in html,page
  for id in ("sidebar","search","legend","allOn","allOff","atlasCanvas","atlasFilterDrawer","districtFilter","dataStatus"):
   assert 'id="'+id+'"' in html,(page,id)
- assert './atlas.js?v=191' in html,page
+ assert ('./atlas.js?v='+worker_version[1]) in html,page
  assert 'url(\'./art/'+art+'\')' in css,art
  assert (ROOT/"art"/art).is_file(),art
  assert "atlas117-world-brand.css?v=117" in html
