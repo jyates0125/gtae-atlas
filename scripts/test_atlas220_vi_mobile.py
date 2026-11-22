@@ -28,6 +28,7 @@ assert '#j171-map-tools' in style and '.atlas85-head>a' in style,'Phone tool and
 assert "j143-official-button" in code,'Compact accessible official map view button must remain'
 assert "back.id='j220-map-back'" in code and "window.location.assign('./maps.html')" in code
 assert "document.getElementById('juraCloseNav')?.click()" in code
+assert "siteDrawer.querySelector('.j132-close')?.click()" in code
 assert "official.click();return" in code and "hub.open=false;return" in code
 assert ".j220-map-back" in style and "env(safe-area-inset-bottom)" in style
 print('PASS Atlas 22.0: VI panel lifetime, pointer isolation, 26 original legend glyphs, scoped premium collectables and saved key preservation')
