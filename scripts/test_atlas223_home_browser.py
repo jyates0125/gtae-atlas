@@ -24,6 +24,19 @@ try:
    page.goto(base+'atlas-dashboard.html',wait_until='domcontentloaded',timeout=60000)
    expect(page.locator('.j223-world-card')).to_have_count(7,timeout=20000)
    expect(page.locator('.j223-shortcuts a')).to_have_count(13)
+   # The 13 tools must be accessible but not overwhelm the initial phone view.
+   menu=page.locator('.j223-shortcuts-menu')
+   expect(menu).to_have_count(1)
+   assert menu.get_attribute('open') is None,'Shortcuts should start collapsed'
+   assert not page.locator('.j223-shortcuts a').first.is_visible(),'Collapsed shortcuts must not be visible'
+   menu.locator('summary').click()
+   expect(page.locator('.j223-shortcuts a').first).to_be_visible()
+   assert menu.get_attribute('open') is not None,'Shortcuts did not expand'
+   assert page.locator('.j223-shortcuts a').count()==13
+   menu.locator('summary').click()
+   assert menu.get_attribute('open') is None,'Shortcuts did not collapse'
+   assert page.locator('.j223-map-actions a[href="./atlas-vi.html?view=rockstar"]').count()>=1,'Missing official VI poster action'
+   assert page.locator('.j223-map-actions a[href="./atlas-vi.html"]').count()>=1,'Missing separate interactive VI map action'
    expect(page.locator('.j223-feature-panel')).to_have_count(4)
    expect(page.locator('#j223-hero-brief')).to_have_count(0) # correct aside is a class, not duplicate ID
    assert page.locator('.j223-hero-brief .j223-brief-button').get_attribute('href')=='./atlas-vi.html'
