@@ -31,7 +31,7 @@ let enabled=true;
 function compatible(){return viewport.dataset.mapImage==='game-original'&&viewport.dataset.sourceImage===config.image&&viewport.dataset.sourceWidth==='1024'&&viewport.dataset.sourceHeight==='1024'}
 function selectRecord(r){
  selectedId=r.id;selectedRecord=r;detail.hidden=false;detail.replaceChildren(E('strong',r.name),E('p','World X '+r.x.toFixed(3)+' · Y '+r.y.toFixed(3)+' · Z '+formatZ(r.z)+' · source reference, not individually gameplay verified.'));
- const link=E('a','Coordinate source ↗');link.href=r.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';const close=E('button','Close detail');close.type='button';close.onclick=()=>{selectedId='';detail.hidden=true;drawMap()};detail.append(link);if(progress)detail.append(progress.button(r));detail.append(close);drawMap();
+ const link=E('a','Coordinate source ↗');link.href=r.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';const close=E('button','Close detail');close.type='button';close.onclick=()=>{selectedId='';selectedRecord=null;detail.hidden=true;drawMap()};detail.append(link);if(progress)detail.append(progress.button(r));detail.append(close);drawMap();
 }
 function drawMap(){
  projected.replaceChildren();
@@ -78,6 +78,6 @@ fetch(config.file).then(r=>{if(!r.ok)throw Error('source unavailable');return r.
   seen.add(r.id);
  }
  for(const [category,count] of Object.entries(config.cats)){if(d.records.filter(r=>r.category===category).length!==count)throw Error('category count mismatch');cat.append(option(category,category+' · '+count))}
- rows=d.records;progress=window.JuraSourceProgress.create(window,{scope:config.world+'-classic',revision:config.revision,rows,identity:r=>iii&&r.category==='Rampages'?'rampage:'+r.slot:r.id,host:root,onChange:()=>{const current=selectedRecord;reset();if(current&&visible().some(r=>r.id===current.id)&&enabled&&compatible())selectRecord(current)}});reset()
+ rows=d.records;progress=window.JuraSourceProgress.create(window,{scope:config.world+'-classic',revision:config.revision,rows,identity:r=>iii&&r.category==='Rampages'?'rampage:'+r.slot:r.id,host:root,onChange:()=>{const current=detail.hidden?null:selectedRecord;reset();if(current&&visible().some(r=>r.id===current.id)&&enabled&&compatible())selectRecord(current)}});reset()
 }).catch(e=>{status.textContent='Reference index unavailable: '+e.message;cat.disabled=q.disabled=start.disabled=true});
 })();
