@@ -47,6 +47,8 @@ jobs:
           python scripts/test_atlas142_official_sources.py
           python scripts/test_atlas143_official_view.py
           node --check atlas143-official-map-view.js
+          python scripts/test_atlas290_poster_source.py
+          node --check atlas290-official-landmarks.js
           node --check atlas131-account.js
           node --check atlas131-social-icons.js
           node --check atlas130-share.js
@@ -186,6 +188,7 @@ jobs:
           python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
           python scripts/test_atlas290_vi_day_browser.py
+          python scripts/test_atlas290_poster_browser.py
           python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
@@ -249,6 +252,7 @@ jobs:
           python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
           python scripts/test_atlas290_vi_day_browser.py
+          python scripts/test_atlas290_poster_browser.py
           python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
