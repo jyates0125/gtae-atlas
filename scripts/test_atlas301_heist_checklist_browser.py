@@ -49,7 +49,16 @@ try:
     # Each page supports a reversible edit that preserves unknown historical keys.
     if page.locator('[data-step]').count()>1:
      another=page.locator('[data-step]').nth(1)
-     another.check()
+     if heist=='cayo-perico':
+      # The owner-approved Cayo flagship hides the older checkbox panel.
+      # Verify its shared data handler without treating a hidden control as
+      # a visible flagship interaction.
+      page.evaluate("""() => {
+        const item=document.querySelectorAll('[data-step]')[1];
+        item.checked=true;item.dispatchEvent(new Event('change',{bubbles:true}));
+      }""")
+     else:
+      another.check()
      latest=page.evaluate("k=>JSON.parse(localStorage.getItem(k))",key)
      assert latest['Retired legacy step'] is True
      assert latest['_history']==record['_history']
