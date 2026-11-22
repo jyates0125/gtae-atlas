@@ -23,6 +23,10 @@ for query in ('#directoryFeatured','#directoryAdditional','#worldSearch','#reset
 for code in ['atlas98-worlds.js','atlas98-portal.js','atlas98-classic.js']:
  r=subprocess.run(['node','--check',str(root/code)],capture_output=True,text=True)
  assert r.returncode==0,r.stderr
+assert 'id="clearWorldSearch"' in index and 'id="resetWorldSearch"' in index
+assert "const resetWorlds=" in portal and "resetTool.hidden" in portal
+assert "clearWorldSearch').onclick=resetWorlds" in portal
+assert "./atlas98-portal.js?v=303" in index and "./atlas98-portal.css?v=303" in index
 assert 'jura155-' in data and 'jura157-' in data,'Preserve original approved world images'
 assert 'Community map positions are not verified gameplay coordinates.' in data
 assert '2,648 of 2,650 GTADB IV landmarks have positions' in data
