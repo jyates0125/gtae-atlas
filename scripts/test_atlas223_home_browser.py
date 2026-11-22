@@ -67,6 +67,22 @@ try:
    expect(suggestion).to_be_visible(timeout=25000)
    assert 'game=vi' in suggestion.get_attribute('href')
    assert 'profile=character%3Alucia' in suggestion.get_attribute('href'),'Home search should open the selected profile directly'
+   # Arrow keys must navigate real results, and Escape must return focus.
+   page.locator('#j223-search-input').fill('GTA')
+   expect(page.locator('#j223-search-results a').first).to_be_visible()
+   page.locator('#j223-search-input').press('ArrowDown')
+   assert page.locator('#j223-search-results a').first.evaluate('(el) => document.activeElement === el'),'ArrowDown did not focus first result'
+   page.keyboard.press('End')
+   assert page.locator('#j223-search-results a').last.evaluate('(el) => document.activeElement === el'),'End did not focus last result'
+   page.keyboard.press('Home')
+   assert page.locator('#j223-search-results a').first.evaluate('(el) => document.activeElement === el'),'Home did not focus first result'
+   page.keyboard.press('ArrowDown')
+   assert page.locator('#j223-search-results a').nth(1).evaluate('(el) => document.activeElement === el'),'ArrowDown did not advance'
+   page.keyboard.press('ArrowUp')
+   assert page.locator('#j223-search-results a').first.evaluate('(el) => document.activeElement === el'),'ArrowUp did not reverse'
+   page.keyboard.press('Escape')
+   assert page.locator('#j223-search-results').is_hidden(),'Escape did not dismiss search results'
+   assert page.locator('#j223-search-input').evaluate('(el) => document.activeElement === el'),'Escape did not return focus to search'
    page.locator('#j223-search-input').fill('Trevor')
    suggestion=page.locator('#j223-search-results a').filter(has_text='Trevor Philips').first
    expect(suggestion).to_be_visible(timeout=15000)
