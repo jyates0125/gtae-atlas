@@ -255,3 +255,9 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** The page-specific Elario jura157-sa cinematic concept replaces the generic crew background and placeholder-like three-city sketch. The three cities remain identified in an honest illustrative caption; no map engine, collection coordinates, private saves or credits were replaced.
 - **TEST:** scripts/test_atlas309_sa_hero.py and built Chromium scripts/test_atlas309_sa_hero_browser.py check actual art decoding at 375/390/844/1440 viewports and preserved map/collection UX. Path-scoped atlas309-sa-hero.yml; exact-head CI mandatory.
 - **HOLD:** Owner design approval, other subject-specific artwork, full release browser/ZIP and real iPhone Safari remain pending. See docs/ATLAS309-SA-HERO-ACCEPTANCE.md.
+
+## Atlas 31.0 — 13-world auditable source evidence matrix (staging)
+- **SOURCE:** 54 source-category rows from 16 retained local source files, distinguishing numeric coordinate references from objective counts and checklist-only slots. Includes Story/Online/VI, Cayo, IV and episodes, SA, III/VC/DE, Stories and CTW gaps. Source location is not automatically a visible or game-verified pin.
+- **UX:** Searchable/filtered, shareable and exportable evidence directly on Marker Coverage. Accessible 44px controls, horizontally scrollable phone table, no private save writes or external background requests, fail closed on broken data.
+- **TEST:** Python independently recalculates each packed row; 4-viewport built Chromium browser journey checks game separation, CSV, filters, source links and missing data. Scoped atlas310-source-coverage.yml. Exact-head CI pending.
+- **HOLD:** Accurate complete map content, artistic finish, real iPhone Safari, final Chromium+Edge+ZIP and owner-reviewed live promotion. See docs/ATLAS310-SOURCE-COVERAGE-ACCEPTANCE.md.
