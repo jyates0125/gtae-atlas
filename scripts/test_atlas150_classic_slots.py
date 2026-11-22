@@ -25,7 +25,7 @@ assert "sets:['Red balloons','Rampages','Empire sites'" in c, 'VCS missing sourc
 assert "sets:['Security cameras','Rampages','Unique jumps'" in c, 'CTW missing sourced collection categories'
 for world in ('iii','vc','vcs','lcs','ctw','tlad','tbogt'):
  assert "'"+world+"':{" in collections,world
-for entry in ('atlas98-classic.js?v=190','atlas98-classic.css?v=190',
+for entry in ('atlas98-classic.js?v=','atlas98-classic.css?v=',
               'atlas98b-progress.js?v=231','atlas98b-progress.css?v=231'):
  assert entry in h,entry
 assert '.j150-slot' in pc and '.j150-place-pin' in pc

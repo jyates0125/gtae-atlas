@@ -67,10 +67,10 @@ for token in ('getRoute:()=>lastRoute.map','sourceReady()', 'atlas-sa-150-source
               'j190-sa-overlay', 'No required ending pin', 'TeamJuraSARoute'):
     assert token in saplan,token
 assert 'j190-sa-line' in sacss and 'pointer-events:none' in sacss
-assert 'atlas190-sa-route.js?v=190' in sah and 'atlas190-sa-route.css?v=190' in sah
+assert re.search(r'atlas190-sa-route\.js\?v=\d+',sah) and 'atlas190-sa-route.css?v=190' in sah
 assert 'j190-episode-collectibles' in hub
 assert "atlas-iv.html?scope=" in classic
-assert 'atlas98-classic.js?v=190' in hub
+assert re.search(r'atlas98-classic\.js\?v=\d+',hub)
 assert len(set(ids))==300
 print('PASS Atlas 19.0: 2650 sourced IV landmarks (2648 positioned), 300 MIT GTA IV/episode birds, 150 SA pickups, scoped routes, markers and credits')
 
@@ -167,3 +167,9 @@ print('PASS Stories edition-specific reference sources; no invented calibration'
 # Affine calibration requires three independent anchors and a fourth holdout.
 import subprocess
 subprocess.run(['node','-e',"const a=require('./atlas249-map-calibration.js');const assert=require('node:assert/strict');const anchors=[{x:-1000,y:-1000,u:25,v:75},{x:1000,y:-1000,u:75,v:75},{x:-1000,y:1000,u:25,v:25},{x:1000,y:1000,u:75,v:25}];const good=a.fit(anchors);assert.deepEqual(good.project({x:0,y:0}),{u:50,v:50});assert.equal(good.error,0);assert.throws(()=>a.fit([...anchors.slice(0,3),{...anchors[3],u:95}]),/Independent check/);assert.throws(()=>a.fit([anchors[0],anchors[0],...anchors.slice(2)]));console.log('PASS independent map calibration check')"],cwd=ROOT,check=True)
+
+assert 'sa-source-order-238-239' in sa and 'state.sourceItems' in sa
+assert 'Older guide slot ' in sa and 'Use old mark/note after checking the location' in sa
+assert 'TeamJuraSAProgress.collected(id)' in saplan
+assert 'merge(data.items,state.items)' in sa and 'merge(data.sourceItems,state.sourceItems,true)' in sa
+print('PASS SA older guide slots and source order progress stay separate')

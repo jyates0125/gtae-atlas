@@ -7,8 +7,16 @@ try{const old=JSON.parse(localStorage.getItem(KEY)||'null');if(old?.schema===1&&
 function message(s){$('status').textContent=s}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch{message('Storage blocked. Export progress to keep a backup.')}}
 function id(slot){return set.id+':'+slot}
-function record(slot){return state.items[id(slot)]||{done:false,note:''}}
-function count(s){let n=0;for(let i=1;i<=s.total;i++)if(state.items[s.id+':'+i]?.done)n++;return n}
+// The new source ordering for tags/jumps is not a crosswalk of older guide slots.
+const SOURCE_BASIS='sa-source-order-238-239';
+if(state.sourceBasis!==SOURCE_BASIS||!state.sourceItems||typeof state.sourceItems!=='object'||Array.isArray(state.sourceItems))state.sourceItems={};
+state.sourceBasis=SOURCE_BASIS;
+function mappedSourceSet(s){return builtIn&&['tags','jumps'].includes(s)&&positions.filter(p=>p.set===s).length===sets.find(p=>p.id===s)?.total}
+function itemMap(s){return mappedSourceSet(s)?state.sourceItems:state.items}
+function record(slot){return itemMap(set.id)[id(slot)]||{done:false,note:''}}
+function count(s){let n=0;const store=itemMap(s.id);for(let i=1;i<=s.total;i++)if(store[s.id+':'+i]?.done)n++;return n}
+function getLegacy(s,slot){return state.items[s+':'+slot]}
+window.TeamJuraSAProgress=Object.freeze({collected:key=>!!itemMap(key.split(':')[0])[key]?.done,sourceReady:s=>builtIn&&mapHasArtwork&&positions.some(p=>p.set===s)});
 function exportFile(payload,name){const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
 function renderCats(){const target=$('categories');target.replaceChildren();for(const s of sets){const b=document.createElement('button');b.className='cat';b.type='button';b.setAttribute('aria-pressed',String(s.id===set.id));b.innerHTML='<span class="emoji"></span><span class="label"></span><span class="count"></span>';b.children[0].textContent=s.icon;b.children[1].textContent=s.name;b.children[2].textContent=count(s)+' / '+s.total;b.onclick=()=>{categoryChosen=true;set=s;render()};target.append(b)}}
 function renderPins(){const layer=$('pinLayer');layer.replaceChildren();if(!map||!mapHasArtwork){$('mapped').textContent=positions.length;return}const hide=$('hideComplete').checked;const only=$('onlyMapped').checked;const visible=positions.filter(p=>p.set===set.id&&p.slot>=1&&p.slot<=set.total);$('mapped').textContent=positions.length;
@@ -27,7 +35,7 @@ function renderPins(){const layer=$('pinLayer');layer.replaceChildren();if(!map|
 }
 function renderItems(){const list=$('items');list.replaceChildren();let shown=0;const q=$('search').value.toLowerCase().trim();const hide=$('hideComplete').checked,only=$('onlyMapped').checked;
  for(let i=1;i<=set.total;i++){const r=record(i),p=positions.find(p=>p.set===set.id&&p.slot===i);if(hide&&r.done)continue;if(only&&!p)continue;const label=p?.label||set.name+' '+String(i).padStart(3,'0');if(q&&!`${label} ${r.note||''} ${i}`.toLowerCase().includes(q))continue;
- const card=document.createElement('div');card.className='item';card.id='item-'+i;const line=document.createElement('label');line.className='itemTop';const box=document.createElement('input');box.type='checkbox';box.checked=!!r.done;box.setAttribute('aria-label','Collected '+label);box.onchange=()=>{state.items[id(i)]={...record(i),done:box.checked};persist();render()};const title=document.createElement('strong');title.textContent=set.icon+' '+label;line.append(box,title);card.append(line);
+ const card=document.createElement('div');card.className='item';card.id='item-'+i;const line=document.createElement('label');line.className='itemTop';const box=document.createElement('input');box.type='checkbox';box.checked=!!r.done;box.setAttribute('aria-label','Collected '+label);box.onchange=()=>{itemMap(set.id)[id(i)]={...record(i),done:box.checked};persist();render()};const title=document.createElement('strong');title.textContent=set.icon+' '+label;line.append(box,title);card.append(line);
  const hint=document.createElement('small');hint.textContent=p?(builtIn?(set.id==='tags'?'Source-backed tag object position · approximate vector alignment, not gameplay verified.':set.id==='jumps'?'Source-backed airborne trigger-zone center; not a ramp or verified driving path.':'Source-backed SA 1.0 US game position · 2D icon approximately projected; not an exact visual alignment.'):('Imported coordinate pack · '+(p.source||'source not supplied'))):'Unmapped tracking slot. No location claimed.';card.append(hint);
  if(p&&builtIn&&set.id==='tags'){const source=document.createElement('a');source.href=p.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';source.textContent='Prineside coordinate source ↗';card.append(source);const warning=document.createElement('small');warning.textContent=(p.directSourceChecked?'Direct source export matched.':'Attributed transcription; direct export not rechecked.')+' Atlas numbering may differ from older checklist guides.';card.append(warning)}
  if(p&&builtIn&&set.id==='jumps'){
@@ -40,10 +48,23 @@ function renderItems(){const list=$('items');list.replaceChildren();let shown=0;
    const pin=[...document.querySelectorAll('.pin')].find(b=>b.title.startsWith(label));
    if(pin)pin.focus({preventScroll:true});
  };card.append(show)}
- const note=document.createElement('textarea');note.placeholder='Your landmark / clue…';note.value=r.note||'';note.maxLength=500;note.setAttribute('aria-label','Notes for '+label);note.onchange=()=>{state.items[id(i)]={...record(i),note:note.value.slice(0,500)};persist()};card.append(note);list.append(card);shown++}
+ const note=document.createElement('textarea');note.placeholder='Your landmark / clue…';note.value=r.note||'';note.maxLength=500;note.setAttribute('aria-label','Notes for '+label);note.onchange=()=>{itemMap(set.id)[id(i)]={...record(i),note:note.value.slice(0,500)};persist()};card.append(note);
+ if(mappedSourceSet(set.id)){
+  const legacy=getLegacy(set.id,i);
+  if(legacy&&(legacy.done||legacy.note)){
+   const old=document.createElement('details'),summary=document.createElement('summary');
+   summary.textContent='Older guide slot '+i+' · not matched to this location';
+   const info=document.createElement('p');info.textContent=(legacy.done?'Previously marked complete. ':'')+(legacy.note||'No saved note.')+' This number may refer to a different place.';
+   const transfer=document.createElement('button');transfer.type='button';transfer.textContent='Use old mark/note after checking the location';
+   transfer.onclick=()=>{if(!confirm('Have you confirmed the older guide slot refers to this exact source location?'))return;const current=record(i);itemMap(set.id)[id(i)]={...current,done:!!current.done||!!legacy.done,note:current.note||String(legacy.note||'').slice(0,500)};persist();render()};
+   old.append(summary,info,transfer);card.append(old);
+  }
+ }
+ if(Array.isArray(r.importedNotes)&&r.importedNotes.length){const d=document.createElement('details'),s=document.createElement('summary');s.textContent='Additional notes retained from imported backups';d.append(s);for(const n of r.importedNotes){const p=document.createElement('p');p.textContent=n;d.append(p)}card.append(d)}
+ list.append(card);shown++}
  if(!shown){const p=document.createElement('p');p.textContent='No results. Change filters or search.';list.append(p)}
 }
-function render(){document.body.dataset.juraSaSet=set.id;renderCats();$('setTitle').textContent=set.icon+' '+set.name;$('setNote').textContent=set.region+' · '+(set.required?'Core 100% collection':'Optional challenge')+' · '+set.total+' entries';$('countLabel').textContent=count(set)+' / '+set.total+' collected';$('collected').textContent=sets.reduce((n,s)=>n+count(s),0);renderPins();renderItems()}
+function render(){document.body.dataset.juraSaSet=set.id;renderCats();$('setTitle').textContent=set.icon+' '+set.name;$('setNote').textContent=set.region+' · '+(set.required?'Core 100% collection':'Optional challenge')+' · '+set.total+' entries'+(mappedSourceSet(set.id)?' · Source-numbered progress separate from older guide slots':'');$('countLabel').textContent=count(set)+' / '+set.total+' collected';$('collected').textContent=sets.reduce((n,s)=>n+count(s),0);renderPins();renderItems()}
 function importMapFile(file){if(!file)return;if(file.size>25000000){message('Map image exceeds 25 MB limit');return}const url=URL.createObjectURL(file),im=new Image();im.onload=()=>{const bg=$('mapBackground');bg.replaceChildren(im);
  customMap=true;const changedImage=!!positions.length;
  // Do not silently overlay built-in pins on unrelated user images, even at matching dimensions.
@@ -56,7 +77,26 @@ async function importLocations(file){if(!file)return;try{if(file.size>4000000)th
  const taken=new Set(),loc=[];for(const p of data.records){const s=sets.find(s=>s.id===p.set);if(!s||!Number.isInteger(p.slot)||p.slot<1||p.slot>s.total||!Number.isFinite(p.x)||!Number.isFinite(p.y)||p.x<0||p.y<0||p.x>data.width||p.y>data.height||taken.has(p.set+':'+p.slot))throw Error('Duplicate or invalid point '+p.set+'/'+p.slot);taken.add(p.set+':'+p.slot);loc.push({set:p.set,slot:p.slot,x:p.x,y:p.y,label:String(p.label||'').slice(0,130),source:String(p.source||data.source).slice(0,160)})}
  if(mapHasArtwork&&(map.width!==data.width||map.height!==data.height))throw Error('Coordinate dimensions do not match loaded image');map={...map,width:data.width,height:data.height,source:data.source};positions=loc;builtIn=false;customPack=true;render();message(loc.length+' attributed positions imported. Verify alignment and source accuracy manually. This does not validate gameplay spawns.');
 }catch(e){message('Import rejected: '+e.message)}}
-async function restore(file){if(!file)return;try{if(file.size>2000000)throw Error('Backup exceeds 2 MB');const data=JSON.parse(await file.text());if(data?.game!=='san-andreas'||data?.schema!==1||typeof data.items!=='object'||Array.isArray(data.items))throw Error('Wrong backup');if(!confirm('Merge imported San Andreas progress with current progress?'))return;let n=0;for(const [k,v] of Object.entries(data.items)){const [s,num]=k.split(':');const found=sets.find(p=>p.id===s);if(!found||!/^[0-9]+$/.test(num)||Number(num)<1||Number(num)>found.total||!v||typeof v!=='object')continue;state.items[k]={done:!!v.done,note:String(v.note||'').slice(0,500)};n++}persist();render();message('Merged '+n+' entries')}catch(e){message('Restore failed: '+e.message)}}
+async function restore(file){if(!file)return;try{
+ if(file.size>2000000)throw Error('Backup exceeds 2 MB');
+ const data=JSON.parse(await file.text());if(data?.game!=='san-andreas'||data?.schema!==1||!data.items||typeof data.items!=='object'||Array.isArray(data.items))throw Error('Wrong backup');
+ if(!confirm('Merge imported San Andreas progress with current progress? Existing marks and notes are retained.'))return;
+ let n=0;
+ function merge(entries,target,sourceOnly=false){
+  if(!entries||typeof entries!=='object'||Array.isArray(entries))return;
+  for(const [k,v] of Object.entries(entries)){
+   const m=/^(tags|snapshots|horseshoes|oysters|jumps):([1-9]\d*)$/.exec(k);
+   const found=m&&sets.find(p=>p.id===m[1]);
+   if(!found||Number(m[2])>found.total||(sourceOnly&&!['tags','jumps'].includes(found.id))||!v||typeof v!=='object'||Array.isArray(v))continue;
+   const old=target[k]||{},note=typeof old.note==='string'?old.note.slice(0,500):'',incoming=typeof v.note==='string'?v.note.slice(0,500):'';
+   const alternates=[...(Array.isArray(old.importedNotes)?old.importedNotes:[]),...(Array.isArray(v.importedNotes)?v.importedNotes:[]),...(note&&incoming&&note!==incoming?[incoming]:[])].filter(x=>typeof x==='string'&&x.trim()).map(x=>x.slice(0,500));
+   target[k]={done:old.done===true||v.done===true,note:note||incoming,importedNotes:[...new Set(alternates)].filter(x=>x!==(note||incoming)).slice(0,30)};n++;
+  }
+ }
+ merge(data.items,state.items);
+ if(data.sourceBasis===SOURCE_BASIS)merge(data.sourceItems,state.sourceItems,true);
+ persist();render();message('Merged '+n+' entries. Older guide slots and source-numbered progress remain separate.');
+ }catch(e){message('Restore failed: '+e.message)}}
 function updateTransform(){const box=$('mapContents');box.style.transform=`translate(${transform.x}px,${transform.y}px) scale(${transform.scale})`}
 function reset(){transform={scale:1,x:0,y:0};updateTransform()}
 function zoom(f){transform.scale=Math.min(5,Math.max(.6,transform.scale*f));updateTransform()}

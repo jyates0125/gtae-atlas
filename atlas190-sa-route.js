@@ -73,13 +73,14 @@ overlay.id='j190-sa-overlay';
 map.append(overlay);
 function sourceReady(){
  const im=document.querySelector('#mapBackground img.j86-san-map');
- return !!(im&&im.complete&&im.naturalWidth===6000&&im.naturalHeight===6000&&im.alt.includes('Toliak')&&pinLayer.querySelector('.pin-source-projected'));
+ return !!(im&&im.complete&&im.naturalWidth===6000&&im.naturalHeight===6000&&im.alt.includes('Toliak')&&window.TeamJuraSAProgress?.sourceReady?.(activeSet()));
 }
 function activeSet(){
  const set=document.body.dataset.juraSaSet;
  return TYPES.includes(set)?set:null;
 }
 function collected(id){
+ if(window.TeamJuraSAProgress?.collected)return window.TeamJuraSAProgress.collected(id);
  try{const data=JSON.parse(localStorage.getItem(progressKey)||'null');return !!data?.items?.[id]?.done}catch(_){return false}
 }
 const safeChoice=(id,set)=>safePoint(id)&&id.startsWith(set+':')&&byId.has(id);

@@ -133,6 +133,8 @@ try:
    proof=ROOT/'qa-evidence'/engine
    proof.mkdir(parents=True,exist_ok=True)
    page.locator('#classicMapShell').screenshot(path=str(proof/('atlas-190-iv-collectibles-'+kind+'.png')),animations='disabled',timeout=30000)
+   # An existing guide number is not proof of the new source location identity.
+   page.add_init_script("""() => {if(location.pathname.endsWith('/atlas-sa.html')&&!localStorage.getItem('jura-sa-test-seeded')){localStorage.setItem('jura-sa-test-seeded','1');localStorage.setItem('team-jura-sa-v1',JSON.stringify({schema:1,items:{'tags:1':{done:true,note:'Old guide location'},'jumps:2':{done:true,note:'Old jump guide'}}}));}}""")
    page.goto(base+'atlas-sa.html',wait_until='domcontentloaded',timeout=45000)
    page.wait_for_function("document.querySelector('#j190-sa-start')&&!document.querySelector('#j190-sa-start').disabled",timeout=30000)
    assert page.locator('.pin-source-projected').count()==50
@@ -154,6 +156,11 @@ try:
    page.locator('#categories button').filter(has_text='Graffiti Tags').click()
    expect(page.locator('.pin-source-projected')).to_have_count(100,timeout=15000)
    expect(page.locator('#mapped')).to_have_text('320')
+   expect(page.locator('#item-1 input[type=checkbox]')).not_to_be_checked()
+   expect(page.locator('#item-1 details summary')).to_contain_text('Older guide slot 1')
+   page.locator('#item-1 input[type=checkbox]').check()
+   assert page.evaluate("""()=>{const d=JSON.parse(localStorage.getItem('team-jura-sa-v1'));return d.items['tags:1'].note==='Old guide location'&&d.sourceItems['tags:1'].done===true}""")
+   page.locator('#item-1 input[type=checkbox]').uncheck()
    page.locator('#j190-sa-start').select_option('tags:1')
    page.locator('#j190-sa-finish').select_option('tags:100')
    tag_route=page.evaluate("window.TeamJuraSARoute.getRoute()")
