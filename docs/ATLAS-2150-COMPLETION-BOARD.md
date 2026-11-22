@@ -266,3 +266,8 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Managing the eight-per-model named Forge variants now supports renaming and confirmed deletion in both V/Online and VI separate local namespaces. Re-reads the exact latest key, checks a saved design has not changed in another tab, and refuses malformed storage or duplicate rename. Primary idea, other vehicle versions, Garage location and ownership remain separate; no new licensed meshes or official specs claimed.
 - **TEST:** Focused source and built-browser phone/desktop tests, including a stale-tab race, cancel/confirm, invalid storage and V/VI isolation; exact-head CI required before staging merge.
 - **HOLD:** physical iPhone Safari, owner 3D visual approval, licensed exact meshes and full Chromium+Edge+ZIP release approval.
+
+## Atlas 31.2 — non-destructive Forge raw recovery (staging)
+- **SOURCE:** Visible damaged-save panel only when a GTA V/Online or Leonida Forge record is invalid. Exact raw bytes downloadable before reset; separate confirm and double current-byte check required to fresh-create only this world's Forge key. No auto-write on opening and no writes to the other world, Garage or ownership.
+- **TEST:** Focused source and real built Chromium for both worlds, broken JSON/schema, raw export, concurrent newer-tab refusal and safe reset. Exact-head CI pending.
+- **HOLD:** Actual Safari device/owner review, licensed meshes/art and full release browser/ZIP.

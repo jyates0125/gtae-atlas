@@ -2,10 +2,10 @@
 <meta name="description" content="Team Jura Atlas premium original 3D concept vehicle configurator: explore licensed reference renders, experiment with color, rotate and zoom an original 3D prototype, and save build ideas locally.">
 <title>3D Concept Vehicle Configurator | Team Jura Atlas · Elario Studios</title>
 <link rel="icon" href="./art/elario-crest.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./atlas101-configurator.css?v=256"><link rel="stylesheet" href="./atlas311-forge-variant-manager.css?v=311">
+<link rel="stylesheet" href="./atlas101-configurator.css?v=256"><link rel="stylesheet" href="./atlas311-forge-variant-manager.css?v=311"><link rel="stylesheet" href="./atlas312-forge-rescue.css?v=312">
 <link rel="stylesheet" href="./atlas99-garage3d.css?v=256">
 <script defer src="./atlas256-forge-geometry.js?v=264"></script><script defer src="./atlas99-garage3d.js?v=276"></script>
-<script defer src="./atlas101-configurator.js?v=311"></script><link rel="stylesheet" href="./atlas160-premium-headers.css?v=160"><link rel="stylesheet" href="./atlas162-subject-heroes.css?v=162"><link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script><link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=222"></script><link rel="stylesheet" href="./atlas131-social-icons.css?v=133"><script defer src="./atlas131-social-icons.js?v=133"></script></head>
+<script defer src="./atlas101-configurator.js?v=312"></script><link rel="stylesheet" href="./atlas160-premium-headers.css?v=160"><link rel="stylesheet" href="./atlas162-subject-heroes.css?v=162"><link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script><link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=222"></script><link rel="stylesheet" href="./atlas131-social-icons.css?v=133"><script defer src="./atlas131-social-icons.js?v=133"></script></head>
 <body><a class="skip" href="#main">Skip to vehicle builder</a>
 <header class="c-head"><a class="c-logo" href="./index.html"><small>ELARIO STUDIOS PRESENTS</small><strong>TEAM JURA <em>ATLAS</em></strong><span>MANY CREWS · ONE VISION</span></a><nav aria-label="Atlas navigation"><a href="./index.html">Home</a><a href="./atlas-database.html?kind=vehicle">Vehicle Database</a><a href="./atlas90-vehicles5.html">Pictured Vehicles</a><a href="./atlas93-garage.html">My Garage</a><a href="./maps.html">Maps</a><a href="./atlas-forge-collections.html">My Forge Collections</a><a href="./atlas90-weapons.html?world=online#forgeArmory">Online Armory</a><a href="./atlas90-weapons6.html#forgeArmory">Leonida Armory</a></nav></header>
 <main id="main" class="c-main">
@@ -23,6 +23,11 @@
  <div class="j311-actions"><button id="j311-rename" type="button" disabled>Rename selected version</button><button id="j311-delete" type="button" disabled>Delete selected version</button></div>
  </div><label class="c-import">Restore presets from a backup<input type="file" id="importBuilds" accept=".json,application/json" aria-describedby="presetImportHint"><span id="presetImportHint">Adds valid missing presets and named builds for this world only. Existing saved ideas and Garage ownership stay untouched.</span></label>
 <p class="c-status" role="status" aria-live="polite" id="builderStatus">Loading vehicle reference catalog…</p>
+<section id="j312-recovery" class="j312-recovery" aria-label="Recover damaged private Forge data" hidden>
+ <strong>Private Forge file needs recovery</strong><p id="j312-recovery-message">Checking saved source data…</p>
+ <div class="j312-recovery-actions"><button id="j312-export" type="button">Download original raw backup</button><button id="j312-reset" type="button" disabled>Start fresh after backup</button></div>
+ <small>The backup is an emergency copy of your stored bytes, not a regular preset import. Reset is optional and affects only the current world's Forge key.</small>
+</section>
 </aside>
 <section class="c-stage" aria-label="Interactive 3D concept">
 <div class="c-stage-head"><div><p class="eyebrow">TEAM JURA / VIRTUAL SHOWROOM</p><h2 id="stageModel">Original 3D Vehicle Concept</h2></div><span class="c-badge">CONCEPT · NOT AN IN-GAME MODEL</span></div>

@@ -21,6 +21,62 @@ const COLORS=[['Night Blue','#4473c2'],['Arctic White','#d9e4f0'],['Sunset','#ef
 let intel={},models=[],visible=[],current='',paint=DEFAULT,design={},storage={schema:1,builds:{}};
 const plain=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
 function readStored(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');return x&&x.schema===1&&plain(x.builds)?x:null}catch{return null}}
+
+/* Atlas 31.2 — fail-closed recovery for an unreadable, saved Forge world.
+   Never delete storage merely because parsing failed; only after raw export,
+   explicit user confirmation and another exact-byte concurrency check. */
+let forgeRecoveryIssue=null,forgeRecoveryExported=false;
+function inspectForgeRecovery(){
+ const panel=$('j312-recovery'),exportButton=$('j312-export'),resetButton=$('j312-reset'),message=$('j312-recovery-message');
+ if(!panel)return;
+ let raw=null,bad=false;
+ try{
+  raw=localStorage.getItem(KEY);
+  if(raw!==null){
+   const value=JSON.parse(raw);
+   bad=!plain(value)||value.schema!==1||!plain(value.builds)||
+    (Object.hasOwn(value,'variants')&&!plain(value.variants));
+  }
+ }catch{bad=true}
+ if(!bad){forgeRecoveryIssue=null;forgeRecoveryExported=false;panel.hidden=true;return}
+ if(!forgeRecoveryIssue||forgeRecoveryIssue.raw!==raw){forgeRecoveryExported=false;forgeRecoveryIssue={raw}}
+ panel.hidden=false;
+ exportButton.disabled=raw===null;
+ resetButton.disabled=!forgeRecoveryExported||raw===null;
+ message.textContent=(VI?'Leonida':'GTA V / Online')+' Forge saved data cannot be read safely. Existing bytes were NOT rewritten. Download a raw recovery copy before considering a fresh file for this world. Other Forge worlds and My Garage are never reset by this tool.';
+}
+function downloadForgeRecovery(){
+ inspectForgeRecovery();
+ const issue=forgeRecoveryIssue;if(!issue||issue.raw===null){status('No readable original Forge bytes could be exported. No save was changed.');return}
+ const backup={schema:'team-jura-forge-recovery-v1',world:WORLD,originalKey:KEY,recordedAt:new Date().toISOString(),unreadableRaw:issue.raw,
+  warning:'Original saved bytes. Keep this file before a manual reset; this is not an importable standard Forge preset file.'};
+ try{
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=VI?'team-jura-forge-vi-recovery.json':'team-jura-forge-v-recovery.json';
+  document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  forgeRecoveryExported=true;
+  $('j312-reset').disabled=false;
+  status('Raw Forge recovery download started. Save and inspect the file before choosing a separate confirmed reset.');
+ }catch(error){status('Raw recovery export failed. Original Forge storage remains unchanged.')}
+}
+function resetForgeAfterRecovery(){
+ const issue=forgeRecoveryIssue;
+ if(!issue||issue.raw===null||!forgeRecoveryExported){status('First export the original saved bytes for this Forge world.');return}
+ try{
+  if(localStorage.getItem(KEY)!==issue.raw){inspectForgeRecovery();status('A newer tab changed Forge data. Reset stopped; inspect or re-export its current bytes.');return}
+  if(!window.confirm('Start fresh ONLY for '+(VI?'Leonida':'GTA V / Online')+' Forge? Keep your downloaded original raw recovery file. All current named and primary Forge designs in this world will be cleared; My Garage and the other world stay untouched.'))return;
+  if(localStorage.getItem(KEY)!==issue.raw){inspectForgeRecovery();status('Forge changed in another tab while confirming. Reset canceled.');return}
+  const empty={schema:1,builds:{},variants:{}};
+  localStorage.setItem(KEY,JSON.stringify(empty));
+  storage=empty;
+  inspectForgeRecovery();
+  refreshVariants();
+  if(current&&models.includes(current))selectModel(current);
+  status('Fresh '+(VI?'Leonida':'GTA V / Online')+' Forge file created after confirmation. Your other world, Garage and ownership were untouched.');
+ }catch(error){status('Fresh Forge reset failed; existing storage was not intentionally replaced. '+String(error.message||error))}
+}
+
 function load(){const x=readStored();if(x)storage=x}
 function mergeLatest(){
  try{
@@ -209,7 +265,7 @@ async function importBuilds(event){
  finally{event.target.value=''}
 }
 function loadSelected(){if(!mergeLatest()){status('Forge storage is unreadable; no primary design was loaded.');return}if(!current||!selectedPreset()){status('No saved idea for the selected model. Your working editor is unchanged.');return}selectModel(current)}
-async function init(){load();paintButtons();initDivisions();$('saveVariant').addEventListener('click',saveVariant);$('loadVariant').addEventListener('click',loadVariant);$('forgeVariant').addEventListener('change',updateNamedManager);$('j311-rename').addEventListener('click',()=>manageNamed('rename'));$('j311-delete').addEventListener('click',()=>manageNamed('delete'));if(VI){$('addToGarage').hidden=true;$('addToGarage').style.display='none';$('loadGarageBuild').hidden=true;$('saveToGarage').hidden=true;$('modelSearch').placeholder='Cheetah, Squalo, Stanier…';$('builderStatus').textContent='Loading GTA VI official visual reference names…';}$('importBuilds').addEventListener('change',importBuilds);$('loadBuild').addEventListener('click',loadSelected);$('loadGarageBuild').addEventListener('click',loadGarageWorking);$('saveToGarage').addEventListener('click',saveToGarage);window.addEventListener('storage',e=>{if(e.key==='team-jura-atlas93-garage-v1')$('loadGarageBuild').disabled=!current||!garagePreset()});$('modelSearch').addEventListener('input',showModels);$('modelSelect').addEventListener('change',e=>selectModel(e.target.value));$('paintColor').addEventListener('input',e=>chooseColor(e.target.value));$('bodyStyle').addEventListener('change',repaint);$('saveBuild').addEventListener('click',save);$('resetBuild').addEventListener('click',reset);$('resetCamera').addEventListener('click',()=>window.TeamJuraGarage3D?.reset());$('exportBuilds').addEventListener('click',exportBuilds);
+async function init(){load();inspectForgeRecovery();paintButtons();$('j312-export').addEventListener('click',downloadForgeRecovery);$('j312-reset').addEventListener('click',resetForgeAfterRecovery);initDivisions();$('saveVariant').addEventListener('click',saveVariant);$('loadVariant').addEventListener('click',loadVariant);$('forgeVariant').addEventListener('change',updateNamedManager);$('j311-rename').addEventListener('click',()=>manageNamed('rename'));$('j311-delete').addEventListener('click',()=>manageNamed('delete'));if(VI){$('addToGarage').hidden=true;$('addToGarage').style.display='none';$('loadGarageBuild').hidden=true;$('saveToGarage').hidden=true;$('modelSearch').placeholder='Cheetah, Squalo, Stanier…';$('builderStatus').textContent='Loading GTA VI official visual reference names…';}$('importBuilds').addEventListener('change',importBuilds);$('loadBuild').addEventListener('click',loadSelected);$('loadGarageBuild').addEventListener('click',loadGarageWorking);$('saveToGarage').addEventListener('click',saveToGarage);window.addEventListener('storage',e=>{if(e.key==='team-jura-atlas93-garage-v1')$('loadGarageBuild').disabled=!current||!garagePreset();if(e.key===KEY)inspectForgeRecovery()});$('modelSearch').addEventListener('input',showModels);$('modelSelect').addEventListener('change',e=>selectModel(e.target.value));$('paintColor').addEventListener('input',e=>chooseColor(e.target.value));$('bodyStyle').addEventListener('change',repaint);$('saveBuild').addEventListener('click',save);$('resetBuild').addEventListener('click',reset);$('resetCamera').addEventListener('click',()=>window.TeamJuraGarage3D?.reset());$('exportBuilds').addEventListener('click',exportBuilds);
  try{if(VI){intel=VI_RECORDS;models=Object.keys(VI_RECORDS).sort((a,b)=>title(a).localeCompare(title(b)))}else{const source=await fetch('./data/atlas-vehicle-intel.json').then(r=>r.ok?r.json():{}).catch(()=>({}));intel=source.vehicles||{};const response=await fetch('./atlas90-seed.json',{cache:'no-cache'});if(!response.ok)throw Error('HTTP '+response.status);const data=await response.json();models=[...new Set((data.vehicles||[]).filter(m=>typeof m==='string'&&/^[a-z0-9_]{2,75}$/.test(m)))].sort((a,b)=>title(a).localeCompare(title(b)))}if(!models.length)throw Error('No suitable vehicle IDs');const selected=new URLSearchParams(location.search).get('model');$('modelSelect').replaceChildren();for(const m of models)$('modelSelect').add(new Option(title(m),m));const requestedVariant=requestedConceptVariant();const garageHandoff=!VI&&new URLSearchParams(location.search).get('source')==='garage'&&models.includes(selected);selectModel(models.includes(selected)?selected:models[0]);if(garageHandoff){const incoming=garagePreset();if(incoming){loadWorking(incoming);status('Opened the saved Garage build as a private Forge working copy. Existing named Forge presets and Garage records are unchanged until you explicitly save.')}else status('This model has no saved Garage build yet. The Forge editor is ready for a new concept.');}const named=models.includes(selected)&&requestedVariant&&variantsFor(current).find(x=>x.name===requestedVariant);if(named&&!garageHandoff){$('forgeVariant').value=named.name;loadWorking(named);updateConceptUrl(current,named.name);status('Opened saved named concept '+named.name+'. Existing saved designs are unchanged.')}else if(!garageHandoff&&!selectedPreset()&&!garagePreset())status(models.length+(VI?' official GTA VI screenshot-title references.':' community GTA V model references available.')+' Viewer uses original concept geometry, not exact GTA meshes.')}
  catch(e){status('Vehicle source catalog unavailable: '+e.message+'. You can still use My Garage.');$('concept3d').textContent='Catalog unavailable: no source model to show.'}
 }
