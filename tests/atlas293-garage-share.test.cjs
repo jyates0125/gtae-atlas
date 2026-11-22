@@ -5,6 +5,10 @@ assert.match(js,/share\.href='\.\/atlas93-garage\.html\?addModel='\+encodeURICom
 assert.match(js,/Your private build and ownership are not shared/,'Explicit privacy note');
 assert.doesNotMatch(js,/share\.href[^;]*JSON\.stringify/,'Do not expose personal collection in links');
 assert.match(js,/v\.studioDesign&&Object\.keys\(v\.studioDesign\)\.length/,'Forge design-only builds must count');
+const html=fs.readFileSync(path.join(root,'atlas93-garage.html'),'utf8');
+assert.match(html,/<option value="saved">My saved builds<\/option>/,'Garage must expose a saved-build filter');
+assert.match(js,/type==='saved'&&hasSavedBuild\(v\)/,'Saved filter must use same saved-build predicate');
+assert.match(js,/Object\.values\(meta\.vehicles\)\.filter\(hasSavedBuild\)\.length/,'Saved-build count must match saved filter');
 assert.match(css,/\.j293-share-actions/,'Model share controls need responsive styling');
 assert.match(css,/min-height:44px/,'Model share actions need touch targets');
 assert.match(js,/querySelector\('\.j226-garage-back'\)\?\.focus\(\{preventScroll:true\}\)/,'Mobile details selection should receive keyboard focus');
