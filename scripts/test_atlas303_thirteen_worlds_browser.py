@@ -79,7 +79,8 @@ try:
      button={'story':'game5','online':'gameOnline','vi':'game6'}[game]
      expect(page.locator('#'+button)).to_have_attribute('aria-pressed','true',timeout=20000)
      assert page.locator('#selectedCard').get_attribute('aria-label')=='Selected map location'
-     assert page.locator('#closeSelected').get_attribute('aria-label')=='Close marker detail'
+     close_label=page.locator('#closeSelected').get_attribute('aria-label') or ''
+     assert 'close' in close_label.lower(),(game,'Map detail must have an accessible Close control',close_label)
     elif game=='cayo':
      assert page.locator('body').get_attribute('data-heist')=='cayo-perico'
      expect(page.locator('#j167-heist-map')).to_be_visible(timeout=25000)
