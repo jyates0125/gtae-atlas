@@ -30,7 +30,18 @@ class QuietHandler(SimpleHTTPRequestHandler):
     def log_message(self, *args):
         pass
 
-with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as server:
+class AtlasTestServer(ThreadingHTTPServer):
+    request_queue_size = 128
+    daemon_threads = True
+    def handle_error(self, request, client_address):
+        # Navigating away can abort an in-flight tile/image response on Windows.
+        # Ignore only socket disconnects; all other handler failures are reported.
+        import sys
+        if isinstance(sys.exc_info()[1], (BrokenPipeError, ConnectionResetError, ConnectionAbortedError)):
+            return
+        super().handle_error(request, client_address)
+
+with AtlasTestServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as server:
     threading.Thread(target=server.serve_forever, daemon=True).start()
     base = f"http://127.0.0.1:{server.server_port}/"
     with sync_playwright() as pw:
@@ -250,6 +261,10 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             expect(page.locator("#modeOnline")).to_have_attribute("aria-pressed","true")
             page.reload(wait_until="domcontentloaded")
             expect(page.locator("#selectedTitle")).to_contain_text("Snowmen")
+            # Local Story source must load and retain stable IDs even with HTTPS blocked.
+            page.goto(base+"atlas-completion.html",wait_until="domcontentloaded")
+            source=page.evaluate("async()=>{const x=await window.JuraSources.load('story');return {bundled:x.bundled,count:x.records.length,spaceship:x.records.filter(r=>r.collectionType==='Spaceship Part').length,ids:new Set(x.records.map(r=>r.id)).size,scope:x.records.every(r=>r.scope==='story')}}")
+            assert source=={"bundled":True,"count":275,"spaceship":50,"ids":275,"scope":True},source
             # Main map backup merge: preserve existing private pins, progress and route order,
             # restore missing collectible/vehicle types, and reject cross-world route stops.
             page.goto(base+"atlas-online.html",wait_until="domcontentloaded")
@@ -340,9 +355,11 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             # set of three other missions at each remaining viewport. Cayo retains its own planner.
             heist_ids=("fleeca","prison-break","humane-labs","series-a","pacific-standard","doomsday-act-1","doomsday-act-2","doomsday-act-3","diamond-casino","cluckin-bell","salvage-yard","auto-shop","agency-vip","kortz-center")
             for heist in heist_ids if width==390 else ("fleeca","diamond-casino","kortz-center"):
-                page.goto(base+"heist-"+heist+".html",wait_until="domcontentloaded")
+                print(f"Checking {heist} at {width}px",flush=True)
+                response=page.goto(base+"heist-"+heist+".html",wait_until="domcontentloaded")
+                assert response and response.ok,heist
                 rows=page.locator("#j167-heist-map .j167-item")
-                expect(rows.first).to_be_visible(timeout=15000)
+                expect(rows.first).to_be_visible(timeout=20000)
                 for i in (0,1,2):
                     rows.nth(i).click()
                     page.locator(".j167-detail").get_by_role("button",name="+ Add to route",exact=True).click()

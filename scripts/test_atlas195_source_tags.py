@@ -40,3 +40,16 @@ assert 'scopeOf(row)!==category.scope' in coverage and 'Number.isFinite(row?.x)'
 assert 'atlas81-hq.html?collection=' in coverage and 'match.mode!==r.mode||match.total!==r.total' in coverage
 assert 'j229-collection-evidence' in html and 'j229-collection-rows' in html
 print('Atlas 19.5/22.9: attributed source tags, 20 cross-checked collection sets, game-scoped reference counts: PASS')
+
+# Pinned community source bundle: IDs and coordinates, not invented spots.
+snapshot=json.loads((r/'data/atlas-story-source-snapshot.json').read_text(encoding='utf-8'))
+assert snapshot['sourceCommit']=='584f2f1d2d1b33dd8a9e1dd8c0c55f37f002c4c3' and snapshot['license']=='WTFPL'
+assert snapshot['originalCount']==276 and snapshot['count']==len(snapshot['records'])==275
+assert len({x['id'] for x in snapshot['records']})==275
+assert Counter(x['type'] for x in snapshot['records'])==snapshot['counts']
+for item in snapshot['records']:
+ assert set(item)=={'id','type','title','lat','lng'}
+ x=103.22126231*item['lng']+12851.6855908
+ y=5913.52505828*math.log(math.tan(math.pi/4+item['lat']*math.pi/360))-10162.16009065
+ assert math.isfinite(x) and math.isfinite(y) and abs(x)<=16384 and abs(y)<=16384
+print('PASS pinned Story community coordinate source, 275 unique bounded records')

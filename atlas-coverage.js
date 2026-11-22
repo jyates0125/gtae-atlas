@@ -12,7 +12,8 @@ const isReferenceMatch=(row,category)=>{
  return (category.aliases||[]).some(a=>normalize(a)&&phrase(text,normalize(a)));
 };
 const format=n=>n.toLocaleString('en-US');
-let types=[],catalog=[],collections=[],catalogReady=false,collectionReady=false;
+let types=[],catalog=[],collections=[],catalogReady=false,collectionReady=false,storyCounts={};
+const storyTypes={'story-spaceship-parts':'Spaceship Part','story-letter-scraps':'Letter Scrap','story-nuclear-waste':'Nuclear Waste','story-stunt-jumps':'Stunt Jump','story-under-bridges':'Under the Bridge','story-knife-flights':'Knife Flight','story-epsilon-tracts':'Epsilon Tract'};
 const matched=category=>catalog.filter(row=>isReferenceMatch(row,category));
 function quoteCsv(value){const str=String(value??''),safe=/^[=+\-@\t\r\n]/.test(str)?"'"+str:str;return '"'+safe.replaceAll('"','""')+'"'}
 function download(filename,rows){const url=URL.createObjectURL(new Blob([rows.map(row=>row.map(quoteCsv).join(',')).join('\r\n')+'\r\n'],{type:'text/csv;charset=utf-8'}));const a=E('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500)}
@@ -47,8 +48,10 @@ function renderCollections(){
   const scope=E('td',row.mode==='story'?'Story':'Online');
   const total=E('td',format(row.total));
   const required=E('td',row.mode==='story'&&Number.isInteger(row.requiredFor100Percent)?String(row.requiredFor100Percent):'—');
-  const evidence=E('td',row.locationVerification==='not-imported'?'No individual coordinates in this index':'Review source status');
+  const mapped=storyCounts[storyTypes[row.id]];
+  const evidence=E('td',Number.isInteger(mapped)?mapped+' bundled community-mapped records; not independently gameplay verified':row.locationVerification==='not-imported'?'No individual coordinates in this index':'Review source status');
   const action=E('td');const link=E('a','Open checklist ↗');link.href='./atlas81-hq.html?collection='+encodeURIComponent(row.id)+'#collections';action.append(link);
+  if(Number.isInteger(mapped)){const map=E('a','Mapped Story records ↗');map.href='./atlas-completion.html';action.append(map)}
   if(/^https:\/\//.test(row.sourceUrl||'')){const source=E('a','Source ↗');source.href=row.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';action.append(source)}
   tr.append(title,scope,total,required,evidence,action);root.append(tr);
  }
@@ -67,8 +70,11 @@ $('j229-collection-export').addEventListener('click',()=>{
 for(const key of ['q','family','only'])$(key).addEventListener('input',render);
 for(const key of ['j229-collection-world','j229-collection-search'])$(key).addEventListener('input',renderCollections);
 $('export').disabled=true;$('j229-collection-export').disabled=true;
-Promise.allSettled([json('./data/atlas-coverage-67.json'),json('./atlas-catalog.json'),json('./atlas-collections.json'),json('./atlas81-collections.json')]).then(result=>{
- const [blueprint,reference,sets,hq]=result;
+Promise.allSettled([json('./data/atlas-coverage-67.json'),json('./atlas-catalog.json'),json('./atlas-collections.json'),json('./atlas81-collections.json'),json('./data/atlas-story-source-snapshot.json')]).then(result=>{
+ const [blueprint,reference,sets,hq,story]=result;
+ if(story.status==='fulfilled'&&story.value.schema===1&&story.value.scope==='story'&&story.value.sourceCommit==='584f2f1d2d1b33dd8a9e1dd8c0c55f37f002c4c3'&&Array.isArray(story.value.records)&&story.value.records.length===275){
+  for(const r of story.value.records)if(typeof r.type==='string')storyCounts[r.type]=(storyCounts[r.type]||0)+1;
+ }
  if(blueprint.status==='fulfilled'&&Array.isArray(blueprint.value.categories)){
   types=blueprint.value.categories.filter(t=>t.scope==='online'&&typeof t.name==='string'&&Array.isArray(t.aliases));
   for(const family of [...new Set(types.map(t=>t.family))]){const o=E('option',family);o.value=family;$('family').append(o)}

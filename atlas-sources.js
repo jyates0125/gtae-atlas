@@ -4,7 +4,7 @@
  */
 (function(root){'use strict';
 const SOURCES={
- story:{label:'GTA V Story · collectibles/challenges',game:'5',scope:'story',url:'https://raw.githubusercontent.com/danharper/GTAV/master/locations.json',license:'WTFPL',credit:'danharper/GTAV · WTFPL',count:276,kind:'collectibles'},
+ story:{label:'GTA V Story · collectibles/challenges',game:'5',scope:'story',url:'https://raw.githubusercontent.com/danharper/GTAV/master/locations.json',license:'WTFPL',credit:'danharper/GTAV · WTFPL',count:275,kind:'collectibles',local:'./data/atlas-story-source-snapshot.json'},
  vi:{label:'GTA VI · trailer research (provisional)',game:'6',scope:'story',url:'https://mapheist.com/data/mapheist-points.json',license:'CC BY 4.0',credit:'Mapheist.com · CC BY 4.0',count:77,kind:'research'},
  atms:{label:"World objects · ATMs",game:'5',scope:'both',url:"https://fivem-minimaps.com/data/atms.json",license:'Publisher permits reuse',credit:'MiniMaps for FiveM · derived from DurtyFree GTA V dumps',count:121,kind:'objects',category:'shop',slug:'atms',name:"ATM"},
  pumps:{label:"World objects · Fuel pumps",game:'5',scope:'both',url:"https://fivem-minimaps.com/data/gas-pumps.json",license:'Publisher permits reuse',credit:'MiniMaps for FiveM · derived from DurtyFree GTA V dumps',count:157,kind:'objects',category:'fuel',slug:'gas-pumps',name:"Fuel pump"},
@@ -65,6 +65,17 @@ function objectRows(data,id){if(!data||!Array.isArray(data.rows))throw Error(id+
  if(out.length<Math.floor(cfg.count*0.75))throw Error(id+' source has too few usable rows');return out;}
 function parse(id,data){if(id==='story')return storyRows(data);if(id==='vi')return viRows(data);if(SOURCES[id]?.kind==='objects')return objectRows(data,id);throw Error('Unknown data source');}
 async function getJSON(id,refresh=false){const src=SOURCES[id];if(!src)throw Error('Unknown data source');
+ // Ship the already licensed Story data locally: first visit works even when external hosts fail.
+ if(id==='story'&&src.local){
+  try{
+   const response=await fetch(src.local,{cache:refresh?'reload':'default'});
+   if(!response.ok)throw Error('Local source HTTP '+response.status);
+   const pack=await response.json();
+   if(pack.schema!==1||pack.game!=='5'||pack.scope!=='story'||pack.sourceCommit!=='584f2f1d2d1b33dd8a9e1dd8c0c55f37f002c4c3'||pack.license!=='WTFPL'||!Array.isArray(pack.records)||pack.count!==pack.records.length||pack.count!==275)throw Error('Invalid bundled Story snapshot');
+   const parsed=parse(id,pack.records);if(parsed.length!==pack.count)throw Error('Story snapshot failed coordinate validation');
+   return{data:pack.records,cache:false,bundled:true};
+  }catch(error){/* Existing remote/cache fallback remains for older packages. */}
+ }
  const KEY='team-jura-atlas-57-source-data';let cached=null;
  let savedAt=0;
  try{if(typeof caches!=='undefined'){const cache=await caches.open(KEY);const saved=await cache.match(src.url);if(saved){cached=await saved.json();savedAt=Number(saved.headers.get('X-Jura-Cached-At'))||0;}}}catch{}
@@ -72,6 +83,6 @@ async function getJSON(id,refresh=false){const src=SOURCES[id];if(!src)throw Err
  try{const resp=await fetch(src.url,{mode:'cors',cache:refresh?'reload':'default'});if(!resp.ok)throw Error('HTTP '+resp.status);const data=await resp.json();parse(id,data);try{if(typeof caches!=='undefined'){const c=await caches.open(KEY);await c.put(src.url,new Response(JSON.stringify(data),{headers:{'Content-Type':'application/json','X-Jura-Cached-At':String(Date.now())}}));}}catch{}return{data,cache:false};}
  catch(err){if(cached)return{data:cached,cache:true,warning:String(err?.message||err)};throw err;}
 }
-async function load(id,refresh=false){const {data,cache,warning}=await getJSON(id,refresh);return{records:parse(id,data),cache,warning:warning||''};}
+async function load(id,refresh=false){const {data,cache,warning,bundled}=await getJSON(id,refresh);return{records:parse(id,data),cache,bundled:!!bundled,warning:warning||''};}
 root.JuraSources=Object.freeze({SOURCES,gtaVFromLegacy,leonidaFromPixels,parse,load,OBJECT_TOTAL:33912});
 })(typeof window==='undefined'?globalThis:window);
