@@ -186,7 +186,7 @@ try:
    assert abs(projected[0]-12.805475)<.0002 and abs(projected[1]-76.11365)<.0002,projected
    pin.evaluate('(e)=>e.click()')
    expect(page.locator('#j241-source-detail')).to_contain_text('Stunt Jump 01')
-   page.locator('#j241-source-detail button').click()
+   page.locator('#j241-source-detail').get_by_role('button',name='Close detail').click()
    expect(page.locator('#j241-source-detail')).to_be_hidden()
    page.get_by_role('button',name='Hide sourced pins').click()
    expect(page.locator('#j241-source-pins')).to_be_hidden()
@@ -220,6 +220,14 @@ try:
    page.locator('#j240-category').select_option('Rampages')
    expect(page.locator('#j240-rows li')).to_have_count(40)
    expect(page.locator('#j240-status')).to_contain_text('20 objectives')
+   # Alternate spawns are one objective. Marking one must hide both when filtered.
+   page.locator('#j240-rows li[data-id="iii-rampage-1-alternate"]').get_by_role('button',name='Mark found',exact=False).click()
+   expect(page.locator('#j240-source-index .j271-source-progress')).to_contain_text('1 / 140')
+   page.locator('#j240-source-index .j271-source-progress input[type=checkbox]').check()
+   expect(page.locator('#j240-rows li')).to_have_count(38)
+   page.locator('#j240-source-index .j271-source-progress input[type=checkbox]').uncheck()
+   page.locator('#j240-rows li[data-id="iii-rampage-1-alternate"]').get_by_role('button',name='Unmark',exact=False).click()
+   expect(page.locator('#j240-rows li')).to_have_count(40)
    page.locator('#j240-start').select_option('iii-rampage-1-alternate')
    page.get_by_role('button',name='Build geometric preview').click()
    expect(page.locator('#j240-rows li')).to_have_count(20)
