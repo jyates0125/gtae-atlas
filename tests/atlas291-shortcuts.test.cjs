@@ -24,4 +24,6 @@ assert.ok(css.includes('max-width:660px'), 'Mobile rule missing');
 assert.ok(html.includes('href="./atlas-vi.html?view=rockstar"'), 'Official poster entry missing');
 assert.ok(html.includes('href="./atlas-vi.html"'), 'Interactive VI Explorer entry missing');
 assert.ok(html.includes('source-labeled community locations'), 'Map provenance note missing');
+assert.ok(css.includes('.j223-shortcuts a:focus-visible'), 'Shortcut link focus ring missing');
+assert.ok(css.includes('max-width:360px'), 'Very narrow phone fallback missing');
 console.log('Atlas 29.1 dashboard source checks passed');
