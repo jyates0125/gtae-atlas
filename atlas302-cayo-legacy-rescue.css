@@ -1,0 +1,21 @@
+/* Atlas 30.2: Elario Cayo recovery shown only for an unreadable legacy checklist. */
+body.j120-heist-page .j302-cayo-recovery{
+ display:grid!important;gap:11px;max-width:880px;margin:20px auto;
+ padding:clamp(16px,3vw,24px);border:1px solid #f4c58b;
+ border-radius:16px;background:linear-gradient(145deg,#311b44,#19172c);
+ box-shadow:0 14px 35px #070414b9;color:#fff1e4;
+ overflow-wrap:anywhere;min-width:0;
+}
+.j302-cayo-recovery h2{margin:0;color:#ffe0ae;font:850 clamp(21px,4vw,29px)/1.18 system-ui}
+.j302-cayo-recovery p{margin:0;color:#eedde7;font:13px/1.6 system-ui}
+.j302-cayo-actions{display:flex;flex-wrap:wrap;gap:9px}
+.j302-cayo-actions button{
+ min-height:44px;min-width:0;padding:10px 14px;flex:1 1 180px;
+ border:1px solid #e6b17e;border-radius:10px;background:#55315c;
+ color:#fff6e9;font:750 13px/1.4 system-ui;cursor:pointer
+}
+.j302-cayo-actions button:disabled{opacity:.52;cursor:not-allowed}
+.j302-cayo-actions button:focus-visible{outline:3px solid #ffdfa0;outline-offset:3px}
+.j302-cayo-status{border-left:3px solid #f7bf77;padding-left:11px}
+@media(max-width:920px){body.j120-heist-page .j302-cayo-recovery{margin:15px 12px}}
+@media(max-width:420px){.j302-cayo-actions{display:grid;grid-template-columns:1fr}.j302-cayo-actions button{width:100%}}
