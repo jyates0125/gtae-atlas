@@ -7,6 +7,7 @@ on:
       - 'atlas101-configurator.js'
       - 'scripts/test_atlas293_garage_forge_handoff.py'
       - 'scripts/test_atlas293_garage_forge_browser.py'
+      - 'scripts/test_atlas293_lamar_appearances.py'
       - '.github/workflows/atlas293-garage-forge.yml'
   workflow_dispatch:
 permissions:
@@ -24,6 +25,7 @@ jobs:
         with:
           node-version: '22'
       - run: python scripts/test_atlas293_garage_forge_handoff.py
+      - run: python scripts/test_atlas293_lamar_appearances.py
       - run: python scripts/test_atlas2150_product_contracts.py
       - run: node --check atlas93-garage.js
       - run: node --check atlas101-configurator.js
