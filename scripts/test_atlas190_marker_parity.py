@@ -138,3 +138,11 @@ assert 'd406fea099e1df2bce42fd6b87eed04bce646629/maps/tiles/' in read('atlas.js'
 assert 'd406fea099e1df2bce42fd6b87eed04bce646629' in read('atlas-sw.js')
 assert './data/atlas-sa-70-jump-zones.json' in read('atlas-sw.js')
 print('PASS reviewed GTADB source provenance and immutable fallback configuration')
+
+vcde=json.loads(read('data/atlas-vc-de-171-source-points.json'))
+assert vcde['world']=='vc' and vcde['edition']=='definitive' and vcde['license']=='ISC'
+assert vcde['counts']=={'Hidden packages':100,'Rampages':35,'Jump approaches':36}
+assert len(vcde['records'])==len({p['id'] for p in vcde['records']})==171
+assert vcde['mapAlignment']=='edition-unverified' and vcde['gameplayVerified'] is False
+assert all(-2000<=p['x']<=2000 and -2000<=p['y']<=2000 and 'imageX' not in p for p in vcde['records'])
+print('PASS Vice City DE separate reference source, 171 rows')
