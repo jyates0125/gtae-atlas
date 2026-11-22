@@ -76,7 +76,14 @@ try:
         pan.click()
         assert pan.get_attribute('aria-pressed')=='false','Pan mode turns back off'
         assert page.locator('.j167-viewport').evaluate("(e)=>e.style.touchAction")=='pan-y','Normal page scrolling restored'
-        assert page.locator('.j167-viewport').evaluate("(e)=>abs(e.getBoundingClientRect().width/e.getBoundingClientRect().height-1284/1262)<0.025".replace('abs(', 'Math.abs(')),'Island aspect ratio is preserved'
+        # Allow Edge one animation frame to settle after toggling map source.
+        page.wait_for_function("""() => {
+          const e=document.querySelector('.j167-viewport');
+          if(!e)return false;
+          const r=e.getBoundingClientRect();
+          return r.height>0 && Math.abs(r.width/r.height-1284/1262)<0.025;
+        }""",timeout=12000)
+        assert page.locator('.j167-viewport').evaluate("(e)=>Math.abs(e.getBoundingClientRect().width/e.getBoundingClientRect().height-1284/1262)<0.025"),'Island aspect ratio is preserved'
         if kind=='mobile':
             toggle=page.get_by_role('button',name='Show marker filters')
             assert toggle.count()==1 and toggle.is_visible(),'Compact filter control visible on phone'
