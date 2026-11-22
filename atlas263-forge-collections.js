@@ -25,7 +25,7 @@ function collect(stores,weaponNames={}){
  }
  const garage=stores.garage,owned=stores.owned;
  const ownedMarks=object(owned)&&owned.schema===1&&object(owned.owned)?owned.owned:{};
- const savedVehicles=object(garage)&&garage.schema===1&&object(garage.vehicles)?garage.vehicles:{};
+ const savedVehicles=object(garage)&&(garage.schema===1||garage.schema===undefined)&&object(garage.vehicles)?garage.vehicles:{};
  // Ownership and a saved Garage idea are independent. Show a saved concept even
  // when the visitor has not purchased/marked the model in GTA Online.
  const hasGarageBuild=v=>object(v)&&!!(
