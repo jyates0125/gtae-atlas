@@ -49,10 +49,14 @@
   const merged={...existing};
   const added={};let skipped=0;
   for(const [field,allowed] of [['route',ids],['scoped',ids],['awards',awardIds]]){
-   const old=unique(existing[field],allowed);
+   // Preserve every older saved identifier, including those from a prior
+   // map revision. Only *new* imported IDs need to match today's catalog.
+   const old=existing[field].slice();
    const input=unique(incoming[field],allowed);
-   const next=unique([...old,...input],allowed);
-   added[field]=next.length-old.length;
+   const seen=new Set(old);
+   const additional=input.filter(id=>!seen.has(id));
+   const next=old.concat(additional);
+   added[field]=additional.length;
    skipped+=incoming[field].length-input.length;
    merged[field]=next;
   }
