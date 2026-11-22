@@ -1,6 +1,6 @@
 # Team Jura Atlas — 2150 completion and release board
 **Created:** 2026-11-21 · **Status:** staging working board, not release certification
-**Canonical repository:** `jyates0125/team-jura-atlas-preview` · **Current verified source:** `development` merge #89 `4f766df1d5e1ecd97eb1bb739314d2def9916e20`; docs and release PRs #91/#90 pending exact-head checks.
+**Canonical repository:** `jyates0125/team-jura-atlas-preview` · **Current reviewed baseline:** `development` PR #91 merge `1d86d5c28d63aa6cfd14f48a5da3ed61bba58fcd`; protected `main` PR #90 synchronized as `8039ee9214fe7bfa3801bcea8f0c95b41f44b94d` with 0 tracked-file differences. **Open staged upgrade:** PR #94 Leonida dual-map/source notebook (not live, exact-head CI, Safari/owner gates outstanding).
 **Studio authority:** `docs/ELARIO-STUDIOS-OPERATING-CHARTER-V2-PROPOSAL.md` (contents adopted)
 **Project authority:** `docs/TEAM-JURA-STANDING-CHARTER.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md`, approved Designed Brand Master and Original Design Reference Pack.
 
