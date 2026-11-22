@@ -22,8 +22,8 @@ for name in ('atlas290-vi-source-ledger.js','atlas290-vi-source-ledger.css', 'at
 assert "landmark='+encodeURIComponent(item.id)" in indexjs
 assert "new URLSearchParams(location.search).get('landmark')" in posterjs
 assert "query.value=requested;list();select(requested)" in posterjs
-assert "picking=id" not in posterjs, 'Placement state must use explicit hint and safe cancel helper'
-assert "function pickup(id)" in posterjs and "data-j290='cancel'" in posterjs
+assert "if(id&&records.has(id)){pickup(id)" in posterjs, 'Placement must provide clear map hint'
+assert "function pickup(id)" in posterjs and "cancel.dataset.j290='cancel'" in posterjs
 assert "window.addEventListener('jura:poster:clear',clear)" in posterjs
 assert "window.dispatchEvent(new Event('jura:poster:clear'))" in official
 assert "crypto.subtle.digest('SHA-256'" in official
