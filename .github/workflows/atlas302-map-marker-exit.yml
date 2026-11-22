@@ -1,0 +1,53 @@
+name: Atlas 30.2 - map marker detail exit accessibility
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas.html'
+      - 'atlas-online.html'
+      - 'atlas-vi.html'
+      - 'atlas302-map-marker-exit.css'
+      - 'atlas302-map-marker-exit.js'
+      - 'scripts/test_atlas302_map_marker_exit.py'
+      - 'scripts/test_atlas302_map_marker_exit_browser.py'
+      - '.github/workflows/atlas302-map-marker-exit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas302-map-exit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  three-map-exit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check map-close source and syntax only
+        run: |
+          python scripts/test_atlas302_map_marker_exit.py
+          python -m py_compile scripts/test_atlas302_map_marker_exit_browser.py
+      - name: Build and audit published Cloudflare map assets
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium for three affected maps
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test four viewports, keyboard and one-tap return
+        run: python scripts/test_atlas302_map_marker_exit_browser.py
+      - name: Save responsive map detail screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas302-marker-exit-phone-landscape
+          path: qa-evidence/chromium/atlas302-marker-exit-*.png
+          if-no-files-found: warn
+          retention-days: 14
