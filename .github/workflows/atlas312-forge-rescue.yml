@@ -1,0 +1,50 @@
+name: Atlas 31.2 - Forge damaged guest save rescue
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas101-configurator.js'
+      - 'atlas-vehicle-configurator.html'
+      - 'atlas312-forge-rescue.css'
+      - 'scripts/test_atlas312_forge_rescue.py'
+      - 'scripts/test_atlas312_forge_rescue_browser.py'
+      - '.github/workflows/atlas312-forge-rescue.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  forge-recovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source contract, Python syntax, related named version safety
+        run: |
+          python scripts/test_atlas312_forge_rescue.py
+          python -m py_compile scripts/test_atlas312_forge_rescue_browser.py
+          python scripts/test_atlas311_forge_management.py
+          node tests/atlas305-garage-variants.test.cjs
+      - name: Build and audit public Cloudflare payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Verify V and VI raw-byte recoveries on phone and desktop
+        run: python scripts/test_atlas312_forge_rescue_browser.py
+      - name: Upload owner-review recovery UI
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas312-forge-safety
+          path: qa-evidence/chromium/atlas312-forge-recovery-*.png
+          if-no-files-found: warn
+          retention-days: 14
