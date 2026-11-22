@@ -1,0 +1,27 @@
+name: Atlas navigation — focused checks
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-dashboard.html'
+      - 'atlas291-shortcuts.css'
+      - 'tests/atlas291-shortcuts.test.cjs'
+      - '.github/workflows/atlas-navigation-focused.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  navigation-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check dashboard shortcut menu and all 13 destinations
+        run: node tests/atlas291-shortcuts.test.cjs
+      - name: Check JavaScript syntax of navigation scripts
+        run: |
+          node --check atlas223-home.js
+          node --check atlas132-nav.js
