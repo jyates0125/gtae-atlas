@@ -63,7 +63,7 @@ def main() -> None:
         raise SystemExit("Workflow must be a local tracked .github/workflows/*.yml file")
     patterns=parse_patterns(workflow.read_text(encoding="utf-8"))
     event=os.getenv("GITHUB_EVENT_NAME","")
-    action=os.getenv("GITHUB_EVENT_ACTION","")
+    action=os.getenv("ATLAS_PR_ACTION",os.getenv("GITHUB_EVENT_ACTION",""))
     changed=current_changes() if event=="pull_request" and action=="synchronize" else None
     selected=should_run(event,action,changed,patterns)
     status="RUN" if selected else "SKIP"
