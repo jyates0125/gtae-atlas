@@ -301,3 +301,7 @@ The CTW reference menu now places Reset collection alignment directly in its mai
 
 ### Atlas 28.7 browser-cache identity
 Map hub references the updated CTW marker/placement script with cache-busting revision 287, avoiding older CDN/browser-cached version 282 when staging is eventually promoted. This changes only the asset request URL, not marker data, saved user keys, pin semantics or source integrity. Preserve release gates at the resulting exact head before deployment; main and Cloudflare development remain unchanged.
+
+
+### Atlas 28.8 — wait for real San Andreas source pin rendering
+Exact 28.7 candidate 097294a4ba4ae794c6d99640f8dd45e3540c3da1 passed cross-product, focused Cayo, and both focused browser suites. Full Edge 137222628802 failed at test_atlas190_map_browser.py line 141: the 50 SA source pin buttons were checked synchronously after the route start picker became enabled. The SA source-data projection and map artwork have separate async rendering lifecycles, so picker availability is not proof of 50 rendered map pins. Replace immediate count assertion with Playwright to_have_count(50, timeout=25000); the same expected count and all map/route requirements remain mandatory. If the pins do not appear, the test will still fail with a readiness diagnostic. No game coordinates, imagery, saved keys or UI features altered. Exact-head full Chromium/Edge and validated ZIP release gates remain required; no main/development merge.

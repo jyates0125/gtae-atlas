@@ -138,7 +138,7 @@ try:
    page.evaluate("""()=>localStorage.setItem('team-jura-sa-v1',JSON.stringify({schema:1,items:{'tags:1':{done:true,note:'Old guide location'},'jumps:2':{done:true,note:'Old jump guide'}}}))""")
    page.goto(base+'atlas-sa.html',wait_until='domcontentloaded',timeout=45000)
    page.wait_for_function("document.querySelector('#j190-sa-start')&&!document.querySelector('#j190-sa-start').disabled",timeout=30000)
-   assert page.locator('.pin-source-projected').count()==50
+   expect(page.locator('.pin-source-projected')).to_have_count(50,timeout=25000)
    page.locator('#j190-sa-start').select_option('snapshots:1')
    route=page.evaluate("window.TeamJuraSARoute.getRoute()")
    assert len(route)==15 and route[0]=='snapshots:1',route
