@@ -3,12 +3,13 @@ on:
   pull_request:
     branches: [development]
     paths:
+      - 'atlas263-forge-collections.js'
+      - 'atlas-forge-collections.html'
       - 'atlas222-characters.js'
       - 'atlas99-garage3d.js'
       - 'atlas101-configurator.js'
       - 'atlas93-garage.js'
       - 'scripts/test_atlas2150_product_contracts.py'
-      - 'docs/ATLAS-2150-COMPLETION-BOARD.md'
       - '.github/workflows/atlas2150-cross-product.yml'
   workflow_dispatch:
 permissions:
@@ -23,21 +24,32 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas2150-cross-product.yml
       - name: Validate product integration contracts
+        if: steps.scope.outputs.run == 'true'
         run: python scripts/test_atlas2150_product_contracts.py
       - name: Validate changed product JavaScript syntax
+        if: steps.scope.outputs.run == 'true'
         run: |
           node --check atlas222-characters.js
           node --check atlas99-garage3d.js
           node --check atlas101-configurator.js
           node --check atlas93-garage.js
       - name: Build Cloudflare production payload and audit assets
+        if: steps.scope.outputs.run == 'true'
         run: |
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py

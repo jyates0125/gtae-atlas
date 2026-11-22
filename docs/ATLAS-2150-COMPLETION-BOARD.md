@@ -180,3 +180,10 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Kortz Center release context links the official Rockstar Art Studio/heist announcement instead of implying the mission is unreleased; precise interior geometry remains labeled illustrative.
 - **TEST:** `tests/atlas298-heist-map-kit.test.cjs`, `scripts/test_atlas298_heist_map_kit_browser.py`, and path-scoped `atlas298-heist-map-kit.yml`. Tests inspect all fourteen maps at 390px/1440px, import/export and privacy. Exact-head results must still be checked; do not infer a pass from source existence.
 - **GATE:** Real iPhone Safari, full final browser + ZIP validation, sourced exact in-game map geometry, complete charter content and owner approval remain open. More detail: `docs/ATLAS298-HEIST-MAP-KIT-ACCEPTANCE.md`.
+
+
+## Atlas 30.0 — relevant-only feature acceptance (staging)
+- **SOURCE:** Twelve path-scoped GitHub workflows (14 jobs) now inspect each new PR synchronization's *actual head commit* before installing browsers or rebuilding unrelated features. Initial PR, manual, unavailable history and final release validation remain fail-open and fully available.
+- **SOURCE:** Shared dependencies are explicitly included for Garage/Forge, character, navigation, heist and integrated Leonida tests; deleted/renamed critical files count. The standalone final production Chromium/Edge/ZIP signoff gate remains manual and unchanged.
+- **TEST:** `scripts/atlas300-ci-delta.py`, `scripts/test_atlas300_ci_delta.py` and lightweight workflow `atlas300-ci-delta.yml`. Exact-head YAML/source CI and observed workflow-skip evidence must pass before this is treated as verified.
+- **HOLD:** This saves development test minutes, not user-facing charter completion. Owner visual, source/rights and real iPhone checks remain mandatory. See `docs/ATLAS300-CI-DELTA-ACCEPTANCE.md`.

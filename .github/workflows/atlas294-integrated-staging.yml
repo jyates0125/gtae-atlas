@@ -3,6 +3,12 @@ on:
   pull_request:
     branches: [development]
     paths:
+      - 'atlas263-forge-collections.js'
+      - 'scripts/test_atlas290*.py'
+      - 'scripts/test_atlas291*.py'
+      - 'scripts/test_atlas292*.py'
+      - 'scripts/test_atlas293*.py'
+      - 'scripts/test_atlas294*.py'
       - 'atlas93-garage.js'
       - 'atlas222-characters.js'
       - 'atlas101-configurator.js'
@@ -11,7 +17,6 @@ on:
       - 'atlas290-*.css'
       - 'atlas-dashboard.html'
       - 'atlas-vi.html'
-      - 'scripts/test_atlas29*.py'
       - '.github/workflows/atlas294-integrated-staging.yml'
   workflow_dispatch:
 permissions:
@@ -25,13 +30,22 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas294-integrated-staging.yml
       - name: Cross-feature and source regression
+        if: steps.scope.outputs.run == 'true'
         run: |
           python scripts/test_atlas294_integration.py
           python scripts/test_atlas291_dual_leonida.py
@@ -44,14 +58,17 @@ jobs:
           node --check atlas101-configurator.js
           node --check atlas292-shortcut-filter.js
       - name: Build audited Cloudflare release payload
+        if: steps.scope.outputs.run == 'true'
         run: |
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
       - name: Install focused Chromium
+        if: steps.scope.outputs.run == 'true'
         run: |
           python -m pip install 'playwright==1.58.0'
           python -m playwright install --with-deps chromium
       - name: Test interacting components in real browser
+        if: steps.scope.outputs.run == 'true'
         run: |
           python scripts/test_atlas290_vi_day_browser.py
           python scripts/test_atlas294_day_switch_browser.py
@@ -59,13 +76,13 @@ jobs:
           python scripts/test_atlas293_garage_forge_browser.py
           python scripts/test_atlas293_character_portraits_browser.py
       - name: Capture integration-specific desktop and phone design evidence
-        if: success()
+        if: success() && steps.scope.outputs.run == 'true'
         continue-on-error: true
         env:
           ATLAS_SCREENSHOT_SCOPE: atlas294
         run: python scripts/capture_design_review.py
       - name: Upload owner-review screenshots and image/overflow manifest
-        if: always()
+        if: always() && steps.scope.outputs.run == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: atlas294-owner-review-desktop-phone
