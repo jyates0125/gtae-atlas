@@ -41,7 +41,17 @@ try:
    page.keyboard.press('Enter')
    expect(page.locator('.j223-shortcuts a').first).to_be_visible()
    page.keyboard.press('Tab')
+   assert page.evaluate('document.activeElement?.id === "juraShortcutFilter"'),'Tab did not reach tool finder'
+   page.keyboard.type('Garage')
+   expect(page.locator('#juraShortcutCount')).to_contain_text('1 of 13 tools found')
+   assert page.locator('.j223-shortcuts a:visible').count()==1,'Tool filter should show one Garage link'
+   page.keyboard.press('Escape')
+   expect(page.locator('#juraShortcutCount')).to_contain_text('13 tools available')
+   assert page.locator('.j223-shortcuts a:visible').count()==13,'Escape did not restore tools'
+   page.keyboard.press('Tab')
    assert page.evaluate('document.activeElement?.closest(".j223-shortcuts") !== null'),'Tab did not enter opened shortcuts'
+   page.keyboard.press('Shift+Tab')
+   assert page.evaluate('document.activeElement?.id === "juraShortcutFilter"'),'Shift+Tab did not return to finder'
    page.keyboard.press('Shift+Tab')
    assert menu.locator('summary').evaluate('(el) => document.activeElement === el'),'Shift+Tab did not return to menu summary'
    page.keyboard.press('Enter')
