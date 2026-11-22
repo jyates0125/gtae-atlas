@@ -83,10 +83,8 @@
      for(const w of worlds){const typeOk=mode==='all'||(mode==='interactive'?(w.kind==='interactive'||w.kind==='schematic'||w.id==='vi'):mode==='research'?w.kind==='research':mode==='limited'?w.kind==='limited':w.kind==='gateway');const words=tokens([w.id,w.name,w.game,w.short,w.grade,w.note,searchAliases[w.id]||'',...w.features].join(' '));if(!typeOk||!terms.every(term=>words.some(word=>word.startsWith(term))))continue;
        const card=makeWorld(w,false,true);card.classList.add('directory-card');
        card.addEventListener('click',()=>{save(lastWorldKey,{id:w.id,href:w.href})});
-       const episode=w.id==='tlad'||w.id==='tbogt';
-       const summary=episode?'50 sourced seagulls · Saved routes':w.kind==='gateway'?'Individual checklist · Personal pins & routes':w.features.slice(0,3).join(' · ');
-       const note=episode?w.note:w.kind==='gateway'?'Built-in verified map calibration pending · Open for full coverage details':w.note;
-       const features=E('p','world-feature-summary',summary);const caption=E('p','world-coverage-note',note);
+       const features=E('p','world-feature-summary',w.features.slice(0,3).join(' · '));
+       const caption=E('p','world-coverage-note',w.note);
        card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
      if(count)count.textContent=total+' of '+worlds.length+' destinations';if($('#noWorlds'))$('#noWorlds').hidden=total!==0;
      $('#mainWorlds').hidden=feature.children.length===0;$('#otherWorlds').hidden=additional.children.length===0;

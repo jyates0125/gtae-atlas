@@ -11,7 +11,7 @@ const out = path.join(root, 'public');
 const legacy = require('./atlas209-legacy-redirect.cjs');
 const skipDirs = new Set(['.git','.github','.venv','node_modules','tests','tools','scripts','reference','reference-pack','optional','private-lab','atlas-lab-private','research-private','user-exports','qa-evidence','public','__pycache__','docs','.playwright','.cache']);
 const allowExt = new Set(['.html','.css','.js','.json','.csv','.svg','.png','.jpg','.jpeg','.webp','.gif','.ico','.woff','.woff2','.mp4','.webm','.mp3','.ogg','.wav','.bin','.txt','.md','.xml','.webmanifest','.wasm','.glb','.gltf','.avif']);
-const excludeNames = new Set(['MANIFEST-SHA256.txt','.env','.env.local','atlas-build-identity.json','INSTALL-TO-DEVELOPMENT.ps1','package-lock.json','package.json']);
+const excludeNames = new Set(['MANIFEST-SHA256.txt','.env','.env.local','atlas-build-identity.json','atlas132-page-directory.json','INSTALL-TO-DEVELOPMENT.ps1','package-lock.json','package.json']);
 const specials = new Set(['_headers','_redirects','.nojekyll']);
 function walk(dir, prefix='') {
   const list=[];
@@ -47,13 +47,18 @@ for (const rel of files) {
   fs.mkdirSync(path.dirname(dst),{recursive:true});
   if (rel.endsWith('.html') && !rel.includes('/')) {
     const html=fs.readFileSync(src,'utf8');
-    const includes='<link rel="stylesheet" href="./atlas160-premium-headers.css?v=160"><link rel="stylesheet" href="./atlas162-subject-heroes.css?v=162"><link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script>'+(html.includes('atlas132-nav.css')?'':'<link rel="stylesheet" href="./atlas132-nav.css?v=132">')+(html.includes('atlas132-nav.js')?'':'<script defer src="./atlas132-nav.js?v=222"></script>')+''+(!html.includes('atlas131-social-icons.css')?'<link rel="stylesheet" href="./atlas131-social-icons.css?v=133">':'')+(!html.includes('atlas131-social-icons.js')?'<script defer src="./atlas131-social-icons.js?v=133"></script>':'');
-    const at=html.toLowerCase().lastIndexOf('</head>');
-    if (at<0) throw new Error('Published HTML is missing head: '+rel);
-    fs.writeFileSync(dst,html.slice(0,at)+includes+html.slice(at));
-  } else {
-    fs.copyFileSync(src,dst);
+    const requiredAssets=[
+      'atlas160-premium-headers.css?v=160','atlas162-subject-heroes.css?v=162',
+      'atlas153-advisory.css?v=153','atlas153-advisory.js?v=153',
+      'atlas132-nav.css','atlas132-nav.js','atlas131-social-icons.css','atlas131-social-icons.js'
+    ];
+    for(const asset of requiredAssets){
+      const attribute=asset.includes('.css')?'href':'src';
+      const references=html.split(attribute+'="./'+asset).length-1;
+      if(references!==1) throw new Error(rel+' requires one reference to '+asset);
+    }
   }
+  fs.copyFileSync(src,dst);
   const buf=fs.readFileSync(dst);
   bytes+=buf.length;
   manifest.push({path:rel.replaceAll('\\','/'),bytes:buf.length,sha256:crypto.createHash('sha256').update(buf).digest('hex')});
@@ -74,6 +79,9 @@ for(const required of ['index.html','maps.html','atlas.html','atlas-online.html'
 }
 const pageBytes=Buffer.from(JSON.stringify({version:132,pages},null,2));
 const pageFile='atlas132-page-directory.json';
+if (JSON.stringify(JSON.parse(fs.readFileSync(path.join(root,pageFile),'utf8'))) !== JSON.stringify({version:132,pages})) {
+  throw new Error('Update '+pageFile+' from the current HTML page titles for direct-source hosting');
+}
 fs.writeFileSync(path.join(out,pageFile),pageBytes);
 bytes+=pageBytes.length;
 manifest.push({path:pageFile,bytes:pageBytes.length,sha256:crypto.createHash('sha256').update(pageBytes).digest('hex')});
