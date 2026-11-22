@@ -221,6 +221,8 @@ function mount(){
  function closeView(){
   updateViewUrl(false);
   panel.hidden=true;button.setAttribute('aria-expanded','false');button.setAttribute('aria-pressed','false');
+  // Tell optional personal-poster tools to disarm pending placement on exit.
+  window.dispatchEvent(new CustomEvent('jura:poster:visibility',{detail:{open:false}}));
   if(!button.hidden)button.focus();
  }
  button.addEventListener('click',()=>panel.hidden?openView():closeView());
