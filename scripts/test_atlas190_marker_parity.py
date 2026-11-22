@@ -163,3 +163,7 @@ for w,n in [('lcs',52),('vcs',51)]:
  assert len(p['records'])==len({r['id'] for r in p['records']})==n
  assert all(r['id'].startswith(w+'-ref-') and 'imageX' not in r for r in p['records'])
 print('PASS Stories edition-specific reference sources; no invented calibration')
+
+# Affine calibration requires three independent anchors and a fourth holdout.
+import subprocess
+subprocess.run(['node','-e',"const a=require('./atlas249-map-calibration.js');const assert=require('node:assert/strict');const anchors=[{x:-1000,y:-1000,u:25,v:75},{x:1000,y:-1000,u:75,v:75},{x:-1000,y:1000,u:25,v:25},{x:1000,y:1000,u:75,v:25}];const good=a.fit(anchors);assert.deepEqual(good.project({x:0,y:0}),{u:50,v:50});assert.equal(good.error,0);assert.throws(()=>a.fit([...anchors.slice(0,3),{...anchors[3],u:95}]),/Independent check/);assert.throws(()=>a.fit([anchors[0],anchors[0],...anchors.slice(2)]));console.log('PASS independent map calibration check')"],cwd=ROOT,check=True)
