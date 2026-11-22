@@ -119,7 +119,9 @@ try:
         assert page.evaluate("g => localStorage.getItem(g)", G) == '{damaged-meta'
 
         page.evaluate("s => localStorage.setItem(s,'{damaged-collection')", S)
-        page.locator('#garageDetails input[type=checkbox]').first.check()
+        # The rejected click immediately restores the original checkbox state.
+        # Playwright check() waits for it to remain checked and would time out.
+        page.locator('#garageDetails input[type=checkbox]').first.click()
         assert page.evaluate("s => localStorage.getItem(s)", S) == '{damaged-collection'
         expect(page.locator('#garageNotice')).to_contain_text('Ownership not saved')
         assert page.evaluate("g => localStorage.getItem(g)", G) == '{damaged-meta'
