@@ -10,6 +10,7 @@ assert.ok(script.includes('const hit=requested && data.find(r=>r.id===requested)
 assert.ok(script.includes("scope!==hit.scope"),'World filter must reconcile to requested character');
 assert.ok(script.includes('editionSelect.value=edition'),'Classic edition must reconcile to requested character');
 assert.ok(script.includes('draw();persist();showProfile(dialog,hit);return'),'Profile must render and retain canonical filter state');
+assert.ok(script.includes('if(term&&!matchesName){q=hit.name;search.value=q}'),'A shared profile must reconcile conflicting search text');
 assert.ok(script.includes("window.addEventListener('popstate',restoreProfile)"),'Browser back must restore profile state');
 assert.ok(script.includes('history.back();return'),'Dialog close must support returning to results');
 console.log('Atlas 29.2 character profile deep-link source contract passed');
