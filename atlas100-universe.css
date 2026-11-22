@@ -100,3 +100,16 @@ body[data-atlas-kind="all"] .u-hero-copy{max-width:880px;align-self:center;paddi
 body[data-atlas-kind="all"] .u-hero h1{text-wrap:balance;text-shadow:0 4px 24px #07030ca8}
 body[data-atlas-kind="all"] .u-hero p:not(.u-eyebrow){color:#fff1f9;text-shadow:0 2px 12px #090412}
 @media(max-width:640px){body[data-atlas-kind="all"] .u-hero{min-height:420px}body[data-atlas-kind="all"] .u-hero-art{background:linear-gradient(180deg,#180b29dd,#160b26c0 58%,#160b26a6),url('./art/atlas98-approved-hero.webp') center/cover no-repeat}body[data-atlas-kind="all"] .u-hero-copy{padding:25px 20px}body[data-atlas-kind="all"] .u-hero h1{font-size:clamp(32px,8vw,48px)}}
+
+/* Keep the dismiss control reachable inside long, scrollable record sheets. */
+.u-dialog > form[method="dialog"] {
+ position: sticky;
+ top: 0;
+ z-index: 3;
+ pointer-events: none;
+}
+.u-dialog > form[method="dialog"] .u-close {
+ pointer-events: auto;
+ min-width: 44px;
+ min-height: 44px;
+}

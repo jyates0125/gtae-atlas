@@ -4,6 +4,7 @@
   "records": [
     {
       "id": "character:michael",
+      "conceptPortrait": "art/jura221-michael-cinematic.webp",
       "kind": "character",
       "name": "Michael De Santa",
       "scope": "story",
@@ -19,6 +20,7 @@
     },
     {
       "id": "character:franklin",
+      "conceptPortrait": "art/jura221-franklin-cinematic.webp",
       "kind": "character",
       "name": "Franklin Clinton",
       "scope": "story",
@@ -34,6 +36,7 @@
     },
     {
       "id": "character:trevor",
+      "conceptPortrait": "art/jura221-trevor-cinematic.webp",
       "kind": "character",
       "name": "Trevor Philips",
       "scope": "story",
@@ -214,6 +217,7 @@
     },
     {
       "id": "character:niko",
+      "conceptPortrait": "art/jura221-niko-cinematic.webp",
       "kind": "character",
       "name": "Niko Bellic",
       "scope": "classic",
@@ -259,6 +263,7 @@
     },
     {
       "id": "character:cj",
+      "conceptPortrait": "art/jura221-cj-cinematic.webp",
       "kind": "character",
       "name": "Carl Johnson",
       "scope": "classic",
@@ -304,6 +309,7 @@
     },
     {
       "id": "character:tommy",
+      "conceptPortrait": "art/jura221-tommy-cinematic.webp",
       "kind": "character",
       "name": "Tommy Vercetti",
       "scope": "classic",
@@ -334,6 +340,7 @@
     },
     {
       "id": "character:claude",
+      "conceptPortrait": "art/jura221-claude-cinematic.webp",
       "kind": "character",
       "name": "Claude",
       "scope": "classic",
@@ -349,6 +356,7 @@
     },
     {
       "id": "character:lucia",
+      "conceptPortrait": "art/jura221-lucia-cinematic.webp",
       "kind": "character",
       "name": "Lucia Caminos",
       "scope": "vi",
@@ -377,6 +385,7 @@
     },
     {
       "id": "character:jason",
+      "conceptPortrait": "art/jura221-jason-cinematic.webp",
       "kind": "character",
       "name": "Jason Duval",
       "scope": "vi",

@@ -179,6 +179,7 @@ jobs:
           python scripts/test_atlas212_directory_browser.py
           python scripts/test_atlas217_vi_world_browser.py
           python scripts/test_atlas222_vi_browser.py
+          python scripts/test_atlas_character_portraits.py
           python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
           python scripts/test_atlas219_hq_browser.py
@@ -240,6 +241,7 @@ jobs:
           python scripts/test_atlas212_directory_browser.py
           python scripts/test_atlas217_vi_world_browser.py
           python scripts/test_atlas222_vi_browser.py
+          python scripts/test_atlas_character_portraits.py
           python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
           python scripts/test_atlas219_hq_browser.py

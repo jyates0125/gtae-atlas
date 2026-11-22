@@ -44,10 +44,21 @@ function portraitMedia(r,profile=false){
   credit.textContent='Illustrative world artwork only · not a depiction of '+r.name;
   media.append(scene,identity,credit);
  };
- if(!srcSafe(r.image)){unavailable();return media}
+ const showFallback=()=>{
+  if(!r.conceptPortrait){unavailable();return}
+  const portrait=make('img');
+  portrait.loading=profile?'eager':'lazy';
+  portrait.decoding='async';
+  portrait.alt='Elario Studios fan concept of '+r.name;
+  portrait.addEventListener('error',unavailable,{once:true});
+  credit.textContent='Elario Studios · illustrated character concept';
+  media.replaceChildren(portrait,credit);
+  portrait.src='./'+r.conceptPortrait;
+ };
+ if(!srcSafe(r.image)){showFallback();return media}
  const img=make('img');img.loading=profile?'eager':'lazy';img.decoding='async';img.referrerPolicy='no-referrer';
  img.alt='Reference artwork attributed to '+r.name+'; see image source for provenance';
- img.addEventListener('error',unavailable,{once:true});
+ img.addEventListener('error',showFallback,{once:true});
  credit.textContent=label(r,false);
  media.append(img,credit);img.src=r.image;
  return media;
@@ -64,14 +75,14 @@ function card(r){
  const actions=make('div','j222-card-actions');
  const details=make('a','j222-action j222-primary','View profile');
  details.href=profileLink(r);
- details.addEventListener('click',event=>{const dialog=$('j222-profile-dialog');if(!dialog||typeof dialog.showModal!=='function')return;event.preventDefault();showProfile(dialog,r);});
+ details.addEventListener('click',event=>{const dialog=$('j222-profile-dialog');if(!dialog||typeof dialog.showModal!=='function')return;event.preventDefault();showProfile(dialog,r,true);});
  const map=make('a','j222-action','Open '+(r.scope==='vi'?'Leonida':'world')+' map');map.href=worldLink(r);
  actions.append(details,map);
  if(srcSafe(r.sourceUrl)){const source=make('a','j222-source','Source ↗');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';actions.append(source)}
  box.append(actions);el.append(media,box);
  return el;
 }
-function showProfile(dialog,r){
+function showProfile(dialog,r,pushEntry=false){
  const content=$('j222-profile-content');if(!content)return;
  content.replaceChildren();
  const hero=make('div','j222-profile-hero');hero.append(portraitMedia(r,true));
@@ -86,7 +97,8 @@ function showProfile(dialog,r){
  if(r.verification)fact('Source confidence',r.verification);else fact('Source confidence','Curated reference; review needed');
  if(r.attributes?.performer)fact('Credited performer(s)',r.attributes.performer);
  if(r.attributes?.affiliation)fact('Published connections',r.attributes.affiliation);
- fact('Image attribution',r.imageRights||'Original Elario illustrative world scene when no reference portrait is available');
+ if(r.conceptPortrait)fact('Concept portrait','Elario Studios · original AI-assisted fan illustration');
+ fact('Reference image attribution',r.imageRights||'Original Elario illustrative world scene when no reference portrait is available');
  content.append(facts);
  if(r.scope==='vi')content.append(make('p','j222-profile-caution','A confirmed character does not verify exact map coordinates, game statistics or spawn locations.'));
  const links=make('div','j222-card-actions');
@@ -113,9 +125,9 @@ function showProfile(dialog,r){
   content.append(other);
  }
  const url=new URL(location.href);
- if(url.searchParams.get('profile')!==r.id){
+ if(pushEntry && url.searchParams.get('profile')!==r.id){
   url.searchParams.set('profile',r.id);
-  history.replaceState(history.state,'',url);
+  history.pushState({...history.state,juraCharacterProfile:r.id},'',url);
  }
  if(!dialog.open)dialog.showModal();
  dialog.scrollTop=0;
@@ -182,6 +194,8 @@ async function start(){
  });
  dialog?.addEventListener('close',()=>{
   const url=new URL(location.href);
+  if(dialog.open)return;
+  if(history.state?.juraCharacterProfile && history.state.juraCharacterProfile===url.searchParams.get('profile')){history.back();return}
   if(url.searchParams.has('profile')){
    url.searchParams.delete('profile');
    history.replaceState(history.state,'',url);
@@ -189,12 +203,17 @@ async function start(){
  });
  if(location.hash==='#results'&&q){history.replaceState(history.state,'',location.pathname+location.search+'#mainCharacterEra');$('mainCharacterEra')?.scrollIntoView({block:'start'})}
  draw();
- const requested=args.get('profile');
- if(requested&&dialog){
-  const hit=data.find(r=>r.id===requested&&(scope==='all'||r.scope===scope)&&(scope!=='classic'||edition==='all'||r.game===edition));
-  if(hit)showProfile(dialog,hit);
-  else{const url=new URL(location.href);url.searchParams.delete('profile');history.replaceState(history.state,'',url)}
+ function restoreProfile(){
+  if(!dialog)return;
+  const url=new URL(location.href);
+  const requested=url.searchParams.get('profile');
+  const hit=requested && data.find(r=>r.id===requested&&(scope==='all'||r.scope===scope)&&(scope!=='classic'||edition==='all'||r.game===edition));
+  if(hit){showProfile(dialog,hit);return}
+  if(requested){url.searchParams.delete('profile');history.replaceState(history.state,'',url)}
+  if(dialog.open)dialog.close();
  }
+ window.addEventListener('popstate',restoreProfile);
+ restoreProfile();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

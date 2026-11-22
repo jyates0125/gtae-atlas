@@ -52,7 +52,19 @@ function index(profile,seed,catalog,sets,viWeapons){
  return [...uniq.values()].sort((a,b)=>a.name.localeCompare(b.name));
 }
 function badge(r){const id=r.id.split(':').pop().replace(/-vi|-v$/,'');if(r.kind==='animal')return WILDLIFE[id]||'✿';if(r.kind==='character')return r.name.split(' ').slice(0,2).map(x=>x[0]).join('');if(r.kind==='collectible')return /pumpkin/i.test(r.name)?'🎃':/snow/i.test(r.name)?'☃':/cards?/i.test(r.name)?'🃏':'◈';return SYMBOLS[r.kind]||'✦'}
-function elarioCharacterPortrait(r,area){
+function elarioCharacterPortrait(r,area,allowConcept=true){
+ if(allowConcept && r.conceptPortrait){
+  const img=make('img');
+  img.loading='lazy';img.decoding='async';
+  img.alt='Elario Studios fan concept of '+r.name;
+  area.dataset.artStatus='character-concept';
+  const note=area.querySelector('.u-image-note')||make('span','u-image-note');
+  note.textContent='ELARIO CHARACTER CONCEPT';
+  img.addEventListener('error',()=>{img.remove();elarioCharacterPortrait(r,area,false)},{once:true});
+  area.append(img,note);
+  img.src='./'+r.conceptPortrait;
+  return;
+ }
  // Cinematic world-scene fallback, honestly not an invented face or exact game portrait.
  const game=r.game||'';
  const classic=/GTA III/.test(game)?'jura157-iii-cinematic.webp':
@@ -80,7 +92,7 @@ function artwork(r){
   area.append(img);
  }else if(r.kind==='character')elarioCharacterPortrait(r,area);
  else area.append(make('span','u-symbol',badge(r)));
- if(isUnverified(r))area.append(make('span','u-image-note','UNVERIFIED RESEARCH'));
+ if(!area.querySelector('.u-image-note') && isUnverified(r))area.append(make('span','u-image-note','UNVERIFIED RESEARCH'));
  else if(r.image)area.append(make('span','u-image-note',r.scope==='vi'?'OFFICIAL RECORD · REFERENCE IMAGE':'REFERENCE ART'));
  else if(area.dataset.artStatus==='world-scene')area.append(make('span','u-image-note','ELARIO CINEMATIC SCENE · NOT A PORTRAIT'));
  if(area.dataset.artStatus==='world-scene')area.querySelector('.u-image-note')?.replaceChildren('ELARIO CINEMATIC SCENE · NOT A PORTRAIT');
@@ -97,7 +109,7 @@ function card(r){const node=make('article','u-card');node.append(artwork(r));con
  const title=make('h3');const open=make('button','u-card-title',r.name);open.type='button';open.onclick=()=>details(r,true);title.append(open);body.append(title);body.append(make('p','u-card-group',(r.brand?r.brand+' · ':'')+(r.group||'Reference')));body.append(make('p','u-card-desc',r.summary||'Open the reference for more information.'));
  const actions=make('div','u-card-actions');const b=make('button','u-action','View details');b.type='button';b.onclick=()=>details(r,true);actions.append(b);
  if(r.kind==='vehicle'&&r.model&&r.scope!=='vi')actions.append(link('▣ Garage','atlas93-garage.html?addModel='+encodeURIComponent(r.model)));
- if(r.kind==='vehicle'||r.kind==='weapon'){const cmp=make('button','u-action u-muted-action',compare.some(x=>x.id===r.id)?'✓ Selected':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.some(x=>x.id===r.id)));cmp.onclick=()=>selectCompare(r);actions.append(cmp)}
+ if(r.kind==='vehicle'||r.kind==='weapon'){const cmp=make('button','u-action u-muted-action',compare.some(x=>x.id===r.id)?'✓ Selected':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.some(x=>x.id===r.id)));cmp.disabled=compare.length>=3&&!compare.some(x=>x.id===r.id);if(cmp.disabled)cmp.textContent='Compare limit reached';cmp.onclick=()=>selectCompare(r);actions.append(cmp)}
  body.append(actions);if(r.kind==='character'&&r.imageCredit&&r.imageCredit.startsWith('https://')){const credit=link('Portrait source ↗',r.imageCredit);credit.className='u-portrait-source';body.append(credit)}node.append(body);return node}
 function syncURL(){
  const url=new URL(location.href);
@@ -122,7 +134,11 @@ function draw(){document.body.dataset.activeWorld=game;document.body.dataset.act
 }
 function field(list,label,value){const d=make('div','u-field');d.append(make('dt','',label),make('dd','',value===null||value===undefined||value===''?'Not provided / unverified':String(value)));list.append(d)}
 function actionsFor(r,box){if(r.kind==='vehicle'){if(r.model&&r.scope!=='vi')box.append(link('▣ Add to My Garage','atlas93-garage.html?addModel='+encodeURIComponent(r.model)));box.append(link('View vehicle gallery',r.scope==='vi'?'atlas90-vehicles6.html':'atlas90-vehicles5.html'))}
- if(r.kind==='weapon')box.append(link('Pictured weapon gallery','atlas90-weapons.html'));
+ if(r.kind==='weapon'){
+  const scope=r.scope==='both'?game:r.scope;
+  const gallery=scope==='vi'?'atlas90-weapons6.html':scope==='online'||scope==='story'?'atlas90-weapons.html?world='+scope:null;
+  if(gallery)box.append(link(scope==='vi'?'Leonida weapon research':'Pictured weapon gallery',gallery));
+ }
  if(r.kind==='collectible'){
   box.append(link('Collection HQ','atlas81-hq.html#collections'));
   const map=r.scope==='online'?'atlas-online.html':r.scope==='vi'?'atlas-vi.html':'atlas.html';
@@ -133,7 +149,7 @@ function actionsFor(r,box){if(r.kind==='vehicle'){if(r.model&&r.scope!=='vi')box
  if(r.sourceUrl&&r.sourceUrl.startsWith('https://'))box.append(link('Source ↗',r.sourceUrl));if(r.creditsUrl&&r.creditsUrl.startsWith('https://www.rockstargames.com/'))box.append(link('Rockstar cast credits ↗',r.creditsUrl));if(r.imageCredit)box.append(link('Artwork credits ↗',r.imageCredit));
  if(r.key){const state=own();for(const [key,word] of [['owned','Mark owned'],['wishlist','Wishlist']]){const b=make('button','u-action',state[key]?.[r.key]?'✓ '+word:word);b.type='button';b.onclick=()=>{if(toggleOwned(r,key))details(r,false);else alert('Storage unavailable; export your garage before clearing this device.');};box.append(b)}}
 }
-function details(r,updateURL){const dialog=$('recordDialog'),area=$('detailContent');area.replaceChildren();const hero=make('div','u-detail-hero');hero.append(artwork(r));const copy=make('div');copy.append(make('p','u-eyebrow',(LABELS[r.kind]||'Reference')+' / '+world(r.scope)),make('h2','',r.name),make('p','u-detail-desc',r.summary||'Curated reference record.'));hero.append(copy);area.append(hero);
+function details(r,updateURL){const dialog=$('recordDialog'),area=$('detailContent');area.replaceChildren();const hero=make('div','u-detail-hero');hero.append(artwork(r));const copy=make('div');copy.append(make('p','u-eyebrow',(LABELS[r.kind]||'Reference')+' / '+world(r.scope)),Object.assign(make('h2','',r.name),{id:'detailTitle'}),make('p','u-detail-desc',r.summary||'Curated reference record.'));hero.append(copy);area.append(hero);
  const list=make('dl','u-facts');field(list,'Record type',LABELS[r.kind]||'Reference');field(list,'Game / scope',r.game||world(r.scope));field(list,'Class or group',r.group);if(r.brand)field(list,'Brand / manufacturer',r.brand);if(r.region)field(list,'Setting / habitat',r.region);if(r.total!==null&&r.total!==undefined)field(list,'Collection total',r.total);field(list,'Verification',r.verification);if(r.kind==='vehicle')field(list,'Price / top speed',r.attributes?.price??null);if(r.kind==='weapon')field(list,'Damage / ammo',r.attributes?.damage??null);if(r.kind==='character'){if(r.attributes?.performer)field(list,'Credited performer(s)',r.attributes.performer);if(r.attributes?.affiliation)field(list,'Officially described connections',r.attributes.affiliation);}if(r.scope==='vi')field(list,'Source distinction',isUnverified(r)?'Provisional research; locations, spawns and exact performance remain unverified.':'This specific entry has an official published reference; exact locations, stats and collectible placement are not implied.');area.append(list);
  const actions=make('div','u-detail-actions');actionsFor(r,actions);area.append(actions);if(updateURL){const url=new URL(location.href);url.searchParams.set('item',r.id);history.replaceState(null,'',url)}if(dialog.showModal)dialog.showModal();}
 function selectCompare(r){const idx=compare.findIndex(x=>x.id===r.id);if(idx>=0)compare.splice(idx,1);else if(compare.length<3)compare.push(r);draw()}
