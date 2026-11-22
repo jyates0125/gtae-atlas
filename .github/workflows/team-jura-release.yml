@@ -169,6 +169,14 @@ jobs:
         run: |
           python -m pip install 'playwright==1.58.0'
           timeout 120s python -m playwright install --with-deps chromium || python -m playwright install chromium
+      - name: Leonida in-game Day and official poster targeted browser preflight
+        # Fail early on VI regressions before the 190-page sweep and Cayo suite.
+        shell: bash
+        env:
+          ATLAS_BROWSER: chromium
+        run: |
+          python scripts/test_atlas290_vi_day_browser.py
+          python scripts/test_atlas290_poster_browser.py
       - name: Desktop and mobile browser QA on served production files
         env:
           ATLAS_BROWSER: chromium
@@ -188,8 +196,6 @@ jobs:
           python scripts/test_atlas222_vi_browser.py
           python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
-          python scripts/test_atlas290_vi_day_browser.py
-          python scripts/test_atlas290_poster_browser.py
           python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
@@ -230,6 +236,13 @@ jobs:
         run: |
           python -m pip install playwright==1.58.0
           python -m playwright install msedge
+      - name: Leonida in-game Day and official poster targeted browser preflight (Edge)
+        shell: bash
+        env:
+          ATLAS_BROWSER: msedge
+        run: |
+          python scripts/test_atlas290_vi_day_browser.py
+          python scripts/test_atlas290_poster_browser.py
       - name: Microsoft Edge desktop/mobile functional smoke tests
         env:
           ATLAS_BROWSER: msedge
@@ -252,8 +265,6 @@ jobs:
           python scripts/test_atlas222_vi_browser.py
           python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
-          python scripts/test_atlas290_vi_day_browser.py
-          python scripts/test_atlas290_poster_browser.py
           python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
