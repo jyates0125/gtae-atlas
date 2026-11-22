@@ -8,6 +8,7 @@ on:
       - 'scripts/test_atlas293_garage_forge_handoff.py'
       - 'scripts/test_atlas293_garage_forge_browser.py'
       - 'scripts/test_atlas293_lamar_appearances.py'
+      - 'scripts/test_atlas293_character_portraits_browser.py'
       - '.github/workflows/atlas293-garage-forge.yml'
   workflow_dispatch:
 permissions:
@@ -36,3 +37,4 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
           python scripts/test_atlas293_garage_forge_browser.py
+          python scripts/test_atlas293_character_portraits_browser.py
