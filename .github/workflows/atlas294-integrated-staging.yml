@@ -57,3 +57,17 @@ jobs:
           python scripts/test_atlas290_poster_browser.py
           python scripts/test_atlas293_garage_forge_browser.py
           python scripts/test_atlas293_character_portraits_browser.py
+      - name: Capture integration-specific desktop and phone design evidence
+        if: success()
+        continue-on-error: true
+        env:
+          ATLAS_SCREENSHOT_SCOPE: atlas294
+        run: python scripts/capture_design_review.py
+      - name: Upload owner-review screenshots and image/overflow manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas294-owner-review-desktop-phone
+          path: qa-evidence/chromium/
+          if-no-files-found: warn
+          retention-days: 14

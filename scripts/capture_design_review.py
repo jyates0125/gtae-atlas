@@ -27,6 +27,16 @@ PAGES=[
 COVERED={name.split('?',1)[0] for name in PAGES}
 PAGES.extend(sorted(p.name for p in PUBLIC.glob('*.html') if p.name not in COVERED))
 assert {p.name for p in PUBLIC.glob('*.html')}.issubset({name.split('?',1)[0] for name in PAGES})
+# Short targeted review for a staging integration; default remains the exhaustive release sweep.
+if os.getenv('ATLAS_SCREENSHOT_SCOPE')=='atlas294':
+    PAGES=[
+        'atlas-dashboard.html',
+        'atlas-characters.html?game=all&q=Lamar',
+        'atlas-characters.html?game=story&profile=character%3Alamar-story',
+        'atlas93-garage.html',
+        'atlas-vehicle-configurator.html?model=jetmax',
+        'atlas-vi.html',
+    ]
 VIEWPORTS=[('desktop',1440,900),('mobile',390,844)]
 OUT=ROOT/'qa-evidence'/BROWSER
 
