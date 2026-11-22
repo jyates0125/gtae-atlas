@@ -631,6 +631,15 @@ function pin(x,y,color,highlight=false,number=null,category='landmark',plain=fal
   ctx.restore();return;
  }
  ctx.save();const r=highlight?13:plain?7.5:11;ctx.shadowColor='#000b';ctx.shadowBlur=7;ctx.shadowOffsetY=2;ctx.beginPath();ctx.moveTo(x,y+(plain?10:15));ctx.bezierCurveTo(x-r*1.03,y+2,x-r,y-r,x,y-r);ctx.bezierCurveTo(x+r,y-r,x+r*1.03,y+2,x,y+(plain?10:15));ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5c0':plain?'#f3f6fa':'#112736';ctx.lineWidth=highlight?2.8:plain?1.2:1.6;ctx.stroke();
+ // Leonida: never reduce researched places to anonymous flat color dots.
+ // Reuse the exact hand-drawn category silhouette from the interactive legend.
+ // The symbol identifies a category, not a verified GTA VI location.
+ if(game==='6'&&!atlas85Icon&&typeof Path2D==='function'){
+  const shape=ELARIO_LEGEND_SHAPES[category]||ELARIO_LEGEND_SHAPES.other;
+  ctx.save();ctx.translate(x-7.5,y-10.5);ctx.scale(.625,.625);
+  ctx.strokeStyle='#1d1733';ctx.lineWidth=2.7;ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.stroke(new Path2D(shape));ctx.restore();ctx.restore();return;
+ }
  if(plain&&!highlight&&!atlas85Icon){ctx.restore();return;}ctx.fillStyle='#17303d';ctx.font=(highlight?'bold 16px':'bold 13px')+' "Segoe UI Symbol",system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';if(atlas85Icon){ctx.font=(highlight?'17px':'14px')+' "Segoe UI Emoji","Apple Color Emoji",sans-serif';ctx.fillText(atlas85Icon,x,y-3)}else ctx.fillText(number!==null?String(number):CATEGORY_SYMBOLS[category]||'✦',x,y-3);ctx.restore()}
 
 function conditionForRecord(r,storeCache){
