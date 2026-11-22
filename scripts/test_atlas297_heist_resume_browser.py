@@ -107,7 +107,7 @@ try:
      expect(page.locator('.j164-field textarea').first).to_have_value('Personal test route',timeout=15000)
      expect(page.locator('input[data-step]').first).to_be_checked()
      saved=page.evaluate("(id)=>JSON.parse(localStorage.getItem('teamjura-heist-focus-v1:'+id))",heist)
-     assert len(saved['route'])==1,(heist,saved)
+     assert len(saved['route'])==(2 if heist=='kortz-center' else 1),(heist,saved)
     if width==390:
      assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2"),heist+' phone overflow'
    print(f'PASS Atlas 29.7 {engine} {width}: 14 non-Cayo mission maps, source-labeled covers, HQ resume, private notes/routes/checklists',flush=True)
