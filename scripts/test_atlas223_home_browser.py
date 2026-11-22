@@ -19,6 +19,7 @@ try:
   for width,height in ((1440,900),(390,844),(375,812)):
    ctx=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
    page=ctx.new_page();errors=[]
+   if width==1440:page.route('**/data/atlas-universe-profiles.json*',lambda route:route.abort()) # Prove offline featured search/cast fallback
    page.on('pageerror',lambda ex:errors.append(str(ex)))
    page.goto(base+'atlas-dashboard.html',wait_until='domcontentloaded',timeout=60000)
    expect(page.locator('.j223-world-card')).to_have_count(7,timeout=20000)
@@ -36,12 +37,29 @@ try:
    suggestion=page.locator('#j223-search-results a').filter(has_text='Trevor Philips').first
    expect(suggestion).to_be_visible(timeout=15000)
    assert 'game=story' in suggestion.get_attribute('href')
+   # Compact and punctuation-normalized profile links are real homepage results.
+   page.locator('#j223-search-input').fill('CJ')
+   cj=page.locator('#j223-search-results a[href*="profile=character%3Acj"]').filter(has_text='Carl Johnson')
+   expect(cj).to_have_count(1,timeout=15000)
+   assert 'edition=GTA%20San%20Andreas' in cj.get_attribute('href')
+   assert 'profile=character%3Acj' in cj.get_attribute('href')
+   page.locator('#j223-search-input').fill('Dre Quan Priest')
+   dre=page.locator('#j223-search-results a').filter(has_text="Dre'Quan Priest")
+   expect(dre).to_have_count(1,timeout=15000)
+   assert '%27' in dre.get_attribute('href') and 'profile=character%3Adre-quan-priest' in dre.get_attribute('href')
    page.locator('#j223-search-input').fill('online')
    suggest=page.locator('#j223-search-results a')
    expect(suggest.first).to_be_visible(timeout=15000)
    assert any('online' in a.get_attribute('href').lower() for a in suggest.all())
    page.keyboard.press('Escape')
    assert page.locator('#j223-search-results').is_hidden()
+   concepts=page.locator('#j223-cast-rail img[data-art="concept"]')
+   expect(concepts).to_have_count(5,timeout=15000)
+   for img in concepts.all():
+    img.scroll_into_view_if_needed()
+    img.evaluate("el => el.decode()")
+    assert img.evaluate("el => el.naturalWidth > 0")
+   expect(page.locator('#j223-cast-rail .j223-cast-credit')).to_have_text(['Fan concept']*5)
    for key,choice in (('official','official'),('community','community'),('unverified','unverified')):
     card=page.locator('.j223-evidence-card[data-j223-evidence="%s"]'%key)
     card.locator('button[data-j223-grade="%s"]'%choice).click()

@@ -11,7 +11,7 @@ const out = path.join(root, 'public');
 const legacy = require('./atlas209-legacy-redirect.cjs');
 const skipDirs = new Set(['.git','.github','.venv','node_modules','tests','tools','scripts','reference','reference-pack','optional','private-lab','atlas-lab-private','research-private','user-exports','qa-evidence','public','__pycache__','docs','.playwright','.cache']);
 const allowExt = new Set(['.html','.css','.js','.json','.csv','.svg','.png','.jpg','.jpeg','.webp','.gif','.ico','.woff','.woff2','.mp4','.webm','.mp3','.ogg','.wav','.bin','.txt','.md','.xml','.webmanifest','.wasm','.glb','.gltf','.avif']);
-const excludeNames = new Set(['MANIFEST-SHA256.txt','.env','.env.local','INSTALL-TO-DEVELOPMENT.ps1','package-lock.json','package.json']);
+const excludeNames = new Set(['MANIFEST-SHA256.txt','.env','.env.local','atlas-build-identity.json','INSTALL-TO-DEVELOPMENT.ps1','package-lock.json','package.json']);
 const specials = new Set(['_headers','_redirects','.nojekyll']);
 function walk(dir, prefix='') {
   const list=[];
@@ -78,6 +78,14 @@ fs.writeFileSync(path.join(out,pageFile),pageBytes);
 bytes+=pageBytes.length;
 manifest.push({path:pageFile,bytes:pageBytes.length,sha256:crypto.createHash('sha256').update(pageBytes).digest('hex')});
 manifest.sort((a,b)=>a.path.localeCompare(b.path));
-const report={version:'9.8C',generatedAt:new Date().toISOString(),fileCount:files.length,bytes,files:manifest};
+// Cloudflare and GitHub Actions supply the checked-out revision. Do not expose arbitrary environment values.
+const revision=[process.env.CF_PAGES_COMMIT_SHA,process.env.GITHUB_SHA].find(v=>typeof v==='string'&&/^[0-9a-f]{40}$/i.test(v))||null;
+const buildIdentity={schema:1,revision,generatedAt:new Date().toISOString()};
+const identityFile='atlas-build-identity.json',identityBytes=Buffer.from(JSON.stringify(buildIdentity,null,2)+'\n');
+fs.writeFileSync(path.join(out,identityFile),identityBytes);
+bytes+=identityBytes.length;
+manifest.push({path:identityFile,bytes:identityBytes.length,sha256:crypto.createHash('sha256').update(identityBytes).digest('hex')});
+manifest.sort((a,b)=>a.path.localeCompare(b.path));
+const report={version:'9.8C',generatedAt:buildIdentity.generatedAt,fileCount:files.length,bytes,files:manifest};
 fs.writeFileSync(path.join(out,'release-manifest.json'),JSON.stringify(report,null,2)+'\n');
 console.log(`Cloudflare static build: ${files.length} files / ${bytes} bytes -> public/ (offline, reproducible)`);

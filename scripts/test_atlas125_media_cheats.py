@@ -40,7 +40,12 @@ assert 'id="cover-art"' in credits and 'id="reuse"' in credits
 for p in ("index.html","maps.html","map-hub.html","atlas98-style-lab.html"):
     html=source(p)
     for asset in ("atlas98-portal.js","atlas98-worlds.js","atlas98-portal.css"):
-        version=212 if p=="maps.html" and asset=="atlas98-portal.js" else 128
+        if asset=="atlas98-portal.css":
+            current=re.search(r'\./atlas98-portal\.css\?v=(\d+)',source("maps.html"))
+            assert current, "Versioned shared portal stylesheet missing"
+            version=current[1]
+        else:
+            version=212 if p=="maps.html" and asset=="atlas98-portal.js" else 128
         assert f"./{asset}?v={version}" in html,(p,asset,version)
 
 profiles=json.loads(source("data/atlas-universe-profiles.json"))

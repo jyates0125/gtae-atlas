@@ -77,8 +77,10 @@
      history.replaceState(null,'',url);
      paint();
    }
-   function paint(){feature.replaceChildren();additional.replaceChildren();const q=(inp?.value||'').trim().toLocaleLowerCase();let total=0;
-     for(const w of worlds){const typeOk=mode==='all'||(mode==='interactive'?(w.kind==='interactive'||w.kind==='schematic'||w.id==='vi'):mode==='research'?w.kind==='research':mode==='limited'?w.kind==='limited':w.kind==='gateway');if(!typeOk||!([w.id,w.name,w.game,w.short,w.grade,w.note,...w.features].join(' ').toLowerCase().includes(q)))continue;
+   const searchAliases={story:'gta 5 gta v story mode',online:'gta 5 gta v online multiplayer',vi:'gta 6 gta vi vice city leonida',iv:'gta 4 gta iv',iii:'gta 3 gta iii',sa:'gta sa san andreas',tlad:'tlad gta 4 episodes',tbogt:'tbogt gta 4 episodes'};
+   const tokens=value=>value.toLowerCase().replace(/gta(?=[0-9])/g,'gta ').split(/[^a-z0-9]+/).filter(Boolean);
+   function paint(){feature.replaceChildren();additional.replaceChildren();const q=(inp?.value||'').trim().toLocaleLowerCase();const terms=tokens(q);let total=0;
+     for(const w of worlds){const typeOk=mode==='all'||(mode==='interactive'?(w.kind==='interactive'||w.kind==='schematic'||w.id==='vi'):mode==='research'?w.kind==='research':mode==='limited'?w.kind==='limited':w.kind==='gateway');const words=tokens([w.id,w.name,w.game,w.short,w.grade,w.note,searchAliases[w.id]||'',...w.features].join(' '));if(!typeOk||!terms.every(term=>words.some(word=>word.startsWith(term))))continue;
        const card=makeWorld(w,false,true);card.classList.add('directory-card');
        card.addEventListener('click',()=>{save(lastWorldKey,{id:w.id,href:w.href})});
        const episode=w.id==='tlad'||w.id==='tbogt';

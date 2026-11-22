@@ -32,7 +32,14 @@ if(document.body.classList.contains('j120-heist-page')){
   const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=180';document.body.append(flagship);
   const iconsStyle=document.createElement('link');iconsStyle.rel='stylesheet';iconsStyle.href='./atlas181-cayo-hotspots.css?v=202';document.head.append(iconsStyle);
   const icons=document.createElement('script');icons.async=false;icons.src='./atlas181-cayo-hotspots.js?v=191';document.body.append(icons);
-  const polishCSS=document.createElement('link');polishCSS.rel='stylesheet';polishCSS.href='./atlas185-cayo-polish.css?v=185';document.head.append(polishCSS);
+  // The Cayo page loads its map geometry before deferred scripts initialize.
+  // Retain support for older cached page shells and failed stylesheet requests.
+  const sheet=document.querySelector('link[href*="atlas185-cayo-polish.css"]');
+  if(!sheet?.sheet){
+   const polishCSS=document.createElement('link');
+   polishCSS.rel='stylesheet';polishCSS.href='./atlas185-cayo-polish.css?v=185';
+   document.head.append(polishCSS);
+  }
   const polish=document.createElement('script');polish.async=false;polish.src='./atlas185-cayo-polish.js?v=185';document.body.append(polish);
   const routeStyle=document.createElement('link');routeStyle.rel='stylesheet';routeStyle.href='./atlas186-cayo-route.css?v=187';document.head.append(routeStyle);
   const routePlanner=document.createElement('script');routePlanner.async=false;routePlanner.src='./atlas186-cayo-route.js?v=191';document.body.append(routePlanner);

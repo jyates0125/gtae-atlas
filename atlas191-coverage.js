@@ -30,7 +30,10 @@ async function load(spec){
  if(spec.kind==='sa'){
   if(data.records?.length!==150||data.counts?.snapshots!==50||data.counts?.horseshoes!==50||data.counts?.oysters!==50)
    throw Error('Incomplete licensed San Andreas coordinate pack');
-  return{description:'50 Snapshots · 50 Horseshoes · 50 Oysters',note:'150 sourced XYZ positions approximately placed on vector artwork. 100 Tags and 70 Jumps still lack bundled, checked positions.',date:data.checkedAt||'Snapshot date unknown'};
+  const extra=await Promise.allSettled(['./data/atlas-sa-100-tag-placements.json','./data/atlas-sa-70-jump-zones.json'].map(async url=>{const r=await fetch(url);if(!r.ok)throw Error('Missing data');return r.json()}));
+  const tags=extra[0].status==='fulfilled'&&extra[0].value.game==='san-andreas'&&extra[0].value.records?.length===100;
+  const jumps=extra[1].status==='fulfilled'&&extra[1].value.game==='san-andreas'&&extra[1].value.records?.length===70&&extra[1].value.sourceValidation?.checksum===14857859;
+  return{description:'50 Snapshots · 50 Horseshoes · 50 Oysters'+(tags?' · 100 Tags':'')+(jumps?' · 70 Jump zones':''),note:(150+(tags?100:0)+(jumps?70:0))+' sourced records with approximate projection. Missing packs never counted. Not individually gameplay verified.',date:data.checkedAt||'Snapshot date unknown'};
  }
  throw Error('Unrecognized data source');
 }

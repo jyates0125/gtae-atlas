@@ -6,7 +6,7 @@
   "height": 6000,
   "source": "Flentric/SA.MapCollectibles (MIT) · SA 1.0 US main.scm spawn positions; mapped approximately to Toliak Apache-2.0 6000px vector",
   "license": "MIT (coordinate source) and Apache-2.0 (Toliak vector map); Rockstar/Take-Two retain game-world IP",
-  "sourceUrl": "https://github.com/Flentric/SA.MapCollectibles/blob/main/source/CollectibleCoords.h",
+  "sourceUrl": "https://github.com/Flentric/SA.MapCollectibles/blob/77dcc3d65e86df7a3806d4e1607445aacfda1855/source/CollectibleCoords.h",
   "mapAttribution": "https://github.com/Toliak/San-Andreas-vector-map",
   "coordinateBasis": "world x,y projected to SVG x=worldX+3000 and SVG y=3000-worldY; alignment is approximate and not individually visually calibrated",
   "checkedAt": "2026-11-17",
@@ -1667,5 +1667,16 @@
       "worldZ": -5,
       "source": "Flentric/SA.MapCollectibles · SA 1.0 US main.scm (MIT)"
     }
-  ]
+  ],
+  "sourceCommit": "77dcc3d65e86df7a3806d4e1607445aacfda1855",
+  "licenseUrl": "https://github.com/Flentric/SA.MapCollectibles/blob/77dcc3d65e86df7a3806d4e1607445aacfda1855/LICENSE",
+  "coordinateSourceLicenseText": "MIT License\n\nCopyright (c) 2026 Flentric\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "coordinateAudit": {
+    "method": "Exact numeric XYZ comparison by source array and slot",
+    "matched": 150,
+    "mismatched": 0,
+    "gameplayVerified": false,
+    "mapAlignmentVerified": false,
+    "sourceCommit": "77dcc3d65e86df7a3806d4e1607445aacfda1855"
+  }
 }

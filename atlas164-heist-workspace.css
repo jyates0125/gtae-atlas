@@ -16,3 +16,7 @@ body.j120-heist-page .j164-msg{color:#dbd0e7;font-size:12px;line-height:1.5;marg
 .j164-field textarea{box-sizing:border-box;width:100%;max-width:100%;min-height:62px;padding:10px 12px;resize:vertical;border:1px solid #a67ab1;border-radius:10px;background:#170e27;color:#fff6ff;font:14px/1.5 system-ui,-apple-system,sans-serif}
 .j164-field textarea:focus-visible{outline:3px solid #f9c98f;outline-offset:2px}
 @media(max-width:700px){body.j120-heist-page .j164-mission-map{padding:13px}body.j120-heist-page iframe.j164-frame{height:74vh;min-height:530px}.j164-field textarea{font-size:16px}.j164-buttons :is(a,button){flex:1 1 145px}}
+
+.j228-import{display:grid;gap:6px;padding:12px;border:1px solid #a67ab1;border-radius:10px;color:#ffe4bb;font:750 13px/1.4 system-ui;min-width:0}
+.j228-import input{width:100%;max-width:100%;min-width:0;min-height:44px;color:#fff;font:14px system-ui}
+.j228-import small{font-weight:400;color:#e1cee5;line-height:1.55}

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Atlas 22.2: source-ranked official launch and character/world isolation checks."""
 from pathlib import Path
+import re
 import json
 from urllib.parse import urlsplit
 
@@ -80,7 +81,7 @@ assert 'map-hub.html?game=iii' in ch_js and 'atlas-online.html' in ch_js and 'at
 assert 'CHARACTERS · SEARCH ALL WORLDS' in nav and 'x.aliases' not in nav
 assert 'j222-vi-categories' in vi and 'atlas222-vi-release.js?v=222' in vi
 assert 'atlas217-vi-world.js?v=217' in vi, 'The existing map engine must stay in place'
-assert 'atlas.js?v=191' in vi
+assert 'atlas.js?v='+re.search(r'\./atlas-sw\.js\?v=(\d+)',(R/'atlas.js').read_text(encoding='utf-8'))[1] in vi
 
 # Premium visual and vehicle-class integrity guards: these check source wiring,
 # not actual browser rendering, which remains a separate release requirement.
@@ -88,7 +89,9 @@ garage3d=(R/'atlas99-garage3d.js').read_text(encoding='utf-8')
 config=(R/'atlas101-configurator.js').read_text(encoding='utf-8')
 dbcss=(R/'atlas100-universe.css').read_text(encoding='utf-8')
 garage=(R/'atlas93-garage.js').read_text(encoding='utf-8')
-assert 'const aircraft=' in garage3d and 'const watercraft=' in garage3d
+assert 'forge.build(opts.type,opts.model,paint,design,environment)' in garage3d
+import subprocess
+subprocess.run(['node','-e',"""const a=require('node:assert/strict'), f=require('./atlas256-forge-geometry.js');for(const [type,id,kind] of [['Aircraft','lazer','air'],['Boat','jetmax','marine'],['Helicopter','buzzard','rotor']]){const m=f.build(type,id,'#4473c2',{});a.equal(m.kind,kind);a.ok(m.vertices.length>0&&m.vertices.every(Number.isFinite));}"""],cwd=R,check=True)
 assert 'Aircraft / Plane concept' in config and 'Boat / Watercraft concept' in config
 assert '◈ Open this vehicle in the 3D concept studio' in garage
 assert 'body[data-atlas-kind="all"] .u-hero-art' in dbcss

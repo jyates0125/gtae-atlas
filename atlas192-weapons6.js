@@ -6,7 +6,7 @@
 const $=id=>document.getElementById(id);
 const KEY='teamjura-vi-weapon-notes-v1';
 const make=(tag,cls,value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=value;return n};
-const state={seen:{},notes:{}};let rows=[],query='',group='all',onlySeen=false;
+const state={seen:Object.create(null),notes:Object.create(null)};let rows=[],query='',group='all',onlySeen=false;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&saved.schema===1){
  for(const field of ['seen','notes'])if(saved[field]&&typeof saved[field]==='object'&&!Array.isArray(saved[field]))Object.assign(state[field],saved[field]);
 }}catch(_){}
@@ -29,7 +29,7 @@ function render(){
   const actions=make('div','viweapon-actions');
   const noted=make('button','viweapon-note',state.seen[r.id]?'✓ Added to my notes':'+ Mark reviewed');
   noted.type='button';noted.setAttribute('aria-pressed',String(!!state.seen[r.id]));
-  noted.addEventListener('click',()=>{state.seen[r.id]=!state.seen[r.id];if(!state.seen[r.id])delete state.seen[r.id];save();render();announce('Personal review updated.');});
+  noted.addEventListener('click',()=>{state.seen[r.id]=!state.seen[r.id];if(!state.seen[r.id])delete state.seen[r.id];const ok=save();render();if(ok)announce('Personal review updated.');});
   const source=make('a','viweapon-source','Check evidence');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';source.title=r.sourceName;
   actions.append(noted,source);card.append(actions);
   const d=make('details','viweapon-notes');d.append(make('summary','','My research notes'));
@@ -39,6 +39,39 @@ function render(){
   saveButton.addEventListener('click',()=>{const value=input.value.trim().slice(0,900);if(value)state.notes[r.id]=value;else delete state.notes[r.id];if(save())announce('Saved your note for '+r.name+'.')});
   d.append(input,saveButton);card.append(d);root.append(card);
  }
+}
+async function importNotes(event){
+ const file=event.target.files?.[0];if(!file)return;
+ try{
+  if(!rows.length)throw Error('Wait for the Leonida evidence catalog');
+  if(file.size>1000000)throw Error('Backup exceeds 1 MB');
+  const payload=JSON.parse(await file.text());
+  const object=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
+  if(!object(payload)||payload.schema!==1||payload.app!=='team-jura-vi-weapons'||payload.scope!=='vi'||!object(payload.notes)||!object(payload.seen))throw Error('Not a GTA VI weapon notes backup');
+  let latest;try{latest=JSON.parse(localStorage.getItem(KEY)||'null')}catch{}
+  const known=new Set(rows.map(r=>r.id));
+  const merged={seen:Object.create(null),notes:Object.create(null)};
+  let restored=0,kept=0,skipped=0;
+  for(const r of rows){
+   const id=r.id,priorNote=typeof latest?.notes?.[id]==='string'?latest.notes[id]:state.notes[id];
+   if(typeof priorNote==='string'&&priorNote.trim())merged.notes[id]=priorNote.slice(0,900);
+   if(latest?.seen?.[id]===true||state.seen[id]===true)merged.seen[id]=true;
+  }
+  for(const [id,note] of Object.entries(payload.notes)){
+   if(!known.has(id)||typeof note!=='string'){skipped++;continue}
+   if(!note.trim())continue;
+   if(merged.notes[id]){if(merged.notes[id]!==note)kept++;continue}
+   merged.notes[id]=note.slice(0,900);restored++;
+  }
+  for(const [id,seen] of Object.entries(payload.seen)){
+   if(!known.has(id)||typeof seen!=='boolean'){skipped++;continue}
+   if(seen&&!merged.seen[id]){merged.seen[id]=true;restored++}
+  }
+  const previous={seen:state.seen,notes:state.notes};state.seen=merged.seen;state.notes=merged.notes;
+  if(!save()){state.seen=previous.seen;state.notes=previous.notes;throw Error('Storage unavailable; existing stored notes left unchanged')}
+  render();announce(restored+' note/review value(s) restored; '+kept+' note conflict(s) kept; '+skipped+' invalid entries skipped. Existing research preserved.');
+ }catch(error){announce('Import rejected: '+error.message)}
+ finally{event.target.value=''}
 }
 function exportNotes(){
  const payload={schema:1,app:'team-jura-vi-weapons',scope:'vi',exportedAt:new Date().toISOString(),notes:{...state.notes},seen:{...state.seen}};
@@ -66,6 +99,7 @@ async function start(){
  $('viWeaponMine').addEventListener('change',e=>{onlySeen=e.target.checked;render()});
  $('viWeaponClear').addEventListener('click',()=>{$('viWeaponSearch').value='';$('viWeaponClass').value='all';$('viWeaponMine').checked=false;query='';group='all';onlySeen=false;render();});
  $('viWeaponExport').addEventListener('click',exportNotes);
+ $('viWeaponImport').addEventListener('change',importNotes);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

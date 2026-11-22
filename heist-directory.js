@@ -14,6 +14,14 @@
   card.insertBefore(summary,link);
   return [{card,keywords,summary,key:'teamjura-heist-'+match[1]}];
  });
+ const urlQuery=()=>new URL(location.href).searchParams.get('q')||'';
+ search.value=urlQuery();
+ function saveQuery(){
+  const url=new URL(location.href);
+  const value=search.value.trim();
+  if(value)url.searchParams.set('q',value);else url.searchParams.delete('q');
+  history.replaceState(history.state,'',url);
+ }
  function render(){
   const query=search.value.trim().toLowerCase();
   let visible=0;
@@ -22,13 +30,13 @@
    try{const saved=JSON.parse(localStorage.getItem(item.key)||'{}');checked=Object.values(saved).filter(v=>v===true).length}catch{}
    item.summary.textContent=checked===1?'1 checklist step marked':checked+' checklist steps marked';
    item.summary.hidden=!checked;
-   item.card.hidden=!item.keywords.includes(query)||(started.checked&&!checked);
+   item.card.hidden=!query.split(/\s+/).every(term=>item.keywords.includes(term))||(started.checked&&!checked);
    if(!item.card.hidden)visible++;
   }
   count.textContent=visible+' of '+cards.length+' workspaces';reset.hidden=!query&&!started.checked;
  }
- search.addEventListener('input',render);started.addEventListener('change',render);
- reset.onclick=()=>{search.value='';started.checked=false;render();search.focus()};
+ search.addEventListener('input',()=>{saveQuery();render()});started.addEventListener('change',render);
+ reset.onclick=()=>{search.value='';started.checked=false;saveQuery();render();search.focus()};
  window.addEventListener('pageshow',render);
  window.addEventListener('storage',e=>{if(!e.key||e.key.startsWith('teamjura-heist-'))render()});
  controls.hidden=false;render();

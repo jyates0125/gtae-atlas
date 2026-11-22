@@ -26,16 +26,31 @@ const staticLinks=[
 ];
 const validLocal=x=>/^[a-z0-9][a-z0-9-]*\.html(?:\?[a-z0-9=&%._-]+)?(?:#[a-z0-9._-]+)?$/i.test(x);
 const toLink=x=>x.startsWith('https://www.rockstargames.com/')?x:validLocal(x)?'./'+x:null;
+const searchText=value=>String(value??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+const identityMatch=(value,s)=>{
+ const n=searchText(value);
+ if(!s||!n)return false;
+ if(n.includes(s)||n.replace(/ /g,'')===s.replace(/ /g,''))return true;
+ const words=s.split(' ');
+ return words.length>1&&words.every(word=>n.split(' ').some(part=>part.startsWith(word)));
+};
+const recordKey=r=>String(r.id||'').split(':').pop();
+const characterMatch=(r,s)=>!!s&&([r.name,...(r.aliases||[])].some(x=>identityMatch(x,s))||
+ searchText(recordKey(r)).replace(/ /g,'')===s.replace(/ /g,''));
+const encodeQuery=value=>encodeURIComponent(value).replace(/[!'()*]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
+const characterHref=r=>'atlas-characters.html?game='+encodeQuery(r.scope)+(r.scope==='classic'?'&edition='+encodeQuery(r.game):'')+'&q='+encodeQuery(r.name)+'&profile='+encodeQuery(r.id)+'#mainCharacterEra';
 let catalog=staticLinks.map(([title,href,keywords])=>({title,href,keywords,kind:'Atlas tool'}));
 const input=q('j223-search-input'),results=q('j223-search-results'),form=q('j223-search-form');
 function findRows(term){
- const normalized=term.toLocaleLowerCase().trim();
+ const normalized=searchText(term);
  if(!normalized)return [];
- return catalog.filter(x=>(x.title+' '+x.keywords+' '+x.kind).toLocaleLowerCase().includes(normalized))
+ return catalog.filter(x=>(x.record&&characterMatch(x.record,normalized))||
+   searchText(x.title+' '+x.keywords+' '+x.kind).includes(normalized))
  .sort((a,b)=>{
-  const score=x=>x.title.toLocaleLowerCase()===normalized?0:
-    x.title.toLocaleLowerCase().startsWith(normalized)?1:
-    x.kind==='Character'?2:3;
+  const score=x=>searchText(x.title)===normalized?0:
+    x.record&&characterMatch(x.record,normalized)?1:
+    searchText(x.title).startsWith(normalized)?2:
+    x.kind==='Character'?3:4;
   return score(a)-score(b)||a.title.localeCompare(b.title);
  }).slice(0,9);
 }
@@ -71,21 +86,36 @@ const localFallback=s=>s==='vi'?'./art/jura155-vi.webp':
  s==='online'?'./art/jura155-online.webp':
  s==='story'?'./art/jura155-story.webp':'./art/jura155-characters.webp';
 const castId=['character:michael','character:franklin','character:trevor','character:lucia','character:jason'];
-async function initData(){
- let characters=[];
- try{
+// Exact identities and local concept image paths copied from the bundled source profiles.
+// Keep featured navigation available when the larger local JSON is still loading or offline.
+const featuredFallback=[
+ {id:'character:michael',name:'Michael De Santa',scope:'story',game:'GTA V',conceptPortrait:'art/jura221-michael-cinematic.webp'},
+ {id:'character:franklin',name:'Franklin Clinton',scope:'story',game:'GTA V',conceptPortrait:'art/jura221-franklin-cinematic.webp'},
+ {id:'character:trevor',name:'Trevor Philips',scope:'story',game:'GTA V',conceptPortrait:'art/jura221-trevor-cinematic.webp'},
+ {id:'character:lucia',name:'Lucia Caminos',scope:'vi',game:'GTA VI Story',conceptPortrait:'art/jura221-lucia-cinematic.webp'},
+ {id:'character:jason',name:'Jason Duval',scope:'vi',game:'GTA VI Story',conceptPortrait:'art/jura221-jason-cinematic.webp'},
+ {id:'character:cj',name:'Carl Johnson',scope:'classic',game:'GTA San Andreas',aliases:['CJ','Carl CJ Johnson']},
+ {id:'character:dre-quan-priest',name:"Dre'Quan Priest",scope:'vi',game:'GTA VI Story',aliases:['DreQuan',"Dre'Quan Priest"]}
+];
+catalog.push(...featuredFallback.map(c=>({title:c.name,kind:'Character',keywords:[c.game,c.scope,...(c.aliases||[])].join(' '),record:c,href:characterHref(c)})));
+async function initData(useFallback=false){
+ let characters=featuredFallback;
+ if(!useFallback)try{
   const res=await fetch('./data/atlas-universe-profiles.json?v=223',{cache:'no-cache'});
   if(!res.ok)throw Error('No local character index');
   characters=(await res.json()).records.filter(x=>x.kind==='character'&&['vi','story','online','classic'].includes(x.scope));
- }catch{characters=[]}
+ }catch{characters=featuredFallback}
  if(characters.length){
   const rows=characters.map(x=>({
    title:x.name,
    kind:'Character',
    keywords:[x.game,x.scope,x.group,x.region,x.summary,...(x.aliases||[])].filter(Boolean).join(' '),
-   href:'atlas-characters.html?game='+encodeURIComponent(x.scope)+'&q='+encodeURIComponent(x.name)+'&profile='+encodeURIComponent(x.id)+'#mainCharacterEra'
+   record:x,
+   href:characterHref(x)
   }));
-  catalog.push(...rows);
+  catalog=catalog.filter(x=>x.kind!=='Character');catalog.push(...rows);
+  // The user may already have typed while the local character index was loading.
+  if(input&&document.activeElement===input&&input.value.trim())show(input.value.slice(0,120));
   for(const [title,href,keywords] of staticLinks){
    if(!catalog.some(x=>x.title===title&&x.href===href))catalog.push({title,href,keywords,kind:'Atlas tool'});
   }
@@ -94,19 +124,20 @@ async function initData(){
  host.replaceChildren();
  const chosen=castId.map(id=>characters.find(c=>c.id===id)).filter(Boolean);
  for(const c of chosen){
-  const a=make('a','');a.href='./atlas-characters.html?game='+encodeURIComponent(c.scope)+'&q='+encodeURIComponent(c.name)+'&profile='+encodeURIComponent(c.id)+'#mainCharacterEra';
+  const a=make('a','');a.href='./'+characterHref(c);
   a.title='Search '+c.name+' · '+c.game;
-  const img=make('img');
+  const img=make('img'),credit=make('small','j223-cast-credit');
   img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
-  let fallback=false;
-  if(typeof c.image==='string'&&/^https:\/\/[a-z0-9.-]+\//i.test(c.image)){img.src=c.image;img.alt='Sourced reference portrait of '+c.name}
-  else{fallback=true;img.src=localFallback(c.scope);img.alt='Original Elario world scene; not a likeness of '+c.name}
-  img.addEventListener('error',()=>{
-    if(fallback)return;
-    fallback=true;img.src=localFallback(c.scope);img.alt='Original Elario world scene; not a likeness of '+c.name;
-    a.title='Elario original world scene fallback, not a portrait of '+c.name;
-  },{once:true});
-  a.append(img,make('strong','',c.name.split(' ')[0]));host.append(a);
+  const scene=()=>{img.dataset.art='world';img.alt='Original Elario world scene; not a likeness of '+c.name;
+   credit.textContent='World scene';a.title='Elario world scene, not a portrait of '+c.name;img.src=localFallback(c.scope)};
+  img.addEventListener('error',()=>{if(img.dataset.art==='world'){img.remove();credit.textContent='Art unavailable';return}scene()});
+  if(typeof c.conceptPortrait==='string'&&/^art\/[a-z0-9-]+\.(?:webp|png|jpe?g)$/i.test(c.conceptPortrait)){
+   img.dataset.art='concept';img.alt='Elario fan concept of '+c.name;credit.textContent='Fan concept';
+   a.title=c.name+' · Elario illustrated fan concept';img.src='./'+c.conceptPortrait;
+  }else if(typeof c.image==='string'&&/^https:\/\/[a-z0-9.-]+\//i.test(c.image)){
+   img.dataset.art='reference';img.alt='Sourced reference portrait of '+c.name;credit.textContent='Reference';img.src=c.image;
+  }else scene();
+  a.append(img,make('strong','',c.name.split(' ')[0]),credit);host.append(a);
  }
 }
 const evidenceExplanations={
@@ -130,5 +161,5 @@ document.querySelectorAll('.j223-evidence-card').forEach(card=>{
   feedback.classList.toggle('j223-correct',choice===answer);
  });
 });
-initData();
+initData(true);initData();
 })();

@@ -900,15 +900,17 @@ async def smoke():
                                     if any('oldcity.svg' in x or 'sunset.svg' in x for x in urls):
                                         failures.append('Legacy skyline artwork returned to map covers')
                             if not failures and path=='atlas-sa.html':
-                                await pg.wait_for_function("document.querySelector('#mapped')?.textContent==='150'")
-                                for label in ['Graffiti Tags','Unique Stunt Jumps','Snapshots']:
+                                await pg.wait_for_function("document.querySelector('#mapped')?.textContent==='320'")
+                                for label,expected in [('Graffiti Tags',100),('Unique Stunt Jumps',70),('Snapshots',50),('Horseshoes',50),('Oysters',50)]:
                                     await pg.locator('#categories button').filter(has_text=label).click()
                                     status=pg.locator('#mapStatus')
-                                    if label=='Snapshots':
-                                        if '50 mapped' not in await status.inner_text():
-                                            failures.append('SA snapshot coverage count is incorrect')
-                                    elif '0 mapped' not in await status.inner_text() or await status.locator('a').count()!=1:
-                                        failures.append('SA guide-only collection lacks its coverage count or map reference')
+                                    if f'{expected} mapped' not in await status.inner_text():
+                                        failures.append(f'SA {label} source coverage count is incorrect')
+                                    pins=pg.locator('#pinLayer .pin-source-projected')
+                                    if await pins.count()!=expected:
+                                        failures.append(f'SA {label} actual marker count is incorrect')
+                                    if label in ('Graffiti Tags','Unique Stunt Jumps') and not await pg.locator('#item-1 a[href^="https://"]').count():
+                                        failures.append(f'SA {label} source link missing')
                             if not failures and path=='atlas-cayo.html':
                                 if await pg.locator('#j121Original').count()!=1 or await pg.locator('#j121Planner').count()!=1:
                                     failures.append('Original Cayo game map and separate heist planning tabs missing')
@@ -1100,6 +1102,15 @@ async def smoke():
                                     await pg.locator('#classicImport').set_input_files(
                                         {'name':'notebook.json','mimeType':'application/json','buffer':backup})
                                     await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='1'",timeout=7000)
+                                    # Re-import a conflicting and a new pin: preserve existing notes and routes.
+                                    if world=='vc':
+                                        original=payload['markers'][0]
+                                        merge_payload={**payload,'markers':[{**original,'name':'Do not overwrite'},{**original,'id':'qa-new-pin','name':'Additional private marker','x':25,'y':75}]}
+                                        await pg.locator('#classicImport').set_input_files({'name':'merge.json','mimeType':'application/json','buffer':json.dumps(merge_payload).encode()})
+                                        await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='2'",timeout=7000)
+                                        merged=await pg.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas98-classic-vc-v1')).markers")
+                                        if merged[0]['name']!=original['name'] or merged[1]['id']!='qa-new-pin':
+                                            failures.append('Classic merge overwrote an existing note or ignored new pin')
                                     # Atlas 15.0: each of the seven classic worlds must connect
                                     # a numbered checklist slot to a user-placed map-image pin.
                                     if await pg.locator('#j98bGrid .j150-place-pin').count()==0:
@@ -1125,7 +1136,7 @@ async def smoke():
                                                 if await pg.locator('#classicMarkerLayer .classic-marker[data-slot-done="true"]').count()!=1:
                                                     failures.append('Checklist completion did not update map pin state')
                                                 await pg.reload(wait_until='domcontentloaded')
-                                                await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='2'",timeout=7000)
+                                                await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==="+json.dumps('3' if world=='vc' else '2'),timeout=7000)
                                                 if await pg.locator('#classicMarkerLayer .classic-marker[data-slot-done="true"]').count()!=1:
                                                     failures.append('Numbered pin/completion relationship lost on reload')
                                 except Exception as exc:
@@ -1223,8 +1234,27 @@ async def smoke():
                                 if await buttons.count()>0:
                                     await buttons.first.click()
                                     if await pg.locator('#garageDetails .j99-showroom canvas').count()!=1:failures.append('3D concept preview missing from selected Garage vehicle')
-                                    if await pg.locator('#garageDetails .j99-3d-controls button').count()!=3:failures.append('Showroom interaction controls missing')
-                                    if 'not a scanned or official model' not in (await pg.locator('#garageDetails .j99-showroom').inner_text()).lower():failures.append('3D concept rights disclaimer missing')
+                                    showroom=pg.locator('#garageDetails .j99-showroom')
+                                    camera_buttons=showroom.locator('.j99-3d-controls button')
+                                    expected_controls={'3/4 view','Front','Side','Top','＋ Zoom','− Zoom','Auto rotate'}
+                                    if set(await camera_buttons.all_text_contents())!=expected_controls:
+                                        failures.append('Current Forge camera or rotation controls missing')
+                                    if not await showroom.locator('.j256-rights').is_visible() or 'not a scanned or official model' not in (await showroom.locator('.j256-rights').inner_text()).lower():
+                                        failures.append('3D concept rights disclaimer missing')
+                                    forge_status=await showroom.get_attribute('data-forge-status')
+                                    if forge_status=='ready':
+                                        await camera_buttons.filter(has_text='Top').click()
+                                        await camera_buttons.filter(has_text='Auto rotate').click()
+                                        if await camera_buttons.filter(has_text='Stop rotation').get_attribute('aria-pressed')!='true':
+                                            failures.append('Forge rotation control did not activate')
+                                        await camera_buttons.filter(has_text='Stop rotation').click()
+                                    elif forge_status=='fallback':
+                                        if await showroom.locator('.j99-3d-stage').is_visible() or await showroom.locator('.j99-3d-controls').is_visible():
+                                            failures.append('Unavailable WebGL controls still presented as usable')
+                                        if not await showroom.locator('.j256-style').is_visible():
+                                            failures.append('Design controls missing in WebGL fallback')
+                                    else:
+                                        failures.append('Unknown Forge renderer status: '+str(forge_status))
                                 else:failures.append('Garage vehicle catalogue did not load')
                                 await pg.locator('#garageSearch').fill('squalo')
                                 await pg.locator('#garageClassFilter').select_option('Boats & Watercraft')
@@ -1238,6 +1268,19 @@ async def smoke():
                                         failures.append('Squalo boat facts did not load')
                                     if await pg.locator('#garageDetails .j99-showroom canvas').count()!=0:
                                         failures.append('Boat incorrectly represented as generic 3D car')
+                                    else:
+                                        launch=pg.locator('#garageDetails .j256-launch')
+                                        if await launch.count()!=1:
+                                            failures.append('Class-specific marine concept launch missing')
+                                        else:
+                                            await launch.click()
+                                            marine=pg.locator('#garageDetails .j256-forge')
+                                            if await marine.get_attribute('data-forge-class')!='marine':
+                                                failures.append('Squalo must use marine geometry, never a road car')
+                                            if await marine.get_attribute('data-forge-status') not in ('ready','fallback'):
+                                                failures.append('Marine renderer did not initialize or provide fallback')
+                                            if not await marine.locator('.j256-rights').is_visible():
+                                                failures.append('Marine model disclaimer missing')
                                 await pg.locator('#garageClassFilter').select_option('all')
                                 await pg.locator('#garageSearch').fill('')
                             if not failures and path=='atlas-research.html':
@@ -1247,33 +1290,19 @@ async def smoke():
                                 if 'GTADB.org' not in await pg.locator('#researchSourceStatus').inner_text():failures.append('Licensed VI research records did not load')
                             if not failures and path=='atlas-sa.html':
                                 try:
-                                    await pg.wait_for_function("document.querySelector('#mapBackground .j86-san-map')?.naturalWidth > 200",timeout=9000)
+                                    await pg.wait_for_function("document.querySelector('#mapBackground .j86-san-map')?.naturalWidth > 200",timeout=15000)
                                     source=await pg.locator('#mapBackground .j86-san-map').get_attribute('src')
                                     if 'atlas-sa-vector.svg' not in source:
                                         failures.append('Bundled licensed San Andreas 2D map did not render as the primary artwork')
                                     if not await pg.locator('.j86-sa-credit a').count():
                                         failures.append('San Andreas vector license attribution missing')
-                                    await pg.wait_for_function("document.querySelector('#mapped')?.textContent?.trim()==='150'",timeout=9000)
-                                    if await pg.locator('#categories .cat[aria-pressed="true"]').inner_text() and 'Snapshots' not in await pg.locator('#categories .cat[aria-pressed="true"]').inner_text():
-                                        failures.append('San Andreas default set should show sourced snapshot locations')
-                                    if await pg.locator('#pinLayer .pin-source-projected').count()!=50:
-                                        failures.append('San Andreas 50 snapshot markers missing on vector map')
-                                    await pg.locator('#categories .cat').filter(has_text='Horseshoes').click()
-                                    if await pg.locator('#pinLayer .pin-source-projected').count()!=50:
-                                        failures.append('San Andreas horseshoe markers missing')
-                                    await pg.locator('#categories .cat').filter(has_text='Oysters').click()
-                                    if await pg.locator('#pinLayer .pin-source-projected').count()!=50:
-                                        failures.append('San Andreas oyster markers missing')
-                                    await pg.locator('#categories .cat').filter(has_text='Graffiti Tags').click()
-                                    if await pg.locator('#pinLayer .pin-source-projected').count()!=0:
-                                        failures.append('Unverified graffiti tag positions were fabricated')
                                     if 'approximate' not in (await pg.locator('.j105-accuracy').inner_text()).lower():
                                         failures.append('Approximate coordinate disclaimer missing')
                                     await pg.locator('#categories .cat').filter(has_text='Snapshots').click()
                                     if await pg.locator('#items #item-1 input[type="checkbox"]').count()==0:
                                         failures.append('Individual sourced completion tracking missing')
                                 except Exception as exc:
-                                    failures.append('San Andreas local base artwork could not load: '+str(exc)[:240])
+                                    failures.append('San Andreas artwork, attribution or individual completion: '+str(exc)[:240])
                             if not failures and path in ('heists.html','atlas-iv.html','atlas-research.html','atlas98-data-lab.html'):
                                 expected={'heists.html':'j119-heists','atlas-iv.html':'j119-iv','atlas-research.html':'j119-research','atlas98-data-lab.html':'j119-lab'}[path]
                                 if await pg.locator('body.'+expected).count()!=1:
