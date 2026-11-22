@@ -51,6 +51,20 @@ const alias={'vice-city':'vc','gta-iii':'iii','vice-city-stories':'vcs','liberty
 const $=q=>document.querySelector(q),E=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
 const params=new URLSearchParams(location.search),raw=(params.get('game')||params.get('world')||'iii').toLowerCase();const id=worlds[raw]?raw:(alias[raw]||'iii'),w=worlds[id];
 const key='team-jura-atlas98-classic-'+id+'-v1';const blank=()=>({schema:'team-jura-atlas98-classic-v1',world:id,markers:[],completed:[],background:null});
+function mergeNotebook(existing,incoming,world,sets,collections){
+ if(!incoming||incoming.schema!=='team-jura-atlas98-classic-v1'||incoming.world!==world||!Array.isArray(incoming.markers)||incoming.markers.length>1000)throw Error('Invalid world schema');
+ const markers=existing.markers.slice(),ids=new Set(markers.map(m=>m.id)),linked=new Set(markers.filter(m=>Number.isInteger(m.collectionSlot)&&m.collectionSet).map(m=>m.collectionSet+':'+m.collectionSlot));let added=0,kept=0,skipped=0;
+ for(const m of incoming.markers){
+  if(!m||typeof m.id!=='string'||!m.id.trim()||m.id.length>80||typeof m.name!=='string'||!m.name.trim()||!sets.includes(m.category)||!Number.isFinite(m.x)||!Number.isFinite(m.y)||m.x<0||m.x>100||m.y<0||m.y>100){skipped++;continue}
+  const validLink=Object.hasOwn(collections,m.collectionSet||'')&&collections[m.collectionSet].count>=m.collectionSlot&&Number.isInteger(m.collectionSlot)&&m.collectionSlot>0&&m.collectionSet===m.category;
+  const slot=validLink?m.collectionSet+':'+m.collectionSlot:null;
+  if(ids.has(m.id)||(slot&&linked.has(slot))){kept++;continue}
+  if(markers.length>=1000){skipped++;continue}
+  markers.push({id:m.id,name:m.name.slice(0,100),category:m.category,note:String(m.note||'').slice(0,300),x:m.x,y:m.y,source:'personal-image-percent',...(validLink?{collectionSet:m.collectionSet,collectionSlot:m.collectionSlot}:{})});ids.add(m.id);if(slot)linked.add(slot);added++;
+ }
+ const completed=[...new Set([...(Array.isArray(existing.completed)?existing.completed:[]),...(Array.isArray(incoming.completed)?incoming.completed:[])].filter(x=>sets.includes(x)))];
+ return{state:{...existing,markers,completed},added,kept,skipped};
+}
 function read(){try{const data=JSON.parse(localStorage.getItem(key)||'null');if(data&&data.schema==='team-jura-atlas98-classic-v1'&&data.world===id&&Array.isArray(data.markers))return data}catch{}return blank()}
 let state=read(),adding=false,editing=null,pendingSlot=null,scale=1,dx=0,dy=0,dragged=false;
 let highResUrl=null,highResSize=null; // personal map raster is stored separately
@@ -184,6 +198,7 @@ function createOrEdit(){const name=$('#markerName').value.trim(),category=$('#ma
  else state.markers.push({id:globalThis.crypto?.randomUUID?.()||'p'+Date.now()+Math.random().toString(36).slice(2),name:name.slice(0,100),category,note:note.slice(0,300),x,y,source:'personal-image-percent',...(link?{collectionSet:link.set,collectionSlot:link.slot}:{})});
  if(state.markers.length>1000){state.markers.pop();status('Limit reached (1000 markers per world).');return}persist();closeEditor();draw();status('Saved personal marker to this browser.')}
 function coords(e){const s=$('#classicMapSurface').getBoundingClientRect();if(!s.width||!s.height||e.clientX<s.left||e.clientX>s.right||e.clientY<s.top||e.clientY>s.bottom)return null;return {x:clamp((e.clientX-s.left)/s.width*100,0,100),y:clamp((e.clientY-s.top)/s.height*100,0,100)}}
+function notebookMapReference(){return highResUrl||state.background?{kind:'private-image'}:originalMapReady&&activeMapUrl?{kind:'source',url:activeMapUrl}:{kind:'illustrative'};}
 function bindMap(){const viewport=$('#classicViewport');
  // Atlas 15.7: multitouch mobile controls and zoom-at-anchor, preserving all world data.
  const pointers=new Map();
@@ -268,9 +283,25 @@ function bindMap(){const viewport=$('#classicViewport');
    status('Personal map image removed. Markers and collection progress remain saved.');
   }catch(error){status('Could not remove local map: '+String(error?.message||error))}
  });
- $('#classicExport').addEventListener('click',()=>{const copy={...state,exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(copy,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+id+'-my-map.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);status(highResUrl?'Markers and progress exported. Your high-resolution map image is stored separately; keep the original PNG/JPEG/WebP file.':'World markers, checked categories and earlier embedded image exported.')});
- $('#classicImport').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2500000){status('Import too large; maximum 2.5 MB.');return}const rd=new FileReader();rd.onload=()=>{try{const obj=JSON.parse(rd.result);if(obj.schema!=='team-jura-atlas98-classic-v1'||obj.world!==id||!Array.isArray(obj.markers)||obj.markers.length>1000)throw Error('Invalid world schema');const clean=[];for(const m of obj.markers){if(typeof m.name!=='string'||!Number.isFinite(m.x)||!Number.isFinite(m.y)||m.x<0||m.x>100||m.y<0||m.y>100)throw Error('Invalid marker');const validLink=window.TeamJuraClassicCollections?.[id]?.[m.collectionSet]?.count>=m.collectionSlot&&Number.isInteger(m.collectionSlot)&&m.collectionSlot>0&&m.collectionSet===m.category;
- clean.push({id:String(m.id).slice(0,80),name:m.name.slice(0,100),category:w.sets.includes(m.category)?m.category:w.sets[0],note:String(m.note||'').slice(0,300),x:m.x,y:m.y,source:'personal-image-percent',...(validLink?{collectionSet:m.collectionSet,collectionSlot:m.collectionSlot}:{})})}state={schema:'team-jura-atlas98-classic-v1',world:id,markers:clean,completed:Array.isArray(obj.completed)?obj.completed.filter(x=>w.sets.includes(x)):[],background:(typeof obj.background==='string'&&(/^data:image\/(png|jpeg|webp);base64,/.test(obj.background))&&obj.background.length<1700000)?obj.background:null};persist();closeEditor();draw();status('World-specific personal data restored.')}catch(err){status('Import refused: invalid file or different GTA world.')}};rd.onerror=()=>status('Could not read JSON.');rd.readAsText(f)});
+ $('#classicExport').addEventListener('click',()=>{const copy={...state,mapReference:notebookMapReference(),exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(copy,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+id+'-my-map.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);status(highResUrl?'Markers and progress exported. Your high-resolution map image is stored separately; keep the original PNG/JPEG/WebP file.':'World markers, checked categories and earlier embedded image exported.')});
+ $('#classicImport').addEventListener('change',async e=>{
+  const f=e.target.files?.[0];e.target.value='';if(!f)return;
+  if(f.size>2500000){status('Import too large; maximum 2.5 MB.');return}
+  try{
+   const obj=JSON.parse(await f.text()),currentMap=notebookMapReference();
+   const result=mergeNotebook(state,obj,id,w.sets,window.TeamJuraClassicCollections?.[id]||{});
+   if(result.added){
+    const other=obj.mapReference;
+    const same=other?.kind==='source'&&currentMap.kind==='source'&&other.url===currentMap.url;
+    const embeddedMatch=typeof obj.background==='string'&&obj.background===state.background&&!!state.background&&!highResUrl;
+    if(!same&&!embeddedMatch&&!window.confirm('This backup does not establish the same map image as the current notebook. Positions are image-relative. Merge the markers only if you accept that their alignment may need adjustment?')){status('Import canceled. Your notebook is unchanged.');return}
+   }
+   const before=state;state=result.state;
+   if(!persist()){state=before;status('Import not saved. Existing notebook kept; export and try again.');return}
+   closeEditor();draw();status(result.added+' marker(s) added; '+result.kept+' existing or linked slots kept; '+result.skipped+' invalid or over-limit skipped. Existing notes, checked categories and map image preserved.');
+  }catch(err){status('Import refused: invalid file or different GTA world.')}
+ });
+
  $('#classicClear').addEventListener('click',()=>{if(!window.confirm('Delete your personal markers for '+w.name+'? Export first if needed.'))return;state.markers=[];persist();closeEditor();draw();status('Personal markers cleared. Collection checkboxes and map illustration preserved.')});
 }
 function init(){
