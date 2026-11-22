@@ -1,0 +1,20 @@
+name: Atlas 31.5 - release source and portal asset contracts
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'scripts/test_atlas125_media_cheats.py'
+      - '.github/workflows/atlas315-release-source.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify actual versioned local portal resources and remaining source contracts
+        run: python3 scripts/test_atlas125_media_cheats.py
