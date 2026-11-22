@@ -73,3 +73,12 @@ assert "atlas-iv.html?scope=" in classic
 assert 'atlas98-classic.js?v=190' in hub
 assert len(set(ids))==300
 print('PASS Atlas 19.0: 2650 sourced IV landmarks (2648 positioned), 300 MIT GTA IV/episode birds, 150 SA pickups, scoped routes, markers and credits')
+
+# Exact upstream comparison performed during Atlas 23.7 source audit.
+for bundle, count, revision in ((pack,150,'77dcc3d65e86df7a3806d4e1607445aacfda1855'),(birds,300,'de21b7df7ec8b10dfe5abe7290d894efbfc1bd11')):
+    audit=bundle['coordinateAudit']
+    assert audit['matched']==count and audit['mismatched']==0 and audit['sourceCommit']==revision
+    assert audit['gameplayVerified'] is False and audit['mapAlignmentVerified'] is False
+    assert 'Permission is hereby granted' in bundle['coordinateSourceLicenseText']
+    assert revision in bundle['sourceUrl'] and revision in bundle['licenseUrl']
+print('PASS Atlas 23.7: pinned coordinate provenance and retained MIT notices (audit evidence, not gameplay certification)')
