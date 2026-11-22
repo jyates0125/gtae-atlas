@@ -62,6 +62,17 @@ try:
     rect=back.bounding_box()
     card_rect=card.bounding_box()
     assert rect is not None and card_rect is not None
+    if name=='atlas-vi.html':
+     overlay=page.evaluate("""() => {
+       const back=document.getElementById('j302-back-to-map');
+       const card=document.getElementById('selectedCard');
+       const hub=document.getElementById('j217-vi-hub');
+       const r=back.getBoundingClientRect();
+       const top=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
+       return {cardZ:getComputedStyle(card).zIndex,hubZ:getComputedStyle(hub).zIndex,
+        hit:!!top?.closest('#selectedCard'),obstruction:top?.tagName+'#'+(top?.id||'')};
+     }""")
+     assert overlay['hit'],(name,width,height,'Leonida overlay covers marker return',overlay)
     assert rect['width']>=120 and rect['height']>=44,(name,width,height,'Small back hitbox',rect)
     assert card_rect['height']<=height+2,(name,width,height,'Card taller than viewport',card_rect)
     # Both portrait and short landscape must keep the exit onscreen.
