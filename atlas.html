@@ -106,7 +106,7 @@
     </section>
     <section class="tab-panel hidden" id="panelPins" role="tabpanel">
       <p class="hint">Choose Add pin, then tap the map. Saved pins stay in their own game.</p><button type="button" id="addPin" class="wide accent">+ Add pin on map</button>
-      <div class="results" id="pinsList"></div><div class="gridbuttons"><button id="exportData" type="button">Export backup</button><button id="importData" type="button">Import backup</button></div><input type="file" id="importFile" class="hidden" accept=".json,application/json" aria-label="Import progress file">
+      <div class="results" id="pinsList"></div><div class="gridbuttons"><button id="exportData" type="button">Export backup</button><button id="importData" type="button" title="Merge missing map data without replacing existing progress">Merge backup</button></div><input type="file" id="importFile" class="hidden" accept=".json,application/json" aria-label="Import progress file">
     </section>
     <section class="offline" id="datasets"><strong>🗂 Licensed location packs</strong>
       <p class="hint">GTADB publishes licensed landmark data and tiles. GTA VI is synced to our GitHub snapshot daily when Actions is enabled; old releases can use GitHub raw fallback. New source overlays add calibrated GTA V Story collectibles, base-game world objects, and provisional GTA VI trailer research. The included offline starter is a smaller fallback. Named service sites are inferred, not confirmed gameplay features. Use the built-in overlays or import a documented, appropriately licensed JSON pack.</p>

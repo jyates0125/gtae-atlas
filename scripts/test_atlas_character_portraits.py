@@ -250,6 +250,33 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             expect(page.locator("#modeOnline")).to_have_attribute("aria-pressed","true")
             page.reload(wait_until="domcontentloaded")
             expect(page.locator("#selectedTitle")).to_contain_text("Snowmen")
+            # Main map backup merge: preserve existing private pins, progress and route order,
+            # restore missing collectible/vehicle types, and reject cross-world route stops.
+            page.goto(base+"atlas-online.html",wait_until="domcontentloaded")
+            page.evaluate("""() => {
+              localStorage.setItem('team-jura-atlas-v41-pins',JSON.stringify([{id:'user-5-qa-1',game:'5',scope:'online',category:'vehicle',name:'Current vehicle',x:30,y:40}]));
+              localStorage.setItem('jura3-progress',JSON.stringify({'online:user-5-qa-1':true}));
+              localStorage.setItem('jura-atlas-routes',JSON.stringify({'5':[],'6':[],online:['user-5-qa-1']}));
+              localStorage.setItem('jura58-route-starts',JSON.stringify({online:{x:30,y:40,name:'Current start'}}));
+            }""")
+            page.reload(wait_until="domcontentloaded")
+            page.wait_for_function("typeof window.JuraDualLegendAPI?.state==='function'",timeout=15000)
+            map_backup={"version":58,"progress":{"online:user-5-qa-1":False,"online:user-5-qa-2":True},"favorites":{},"personal":[
+              {"id":"user-5-qa-1","game":"5","scope":"online","category":"user","name":"Older version","x":1,"y":2},
+              {"id":"user-5-qa-2","game":"5","scope":"online","category":"collectible","name":"Restored pickup","x":50,"y":60},
+              {"id":"user-6-qa-3","game":"6","scope":"story","category":"vehicle","name":"Leonida private vehicle","x":80,"y":90},
+              {"id":"gtadb-5-L1","game":"5","scope":"online","name":"Wrong canonical id","x":0,"y":0}],
+              "routes":{"online":["user-5-qa-2","user-6-qa-3","user-5-qa-1"],"6":["user-6-qa-3","user-5-qa-1"]},
+              "routeStarts":{"online":{"x":1,"y":2,"name":"Old start"}}}
+            page.once("dialog",lambda dialog:dialog.accept())
+            page.locator("#importFile").set_input_files({"name":"map.json","mimeType":"application/json","buffer":json.dumps(map_backup).encode()})
+            page.wait_for_function("JSON.parse(localStorage.getItem('team-jura-atlas-v41-pins')).length===3",timeout=15000)
+            restored=page.evaluate("""() => ({pins:JSON.parse(localStorage.getItem('team-jura-atlas-v41-pins')),progress:JSON.parse(localStorage.getItem('jura3-progress')),routes:JSON.parse(localStorage.getItem('jura-atlas-routes')),starts:JSON.parse(localStorage.getItem('jura58-route-starts'))})""")
+            assert restored["pins"][0]["name"]=="Current vehicle"
+            assert restored["pins"][1]["category"]=="collectible" and restored["pins"][2]["scope"]=="vi"
+            assert restored["progress"]["online:user-5-qa-1"] is True and restored["progress"]["online:user-5-qa-2"] is True
+            assert restored["routes"]["online"]==["user-5-qa-1","user-5-qa-2"] and restored["routes"]["6"]==["user-6-qa-3"]
+            assert restored["starts"]["online"]["name"]=="Current start"
             # A synthetic, local-only source pack tests temporary event focus without
             # introducing any claimed real game coordinates into the published catalog.
             page.goto(base+"atlas-online.html",wait_until="domcontentloaded")

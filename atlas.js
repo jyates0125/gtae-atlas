@@ -693,7 +693,7 @@ function endPointer(e){const p=pointers.get(e.pointerId);if(!p)return;const wasS
 canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointercancel',e=>{pointers.delete(e.pointerId);if(!pointers.size)canvas.classList.remove('dragging');gesture=null});
 canvas.addEventListener('wheel',e=>{e.preventDefault();const p=position(e);zoomBy(e.deltaY<0?.28:-.28,p.x,p.y)},{passive:false});
 canvas.addEventListener('keydown',e=>{if(e.key==='+'||e.key==='='){zoomBy(.45);e.preventDefault()}else if(e.key==='-'){zoomBy(-.45);e.preventDefault()}else if(e.key.startsWith('Arrow')){const step=150/scale();if(e.key==='ArrowLeft')camera.x-=step;if(e.key==='ArrowRight')camera.x+=step;if(e.key==='ArrowUp')camera.y+=step;if(e.key==='ArrowDown')camera.y-=step;schedulePaint();e.preventDefault()}});
-function tapMap(p){if(chooseRouteStartMode){let match=null;for(let i=hitRegions.length-1;i>=0;i--){const h=hitRegions[i];if(h.record&&Math.hypot(h.x-p.x,h.y-p.y)<=h.r){match=h.record;break}}const at=match||fromScreen(p.x,p.y);setRouteStart({x:at.x,y:at.y,name:match?.name||'Selected map position'});showTab('Route');return}if(addPinMode){addPinMode=false;const at=fromScreen(p.x,p.y);let name=prompt('Name this pin:');if(!name||!name.trim()){toast('Pin creation cancelled.');return}name=name.trim().slice(0,120);const r={id:'user-'+game+'-'+Date.now(),game,name,x:at.x,y:at.y,tags:[],category:pendingPinCategory,scope:game==='6'?'story':mode,source:'My saved location',uncertain:false};personal.push(r);persist();active[filterScope()]=null;choosePlace(r);render();showTab(pendingPinCategory==='collectible'?'Collections':pendingPinCategory==='vehicle'?'Vehicles':'Pins');toast('Saved location placed on the map: '+name);return}
+function tapMap(p){if(chooseRouteStartMode){let match=null;for(let i=hitRegions.length-1;i>=0;i--){const h=hitRegions[i];if(h.record&&Math.hypot(h.x-p.x,h.y-p.y)<=h.r){match=h.record;break}}const at=match||fromScreen(p.x,p.y);setRouteStart({x:at.x,y:at.y,name:match?.name||'Selected map position'});showTab('Route');return}if(addPinMode){addPinMode=false;const at=fromScreen(p.x,p.y);let name=prompt('Name this pin:');if(!name||!name.trim()){toast('Pin creation cancelled.');return}name=name.trim().slice(0,120);const r={id:'user-'+game+'-'+Date.now(),game,name,x:at.x,y:at.y,tags:[],category:pendingPinCategory,scope:game==='6'?'vi':mode,source:'My saved location',uncertain:false};personal.push(r);persist();active[filterScope()]=null;choosePlace(r);render();showTab(pendingPinCategory==='collectible'?'Collections':pendingPinCategory==='vehicle'?'Vehicles':'Pins');toast('Saved location placed on the map: '+name);return}
  for(let i=hitRegions.length-1;i>=0;i--){const h=hitRegions[i];if(Math.hypot(h.x-p.x,h.y-p.y)>h.r)continue;if(h.record)choosePlace(h.record);else if(h.cluster){const r=h.cluster;camera.x=r.x;camera.y=r.y;camera.z=clamp(camera.z+1.35,MIN_Z,MAX_Z);schedulePaint();announce('Zooming in to separate nearby locations.')}return}
  // A plain map tap stays on the map; no modal coordinate window.
  const at=fromScreen(p.x,p.y);announce('GTA '+game+' map · X '+at.x.toFixed(0)+' · Y '+at.y.toFixed(0)+' · Tap a marker to inspect it.');
@@ -792,8 +792,76 @@ async function saveOffline(){if(offlineBusy)return;offlineBusy=true;offlineStop=
  }catch(e){$('offlineStatus').textContent='Offline download not available on this browser: '+e.message}finally{offlineBusy=false;buttonEl.disabled=false;$('stopOffline').classList.add('hidden')}
 }
 function exportBackup(){const value={version:58,progress,favorites,routes,routeStarts,personal};const file=new Blob([JSON.stringify(value,null,2)],{type:'application/json'}),url=URL.createObjectURL(file),link=document.createElement('a');link.href=url;link.download='team-jura-atlas-backup.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('Backup exported to your downloads.')}
-async function importBackup(file){if(!file)return;try{if(file.size>3500000)throw Error('File is too large');const raw=JSON.parse(await file.text());if(!raw||typeof raw!=='object'||!raw.progress||!Array.isArray(raw.personal))throw Error('Invalid Team Jura backup');if(!confirm('Replace saved progress, routes, favorites and pins on this device?'))return;
- progress=Object.fromEntries(Object.entries(raw.progress).filter(([k,v])=>typeof k==='string'&&typeof v==='boolean').slice(0,30000));favorites=raw.favorites&&typeof raw.favorites==='object'?raw.favorites:{};routes=raw.routes&&typeof raw.routes==='object'?raw.routes:{'5':[],'6':[]};routeStarts=raw.routeStarts&&typeof raw.routeStarts==='object'&&!Array.isArray(raw.routeStarts)?Object.fromEntries(Object.entries(raw.routeStarts).filter(([k,v])=>['5','6','online'].includes(k)&&v&&Number.isFinite(v.x)&&Number.isFinite(v.y)).map(([k,v])=>[k,{x:v.x,y:v.y,name:String(v.name||'Saved start').slice(0,100)}])):{};personal=raw.personal.filter(p=>p&&['5','6'].includes(p.game)&&typeof p.name==='string'&&Number.isFinite(p.x)&&Number.isFinite(p.y)).slice(0,5000).map(p=>({...p,name:p.name.slice(0,120),tags:[],category:'user'}));persist();render();toast('Backup imported.');}catch(e){toast('Could not import backup: '+e.message)}finally{$('importFile').value=''}}
+// Map backups are private device data, not permission to publish or verify a location.
+const backupObject=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
+const backupId=value=>typeof value==='string'&&/^[a-zA-Z0-9_.:-]{1,180}$/.test(value)&&!['__proto__','prototype','constructor'].includes(value);
+const backupPosition=value=>backupObject(value)&&Number.isFinite(value.x)&&Number.isFinite(value.y)&&Math.abs(value.x)<=32768&&Math.abs(value.y)<=32768;
+function cleanPersonalPin(pin){
+ if(!backupPosition(pin)||!backupId(pin.id)||!['5','6'].includes(pin.game)||typeof pin.name!=='string'||!pin.name.trim())return null;
+ // Canonical sourced IDs cannot be replaced by a personal backup.
+ if(/^(?:gtadb-|pack-|jura-(?:story-|vi-))/.test(pin.id))return null;
+ if(pin.game==='5'&&pin.scope&&!['story','online'].includes(pin.scope))return null;
+ if(pin.game==='6'&&pin.scope&&!['story','vi'].includes(pin.scope))return null;
+ return {id:pin.id,game:pin.game,scope:pin.game==='6'?'vi':pin.scope||'story',name:pin.name.trim().slice(0,120),x:pin.x,y:pin.y,category:['user','collectible','vehicle'].includes(pin.category)?pin.category:'user',tags:[],source:'My saved location',uncertain:false};
+}
+async function importBackup(file){
+ if(!file)return;
+ try{
+  if(file.size>3500000)throw Error('File is too large');
+  const raw=JSON.parse(await file.text());
+  if(!backupObject(raw)||!backupObject(raw.progress)||!Array.isArray(raw.personal)||raw.version!==58)throw Error('Invalid Team Jura map backup (version 58 required)');
+  if(raw.personal.length>5000||Object.keys(raw.progress).length>30000)throw Error('Backup record limit exceeded');
+  const nextProgress={...progress},nextFavorites={...favorites},nextRoutes={...routes},nextStarts={...routeStarts},nextPins=[...personal];
+  let added=0,kept=0,skipped=0;
+  const mergeFlags=(dest,source)=>{
+   if(!backupObject(source))return;
+   for(const [id,value] of Object.entries(source).slice(0,30000)){
+    if(!backupId(id)||typeof value!=='boolean'){skipped++;continue}
+    if(dest[id]===true){if(!value)kept++;continue}
+    if(value){dest[id]=true;added++}
+   }
+  };
+  mergeFlags(nextProgress,raw.progress);mergeFlags(nextFavorites,raw.favorites);
+  const known=new Map(nextPins.filter(p=>p&&backupId(p.id)).map(p=>[p.id,p]));
+  for(const input of raw.personal){
+   const pin=cleanPersonalPin(input);
+   if(!pin){skipped++;continue}
+   if(known.has(pin.id)){kept++;continue}
+   if(nextPins.length>=5000){skipped++;continue}
+   nextPins.push(pin);known.set(pin.id,pin);added++;
+  }
+  for(const scope of ['5','online','6']){
+   const incoming=backupObject(raw.routes)?raw.routes[scope]:null;
+   if(Array.isArray(incoming)){
+    const ids=Array.isArray(nextRoutes[scope])?[...nextRoutes[scope]]:[];
+    const wantedGame=scope==='6'?'6':'5',wantedMode=scope==='online'?'online':'story';
+    for(const id of incoming.slice(0,12000)){
+     if(!backupId(id)){skipped++;continue}
+     const pin=known.get(id);
+     if(pin&&(pin.game!==wantedGame||(wantedGame==='5'&&(pin.scope||'story')!==wantedMode))||wantedGame==='5'&&/^gtadb-6-/.test(id)||wantedGame==='6'&&/^gtadb-5-/.test(id)){skipped++;continue}
+     if(ids.includes(id))continue;
+     if(ids.length>=12000){skipped++;continue}
+     ids.push(id);added++;
+    }
+    nextRoutes[scope]=ids;
+   }
+   const origin=backupObject(raw.routeStarts)?raw.routeStarts[scope]:null;
+   if(backupPosition(origin)){
+    if(backupPosition(nextStarts[scope]))kept++;
+    else{nextStarts[scope]={x:origin.x,y:origin.y,name:String(origin.name||'Saved start').slice(0,100)};added++}
+   }
+  }
+  if(!window.confirm('Merge '+added+' missing values into your saved map data? Existing progress, pins, route order and route starts are preserved.'))return;
+  progress=nextProgress;favorites=nextFavorites;routes=nextRoutes;routeStarts=nextStarts;personal=nextPins;
+  // Keep existing storage keys and never report success if the browser rejects persistence.
+  const entries=[['jura3-progress',progress],['jura-atlas-favorites',favorites],['jura-atlas-routes',routes],['jura58-route-starts',routeStarts],[APP+'-pins',personal]];
+  let failed=0;
+  for(const [key,value] of entries){try{localStorage.setItem(key,JSON.stringify(value))}catch{failed++}}
+  render();
+  toast(added+' values restored; '+kept+' existing kept; '+skipped+' invalid skipped.'+(failed?' Storage incomplete; export a backup before leaving.':' Existing map data preserved.'));
+ }catch(error){toast('Could not import backup: '+error.message)}
+ finally{$('importFile').value=''}
+}
 function optimizeRoute(){const r=routeRecords();if(r.length<2)return toast('Add at least two stops to order them.');if(!window.JuraRoutePlanner)return toast('Route engine is unavailable.');
  const origin=currentRouteStart()||r[0],stops=currentRouteStart()?r:r.slice(1);const result=window.JuraRoutePlanner.plan(origin,stops);
  routes[routeScope()]=currentRouteStart()?result.stops.map(p=>p.id):[r[0].id,...result.stops.map(p=>p.id)];persist();render();toast('Optimized '+r.length+' stops using straight-line GTA world distance (not road directions).')}

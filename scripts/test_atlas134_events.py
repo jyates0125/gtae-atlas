@@ -29,6 +29,11 @@ assert "Temporary event focus:" in mapjs and "jura:event-focus-cleared" in mapjs
 focus=mapjs.split("window.JuraAtlasEventLocations=Object.freeze({",1)[1].split("window.JuraDualLegendAPI",1)[0]
 assert "active[filterScope()]=" not in focus and "hiddenNamed[namedScope()]=" not in focus
 assert "JuraAtlasEventLocations?.refresh()" in src("atlas88-events.js")
+assert "function cleanPersonalPin" in mapjs and "const nextProgress={...progress}" in mapjs
+assert "Existing progress, pins, route order and route starts are preserved" in mapjs
+assert "category:['user','collectible','vehicle'].includes(pin.category)" in mapjs
+for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
+ assert 'Merge backup</button>' in src(page)
 node=r"""
 const assert=require('node:assert/strict');
 const C=require('./atlas-conditions.js');
