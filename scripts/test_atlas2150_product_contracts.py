@@ -117,3 +117,25 @@ require("docs/ELARIO-STUDIOS-OPERATING-CHARTER-V2-PROPOSAL.md",
         "The Elario 2150 Vision", "Owner-approved", "Release hold triggers")
 
 print("PASS Atlas 2150 focused cross-product source contracts")
+
+# Execute the same all-world inventory module served by the coverage page.
+require("atlas-coverage.html", 'id="j267-world-evidence"', 'id="j267-filter"', 'id="j267-search"', "atlas267-world-evidence.js")
+subprocess.run(["node","-e", """
+const assert=require('node:assert/strict'), fs=require('node:fs'), vm=require('node:vm');
+const api=require('./atlas267-world-evidence.js');
+const data=Object.fromEntries(Object.entries(api.files).map(([k,f])=>[k,JSON.parse(fs.readFileSync(f,'utf8'))]));
+const result=api.inventory(data), ctx={window:{}};vm.runInNewContext(fs.readFileSync('atlas98-worlds.js','utf8'),ctx);
+assert.equal(ctx.window.TeamJuraWorlds.length,13);
+assert.deepEqual(Object.keys(result).sort(),Array.from(ctx.window.TeamJuraWorlds,w=>w.id).sort());
+assert.ok(result.story.summary.startsWith('275'));
+assert.ok(result.sa.summary.startsWith('320'));
+assert.ok(result.iii.summary.startsWith('160')&&result.iii.secondary.startsWith('140'));
+assert.ok(result.vc.summary.startsWith('51')&&result.vc.secondary.startsWith('171'));
+assert.ok(result.tlad.summary.startsWith('50')&&result.tbogt.summary.startsWith('50'));
+assert.ok(result.lcs.summary.startsWith('52')&&result.vcs.summary.startsWith('51'));
+assert.ok(api.inventory({}).sa.summary.includes('unavailable'));
+assert.ok(result.vi.summary.startsWith(data.vi.mappedCount.toLocaleString('en-US')));
+assert.ok(api.inventory({...data,vcde:{...data.vcde,edition:'classic'}}).vc.secondary.startsWith('Source unavailable'));
+assert.deepEqual(Object.keys(result).filter(k=>result[k].nativeGap).sort(),['ctw','lcs','vcs']);
+console.log('PASS thirteen-world inventory and edition isolation');
+"""],cwd=ROOT,check=True)
