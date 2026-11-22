@@ -32,7 +32,8 @@ require("atlas-characters.html", 'id="j222-profile-dialog"',
 require("atlas93-garage.js", "atlas-vehicle-configurator.html?model=",
         "TeamJuraGarage3D")
 require("atlas101-configurator.js", "Aircraft / Plane concept",
-        "Boat / Watercraft concept", "Helicopter concept", "sceneType()")
+        "Boat / Watercraft concept", "Helicopter concept", "sceneType()",
+        "prepareImport", "Object.hasOwn(merged,id)", "classLocked")
 require("atlas99-garage3d.js", "const aircraft=", "const watercraft=", "const helicopter=")
 
 # World and heist navigation: these pages must remain in the release.

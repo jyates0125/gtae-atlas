@@ -172,6 +172,37 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             page.goto(base + "map-hub.html?game=vc",wait_until="domcontentloaded")
             expect(page.locator("#j98bRouteStops li span")).to_have_count(0)
 
+            # Studio restore must preserve both a conflicting existing idea and Garage ownership.
+            page.goto(base+"atlas-vehicle-configurator.html?model=adder",wait_until="domcontentloaded")
+            expect(page.locator("#modelSelect")).to_have_value("adder",timeout=15000)
+            page.evaluate("""() => {
+                localStorage.setItem('team-jura-atlas101-concept-presets-v1',JSON.stringify({schema:1,builds:{
+                    adder:{model:'adder',paint:'#102030',body:'auto',name:'Keep my Adder',note:'Original notes'}
+                }}));
+                localStorage.setItem('team-jura-atlas90-collection-v1',JSON.stringify({schema:1,owned:{'vehicles5:adder':true},wishlist:{}}));
+            }""")
+            preset_backup={"schema":1,"builds":{
+                "adder":{"model":"adder","paint":"#ff0000","body":"sports","name":"Do not overwrite","note":""},
+                "zentorno":{"model":"zentorno","paint":"#aabbcc","body":"sports","name":"Restored Zentorno","note":"Saved offline"},
+                "invalid_unknown":{"model":"invalid_unknown","paint":"#ffffff","body":"auto","name":"Ignore","note":""}}}
+            page.locator("#importBuilds").set_input_files({"name":"concepts.json","mimeType":"application/json","buffer":json.dumps(preset_backup).encode()})
+            expect(page.locator("#builderStatus")).to_contain_text("1 new preset(s) imported; 1 existing kept; 1 invalid or unknown skipped")
+            page.locator("#loadBuild").click()
+            expect(page.locator("#buildName")).to_have_value("Keep my Adder")
+            page.locator("#modelSelect").select_option("zentorno")
+            expect(page.locator("#buildName")).to_have_value("Restored Zentorno")
+            expect(page.locator("#paintColor")).to_have_value("#aabbcc")
+            page.locator("#modelSelect").select_option("alkonost")
+            expect(page.locator("#bodyStyle")).to_be_disabled()
+            expect(page.locator("#bodyStyleHint")).to_contain_text("road body styles do not apply")
+            page.locator("#modelSelect").select_option("adder")
+            expect(page.locator("#bodyStyle")).to_be_enabled()
+            page.locator("#importBuilds").set_input_files({"name":"invalid.json","mimeType":"application/json","buffer":b'{"schema":99}'})
+            expect(page.locator("#builderStatus")).to_contain_text("Import rejected:")
+            saved_studio=page.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas101-concept-presets-v1'))")
+            assert saved_studio["builds"]["adder"]["name"]=="Keep my Adder"
+            assert saved_studio["builds"]["zentorno"]["paint"]=="#aabbcc"
+            assert page.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas90-collection-v1')).owned['vehicles5:adder']") is True
             page.goto(base + "atlas93-garage.html",wait_until="domcontentloaded")
             page.wait_for_function("Number(document.querySelector('#catalogCount').textContent.replaceAll(',',''))>0")
             backup={"schema":1,"app":"team-jura-atlas93-garage","garage":{"garages":["Main Garage"],"vehicles":{}},
