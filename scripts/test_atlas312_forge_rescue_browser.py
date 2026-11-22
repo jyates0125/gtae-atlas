@@ -30,7 +30,7 @@ try:
     context.route('https://**/*',lambda route:route.abort())
     page=context.new_page()
     page.goto(BASE+('?world=vi&model='+model if world=='vi' else '?model='+model),wait_until='domcontentloaded')
-    broken='{damaged-"+world if world=='v' else '{"schema":2,"builds":{},"variants":{}}'
+    broken=('{damaged-'+world) if world=='v' else '{"schema":2,"builds":{},"variants":{}}'
     unrelated={other:json.dumps({'schema':1,'builds':{'sentinel':{'model':'sentinel','name':'Keep'}},'variants':{}},separators=(',',':')),
                G:'{"schema":1,"garages":["Main Garage"],"vehicles":{"adder":{"paint":"#ffcc00"}}}',
                O:'{"schema":1,"owned":{"vehicles5:adder":true}}'}
