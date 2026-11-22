@@ -1,0 +1,49 @@
+name: Atlas 31.3 - private named Forge version navigation
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas263-forge-collections.js'
+      - 'atlas101-configurator.js'
+      - 'tests/atlas296-forge-collections.test.cjs'
+      - 'scripts/test_atlas313_private_forge.py'
+      - 'scripts/test_atlas313_private_forge_browser.py'
+      - '.github/workflows/atlas313-private-forge.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  private-handoff:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source, collection identity and private URL hygiene
+        run: |
+          python scripts/test_atlas313_private_forge.py
+          python scripts/test_atlas311_forge_management.py
+          python scripts/test_atlas312_forge_rescue.py
+      - name: Build and audit Cloudflare static payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test V and VI private handoff on three viewports
+        run: python scripts/test_atlas313_private_forge_browser.py
+      - name: Save 390px phone visual proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas313-private-forge
+          path: qa-evidence/chromium/atlas313-private-*.png
+          if-no-files-found: warn
+          retention-days: 14
