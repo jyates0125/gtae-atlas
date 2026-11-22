@@ -31,6 +31,12 @@ try:
    page.locator('.directory-card').first.wait_for()
    assert page.locator('.directory-card').count()==13
    assert page.locator('#j212Recent').is_hidden(), 'New visitors must not see a bogus recent map'
+   search=page.locator('#worldSearch')
+   for query,world in [('security cameras','ctw'),('52 PSP','lcs'),('36 stunt jumps','vc')]:
+    search.fill(query)
+    card=page.locator('.directory-card[data-id="'+world+'"]')
+    assert card.is_visible() and query.lower() in card.inner_text().lower()
+   search.fill('')
    # Gateway URLs include a game query: preserve the exact world, not a general IV map.
    card=page.locator('.directory-card[data-id="tlad"]')
    assert card.get_attribute('href')=='./map-hub.html?game=tlad'

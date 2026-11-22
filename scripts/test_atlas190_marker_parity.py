@@ -67,9 +67,109 @@ for token in ('getRoute:()=>lastRoute.map','sourceReady()', 'atlas-sa-150-source
               'j190-sa-overlay', 'No required ending pin', 'TeamJuraSARoute'):
     assert token in saplan,token
 assert 'j190-sa-line' in sacss and 'pointer-events:none' in sacss
-assert 'atlas190-sa-route.js?v=190' in sah and 'atlas190-sa-route.css?v=190' in sah
+assert re.search(r'atlas190-sa-route\.js\?v=\d+',sah) and 'atlas190-sa-route.css?v=190' in sah
 assert 'j190-episode-collectibles' in hub
 assert "atlas-iv.html?scope=" in classic
-assert 'atlas98-classic.js?v=190' in hub
+assert re.search(r'atlas98-classic\.js\?v=\d+',hub)
 assert len(set(ids))==300
 print('PASS Atlas 19.0: 2650 sourced IV landmarks (2648 positioned), 300 MIT GTA IV/episode birds, 150 SA pickups, scoped routes, markers and credits')
+
+# Exact upstream comparison performed during Atlas 23.7 source audit.
+for bundle, count, revision in ((pack,150,'77dcc3d65e86df7a3806d4e1607445aacfda1855'),(birds,300,'de21b7df7ec8b10dfe5abe7290d894efbfc1bd11')):
+    audit=bundle['coordinateAudit']
+    assert audit['matched']==count and audit['mismatched']==0 and audit['sourceCommit']==revision
+    assert audit['gameplayVerified'] is False and audit['mapAlignmentVerified'] is False
+    assert 'Permission is hereby granted' in bundle['coordinateSourceLicenseText']
+    assert revision in bundle['sourceUrl'] and revision in bundle['licenseUrl']
+print('PASS Atlas 23.7: pinned coordinate provenance and retained MIT notices (audit evidence, not gameplay certification)')
+
+# New separate tag placement pack, leaving all previous SA source IDs untouched.
+tags=json.loads(read('data/atlas-sa-100-tag-placements.json'))
+assert len(tags['records'])==100 and tags['counts']=={'tags':100}
+assert tags['directSourceMatches']==sum(p['directSourceChecked'] for p in tags['records'])==61
+assert tags['transcriptionOnly']==39 and tags['gameplayVerified'] is False
+assert len({(p['worldX'],p['worldY'],p['worldZ']) for p in tags['records']})==100
+assert {p['slot'] for p in tags['records']}==set(range(1,101))
+for p in tags['records']:
+ assert p['set']=='tags' and abs(p['x']-(p['worldX']+3000))<.001 and abs(p['y']-(3000-p['worldY']))<.001
+ assert p['sourceUrl'].startswith('https://dev.prineside.com/en/gtasa_samp_model_id/model/')
+assert 'TeamJuraSATags' in sa and 'TeamJuraSATags' in saplan
+print('PASS attributed 100 tag object positions; 61 direct export matches, 39 transcription-only')
+
+jumps=json.loads(read('data/atlas-sa-70-jump-zones.json'))
+assert jumps['sourceRevision']=='6611e3cf21422bdd530a38743c1d15178d5d5df2' and jumps['sourceValidation']['checksum']==14857859
+assert jumps['counts']=={'jumps':70} and len(jumps['records'])==70 and jumps['gameplayVerified'] is False
+assert {p['slot'] for p in jumps['records']}==set(range(1,71))
+assert len({tuple(p['startZone']) for p in jumps['records']})==70
+for p in jumps['records']:
+ for zone in (p['startZone'],p['landingZone']):
+  assert len(zone)==6 and all(-3000<=v<=3000 for v in zone)
+  assert all(zone[i]<=zone[i+3] for i in range(3))
+ assert all(abs((p['startZone'][i]+p['startZone'][i+3])/2-v)<.001 for i,v in enumerate((p['worldX'],p['worldY'],p['worldZ'])))
+ assert abs(p['x']-p['worldX']-3000)<.001 and abs(p['y']+p['worldY']-3000)<.001
+assert 'TeamJuraSAJumps' in sa and 'TeamJuraSAJumps' in saplan
+print('PASS 320 SA source records across five sets; 70 bounded jump zones')
+
+vc=json.loads(read('data/atlas-vc-51-source-points.json'))
+assert vc['world']=='vc' and vc['license']=='Apache-2.0' and vc['sourceRevision']=='b06265e1bf37e2b1ed389c58c80679addfbc8f20'
+assert vc['counts']=={'Stunt jumps':36,'Store robberies':15} and len(vc['records'])==51
+assert vc['mapAlignment']=='source-transform-matched' and vc['gameplayVerified'] is False
+import hashlib
+image_bytes=(ROOT/'art/atlas128-vice-city-radar.png').read_bytes()
+assert hashlib.sha1(f'blob {len(image_bytes)}\0'.encode()+image_bytes).hexdigest()==vc['projection']['gitBlobSha']=='7ae40595da5d5480c50f6a82c2b20557f1f7f6ae'
+assert vc['projection']['sourceRevision']=='5756e398975ff2fa7dd9b818edda82b46ea4a6a0'
+assert image_bytes[16:24]==bytes.fromhex('0000040000000400')
+for point in vc['records']:
+ assert 0<=point['imageX']<=100 and 0<=point['imageY']<=100
+ assert abs(point['imageX']-(point['x']+2000)/40)<.000001 and abs(point['imageY']-(2000-point['y'])/40)<.000001
+assert len({p['id'] for p in vc['records']})==len({(p['x'],p['y'],p['z']) for p in vc['records']})==51
+for p in vc['records']:
+ assert abs(p['sourceZ']+p['zAdjustment']-p['z'])<.00001 and p['sourceUrl']==vc['sourceUrl']
+print('PASS Vice City 51 attributed world-coordinate records, no unsupported pixel calibration')
+
+# Reviewed GTADB fallback source and offline recognition, same licensed publisher.
+gtadb_audit=json.loads(read('data/atlas-gtadb-map-source-audit.json'))
+assert gtadb_audit['sourceRevision']=='d406fea099e1df2bce42fd6b87eed04bce646629'
+assert gtadb_audit['worlds']['4']['unchangedPathsAndBlobs']==936
+assert gtadb_audit['worlds']['5']['unchangedPathsAndBlobs']==37640
+assert 'yanis,18' in gtadb_audit['worlds']['6']['styles']
+assert 'CC BY 4.0' in gtadb_audit['licenseText']
+assert 'd406fea099e1df2bce42fd6b87eed04bce646629/maps/tiles/' in read('atlas.js')
+assert 'd406fea099e1df2bce42fd6b87eed04bce646629' in read('atlas-sw.js')
+assert './data/atlas-sa-70-jump-zones.json' in read('atlas-sw.js')
+print('PASS reviewed GTADB source provenance and immutable fallback configuration')
+
+vcde=json.loads(read('data/atlas-vc-de-171-source-points.json'))
+assert vcde['world']=='vc' and vcde['edition']=='definitive' and vcde['license']=='ISC'
+assert vcde['counts']=={'Hidden packages':100,'Rampages':35,'Jump approaches':36}
+assert len(vcde['records'])==len({p['id'] for p in vcde['records']})==171
+assert vcde['mapAlignment']=='edition-unverified' and vcde['gameplayVerified'] is False
+assert all(-2000<=p['x']<=2000 and -2000<=p['y']<=2000 and 'imageX' not in p for p in vcde['records'])
+print('PASS Vice City DE separate reference source, 171 rows')
+
+iii=json.loads(read('data/atlas-iii-160-source-points.json'))
+assert iii['world']=='iii' and iii['sourceRevision']=='aa120220618c4c1314d319bc6210071437d14662' and iii['gameplayVerified'] is False
+assert iii['counts']=={'Hidden packages':100,'Rampages':40,'Unique stunt jumps':20}
+assert len(iii['records'])==len({p['id'] for p in iii['records']})==160
+assert len({p['slot'] for p in iii['records'] if p['category']=='Rampages'})==20
+assert sum(p['z'] is None for p in iii['records'])==14
+assert all(abs(p['imageX']-(p['x']+2000)/40)<.000001 and abs(p['imageY']-(2000-p['y'])/40)<.000001 for p in iii['records'])
+print('PASS GTA III 160 numeric references, 140 objectives, unknown Z preserved')
+
+for w,n in [('lcs',52),('vcs',51)]:
+ p=json.loads(read('data/atlas-'+w+'-psp-reference.json'))
+ assert p['world']==w and p['license']=='MIT' and p['sourceRevision']=='eb962c5bff9c1d94e6cb48077885fde0f5d28317'
+ assert p['mapAlignment']=='unverified' and p['gameplayVerified'] is False
+ assert len(p['records'])==len({r['id'] for r in p['records']})==n
+ assert all(r['id'].startswith(w+'-ref-') and 'imageX' not in r for r in p['records'])
+print('PASS Stories edition-specific reference sources; no invented calibration')
+
+# Affine calibration requires three independent anchors and a fourth holdout.
+import subprocess
+subprocess.run(['node','-e',"const a=require('./atlas249-map-calibration.js');const assert=require('node:assert/strict');const anchors=[{x:-1000,y:-1000,u:25,v:75},{x:1000,y:-1000,u:75,v:75},{x:-1000,y:1000,u:25,v:25},{x:1000,y:1000,u:75,v:25}];const good=a.fit(anchors);assert.deepEqual(good.project({x:0,y:0}),{u:50,v:50});assert.equal(good.error,0);assert.throws(()=>a.fit([...anchors.slice(0,3),{...anchors[3],u:95}]),/Independent check/);assert.throws(()=>a.fit([anchors[0],anchors[0],...anchors.slice(2)]));console.log('PASS independent map calibration check')"],cwd=ROOT,check=True)
+
+assert 'sa-source-order-238-239' in sa and 'state.sourceItems' in sa
+assert 'Older guide slot ' in sa and 'Use old mark/note after checking the location' in sa
+assert 'TeamJuraSAProgress.collected(id)' in saplan
+assert 'merge(data.items,state.items)' in sa and 'merge(data.sourceItems,state.sourceItems,true)' in sa
+print('PASS SA older guide slots and source order progress stay separate')

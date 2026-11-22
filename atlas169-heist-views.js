@@ -74,7 +74,7 @@ function activate(next){
  routeHelp.hidden=next!=='route';
  if(next==='objective'){renderObjectives();notice.textContent='Objective and interior references · one-tap return to map POIs. Images are concepts, not exact floor plans.';}
  else if(next==='original'){notice.textContent='Cayo in-game island map with Team Jura pins, search, layer toggles, zoom and routes together. Static POI positions are approximate; rotating loot has no invented fixed pin.';}
- else if(next==='route'){notice.textContent='Enhanced route planner · select pins, reorder by removing/re-adding, and use the route list below.';}
+ else if(next==='route'){notice.textContent=(id==='cayo-perico'?'Enhanced route planner · select pins and use the Cayo route list below.':'Enhanced route planner · choose your start, move stops, reverse or sort by schematic distance using the route list below.');}
  else notice.textContent='Original Elario enhanced overhead art · interactive category pins · schematic positions.';
  focus.dataset.j169View=mode;
 }

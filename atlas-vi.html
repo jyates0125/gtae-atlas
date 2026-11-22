@@ -14,7 +14,7 @@
 <script defer src="./atlas-3d.js?v=70"></script>
 <script defer src="./atlas-navigation.js?v=70"></script>
 <script defer src="./atlas-conditions.js?v=70"></script>
-<script defer src="./atlas.js?v=191"></script>
+<script defer src="./atlas.js?v=277"></script>
 
 <link rel="stylesheet" href="./atlas-layout-71.css?v=71">
 <script defer src="./atlas-layout-71.js?v=71"></script>
@@ -36,7 +36,7 @@
 <link rel="stylesheet" href="./atlas97-connect.css?v=97">
 <script defer src="./atlas97-connect.js?v=97"></script>
 <link rel="stylesheet" href="./atlas117-world-brand.css?v=117"><link rel="stylesheet" href="./atlas128-map-chrome.css?v=128"><link rel="stylesheet" href="./atlas141-leonida-views.css?v=141"><link rel="stylesheet" href="./atlas143-official-map-view.css?v=143"><script defer src="./atlas143-official-map-view.js?v=153"></script><link rel="stylesheet" href="./atlas145-leonida-map-ux.css?v=145"><script defer src="./atlas145-leonida-map-ux.js?v=145"></script>
-<link rel="stylesheet" href="./atlas145-mobile-map-entry.css?v=211"><script defer src="./atlas145-mobile-map-entry.js?v=156"></script><link rel="stylesheet" href="./atlas154-map-zoom.css?v=154"><script defer src="./atlas154-map-zoom.js?v=154"></script><link rel="stylesheet" href="./atlas171-research-usability.css?v=171"><script defer src="./atlas171-research-usability.js?v=171"></script><link rel="stylesheet" href="./atlas217-vi-world.css?v=217"><script defer src="./atlas217-vi-world.js?v=217"></script><link rel="stylesheet" href="./atlas220-vi-mobile.css?v=220"><script defer src="./atlas220-vi-mobile.js?v=220"></script></head>
+<link rel="stylesheet" href="./atlas145-mobile-map-entry.css?v=211"><script defer src="./atlas145-mobile-map-entry.js?v=156"></script><link rel="stylesheet" href="./atlas154-map-zoom.css?v=154"><script defer src="./atlas154-map-zoom.js?v=154"></script><link rel="stylesheet" href="./atlas171-research-usability.css?v=171"><script defer src="./atlas171-research-usability.js?v=171"></script><link rel="stylesheet" href="./atlas217-vi-world.css?v=217"><script defer src="./atlas217-vi-world.js?v=217"></script><link rel="stylesheet" href="./atlas220-vi-mobile.css?v=220"><script defer src="./atlas220-vi-mobile.js?v=220"></script><link rel="stylesheet" href="./atlas222-vi-release.css?v=222"><script defer src="./atlas222-vi-release.js?v=222"></script><link rel="stylesheet" href="./atlas160-premium-headers.css?v=160"><link rel="stylesheet" href="./atlas162-subject-heroes.css?v=162"><link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script><link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=222"></script><link rel="stylesheet" href="./atlas131-social-icons.css?v=133"><script defer src="./atlas131-social-icons.js?v=133"></script></head>
 <body data-start-world="6" class="j117-map-world j128-map-chrome"><a data-j87-maps-link href="./maps.html" style="position:fixed;bottom:12px;right:12px;z-index:1000;background:#2a153a;color:#ffcb78;padding:10px 14px;border:1px solid #efae56;border-radius:10px;text-decoration:none;font:700 12px system-ui;box-shadow:0 4px 18px #10091fae">▦ All Maps</a>
 <header class="topbar">
   <a href="./index.html" class="brand"><span class="emblem"><img src="./art/elario-crest.svg" width="43" height="43" alt=""></span><span><b>TEAM JURA ATLAS</b><small>ELARIO STUDIOS · MANY CREWS · ONE VISION</small></span></a>
@@ -51,7 +51,7 @@
       <button class="world" type="button" id="game6" aria-pressed="false"><small>LEONIDA + VICE CITY</small><b>GTA VI</b></button>
     </div>
     <div class="atlas-explorer-head"><div class="atlas-eyebrow">ELARIO STUDIOS / TEAM JURA</div><h1>World Explorer</h1><p>Find places. Follow the map. Make your own route.</p></div>
-    <section class="j217-vi-compass" aria-label="Leonida world connections"><strong>GTA VI · OUT NOW · 2026-11-19</strong><p>Play within the VI map, then explore its own characters, vehicles, weapons and official launch sources. Community coordinates remain provisional until confirmed against released gameplay.</p><a id="j217-vi-open-from-sidebar" href="#j217-vi-hub">◆ Open the GTA VI world guide</a><a href="./atlas-vi.html?view=rockstar">▧ View Rockstar's printable map inside Atlas</a></section>
+    <section class="j217-vi-compass" aria-label="Leonida world connections"><strong>GTA VI · OUT NOW · 2026-11-19</strong><p>Play within the VI map, then explore its own characters, vehicles, weapons and official launch sources. Released GTA VI data is source-graded. Community coordinates remain provisional until independently confirmed against released gameplay; original approximations are not official pins.</p><a id="j217-vi-open-from-sidebar" href="#j217-vi-hub">◆ Open the GTA VI world guide</a><a href="./atlas-vi.html?view=rockstar">▧ View Rockstar's printable map inside Atlas</a></section>
     <div class="dataset"><span class="dot" id="dataDot"></span><span id="dataStatus" role="status">Loading local locations…</span></div>
     <p class="hint"><a id="activityModeLink" href="./atlas-activities.html?mode=vi">◷ Leonida · Research & verification rules</a> · <a href="./atlas-research.html" aria-label="Open dedicated GTA VI Community Research map">⌕ Open Community Research map</a> · <a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Rockstar official map source ↗</a></p>
     <label class="field-label" for="search">Search locations</label>
@@ -111,7 +111,7 @@
     </section>
     <section class="tab-panel hidden" id="panelPins" role="tabpanel">
       <p class="hint">Choose Add pin, then tap the map. Saved pins stay in their own game.</p><button type="button" id="addPin" class="wide accent">+ Add pin on map</button>
-      <div class="results" id="pinsList"></div><div class="gridbuttons"><button id="exportData" type="button">Export backup</button><button id="importData" type="button">Import backup</button></div><input type="file" id="importFile" class="hidden" accept=".json,application/json" aria-label="Import progress file">
+      <div class="results" id="pinsList"></div><div class="gridbuttons"><button id="exportData" type="button">Export backup</button><button id="importData" type="button" title="Merge missing map data without replacing existing progress">Merge backup</button></div><input type="file" id="importFile" class="hidden" accept=".json,application/json" aria-label="Import progress file">
     </section>
     <section class="offline" id="datasets"><strong>🗂 Licensed location packs</strong>
       <p class="hint">GTADB publishes licensed landmark data and tiles. GTA VI is synced to our GitHub snapshot daily when Actions is enabled; old releases can use GitHub raw fallback. New source overlays add calibrated GTA V Story collectibles, base-game world objects, and provisional GTA VI trailer research. The included offline starter is a smaller fallback. Named service sites are inferred, not confirmed gameplay features. Use the built-in overlays or import a documented, appropriately licensed JSON pack.</p>
@@ -155,7 +155,7 @@
         <figure><img src="./art/jura155-vi.webp" loading="lazy" decoding="async" alt="Original Elario Studios cinematic Leonida artwork, not a Rockstar screenshot"><figcaption>Original Elario Leonida scene · community coordinates remain provisional</figcaption></figure>
         <nav class="j217-vi-grid" aria-label="GTA VI world destinations">
           <a href="./atlas-vi.html?view=rockstar">▧ Rockstar map poster</a>
-          <a href="./atlas-characters.html?game=vi#results">♟ VI characters</a>
+          <a href="./atlas-characters.html?game=vi#mainCharacterEra">♟ VI characters</a>
           <a href="./atlas90-vehicles6.html">◆ VI vehicles</a>
           <a href="./atlas90-weapons6.html">✦ VI weapons</a>
           <a href="./atlas-animals.html?game=vi">✿ VI wildlife</a>
@@ -163,6 +163,16 @@
           <a href="./atlas-research.html">⌖ Community research map</a>
           <a href="./atlas98-data-lab.html">◎ Source &amp; data lab</a>
         </nav>
+        <details class="j222-release" id="j222-vi-release">
+          <summary>◆ Rockstar launch directory · characters, maps and 11 categories</summary>
+          <div class="j222-release-content">
+            <p class="j222-release-intro">GTA VI is officially released. Rockstar-confirmed people, places and media are indexed separately from community map coordinates, tentative item lists and unsourced claims. No mission spoilers are forced into this overview.</p>
+            <p id="j222-vi-status" role="status">Loading launch source index…</p>
+            <div class="j222-launch-grid" id="j222-vi-categories"></div>
+            <strong class="j217-kicker">SIX ROCKSTAR-NAMED REGIONS · NO MADE-UP PINS</strong>
+            <div id="j222-vi-regions" class="j222-vi-regions"></div>
+          </div>
+        </details>
         <div class="j217-source-leads">
           <strong>New official launch evidence · November 19, 2026</strong>
           <p>Rockstar confirms Jason Duval and Lucia Caminos, and publishes the printable Leonida map and 138 launch screenshots. Its media gallery also names the ’95 Grotti Cheetah, ’55 Vapid Stanier, and Hawk &amp; Little Morgan Revolvers. These are official media references, <b>not</b> independently verified spawn points, vehicle specifications, or a complete weapon list.</p>

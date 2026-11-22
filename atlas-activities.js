@@ -4,14 +4,14 @@ const u=new URLSearchParams(location.search),mode=['story','online','vi'].includ
 const titles={story:'GTA V · Story Mode activities',online:'GTA Online · activity conditions',vi:'GTA VI · Leonida research conditions'},intro={story:'Story collectibles, challenges and missions only. No Gun Van, Online pumpkins, dealers, rotating events or GTA VI research here.',online:'Daily rotations, unlocks, seasonal clocks, possible spawns and progress are tracked separately from GTA V Story Mode.',vi:'Provisional Leonida discoveries and validation queues. No GTA Online activity is considered playable in GTA VI without separate evidence.'};
 let state=C.safeState(load(KEY,{})),snapshot=null,needle='',group='';try{snapshot=C.safeSnapshot(load(FEED,{schema:1,rotations:{}}))}catch{snapshot={schema:1,rotations:{}}}
 function load(k,def){try{return JSON.parse(localStorage.getItem(k)||'null')||def}catch{return def}}
-let sourceLabel='Personal imported snapshot · not verified';
+let sourceLabel='Personal imported snapshot · not verified',reviewedSnapshot={schema:1,rotations:{}};
 async function loadReviewedRotations(){
  if(mode!=='online')return;
  const status=$('autoRotationStatus');
  try{
   const response=await fetch('./data/online-rotation-current.json',{cache:'no-cache'});
   if(!response.ok)throw Error('Reviewed data unavailable');
-  const reviewed=C.safeSnapshot(await response.json());
+  const reviewed=C.safeSnapshot(await response.json());reviewedSnapshot=reviewed;
   // A personal import is kept separate and never replaced or described as verified.
   const personal=load(FEED,null);
   if(personal&&Object.keys(snapshot.rotations||{}).length){
@@ -45,8 +45,8 @@ function build(){document.title='Atlas Activities · '+titles[mode];$('headline'
  $('search').oninput=e=>{needle=e.target.value.toLowerCase().trim();render()};$('group').onchange=e=>{group=e.target.value;render()};
  $('resetProgress').onclick=()=>{if(!confirm('Reset only '+titles[mode]+' progress on this device?'))return;state=C.emptyState();save();location.reload()};
  $('export').onclick=()=>{const doc={schema:1,mode,exportedAtUtc:new Date().toISOString(),progress:state};const data=new Blob([JSON.stringify(doc,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(data);a.download='team-jura-'+mode+'-activity-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
- render();loadReviewedRotations();}
-function evaluation(r){return C.evaluate(r.id,{mode,state,snapshot,now:Date.now(),hour:$('gameHour').value===''?NaN:Number($('gameHour').value)})}
+ render();loadReviewedRotations();if(mode==='online'){let last='';const refresh=()=>{if(document.hidden)return;const current=C.rulesForMode(mode).map(r=>evaluation(r).status+':'+evaluation(r).reason).join('|');if(current!==last){last=current;render()}updateResets()};setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);}}
+function evaluation(r){return C.evaluate(r.id,{mode,state,snapshot:C.selectRotationSnapshot(snapshot,reviewedSnapshot),now:Date.now(),hour:$('gameHour').value===''?NaN:Number($('gameHour').value)})}
 function render(){const all=C.rulesForMode(mode),selected=all.filter(r=>(!group||r.group===group)&&(!needle||(r.name+' '+r.detail+' '+r.group).toLowerCase().includes(needle))),root=$('ruleList');root.replaceChildren();let active=0,unknown=0,finished=0;for(const r of all){let result=evaluation(r);if(result.status==='active')active++;if(['unknown','research','available-feed'].includes(result.status))unknown++;if(state.completed[r.id])finished++;}
  let last='';for(const r of selected){if(r.group!==last){last=r.group;const h=document.createElement('div');h.className='group';h.textContent=last;root.append(h)}const status=evaluation(r);const card=document.createElement('article');card.className='rule';const heading=document.createElement('div');heading.className='row space';const h=document.createElement('h3');h.textContent=r.name;const pill=document.createElement('span');pill.className='status';pill.style.setProperty('--status',C.markerColor(status.status));pill.textContent=C.statusText(status.status);heading.append(h,pill);const desc=document.createElement('p');desc.textContent=r.detail;const why=document.createElement('small');why.textContent=status.reason;const actions=document.createElement('div');actions.className='row';
  actions.append(checkedRow(r.id,'Completed / photographed',state.completed[r.id],v=>{state.completed[r.id]=v;save();render()}));if(mode==='online'&&r.kind==='session')actions.append(checkedRow('seen-'+r.id,'Seen in my session',state.seen[r.id],v=>{state.seen[r.id]=v;save();render()}));

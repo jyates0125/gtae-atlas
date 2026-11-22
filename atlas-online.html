@@ -14,7 +14,7 @@
 <script defer src="./atlas-3d.js?v=70"></script>
 <script defer src="./atlas-navigation.js?v=70"></script>
 <script defer src="./atlas-conditions.js?v=70"></script>
-<script defer src="./atlas.js?v=191"></script>
+<script defer src="./atlas.js?v=277"></script>
 
 <link rel="stylesheet" href="./atlas-layout-71.css?v=71">
 <script defer src="./atlas-layout-71.js?v=71"></script>
@@ -38,7 +38,7 @@
 <link rel="stylesheet" href="./atlas97-connect.css?v=97">
 <script defer src="./atlas97-connect.js?v=97"></script>
 <link rel="stylesheet" href="./atlas117-world-brand.css?v=117"><link rel="stylesheet" href="./atlas128-map-chrome.css?v=128">
-<link rel="stylesheet" href="./atlas145-mobile-map-entry.css?v=211"><script defer src="./atlas145-mobile-map-entry.js?v=156"></script><link rel="stylesheet" href="./atlas154-map-zoom.css?v=154"><script defer src="./atlas154-map-zoom.js?v=154"></script></head>
+<link rel="stylesheet" href="./atlas145-mobile-map-entry.css?v=211"><script defer src="./atlas145-mobile-map-entry.js?v=156"></script><link rel="stylesheet" href="./atlas154-map-zoom.css?v=154"><script defer src="./atlas154-map-zoom.js?v=154"></script><link rel="stylesheet" href="./atlas160-premium-headers.css?v=160"><link rel="stylesheet" href="./atlas162-subject-heroes.css?v=162"><link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script><link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=222"></script><link rel="stylesheet" href="./atlas131-social-icons.css?v=133"><script defer src="./atlas131-social-icons.js?v=133"></script></head>
 <body data-start-world="online" class="j117-map-world j128-map-chrome">
 <header class="topbar">
   <a href="./index.html" class="brand"><span class="emblem"><img src="./art/elario-crest.svg" width="43" height="43" alt=""></span><span><b>TEAM JURA ATLAS</b><small>ELARIO STUDIOS · MANY CREWS · ONE VISION</small></span></a>
@@ -112,7 +112,7 @@
     </section>
     <section class="tab-panel hidden" id="panelPins" role="tabpanel">
       <p class="hint">Choose Add pin, then tap the map. Saved pins stay in their own game.</p><button type="button" id="addPin" class="wide accent">+ Add pin on map</button>
-      <div class="results" id="pinsList"></div><div class="gridbuttons"><button id="exportData" type="button">Export backup</button><button id="importData" type="button">Import backup</button></div><input type="file" id="importFile" class="hidden" accept=".json,application/json" aria-label="Import progress file">
+      <div class="results" id="pinsList"></div><div class="gridbuttons"><button id="exportData" type="button">Export backup</button><button id="importData" type="button" title="Merge missing map data without replacing existing progress">Merge backup</button></div><input type="file" id="importFile" class="hidden" accept=".json,application/json" aria-label="Import progress file">
     </section>
     <section class="offline" id="datasets"><strong>🗂 Licensed location packs</strong>
       <p class="hint">GTADB publishes licensed landmark data and tiles. GTA VI is synced to our GitHub snapshot daily when Actions is enabled; old releases can use GitHub raw fallback. New source overlays add calibrated GTA V Story collectibles, base-game world objects, and provisional GTA VI trailer research. The included offline starter is a smaller fallback. Named service sites are inferred, not confirmed gameplay features. Use the built-in overlays or import a documented, appropriately licensed JSON pack.</p>

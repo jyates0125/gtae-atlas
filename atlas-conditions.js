@@ -75,7 +75,20 @@ function rotationFeed(snapshot,id,now=Date.now()){
  const checked=Date.parse(s.checkedAtUtc),end=Date.parse(s.validUntilUtc);
  if(checked>now+5*60e3||end<=now||end<=checked||checked<now-48*3600e3||s.activeIds.length>200||s.activeIds.some(v=>!/^[-a-z0-9_:]{1,80}$/i.test(String(v))))return null;
  const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length>rule.today))return null;
+ // Daily selections cannot survive the activity's next UTC reset, even when an imported file says otherwise.
+ if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6))return null;
+ if(!s.activeIds.length||new Set(s.activeIds.map(String)).size!==s.activeIds.length)return null;
  return{active:new Set(s.activeIds.map(String)),checkedAtUtc:s.checkedAtUtc,validUntilUtc:s.validUntilUtc,source:typeof s.source==='string'?s.source.slice(0,200):'Imported snapshot',confidence:'user-imported; independently unverified'};
+}
+// Select independently by activity; stale personal files never mask valid bundled groups.
+function selectRotationSnapshot(personal,reviewed,now=Date.now()){
+ const rotations={};
+ for(const rule of RULES.filter(r=>r.kind==='rotation')){
+  const id=rule.id;
+  const choice=rotationFeed(personal,id,now)?personal.rotations[id]:rotationFeed(reviewed,id,now)?reviewed.rotations[id]:personal?.rotations?.[id]||reviewed?.rotations?.[id];
+  if(choice)rotations[id]=choice;
+ }
+ return {schema:1,rotations};
 }
 function evaluate(id,ctx={}){
  const r=BY_ID[id];if(!r)return{status:'unknown',reason:'Rule not recognized'};if(ctx.mode&&ctx.mode!==r.mode)return{status:'excluded',reason:'This activity belongs to '+r.mode+', not '+ctx.mode};
@@ -111,5 +124,5 @@ function emptyState(){return {completed:{},seen:{},flags:{},events:{}};}
 function safeState(s){const o=emptyState();if(!s||typeof s!=='object')return o;for(const k of Object.keys(o)){if(!s[k]||typeof s[k]!=='object'||Array.isArray(s[k]))continue;for(const [key,val] of Object.entries(s[k]))if(/^[a-z0-9-]{1,70}$/i.test(key)&&typeof val==='boolean')o[k][key]=val;}return o;}
 function safeSnapshot(s){if(!s||typeof s!=='object'||s.schema!==1||!s.rotations||typeof s.rotations!=='object')throw Error('Expected schema 1 with a rotations object.');const a={schema:1,rotations:{}};for(const [id,v] of Object.entries(s.rotations)){const r=BY_ID[id];if(!r||r.kind!=='rotation')continue;if(!v||!Array.isArray(v.activeIds)||v.activeIds.length>200||v.activeIds.some(i=>!/^[-a-z0-9_:]{1,80}$/i.test(String(i)))||!validIso(v.checkedAtUtc)||!validIso(v.validUntilUtc))throw Error('Invalid position data for '+id);
  a.rotations[id]={checkedAtUtc:v.checkedAtUtc,validUntilUtc:v.validUntilUtc,activeIds:v.activeIds.map(String),source:String(v.source||'User-supplied').slice(0,200)};}return a;}
-return{RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });

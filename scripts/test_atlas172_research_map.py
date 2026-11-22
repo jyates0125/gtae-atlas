@@ -12,4 +12,6 @@ for part in ['j172-research-tools','j172-expand','j172-bright','j172-pins','j172
 assert 'min-height:580px' in css and 'height:78dvh' in css
 assert 'brightness(1.12)' in css and css.count('{')==css.count('}')
 assert 'j172-map-expanded #rail.open' in css
+assert 'browser-tested collision fix' in css and 'top:auto!important' in css
+assert 'bottom:max(12px,env(safe-area-inset-bottom,0px))!important' in css
 print('Atlas 17.2: GTA VI Community Research map size, contrast, fullscreen and filters PASS')

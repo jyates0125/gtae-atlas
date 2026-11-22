@@ -1,0 +1,105 @@
+/* Atlas 22.2 · Premium Elario character records: world scoped, phone friendly. */
+body[data-atlas-kind="character"] .u-hero .u-hero-art{
+ background:linear-gradient(90deg,#24103e6e,transparent 72%),url('./art/jura155-characters.webp') center/cover!important;min-height:290px;
+}
+.j222-gallery{margin:22px 0 35px;padding:clamp(15px,2.9vw,30px);border:1px solid #be87b6;border-radius:24px;background:linear-gradient(153deg,#352044 0%,#190e2a 58%,#231331 100%);box-shadow:0 20px 50px #0a0610a8;color:#fff;min-width:0}
+.j222-intro{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:17px;flex-wrap:wrap}
+.j222-intro>div{flex:1 1 350px}.j222-intro h2{font-size:clamp(25px,3.4vw,41px);color:#ffdfa7;margin:3px 0 9px;line-height:1.1}.j222-intro p:last-child{color:#e5d8e8;margin:0;max-width:760px;line-height:1.55;font-size:14px}
+.j222-feature-link{display:inline-flex;align-items:center;justify-content:center;min-height:45px;padding:10px 14px;border-radius:12px;border:1px solid #f3c88f;background:linear-gradient(100deg,#7d366e,#46265f);color:#fff5df;text-decoration:none;font-weight:850;font-size:13px}
+.j222-searchbox{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin:17px 0 14px}
+.j222-searchbox label{grid-column:1/-1;color:#f8d3a0;font-size:13px;font-weight:800;letter-spacing:.04em}
+.j222-searchbox input{box-sizing:border-box;min-width:0;width:100%;min-height:48px;padding:12px 15px;border:1px solid #b97ba9;border-radius:12px;color:#fff;background:#150d24;font:500 15px system-ui;outline-offset:3px}
+.j222-searchbox input:focus-visible{outline:3px solid #ffe0a0}
+.j222-searchbox button,.j222-tabs button{min-height:44px;border:1px solid #ac779f;border-radius:11px;background:#3c2451;color:#fff1dc;padding:8px 14px;font:750 13px/1.2 system-ui;cursor:pointer}
+.j222-searchbox button:hover,.j222-tabs button:hover{border-color:#ffcb8f;background:#5b3466}
+.j222-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:11px 0 14px}
+.j222-tabs button[aria-pressed="true"]{background:linear-gradient(120deg,#ffdf9d,#eead68);border-color:#ffe6b4;color:#25132b}
+.j222-searchbox button:focus-visible,.j222-tabs button:focus-visible,.j222-feature-link:focus-visible,.j222-card-actions a:focus-visible{outline:3px solid #ffe09e;outline-offset:3px}
+.j222-gallery-note{font:13px/1.55 system-ui;color:#e1cde1;margin:0 0 17px}
+.j222-gallery-note strong{color:#ffe1a9}.j222-gallery-note a{color:#ffdfa5}
+.j222-character-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.j222-character-card{min-width:0;overflow:hidden;display:flex;flex-direction:column;border:1px solid #91648d;border-radius:16px;background:linear-gradient(#30183e,#180c2a);box-shadow:0 12px 28px #0b0715a8}
+.j222-character-media{position:relative;overflow:hidden;background:linear-gradient(135deg,#6c3156,#2f223f);aspect-ratio:6/5}
+.j222-character-media img{width:100%;height:100%;display:block;object-fit:cover;object-position:center 29%;filter:saturate(1.08);transition:transform .2s ease}
+.j222-character-card:hover .j222-character-media img{transform:scale(1.025)}
+.j222-art-credit{position:absolute;left:8px;bottom:8px;right:8px;padding:5px 7px;border-radius:7px;font:700 9px/1.3 system-ui;color:#fff1dc;background:#190d29db;backdrop-filter:blur(5px)}
+.j222-character-info{padding:14px;display:flex;flex:1;flex-direction:column;gap:10px}
+.j222-world-tag{display:block;font:800 10px/1.3 system-ui;text-transform:uppercase;letter-spacing:.07em;color:#ffd495}
+.j222-character-info h3{margin:0;font:850 clamp(17px,1.75vw,23px)/1.17 system-ui;color:#fff}
+.j222-character-info>p{margin:0;color:#ddcddd;font:13px/1.48 system-ui;flex:1}
+.j222-card-actions{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.j222-action,.j222-source{display:inline-flex;min-height:41px;box-sizing:border-box;align-items:center;padding:8px 11px;border-radius:9px;border:1px solid #ad81a8;font:800 12px/1.25 system-ui;color:#ffe4bc;text-decoration:none}
+.j222-action:hover,.j222-source:hover{border-color:#ffe0a6;color:#fff}
+.j222-primary{background:linear-gradient(115deg,#f6cb87,#efaa70);border-color:#f8d89d;color:#27152a}
+.j222-primary:hover{background:#ffe2a2;color:#21112b}
+.j222-source{font-size:11px;border:0;text-decoration:underline}
+.j222-empty{grid-column:1/-1;border:1px dashed #936a9b;border-radius:13px;padding:18px;color:#efdfe6}
+@media(max-width:930px){.j222-character-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.j222-gallery{padding:14px;margin:12px 0 24px;border-radius:17px}.j222-character-grid{grid-template-columns:1fr;gap:12px}.j222-character-media{aspect-ratio:8/5}.j222-searchbox{grid-template-columns:1fr}.j222-searchbox button{width:100%}.j222-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.j222-tabs button{padding:8px 5px}.j222-character-info{padding:12px}}
+@media(prefers-reduced-motion:reduce){.j222-character-media img{transition:none!important}.j222-character-card:hover .j222-character-media img{transform:none}}
+
+/* Character detail: keyboard-native dialog, safe phone viewport and clear source hierarchy. */
+#j222-profile-dialog{box-sizing:border-box;width:min(620px,calc(100vw - 28px));max-height:min(85dvh,780px);overflow:auto;border:1px solid #d7a77b;border-radius:20px;padding:clamp(18px,3vw,30px);background:linear-gradient(150deg,#382044,#180d29 75%);color:#fff;box-shadow:0 24px 85px #090410d9}
+#j222-profile-dialog::backdrop{background:#090414c9;backdrop-filter:blur(5px)}
+#j222-profile-dialog>form{display:flex;justify-content:flex-end;margin:-7px -7px 6px 0}
+#j222-profile-dialog .u-close{min-width:44px;min-height:44px;border:1px solid #c99aaf;border-radius:12px;background:#3a234b;color:#fff;cursor:pointer;font-size:20px}
+#j222-profile-dialog .u-close:focus-visible,#j222-profile-dialog a:focus-visible{outline:3px solid #ffe09e;outline-offset:3px}
+#j222-profile-content{display:grid;gap:13px;min-width:0}
+#j222-profile-content h2{font:850 clamp(26px,4vw,39px)/1.12 system-ui;color:#ffe0a3;margin:0;overflow-wrap:anywhere}
+#j222-profile-content p{font:14px/1.6 system-ui;color:#eadbe9;margin:0;overflow-wrap:anywhere}
+#j222-profile-content .j222-world-tag{color:#ffd495;font-size:12px}
+#j222-profile-content .j222-card-actions{margin-top:7px}
+@media(max-width:600px){#j222-profile-dialog{max-height:calc(100dvh - 36px);border-radius:15px;padding:17px}#j222-profile-content .j222-card-actions{display:grid;grid-template-columns:1fr}#j222-profile-content .j222-action{justify-content:center;min-height:44px}}
+
+/* Atlas 22.4: clear Elario identity, cinematic profile and mobile provenance. */
+/* Retain visible universe world controls: existing browser tests and the separate full database workspace use them. */
+body[data-atlas-kind="character"] .j224-brand-crest{width:44px;height:44px;object-fit:contain;float:left;margin:2px 11px 0 0;filter:drop-shadow(0 3px 9px #d7a25466)}
+.j222-profile-hero{display:grid;grid-template-columns:minmax(120px,40%) minmax(0,1fr);gap:18px;align-items:center;min-width:0}
+.j222-profile-hero .j222-profile-media{width:100%;min-height:180px;aspect-ratio:4/5;border-radius:13px;border:1px solid #bf83aa}
+.j222-profile-intro{display:grid;gap:10px;min-width:0;align-content:center}
+.j222-profile-facts{display:grid;grid-template-columns:minmax(95px,.65fr) minmax(0,1.35fr);gap:9px 13px;min-width:0;margin:0;padding:14px 0;border-top:1px solid #9e718e;border-bottom:1px solid #9e718e}
+.j222-profile-facts dt{font:800 11px/1.45 system-ui;text-transform:uppercase;letter-spacing:.05em;color:#ffd99b}
+.j222-profile-facts dd{margin:0;min-width:0;overflow-wrap:anywhere;font:13px/1.5 system-ui;color:#f4eaf2}
+#j222-profile-content p.j222-profile-caution{font-size:12px;color:#edd2b6;border-left:3px solid #f6bd79;padding:5px 0 5px 11px}
+@media(max-width:600px){body[data-atlas-kind="character"] .j224-brand-crest{width:36px;height:36px;margin-right:8px}.j222-profile-hero{grid-template-columns:1fr;gap:12px}.j222-profile-hero .j222-profile-media{max-height:265px;min-height:0;aspect-ratio:7/4}.j222-profile-facts{grid-template-columns:1fr;gap:4px}.j222-profile-facts dd{margin:0 0 10px}}
+
+/* Atlas 22.5 · grounded appearances across GTA V Story and GTA Online. */
+.j225-character-appearances{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px solid #a06f96;padding:13px 0 0;min-width:0}
+#j222-profile-content .j225-character-appearances p.j225-appearances-heading{font:850 11px/1.5 system-ui;text-transform:uppercase;letter-spacing:.06em;color:#ffda9d;margin:0 8px 0 0}
+.j225-character-appearances .j222-action{min-height:44px;border-color:#e5af80;color:#ffefda}
+@media(max-width:600px){.j225-character-appearances{display:grid;grid-template-columns:1fr}.j225-character-appearances .j222-action{justify-content:center}}
+
+/* Honest identity state when a specific portrait is missing or cannot decode. */
+.j222-portrait-unavailable{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:210px;width:100%;height:100%;padding:22px;text-align:center;background:radial-gradient(circle at 50% 20%,#64366c,#21172e 75%);color:#fff3e4;border:1px solid #a46c79}
+.j222-portrait-unavailable .j222-portrait-initials{display:grid;place-items:center;width:76px;height:76px;border:2px solid #edb867;border-radius:50%;font:800 30px/1 system-ui;color:#ffdfa6;background:#38243f}
+.j222-portrait-unavailable span{font:800 18px/1.2 system-ui;overflow-wrap:anywhere}
+.j222-portrait-unavailable small{font:500 12px/1.5 system-ui;color:#e6c6cc;max-width:230px}
+
+/* Fallback scene remains visible but cannot masquerade as the named person. */
+.j222-character-media:has(.j222-world-scene){position:relative;isolation:isolate;overflow:hidden}
+.j222-world-scene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.38) saturate(.75);z-index:0}
+.j222-character-media:has(.j222-world-scene) .j222-portrait-unavailable{position:relative;z-index:1;background:linear-gradient(180deg,#241a32a8,#21172ef0);border:0;min-height:210px}
+.j222-character-media:has(.j222-world-scene) .j222-art-credit{position:relative;z-index:2}
+
+/* Atlas 22.6 — native, title-specific classic edition filter. */
+.j226-edition-label{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 16px;color:#ffdfa7;font:750 13px/1.5 system-ui}
+.j226-edition-label[hidden]{display:none}
+.j226-edition-select{min-height:44px;max-width:100%;min-width:0;padding:8px 12px;border:1px solid #be87b6;border-radius:11px;background:#241331;color:#fff1dc;font:600 14px system-ui}
+.j226-edition-select:focus-visible{outline:3px solid #ffe09e;outline-offset:3px}
+@media(max-width:600px){.j226-edition-label{display:grid;grid-template-columns:minmax(0,1fr)}.j226-edition-label[hidden]{display:none}.j226-edition-select{width:100%}}
+
+/* Keep the exit reachable even when scrolling lengthy character records. */
+#j222-profile-dialog>form{position:sticky;top:0;z-index:5;margin:0 0 8px;pointer-events:none}
+#j222-profile-dialog>form .u-close{pointer-events:auto;box-shadow:0 3px 15px #10091bcc}
+#j222-profile-dialog{overscroll-behavior:contain}
+.j222-portrait-unavailable{box-sizing:border-box;min-height:0;padding:12px 12px 42px}
+.j222-character-media:has(.j222-world-scene) .j222-portrait-unavailable{min-height:0}
+.j222-character-media:has(.j222-world-scene) .j222-art-credit{position:absolute}
+
+.j222-character-media .jura-concept-portrait { object-position: center top; }
+@media (max-width:600px) {
+ .j222-profile-hero .j222-profile-media:has(.jura-concept-portrait) {
+  max-height: none;
+  aspect-ratio: 4 / 3;
+ }
+}

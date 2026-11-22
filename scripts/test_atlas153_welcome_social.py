@@ -38,7 +38,7 @@ assert 'j130-social-inline' not in index
 assert 'download or account' in index.lower()
 assert "document.body.append(footer)" in js and "footer.append(host)" in js
 assert "const existing=node.querySelector('.j131-social')" in js
-assert "(!html.includes('atlas131-social-icons.js')" in build  # all other pages receive the footer script
+assert all(page.read_text().count('src="./atlas131-social-icons.js') == 1 for page in R.glob('*.html'))
 assert 'atlas131-social-icons.css' in build
 assert 'data-j130-action="share-page"' in index
 assert index.index('data-j130-action="share-page"') > index.index('id="featuredGrid"')

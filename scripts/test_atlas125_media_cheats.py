@@ -40,16 +40,26 @@ assert 'id="cover-art"' in credits and 'id="reuse"' in credits
 for p in ("index.html","maps.html","map-hub.html","atlas98-style-lab.html"):
     html=source(p)
     for asset in ("atlas98-portal.js","atlas98-worlds.js","atlas98-portal.css"):
-        version=212 if p=="maps.html" and asset=="atlas98-portal.js" else 128
+        if asset=="atlas98-portal.css":
+            current=re.search(r'\./atlas98-portal\.css\?v=(\d+)',source("maps.html"))
+            assert current, "Versioned shared portal stylesheet missing"
+            version=current[1]
+        else:
+            version=289 if p=="maps.html" else 128
         assert f"./{asset}?v={version}" in html,(p,asset,version)
 
 profiles=json.loads(source("data/atlas-universe-profiles.json"))
 characters=[r for r in profiles["records"] if r["kind"]=="character"]
-assert len(characters)==30
-assert all(r.get("image","").startswith("https://") for r in characters)
-assert all(r.get("imageCredit","").startswith("https://") for r in characters)
+assert len(characters)>=36, "Public VI launch characters extend the original 30-person roster"
+original_portraits=[r for r in characters if r.get("image")]
+assert len(original_portraits)>=30, "Existing sourced character images must not be erased"
+assert all(r["image"].startswith("https://") for r in original_portraits)
+assert all(r.get("imageCredit","").startswith("https://") for r in original_portraits)
+for r in characters:
+    if not r.get("image"):
+        assert r["scope"]=="vi" and r["sourceUrl"]=="https://www.rockstargames.com/VI/only-in-leonida",r
 assert {"character:vic-vance","character:toni-cipriani","character:huang-lee","character:johnny-klebitz","character:luis-lopez"}.issubset({c["id"] for c in characters})
-assert "data/atlas-universe-profiles.json?v=130" in source("atlas100-universe.js")
+assert "data/atlas-universe-profiles.json?v=222" in source("atlas100-universe.js")
 assert "elarioCharacterPortrait" in source("atlas100-universe.js")
 assert "Portrait source" in source("atlas100-universe.js")
 assert ".u-character-portrait" in source("atlas100-universe.css")

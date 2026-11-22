@@ -44,3 +44,11 @@ body.j120-heist-page .j167-focus{margin:18px 0 24px;padding:clamp(12px,2.5vw,24p
 .j167-focus :is(button,a,input):focus-visible{outline:3px solid #ffe9b6;outline-offset:3px}
 @media(max-width:760px){.j167-panels{grid-template-columns:1fr}.j167-viewport{min-height:385px;aspect-ratio:4/3}.j167-items{grid-template-columns:1fr 1fr}.j167-map-hint{font-size:10px}.j167-label{max-width:100%}}
 @media(max-width:440px){.j167-focus{padding:11px}.j167-viewport{min-height:410px;aspect-ratio:4/5}.j167-pin{width:31px;height:33px;font-size:16px}.j167-chips{gap:5px}.j167-chip{font-size:11px!important;padding:8px 9px!important}.j167-zoom{width:100%;justify-content:space-between}.j167-tool{flex:1}.j167-items{grid-template-columns:1fr}}
+
+/* Atlas 22.8: non-Cayo stop ordering controls, phone-safe and keyboard accessible. */
+.j227-route-row{padding:10px 0!important;border-bottom:1px solid #765787;overflow-wrap:anywhere}
+.j227-route-name{display:block;font-weight:750;color:#ffe9c8}
+.j227-route-actions,.j227-route-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.j227-route-button{min-height:44px;min-width:44px;padding:5px 9px;border:1px solid #c69ac0;border-radius:8px;background:#382244;color:#fff;font-weight:750;cursor:pointer}
+.j227-route-button:disabled,.j227-route-tools button:disabled{opacity:.5;cursor:default}
+.j227-route-status:empty{display:none}

@@ -1,11 +1,11 @@
 {
   "build": "Team Jura Atlas 9.8C full-site integration",
   "checks": {
-    "html": 65,
-    "css": 48,
-    "js": 75,
-    "json": 35,
-    "assets": 467
+    "html": 82,
+    "css": 121,
+    "js": 140,
+    "json": 69,
+    "assets": 1001
   },
   "passed": true,
   "errors": [],
