@@ -1,0 +1,32 @@
+name: Team Jura - production branch parity guard
+on:
+  push:
+    branches: [main, development]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  branch-parity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch both release branches
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify main and development publish the same tracked files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main development
+          echo "main:        $(git rev-parse origin/main)"
+          echo "development: $(git rev-parse origin/development)"
+          if ! git diff --quiet origin/main origin/development -- .; then
+            echo "::error::main and development have different tracked website files. Review the diff before any production sync."
+            git diff --stat origin/main origin/development
+            exit 1
+          fi
+          echo "PASS: branch trees match; differing commit history alone does not change the published files."
+      - name: Explain release policy
+        run: |
+          echo "Cloudflare public production must be configured to build development."
+          echo "This workflow only checks parity; it does not merge, deploy or overwrite either branch."
