@@ -94,6 +94,17 @@ function mount(){
   if(objectUrl)URL.revokeObjectURL(objectUrl);
   objectUrl=nextUrl;img.hidden=false;empty.hidden=true;loaded=true;fit();
   status.textContent=notice;
+  // The poster itself remains local. Hash its exact bytes so personal pins
+  // cannot silently appear on a different crop, edition, or unrelated image.
+  try{
+   const digest=await crypto.subtle.digest('SHA-256',await file.arrayBuffer());
+   const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+   panel.dataset.j290Hash=hash;
+   window.dispatchEvent(new CustomEvent('jura:poster:ready',{detail:{sha256:hash}}));
+  }catch{
+   panel.removeAttribute('data-j290-hash');
+   window.dispatchEvent(new Event('jura:poster:clear'));
+  }
  }
  async function imageFromZip(file){
   if(file.size>90*1024*1024)throw Error('ZIP exceeds 90 MB. Extract the official JPG manually.');
@@ -224,6 +235,7 @@ function mount(){
    }
    if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null}
    img.removeAttribute('src');img.hidden=true;empty.hidden=false;fetchButton.hidden=false;loaded=false;fit();
+   panel.removeAttribute('data-j290-hash');window.dispatchEvent(new Event('jura:poster:clear'));
    status.textContent='Local image forgotten. No player map progress was changed.';
   });
  });
