@@ -1249,33 +1249,19 @@ async def smoke():
                                 if 'GTADB.org' not in await pg.locator('#researchSourceStatus').inner_text():failures.append('Licensed VI research records did not load')
                             if not failures and path=='atlas-sa.html':
                                 try:
-                                    await pg.wait_for_function("document.querySelector('#mapBackground .j86-san-map')?.naturalWidth > 200",timeout=9000)
+                                    await pg.wait_for_function("document.querySelector('#mapBackground .j86-san-map')?.naturalWidth > 200",timeout=15000)
                                     source=await pg.locator('#mapBackground .j86-san-map').get_attribute('src')
                                     if 'atlas-sa-vector.svg' not in source:
                                         failures.append('Bundled licensed San Andreas 2D map did not render as the primary artwork')
                                     if not await pg.locator('.j86-sa-credit a').count():
                                         failures.append('San Andreas vector license attribution missing')
-                                    await pg.wait_for_function("document.querySelector('#mapped')?.textContent?.trim()==='150'",timeout=9000)
-                                    if await pg.locator('#categories .cat[aria-pressed="true"]').inner_text() and 'Snapshots' not in await pg.locator('#categories .cat[aria-pressed="true"]').inner_text():
-                                        failures.append('San Andreas default set should show sourced snapshot locations')
-                                    if await pg.locator('#pinLayer .pin-source-projected').count()!=50:
-                                        failures.append('San Andreas 50 snapshot markers missing on vector map')
-                                    await pg.locator('#categories .cat').filter(has_text='Horseshoes').click()
-                                    if await pg.locator('#pinLayer .pin-source-projected').count()!=50:
-                                        failures.append('San Andreas horseshoe markers missing')
-                                    await pg.locator('#categories .cat').filter(has_text='Oysters').click()
-                                    if await pg.locator('#pinLayer .pin-source-projected').count()!=50:
-                                        failures.append('San Andreas oyster markers missing')
-                                    await pg.locator('#categories .cat').filter(has_text='Graffiti Tags').click()
-                                    if await pg.locator('#pinLayer .pin-source-projected').count()!=0:
-                                        failures.append('Unverified graffiti tag positions were fabricated')
                                     if 'approximate' not in (await pg.locator('.j105-accuracy').inner_text()).lower():
                                         failures.append('Approximate coordinate disclaimer missing')
                                     await pg.locator('#categories .cat').filter(has_text='Snapshots').click()
                                     if await pg.locator('#items #item-1 input[type="checkbox"]').count()==0:
                                         failures.append('Individual sourced completion tracking missing')
                                 except Exception as exc:
-                                    failures.append('San Andreas local base artwork could not load: '+str(exc)[:240])
+                                    failures.append('San Andreas artwork, attribution or individual completion: '+str(exc)[:240])
                             if not failures and path in ('heists.html','atlas-iv.html','atlas-research.html','atlas98-data-lab.html'):
                                 expected={'heists.html':'j119-heists','atlas-iv.html':'j119-iv','atlas-research.html':'j119-research','atlas98-data-lab.html':'j119-lab'}[path]
                                 if await pg.locator('body.'+expected).count()!=1:

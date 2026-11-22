@@ -54,7 +54,21 @@ function visible(){const s=q.value.trim().toLowerCase();return rows.filter(r=>r.
 function display(items){list.replaceChildren();for(const r of items){const li=E('li'),label=E('strong',r.name),detail=E('small','X '+r.x.toFixed(3)+' · Y '+r.y.toFixed(3)+' · Z '+formatZ(r.z));li.dataset.id=r.id;const locate=E('button','Locate reference');locate.type='button';locate.onclick=()=>{selectRecord(r);if(compatible()&&enabled)viewport.scrollIntoView({block:'center',behavior:'smooth'});else detail.hidden=false};li.append(label,detail,locate);list.append(li)}}
 function reset(){planned=[];exportButton.disabled=true;const selected=start.value,items=visible();start.replaceChildren(option('','Choose origin…'),...items.map(r=>option(r.id,r.name)));if(items.some(r=>r.id===selected))start.value=selected;order.disabled=!start.value;display(items);status.textContent=items.length+' references shown · '+config.count+' total · source-matched radar projection.'+(iii&&cat.value==='Rampages'?' 20 objectives; 2 possible spawns each.':'');drawMap()}
 q.oninput=reset;cat.onchange=reset;start.onchange=()=>{order.disabled=!start.value;planned=[];exportButton.disabled=true;display(visible());drawMap()};
-order.onclick=()=>{const points=visible(),origin=points.find(r=>r.id===start.value);if(!origin)return;const pending=points.filter(r=>r.id!==origin.id);planned=[origin];while(pending.length){const from=planned.at(-1);pending.sort((a,b)=>((a.x-from.x)**2+(a.y-from.y)**2)-((b.x-from.x)**2+(b.y-from.y)**2)||a.slot-b.slot);planned.push(pending.shift())}display(planned);exportButton.disabled=false;status.textContent=planned.length+' reference stops · straight-line nearest-next order; not road directions.';drawMap()};
+order.onclick=()=>{
+ const points=visible(),origin=points.find(r=>r.id===start.value);if(!origin)return;
+ const alternateSpawns=iii&&cat.value==='Rampages',objective=r=>alternateSpawns?r.slot:r.id;
+ let pending=points.filter(r=>objective(r)!==objective(origin));const baseline=[origin];
+ while(pending.length){
+  const from=baseline.at(-1);
+  pending.sort((a,b)=>((a.x-from.x)**2+(a.y-from.y)**2)-((b.x-from.x)**2+(b.y-from.y)**2)||a.slot-b.slot||a.id.localeCompare(b.id));
+  const next=pending[0];baseline.push(next);pending=pending.filter(r=>objective(r)!==objective(next));
+ }
+ const improved=window.JuraRoutePlanner?.improveOrder(origin,baseline.slice(1));
+ planned=improved?.improved?[origin,...improved.stops]:baseline;
+ display(planned);exportButton.disabled=false;
+ status.textContent=planned.length+' reference stops · '+(alternateSpawns?'one candidate spawn per objective; confirm the active spawn. ':'')+(improved?.improved?'shorter geometric order; ':'nearest-next order retained; ')+'not road directions.';
+ drawMap();
+};
 exportButton.onclick=()=>{if(!planned.length)return;const blob=new Blob([JSON.stringify({schema:1,world:config.world,kind:'sourced-coordinate-preview',sourceUrl:source.href,route:planned.map(({id,x,y,z})=>({id,x,y,z}))},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+config.world+'-reference-route.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)};
 fetch(config.file).then(r=>{if(!r.ok)throw Error('source unavailable');return r.json()}).then(d=>{
  const seen=new Set();

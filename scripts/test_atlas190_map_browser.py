@@ -209,6 +209,13 @@ try:
    page.locator('#j240-category').select_option('Rampages')
    expect(page.locator('#j240-rows li')).to_have_count(40)
    expect(page.locator('#j240-status')).to_contain_text('20 objectives')
+   page.locator('#j240-start').select_option('iii-rampage-1-alternate')
+   page.get_by_role('button',name='Build geometric preview').click()
+   expect(page.locator('#j240-rows li')).to_have_count(20)
+   ids_iii=page.locator('#j240-rows li').evaluate_all("(rows)=>rows.map(r=>r.dataset.id)")
+   assert ids_iii[0]=='iii-rampage-1-alternate'
+   assert len({x.split('-')[2] for x in ids_iii})==20
+   expect(page.locator('#j240-status')).to_contain_text('confirm the active spawn')
    page.locator('#j240-category').select_option('Unique stunt jumps')
    expect(page.locator('#j240-rows li')).to_have_count(20)
    expect(page.locator('#j240-rows')).to_contain_text('not specified (2D trigger)')
