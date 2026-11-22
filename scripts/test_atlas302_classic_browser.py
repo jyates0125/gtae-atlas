@@ -61,7 +61,7 @@ try:
     # The ordinary notebook export must now return the raw original bytes,
     # not a fabricated empty, apparently valid notebook.
     with page.expect_download(timeout=15000) as event:
-     page.locator('#classicExport').click()
+     panel.locator('#j302-recovery-export').click()
     backup=json.loads(Path(event.value.path()).read_text(encoding='utf-8'))
     assert backup['world']==game and backup['unreadableRaw']==broken
     assert backup['schema']=='team-jura-classic-recovery-v1'
@@ -95,6 +95,8 @@ try:
    panel=one.locator('#j302-storage-warning')
    expect(panel).to_be_visible(timeout=15000)
    expect(panel).to_contain_text('Another tab changed')
+   # Classic data tools are behind an intentional disclosure; open it as a player would.
+   one.locator('.classic-accordions summary').filter(has_text='Map & data tools').click()
    one.once('dialog',lambda dialog:dialog.accept())
    one.locator('#classicClear').click()
    stored=one.evaluate("k=>JSON.parse(localStorage.getItem(k))",k)
