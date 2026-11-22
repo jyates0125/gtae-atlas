@@ -1,0 +1,29 @@
+/* Elario Forge Armory: private fictional game-item exhibition, no functional weapon simulation. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else if(root)api.start(root)})(typeof window==='undefined'?null:window,function(){'use strict';
+const themes=Object.freeze({signature:'Elario Signature',gallery:'Amber Gallery',neon:'Leonida Neon',midnight:'Midnight Vault'});
+function key(world){return 'team-jura-forge-armory-'+(['story','online','vi'].includes(world)?world:'online')+'-v1'}
+function clean(raw,known){const obj=raw&&typeof raw==='object'?raw:{};return{schema:1,theme:Object.hasOwn(themes,obj.theme)?obj.theme:'signature',name:typeof obj.name==='string'?obj.name.slice(0,64):'',items:[...new Set(Array.isArray(obj.items)?obj.items.filter(id=>typeof id==='string'&&known.has(id)):[])].slice(0,8)}}
+function update(state,id,known){if(!known.has(id))return clean(state,known);const s=clean(state,known);return {...s,items:s.items.includes(id)?s.items.filter(x=>x!==id):[...s.items,id].slice(0,8)}}
+function start(w){const d=w.document;async function init(){
+ const root=d.getElementById('forgeArmory');if(!root)return;
+ const world=root.dataset.world==='vi'?'vi':new URLSearchParams(w.location.search).get('world')==='story'?'story':'online';
+ const el=(tag,txt,cls)=>{const n=d.createElement(tag);if(txt!==undefined)n.textContent=txt;if(cls)n.className=cls;return n};
+ const status=el('p','Loading game reference catalog…','fa-status');status.setAttribute('role','status');
+ root.append(el('p','ELARIO FORGE 2150 / PERSONAL EXHIBITION','fa-kicker'),el('h2','My Armory'),el('p','Display up to eight favorite virtual items. Lighting affects the cabinet only; no claim of game ownership, real-world modification or verified in-game appearance. Your display is private on this device.'),status);
+ try{const response=await w.fetch(world==='vi'?'./data/atlas192-vi-weapons.json':'./atlas90-seed.json');if(!response.ok)throw Error('Catalog unavailable');const data=await response.json();if(world==='vi'&&(data.scope!=='vi'||data.kind!=='weapon'||!Array.isArray(data.records)))throw Error('Wrong world dataset');
+ const rows=world==='vi'?data.records.filter(x=>x&&/^[a-z0-9-]+$/.test(x.id)&&typeof x.name==='string').map(x=>({id:x.id,name:x.name})):data.weapons.filter(x=>typeof x==='string'&&/^[a-z0-9_]+$/.test(x)).map(x=>({id:x,name:x.replace(/_mk(\d+)/g,' Mk $1').replace(/_/g,' ').replace(/\b[a-z]/g,c=>c.toUpperCase())}));
+ const byId=new Map(rows.map(x=>[x.id,x])),known=new Set(byId.keys());let state;try{state=clean(JSON.parse(w.localStorage.getItem(key(world))||'null'),known)}catch{state=clean(null,known)}
+ const tools=el('div',undefined,'fa-controls'),name=el('input'),theme=el('select'),picker=el('select'),add=el('button','Add to display'),grid=el('div',undefined,'fa-grid');
+ name.type='text';name.maxLength=64;name.value=state.name;name.placeholder='My collection';
+ function label(text,field){const l=el('label',text);l.append(field);tools.append(l)}
+ for(const [id,text] of Object.entries(themes)){const o=el('option',text);o.value=id;theme.append(o)}theme.value=state.theme;
+ for(const r of rows){const o=el('option',r.name);o.value=r.id;picker.append(o)}
+ label('Exhibition name',name);label('Display environment',theme);label('Game reference',picker);add.type='button';tools.append(add);
+ function persist(){try{w.localStorage.setItem(key(world),JSON.stringify(state));status.textContent='Saved locally · '+state.items.length+'/8 display slots.'}catch{status.textContent='Browser storage unavailable; your display is temporary.'}}
+ function render(){root.dataset.theme=state.theme;grid.replaceChildren();for(const id of state.items){const slot=el('article',undefined,'fa-slot'),r=byId.get(id);if(world!=='vi'){const img=el('img');img.loading='lazy';img.alt='GTA V archive reference: '+r.name;img.onerror=()=>{img.remove();slot.prepend(el('p','Reference image unavailable','fa-image-note'))};img.src='https://cdn.jsdelivr.net/gh/Stuyk/gtav-image-archive@main/weapons/weapon_'+encodeURIComponent(id)+'.webp';slot.append(img)}else slot.append(el('p','GTA VI · source research only','fa-image-note'));slot.append(el('h3',r.name));const remove=el('button','Remove from display');remove.type='button';remove.onclick=()=>{state=update(state,id,known);render();persist()};slot.append(remove);grid.append(slot)}if(!state.items.length)grid.append(el('p','Choose a virtual item to start your personal exhibition.'));add.disabled=state.items.length===8&&!state.items.includes(picker.value);add.textContent=state.items.includes(picker.value)?'Already displayed':'Add to display';}
+ name.onchange=()=>{state.name=name.value.slice(0,64);persist()};theme.onchange=()=>{state.theme=Object.hasOwn(themes,theme.value)?theme.value:'signature';render();persist()};picker.onchange=render;add.onclick=()=>{if(state.items.includes(picker.value)||state.items.length>=8)return;state=update(state,picker.value,known);render();persist()};
+ const credit=el('a','Fan use notice & source credits');credit.href='./atlas-credits.html#fan-community-use';root.append(tools,grid,credit);render();status.textContent=(world==='vi'?'GTA VI research':world==='story'?'GTA V Story':'GTA Online')+' · '+state.items.length+'/8 display slots. Reference availability is not an edition ownership claim.';
+ }catch(e){status.textContent='Forge exhibition unavailable: '+String(e.message).slice(0,100)+'. Existing catalog remains usable.'}
+ }if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',init,{once:true});else init()}
+return Object.freeze({themes,key,clean,update,start});
+});
