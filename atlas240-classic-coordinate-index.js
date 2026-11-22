@@ -5,7 +5,7 @@ if(!['vc','vice-city'].includes(raw))return;
 const target=document.getElementById('classicFlatReference');if(!target)return;
 const E=(t,s)=>{const n=document.createElement(t);if(s!==undefined)n.textContent=s;return n};
 const root=E('section');root.id='j240-source-index';root.className='j240-source-index';root.setAttribute('aria-label','Vice City sourced coordinates');
-const heading=E('h3','Vice City · sourced location coordinates');
+const heading=E('h3','Vice City · sourced map locations');
 const note=E('p','Game-script reference positions projected using the original radar publisher’s documented coordinates. Only the matching original image displays source markers. Source numbering differs from guide checklists. Geometric routes are not street navigation or gameplay verification.');
 const status=E('p','Loading locally bundled source…');status.setAttribute('role','status');status.id='j240-status';
 const controls=E('div');controls.className='j240-controls';

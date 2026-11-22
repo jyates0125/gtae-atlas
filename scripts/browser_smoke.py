@@ -901,14 +901,16 @@ async def smoke():
                                         failures.append('Legacy skyline artwork returned to map covers')
                             if not failures and path=='atlas-sa.html':
                                 await pg.wait_for_function("document.querySelector('#mapped')?.textContent==='320'")
-                                for label in ['Graffiti Tags','Unique Stunt Jumps','Snapshots']:
+                                for label,expected in [('Graffiti Tags',100),('Unique Stunt Jumps',70),('Snapshots',50),('Horseshoes',50),('Oysters',50)]:
                                     await pg.locator('#categories button').filter(has_text=label).click()
                                     status=pg.locator('#mapStatus')
-                                    if label=='Snapshots':
-                                        if '50 mapped' not in await status.inner_text():
-                                            failures.append('SA snapshot coverage count is incorrect')
-                                    elif '0 mapped' not in await status.inner_text() or await status.locator('a').count()!=1:
-                                        failures.append('SA guide-only collection lacks its coverage count or map reference')
+                                    if f'{expected} mapped' not in await status.inner_text():
+                                        failures.append(f'SA {label} source coverage count is incorrect')
+                                    pins=pg.locator('#pinLayer .pin-source-projected')
+                                    if await pins.count()!=expected:
+                                        failures.append(f'SA {label} actual marker count is incorrect')
+                                    if label in ('Graffiti Tags','Unique Stunt Jumps') and not await pg.locator('#item-1 a[href^="https://"]').count():
+                                        failures.append(f'SA {label} source link missing')
                             if not failures and path=='atlas-cayo.html':
                                 if await pg.locator('#j121Original').count()!=1 or await pg.locator('#j121Planner').count()!=1:
                                     failures.append('Original Cayo game map and separate heist planning tabs missing')
