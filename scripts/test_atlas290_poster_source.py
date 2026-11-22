@@ -18,7 +18,7 @@ assert manifest['sourceHash']==pack['sourceHash']
 assert manifest['upstreamRevision']=='d406fea099e1df2bce42fd6b87eed04bce646629'
 assert all(re.fullmatch(r'L[1-9][0-9]*',key) for key in pack['records'])
 assert len(pack['records'])==len(set(pack['records']))
-assert 'atlas290-official-landmarks.js?v=290' in html and 'atlas290-official-landmarks.css?v=290' in html
+assert 'atlas290-official-landmarks.js?v=291' in html and 'atlas290-official-landmarks.css?v=291' in html
 assert 'atlas290-official-landmarks.js' not in (root/'atlas.html').read_text()
 assert 'atlas290-official-landmarks.js' not in (root/'atlas-online.html').read_text()
 assert "crypto.subtle.digest('SHA-256'" in poster
