@@ -249,7 +249,7 @@ with AtlasTestServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as
                     "collection":{"owned":{"vehicles5:adder":True},"wishlist":{"vehicles5:zentorno":True}}}
             page.locator("#importGarage").set_input_files({"name":"garage.json","mimeType":"application/json",
                                                           "buffer":json.dumps(backup).encode()})
-            expect(page.locator("#garageNotice")).to_have_text("Garage backup restored.")
+            expect(page.locator("#garageNotice")).to_contain_text("1 collection marks.")
             collection=page.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas90-collection-v1'))")
             assert collection["owned"]["vehicles5:adder"] and collection["wishlist"]["vehicles5:zentorno"]
             page.goto(base + "atlas-collectibles.html?game=online&q=snowmen",wait_until="domcontentloaded")

@@ -315,6 +315,27 @@
       "storage": "Pegasus vehicle",
       "delivery": "Pegasus Concierge",
       "secondarySourceUrl": "https://www.gtabase.com/grand-theft-auto-v/vehicles/shitzu-squalo"
+    },
+    "jetmax": {
+      "model": "jetmax",
+      "manufacturer": "Shitzu",
+      "category": "Boats & Watercraft",
+      "seats": null,
+      "drive": null,
+      "priceUSD": 299000,
+      "topSpeedMph": 70,
+      "description": "Performance powerboat. Seat count omitted because published sources disagree.",
+      "sourceUrl": "https://gtadb.net/gta-online/vehicles/jetmax/",
+      "source": "GTADB GTA Online vehicle technical profile / tested Broughy top speed",
+      "checkedAt": "2026-11-21",
+      "game": "GTA Online",
+      "confidence": "Source cross-checked with GTABase and GTACars; pricing and availability can change; seat count conflicting",
+      "customizable": false,
+      "purchaseSite": "DockTease",
+      "storage": "Pegasus vehicle",
+      "delivery": "Pegasus Concierge",
+      "secondarySourceUrl": "https://www.gtabase.com/grand-theft-auto-v/vehicles/shitzu-jetmax",
+      "additionalSourceUrl": "https://gtacars.net/gta5/jetmax"
     }
   }
 }

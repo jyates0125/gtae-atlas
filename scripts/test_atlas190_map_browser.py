@@ -134,7 +134,8 @@ try:
    proof.mkdir(parents=True,exist_ok=True)
    page.locator('#classicMapShell').screenshot(path=str(proof/('atlas-190-iv-collectibles-'+kind+'.png')),animations='disabled',timeout=30000)
    # An existing guide number is not proof of the new source location identity.
-   page.add_init_script("""() => {if(location.pathname.endsWith('/atlas-sa.html')&&!localStorage.getItem('jura-sa-test-seeded')){localStorage.setItem('jura-sa-test-seeded','1');localStorage.setItem('team-jura-sa-v1',JSON.stringify({schema:1,items:{'tags:1':{done:true,note:'Old guide location'},'jumps:2':{done:true,note:'Old jump guide'}}}));}}""")
+   # The IV test page uses the same origin; seed before SA navigation.
+   page.evaluate("""()=>localStorage.setItem('team-jura-sa-v1',JSON.stringify({schema:1,items:{'tags:1':{done:true,note:'Old guide location'},'jumps:2':{done:true,note:'Old jump guide'}}}))""")
    page.goto(base+'atlas-sa.html',wait_until='domcontentloaded',timeout=45000)
    page.wait_for_function("document.querySelector('#j190-sa-start')&&!document.querySelector('#j190-sa-start').disabled",timeout=30000)
    assert page.locator('.pin-source-projected').count()==50
