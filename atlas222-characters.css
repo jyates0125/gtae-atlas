@@ -87,3 +87,11 @@ body[data-atlas-kind="character"] .j224-brand-crest{width:44px;height:44px;objec
 .j226-edition-select{min-height:44px;max-width:100%;min-width:0;padding:8px 12px;border:1px solid #be87b6;border-radius:11px;background:#241331;color:#fff1dc;font:600 14px system-ui}
 .j226-edition-select:focus-visible{outline:3px solid #ffe09e;outline-offset:3px}
 @media(max-width:600px){.j226-edition-label{display:grid;grid-template-columns:minmax(0,1fr)}.j226-edition-label[hidden]{display:none}.j226-edition-select{width:100%}}
+
+/* Keep the exit reachable even when scrolling lengthy character records. */
+#j222-profile-dialog>form{position:sticky;top:0;z-index:5;margin:0 0 8px;pointer-events:none}
+#j222-profile-dialog>form .u-close{pointer-events:auto;box-shadow:0 3px 15px #10091bcc}
+#j222-profile-dialog{overscroll-behavior:contain}
+.j222-portrait-unavailable{box-sizing:border-box;min-height:0;padding:12px 12px 42px}
+.j222-character-media:has(.j222-world-scene) .j222-portrait-unavailable{min-height:0}
+.j222-character-media:has(.j222-world-scene) .j222-art-credit{position:absolute}
