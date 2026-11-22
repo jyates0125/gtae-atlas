@@ -8,3 +8,7 @@ body[data-page="classic"] #j307-back-map:focus-visible{outline:3px solid #ffe2a3
 body[data-page="classic"] .classic-editor-buttons button{min-height:44px;min-width:44px}
 @media(max-width:570px){body[data-page="classic"] .j307-editor-toolbar{align-items:stretch}body[data-page="classic"] #j307-back-map{width:100%}body[data-page="classic"] .classic-editor-buttons{flex-wrap:wrap}body[data-page="classic"] .classic-editor-buttons button{flex:1 1 auto}}
 @media(max-height:540px){body[data-page="classic"] .j307-editor-toolbar{padding:6px 0}}
+
+/* The toolbar becomes first child; explicitly restore the original three-field grid. */
+body[data-page="classic"] .classic-editor>.j307-editor-toolbar+div{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr) minmax(0,1.4fr);gap:9px}
+@media(max-width:570px){body[data-page="classic"] .classic-editor>.j307-editor-toolbar+div{grid-template-columns:minmax(0,1fr)}}
