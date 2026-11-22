@@ -81,7 +81,8 @@ function showProfile(dialog,r){
  hero.append(intro);content.append(hero);
  const facts=make('dl','j222-profile-facts');
  const fact=(key,value)=>{if(value)facts.append(make('dt','',key),make('dd','',value))};
- fact('Edition',r.game||worlds[r.scope]);fact('Character role',r.group);fact('Region',r.region);
+ fact('Edition',r.scope==='classic'?r.game:worlds[r.scope]);
+ if(r.aliases?.length)fact('Also known as',r.aliases.join(', '));fact('Character role',r.group);fact('Region',r.region);
  if(r.verification)fact('Source confidence',r.verification);else fact('Source confidence','Curated reference; review needed');
  if(r.attributes?.performer)fact('Credited performer(s)',r.attributes.performer);
  if(r.attributes?.affiliation)fact('Published connections',r.attributes.affiliation);
@@ -93,6 +94,12 @@ function showProfile(dialog,r){
  if(srcSafe(r.sourceUrl)){const source=make('a','j222-action','View original source');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';links.append(source)}
  if(srcSafe(r.imageCredit)&&r.imageCredit!==r.sourceUrl){const credit=make('a','j222-action','Image credit');credit.href=r.imageCredit;credit.target='_blank';credit.rel='noopener noreferrer';links.append(credit)}
  const share=make('a','j222-action','Link to character');share.href=profileLink(r);links.append(share);
+ if(navigator.clipboard?.writeText){
+  const copy=make('button','j222-action j226-copy','Copy profile link');copy.type='button';
+  const status=make('span','j226-copy-status');status.setAttribute('role','status');
+  copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(new URL(profileLink(r),location.href).href);status.textContent='Profile link copied.'}catch{status.textContent='Copy unavailable. Open the profile link to share it.'}});
+  links.append(copy,status);
+ }
  content.append(links);
  const alternates=indexedCharacters.filter(x=>x.kind==='character'&&x.name===r.name&&x.id!==r.id);
  if(alternates.length){
