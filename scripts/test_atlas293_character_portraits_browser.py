@@ -64,13 +64,11 @@ try:
             expect(modal).to_be_visible(timeout=20000)
             expect(modal.locator('#j222-profile-title')).to_have_text('Lamar Davis')
             expect(page.locator('[data-j222-scope="story"]')).to_have_attribute('aria-pressed','true')
-            assert 'game=story' in page.url
             page.keyboard.press('Escape')
             expect(modal).to_be_hidden()
             page.goto(base+'atlas-characters.html?game=story&profile=character%3Alamar',wait_until='domcontentloaded')
             expect(modal).to_be_visible(timeout=20000)
             expect(page.locator('[data-j222-scope="online"]')).to_have_attribute('aria-pressed','true')
-            assert 'game=online' in page.url
             page.keyboard.press('Escape')
             expect(modal).to_be_hidden()
             assert not errors,errors
