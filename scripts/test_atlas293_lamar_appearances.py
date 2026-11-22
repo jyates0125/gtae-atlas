@@ -9,7 +9,7 @@ assert {r['scope'] for r in lamar}=={'story','online'}
 assert {r['id'] for r in lamar}=={'character:lamar-story','character:lamar'}
 for r in lamar:
     assert r.get('image','').startswith('https://'), 'A source portrait reference is required'
-    assert r.get('game') in ('GTA V','GTA Online'), 'World/era must remain identified'
+    assert r.get('game') in ('GTA V Story','GTA V / Online'), 'World/era must remain identified'
 js=(root/'atlas222-characters.js').read_text(encoding='utf-8')
 assert "media.dataset.artStatus='portrait-pending'" in js
 assert "Individual portrait unavailable for " in js
