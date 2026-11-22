@@ -55,6 +55,7 @@ function portraitMedia(r,profile=false){
 function card(r){
  const el=make('article','j222-character-card');
  el.dataset.j222World=r.scope;
+ el.dataset.j226Edition=r.game||'';
  const media=portraitMedia(r);
  const box=make('div','j222-character-info');
  box.append(make('span','j222-world-tag',(worlds[r.scope]||r.scope)+' · '+(r.group||'Character')));
@@ -93,13 +94,13 @@ function showProfile(dialog,r){
  if(srcSafe(r.imageCredit)&&r.imageCredit!==r.sourceUrl){const credit=make('a','j222-action','Image credit');credit.href=r.imageCredit;credit.target='_blank';credit.rel='noopener noreferrer';links.append(credit)}
  const share=make('a','j222-action','Link to character');share.href=profileLink(r);links.append(share);
  content.append(links);
- const alternates=indexedCharacters.filter(x=>x.kind==='character'&&x.name===r.name&&x.scope!==r.scope);
+ const alternates=indexedCharacters.filter(x=>x.kind==='character'&&x.name===r.name&&x.id!==r.id);
  if(alternates.length){
   const other=make('nav','j225-character-appearances');
   other.setAttribute('aria-label','Other documented game appearances');
   other.append(make('p','j225-appearances-heading','Also appears in'));
   for(const entry of alternates){
-   const link=make('a','j222-action','View '+(worlds[entry.scope]||entry.game)+' profile');
+   const link=make('a','j222-action','View '+(entry.scope==='classic'?entry.game:(worlds[entry.scope]||entry.game))+' profile');
    link.href=profileLink(entry);other.append(link);
   }
   content.append(other);
@@ -109,7 +110,8 @@ function showProfile(dialog,r){
   url.searchParams.set('profile',r.id);
   history.replaceState(history.state,'',url);
  }
- dialog.showModal();
+ if(!dialog.open)dialog.showModal();
+ dialog.scrollTop=0;
 }
 async function start(){
  const grid=$('j222-character-grid'),search=$('j222-character-search'),stat=$('j222-character-count');
@@ -182,7 +184,7 @@ async function start(){
  draw();
  const requested=args.get('profile');
  if(requested&&dialog){
-  const hit=data.find(r=>r.id===requested&&(scope==='all'||r.scope===scope));
+  const hit=data.find(r=>r.id===requested&&(scope==='all'||r.scope===scope)&&(scope!=='classic'||edition==='all'||r.game===edition));
   if(hit)showProfile(dialog,hit);
   else{const url=new URL(location.href);url.searchParams.delete('profile');history.replaceState(history.state,'',url)}
  }
