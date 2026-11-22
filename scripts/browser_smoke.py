@@ -1339,6 +1339,16 @@ async def smoke():
                             if not failures:
                                 try:
                                     disclosures=pg.locator('details > summary')
+                                    if path=='atlas-vi.html' and width==390:
+                                        # VI has a real off-canvas map-tools drawer on phones.
+                                        # Open it by the user's control before testing the source
+                                        # disclosure; Playwright considers offscreen summaries
+                                        # visible but cannot click through a collapsed drawer.
+                                        side=pg.locator('#sidebar')
+                                        if await side.count() and await side.evaluate("(e)=>e.classList.contains('mobile-collapsed')"):
+                                            await pg.locator('#mobileTools').click(timeout=5500)
+                                            if await side.evaluate("(e)=>e.classList.contains('mobile-collapsed')"):
+                                                failures.append('GTA VI mobile map-tools drawer failed to open')
                                     if path=='atlas-research.html':
                                         # The map-first phone layout intentionally keeps
                                         # research accordion filters inside the Filters /
