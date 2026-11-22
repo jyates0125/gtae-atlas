@@ -266,6 +266,8 @@
     {
       "id": "character:cj",
       "conceptPortrait": "art/jura221-cj-cinematic.webp",
+      "preferConceptPortrait": true,
+      "aliases": ["CJ", "Carl CJ Johnson"],
       "kind": "character",
       "name": "Carl Johnson",
       "scope": "classic",

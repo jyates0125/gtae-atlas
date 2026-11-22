@@ -98,7 +98,9 @@ function artwork(r){
  const area=make('div','u-image u-image-'+r.kind);let hue=0;
  for(const c of r.name)hue=(hue*7+c.charCodeAt(0))%360;
  area.style.setProperty('--art-hue',String(hue)+'deg');
- if(r.image){
+ if(r.kind==='character'&&r.preferConceptPortrait===true&&r.conceptPortrait){
+  elarioCharacterPortrait(r,area);
+ }else if(r.image){
   const img=make('img');img.src=r.image;img.alt='Sourced reference image for '+r.name;
   img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
   img.addEventListener('error',()=>{img.remove();if(r.kind==='character')elarioCharacterPortrait(r,area);else area.append(make('span','u-symbol',badge(r)))},{once:true});
@@ -106,7 +108,7 @@ function artwork(r){
  }else if(r.kind==='character')elarioCharacterPortrait(r,area);
  else area.append(make('span','u-symbol',badge(r)));
  if(!area.querySelector('.u-image-note') && isUnverified(r))area.append(make('span','u-image-note','UNVERIFIED RESEARCH'));
- else if(r.image)area.append(make('span','u-image-note',r.scope==='vi'?'OFFICIAL RECORD · REFERENCE IMAGE':'REFERENCE ART'));
+ else if(r.image&&!area.querySelector('.u-image-note'))area.append(make('span','u-image-note',r.scope==='vi'?'OFFICIAL RECORD · REFERENCE IMAGE':'REFERENCE ART'));
  else if(area.dataset.artStatus==='world-scene')area.append(make('span','u-image-note','ELARIO CINEMATIC SCENE · NOT A PORTRAIT'));
  if(area.dataset.artStatus==='world-scene')area.querySelector('.u-image-note')?.replaceChildren('ELARIO CINEMATIC SCENE · NOT A PORTRAIT');
  return area;

@@ -64,7 +64,7 @@ function portraitMedia(r,profile=false){
   media.replaceChildren(portrait,credit);
   portrait.src='./'+r.conceptPortrait;
  };
- if(!srcSafe(r.image)){showFallback();return media}
+ if((r.preferConceptPortrait===true&&r.conceptPortrait)||!srcSafe(r.image)){showFallback();return media}
  const img=make('img');img.loading=profile?'eager':'lazy';img.decoding='async';img.referrerPolicy='no-referrer';
  img.alt='Reference artwork attributed to '+r.name+'; see image source for provenance';
  img.addEventListener('error',showFallback,{once:true});
@@ -108,7 +108,7 @@ function showProfile(dialog,r,pushEntry=false){
  if(r.attributes?.performer)fact('Credited performer(s)',r.attributes.performer);
  if(r.attributes?.affiliation)fact('Published connections',r.attributes.affiliation);
  if(r.conceptPortrait)fact('Concept portrait','Elario Studios · original AI-assisted fan illustration');
- fact('Reference image attribution',r.imageRights||'Original Elario illustrative world scene when no reference portrait is available');
+ fact(r.preferConceptPortrait?'Additional reference attribution':'Reference image attribution',r.imageRights||'Original Elario illustrative world scene when no reference portrait is available');
  content.append(facts);
  if(r.scope==='vi')content.append(make('p','j222-profile-caution','A confirmed character does not verify exact map coordinates, game statistics or spawn locations.'));
  const links=make('div','j222-card-actions');
