@@ -49,7 +49,17 @@ for (const [type,id,kind] of cases) {
   assert.ok(model.vertices.length>0 && model.vertices.length%18===0,id+' triangles');
   assert.ok(model.vertices.every(Number.isFinite),id+' finite geometry');
 }
-console.log('PASS six original Forge geometry classes');
+assert.equal(forge.normalize({}).environment,'auto');
+assert.equal(forge.normalize({environment:'__proto__'}).environment,'auto');
+assert.equal(forge.normalize({environment:'workshop'}).environment,'workshop');
+assert.equal(forge.resolveTheme('marine','auto'),'marina');
+assert.equal(forge.resolveTheme('air','auto'),'hangar');
+assert.equal(forge.resolveTheme('marine','workshop'),'workshop');
+const saved=forge.build('Boat','jetmax','#123456',{environment:'hangar'}).vertices;
+const auto=forge.build('Boat','jetmax','#123456',{}).vertices;
+assert.notDeepEqual(saved,auto,'Saved environment must change stage geometry');
+assert.deepEqual(saved,forge.build('Boat','jetmax','#123456',{},'hangar').vertices,'Saved and explicit stage match');
+console.log('PASS six original Forge geometry classes and saved environment regression');
 """], cwd=ROOT, check=True)
 
 # World and heist navigation: these pages must remain in the release.
