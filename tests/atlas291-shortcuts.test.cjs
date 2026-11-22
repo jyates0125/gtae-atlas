@@ -27,3 +27,22 @@ assert.ok(html.includes('source-labeled community locations'), 'Map provenance n
 assert.ok(css.includes('.j223-shortcuts a:focus-visible'), 'Shortcut link focus ring missing');
 assert.ok(css.includes('max-width:360px'), 'Very narrow phone fallback missing');
 console.log('Atlas 29.1 dashboard source checks passed');
+
+// Route integrity: every dashboard shortcut and featured world must resolve to
+// a tracked local HTML page. Query strings never count as part of a file path.
+const shortcutHrefs = [...section.matchAll(/<a\s+href="([^"]+)"/g)].map(m => m[1].replaceAll('&amp;', '&'));
+assert.equal(shortcutHrefs.length, 13);
+assert.equal(new Set(shortcutHrefs).size, 13, 'Duplicate dashboard tool destination');
+const featured = html.match(/<div class="j223-world-grid"[\s\S]*?<\/div>/);
+assert.ok(featured, 'Missing featured world grid');
+const featuredHrefs = [...featured[0].matchAll(/<a\s+href="([^"]+)"/g)].map(m => m[1]);
+assert.equal(featuredHrefs.length, 7, 'Preserve seven world tiles');
+const officialAndResearch = ['./atlas-vi.html?view=rockstar', './atlas-vi.html'];
+for (const href of [...shortcutHrefs, ...featuredHrefs, ...officialAndResearch]) {
+  assert.ok(href.startsWith('./'), 'Dashboard internal destination must remain relative: ' + href);
+  const url = new URL(href, 'https://gtae-online.pages.dev/');
+  assert.ok(!url.pathname.includes('..'), 'Unsafe route: ' + href);
+  const target = path.join(root, decodeURIComponent(url.pathname));
+  assert.ok(fs.existsSync(target) && fs.statSync(target).isFile(), 'Missing internal dashboard destination: ' + href);
+}
+console.log('Atlas 29.1 route integrity: 13 tools, 7 world tiles, official and community VI entries');
