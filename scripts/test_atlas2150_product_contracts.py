@@ -90,7 +90,7 @@ const rows = hub.collect({
 },{'girardi-es9':'Girardi ES9'});
 assert.equal(rows.length,7);
 assert.deepEqual(rows.filter(x=>x.kind==='armory').map(x=>x.world),['story','online','vi']);
-assert.ok(rows.some(x=>x.href.includes('variant=Sun%20%26%20Moon')));
+assert.ok(rows.some(x=>x.href.includes('#variant=Sun%20%26%20Moon')&&!x.href.includes('&variant=')));
 assert.ok(rows.some(x=>x.href.includes('world=vi&model=vi_squalo')));
 assert.ok(rows.some(x=>x.kind==='garage'&&x.subtitle==='Main Garage'));
 assert.ok(!rows.some(x=>x.model==='bison'));
