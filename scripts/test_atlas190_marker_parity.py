@@ -126,3 +126,15 @@ assert len({p['id'] for p in vc['records']})==len({(p['x'],p['y'],p['z']) for p 
 for p in vc['records']:
  assert abs(p['sourceZ']+p['zAdjustment']-p['z'])<.00001 and p['sourceUrl']==vc['sourceUrl']
 print('PASS Vice City 51 attributed world-coordinate records, no unsupported pixel calibration')
+
+# Reviewed GTADB fallback source and offline recognition, same licensed publisher.
+gtadb_audit=json.loads(read('data/atlas-gtadb-map-source-audit.json'))
+assert gtadb_audit['sourceRevision']=='d406fea099e1df2bce42fd6b87eed04bce646629'
+assert gtadb_audit['worlds']['4']['unchangedPathsAndBlobs']==936
+assert gtadb_audit['worlds']['5']['unchangedPathsAndBlobs']==37640
+assert 'yanis,18' in gtadb_audit['worlds']['6']['styles']
+assert 'CC BY 4.0' in gtadb_audit['licenseText']
+assert 'd406fea099e1df2bce42fd6b87eed04bce646629/maps/tiles/' in read('atlas.js')
+assert 'd406fea099e1df2bce42fd6b87eed04bce646629' in read('atlas-sw.js')
+assert './data/atlas-sa-70-jump-zones.json' in read('atlas-sw.js')
+print('PASS reviewed GTADB source provenance and immutable fallback configuration')

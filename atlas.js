@@ -527,7 +527,7 @@ function switchGame(g){if(!['5','6','online'].includes(g))return;dropEventFocus(
 }
 // Atlas 6.2: use the same map service as the upstream map; fall back to the
 // published CC BY 4.0 repository mirror on network, CORS, or host failure.
-const TILE_HOSTS=[UPSTREAM+'maps/tiles/']; // Read from GTADB's licensed GitHub mirror, not its live media server.
+const TILE_HOSTS=[UPSTREAM+'maps/tiles/','https://raw.githubusercontent.com/rolux/gtadb.org/d406fea099e1df2bce42fd6b87eed04bce646629/maps/tiles/']; // Same CC BY 4.0 publisher; reviewed immutable fallback if main changes.
 function sourceUrl(g,style,z,tx,ty,host=0){return `${TILE_HOSTS[host]}${g}/${style}/${z}/${z},${ty},${tx}.jpg`+(host?'?atlas_tiles=62':'');}
 function tileHealth(){const el=$('tileHealth');if(!el)return;const current=styles[game],all=[...tileStore.values()].filter(t=>t.game===game);const valid=new Set([mapView(current,game).base,...sourceTileStyles(current,0,1,1,game)]);const group=all.filter(t=>valid.has(t.path));const good=group.filter(t=>t.state==='ok').length,loading=group.filter(t=>t.state==='loading').length,bad=group.filter(t=>t.state==='error').length;
  el.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`:bad?'Map artwork unavailable · retry a different layer or connection':'Preparing artwork…';
