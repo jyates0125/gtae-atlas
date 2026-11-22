@@ -3,7 +3,7 @@
  'use strict';
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n)),hex=(s,fallback=[.42,.29,.65])=>typeof s==='string'&&/^#[a-f0-9]{6}$/i.test(s)?[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)/255):fallback;
  const defaults={finish:'metallic',accent:'#eab56a',stance:'street',kit:'sport',lights:true};
- function normalize(d){d=d&&typeof d==='object'?d:{};return{finish:['metallic','satin','stealth'].includes(d.finish)?d.finish:defaults.finish,accent:typeof d.accent==='string'&&/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent.toLowerCase():defaults.accent,stance:['street','low','raised'].includes(d.stance)?d.stance:defaults.stance,kit:['clean','sport','track'].includes(d.kit)?d.kit:defaults.kit,lights:typeof d.lights==='boolean'?d.lights:defaults.lights}}
+ function normalize(d){d=d&&typeof d==='object'?d:{};return{finish:['metallic','satin','stealth'].includes(d.finish)?d.finish:defaults.finish,accent:typeof d.accent==='string'&&/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent.toLowerCase():defaults.accent,stance:['street','low','raised'].includes(d.stance)?d.stance:defaults.stance,kit:['clean','sport','track'].includes(d.kit)?d.kit:defaults.kit,lights:typeof d.lights==='boolean'?d.lights:defaults.lights,environment:['signature','marina','hangar','workshop'].includes(d.environment)?d.environment:'auto'}}
  function classify(type,model=''){
   const t=String(type||'').toLowerCase(),m=String(model||'').toLowerCase();
   if(/watercraft|boat|marine|submarine/.test(t)||/^(jetmax|squalo|dinghy|speeder|longfin|tropic|suntrap|seashark|marquis|tug|kosatka|avisa|kraken|submersible)/.test(m))return 'marine';
@@ -21,9 +21,10 @@
  });
  function themeFor(name){return Object.hasOwn(themes,name)?name:'signature'}
  function defaultTheme(kind){return kind==='marine'?'marina':kind==='air'||kind==='rotor'?'hangar':kind==='utility'?'workshop':'signature'}
+ function resolveTheme(kind,environment){return environment==='auto'||!environment?defaultTheme(kind):themeFor(environment)}
  function build(type,model,paint,settings,environment){
   const kind=classify(type,model),d=normalize(settings),base=hex(paint),accent=hex(d.accent),glass=[.12,.24,.34],dark=[.07,.085,.13],rubber=[.045,.05,.065],chrome=[.56,.64,.73],data=[];
-  const theme=themes[themeFor(environment||defaultTheme(kind))];
+  const theme=themes[resolveTheme(kind,environment||d.environment)];
   const tint=(c,k)=>c.map(v=>clamp(v*k,0,1));
   const blend=(a,b,f)=>a.map((v,i)=>v*(1-f)+b[i]*f);
   function tri(a,b,c,col,emissive=false){
@@ -51,7 +52,7 @@
   function ring(y,r,w,col){const c=circle(64);for(let i=0;i<c.length;i++){const a=c[i],b=c[(i+1)%c.length];quad([a[0]*r,y,a[1]*r],[b[0]*r,y,b[1]*r],[b[0]*(r-w),y,b[1]*(r-w)],[a[0]*(r-w),y,a[1]*(r-w)],col,true)}}
   disc(-.06,3.42,theme.floor);disc(-.035,3.28,theme.deck);ring(-.025,3.27,.025,accent);ring(-.02,2.93,.024,theme.trim);ring(-.015,2.31,.012,tint(theme.trim,.65));
   // Original low-profile set dressing: visible from orbit and top cameras without occluding the vehicle.
-  const env=themeFor(environment||defaultTheme(kind));
+  const env=resolveTheme(kind,environment||d.environment);
   if(env==='marina'){
    for(const x of [-2.85,2.85]){box(x,.025,0,.42,.10,2.7,theme.deck);for(const z of [-1.1,0,1.1]){box(x,.10,z,.16,.21,.16,chrome);box(x,.22,z,.18,.035,.18,theme.trim,true)}}
    for(let n=-3;n<=3;n++){box(n*.36,-.01,2.92,.22,.012,.07,theme.trim,true);box(n*.36,-.01,-2.92,.22,.012,.07,theme.trim,true)}
@@ -111,5 +112,5 @@
   }
   return{kind,vertices:new Float32Array(data),settings:d};
  }
- return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme});
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme});
 });
