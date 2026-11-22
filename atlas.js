@@ -649,8 +649,9 @@ function drawMarkers(){hitRegions=[];if(!showPins&&!selected)return;
  const visible=showPins?matches():[];let drawn=0;const hasRules=visible.some(r=>!!r.activityId);const conditionCache=hasRules&&window.JuraConditions?{save:window.JuraConditions.safeState(loadStore('jura68-conditions-'+(game==='6'?'vi':mode),{})),feed:loadStore('jura68-rotation-feed',{schema:1,rotations:{}}),hour:loadStore('jura68-online-hour',null)}:null;
  for(const r of visible){const p=toScreen(r.x,r.y);if(p.x<-20||p.x>width+20||p.y<-20||p.y>height+20)continue;
   if(drawn>=20000)break;drawn++;
-  // Preserve the original Yanis/Scaly category colors and original marker symbols.
-  const color=conditionPinColor(r,conditionCache);
+  // Keep original colored pins intact; tone down ONLY the default gold landmarks.
+  // Explicit source marker colors and event/collectible colors take precedence.
+  const color=game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId?'#49315e':conditionPinColor(r,conditionCache);
   pin(p.x,p.y,color,false,null,r.category,!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r),!!progress[doneKey(r)],r.category==='collectible'&&!r.activityId);
   hitRegions.push({x:p.x,y:p.y,r:12,record:r});
  }
