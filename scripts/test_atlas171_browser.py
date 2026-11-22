@@ -37,6 +37,9 @@ try:
         if page.locator('#j98-flow').count():
             assert page.locator('#j98-flow').evaluate("(e)=>getComputedStyle(e).display==='none'"),'Legacy map dock must not cover Cayo mission controls'
         directory=page.locator('.j132-nav')
+        # Edge can finish parsing before the deferred navigation script mounts.
+        # Wait for the actual menu rather than sampling the DOM once.
+        directory.wait_for(state='attached',timeout=15000)
         assert directory.count()==1,'Searchable All Pages directory remains available'
         assert directory.evaluate("(e)=>getComputedStyle(e).position!=='fixed'"),'All Pages menu must not float over Cayo map'
         assert page.locator('#j132-nav-toggle').count()==1,'All Pages remains operable'
