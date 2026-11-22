@@ -261,3 +261,8 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **UX:** Searchable/filtered, shareable and exportable evidence directly on Marker Coverage. Accessible 44px controls, horizontally scrollable phone table, no private save writes or external background requests, fail closed on broken data.
 - **TEST:** Python independently recalculates each packed row; 4-viewport built Chromium browser journey checks game separation, CSV, filters, source links and missing data. Scoped atlas310-source-coverage.yml. Exact-head CI pending.
 - **HOLD:** Accurate complete map content, artistic finish, real iPhone Safari, final Chromium+Edge+ZIP and owner-reviewed live promotion. See docs/ATLAS310-SOURCE-COVERAGE-ACCEPTANCE.md.
+
+## Atlas 31.1 — safe rename/remove for Forge named vehicle builds (staging)
+- **SOURCE:** Managing the eight-per-model named Forge variants now supports renaming and confirmed deletion in both V/Online and VI separate local namespaces. Re-reads the exact latest key, checks a saved design has not changed in another tab, and refuses malformed storage or duplicate rename. Primary idea, other vehicle versions, Garage location and ownership remain separate; no new licensed meshes or official specs claimed.
+- **TEST:** Focused source and built-browser phone/desktop tests, including a stale-tab race, cancel/confirm, invalid storage and V/VI isolation; exact-head CI required before staging merge.
+- **HOLD:** physical iPhone Safari, owner 3D visual approval, licensed exact meshes and full Chromium+Edge+ZIP release approval.
