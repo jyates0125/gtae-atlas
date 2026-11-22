@@ -15,7 +15,9 @@
 <script defer src="./atlas-navigation.js?v=70"></script>
 <script defer src="./atlas-conditions.js?v=70"></script>
 <script defer src="./atlas.js?v=290"></script>
+<script defer src="./atlas290-vi-source-ledger.js?v=290"></script>
 
+<link rel="stylesheet" href="./atlas290-vi-source-ledger.css?v=290">
 <link rel="stylesheet" href="./atlas-layout-71.css?v=71">
 <script defer src="./atlas-layout-71.js?v=71"></script>
 <link rel="stylesheet" href="./atlas-unified.css?v=741"><script defer src="./site-unified.js?v=156"></script><link rel="stylesheet" href="./atlas85-brand.css">
@@ -53,6 +55,21 @@
     <div class="atlas-explorer-head"><div class="atlas-eyebrow">ELARIO STUDIOS / TEAM JURA</div><h1>World Explorer</h1><p>Find places. Follow the map. Make your own route.</p></div>
     <section class="j217-vi-compass" aria-label="Leonida world connections"><strong>GTA VI · OUT NOW · 2026-11-19</strong><p>Play within the VI map, then explore its own characters, vehicles, weapons and official launch sources. Released GTA VI data is source-graded. Community coordinates remain provisional until independently confirmed against released gameplay; original approximations are not official pins.</p><a id="j217-vi-open-from-sidebar" href="#j217-vi-hub">◆ Open the GTA VI world guide</a><a href="./atlas-vi.html?view=rockstar">▧ View Rockstar's printable map inside Atlas</a></section>
     <div class="dataset"><span class="dot" id="dataDot"></span><span id="dataStatus" role="status">Loading local locations…</span></div>
+    <details id="j290-vi-ledger" class="j290-ledger">
+      <summary>◇ Complete Leonida source index · mapped &amp; unpositioned</summary>
+      <div class="j290-ledger-inner">
+        <p id="j290-status" role="status">Open this panel to browse the complete GTADB community landmark snapshot. The released-game map and independently confirmed gameplay points are distinct evidence.</p>
+        <p id="j290-count" class="j290-count">Source index not loaded</p>
+        <div class="j290-controls">
+          <label for="j290-search">Search all source records<input type="search" id="j290-search" autocomplete="off" placeholder="Name, area, address, tag, ID"></label>
+          <label for="j290-kind">Position evidence<select id="j290-kind"><option value="all">All entries</option><option value="mapped">Approximate community X/Y</option><option value="search-only">No usable X/Y · search-only</option></select></label>
+          <label for="j290-tag">Publisher source tag<select id="j290-tag"><option value="all">All publisher tags</option></select></label>
+        </div>
+        <div id="j290-list" class="j290-list" aria-label="Indexed GTA VI source records"></div>
+        <div class="j290-pagination"><button type="button" id="j290-prev">Previous</button><span id="j290-pages" role="status">No source loaded</span><button type="button" id="j290-next">Next</button></div>
+        <p>These GTADB records and provisional X/Y coordinates are <strong>not</strong> Rockstar-verified collectible, mission, business or vehicle spawn locations. Search-only entries receive no invented pin. <a href="./atlas-credits.html">Licenses and credit</a>.</p>
+      </div>
+    </details>
     <p class="hint"><a id="activityModeLink" href="./atlas-activities.html?mode=vi">◷ Leonida · Research & verification rules</a> · <a href="./atlas-research.html" aria-label="Open dedicated GTA VI Community Research map">⌕ Open Community Research map</a> · <a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Rockstar official map source ↗</a></p>
     <label class="field-label" for="search">Search locations</label>
     <input id="search" type="search" placeholder="Find landmarks, vehicles, collections…" autocomplete="off">
