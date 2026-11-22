@@ -141,7 +141,8 @@
           "category": "Dealer contacts",
           "required": true,
           "x": 466,
-          "y": 764.5
+          "y": 764.5,
+          "areaReview": "Itemaps and game-wiki references call this Hove Beach; iGrandTheftAuto and Bloxodes describe East Hook Bay near Broker Bridge. Neighborhood wording differs; publisher XY is not an in-game-verified position."
         },
         {
           "id": "ctw-dealer-cheaves",
