@@ -23,7 +23,22 @@ let saved={scoped:[],route:[],awards:[]};
 try{const s=JSON.parse(localStorage.getItem(storage)||'{}');if(s&&typeof s==='object'){
  for(const k of ['scoped','route','awards'])if(Array.isArray(s[k]))saved[k]=s[k].filter(v=>typeof v==='string').slice(0,100);
 }}catch(_){}
-const persist=()=>{try{localStorage.setItem(storage,JSON.stringify({schema:1,updatedAt:new Date().toISOString(),...saved}));return true}catch(_){return false}};
+const persist=()=>{try{
+ // Atlas 31.4: never destroy a malformed non-Cayo save when a visitor taps a map action.
+ // Cayo keeps its separate, established recovery and save behavior.
+ if(id!=='cayo-perico'){
+  const raw=localStorage.getItem(storage);
+  if(raw!==null){
+   const older=JSON.parse(raw);
+   if(!older||typeof older!=='object'||Array.isArray(older)||
+      ['route','scoped','awards'].some(k=>older[k]!==undefined&&(
+       !Array.isArray(older[k])||older[k].length>150||!older[k].every(x=>typeof x==='string')
+      )))return false;
+  }
+ }
+ localStorage.setItem(storage,JSON.stringify({schema:1,updatedAt:new Date().toISOString(),...saved}));
+ return true;
+ }catch(_){return false}};
 const advancedRoutes=id!=='cayo-perico';
 if(advancedRoutes){const known=new Set(points.map(p=>p.id));saved.route=[...new Set(saved.route.filter(k=>known.has(k)))];}
 function closestSequence(ids){

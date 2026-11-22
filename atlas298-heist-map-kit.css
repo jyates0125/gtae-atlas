@@ -16,3 +16,12 @@
 @media(max-width:540px){.j298-phases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.j298-phase:first-child{grid-column:1/-1}.j298-transfer{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.j298-kit{padding:12px}.j298-phase,.j298-action,.j298-import{font-size:12px;padding:9px 7px;overflow-wrap:anywhere}}
 @media(max-width:360px){.j298-transfer{grid-template-columns:1fr}.j298-phases{grid-template-columns:1fr}.j298-phase:first-child{grid-column:auto}}
 @media(prefers-reduced-motion:reduce){.j298-kit *{scroll-behavior:auto}}
+
+/* Atlas 31.4 — recovery controls must stay reachable on short phone landscapes. */
+.j298-rescue{margin:12px 0;padding:14px;border:1px solid #f5bb7b;border-radius:12px;background:#3b2031;display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.j298-rescue h4,.j298-rescue p{flex-basis:100%;margin:0;color:#fff0d1;overflow-wrap:anywhere}
+.j298-rescue h4{font:800 16px/1.3 system-ui}
+.j298-rescue p{font:13px/1.5 system-ui}
+.j298-rescue .j298-rescue-status{color:#ffdcad}
+.j298-rescue .j298-action:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:540px){.j298-rescue{padding:11px}.j298-rescue .j298-action{flex:1 1 100%}}
