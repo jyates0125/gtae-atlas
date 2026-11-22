@@ -151,7 +151,7 @@ async function start(){
   // other characters whose biography merely mentions that person's name.
   const nameMatches=s?scoped.filter(r=>[r.name,...(r.aliases||[])].some(x=>String(x).toLocaleLowerCase().includes(s))):[];
   const rows=!s?scoped:nameMatches.length?nameMatches:scoped.filter(r=>
-   [worlds[r.scope],r.game,r.group,r.region,r.summary].join(' ').toLocaleLowerCase().includes(s));
+   [worlds[r.scope],r.game,r.group,r.region,r.summary,r.attributes?.affiliation,r.attributes?.performer].join(' ').toLocaleLowerCase().includes(s));
   const rank=r=>{
    const name=r.name.toLocaleLowerCase();
    return name===s?0:name.startsWith(s)?1:name.includes(s)?2:3;
@@ -160,7 +160,7 @@ async function start(){
     (a.group==='Protagonist'?0:1)-(b.group==='Protagonist'?0:1)||a.name.localeCompare(b.name));
   grid.replaceChildren();for(const r of rows)grid.append(card(r));
   if(!rows.length)grid.append(make('p','j222-empty','No characters matched. Try another world or search term.'));
-  stat.textContent=rows.length+' of '+data.length+' indexed characters · '+(worlds[scope]||'All worlds');
+  stat.textContent=rows.length+' of '+data.length+' indexed character appearances · '+(scope==='classic'&&edition!=='all'?edition:(worlds[scope]||'All worlds'));
   for(const b of buttons)b.setAttribute('aria-pressed',String(b.dataset.j222Scope===scope));
  };
  editionSelect.addEventListener('change',()=>{edition=editionSelect.value;draw();persist()});
