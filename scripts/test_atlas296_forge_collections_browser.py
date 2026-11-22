@@ -55,10 +55,12 @@ try:
         page.set_viewport_size({'width':390,'height':844})
         page.locator('#forgeCollectionKind').select_option('garage')
         expect(cards).to_have_count(2)
-        assert 'Saved Garage build' in cards.first.inner_text()
+        # Entries are sorted by their saved sources, not by ownership.
+        # Verify the concrete unowned saved vehicle rather than assuming order.
         page.locator('#forgeCollectionSearch').fill('Jetmax')
         expect(cards).to_have_count(1)
         row=cards.first
+        expect(row).to_contain_text('Saved Garage build')
         expect(row).to_contain_text('not marked owned')
         assert 'My unowned boat concept' not in row.inner_text(), 'Private note should not leak into summary'
         assert row.locator('a').get_attribute('href')=='./atlas93-garage.html?addModel=jetmax'
