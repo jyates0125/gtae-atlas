@@ -79,7 +79,7 @@ for(const required of ['index.html','maps.html','atlas.html','atlas-online.html'
 }
 const pageBytes=Buffer.from(JSON.stringify({version:132,pages},null,2));
 const pageFile='atlas132-page-directory.json';
-if (!fs.readFileSync(path.join(root,pageFile)).equals(pageBytes)) {
+if (JSON.stringify(JSON.parse(fs.readFileSync(path.join(root,pageFile),'utf8'))) !== JSON.stringify({version:132,pages})) {
   throw new Error('Update '+pageFile+' from the current HTML page titles for direct-source hosting');
 }
 fs.writeFileSync(path.join(out,pageFile),pageBytes);
