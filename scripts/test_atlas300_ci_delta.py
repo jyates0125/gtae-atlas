@@ -51,4 +51,42 @@ try:
  mod.parse_patterns("on:\n  pull_request:\n    branches: [development]\n")
  raise AssertionError("Missing configured path list should be explicit")
 except ValueError:pass
-print("Atlas 30.0 tests passed: twelve workflow scopes, initial/manual/fail-open and unrelated-commit skip behavior")
+
+# Verify GitHub's full YAML parser accepts the real workflow files and that
+# every expensive feature step is properly gated. This catches whitespace and
+# trigger regressions before any action is merged.
+import yaml
+total_jobs=0
+total_steps=0
+for file in required:
+    obj=yaml.safe_load((workflow/file).read_text(encoding="utf-8"))
+    assert isinstance(obj,dict) and isinstance(obj.get("jobs"),dict),file
+    for job_name,job in obj["jobs"].items():
+        steps=job.get("steps",[])
+        checkouts=[s for s in steps if s.get("uses","").startswith("actions/checkout@")]
+        assert len(checkouts)==1,(file,job_name,"checkout missing")
+        assert checkouts[0]["with"]["fetch-depth"]==2,(file,job_name)
+        assert "head.sha" in checkouts[0]["with"]["ref"],(file,job_name)
+        scope=[i for i,s in enumerate(steps) if s.get("id")=="scope"]
+        assert len(scope)==1,(file,job_name,"one scope gate required")
+        pos=scope[0]
+        assert steps[pos].get("env",{}).get("ATLAS_PR_ACTION")=="${{ github.event.action }}",(file,job_name)
+        assert file in steps[pos].get("run",""),(file,job_name)
+        for step in steps[pos+1:]:
+            assert "steps.scope.outputs.run" in str(step.get("if","")),(file,job_name,step.get("name") or step.get("run","")[:60])
+            total_steps+=1
+        total_jobs+=1
+assert total_jobs>=14 and total_steps>=45,(total_jobs,total_steps)
+integrated=(workflow/"atlas294-integrated-staging.yml").read_text()
+assert "'scripts/test_atlas29*.py'" not in integrated
+assert "'scripts/test_atlas298*.py'" not in integrated
+assert "'scripts/test_atlas294*.py'" in integrated
+cross=(workflow/"atlas2150-cross-product.yml").read_text()
+assert "'atlas263-forge-collections.js'" in cross
+assert "'docs/ATLAS-2150-COMPLETION-BOARD.md'" not in cross
+cayo=(workflow/"cayo-focused-acceptance.yml").read_text()
+assert "Check latest PR commit relevance" in cayo
+full=(workflow/"team-jura-release.yml").read_text()
+assert "workflow_dispatch:" in full and "  pull_request:" not in full
+print(f"Atlas 30.0 passed: {len(required)} workflow scopes, {total_jobs} jobs, {total_steps} conditional steps; full release remains manual")
+
