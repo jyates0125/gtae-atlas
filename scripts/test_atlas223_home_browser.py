@@ -67,6 +67,9 @@ try:
    assert not errors,errors
    if width<=390:
     overflow=page.evaluate('document.documentElement.scrollWidth-innerWidth')
+    if overflow>1:
+     offenders=page.evaluate("""() => [...document.querySelectorAll('body *')].map(el=>({tag:el.tagName,cls:String(el.className).slice(0,90),width:Math.round(el.getBoundingClientRect().width),right:Math.round(el.getBoundingClientRect().right)})).filter(x=>x.right>innerWidth+2&&x.width>0).sort((a,b)=>b.right-a.right).slice(0,12)""")
+     print('OVERFLOW DIAGNOSTICS',width,offenders,flush=True)
     assert overflow<=1,('Dashboard horizontal overflow',width,overflow)
     assert page.locator('.menu-toggle').is_visible()
     page.locator('.menu-toggle').click()
