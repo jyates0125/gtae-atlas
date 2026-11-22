@@ -158,13 +158,21 @@ function download(obj,name){const blob=new Blob([JSON.stringify(obj,null,2)],{ty
 function install(){ $('garageSearch').addEventListener('input',()=>{page=0;paint()});for(const id of ['garageFilter','garageLocation','garageClassFilter'])$(id).addEventListener('change',()=>{page=0;paint()});
 $('showAll').onclick=()=>{$('garageFilter').value='all';$('garageLocation').value='';page=0;paint()};$('showOwned').onclick=()=>{$('garageFilter').value='owned';$('garageLocation').value='';page=0;paint()};$('prevPage').onclick=()=>{page--;paint()};$('nextPage').onclick=()=>{page++;paint()};
 $('addGarage').onclick=()=>{const name=f($('newGarage').value).slice(0,56);if(!name){notice('Enter a garage name.');return}if(meta.garages.includes(name)){notice('This garage already exists.');return}if(saveGarageName(name)){$('newGarage').value='';garages();paint()}};
-$('exportGarage').onclick=()=>download({schema:1,app:'team-jura-atlas93-garage',exported:new Date().toISOString(),garage:meta,collection:{owned:gallery.owned,wishlist:gallery.wishlist}},'team-jura-my-garage-backup.json');
+$('exportGarage').onclick=()=>{
+ try{
+  // A Forge tab may have written a newer design before this Garage tab repaints.
+  const liveMeta=readChecked(META,meta,x=>plain(x)&&Array.isArray(x.garages)&&plain(x.vehicles)&&Object.values(x.vehicles).every(plain));
+  const liveGallery=readChecked(S,gallery,x=>plain(x)&&plain(x.owned)&&plain(x.wishlist)&&(x.note===undefined||plain(x.note)));
+  download({schema:1,app:'team-jura-atlas93-garage',exported:new Date().toISOString(),garage:liveMeta,collection:{owned:liveGallery.owned,wishlist:liveGallery.wishlist}},'team-jura-my-garage-backup.json');
+ }catch(e){notice('Garage backup not exported: saved data needs recovery before exporting.')}
+};
 $('importGarage').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{
  if(file.size>2000000)throw Error('Backup exceeds 2 MB');
  if(!records.length)throw Error('Wait for the vehicle catalog before importing');
  const payload=JSON.parse(await file.text()),allowed=new Set(records.map(r=>r.id));
  // Re-read both keys to preserve updates made in another tab.
- const latestMeta=safeParse(META,meta),latestGallery=safeParse(S,gallery);
+ const latestMeta=readChecked(META,meta,x=>plain(x)&&Array.isArray(x.garages)&&plain(x.vehicles)&&Object.values(x.vehicles).every(plain));
+ const latestGallery=readChecked(S,gallery,x=>plain(x)&&plain(x.owned)&&plain(x.wishlist)&&(x.note===undefined||plain(x.note)));
  const result=window.JuraGarageMerge.merge(payload,latestMeta,latestGallery,allowed);
  if(!result.added&&!result.addedGarages&&!result.marks){notice('No new Garage data: '+result.kept+' existing builds retained; '+result.skipped+' skipped.');return}
  const originalMeta=localStorage.getItem(META),originalGallery=localStorage.getItem(S);
