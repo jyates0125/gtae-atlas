@@ -215,3 +215,10 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **TESTED:** Exact-head focused source and Chromium acceptance `bf3c83e24909b0b8ee472746dc311320fea569a8` passed for 13 routes, world identities, phone 390px and desktop 1440px, return links, search/reset, Back/recent-world continuity and no horizontal overflow. PR #108 merged into draft staging only.
 - **RETAINED:** Existing Cayo and GTA V/Online/VI engine separation, original game covers, classic episode image-relative map notebooks and provisional source notices. The new workflow `atlas303-thirteen-worlds.yml` is strictly world/directory focused.
 - **REMAINING:** This certifies navigation, not exhaustive 13-world verified collectibles/road networks, source permissions, 3D, real Safari/iPhone, full final Chromium/Edge/ZIP or owner release approval. See `docs/ATLAS303-THIRTEEN-WORLD-ACCEPTANCE.md`.
+
+
+## Atlas 30.2 — Mobile marker exit and safe map return (staging)
+- **SOURCE:** GTA V Story / GTA Online / GTA VI map detail cards now have a sticky, 44px **Back to map** button, 44px existing × and focus return to the map canvas after closing. Scrolling tall media/text no longer strands the exit below an overflowing overlay. Short iPhone landscape receives a bounded fixed panel.
+- **SOURCE:** Closing keeps world, map camera/zoom, marker sources, user routes, progress and browser history unchanged. Original Elario violet/gold styling and approved imagery remain intact.
+- **TEST:** `scripts/test_atlas302_map_marker_exit.py`, `scripts/test_atlas302_map_marker_exit_browser.py` and focused `atlas302-map-marker-exit.yml` cover all three map pages at 375×667, 390×844, 844×390 and 1440×900; confirm exact-head CI before accepting.
+- **HOLD:** Actual iPhone Safari signoff, complete 13-world navigation/device QA, final Chromium/Edge/ZIP and owner-approved release remain outstanding. See `docs/ATLAS302-MAP-DETAIL-EXIT-ACCEPTANCE.md`.
