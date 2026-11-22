@@ -38,7 +38,7 @@ try:
    assert 'game=story' in suggestion.get_attribute('href')
    # Compact and punctuation-normalized profile links are real homepage results.
    page.locator('#j223-search-input').fill('CJ')
-   cj=page.locator('#j223-search-results a').filter(has_text='Carl Johnson')
+   cj=page.locator('#j223-search-results a[href*="profile=character%3Acj"]').filter(has_text='Carl Johnson')
    expect(cj).to_have_count(1,timeout=15000)
    assert 'edition=GTA%20San%20Andreas' in cj.get_attribute('href')
    assert 'profile=character%3Acj' in cj.get_attribute('href')
