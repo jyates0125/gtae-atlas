@@ -234,3 +234,8 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Invalid/corrupt or stale Forge data causes a visible refusal without destructive defaults; GTA VI variants stay in their separate store, and private variant labels do not enter share URLs. The class-correct original 3D study/verified-source disclaimers remain unchanged.
 - **TEST:** `tests/atlas305-garage-variants.test.cjs`, built-site `scripts/test_atlas305_garage_variants_browser.py`, path-scoped `atlas305-garage-variants.yml`. No unrelated Cayo checks are introduced by this batch. Exact-head CI pending.
 - **HOLD:** real iPhone Safari, owner visual/style review, licensed model-specific geometry, complete final release verification and release authorization. See `docs/ATLAS305-GARAGE-VARIANTS-ACCEPTANCE.md`.
+
+## Atlas 30.6 — GTA IV / TLAD / TBOGT map return (staging)
+- **SOURCE:** Visible, sticky and 44px touch-target Back to map action inside the shared GTA IV source detail. Uses the original Close, Escape support, canvas focus and mobile scroll return; preserves camera/zoom/layer, episode scope, routes and completed bird markers.
+- **TEST:** `scripts/test_atlas306_iv_return.py`, `scripts/test_atlas306_iv_return_browser.py` and path-scoped `atlas306-iv-return.yml` cover 12 episode/viewport journeys in built Chromium. Exact-head CI required before staging integration.
+- **HOLD:** This does not certify the entire 13-world map inventory, accurate road routes, native iPhone Safari, full final release Chromium/Edge/ZIP or owner visual approval. See `docs/ATLAS306-IV-MAP-RETURN-ACCEPTANCE.md`.
