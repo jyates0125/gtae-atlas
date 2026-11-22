@@ -58,10 +58,12 @@ try:
             page.goto(base + "atlas-vi.html", wait_until="domcontentloaded", timeout=45000)
             layer = page.locator("#layer")
             expect(layer.locator('option[value="day"]')).to_have_count(1, timeout=25000)
-            assert layer.input_value() == "day", "Day should be new first-visit VI default"
+            assert layer.input_value() == "scaly,view", "Existing Scaly view must remain the first-visit default"
             expect(layer.locator('option[value="scaly,view"]')).to_have_count(1)
             expect(layer.locator('option[value="yanis,18"]')).to_have_count(1)
             expect(layer.locator('option[value="dupzor,51"]')).to_have_count(1)
+            layer.select_option("day")
+            assert layer.input_value() == "day", "Opt-in Day map must be selectable"
             page.wait_for_function(
                 "() => /Illustration: [1-9][0-9]* tiles/.test(document.querySelector('#tileHealth')?.textContent || '')",
                 timeout=25000,
@@ -118,7 +120,7 @@ try:
                     0, timeout=25000
                 )
             print(
-                f"PASS Atlas 29.0 {engine} {width}: default Day map,"
+                f"PASS Atlas 29.0 {engine} {width}: Scaly default, opt-in Day map,"
                 " distinct historic views, tile load, zoom, toggle,"
                 " no GTA V/Online day leak",
                 flush=True,
