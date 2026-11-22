@@ -33,6 +33,8 @@ function init(){
  back.textContent='← Back';back.setAttribute('aria-label','Back out of the GTA VI map or close the current panel');
  document.body.append(back);
  back.addEventListener('click',()=>{
+  const siteDrawer=document.getElementById('j132-nav-drawer');
+  if(siteDrawer&&!siteDrawer.hidden){siteDrawer.querySelector('.j132-close')?.click();return}
   if(!card.classList.contains('hidden')){close.click();return}
   const nav=document.getElementById('juraNavPanel');
   if(nav&&!nav.hidden){document.getElementById('juraCloseNav')?.click();return}
