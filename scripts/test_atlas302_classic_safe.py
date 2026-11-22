@@ -6,7 +6,8 @@ root=Path(__file__).resolve().parents[1]
 js=(root/'atlas98-classic.js').read_text(encoding='utf-8')
 css=(root/'atlas98-classic.css').read_text(encoding='utf-8')
 html=(root/'map-hub.html').read_text(encoding='utf-8')
-worlds=re.findall(r'^\s*(iii|vc|vcs|lcs|ctw|tlad|tbogt):\{name:',js,re.M)
+world_config=js.split('const worlds={',1)[1].split('};',1)[0]
+worlds=re.findall(r'^\s*(iii|vc|vcs|lcs|ctw|tlad|tbogt):\{name:',world_config,re.M)
 assert len(worlds)==7 and len(set(worlds))==7,worlds
 for part in (
  "function validNotebook(x)", "let storageIssue=null,lastStoredRaw=null",
