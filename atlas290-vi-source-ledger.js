@@ -45,6 +45,9 @@ function render(){
    a.title='Community map coordinate, not a verified GTA VI gameplay position';
    actions.append(a);
   }else actions.append(el('span','j290-not-positioned','Not mapped · use the source notes'));
+  const poster=link('./atlas-vi.html?view=rockstar&landmark='+encodeURIComponent(item.id),'Place on official poster');
+  poster.title='Personal positioning only: opens the official poster; no community coordinate is automatically projected';
+  actions.append(poster);
   actions.append(link('https://github.com/rolux/gtadb.org/blob/main/map/data/6/landmarks.json','GTADB source'));
   card.append(title,note,detail,badges,actions);list.append(card);
  }
