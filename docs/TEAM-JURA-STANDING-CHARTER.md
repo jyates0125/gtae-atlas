@@ -297,3 +297,7 @@ After successful no-fingerprint CTW personal pin placement, the UI browser regre
 
 ### Atlas 28.7 — always-reachable reset for manually positioned classic pins
 The CTW reference menu now places Reset collection alignment directly in its main responsive control toolbar, instead of requiring expanding a collapsed calibration disclosure. This reset removes only the collection-specific affine alignment and preserves manual image-relative markers, per-item visited/found state and the Show/Hide pin toggle; it does not claim publisher XY matches native game coordinates. Regression verifies visible toolbar reset from the closed calibration panel and the manually placed pin remains. Existing 28.6 test/previous features retained. Exact-head browser and ZIP validation required; no development/main merge.
+
+
+### Atlas 28.7 browser-cache identity
+Map hub references the updated CTW marker/placement script with cache-busting revision 287, avoiding older CDN/browser-cached version 282 when staging is eventually promoted. This changes only the asset request URL, not marker data, saved user keys, pin semantics or source integrity. Preserve release gates at the resulting exact head before deployment; main and Cloudflare development remain unchanged.
