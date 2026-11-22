@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="./atlas101-configurator.css?v=227">
 <link rel="stylesheet" href="./atlas99-garage3d.css?v=99">
 <script defer src="./atlas99-garage3d.js?v=99"></script>
-<script defer src="./atlas101-configurator.js?v=254"></script></head>
+<script defer src="./atlas101-configurator.js?v=255"></script></head>
 <body><a class="skip" href="#main">Skip to vehicle builder</a>
 <header class="c-head"><a class="c-logo" href="./index.html"><small>ELARIO STUDIOS PRESENTS</small><strong>TEAM JURA <em>ATLAS</em></strong><span>MANY CREWS · ONE VISION</span></a><nav aria-label="Atlas navigation"><a href="./index.html">Home</a><a href="./atlas-database.html?kind=vehicle">Vehicle Database</a><a href="./atlas90-vehicles5.html">Pictured Vehicles</a><a href="./atlas93-garage.html">My Garage</a><a href="./maps.html">Maps</a></nav></header>
 <main id="main" class="c-main">
@@ -17,7 +17,7 @@
 <h2>02 / Paint study</h2><p class="c-note">Concept colors affect only our generic 3D shape. They are <strong>not</strong> exact GTA modification slots, paint jobs or verified in-game presets.</p><div class="c-swatches" id="paintSwatches" role="group" aria-label="Concept paint colors"></div>
 <label>Custom RGB color<input type="color" id="paintColor" value="#4473c2"></label>
 <h2>03 / Your build notes</h2><label>Design name<input id="buildName" maxlength="72" placeholder="Midnight street build"></label><label>Private notes<textarea id="buildNote" rows="3" maxlength="800" placeholder="Paint ideas, wheels, planned tuning…"></textarea></label>
-<div class="c-actions"><button type="button" id="saveBuild">Save this idea</button><button type="button" id="resetBuild">Reset concept</button><button type="button" id="exportBuilds">Export presets</button><button type="button" id="loadBuild">Load saved idea</button></div><label class="c-import">Restore presets from a backup<input type="file" id="importBuilds" accept=".json,application/json" aria-describedby="presetImportHint"><span id="presetImportHint">Adds valid missing presets only. Existing saved ideas and Garage ownership stay untouched.</span></label>
+<div class="c-actions"><button type="button" id="saveBuild">Save this idea</button><button type="button" id="resetBuild">Reset concept</button><button type="button" id="exportBuilds">Export presets</button><button type="button" id="loadBuild">Load saved idea</button><button type="button" id="loadGarageBuild" disabled>Load saved Garage build</button></div><label class="c-import">Restore presets from a backup<input type="file" id="importBuilds" accept=".json,application/json" aria-describedby="presetImportHint"><span id="presetImportHint">Adds valid missing presets only. Existing saved ideas and Garage ownership stay untouched.</span></label>
 <p class="c-status" role="status" aria-live="polite" id="builderStatus">Loading vehicle reference catalog…</p>
 </aside>
 <section class="c-stage" aria-label="Interactive 3D concept">

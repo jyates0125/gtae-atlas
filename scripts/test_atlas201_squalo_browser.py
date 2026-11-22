@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Browser QA: Squalo profile, craft art, gallery deep-link, persistence and mobile width."""
-import os, threading
+import os, threading, json
 from functools import partial
 from pathlib import Path
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
@@ -62,6 +62,28 @@ try:
    evidence=ROOT/'qa-evidence'/engine
    evidence.mkdir(parents=True,exist_ok=True)
    page.locator('#garageDetails').screenshot(path=str(evidence/('atlas201-squalo-'+str(width)+'.png')),animations='disabled')
+   # Use exact RGB, retain the Studio preset, and import a conflicting older Garage backup.
+   page.locator('#j255-rgb').fill('#13a9ce')
+   page.locator('#garageDetails button.save').click()
+   expect(page.locator('#j255-primary')).to_have_value('#13a9ce')
+   page.evaluate("""()=>localStorage.setItem('team-jura-atlas101-concept-presets-v1',JSON.stringify({schema:1,builds:{squalo:{model:'squalo',paint:'#aa3344',body:'auto',name:'Separate Studio idea',note:'Studio-only note'}}}))""")
+   backup={'schema':1,'app':'team-jura-atlas93-garage','garage':{'garages':['New berth'],'vehicles':{'squalo':{'paint':'Midnight','note':'Older backup note'},'adder':{'garage':'New berth','paint':'#ffaa33','secondary':'Midnight','note':'Imported build','favorite':True}}},'collection':{'owned':{'vehicles5:adder':True}}}
+   page.locator('#importGarage').set_input_files({'name':'older-garage.json','mimeType':'application/json','buffer':json.dumps(backup).encode()})
+   expect(page.locator('#garageNotice')).to_contain_text('1 existing builds kept')
+   expect(page.locator('#j255-primary')).to_have_value('#13a9ce')
+   expect(page.locator('#garageDetails textarea')).to_have_value('Squalo berth / personal QA notes')
+   assert page.evaluate("""()=>{const m=JSON.parse(localStorage.getItem('team-jura-atlas93-garage-v1'));return m.vehicles.adder.paint==='#ffaa33'&&m.vehicles.squalo.paint==='#13a9ce'&&m.garages.includes('New berth')}""")
+   page.locator('#garageDetails a.j99-studio-link').click()
+   expect(page.locator('#paintColor')).to_have_value('#aa3344',timeout=20000)
+   page.locator('#loadGarageBuild').click()
+   expect(page.locator('#paintColor')).to_have_value('#13a9ce')
+   expect(page.locator('#builderStatus')).to_contain_text('saved Studio idea and Garage record are unchanged')
+   assert page.evaluate("""()=>JSON.parse(localStorage.getItem('team-jura-atlas101-concept-presets-v1')).builds.squalo.paint==='#aa3344'""")
+   page.locator('#loadBuild').click()
+   expect(page.locator('#paintColor')).to_have_value('#aa3344')
+   expect(page.locator('#buildName')).to_have_value('Separate Studio idea')
+   if width==390:
+    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+8'),'Studio handoff causes phone horizontal overflow'
    context.close();browser.close()
    print('PASS Squalo source facts, original marine art, safe deep link, local notes and responsive QA:',engine,width)
 finally:
