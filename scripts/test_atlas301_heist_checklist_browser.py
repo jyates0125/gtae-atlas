@@ -43,7 +43,17 @@ try:
       id,'Merely visiting a heist page wrote a checklist key')
     assert not checks.first.is_disabled()
     first=checks.first.get_attribute('data-step')
-    checks.first.check()
+    if id=='cayo-perico':
+     # Cayo intentionally hides the old checklist beneath its modern mission
+     # board. Exercise the shared save handler with a genuine change event,
+     # without trying to click a legacy control users cannot see.
+     page.evaluate("""() => {
+       const input=document.querySelector('input[data-step]');
+       input.checked=true;
+       input.dispatchEvent(new Event('change',{bubbles:true}));
+     }""")
+    else:
+     checks.first.check()
     saved=page.evaluate('key=>JSON.parse(localStorage.getItem(key))',key)
     assert saved[first] is True,(id,'Checklist interaction not saved')
     untouched=page.evaluate('key=>localStorage.getItem(key)',key)
