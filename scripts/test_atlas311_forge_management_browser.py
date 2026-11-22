@@ -90,9 +90,9 @@ try:
     # Never replace malformed existing bytes, including primary idea saves.
     page.locator('#forgeVariant').select_option('Harbor Night II')
     page.evaluate("key=>localStorage.setItem(key,'{corrupted-json')",forge_key)
+    page.once('dialog',lambda dialog:dialog.accept())
     page.locator('#j311-delete').click()
-    # JavaScript confirm occurs before corruption read.
-    # Confirm dialog is accepted automatically by default in Playwright when no listener.
+    # Confirmed deletion still refuses to overwrite corrupt Forge storage.
     expect(page.locator('#builderStatus')).to_contain_text('Named design NOT changed',timeout=10000)
     page.locator('#saveBuild').click()
     expect(page.locator('#builderStatus')).to_contain_text('Forge storage is unreadable')
