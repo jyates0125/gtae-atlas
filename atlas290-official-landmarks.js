@@ -223,6 +223,9 @@ function mount(){
  if(typeof ResizeObserver!=='undefined')new ResizeObserver(layout).observe(stage);
  window.addEventListener('jura:poster:ready',ready);
  window.addEventListener('jura:poster:clear',clear);
+ window.addEventListener('jura:poster:visibility',ev=>{
+  if(ev.detail?.open===false){drag=null;if(picking){pickup('');message('Placement cancelled when poster closed; existing saved pins preserved.');}}
+ });
  if(SHA.test(panel.dataset.j290Hash||''))ready();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
