@@ -194,3 +194,11 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Malformed or unreadable checklist storage is never replaced with empty progress; accessible error status and a raw JSON recovery export protect guest data. No new account or server storage.
 - **TEST:** `scripts/test_atlas301_heist_checklist.py`, `scripts/test_atlas301_heist_checklist_browser.py` and `atlas301-heist-checklists.yml` cover all 15 mission pages at 390px/1440px, cross-tab updates, historical data, reset and corrupt export. Check exact-head results before claiming automated proof.
 - **HOLD:** Production release, exact-head full suite, user iPhone Safari, design review, source rights and owner approval remain mandatory. See `docs/ATLAS301-HEIST-CHECKLIST-PRESERVATION.md`.
+
+
+## Atlas 30.2 — seven classic map guest notebook preservation (staging)
+- **SOURCE:** GTA III, Vice City, Vice City Stories, Liberty City Stories, Chinatown Wars, TLAD and TBOGT share a fail-closed notebook reader. Corrupt/wrong-world stored records are not silently rewritten, and stale tabs cannot replace newer local guest markers in the ordinary sequential-save case.
+- **SOURCE:** Clear recovery panel lets the visitor export untouched raw bytes before choosing an explicit confirmed fresh notebook; a second byte check refuses to erase a newer tab's save. Original keys and image-relative coordinate/source distinctions remain intact.
+- **SOURCE:** Marker CRUD, category progress, JSON import and personal map image actions avoid claiming success after failed notebook saves. Cache revisions `v=302` prevent browsers using outdated Classic notebook logic.
+- **TEST:** `scripts/test_atlas302_classic_safe.py`, `scripts/test_atlas302_classic_browser.py` and `atlas302-classic-notebook.yml`. Real Chromium built-site checks for seven classic worlds at 390px/1440px, no load overwrite, corrupt export, intentional recovery and stale-tab preservation. Exact-head CI not claimed until confirmed.
+- **HOLD:** Source/location alignment gaps, complete classic-world data/media, manual full browser/ZIP release validation, real Safari and owner approval remain. See `docs/ATLAS302-CLASSIC-NOTEBOOK-RECOVERY.md`.
