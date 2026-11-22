@@ -1,0 +1,289 @@
+{
+  "schema": 1,
+  "title": "Team Jura · 13-world coordinate and collection evidence",
+  "dataAsOf": "2026-11-22",
+  "worlds": [
+    {
+      "id": "story",
+      "name": "GTA V Story",
+      "href": "./atlas.html"
+    },
+    {
+      "id": "online",
+      "name": "GTA Online",
+      "href": "./atlas-online.html"
+    },
+    {
+      "id": "vi",
+      "name": "GTA VI · Leonida",
+      "href": "./atlas-vi.html"
+    },
+    {
+      "id": "cayo",
+      "name": "Cayo Perico",
+      "href": "./heist-cayo-perico.html"
+    },
+    {
+      "id": "iv",
+      "name": "GTA IV",
+      "href": "./atlas-iv.html?scope=iv"
+    },
+    {
+      "id": "sa",
+      "name": "San Andreas",
+      "href": "./atlas-sa.html"
+    },
+    {
+      "id": "iii",
+      "name": "GTA III",
+      "href": "./map-hub.html?game=iii"
+    },
+    {
+      "id": "vc",
+      "name": "Vice City",
+      "href": "./map-hub.html?game=vc"
+    },
+    {
+      "id": "vcs",
+      "name": "Vice City Stories",
+      "href": "./map-hub.html?game=vcs"
+    },
+    {
+      "id": "lcs",
+      "name": "Liberty City Stories",
+      "href": "./map-hub.html?game=lcs"
+    },
+    {
+      "id": "ctw",
+      "name": "Chinatown Wars",
+      "href": "./map-hub.html?game=ctw"
+    },
+    {
+      "id": "tlad",
+      "name": "The Lost and Damned",
+      "href": "./atlas-iv.html?scope=tlad"
+    },
+    {
+      "id": "tbogt",
+      "name": "The Ballad of Gay Tony",
+      "href": "./atlas-iv.html?scope=tbogt"
+    }
+  ],
+  "specs": [
+    {
+      "world": "story",
+      "path": "data/atlas-story-source-snapshot.json",
+      "shape": "records",
+      "group": "type",
+      "point": [
+        "lat",
+        "lng"
+      ],
+      "evidence": "projected-reference",
+      "note": "Map-space numeric references; not independently verified in-game spawns or guide-number parity."
+    },
+    {
+      "world": "online",
+      "path": "atlas-collections.json",
+      "shape": "slots",
+      "filter": "online",
+      "evidence": "slots-only",
+      "note": "Reference checklist slots only. No individual position is supplied by this index; other Online map layers are independently audited."
+    },
+    {
+      "world": "vi",
+      "path": "data/gtadb-6-manifest.json",
+      "shape": "manifest",
+      "evidence": "provisional-landmarks",
+      "note": "Community research coordinates after release, not official or gameplay-confirmed landmarks."
+    },
+    {
+      "world": "cayo",
+      "path": "data/cayo-treasure-spots.json",
+      "shape": "records",
+      "list": "spawns",
+      "group": "kind",
+      "point": [
+        "worldX",
+        "worldY"
+      ],
+      "evidence": "possible-not-daily",
+      "categoryPrefix": "Possible treasure · ",
+      "note": "Possible chest positions; not the two independently verified active spawns for today."
+    },
+    {
+      "world": "cayo",
+      "path": "data/cayo-schematic.json",
+      "shape": "records",
+      "list": "locations",
+      "group": "category",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "schematic",
+      "categoryPrefix": "Schematic · ",
+      "note": "Illustrative island-scoping canvas pixels only, not independently surveyed game coordinates."
+    },
+    {
+      "world": "iv",
+      "path": "data/gtadb-4-manifest.json",
+      "shape": "manifest",
+      "evidence": "landmark-reference",
+      "note": "Shared Liberty City place references, not Flying Rats or edition-specific collectible pickups."
+    },
+    {
+      "world": "iv",
+      "path": "data/atlas-iv-300-source-birds.json",
+      "shape": "set",
+      "set": "iv",
+      "category": "Flying Rats",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "numeric-source-xyz",
+      "note": "200 numbered GTA IV birds from pinned MIT source; projection/gameplay alignment requires review."
+    },
+    {
+      "world": "tlad",
+      "path": "data/atlas-iv-300-source-birds.json",
+      "shape": "set",
+      "set": "tlad",
+      "category": "Seagulls",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "numeric-source-xyz",
+      "note": "Distinct 50 TLAD seagulls; does not borrow GTA IV Flying Rat progress."
+    },
+    {
+      "world": "tbogt",
+      "path": "data/atlas-iv-300-source-birds.json",
+      "shape": "set",
+      "set": "tbogt",
+      "category": "Seagulls",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "numeric-source-xyz",
+      "note": "Distinct 50 TBOGT seagulls; does not borrow TLAD progress."
+    },
+    {
+      "world": "sa",
+      "path": "data/atlas-sa-150-sourced-pins.json",
+      "shape": "records",
+      "group": "set",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "approximate-projection",
+      "note": "MIT numeric reference projected onto Apache-2.0 vector map; game-placement pixels are approximate."
+    },
+    {
+      "world": "sa",
+      "path": "data/atlas-sa-100-tag-placements.json",
+      "shape": "records",
+      "group": "set",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "mixed-object-evidence",
+      "note": "100 tags: 61 directly matched object exports, 39 attribution/transcription-only; locations not gameplay-certified."
+    },
+    {
+      "world": "sa",
+      "path": "data/atlas-sa-70-jump-zones.json",
+      "shape": "records",
+      "group": "set",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "trigger-zone-centers",
+      "note": "70 airborne trigger-zone centers; neither ramp approaches nor drivable route instructions."
+    },
+    {
+      "world": "iii",
+      "path": "data/atlas-iii-160-source-points.json",
+      "shape": "records",
+      "group": "category",
+      "point": [
+        "x",
+        "y"
+      ],
+      "objectiveField": "slot",
+      "evidence": "source-projection",
+      "note": "Script source, original radar projection; rampages include alternate pickup positions, not 40 objectives."
+    },
+    {
+      "world": "vc",
+      "path": "data/atlas-vc-51-source-points.json",
+      "shape": "records",
+      "group": "category",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "source-projection",
+      "note": "Original PC Vice City source and radar transform; not gameplay pixel-verified."
+    },
+    {
+      "world": "vc",
+      "path": "data/atlas-vc-de-171-source-points.json",
+      "shape": "records",
+      "group": "category",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "edition-uncalibrated",
+      "categoryPrefix": "Definitive Edition · ",
+      "note": "171 separate Definitive Edition reference positions, no verified calibration to the classic radar or transferred progress."
+    },
+    {
+      "world": "vcs",
+      "path": "data/atlas-vcs-psp-reference.json",
+      "shape": "records",
+      "group": "category",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "uncalibrated-presets",
+      "objectiveMode": "not-collectibles",
+      "note": "PSP teleport/reference presets, not collectible coordinates; image-to-world transform not established."
+    },
+    {
+      "world": "lcs",
+      "path": "data/atlas-lcs-psp-reference.json",
+      "shape": "records",
+      "group": "category",
+      "point": [
+        "x",
+        "y"
+      ],
+      "evidence": "uncalibrated-presets",
+      "objectiveMode": "not-collectibles",
+      "note": "PSP teleport/reference presets, not collectible coordinates; image-to-world transform not established."
+    },
+    {
+      "world": "ctw",
+      "shape": "gap",
+      "category": "Edition-specific collectible positions",
+      "evidence": "not-audited",
+      "note": "No licensed, calibrated individual Chinatown Wars collectible source pack is included in this matrix; personal notebook pins remain private."
+    },
+    {
+      "world": "story",
+      "path": "data/gtadb-5-manifest.json",
+      "shape": "manifest",
+      "evidence": "landmark-reference",
+      "note": "Shared GTA V/Online geography; not individually validated Story collectible spawns."
+    }
+  ]
+}
