@@ -88,7 +88,9 @@ garage3d=(R/'atlas99-garage3d.js').read_text(encoding='utf-8')
 config=(R/'atlas101-configurator.js').read_text(encoding='utf-8')
 dbcss=(R/'atlas100-universe.css').read_text(encoding='utf-8')
 garage=(R/'atlas93-garage.js').read_text(encoding='utf-8')
-assert 'const aircraft=' in garage3d and 'const watercraft=' in garage3d
+assert 'forge.build(opts.type,opts.model,paint,design,environment)' in garage3d
+import subprocess
+subprocess.run(['node','-e',"""const a=require('node:assert/strict'), f=require('./atlas256-forge-geometry.js');for(const [type,id,kind] of [['Aircraft','lazer','air'],['Boat','jetmax','marine'],['Helicopter','buzzard','rotor']]){const m=f.build(type,id,'#4473c2',{});a.equal(m.kind,kind);a.ok(m.vertices.length>0&&m.vertices.every(Number.isFinite));}"""],cwd=R,check=True)
 assert 'Aircraft / Plane concept' in config and 'Boat / Watercraft concept' in config
 assert '◈ Open this vehicle in the 3D concept studio' in garage
 assert 'body[data-atlas-kind="all"] .u-hero-art' in dbcss
