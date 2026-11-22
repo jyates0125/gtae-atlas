@@ -30,4 +30,13 @@ html=(r/'atlas-coverage.html').read_text(encoding='utf-8')
 js=(r/'atlas195-source-tags.js').read_text(encoding='utf-8')
 assert 'id="j195-source-tags"' in html and 'atlas195-source-tags.js?v=195' in html and 'atlas195-source-tags.css?v=195' in html
 assert 'atlas195-source-tags.json' in js and "current.tags.filter" in js and "filtered.map" in js
-print('Atlas 19.5 local source tags / mapped and search-only counts: PASS')
+sets=json.loads((r/'atlas-collections.json').read_text(encoding='utf-8'))['sets']
+hq={x['id']:x for x in json.loads((r/'atlas81-collections.json').read_text(encoding='utf-8'))['sets']}
+assert len(sets)==len({x['id'] for x in sets})==20
+assert all(x['mode']==hq[x['id']]['mode'] and x['total']==hq[x['id']]['total'] for x in sets)
+assert all(x['locationVerification']=='not-imported' and x['slotsAreLocations'] is False for x in sets)
+coverage=(r/'atlas-coverage.js').read_text(encoding='utf-8')
+assert 'scopeOf(row)!==category.scope' in coverage and 'Number.isFinite(row?.x)' in coverage
+assert 'atlas81-hq.html?collection=' in coverage and 'match.mode!==r.mode||match.total!==r.total' in coverage
+assert 'j229-collection-evidence' in html and 'j229-collection-rows' in html
+print('Atlas 19.5/22.9: attributed source tags, 20 cross-checked collection sets, game-scoped reference counts: PASS')
