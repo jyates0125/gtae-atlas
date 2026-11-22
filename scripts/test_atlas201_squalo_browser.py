@@ -132,6 +132,36 @@ try:
    expect(page.locator('#garageDetails label').filter(has_text='NOT an in-game customization')).to_have_count(1)
    if width==390:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+8'),'Studio handoff causes phone horizontal overflow'
+   # Forge 26.5: test the actual served collection hub and cross-world deep links.
+   identity=page.request.get(base+'atlas-build-identity.json')
+   assert identity.ok,'Published build identity missing'
+   assert identity.json()['schema']==1
+   page.goto(base+'atlas-vehicle-configurator.html?model=jetmax',wait_until='domcontentloaded')
+   expect(page.locator('#concept3d')).to_have_attribute('data-forge-fidelity','model-study',timeout=20000)
+   page.locator('#buildName').fill('QA Marina Edition')
+   page.locator('#concept3d [data-forge-control="environment"]').select_option('marina')
+   page.locator('#saveVariant').click()
+   expect(page.locator('#builderStatus')).to_contain_text('Named build saved')
+   page.goto(base+'atlas-forge-collections.html',wait_until='domcontentloaded')
+   page.locator('#forgeCollectionSearch').fill('QA Marina Edition')
+   card=page.locator('#forgeCollectionRows .fc-entry')
+   expect(card).to_have_count(1,timeout=20000)
+   expect(card).to_contain_text('Jetmax')
+   card.get_by_role('link',name='Open in Forge Studio').click()
+   expect(page.locator('#buildName')).to_have_value('QA Marina Edition',timeout=20000)
+   expect(page.locator('#concept3d [data-forge-control="environment"]')).to_have_value('marina')
+   page.goto(base+'atlas-vehicle-configurator.html?world=vi&model=vi_squalo',wait_until='domcontentloaded')
+   expect(page.locator('#modelSelect')).to_have_value('vi_squalo',timeout=20000)
+   expect(page.locator('#concept3d')).to_have_attribute('data-forge-fidelity','model-study')
+   expect(page.locator('#referenceNote')).to_contain_text('Official Rockstar screenshot title')
+   assert not page.locator('#addToGarage').is_visible()
+   page.goto(base+'atlas-forge-collections.html',wait_until='domcontentloaded')
+   page.locator('#forgeCollectionWorld').select_option('vi')
+   expect(page.locator('#forgeCollectionCount')).to_contain_text('0 of',timeout=20000)
+   page.locator('#forgeCollectionWorld').select_option('all')
+   page.screenshot(path=str(evidence/('atlas265-forge-collections-'+str(width)+'.png')),animations='disabled',full_page=True)
+   if width==390:
+    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+8'),'Forge collection hub overflows phone width'
    context.close();browser.close()
    print('PASS Squalo source facts, original marine art, safe deep link, local notes and responsive QA:',engine,width)
 finally:
