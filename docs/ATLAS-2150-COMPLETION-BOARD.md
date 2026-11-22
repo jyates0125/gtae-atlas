@@ -208,3 +208,10 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Marker CRUD, category progress, JSON import and personal map image actions avoid claiming success after failed notebook saves. Cache revisions `v=302` prevent browsers using outdated Classic notebook logic.
 - **TEST:** `scripts/test_atlas302_classic_safe.py`, `scripts/test_atlas302_classic_browser.py` and `atlas302-classic-notebook.yml`. Real Chromium built-site checks for seven classic worlds at 390px/1440px, no load overwrite, corrupt export, intentional recovery and stale-tab preservation. Exact-head CI not claimed until confirmed.
 - **HOLD:** Source/location alignment gaps, complete classic-world data/media, manual full browser/ZIP release validation, real Safari and owner approval remain. See `docs/ATLAS302-CLASSIC-NOTEBOOK-RECOVERY.md`.
+
+
+## Atlas 30.3 — all thirteen GTA destinations and phone/desktop navigation
+- **SOURCE/UX:** The four featured worlds and nine additional game/episode destinations have unique, same-origin game-correct links. The world finder now exposes a single-tap Show all 13 reset whenever search or filters are active; the allowlisted recent-world shortcut refreshes after browser Back restores a cached directory page.
+- **TESTED:** Exact-head focused source and Chromium acceptance `bf3c83e24909b0b8ee472746dc311320fea569a8` passed for 13 routes, world identities, phone 390px and desktop 1440px, return links, search/reset, Back/recent-world continuity and no horizontal overflow. PR #108 merged into draft staging only.
+- **RETAINED:** Existing Cayo and GTA V/Online/VI engine separation, original game covers, classic episode image-relative map notebooks and provisional source notices. The new workflow `atlas303-thirteen-worlds.yml` is strictly world/directory focused.
+- **REMAINING:** This certifies navigation, not exhaustive 13-world verified collectibles/road networks, source permissions, 3D, real Safari/iPhone, full final Chromium/Edge/ZIP or owner release approval. See `docs/ATLAS303-THIRTEEN-WORLD-ACCEPTANCE.md`.
