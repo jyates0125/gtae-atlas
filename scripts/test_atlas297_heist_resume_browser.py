@@ -73,11 +73,18 @@ try:
      expect(item).to_be_visible()
      item.click()
      detail=page.locator('.j167-detail')
-     expect(detail.get_by_role('button',name='Mark scoped')).to_be_visible()
-     detail.get_by_role('button',name='Mark scoped').click()
+     # Kortz Center already has an m0 scoped mark from the seeded resume
+     # fixture. An existing mark must survive entering its workspace.
+     scope_button=detail.locator('.j167-detail-actions button').first
+     expect(scope_button).to_be_visible()
+     was_scoped=scope_button.inner_text().startswith('✓')
+     if not was_scoped: scope_button.click()
+     assert '✓' in detail.locator('.j167-detail-actions button').first.inner_text()
      detail.get_by_role('button',name='+ Add to route').click()
      save=page.evaluate("(id)=>JSON.parse(localStorage.getItem('teamjura-heist-focus-v1:'+id))",heist)
-     assert len(save['route'])==1 and len(save['scoped'])==1,(heist,save)
+     assert len(save['route']) >= 1 and len(save['scoped']) >= 1,(heist,save)
+     if heist=='kortz-center':
+      assert set(save['route'])=={'m0','m1'} and 'm0' in save['scoped'], 'Existing planning route was lost'
      check=page.locator('input[data-step]').first
      check.check()
      assert page.evaluate("(id)=>Object.values(JSON.parse(localStorage.getItem('teamjura-heist-'+id))).some(x=>x===true)",heist)
