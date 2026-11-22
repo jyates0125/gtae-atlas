@@ -48,7 +48,7 @@ def should_run(event: str, action: str, changed: list[str] | None, patterns: lis
 
 def current_changes() -> list[str] | None:
     try:
-        command=["git","diff","--name-only","--diff-filter=ACMRT","HEAD^","HEAD"]
+        command=["git","diff","--name-only","--no-renames","--diff-filter=ACDMRT","HEAD^","HEAD"]
         result=subprocess.run(command,cwd=ROOT,check=True,text=True,capture_output=True,timeout=15)
         return [name.strip() for name in result.stdout.splitlines() if name.strip()]
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
