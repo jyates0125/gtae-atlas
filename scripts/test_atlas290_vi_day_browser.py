@@ -81,6 +81,25 @@ try:
             page.locator("#togglePins").click()
             page.locator("#togglePins").click()
             assert not page.locator("#atlasCanvas").is_hidden()
+            # Full GTADB index is independently searchable, including records
+            # without calibrated coordinates. Never invent pins for these.
+            page.locator("#j290-vi-ledger").evaluate("(el) => el.open = true")
+            expect(page.locator("#j290-count")).to_contain_text(
+                "3,754 records", timeout=25000
+            )
+            expect(page.locator("#j290-count")).to_contain_text("3,663 provisional X/Y")
+            expect(page.locator("#j290-count")).to_contain_text("91 unpositioned")
+            page.locator("#j290-kind").select_option("search-only")
+            expect(page.locator("#j290-pages")).to_contain_text("91 matching")
+            assert page.locator(".j290-entry").count()==24
+            assert page.locator(".j290-entry .j290-not-positioned").count()==24
+            assert page.locator(".j290-entry a[href^='./atlas-vi.html?place=']").count()==0
+            page.locator("#j290-next").click()
+            expect(page.locator("#j290-pages")).to_contain_text("page 2 of 4")
+            page.locator("#j290-kind").select_option("mapped")
+            expect(page.locator("#j290-pages")).to_contain_text("3,663 matching")
+            assert page.locator(".j290-entry a[href^='./atlas-vi.html?place=']").count()==24
+            page.locator("#j290-vi-ledger").evaluate("(el) => el.open = false")
             if width == 390:
                 assert page.evaluate(
                     "document.documentElement.scrollWidth <= innerWidth + 1"
