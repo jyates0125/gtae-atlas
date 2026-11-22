@@ -23,7 +23,8 @@ assert 'atlas90-seed.json' in script
 assert 'atlas93-garage.html?addModel=' in script
 assert 'TeamJuraGarage3D.mount' in script
 assert 'No licensed game meshes' in script
-assert 'prepareImport(payload,storage.builds,new Set(models))' in script
+assert 'const known=new Set(models)' in script and 'prepareImport(payload,storage.builds,known)' in script
+assert "payload.world!==WORLD" in script and "world:WORLD,exported:" in script
 assert 'Object.hasOwn(merged,id)' in script and 'entry.model!==id' in script
 assert 'style.disabled=unsupported||classLocked' in script
 assert 'presets and Garage ownership stay untouched' not in page or 'importBuilds' in page
