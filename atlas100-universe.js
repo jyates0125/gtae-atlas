@@ -140,7 +140,10 @@ function actionsFor(r,box){if(r.kind==='vehicle'){if(r.model&&r.scope!=='vi')box
   if(gallery)box.append(link(scope==='vi'?'Leonida weapon research':'Pictured weapon gallery',gallery));
  }
  if(r.kind==='collectible'){
-  box.append(link('Collection HQ','atlas81-hq.html#collections'));
+  if(r.scope==='story'||r.scope==='online'){
+   const checklist=r.collectionId?'atlas81-hq.html?collection='+encodeURIComponent(r.collectionId)+'#collections':'atlas81-hq.html#collections';
+   box.append(link(r.collectionId?'Open collection checklist':'Collection HQ',checklist));
+  }
   const map=r.scope==='online'?'atlas-online.html':r.scope==='vi'?'atlas-vi.html':'atlas.html';
   if(r.collectionId)box.append(link('Open collection on map',map+'?collection='+encodeURIComponent(r.collectionId)));
   else box.append(link('Open relevant map',map));
