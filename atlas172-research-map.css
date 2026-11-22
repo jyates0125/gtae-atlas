@@ -40,3 +40,16 @@ body.j119-research .j172-tools #j172-back{
   top:max(12px,env(safe-area-inset-top));left:8px;right:8px;
  }
 }
+
+/* Atlas 22.4: browser-tested collision fix. The research action group
+   previously sat at top:125px on phones and intercepted the native #home
+   map-reset control. Dock it at the bottom, outside the zoom/reset stack. */
+@media(max-width:760px){
+ body.j119-research .maparea .j172-tools,
+ body.j119-research .maparea.j172-full-map .j172-tools{
+  top:auto!important;
+  bottom:max(12px,env(safe-area-inset-bottom,0px))!important;
+  left:8px!important;right:8px!important;
+  width:max-content;max-width:calc(100% - 16px);
+ }
+}
