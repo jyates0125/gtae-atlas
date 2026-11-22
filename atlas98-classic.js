@@ -82,9 +82,13 @@ function renderBackground(){
  b.classList.toggle('has-image',!!img);
  b.querySelector('span').hidden=true;b.querySelector('small').hidden=true;
  const viewport=$('#classicViewport');if(viewport)viewport.dataset.mapImage=highResUrl?'local-highres':state.background?'legacy-local':originalMapReady?'game-original':'original-art';
- if(viewport){viewport.dataset.sourceImage=!own&&originalMapReady?activeMapUrl||'':'';viewport.dataset.sourceWidth=!own&&originalMapReady?String(originalMapSize?.width||0):'';viewport.dataset.sourceHeight=!own&&originalMapReady?String(originalMapSize?.height||0):'';}
+ if(viewport){if(own)viewportSourceMismatch(false);viewport.dataset.sourceImage=!own&&originalMapReady?activeMapUrl||'':'';viewport.dataset.sourceWidth=!own&&originalMapReady?String(originalMapSize?.width||0):'';viewport.dataset.sourceHeight=!own&&originalMapReady?String(originalMapSize?.height||0):'';}
  fitClassicImage();
  window.dispatchEvent(new CustomEvent('team-jura:classic-map-image-change',{detail:{game:id}}));
+}
+function viewportSourceMismatch(mismatch){
+ const v=$('#classicViewport');if(v)v.dataset.personalImageMismatch=String(!!mismatch);
+ const layer=$('#classicMarkerLayer');if(layer)layer.hidden=!!mismatch;
 }
 function loadOriginalWorldMap(){
  // Keep the game/era unchanged across every fallback; don't redirect fans to generic city artwork.
@@ -120,9 +124,9 @@ function loadOriginalWorldMap(){
    activeMapUrl=current.url;
    if(!highResUrl&&!state.background){
     if(state.markers.length&&previousSource&&previousSource!==current.url){
-     // Existing image-relative marker values are intentionally not moved.
-     status('Alternate map loaded. Existing personal pins may require alignment review.');
-    }else try{localStorage.setItem(sourceKey,current.url)}catch{}
+     // Preserve old coordinates and origin, but flag the mismatching artwork.
+     viewportSourceMismatch(true);
+    }else{viewportSourceMismatch(false);try{localStorage.setItem(sourceKey,current.url)}catch{}}
    }
    showSource(current);
    if(!highResUrl&&!state.background){

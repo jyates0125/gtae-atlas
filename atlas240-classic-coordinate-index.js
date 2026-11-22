@@ -63,7 +63,7 @@ order.onclick=()=>{
   pending.sort((a,b)=>((a.x-from.x)**2+(a.y-from.y)**2)-((b.x-from.x)**2+(b.y-from.y)**2)||a.slot-b.slot||a.id.localeCompare(b.id));
   const next=pending[0];baseline.push(next);pending=pending.filter(r=>objective(r)!==objective(next));
  }
- const improved=window.JuraRoutePlanner?.improveOrder(origin,baseline.slice(1));
+ const improved=window.JuraRoutePlanner?.improveOrder?.(origin,baseline.slice(1));
  planned=improved?.improved?[origin,...improved.stops]:baseline;
  display(planned);exportButton.disabled=false;
  status.textContent=planned.length+' reference stops · '+(alternateSpawns?'one candidate spawn per objective; confirm the active spawn. ':'')+(improved?.improved?'shorter geometric order; ':'nearest-next order retained; ')+'not road directions.';
