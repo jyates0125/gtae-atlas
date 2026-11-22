@@ -42,5 +42,34 @@ exp.addEventListener('click',()=>{
 });
 const clear=node('button','j164-other','Clear mission notes');clear.type='button';
 clear.addEventListener('click',()=>{if(!confirm('Clear these personal notes? Your existing checklist will be preserved.'))return;for(const [k,t] of used){t.value='';data[k]=''}try{localStorage.removeItem(key)}catch(_){}saveMsg.textContent='Notes cleared. Your mission checklist was not changed.'});
-actions.append(exp,clear);form.append(actions,saveMsg);section.append(form);box.append(section);
+actions.append(exp,clear);
+if(id!=='cayo-perico'){
+ const restore=node('label','j228-import');restore.append(node('span','','Restore missing notes from a mission backup'));
+ const file=node('input');file.type='file';file.accept='.json,application/json';file.setAttribute('aria-describedby','j228-restore-help');
+ const help=node('small','','Only imports notes for this mission into empty fields. Existing notes, scoped points, routes and checklists are preserved.');help.id='j228-restore-help';
+ restore.append(file,help);
+ file.addEventListener('change',async()=>{
+  const selected=file.files?.[0];if(!selected)return;
+  try{
+   if(selected.size>100000)throw Error('Backup exceeds 100 KB');
+   const incoming=JSON.parse(await selected.text());
+   if(!incoming||incoming.schema!=='teamjura-heist-plan-v1'||incoming.heist!==id||!incoming.notes||typeof incoming.notes!=='object'||Array.isArray(incoming.notes))throw Error('Not a backup for this mission');
+   let restored=0,preserved=0;
+   // Read the latest values again after file I/O; never overwrite nonempty notes.
+   const changes=[];
+   for(const [k,t] of used){
+    const value=incoming.notes[k];if(typeof value!=='string'||!value.trim())continue;
+    if(t.value.trim()){preserved++;continue}
+    changes.push([k,t,value.slice(0,700)]);
+   }
+   for(const [k,t,value] of changes){t.value=value;data[k]=value;restored++}
+   if(restored)save();
+   const persistFailed=restored&&saveMsg.textContent.startsWith('Could not save');
+   saveMsg.textContent=restored+' field(s) restored; '+preserved+' existing kept.'+(persistFailed?' Storage unavailable; export a copy before leaving.':restored?' Saved on this device.':' No changes made.');
+  }catch(error){saveMsg.textContent='Import rejected: '+error.message}
+  finally{file.value=''}
+ });
+  form.append(actions,restore,saveMsg);
+}else form.append(actions,saveMsg);
+section.append(form);box.append(section);
 })();

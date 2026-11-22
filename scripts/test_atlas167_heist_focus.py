@@ -16,6 +16,9 @@ assert 'canvas.getContext' in src
 assert "teamjura-heist-focus-v1:" in src and 'localStorage.setItem' in src
 assert 'ILLUSTRATIVE POSITIONS · NOT GEOREFERENCED' in src and 'not real travel paths' in src
 assert 'Chances & Progress' not in src and 'Challenges & progress' in src
+assert "advancedRoutes=id!=='cayo-perico'" in src
+for marker in ('closestSequence','data-route-point','Nearest next','Reverse order','Starting point updated.'):
+ assert marker in src,marker
 from hashlib import sha256
 files=[p/'art'/('jura167-map-'+slug+'.webp') for slug in (*ids,'heist-hq')]
 assert len(files)==16

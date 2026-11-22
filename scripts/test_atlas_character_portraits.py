@@ -221,6 +221,48 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             expect(page.locator("#modeOnline")).to_have_attribute("aria-pressed","true")
             page.reload(wait_until="domcontentloaded")
             expect(page.locator("#selectedTitle")).to_contain_text("Snowmen")
+            # Check all 14 non-Cayo route workspaces at phone width and a representative
+            # set of three other missions at each remaining viewport. Cayo retains its own planner.
+            heist_ids=("fleeca","prison-break","humane-labs","series-a","pacific-standard","doomsday-act-1","doomsday-act-2","doomsday-act-3","diamond-casino","cluckin-bell","salvage-yard","auto-shop","agency-vip","kortz-center")
+            for heist in heist_ids if width==390 else ("fleeca","diamond-casino","kortz-center"):
+                page.goto(base+"heist-"+heist+".html",wait_until="domcontentloaded")
+                rows=page.locator("#j167-heist-map .j167-item")
+                expect(rows.first).to_be_visible(timeout=15000)
+                for i in (0,1,2):
+                    rows.nth(i).click()
+                    page.locator(".j167-detail").get_by_role("button",name="+ Add to route",exact=True).click()
+                ordered=page.locator(".j227-route-row")
+                expect(ordered).to_have_count(3)
+                def ids(): return ordered.evaluate_all("rows => rows.map(r => r.dataset.routePoint)")
+                initial=ids()
+                ordered.nth(2).locator('[data-route-action="start"]').click()
+                assert ids()==[initial[2],initial[0],initial[1]]
+                ordered.nth(1).locator('[data-route-action="down"]').click()
+                assert ids()==[initial[2],initial[1],initial[0]]
+                page.get_by_role("button",name="Reverse order",exact=True).click()
+                assert ids()==initial
+                page.get_by_role("button",name="Nearest next",exact=True).click()
+                result=ids()
+                assert result[0]==initial[0] and set(result)==set(initial)
+                page.reload(wait_until="domcontentloaded")
+                expect(ordered).to_have_count(3,timeout=15000)
+                assert ids()==result
+                notes=page.locator(".j164-notes textarea")
+                expect(notes).to_have_count(5,timeout=15000)
+                notes.nth(0).fill("Existing private approach")
+                restore={"schema":"teamjura-heist-plan-v1","heist":heist,"notes":{"approach":"Do not overwrite","entry":"Restored private entry"}}
+                page.locator(".j228-import input").set_input_files({"name":"mission.json","mimeType":"application/json","buffer":json.dumps(restore).encode()})
+                expect(page.locator(".j164-notes [role=status]")).to_contain_text("1 field(s) restored; 1 existing kept")
+                expect(notes.nth(0)).to_have_value("Existing private approach")
+                expect(notes.nth(1)).to_have_value("Restored private entry")
+                restore["heist"]="another-mission"
+                page.locator(".j228-import input").set_input_files({"name":"wrong.json","mimeType":"application/json","buffer":json.dumps(restore).encode()})
+                expect(page.locator(".j164-notes [role=status]")).to_contain_text("Import rejected:")
+                assert ids()==result
+                page.reload(wait_until="domcontentloaded")
+                expect(notes.nth(1)).to_have_value("Restored private entry",timeout=15000)
+                if width==390:
+                    assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 2"),heist
             assert not errors, errors
             page.close()
             print(f"PASS portraits, history and database navigation at {width}px", flush=True)
