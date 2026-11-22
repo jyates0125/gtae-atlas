@@ -43,6 +43,8 @@ for file,(yes,no) in cases.items():
  assert mod.relevant(yes,pats),file
  assert not mod.relevant(no,pats),file
 
+assert "--diff-filter=ACDMRT" in (root/"scripts/atlas300-ci-delta.py").read_text(), "Deleted dependency paths must count"
+assert "--no-renames" in (root/"scripts/atlas300-ci-delta.py").read_text(), "Renamed-away critical paths must be checked"
 assert mod.relevant(["scripts/test_atlas290_vi_day.py"],["scripts/test_atlas29*.py"])
 assert not mod.relevant(["scripts/test_atlas171_browser.py"],["scripts/test_atlas29*.py"])
 assert mod.relevant(["atlas290-official-landmarks.js"],["atlas290-*.js"])
