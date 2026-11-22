@@ -44,6 +44,33 @@ try:
         after = page.evaluate("([g,f]) => [localStorage.getItem(g),JSON.parse(localStorage.getItem(f))]", [garage_key, forge_key])
         assert after[0] == before[0], 'Saving Forge should not modify Garage'
         assert after[1]['builds']['jetmax']['paint'] == '#12ab34'
+        # Reverse journey: editing in Forge must update only this model's Garage concept.
+        page.locator('#buildName').fill('Marina Refit')
+        page.locator('#buildNote').fill('New dock')
+        page.locator('#saveToGarage').click()
+        expect(page.locator('#builderStatus')).to_contain_text('Saved Jetmax concept to My Garage')
+        snapshot=page.evaluate("([g,f]) => [JSON.parse(localStorage.getItem(g)),JSON.parse(localStorage.getItem(f))]", [garage_key,forge_key])
+        assert snapshot[0]['vehicles']['jetmax']['studioName']=='Marina Refit'
+        assert snapshot[0]['vehicles']['jetmax']['note']=='New dock'
+        assert snapshot[0]['vehicles']['jetmax']['paint']=='#12ab34'
+        assert snapshot[1]==after[1], 'Reverse Garage save must not change Forge presets'
+        # Preserve independent ownership/location/plate and other vehicles across the handoff.
+        page.evaluate("""g => {const obj=JSON.parse(localStorage.getItem(g));
+          Object.assign(obj.vehicles.jetmax,{favorite:true,garage:'Marina',plate:'KEEP'});
+          obj.vehicles.sultan={favorite:true,paint:'Graphite'};
+          localStorage.setItem(g,JSON.stringify(obj));
+        }""",garage_key)
+        page.locator('#buildName').fill('Refit Two')
+        page.locator('#saveToGarage').click()
+        preserved=page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles",garage_key)
+        assert preserved['jetmax']['favorite'] is True
+        assert preserved['jetmax']['garage']=='Marina'
+        assert preserved['jetmax']['plate']=='KEEP'
+        assert preserved['sultan']=={'favorite':True,'paint':'Graphite'}
+        # VI must not expose the GTA V Garage write control.
+        page.goto(base+'/atlas-vehicle-configurator.html?world=vi',wait_until='domcontentloaded')
+        expect(page.locator('#saveToGarage')).to_be_hidden()
+        assert page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.studioName",garage_key)=='Refit Two'
         browser.close()
 finally:
     server.shutdown()
