@@ -62,6 +62,34 @@ assert.deepEqual(saved,forge.build('Boat','jetmax','#123456',{},'hangar').vertic
 console.log('PASS six original Forge geometry classes and saved environment regression');
 """], cwd=ROOT, check=True)
 
+# Read-only collection hub: world isolation, private named-build deep links and ownership semantics.
+require("atlas-forge-collections.html", 'id="forgeCollectionRows"', 'id="forgeCollectionWorld"', 'id="forgeCollectionKind"', "atlas263-forge-collections.js")
+for page in ("atlas-vehicle-configurator.html", "atlas93-garage.html", "atlas90-weapons.html", "atlas90-weapons6.html"):
+    require(page, "atlas-forge-collections.html")
+require("atlas101-configurator.js", "requestedVariant", "loadWorking(named)")
+subprocess.run(["node", "-e", """
+const assert = require('node:assert/strict');
+const hub = require('./atlas263-forge-collections.js');
+const preset = (model,name) => ({model,name,paint:'#123456'});
+const rows = hub.collect({
+  v:{schema:1,builds:{adder:preset('adder','Primary'),vi_squalo:preset('vi_squalo','wrong')},variants:{adder:[preset('adder','Sun & Moon'),preset('adder','SUN & MOON')]}},
+  vi:{schema:1,builds:{vi_squalo:preset('vi_squalo','Marina'),adder:preset('adder','wrong')}},
+  owned:{schema:1,owned:{'vehicles5:adder':true,'vehicles5:bison':false}},
+  garage:{vehicles:{adder:{garage:'Main Garage'}}},
+  story:{schema:1,items:['bat']},online:{schema:1,items:['bat']},
+  viArmory:{schema:1,items:['girardi-es9','unknown']}
+},{'girardi-es9':'Girardi ES9'});
+assert.equal(rows.length,7);
+assert.deepEqual(rows.filter(x=>x.kind==='armory').map(x=>x.world),['story','online','vi']);
+assert.ok(rows.some(x=>x.href.includes('variant=Sun%20%26%20Moon')));
+assert.ok(rows.some(x=>x.href.includes('world=vi&model=vi_squalo')));
+assert.ok(rows.some(x=>x.kind==='garage'&&x.subtitle==='Main Garage'));
+assert.ok(!rows.some(x=>x.model==='bison'));
+assert.ok(!rows.some(x=>x.model==='unknown'));
+assert.ok(!rows.some(x=>x.title==='wrong'));
+console.log('PASS eight Forge collection projection assertions');
+"""], cwd=ROOT, check=True)
+
 # World and heist navigation: these pages must remain in the release.
 for path in ("index.html", "atlas-dashboard.html", "maps.html",
              "atlas.html", "atlas-online.html", "atlas-vi.html",
