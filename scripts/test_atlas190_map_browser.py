@@ -167,6 +167,15 @@ try:
    page.locator('#j190-sa-limit').select_option('100')
    jump_route=page.evaluate("window.TeamJuraSARoute.getRoute()")
    assert len(jump_route)==len(set(jump_route))==70 and jump_route[0]=='jumps:1' and jump_route[-1]=='jumps:70'
+   page.goto(base+'map-hub.html?game=vc',wait_until='domcontentloaded',timeout=45000)
+   expect(page.locator('#j240-rows li')).to_have_count(36,timeout=15000)
+   page.locator('#j240-category').select_option('Store robberies')
+   expect(page.locator('#j240-rows li')).to_have_count(15)
+   page.locator('#j240-start').select_option('vc-robbery-01')
+   page.get_by_role('button',name='Build geometric preview').click()
+   expect(page.locator('#j240-rows li').first).to_have_attribute('data-id','vc-robbery-01')
+   expect(page.locator('#j240-status')).to_contain_text('not road directions')
+   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
    for scope in ('tlad','tbogt'):
     page.goto(base+'map-hub.html?game='+scope,wait_until='domcontentloaded',timeout=45000)
     link=page.locator('#j190-episode-collectibles')

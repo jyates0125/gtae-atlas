@@ -109,3 +109,12 @@ for p in jumps['records']:
  assert abs(p['x']-p['worldX']-3000)<.001 and abs(p['y']+p['worldY']-3000)<.001
 assert 'TeamJuraSAJumps' in sa and 'TeamJuraSAJumps' in saplan
 print('PASS 320 SA source records across five sets; 70 bounded jump zones')
+
+vc=json.loads(read('data/atlas-vc-51-source-points.json'))
+assert vc['world']=='vc' and vc['license']=='Apache-2.0' and vc['sourceRevision']=='b06265e1bf37e2b1ed389c58c80679addfbc8f20'
+assert vc['counts']=={'Stunt jumps':36,'Store robberies':15} and len(vc['records'])==51
+assert vc['mapAlignment']=='unverified' and vc['gameplayVerified'] is False
+assert len({p['id'] for p in vc['records']})==len({(p['x'],p['y'],p['z']) for p in vc['records']})==51
+for p in vc['records']:
+ assert abs(p['sourceZ']+p['zAdjustment']-p['z'])<.00001 and p['sourceUrl']==vc['sourceUrl']
+print('PASS Vice City 51 attributed world-coordinate records, no unsupported pixel calibration')
