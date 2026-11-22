@@ -56,7 +56,7 @@ function findRows(term){
 }
 function show(term){
  const rows=findRows(term);results.replaceChildren();
- if(!term){results.hidden=true;input.setAttribute('aria-expanded','false');return rows}
+ if(!term){results.hidden=true;input.setAttribute('aria-expanded','false');input.removeAttribute('aria-activedescendant');return rows}
  if(!rows.length){results.append(make('p','','No direct matches. Press Search to explore all records.'))}
  else for(const row of rows){
   const href=toLink(row.href);if(!href)continue;
@@ -64,7 +64,7 @@ function show(term){
   a.href=href;if(href.startsWith('https:')){a.target='_blank';a.rel='noopener noreferrer'}
   a.append(small);results.append(a);
  }
- results.hidden=false;input.setAttribute('aria-expanded','true');return rows;
+ results.hidden=false;input.setAttribute('aria-expanded','true');input.removeAttribute('aria-activedescendant');return rows;
 }
 input?.addEventListener('input',()=>show(input.value.slice(0,120)));
 input?.addEventListener('keydown',e=>{
