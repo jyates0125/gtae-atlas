@@ -12,7 +12,7 @@ class RefParser(HTMLParser):
             url=a.get(key,'')
             if url.startswith('./') and not ('?' in url and not url.split('?',1)[0]): self.refs.append(url.split('?',1)[0].split('#')[0].removeprefix('./'))
 js=(D/'atlas.js').read_text()
-expected=['scaly,view','yanis,18','dupzor,51','research,view','yanis,15']
+expected=['day','scaly,view','yanis,18','dupzor,51','research,view','yanis,15']
 m=re.search(r" '6':\[(.*)\]\n\};",js)
 assert m,'GTA VI layer selector missing'
 actual=re.findall(r"\['([^']+)','",m.group(1))
@@ -20,7 +20,7 @@ assert actual==expected,(actual,expected)
 assert "let markerDensity='individual'" in js
 assert 'function cluster(' not in js
 assert 'markerColor:Array.isArray(v)' in js
-assert "styles={'5':'radar','6':'scaly,view'}" in js
+assert "styles={'5':'radar','6':'day'}" in js
 assert 'jura3-progress' in js and 'jura-atlas-routes' in js
 # The GTA VI JSON feed is used by research adapters, not hard-wired into the map canvas.
 assert 'data/gtadb-6.json' in (D/'atlas-research.js').read_text() or "'./data/gtadb-'" in (D/'atlas98-landmarks.js').read_text()
@@ -50,7 +50,7 @@ assert "team-jura-atlas-v191" in (D/'atlas-sw.js').read_text()
 for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
     assert "./atlas.js?v="+worker_version[1] in (D/page).read_text(), page
 assert "./atlas-research.js?v=218-yanis18" in (D/'atlas-research.html').read_text()
-print('Atlas static regression PASS: licensed community VI views, navigation, legacy keys, links, sync plumbing')
+print('Atlas static regression PASS: GTADB VI Day plus historic community maps, navigation, keys and links')
 
 # Universe database, showroom and gallery integration regression.
 import runpy
