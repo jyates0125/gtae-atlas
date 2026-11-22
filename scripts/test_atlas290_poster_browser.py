@@ -94,6 +94,11 @@ try:
    assert not any('atlas290-' in e for e in errors),errors
    # The source index and the poster notebook must form one connected workflow.
    page.goto(url,wait_until='domcontentloaded',timeout=45000)
+   if width<=700:
+    page.wait_for_timeout(220)
+    if page.locator('#sidebar').evaluate('(el)=>el.classList.contains("mobile-collapsed")'):
+     page.locator('#mobileTools').click()
+    expect(page.locator('#sidebar')).to_be_visible()
    page.locator('#j290-vi-ledger').evaluate('(el)=>el.open=true')
    expect(page.locator('#j290-count')).to_contain_text('3,754',timeout=20000)
    page.locator('#j290-search').fill('Vice Regal, Washington Beach, Vice Beach')
