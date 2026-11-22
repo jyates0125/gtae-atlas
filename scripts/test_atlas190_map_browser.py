@@ -222,6 +222,15 @@ try:
    for game,count in [('lcs',52),('vcs',51)]:
     page.goto(base+'map-hub.html?game='+game,wait_until='domcontentloaded',timeout=45000)
     expect(page.locator('#j247-results li')).to_have_count(count,timeout=15000)
+    expect(page.locator('#j250-source-link')).to_have_attribute('href','https://gtamap.io/gta-'+('liberty-city-stories' if game=='lcs' else 'vice-city-stories')+'-map/')
+    expect(page.locator('#j250-external')).to_be_hidden()
+    # Test our integration without loading the third-party page during CI.
+    page.route('https://gtamap.io/**',lambda route:route.fulfill(status=200,body='source viewer test'))
+    page.locator('#j250-open').click()
+    expect(page.locator('#j250-external iframe')).to_have_count(1)
+    page.locator('#j250-open').click()
+    expect(page.locator('#j250-external iframe')).to_have_count(0)
+    page.unroute('https://gtamap.io/**')
     expect(page.locator('#j248-map-sources a')).to_have_count(2)
     expect(page.locator('#j248-map-sources a').first).to_have_attribute('href','https://gtamap.io/gta-'+('liberty-city-stories' if game=='lcs' else 'vice-city-stories')+'-map/')
     expect(page.locator('#j248-map-sources a').last).to_have_attribute('href','https://www.rockstargames.com/newswire/article/25o2411819oo5k/download-high-res-maps-for-liberty-city-stories-and-vice-city-st.html?hl=en-US')

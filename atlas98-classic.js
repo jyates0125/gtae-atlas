@@ -6,7 +6,7 @@ const worlds={
  iii:{name:'GTA III · Liberty City',desc:'The original 3D-era Liberty City. Track personal map notes and collections.',art:'atlas106-gta3.svg',map:'./art/atlas128-gta3-radar.png',sets:['Hidden packages','Unique stunt jumps','Rampages','Missions','Safehouses']},
  vc:{name:'GTA Vice City',desc:'Ocean Beach, Downtown, Little Havana and the classic neon coastline.',art:'atlas106-vice-city.svg',map:'./art/atlas128-vice-city-radar.png',sets:['Hidden packages','Rampages','Stunt jumps','Properties','Missions']},
  vcs:{name:'Vice City Stories',desc:'Explore the earlier Vice City era with your personal research notes.',art:'atlas106-vcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/ViceCity-GTAVCS-map.png',sets:['Red balloons','Rampages','Empire sites','Stunt jumps','Missions','Safehouses']},
- lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',map:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-map.jpg',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
+ lcs:{name:'Liberty City Stories',desc:'Return to Liberty City in 1998; build an organized record of pickups and missions.',art:'atlas106-lcs.svg',map:'https://wikiassets.net/gta-vi-1c4e11/images/5019685d9fa05493b4cea714ca968bf1.webp',sets:['Hidden packages','Rampages','Stunt jumps','Missions','Safehouses']},
  ctw:{name:'Chinatown Wars',desc:'A different Liberty City map and handheld-era collections.',art:'atlas106-chinatown-wars.svg',map:'https://www.igrandtheftauto.com/content/images/1934-gtacw-full-map.jpg',sets:['Security cameras','Rampages','Unique jumps','Collectibles','Missions','Safehouses','Drug dealer locations']},
  tlad:{name:'The Lost and Damned',desc:'Liberty City motorcycle-club episode; notes stay separate from GTA IV.',art:'atlas106-lost-damned.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Gang wars','Motorcycle missions','Races','Activities']},
  tbogt:{name:'The Ballad of Gay Tony',desc:'Liberty City nightlife episode; nightclub missions and activities.',art:'atlas106-gay-tony.svg',map:'./art/atlas128-gta4-landmarks.jpg',sets:['Seagulls','Drug wars','Base jumps','Nightclub missions','Activities']}
@@ -20,7 +20,7 @@ const mapAlternates={
  ],
  lcs:[
   {url:'https://www.igrandtheftauto.com/content/images/1932-gtalcs-full-map.jpg',name:'Liberty City Stories · independent fan archive',page:'https://www.igrandtheftauto.com/gtalcs/images/1932-gtalcs-full-map'},
-  {url:'https://wikiassets.net/gta-vi-1c4e11/images/5019685d9fa05493b4cea714ca968bf1.webp',name:'Liberty City Stories · wiki image reference',page:'https://gta.fandom.com/wiki/File:LibertyCity-GTALCS-MapFull-ExceptUpstate.png'}
+  {url:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-map.jpg',name:'Liberty City Stories · previous original reference',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTALCS-map.jpg'}
  ],
  ctw:[
   {url:'https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTACW-map.png',name:'Chinatown Wars · GTASeries.com neighborhood map adapted from GTA IV artwork',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTACW-map.png'},  
@@ -31,7 +31,7 @@ const mapOrigins={
  iii:{name:'GTA III radar · XiaoNiaoa/noiseXYZ (game art: Rockstar)',page:'https://github.com/XiaoNiaoa/vc_lc'},
  vc:{name:'Vice City radar · XiaoNiaoa/noiseXYZ (game art: Rockstar)',page:'https://github.com/XiaoNiaoa/vc_lc'},
  vcs:{name:'Vice City Stories · original game-map reference (Rockstar)',page:'https://www.grandtheftwiki.com/File:ViceCity-GTAVCS-map.png'},
- lcs:{name:'Liberty City Stories · game map (© Rockstar; Grand Theft Wiki archive)',page:'https://www.grandtheftwiki.com/File:LibertyCity-GTALCS-map.jpg'}, 
+ lcs:{name:'Liberty City Stories · clean in-game road image (Rockstar / GTA Wiki reference)',page:'https://grandtheftauto6wiki.com/wiki/liberty-city-3d-universe/'}, 
  ctw:{name:'Chinatown Wars · original game-era map (Rockstar), archived by iGrandTheftAuto',page:'https://www.igrandtheftauto.com/gtacw/setting'},  
  tlad:{name:'GTA IV map · GTADB.ORG contributors, CC BY 4.0 (game world: Rockstar)',page:'https://github.com/rolux/gtadb.org/blob/main/LICENSE-DATA'},
  tbogt:{name:'GTA IV map · GTADB.ORG contributors, CC BY 4.0 (game world: Rockstar)',page:'https://github.com/rolux/gtadb.org/blob/main/LICENSE-DATA'}
@@ -94,6 +94,8 @@ function loadOriginalWorldMap(){
  // different higher-resolution image over the user's previous reference.
  const sourceKey='team-jura-classic-image-source-v1:'+id;
  let previousSource='';try{previousSource=localStorage.getItem(sourceKey)||''}catch{}
+ // Older saved LCS markers without a source key were made on the former first-choice artwork.
+ if(id==='lcs'&&state.markers.length&&!previousSource)previousSource='https://gtwfilesie.grandtheftwiki.com/LibertyCity-GTALCS-map.jpg';
  const previous=choices.findIndex(c=>c.url===previousSource);
  if(state.markers.length&&previous>0)choices.unshift(...choices.splice(previous,1));
  const credit=$('#classicMapAttribution'),source=$('#classicMapSourceLink');
