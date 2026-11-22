@@ -60,6 +60,15 @@ const auto=forge.build('Boat','jetmax','#123456',{}).vertices;
 assert.notDeepEqual(saved,auto,'Saved environment must change stage geometry');
 assert.deepEqual(saved,forge.build('Boat','jetmax','#123456',{},'hangar').vertices,'Saved and explicit stage match');
 console.log('PASS six original Forge geometry classes and saved environment regression');
+const studies = [["Sports","adder"],["Sports","alpha"],["Sports","buffalo"],["Sedan","asea"],["Sedan","regina"],["Utility","rebel"],["Utility","riata"],["Utility","aleutian"],["Utility","rocoto"],["Boat","jetmax"],["Boat","squalo"],["Sports","vi_cheetah95"],["Sedan","vi_stanier55"],["Utility","vi_dominator67_buggy"],["Boat","vi_squalo"]];
+for(const [type,id] of studies){
+ const mesh=forge.build(type,id,'#4473c2',{},'signature');
+ assert.ok(mesh.profile,id+' model profile');
+ assert.ok(mesh.vertices.length>0 && mesh.vertices.length%18===0 && mesh.vertices.every(Number.isFinite),id+' valid triangles');
+ assert.notDeepEqual(mesh.vertices,forge.build(type,'unprofiled','#4473c2',{},'signature').vertices,id+' distinct from fallback');
+}
+assert.equal(forge.modelProfile('Utility','adder'),null,'Class override uses matching fallback');
+console.log('PASS fifteen targeted model geometry studies');
 """], cwd=ROOT, check=True)
 
 # Read-only collection hub: world isolation, private named-build deep links and ownership semantics.
