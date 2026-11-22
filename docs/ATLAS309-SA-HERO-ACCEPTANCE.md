@@ -1,0 +1,6 @@
+# Atlas 30.9 — San Andreas original cinematic page hero
+This staging-only visual milestone removes an unrelated generic Atlas crew scene and the stylized three-city schematic from the San Andreas landing hero, replacing the display region with the already bundled source-specific Elario San Andreas cinematic artwork. It preserves the three named regions in a legible caption and states that the image is an original fan illustration, not a navigational map or gameplay screenshot. GTA SA vector maps, licensed source coordinates and all saved collectible state remain untouched.
+
+Focused tests check bundled asset presence, no background crew placeholder, rendered image decode, visible map and collection controls, 375px/390px phone, 844px short landscape, and 1440px desktop. The two captures at 390px and 1440px are CI review evidence, not owner aesthetic approval.
+
+Outstanding charter work: subjective premium visual review of all public pages, 13-world source completeness, characters and film artwork, native iPhone Safari, release Chromium+Edge+ZIP, explicit owner production authorization.

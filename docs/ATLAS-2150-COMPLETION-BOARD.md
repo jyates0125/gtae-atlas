@@ -250,3 +250,8 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** 44px Back to map and Escape from collectible cards, with last-visible-pin or map canvas focus. Keeps active tag/snapshot/horseshoe/oyster/jump category, zoom/pan, per-world progress and attributed map data unchanged.
 - **TEST:** scoped scripts/test_atlas308_sa_return.py and built Chromium scripts/test_atlas308_sa_return_browser.py at phone, landscape and desktop, via atlas308-sa-return.yml. Exact-head green required before staging integration.
 - **HOLD:** All-source completeness, original artwork, native Safari, final Chromium+Edge+ZIP and owner release approval. See docs/ATLAS308-SA-RETURN-ACCEPTANCE.md.
+
+## Atlas 30.9 — San Andreas original cinematic hero replaces unrelated crew art (staging)
+- **SOURCE:** The page-specific Elario jura157-sa cinematic concept replaces the generic crew background and placeholder-like three-city sketch. The three cities remain identified in an honest illustrative caption; no map engine, collection coordinates, private saves or credits were replaced.
+- **TEST:** scripts/test_atlas309_sa_hero.py and built Chromium scripts/test_atlas309_sa_hero_browser.py check actual art decoding at 375/390/844/1440 viewports and preserved map/collection UX. Path-scoped atlas309-sa-hero.yml; exact-head CI mandatory.
+- **HOLD:** Owner design approval, other subject-specific artwork, full release browser/ZIP and real iPhone Safari remain pending. See docs/ATLAS309-SA-HERO-ACCEPTANCE.md.
