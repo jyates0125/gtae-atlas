@@ -19,6 +19,9 @@ for required in (
 assert "function update()=>{" not in js
 assert "checks.forEach(x=>{x.checked=!!saved" not in js
 assert "j301-rescue" in css and "min-height:44px" in css
+assert "function ensureCayoRecovery()" in js, "Cayo must expose raw rescue outside its hidden legacy UI"
+assert "document.getElementById('j301-cayo-recovery')?.remove();" in js
+assert "body.j180-cayo #j301-cayo-recovery" in css
 assert 'data-heist="fleeca"' in html
 for name in ('fleeca','prison-break','humane-labs','series-a','pacific-standard',
     'doomsday-act-1','doomsday-act-2','doomsday-act-3','diamond-casino',
