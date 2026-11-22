@@ -29,14 +29,14 @@ body.j119-heists .cards .card:hover .j151-heist-cover{filter:brightness(1.1)}
 .cards .card small:not([hidden]){display:block;color:#ffdb9e;margin-block:.45rem}
 
 /* Atlas 29.6 · resumable, device-only heist planning. No new progress keys. */
-.j296-heist-resume{margin:0 0 16px;padding:clamp(15px,2.5vw,24px);border:1px solid #d9a16d;border-radius:17px;background:linear-gradient(125deg,#352044,#180e28 85%);color:#fff7e8;min-width:0}
-.j296-heist-resume[hidden]{display:none!important}
-.j296-resume-heading h2{margin:0;color:#ffdd9c;font:850 clamp(20px,2.5vw,27px)/1.2 system-ui}
-.j296-resume-heading p{color:#e9d5e7;line-height:1.5;font-size:13px;margin:7px 0 13px}
-.j296-resume-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px}
-.j296-resume-card{display:flex;flex-direction:column;gap:8px;min-width:0;min-height:108px;padding:13px 15px;border:1px solid #a67ba9;border-radius:12px;background:#2b193b;color:#fdf4eb;text-decoration:none;overflow-wrap:anywhere}
-.j296-resume-card strong{font:800 15px/1.25 system-ui;color:#ffdfad}
-.j296-resume-card small{font:500 12px/1.45 system-ui;color:#e9d9e5}
-.j296-resume-card span{margin-top:auto;color:#ffe0a0;font:750 12px/1.4 system-ui}
-.j296-resume-card:hover{border-color:#ffe0a0;background:#402750}
-.j296-resume-card:focus-visible{outline:3px solid #ffe3a8;outline-offset:3px}
+.j297-heist-resume{margin:0 0 16px;padding:clamp(15px,2.5vw,24px);border:1px solid #d9a16d;border-radius:17px;background:linear-gradient(125deg,#352044,#180e28 85%);color:#fff7e8;min-width:0}
+.j297-heist-resume[hidden]{display:none!important}
+.j297-resume-heading h2{margin:0;color:#ffdd9c;font:850 clamp(20px,2.5vw,27px)/1.2 system-ui}
+.j297-resume-heading p{color:#e9d5e7;line-height:1.5;font-size:13px;margin:7px 0 13px}
+.j297-resume-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px}
+.j297-resume-card{display:flex;flex-direction:column;gap:8px;min-width:0;min-height:108px;padding:13px 15px;border:1px solid #a67ba9;border-radius:12px;background:#2b193b;color:#fdf4eb;text-decoration:none;overflow-wrap:anywhere}
+.j297-resume-card strong{font:800 15px/1.25 system-ui;color:#ffdfad}
+.j297-resume-card small{font:500 12px/1.45 system-ui;color:#e9d9e5}
+.j297-resume-card span{margin-top:auto;color:#ffe0a0;font:750 12px/1.4 system-ui}
+.j297-resume-card:hover{border-color:#ffe0a0;background:#402750}
+.j297-resume-card:focus-visible{outline:3px solid #ffe3a8;outline-offset:3px}

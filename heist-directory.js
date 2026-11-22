@@ -16,13 +16,13 @@
   return [{id:match[1],name:card.querySelector('h2')?.textContent?.trim()||match[1],
     href:link.getAttribute('href'),card,keywords,summary,key:'teamjura-heist-'+match[1]}];
  });
- const resume=document.createElement('section');resume.className='j296-heist-resume';resume.hidden=true;
- resume.setAttribute('aria-labelledby','j296-resume-title');
- const heading=document.createElement('div');heading.className='j296-resume-heading';
- const title=document.createElement('h2');title.id='j296-resume-title';title.textContent='Continue your missions';
+ const resume=document.createElement('section');resume.className='j297-heist-resume';resume.hidden=true;
+ resume.setAttribute('aria-labelledby','j297-resume-title');
+ const heading=document.createElement('div');heading.className='j297-resume-heading';
+ const title=document.createElement('h2');title.id='j297-resume-title';title.textContent='Continue your missions';
  const help=document.createElement('p');help.textContent='Your saved checklists, notes and planning routes stay on this device. No account required.';
  heading.append(title,help);
- const savedLinks=document.createElement('div');savedLinks.className='j296-resume-list';
+ const savedLinks=document.createElement('div');savedLinks.className='j297-resume-list';
  resume.append(heading,savedLinks);controls.before(resume);
  const safeJson=key=>{
   try{
@@ -70,7 +70,7 @@
   savedLinks.replaceChildren();
   for(const item of resumable.slice(0,5)){
    const link=document.createElement('a');
-   link.className='j296-resume-card';link.href=item.href;
+   link.className='j297-resume-card';link.href=item.href;
    const strong=document.createElement('strong');strong.textContent=item.name;
    const meta=document.createElement('small');meta.textContent=summaryText(item.p);
    const action=document.createElement('span');action.textContent='Resume workspace';
