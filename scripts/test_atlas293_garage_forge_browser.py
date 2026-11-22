@@ -45,6 +45,14 @@ try:
         after = page.evaluate("([g,f]) => [localStorage.getItem(g),JSON.parse(localStorage.getItem(f))]", [garage_key, forge_key])
         assert after[0] == before[0], 'Saving Forge should not modify Garage'
         assert after[1]['builds']['jetmax']['paint'] == '#12ab34'
+        # The selected model must remain navigable back to its Garage detail on mobile.
+        garage_link=page.locator('#addToGarage')
+        expect(garage_link).to_have_attribute('href','./atlas93-garage.html?addModel=jetmax')
+        for width in (375,390):
+            page.set_viewport_size({'width':width,'height':812})
+            assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2"), f'Forge horizontal overflow at {width}px'
+            assert garage_link.is_visible(),f'Garage return link hidden at {width}px'
+        page.set_viewport_size({'width':390,'height':844})
         # Reverse journey: editing in Forge must update only this model's Garage concept.
         page.locator('#buildName').fill('Marina Refit')
         page.locator('#buildNote').fill('New dock')
