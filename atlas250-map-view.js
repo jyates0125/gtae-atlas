@@ -15,6 +15,7 @@ if(!own){
  b.onclick=()=>{if(!host.hidden){host.hidden=true;host.replaceChildren();b.textContent='Open high-detail viewer here';b.setAttribute('aria-expanded','false');return}
   const iframe=E('iframe');iframe.title='GTAMap.io '+id+' source viewer';iframe.referrerPolicy='no-referrer';iframe.setAttribute('sandbox','allow-scripts allow-same-origin allow-popups');iframe.src=sources[id];iframe.loading='lazy';host.append(note,iframe);host.hidden=false;b.setAttribute('aria-expanded','true');b.textContent='Close publisher viewer';};
  box.append(b,link,host);
+ if(id==='ctw'){const community=E('a','Chinatown Wars community collectibles map ↗');community.href='https://jeanropke.github.io/GTACTWMap/';community.target='_blank';community.rel='noopener noreferrer';box.append(community,E('p','Independent community map by Jean Ropke and contributors. Use its own location and save tools separately; Atlas does not copy or synchronize its dataset.'));}
 }else box.append(link);
 viewport.before(box);
 })();
