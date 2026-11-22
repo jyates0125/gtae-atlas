@@ -136,6 +136,7 @@ jobs:
           python scripts/test_atlas217_vi_world.py
           python scripts/test_atlas172_research_map.py
           python scripts/test_atlas218_yanis_v18.py
+          python scripts/test_atlas290_vi_day.py
           python scripts/test_atlas219_hq_premium.py
           python scripts/test_atlas220_vi_mobile.py
           node --check atlas220-vi-mobile.js
@@ -182,6 +183,7 @@ jobs:
           python scripts/test_atlas222_vi_browser.py
           python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
+          python scripts/test_atlas290_vi_day_browser.py
           python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
@@ -244,6 +246,7 @@ jobs:
           python scripts/test_atlas222_vi_browser.py
           python scripts/test_atlas223_home_browser.py
           python scripts/test_atlas218_yanis_v18_browser.py
+          python scripts/test_atlas290_vi_day_browser.py
           python scripts/test_atlas219_hq_browser.py
           python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
