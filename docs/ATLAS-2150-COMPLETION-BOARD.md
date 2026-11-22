@@ -187,3 +187,10 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Shared dependencies are explicitly included for Garage/Forge, character, navigation, heist and integrated Leonida tests; deleted/renamed critical files count. The standalone final production Chromium/Edge/ZIP signoff gate remains manual and unchanged.
 - **TEST:** `scripts/atlas300-ci-delta.py`, `scripts/test_atlas300_ci_delta.py` and lightweight workflow `atlas300-ci-delta.yml`. Exact-head YAML/source CI and observed workflow-skip evidence must pass before this is treated as verified.
 - **HOLD:** This saves development test minutes, not user-facing charter completion. Owner visual, source/rights and real iPhone checks remain mandatory. See `docs/ATLAS300-CI-DELTA-ACCEPTANCE.md`.
+
+
+## Atlas 30.1 — heist checklist no-write load and raw-data rescue
+- **SOURCE:** All 15 heist checklists hydrate read-only; edits update only the selected mission step against the latest stored record and preserve other tabs, notes, routes and unknown legacy fields. Current export reflects the latest persisted marks.
+- **SOURCE:** Malformed checklist JSON is not overwritten on page load. The page offers raw byte-for-byte download, then a distinct confirmation before replacing only that damaged checklist. Other mission keys and the 29.8/29.9 map/complete-backup modules are kept.
+- **TEST:** `scripts/test_atlas301_heist_checklist.py`, `scripts/test_atlas301_heist_checklist_browser.py` and the affected complete-backup regression `scripts/test_atlas299_heist_backup_browser.py`, run in `atlas301-heist-checklist.yml` only; expect phone/desktop screenshots and no unrelated broad suites.
+- **GATE:** Exact-head focused CI, owner phone/Safari review and final release-level browser/ZIP approval must be confirmed before shipping. See `docs/ATLAS301-HEIST-CHECKLIST-RECOVERY.md`.
