@@ -111,6 +111,18 @@ try:
         # A Garage build is a private concept, never a purchase or ownership assertion.
         assert page.evaluate("() => localStorage.getItem('team-jura-atlas90-collection-v1')")==registry_before
         preserved=fresh
+        # Actual reverse navigation: the Garage opens the same model with its saved concept.
+        garage_page=context.new_page()
+        garage_page.goto(base+'/atlas93-garage.html?addModel=jetmax',wait_until='domcontentloaded')
+        expect(garage_page.locator('#garageDetails h2').filter(has_text='Jetmax')).to_be_visible(timeout=30000)
+        expect(garage_page.locator('.j99-studio-link')).to_have_attribute('href','./atlas-vehicle-configurator.html?model=jetmax&source=garage')
+        assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.studioName",garage_key)=='Refit Three'
+        assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.sultan.favorite",garage_key) is True
+        garage_page.locator('.j99-studio-link').click()
+        expect(garage_page).to_have_url(base+'/atlas-vehicle-configurator.html?model=jetmax&source=garage')
+        expect(garage_page.locator('#buildName')).to_have_value('Refit Three',timeout=30000)
+        assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.sultan.favorite",garage_key) is True
+        garage_page.close()
         # Corrupt Garage JSON must be preserved byte-for-byte; a save must fail safely.
         page.evaluate("g => localStorage.setItem(g, '{broken-json')",garage_key)
         page.locator('#saveToGarage').click()
