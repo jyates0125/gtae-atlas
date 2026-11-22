@@ -69,6 +69,10 @@
        lastWorldLink.textContent='Continue '+selected.name+' ›'}
    }
    renderLastWorld();
+   // A Back navigation may restore this page from the browser's page cache.
+   // Refresh only the allowlisted recent-world link; keep search/filter state.
+   window.addEventListener('pageshow',renderLastWorld);
+   window.addEventListener('storage',event=>{if(event.key===lastWorldKey)renderLastWorld()});
    function apply(){
      const url=new URL(location.href);
      for(const [key,value] of [['q',inp.value.trim()],['filter',mode==='all'?'':mode]]){
