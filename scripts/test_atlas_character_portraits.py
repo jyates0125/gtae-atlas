@@ -1,4 +1,5 @@
 """Run against deployed-format files or a local Atlas source directory."""
+import json
 import os
 import threading
 from functools import partial
@@ -56,6 +57,47 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
                 detail.evaluate("d => d.scrollTop = d.scrollHeight")
                 expect(detail.get_by_role("button", name="Close details")).to_be_in_viewport()
                 detail.get_by_role("button", name="Close details").click()
+            page.goto(base + "maps.html?q=gta6",wait_until="domcontentloaded")
+            expect(page.locator('.directory-card[data-id="vi"]')).to_be_visible()
+            page.locator("#worldSearch").fill("")
+            expect(page.locator(".directory-card")).to_have_count(13)
+            page.goto(base + "heists.html?q=casino+diamond",wait_until="domcontentloaded")
+            expect(page.locator(".cards article:visible")).to_have_count(1)
+            expect(page.locator(".cards article:visible h2")).to_contain_text("Diamond Casino")
+            page.locator("#heistReset").click()
+            expect(page.locator(".cards article:visible")).to_have_count(15)
+
+            page.goto(base + "map-hub.html?game=iii",wait_until="domcontentloaded")
+            page.evaluate("""() => {
+              const markers = [[10,10],[80,80],[11,11]].map(([x,y],i)=>({
+                id:String(i), name:'Test pin '+i, x,y, category:'Note'
+              }));
+              localStorage.setItem('team-jura-atlas98-classic-iii-v1',JSON.stringify({
+                schema:'team-jura-atlas98-classic-v1',world:'iii',markers,completed:[],background:null
+              }));
+            }""")
+            page.reload(wait_until="domcontentloaded")
+            pick=page.locator("#j98bRoutePick")
+            for pin in ("1","2","0"):
+                pick.select_option(pin)
+                page.locator("#j98bRouteAdd").click()
+            page.locator("#j98bRouteOrder").click()
+            expected=["1. Test pin 0","2. Test pin 2","3. Test pin 1"]
+            expect(page.locator("#j98bRouteStops li span")).to_have_text(expected)
+            page.reload(wait_until="domcontentloaded")
+            expect(page.locator("#j98bRouteStops li span")).to_have_text(expected)
+            page.goto(base + "map-hub.html?game=vc",wait_until="domcontentloaded")
+            expect(page.locator("#j98bRouteStops li span")).to_have_count(0)
+
+            page.goto(base + "atlas93-garage.html",wait_until="domcontentloaded")
+            page.wait_for_function("Number(document.querySelector('#catalogCount').textContent.replaceAll(',',''))>0")
+            backup={"schema":1,"app":"team-jura-atlas93-garage","garage":{"garages":["Main Garage"],"vehicles":{}},
+                    "collection":{"owned":{"vehicles5:adder":True},"wishlist":{"vehicles5:zentorno":True}}}
+            page.locator("#importGarage").set_input_files({"name":"garage.json","mimeType":"application/json",
+                                                          "buffer":json.dumps(backup).encode()})
+            expect(page.locator("#garageNotice")).to_have_text("Garage backup restored.")
+            collection=page.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas90-collection-v1'))")
+            assert collection["owned"]["vehicles5:adder"] and collection["wishlist"]["vehicles5:zentorno"]
             assert not errors, errors
             page.close()
             print(f"PASS portraits, history and database navigation at {width}px", flush=True)
