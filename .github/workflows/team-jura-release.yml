@@ -1,9 +1,7 @@
 name: Team Jura Atlas - validate production website
 on:
-  push:
-    branches: [development, main]
-  pull_request:
-    branches: [development, main]
+  # Full cross-browser / Cayo / ZIP suite is a manual pre-merge release gate.
+  # Feature PRs use path-filtered focused workflows instead.
   workflow_dispatch:
 permissions:
   contents: read
