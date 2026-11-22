@@ -24,4 +24,23 @@ for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
 assert 'atlas-sw.js?v=290' in engine
 assert "const LAYERS=" in engine and "'5':[['radar','In-game radar']" in engine
 assert "SHELL='team-jura-atlas-v290-shell'" in (R/'atlas-sw.js').read_text(encoding='utf-8')
+# Local CC BY source snapshot contains ALL upstream landmarks, including the
+# 91 without X/Y which must stay searchable and never be auto-positioned.
+data=__import__('json').loads((R/'data/gtadb-6.json').read_text(encoding='utf-8'))
+rows=data['records']
+valid=lambda p:isinstance(p,list) and len(p)==2 and all(isinstance(n,(float,int)) and not isinstance(n,bool) and abs(n)<=16384 for n in p)
+located=sum(valid(r[1]) for r in rows.values())
+assert data['schema']==2 and data['game']=='6'
+assert len(rows)==data['count']==3754 and located==data['mappedCount']==3663
+assert data['searchOnlyCount']==len(rows)-located==91
+for key in ('j290-vi-ledger','j290-search','j290-kind','j290-tag','j290-list','j290-prev','j290-next'):
+    assert 'id="'+key+'"' in vi,('Missing source index control',key)
+ledger=(R/'atlas290-vi-source-ledger.js').read_text(encoding='utf-8')
+assert 'atlas290-vi-source-ledger.js?v=290' in vi
+assert 'atlas290-vi-source-ledger.css?v=290' in vi
+assert 'validPosition' in ledger and 'Source-only' not in ledger  # uses deliberate human-readable sentence case
+assert "item.mapped?'Community X/Y · provisional':'Search-only · no verified map point'" in ledger
+assert 'textContent' in ledger and 'innerHTML' not in ledger and 'eval(' not in ledger
+assert "encodeURIComponent(item.id)" in ledger
+assert '"./atlas290-vi-source-ledger.js"' in (R/'atlas-sw.js').read_text(encoding='utf-8')
 print('PASS Atlas 29.0: GTADB Day map, native tile bounds, saved keys, legal credits and V/Online isolation')
