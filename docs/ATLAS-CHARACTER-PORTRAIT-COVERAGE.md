@@ -57,3 +57,10 @@ Use permitted subject-specific references or individually created accurate fan c
 ## Validation
 
 Static test checks local files and explicit preference. Browser test checks every record, same-origin decode for the 13 concepts and the named pending state for the others under intentionally blocked remote requests at 375, 390 and 1440 px. This is a failure-mode check, not a remote publisher availability/rights audit. Real visual review and owner release approval remain required.
+
+## Atlas 29.3 — focused portrait acceptance checkpoint
+
+- Agent 14, Carl Johnson (CJ) and Claude remain locally bundled, **individual Elario fan concepts**, not verified game-model renders. The real-browser check now requires each exact image to decode at phone and desktop widths, and checks the individual profile dialog.
+- Lamar Davis has **two separate** GTA V Story and GTA Online records. A dedicated source contract and browser journey check both appearances, distinct world destinations and the clearly labeled individual-portrait-pending fallback when external references are unavailable.
+- A dedicated subject-specific Lamar portrait is **not yet delivered**. No generic scene or unrelated image is presented as a completed Lamar portrait. Owner visual review of Agent 14, CJ and Claude is still required; automated decode only proves that the file renders, not that it resembles the character.
+- Tests: `scripts/test_atlas293_lamar_appearances.py`, `scripts/test_atlas293_character_portraits_browser.py`, scoped workflow `atlas293-garage-forge.yml`. These are staging checks and do not authorize release.
