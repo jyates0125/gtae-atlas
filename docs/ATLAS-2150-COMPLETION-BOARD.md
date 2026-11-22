@@ -1,6 +1,6 @@
 # Team Jura Atlas — 2150 completion and release board
 **Created:** 2026-11-21 · **Status:** staging working board, not release certification
-**Canonical repository:** `jyates0125/team-jura-atlas-preview` · **Staging PR:** #88 targeting `development`
+**Canonical repository:** `jyates0125/team-jura-atlas-preview` · **Current verified source:** `development` merge #89 `4f766df1d5e1ecd97eb1bb739314d2def9916e20`; docs and release PRs #91/#90 pending exact-head checks.
 **Studio authority:** `docs/ELARIO-STUDIOS-OPERATING-CHARTER-V2-PROPOSAL.md` (contents adopted)
 **Project authority:** `docs/TEAM-JURA-STANDING-CHARTER.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md`, approved Designed Brand Master and Original Design Reference Pack.
 
