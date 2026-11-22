@@ -35,7 +35,21 @@ for(const id of ['pumpkins','ufo','ghosts-exposed','ghost-1']){
 }
 assert.equal(C.statusText('closed'),'Not active');
 assert.equal(C.evaluate('gun-van',{mode:'online',state,now,snapshot:{schema:1,rotations:{}}}).status,'unknown');
-console.log('PASS event status and absent rotation feed');
+const at=Date.parse('2026-11-21T05:30:00Z');
+const snapshot=(id,checked,end,activeIds=['1'])=>({schema:1,rotations:{[id]:{checkedAtUtc:checked,validUntilUtc:end,activeIds}}});
+const overReset=snapshot('gun-van','2026-11-21T05:00:00Z','2026-11-21T08:00:00Z');
+assert.equal(C.rotationFeed(overReset,'gun-van',at),null);
+const valid=snapshot('gun-van','2026-11-21T05:00:00Z','2026-11-21T06:00:00Z');
+assert.ok(C.rotationFeed(valid,'gun-van',at));
+assert.equal(C.rotationFeed(valid,'gun-van',Date.parse('2026-11-21T06:00:00Z')),null);
+const dealer=snapshot('street-dealers','2026-11-21T05:00:00Z','2026-11-21T07:00:00Z',['1','2','3']);
+assert.ok(C.rotationFeed(dealer,'street-dealers',Date.parse('2026-11-21T06:30:00Z')));
+assert.equal(C.rotationFeed(snapshot('street-dealers','2026-11-21T05:00:00Z','2026-11-21T07:00:00Z',['1','1']),'street-dealers',at),null);
+const merged=C.selectRotationSnapshot(overReset,{schema:1,rotations:{...valid.rotations,...dealer.rotations}},at);
+assert.equal(merged.rotations['gun-van'].validUntilUtc,'2026-11-21T06:00:00Z');
+assert.ok(merged.rotations['street-dealers']);
+assert.equal(C.rotationFeed(snapshot('gun-van','2026-11-21T05:00:00Z','2026-11-21T06:00:00Z',[]),'gun-van',at),null);
+console.log('PASS event status, reset boundary, distinct rotation IDs, per-activity fallback and absent rotation feed');
 """
 subprocess.run(["node","-e",node],cwd=R,check=True)
 print("PASS Atlas 13.4 automatic rotation file, optional JSON and ended Halloween event")

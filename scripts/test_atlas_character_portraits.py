@@ -198,6 +198,8 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
                 page.reload(wait_until="domcontentloaded")
                 expect(slots.nth(0)).to_have_attribute("data-done","true",timeout=15000)
                 expect(slots.nth(1)).to_have_attribute("data-done","true")
+                assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1"),world
+                assert page.locator("#j98bImport").evaluate("e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1}"),world
 
             # Studio restore must preserve both a conflicting existing idea and Garage ownership.
             page.goto(base+"atlas-vehicle-configurator.html?model=adder",wait_until="domcontentloaded")

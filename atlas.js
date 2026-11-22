@@ -633,12 +633,18 @@ function pin(x,y,color,highlight=false,number=null,category='landmark',plain=fal
  ctx.save();const r=highlight?13:plain?7.5:11;ctx.shadowColor='#000b';ctx.shadowBlur=7;ctx.shadowOffsetY=2;ctx.beginPath();ctx.moveTo(x,y+(plain?10:15));ctx.bezierCurveTo(x-r*1.03,y+2,x-r,y-r,x,y-r);ctx.bezierCurveTo(x+r,y-r,x+r*1.03,y+2,x,y+(plain?10:15));ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=highlight?'#fff5c0':plain?'#f3f6fa':'#112736';ctx.lineWidth=highlight?2.8:plain?1.2:1.6;ctx.stroke();
  if(plain&&!highlight&&!atlas85Icon){ctx.restore();return;}ctx.fillStyle='#17303d';ctx.font=(highlight?'bold 16px':'bold 13px')+' "Segoe UI Symbol",system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';if(atlas85Icon){ctx.font=(highlight?'17px':'14px')+' "Segoe UI Emoji","Apple Color Emoji",sans-serif';ctx.fillText(atlas85Icon,x,y-3)}else ctx.fillText(number!==null?String(number):CATEGORY_SYMBOLS[category]||'✦',x,y-3);ctx.restore()}
 
+let reviewedRotationSnapshot={schema:1,rotations:{}};
+function currentRotationSnapshot(){
+ const C=window.JuraConditions;if(!C)return {schema:1,rotations:{}};
+ let personal;try{personal=C.safeSnapshot(loadStore('jura68-rotation-feed',{schema:1,rotations:{}}))}catch{}
+ return C.selectRotationSnapshot(personal,reviewedRotationSnapshot);
+}
 function conditionForRecord(r,storeCache){
  const engine=window.JuraConditions;if(!engine||!r.activityId)return null;
  const required=game==='6'?'vi':mode==='online'?'online':'story';
  const rule=engine.BY_ID[r.activityId];if(!rule||rule.mode!==required)return null;
  const save=storeCache?.save||engine.safeState(loadStore('jura68-conditions-'+required,{}));
- const feed=storeCache?.feed||loadStore('jura68-rotation-feed',{schema:1,rotations:{}});
+ const feed=storeCache?.feed||currentRotationSnapshot();
  const storedHour=storeCache?.hour??loadStore('jura68-online-hour',null);const gameHour=storedHour===null||storedHour===''?NaN:Number(storedHour);
  return engine.evaluate(r.activityId,{mode:required,state:save,snapshot:feed,markerId:r.rotationMarkerId,hour:gameHour,now:Date.now()});
 }
@@ -646,7 +652,7 @@ function conditionPinColor(r,storeCache){const c=conditionForRecord(r,storeCache
 function drawMarkers(){hitRegions=[];if(!showPins&&!selected)return;
  // One physical pin per visible record: GTADB-style ungrouped locations.
  // Cap only at extremely large source-object loads to prevent phone freezes.
- const visible=showPins?matches():[];let drawn=0;const hasRules=visible.some(r=>!!r.activityId);const conditionCache=hasRules&&window.JuraConditions?{save:window.JuraConditions.safeState(loadStore('jura68-conditions-'+(game==='6'?'vi':mode),{})),feed:loadStore('jura68-rotation-feed',{schema:1,rotations:{}}),hour:loadStore('jura68-online-hour',null)}:null;
+ const visible=showPins?matches():[];let drawn=0;const hasRules=visible.some(r=>!!r.activityId);const conditionCache=hasRules&&window.JuraConditions?{save:window.JuraConditions.safeState(loadStore('jura68-conditions-'+(game==='6'?'vi':mode),{})),feed:currentRotationSnapshot(),hour:loadStore('jura68-online-hour',null)}:null;
  for(const r of visible){const p=toScreen(r.x,r.y);if(p.x<-20||p.x>width+20||p.y<-20||p.y>height+20)continue;
   if(drawn>=20000)break;drawn++;
   // Keep original colored pins intact; tone down ONLY the default gold landmarks.
@@ -928,6 +934,12 @@ function init(){
  if(q)$('search').value=q.slice(0,100);
  if(cat&&CATEGORIES[cat]){active[filterScope()]=new Set([cat]);showTab('Services')}
  if(q||cat)render();readPacks();renderSources();loadDataset('5');loadDataset('6');loadSources();
+ if(document.body.dataset.startWorld==='online'&&window.JuraConditions){
+  fetch('./data/online-rotation-current.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Rotation feed unavailable');return r.json()}).then(data=>{reviewedRotationSnapshot=window.JuraConditions.safeSnapshot(data);renderFind();updateSelected();schedulePaint()}).catch(()=>{});
+  const refresh=()=>{if(!document.hidden&&mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint()}};
+  setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
+  window.addEventListener('storage',e=>{if(['jura68-rotation-feed','jura68-conditions-online','jura68-online-hour'].includes(e.key))refresh()});
+ }
  if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=191',{scope:'./'}).catch(()=>{});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();

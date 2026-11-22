@@ -11,7 +11,7 @@ const icon=(r)=>icons.find(([re])=>re.test(r.name||''))?.[1]||'✦';
 window.TeamJuraEventIcon88=Object.freeze({forName:n=>icon({name:n}),forRecord:r=>r?.activityId?icon(C.BY_ID[r.activityId]||r):null});
 const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch{return d}};
 let reviewedFeed={schema:1,rotations:{}};
-const rotationFeed=()=>{const personal=read('jura68-rotation-feed',{schema:1,rotations:{}});return personal&&personal.rotations&&Object.keys(personal.rotations).length?personal:reviewedFeed};
+const rotationFeed=()=>{let personal;try{personal=C.safeSnapshot(read('jura68-rotation-feed',{schema:1,rotations:{}}))}catch{}return C.selectRotationSnapshot(personal,reviewedFeed)};
 const statusFor=r=>{const state=C.safeState(read('jura68-conditions-online',{}));if(/^ghost-/i.test(r.id)&&state.events.halloween!==true)return{status:'closed',reason:'Halloween mode is not enabled in this tracker. This is not a claim about Rockstar event availability.'};const raw=rotationFeed();let feed;try{feed=C.safeSnapshot(raw)}catch{feed={schema:1,rotations:{}}};const hour=read('jura68-online-hour',null);return C.evaluate(r.id,{mode:'online',state,snapshot:feed,hour:hour===null?NaN:Number(hour),now:Date.now()})};
 const human=s=>({active:'ELIGIBLE · NOT LIVE VERIFIED',possible:'POSSIBLE · WHITE PIN',unknown:'NOT CONFIRMED',closed:'NOT ACTIVE',locked:'LOCKED',complete:'COMPLETED',research:'RESEARCH',excluded:'NOT IN THIS GAME', 'available-feed':'DATED SELECTION'})[s]||s.toUpperCase();
 const mk=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e};
@@ -41,7 +41,7 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  const focused=mk('p','j88-note','');focused.setAttribute('role','status');panel.insertBefore(focused,results);
  const clear=mk('button','','Clear event focus');clear.type='button';clear.hidden=true;clear.onclick=()=>{window.JuraAtlasEventLocations?.clear();focused.textContent='Event map filter cleared.';clear.hidden=true};panel.insertBefore(clear,results);
  function locate(r){
-  if(!mapPage){window.location.href='./atlas-online.html';return}
+  if(!mapPage){window.location.href='./atlas-online.html?event='+encodeURIComponent(r.id);return}
   const bridge=window.JuraAtlasEventLocations;
   if(!bridge){focused.textContent='The map is still loading its sources. Use the map search or try again.';return}
   const result=bridge.focus(r);
@@ -57,7 +57,23 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  }if(!num)results.append(mk('p','j88-note','No matching event rules.'));}
  const redrawMap=()=>{if(mapPage){const mapSearch=$('search');if(mapSearch)mapSearch.dispatchEvent(new Event('input',{bubbles:true}))}};
  search.oninput=render;refresh.onclick=()=>{render();redrawMap()};hour.onchange=()=>{try{localStorage.setItem('jura68-online-hour',JSON.stringify(hour.value))}catch{}render();redrawMap()};checkbox.onchange=()=>{if(checkbox.disabled)return;let state=C.safeState(read('jura68-conditions-online',{}));state.events.halloween=checkbox.checked;try{localStorage.setItem('jura68-conditions-online',JSON.stringify(state))}catch{}render();redrawMap()};
- window.addEventListener('storage',e=>{if(['jura68-conditions-online','jura68-online-hour','jura68-rotation-feed'].includes(e.key))render()});
+ window.addEventListener('storage',e=>{if(['jura68-conditions-online','jura68-online-hour','jura68-rotation-feed'].includes(e.key)){render();redrawMap()}});
+ let lastEvidence='';function refreshEvidence(){
+  if(document.hidden)return;
+  const signature=groups().map(r=>{const s=statusFor(r);return r.id+':'+s.status+':'+s.reason}).join('|');
+  if(signature!==lastEvidence){lastEvidence=signature;render();redrawMap()}
+ }
+ setInterval(refreshEvidence,60000);document.addEventListener('visibilitychange',refreshEvidence);
+ // A dashboard deep link selects only the requested Online rule. Retry after async map sources arrive.
+ const requested=new URLSearchParams(location.search).get('event');
+ const requestedRule=mapPage&&groups().find(r=>r.id===requested);
+ if(requestedRule){category='all';search.value=requestedRule.name;let attempts=0;const tryFocus=()=>{
+  if(++attempts>12)return;
+  const bridge=window.JuraAtlasEventLocations;
+  if(bridge&&bridge.count(requestedRule)>0){locate(requestedRule);return}
+  if(attempts===12){locate(requestedRule);return}
+  setTimeout(tryFocus,500);
+ };setTimeout(tryFocus,100);}
  render();
  // The sidebar shares the same bundled, reviewed feed as the full daily dashboard.
  // Missing or empty current data means unknown/possible, never invented active pins.

@@ -26,7 +26,7 @@ assert "sets:['Security cameras','Rampages','Unique jumps'" in c, 'CTW missing s
 for world in ('iii','vc','vcs','lcs','ctw','tlad','tbogt'):
  assert "'"+world+"':{" in collections,world
 for entry in ('atlas98-classic.js?v=190','atlas98-classic.css?v=190',
-              'atlas98b-progress.js?v=150','atlas98b-progress.css?v=150'):
+              'atlas98b-progress.js?v=231','atlas98b-progress.css?v=231'):
  assert entry in h,entry
 assert '.j150-slot' in pc and '.j150-place-pin' in pc
 assert '.classic-marker[data-slot-done="true"]' in cc
