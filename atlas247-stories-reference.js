@@ -23,9 +23,14 @@ save.onclick=()=>{if(!route.length)return;const a=E('a');a.href=URL.createObject
 
 // Private image alignment is never transferred to another image or world.
 const viewport=document.getElementById('classicViewport'),surface=document.getElementById('classicMapSurface'),bg=document.getElementById('classicMapBackground');
-let anchors=[],transform=null,imageKey='',picking=false;
+let anchors=[],transform=null,imageKey='',picking=false,lastFingerprint='';
+const revision='eb962c5bff9c1d94e6cb48077885fde0f5d28317';
+const storageKey='team-jura-stories-calibration-v1:'+world;
+const fingerprint=()=>viewport.dataset.mapImage==='local-highres'&&/^sha256:[a-f0-9]{64}$/.test(viewport.dataset.imageFingerprint||'')?viewport.dataset.imageFingerprint:'';
+function remember(){const fp=fingerprint();if(!fp||!transform)return;try{localStorage.setItem(storageKey,JSON.stringify({schema:1,world,revision,fingerprint:fp,anchors:anchors.map(({id,u,v})=>({id,u,v}))}));calStatus.textContent+=' Saved privately for this exact image.'}catch{calStatus.textContent+=' Local storage unavailable; alignment is session-only.'}}
+function recover(){const fp=fingerprint();if(!fp||!rows.length||!getImage())return false;try{const raw=localStorage.getItem(storageKey);if(!raw)return false;const restored=window.JuraMapCalibration.restore(JSON.parse(raw),world,revision,fp,rows);anchors=restored.anchors;transform=restored.transform;calStatus.textContent='Saved private alignment restored · independent check error '+transform.error.toFixed(2)+'% of image dimensions.';refreshAnchors();drawAligned();return true}catch{return false}}
 const calibration=E('details');calibration.id='j249-calibrate';
-calibration.append(E('summary','Align sourced pins to my map image'),E('p','Choose three well-separated recognizable reference points and a fourth independent check point. Pick each exact corresponding place on the visible image. Accepted alignment is approximate and private to this image/session. It does not move personal markers or certify gameplay locations.'));
+calibration.append(E('summary','Align sourced pins to my map image'),E('p','Choose three well-separated recognizable reference points and a fourth independent check point. Pick each exact corresponding place on the visible image. Accepted alignment is approximate and private to this image. Locally imported images can retain their alignment after reload; publisher images stay session-only. It does not move personal markers or certify gameplay locations.'));
 const anchor=E('select');anchor.id='j249-anchor';anchor.setAttribute('aria-label','Choose alignment landmark');
 const pick=E('button','Pick point on map');pick.type='button';pick.disabled=true;
 const clear=E('button','Reset alignment');clear.type='button';
@@ -54,8 +59,8 @@ function refreshAnchors(){
  pick.disabled=!getImage()||!anchor.value||anchors.length>=4;anchor.disabled=!getImage()||anchors.length>=4;
 }
 function cancelPicking(){picking=false;surface.classList.remove('j249-picking')}
-function invalidate(){cancelPicking();anchors=[];transform=null;pinsHidden=false;hidePins.setAttribute('aria-pressed','false');hidePins.textContent='Hide aligned source pins';markerInfo.hidden=true;imageKey=getImage();calStatus.textContent=imageKey?'Choose four known landmarks. Source pins stay hidden until the independent check passes.':'Load an actual game map image first.';refreshAnchors();drawAligned()}
-anchor.onchange=refreshAnchors;clear.onclick=invalidate;
+function invalidate(){cancelPicking();anchors=[];transform=null;pinsHidden=false;hidePins.setAttribute('aria-pressed','false');hidePins.textContent='Hide aligned source pins';markerInfo.hidden=true;imageKey=getImage();lastFingerprint=fingerprint();calStatus.textContent=imageKey?'Choose four known landmarks. Source pins stay hidden until the independent check passes.':'Load an actual game map image first.';refreshAnchors();drawAligned();}
+anchor.onchange=refreshAnchors;clear.onclick=()=>{try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved?.fingerprint===fingerprint())localStorage.removeItem(storageKey)}catch{}invalidate()};
 pick.onclick=()=>{if(!getImage()||!anchor.value||anchors.length>=4)return;picking=true;imageKey=getImage();surface.classList.add('j249-picking');calStatus.textContent='Tap the exact location of '+rows.find(r=>r.id===anchor.value).name+' on the map. Press Escape or Reset to cancel.';viewport.scrollIntoView({block:'center',behavior:'smooth'})};
 let tap=null;
 viewport.addEventListener('pointerdown',e=>{if(!picking)return;tap={x:e.clientX,y:e.clientY,id:e.pointerId};e.preventDefault();e.stopImmediatePropagation()},true);
@@ -64,13 +69,13 @@ viewport.addEventListener('pointerup',e=>{if(!picking||!tap||tap.id!==e.pointerI
  const u=(e.clientX-bounds.left)/bounds.width*100,v=(e.clientY-bounds.top)/bounds.height*100;
  if(u<0||u>100||v<0||v>100)return;
  anchors.push({...r,u,v});cancelPicking();refreshAnchors();
- if(anchors.length===4){try{transform=window.JuraMapCalibration.fit(anchors);calStatus.textContent='Approximate private alignment accepted · independent check error '+transform.error.toFixed(2)+'% of image dimensions.';drawAligned()}catch(err){transform=null;calStatus.textContent=err.message+'. Reset and try again.';drawAligned()}}
+ if(anchors.length===4){try{transform=window.JuraMapCalibration.fit(anchors);calStatus.textContent='Approximate private alignment accepted · independent check error '+transform.error.toFixed(2)+'% of image dimensions.';drawAligned();remember()}catch(err){transform=null;calStatus.textContent=err.message+'. Reset and try again.';drawAligned()}}
  else calStatus.textContent=anchors.length+' of 4 control points recorded. Choose next landmark.';
 },true);
 viewport.addEventListener('pointercancel',()=>{tap=null},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&picking){cancelPicking();tap=null;calStatus.textContent='Point selection cancelled. Choose a landmark to continue.'}});
 
-window.addEventListener('team-jura:classic-map-image-change',()=>{if(getImage()!==imageKey)invalidate()});
+window.addEventListener('team-jura:classic-map-image-change',()=>{const changed=getImage()!==imageKey;if(changed)invalidate();const fp=fingerprint();if(fp&&(changed||fp!==lastFingerprint)){lastFingerprint=fp;if(transform)remember();else recover()}});
 
-fetch('./data/atlas-'+world+'-psp-reference.json').then(r=>{if(!r.ok)throw Error('Source unavailable');return r.json()}).then(d=>{if(d.schema!==1||d.world!==world||d.sourceRevision!=='eb962c5bff9c1d94e6cb48077885fde0f5d28317'||d.mapAlignment!=='unverified'||d.records?.length!==counts[world])throw Error('Source mismatch');const ids=new Set();for(const r of d.records){if(typeof r.id!=='string'||!r.id.startsWith(world+'-ref-')||ids.has(r.id)||typeof r.name!=='string'||typeof r.category!=='string'||![r.x,r.y,r.z].every(Number.isFinite))throw Error('Invalid record');ids.add(r.id)}rows=d.records;progress=window.JuraSourceProgress.create(window,{scope:world+'-psp-reference',revision:d.sourceRevision,rows,identity:r=>r.id,kind:'visited',host:root,onChange:()=>{markerInfo.hidden=true;reset()}});cat.append(option('','All categories'),...[...new Set(rows.map(r=>r.category))].map(c=>option(c,c)));invalidate();reset()}).catch(e=>{status.textContent='References unavailable: '+e.message;cat.disabled=q.disabled=origin.disabled=true});
+fetch('./data/atlas-'+world+'-psp-reference.json').then(r=>{if(!r.ok)throw Error('Source unavailable');return r.json()}).then(d=>{if(d.schema!==1||d.world!==world||d.sourceRevision!=='eb962c5bff9c1d94e6cb48077885fde0f5d28317'||d.mapAlignment!=='unverified'||d.records?.length!==counts[world])throw Error('Source mismatch');const ids=new Set();for(const r of d.records){if(typeof r.id!=='string'||!r.id.startsWith(world+'-ref-')||ids.has(r.id)||typeof r.name!=='string'||typeof r.category!=='string'||![r.x,r.y,r.z].every(Number.isFinite))throw Error('Invalid record');ids.add(r.id)}rows=d.records;progress=window.JuraSourceProgress.create(window,{scope:world+'-psp-reference',revision:d.sourceRevision,rows,identity:r=>r.id,kind:'visited',host:root,onChange:()=>{markerInfo.hidden=true;reset()}});cat.append(option('','All categories'),...[...new Set(rows.map(r=>r.category))].map(c=>option(c,c)));invalidate();recover();reset()}).catch(e=>{status.textContent='References unavailable: '+e.message;cat.disabled=q.disabled=origin.disabled=true});
 })();
