@@ -26,7 +26,7 @@ assert "sets:['Security cameras','Rampages','Unique jumps'" in c, 'CTW missing s
 for world in ('iii','vc','vcs','lcs','ctw','tlad','tbogt'):
  assert "'"+world+"':{" in collections,world
 for entry in ('atlas98-classic.js?v=','atlas98-classic.css?v=',
-              'atlas98b-progress.js?v=231','atlas98b-progress.css?v=231'):
+              'atlas98b-progress.js?v=','atlas98b-progress.css?v=231'):
  assert entry in h,entry
 assert '.j150-slot' in pc and '.j150-place-pin' in pc
 assert '.classic-marker[data-slot-done="true"]' in cc
@@ -38,3 +38,7 @@ assert 'team-jura-classic-route-v1' in route and 'input.world!==game' in route
 assert 'existing.has(id)' in route and 'j228RouteImport' in route and 'j228RouteExport' in route
 assert 'team-jura-atlas98-classic-'+'' in c, 'Marker key must not be renamed'
 print('PASS Atlas 15.0: linked classic-world slots, preserved old save keys, explicit personal image coordinates')
+
+import subprocess
+subprocess.run(['node','-e',"""const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');const ctx={window:{}};vm.runInNewContext(fs.readFileSync('atlas98b-collection-data.js','utf8'),ctx);const c=ctx.window.TeamJuraClassicCollections;assert.equal(c.vcs.Rampages.count,30);assert.equal(c.vcs['Rampages (PS2)'].count,35);assert.equal(c.vcs['Stunt jumps (PS2)'].count,36);assert.equal(c.ctw['Rampages (PSP)'].count,35);assert.equal(c.ctw['Riding Shotguns'].count,5);assert.equal(c.ctw['Riding Shotguns (PSP)'].count,8);assert.equal(c.ctw['Lions of Fo'].count,2);assert.equal(c.lcs['Hidden packages'].count,100);console.log('PASS edition-specific collection totals');"""],cwd=R,check=True)
+assert "refreshLatest();const target=new Set" in p and "window.addEventListener('storage'" in p
