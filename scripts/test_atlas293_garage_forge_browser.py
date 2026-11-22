@@ -85,6 +85,16 @@ try:
         assert page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.sultan.favorite",garage_key) is True
         second.close()
         preserved=page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles",garage_key)
+        # New vehicle records must not automatically mark a vehicle owned or wished for.
+        page.evaluate("g => {const x=JSON.parse(localStorage.getItem(g));delete x.vehicles.jetmax;localStorage.setItem(g,JSON.stringify(x))}",garage_key)
+        page.locator('#saveToGarage').click()
+        fresh=page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles",garage_key)
+        assert fresh['jetmax']['studioName']=='Refit Three'
+        assert 'owned' not in fresh['jetmax'] and 'wishlist' not in fresh['jetmax']
+        assert fresh['sultan']=={'favorite':True,'paint':'Graphite'}
+        # A Garage build is a private concept, never a purchase or ownership assertion.
+        assert page.evaluate("() => localStorage.getItem('team-jura-atlas90-collection-v1')") is None
+        preserved=fresh
         # Corrupt Garage JSON must be preserved byte-for-byte; a save must fail safely.
         page.evaluate("g => localStorage.setItem(g, '{broken-json')",garage_key)
         page.locator('#saveToGarage').click()
