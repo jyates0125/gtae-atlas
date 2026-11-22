@@ -172,6 +172,7 @@
     },
     {
       "id": "character:agent14",
+      "conceptPortrait": "art/elario-agent14-portrait.webp",
       "kind": "character",
       "name": "Agent 14",
       "scope": "online",
