@@ -24,7 +24,7 @@ const persist=()=>{try{localStorage.setItem(key,JSON.stringify(state))}catch(_){
 let points=[],byId=new Map(),selectingOnMap=false,lastRoute=[],waiting=false,ready=false;
 const panel=E('section','j190-sa-panel');panel.id='j190-sa-route';panel.setAttribute('aria-label','San Andreas personal collectible route planner');
 const top=E('div','j190-sa-head');
-top.append(E('strong','','COLLECTIBLE ROUTES · SAN ANDREAS'),E('p','','Start at any sourced map pin and visit the nearest remaining locations in this collection. The gold line is a planning diagram across approximately aligned symbols—not a road route or travel-time prediction.'));
+top.append(E('strong','','COLLECTIBLE ROUTES · SAN ANDREAS'),E('p','','Start at any sourced map pin and select an optional finish. Nearest-next routes are refined only when their geometric length decreases. The gold line is a planning diagram across approximately aligned symbols—not a road route or travel-time prediction.'));
 panel.append(top);
 const controls=E('div','j190-sa-controls');
 const startLabel=E('label','','Start at a source-backed pin');
@@ -50,7 +50,7 @@ const pickOnMap=B('Pick start on map',()=>{selectingOnMap=!selectingOnMap;
 });
 pickOnMap.id='j190-sa-pick';
 pickOnMap.setAttribute('aria-pressed','false');
-const recalc=B('Build nearest route',()=>render('Route rebuilt from the selected starting pin.'));
+const recalc=B('Build optimized route',()=>render('Route rebuilt from the selected starting pin.'));
 const clear=B('Clear route',()=>{state.start=null;state.finish=null;persist();render('Route cleared. Pick a new starting pin.')});
 const copy=B('Copy route list',async()=>{
  if(!lastRoute.length){status.textContent='Choose a starting pin first.';return}
@@ -113,8 +113,11 @@ function nearest(){
   });
   here=remain.shift();out.push(here);
  }
- if(end&&end.id!==start.id)out.push(end);
- return out;
+ const finish=end&&end.id!==start.id?end:null;
+ const refined=window.JuraRoutePlanner?.improveOrder?.(start,out.slice(1),finish);
+ const result=refined?.improved?[start,...refined.stops]:out;
+ if(finish)result.push(finish);
+ return result;
 }
 function draw(route){
  overlay.replaceChildren();
