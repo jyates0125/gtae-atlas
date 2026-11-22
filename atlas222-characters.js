@@ -12,6 +12,7 @@ const identityMatch=(value,s)=>{
  return words.length>1&&words.every(word=>n.split(' ').some(part=>part.startsWith(word)));
 };
 const recordKey=r=>String(r.id||'').split(':').pop();
+const hasLocalConcept=r=>r.preferConceptPortrait===true&&typeof r.conceptPortrait==='string'&&/^art\/[a-z0-9-]+\.(?:webp|png|jpe?g)$/i.test(r.conceptPortrait);
 const WORLD_SCENES={story:'art/jura155-story.webp',online:'art/jura155-online.webp',vi:'art/jura155-vi.webp',classic:'art/jura155-characters.webp'};
 const CLASSIC={
  'GTA III':'map-hub.html?game=iii','GTA Vice City':'map-hub.html?game=vc',
@@ -23,7 +24,7 @@ const CLASSIC={
  'GTA The Ballad of Gay Tony':'map-hub.html?game=tbogt'
 };
 const worlds={story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story',classic:'Classic GTA'};
-let indexedCharacters=[];
+let indexedCharacters=[],visibleCharacters=[];
 const profileLink=r=>'./atlas-characters.html?game='+encodeURIComponent(r.scope)+(r.scope==='classic'?'&edition='+encodeURIComponent(r.game):'')+'&q='+encodeURIComponent(r.name)+'&profile='+encodeURIComponent(r.id)+'#mainCharacterEra';
 const worldLink=r=>r.scope==='classic'?'./'+(CLASSIC[r.game]||'maps.html'):
  r.scope==='story'?'./atlas.html':r.scope==='online'?'./atlas-online.html':'./atlas-vi.html';
@@ -129,6 +130,33 @@ function showProfile(dialog,r,pushEntry=false){
   links.append(copy,status);
  }
  content.append(links);
+
+ // Navigate the current filtered roster without stacking browser history:
+ // one modal visit should require one Back action, even after many profiles.
+ const index=visibleCharacters.findIndex(entry=>entry.id===r.id);
+ if(index>=0&&visibleCharacters.length>1){
+  const browse=make('nav','j304-profile-browse');
+  browse.setAttribute('aria-label','Browse filtered character appearances');
+  const current=make('span','j304-profile-position',(index+1)+' of '+visibleCharacters.length+' appearances');
+  const step=(delta,labelText)=>{
+   const button=make('button','j222-action',labelText);button.type='button';
+   button.addEventListener('click',()=>{
+    const next=visibleCharacters[(index+delta+visibleCharacters.length)%visibleCharacters.length];
+    if(!next)return;
+    const u=new URL(location.href);u.searchParams.set('profile',next.id);
+    const state=history.state?.juraCharacterProfile?
+     {...history.state,juraCharacterProfile:next.id}:history.state;
+    history.replaceState(state,'',u);
+    showProfile(dialog,next);
+    button.textContent=labelText;
+    browse.querySelector('[data-j304-next]')?.focus({preventScroll:true});
+   });
+   if(delta===1)button.dataset.j304Next='';else button.dataset.j304Previous='';
+   return button;
+  };
+  browse.append(step(-1,'← Previous character'),current,step(1,'Next character →'));
+  content.append(browse);
+ }
  const alternates=indexedCharacters.filter(x=>x.kind==='character'&&x.name===r.name&&x.id!==r.id);
  if(alternates.length){
   const other=make('nav','j225-character-appearances');
@@ -158,6 +186,7 @@ async function start(){
  const args=new URLSearchParams(location.search);
  let scope=ALLOWED.has(args.get('game'))?args.get('game'):'all';
  let q=(args.get('q')||'').slice(0,120);
+ let art=['concept','reference'].includes(args.get('art'))?args.get('art'):'all';
  const editions=[...new Set(data.filter(r=>r.scope==='classic').map(r=>r.game))].sort();
  let edition=editions.includes(args.get('edition'))?args.get('edition'):'all';
  const editionLabel=make('label','j226-edition-label','Classic game edition ');
@@ -170,11 +199,16 @@ async function start(){
  editionSelect.value=edition;
  editionLabel.append(editionSelect);
  buttons[0]?.parentElement?.after(editionLabel);
+ const artButtons=[...document.querySelectorAll('[data-j304-art]')];
+ const concepts=data.filter(hasLocalConcept).length;
+ const metrics=$('j304-portrait-metrics');
+ if(metrics)metrics.textContent=concepts+' listed local concepts · '+(data.length-concepts)+' reference/pending appearances';
  search.value=q;
  const persist=()=>{const u=new URL(location.href);
   if(scope==='all')u.searchParams.delete('game');else u.searchParams.set('game',scope);
   if(scope==='classic'&&edition!=='all')u.searchParams.set('edition',edition);else u.searchParams.delete('edition');
   if(q.trim())u.searchParams.set('q',q.trim());else u.searchParams.delete('q');
+  if(art==='all')u.searchParams.delete('art');else u.searchParams.set('art',art);
   history.replaceState(history.state,'',u);
  };
  const syncDatabase=()=>{const el=$('filterGame');if(el&&el.value!==scope){el.value=scope;el.dispatchEvent(new Event('change',{bubbles:true}))}};
@@ -194,15 +228,19 @@ async function start(){
   };
   rows.sort((a,b)=>(s?rank(a)-rank(b):0)||
     (a.group==='Protagonist'?0:1)-(b.group==='Protagonist'?0:1)||a.name.localeCompare(b.name));
-  grid.replaceChildren();for(const r of rows)grid.append(card(r));
-  if(!rows.length)grid.append(make('p','j222-empty','No characters matched. Try another world or search term.'));
-  stat.textContent=rows.length+' of '+data.length+' indexed character appearances · '+(scope==='classic'&&edition!=='all'?edition:(worlds[scope]||'All worlds'));
+  const display=art==='all'?rows:rows.filter(r=>art==='concept'?hasLocalConcept(r):!hasLocalConcept(r));
+  visibleCharacters=display;
+  grid.replaceChildren();for(const r of display)grid.append(card(r));
+  if(!display.length)grid.append(make('p','j222-empty','No appearances match these filters. Choose All appearances or reset to browse again.'));
+  stat.textContent=display.length+' of '+data.length+' indexed character appearances · '+(scope==='classic'&&edition!=='all'?edition:(worlds[scope]||'All worlds'));
   for(const b of buttons)b.setAttribute('aria-pressed',String(b.dataset.j222Scope===scope));
+  for(const b of artButtons)b.setAttribute('aria-pressed',String(b.dataset.j304Art===art));
  };
  editionSelect.addEventListener('change',()=>{edition=editionSelect.value;draw();persist()});
+ for(const b of artButtons)b.addEventListener('click',()=>{art=b.dataset.j304Art;draw();persist()});
  for(const b of buttons)b.addEventListener('click',()=>{scope=b.dataset.j222Scope;draw();syncDatabase();persist()});
  search.addEventListener('input',()=>{q=search.value.slice(0,120);draw();persist()});
- $('j222-reset')?.addEventListener('click',()=>{scope='all';edition='all';editionSelect.value='all';q='';search.value='';draw();syncDatabase();persist()});
+ $('j222-reset')?.addEventListener('click',()=>{scope='all';edition='all';editionSelect.value='all';art='all';q='';search.value='';draw();syncDatabase();persist()});
  const dialog=$('j222-profile-dialog');
  dialog?.addEventListener('click',event=>{
   if(event.target!==dialog)return;
@@ -235,6 +273,7 @@ async function start(){
    const term=searchText(q);
    const matchesName=[hit.name,...(hit.aliases||[])].some(x=>identityMatch(x,term));
    if(term&&!matchesName){q=hit.name;search.value=q}
+   if(art!=='all'&&(art==='concept')!==hasLocalConcept(hit))art='all';
    draw();persist();showProfile(dialog,hit);return
   }
   if(requested){url.searchParams.delete('profile');history.replaceState(history.state,'',url)}
