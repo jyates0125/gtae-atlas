@@ -59,7 +59,8 @@ function portraitMedia(r,profile=false){
   if(!safeConcept){unavailable();return}
   media.dataset.artStatus='character-concept';
   const portrait=make('img','jura-concept-portrait');
-  portrait.loading=profile?'eager':'lazy';
+  // Only the small, locally bundled portrait set is eager; remote references stay lazy.
+  portrait.loading='eager';
   portrait.decoding='async';
   portrait.alt='Elario Studios fan concept of '+r.name;
   portrait.addEventListener('error',unavailable,{once:true});

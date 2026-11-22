@@ -13,6 +13,19 @@ local_roster = [r for r in roster if r.get("conceptPortrait")]
 assert len(roster) == 40 and len(local_roster) >= 13
 assert all(r.get("preferConceptPortrait") is True for r in local_roster)
 
+def decode_portrait(locator, identity):
+    # Native lazy loading and layout may not yet have scheduled an image request.
+    # Require a rendered successfully loaded image before decode; never swallow failure.
+    locator.scroll_into_view_if_needed()
+    locator.evaluate("el => { el.loading = 'eager'; }")
+    try:
+        expect(locator).to_have_js_property("complete", True, timeout=15000)
+        locator.evaluate("el => el.decode()")
+        assert locator.evaluate("el => el.naturalWidth>0 && el.naturalHeight>0")
+    except Exception as error:
+        details = locator.evaluate("el => ({src: el.getAttribute('src'), currentSrc:el.currentSrc, complete:el.complete, width:el.naturalWidth, height:el.naturalHeight})") if locator.count() else {"missing": True}
+        raise AssertionError(f"Portrait decode failed for {identity}: {details}") from error
+
 class QuietHandler(SimpleHTTPRequestHandler):
     def log_message(self, *args):
         pass
@@ -40,8 +53,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
                 expect(portrait_card.locator(".j222-character-media")).to_have_attribute("data-art-status","character-concept")
                 portrait=portrait_card.locator("img.jura-concept-portrait")
                 expect(portrait).to_have_attribute("src","./"+entry["conceptPortrait"])
-                portrait.scroll_into_view_if_needed()
-                portrait.evaluate("el => el.decode()")
+                decode_portrait(portrait,entry["id"])
                 assert portrait.evaluate("el => el.naturalWidth>0 && new URL(el.src).origin===location.origin")
                 expect(portrait_card.locator(".j222-art-credit")).to_have_text("Elario Studios · illustrated character concept")
             # Shared reference URLs may belong to a different appearance (e.g. Franklin Online).
@@ -58,14 +70,13 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             cj_card=page.locator(".j222-character-card").filter(has=page.get_by_role("heading",name="Carl Johnson",exact=True))
             cj_portrait=cj_card.locator('img[src$="jura221-cj-cinematic.webp"]')
             expect(cj_portrait).to_have_count(1,timeout=15000)
-            cj_portrait.scroll_into_view_if_needed()
-            cj_portrait.evaluate("el => el.decode()")
+            decode_portrait(cj_portrait,"CJ archive")
             assert cj_portrait.evaluate("el => el.naturalWidth>0 && new URL(el.src).origin===location.origin")
             expect(cj_card.locator(".j222-art-credit")).to_have_text("Elario Studios · illustrated character concept")
             cj_card.get_by_role("link",name="View profile").click()
             cj_dialog=page.get_by_role("dialog",name="Carl Johnson")
             expect(cj_dialog).to_be_visible()
-            cj_dialog.locator('img[src$="jura221-cj-cinematic.webp"]').evaluate("el => el.decode()")
+            decode_portrait(cj_dialog.locator('img[src$="jura221-cj-cinematic.webp"]'),"CJ profile dialog")
             cj_dialog.get_by_role("button",name="Close character profile").click()
             expect(cj_dialog).to_be_hidden()
             page.wait_for_function("!new URL(location.href).searchParams.has('profile')")
@@ -76,20 +87,18 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
                 card.scroll_into_view_if_needed()
             expect(concepts).to_have_count(9)
             for img in concepts.all():
-                img.scroll_into_view_if_needed()
-                img.evaluate("el => el.decode()")
+                decode_portrait(img,img.get_attribute("src"))
                 assert img.evaluate("el => el.naturalWidth === 418 && el.naturalHeight === 418")
             agent = cards.filter(has=page.get_by_role("heading",name="Agent 14",exact=True))
             assert agent.get_attribute("data-j222-world")=="online"
             agent_image=agent.locator('img[src$="elario-agent14-portrait.webp"]')
-            agent_image.scroll_into_view_if_needed()
-            agent_image.evaluate("el => el.decode()")
+            decode_portrait(agent_image,"Agent 14")
             assert agent_image.evaluate("el => el.naturalWidth === 640")
             for slug,scope in (("huang-lee","classic"),("agatha-baker","online"),("bigsmoke","classic")):
                 portrait=cards.locator(f'img[src$="elario-{slug}-portrait.webp"]')
                 portrait.scroll_into_view_if_needed()
                 assert portrait.evaluate("el => el.closest('article').dataset.j222World")==scope
-                portrait.evaluate("el => el.decode()")
+                decode_portrait(portrait,slug)
                 assert portrait.evaluate("el => el.naturalWidth === 640")
             card = cards.filter(has=page.get_by_role("heading", name="Jason Duval", exact=True))
             card.get_by_text("View profile").click()
@@ -114,8 +123,7 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             expect(record.locator("h3")).to_have_text("Carl Johnson")
             local_cj=record.locator('img[src$="jura221-cj-cinematic.webp"]')
             expect(local_cj).to_have_count(1)
-            local_cj.scroll_into_view_if_needed()
-            local_cj.evaluate("el => el.decode()")
+            decode_portrait(local_cj,"CJ Universe Database")
             expect(record.locator(".u-image-note")).to_have_text("ELARIO CHARACTER CONCEPT")
             expect(record.locator(".u-card-eyebrow")).to_contain_text("GTA San Andreas")
             profile_link=record.get_by_role("link",name="Open character profile")

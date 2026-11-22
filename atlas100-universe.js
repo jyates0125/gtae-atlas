@@ -68,7 +68,7 @@ function badge(r){const id=r.id.split(':').pop().replace(/-vi|-v$/,'');if(r.kind
 function elarioCharacterPortrait(r,area,allowConcept=true){
  if(allowConcept && typeof r.conceptPortrait==='string' && /^art\/[a-z0-9-]+\.(?:webp|png|jpe?g)$/i.test(r.conceptPortrait)){
   const img=make('img');
-  img.loading='lazy';img.decoding='async';
+  img.loading='eager';img.decoding='async';
   img.alt='Elario Studios fan concept of '+r.name;
   area.dataset.artStatus='character-concept';
   const note=area.querySelector('.u-image-note')||make('span','u-image-note');
