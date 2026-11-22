@@ -103,6 +103,11 @@ try:
    page.locator('#concept3d [data-forge-control="lights"]').uncheck()
    page.locator('#saveBuild').click()
    page.reload(wait_until='domcontentloaded')
+   # The URL still says source=garage, so reload correctly restores the Garage working copy.
+   # Explicitly load the independent Studio preset to verify its saved finish persists.
+   expect(page.locator('#paintColor')).to_have_value('#13a9ce',timeout=20000)
+   page.locator('#loadBuild').click()
+   expect(page.locator('#paintColor')).to_have_value('#aa3344')
    expect(page.locator('#concept3d [data-forge-control="finish"]')).to_have_value('satin',timeout=20000)
    expect(page.locator('#concept3d [data-forge-control="accent"]')).to_have_value('#10abcf')
    expect(page.locator('#concept3d [data-forge-control="kit"]')).to_have_value('track')
