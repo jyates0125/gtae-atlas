@@ -7,3 +7,5 @@
 .c-import span{color:#e6d0e4;font:12px/1.5 system-ui}
 .c-filters select:disabled{opacity:.72;cursor:not-allowed}
 .c-actions button{min-height:44px}
+
+.c-viewer .j256-stage canvas{min-height:0;height:clamp(300px,42vw,500px)}.c-viewer.j256-forge{align-items:stretch}.c-stage .j256-style{margin-top:6px}@media(max-width:620px){.c-viewer .j256-stage canvas{height:290px;min-height:0}}

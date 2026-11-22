@@ -31,3 +31,8 @@ assert 'NOT a GTA vehicle model' in viewer, 'Viewer disclaimer must remain'
 for nav in ('index.html','atlas97-journey.html','atlas93-garage.html','atlas-database.html','atlas100-showroom.js'):
  assert 'atlas-vehicle-configurator.html' in (ROOT/nav).read_text(encoding='utf8'),nav
 print('PASS Atlas 10.1 original 3D concept builder: source references, inputs, storage isolation, navigation and rights disclosures')
+
+# Forge geometry: exact class separation and actual design variant changes.
+import subprocess
+subprocess.run(['node','-e',"""const a=require('node:assert/strict'),f=require('./atlas256-forge-geometry.js');a.equal(f.classify('Aircraft / Plane concept','jetmax'),'marine');for(const [type,model] of [['Sports concept','adder'],['Pickup / Truck','bison'],['Touring concept','tailgater'],['Boat','jetmax'],['Aircraft','lazer'],['Helicopter','buzzard']]){const base=f.build(type,model,'#7644cc',{}),variant=f.build(type,model,'#7644cc',{finish:'stealth',kit:'track',lights:false,accent:'#00ffff',stance:'raised'});a.ok(base.vertices.length>10000&&base.vertices.length%18===0&&base.vertices.every(Number.isFinite));a.ok(!base.vertices.every((v,i)=>v===variant.vertices[i]));}a.equal(f.normalize({accent:'bad',finish:'fake'}).accent,'#eab56a');console.log('PASS six original Forge class meshes and variant geometry');"""],cwd=ROOT,check=True)
+assert 'atlas256-forge-geometry.js' in page and 'onDesign:value=>{design=value}' in script
