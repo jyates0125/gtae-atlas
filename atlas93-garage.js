@@ -14,7 +14,55 @@ if(!Array.isArray(meta.garages))meta.garages=['Main Garage'];if(!meta.vehicles||
 meta.garages=[...new Set(meta.garages.filter(x=>typeof x==='string').map(x=>x.trim()).filter(Boolean))].slice(0,40);
 let records=[],shown=[],selected='',page=0,intel={};const PER_PAGE=24;
 const f=x=>String(x??'').trim();const text=(id,value)=>{if($(id))$(id).textContent=value};
-function persist(){try{localStorage.setItem(META,JSON.stringify({...meta,schema:1,updated:new Date().toISOString()}));gallery.schema=1;localStorage.setItem(S,JSON.stringify({...gallery,updated:new Date().toISOString()}));return true}catch(e){notice('Browser storage unavailable; export your garage backup.');return false}}
+// Keep independently edited Garage metadata and Atlas ownership in separate saves.
+const plain=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
+function readChecked(key,fallback,valid){
+ const raw=localStorage.getItem(key);
+ if(raw===null)return fallback;
+ const value=JSON.parse(raw);
+ if(!valid(value))throw Error('Invalid saved collection');
+ return value;
+}
+function saveOwnedMark(id,shouldOwn){
+ try{
+  const latest=readChecked(S,{schema:1,owned:{},wishlist:{},note:{}},x=>
+   plain(x)&&plain(x.owned)&&plain(x.wishlist)&&(x.note===undefined||plain(x.note)));
+  const owned={...latest.owned},key='vehicles5:'+id;
+  if(shouldOwn)owned[key]=true;else delete owned[key];
+  const next={...latest,owned,schema:1,updated:new Date().toISOString()};
+  localStorage.setItem(S,JSON.stringify(next));
+  gallery=next;
+  return true;
+ }catch(e){
+  notice('Ownership not saved: collection data could not be read safely. Export a backup before retrying.');
+  return false;
+ }
+}
+function saveGarageName(name,remove=false){
+ try{
+  const latest=readChecked(META,meta,x=>plain(x)&&Array.isArray(x.garages)&&plain(x.vehicles));
+  if(Object.values(latest.vehicles).some(v=>!plain(v)))throw Error('Malformed vehicle entry');
+  let names=[...new Set(latest.garages.filter(x=>typeof x==='string').map(x=>x.trim()).filter(Boolean))];
+  if(remove){
+   if(name==='Main Garage')throw Error('Main Garage cannot be removed');
+   if(Object.values(latest.vehicles).some(v=>v.garage===name)){
+    notice('Move vehicles out of this garage before removing it.');return false;
+   }
+   names=names.filter(x=>x!==name);
+  }else{
+   if(names.includes(name)){notice('This garage already exists.');return false}
+   if(names.length>=40){notice('Maximum 40 garage names.');return false}
+   names.push(name);
+  }
+  const next={...latest,garages:names,schema:1,updated:new Date().toISOString()};
+  localStorage.setItem(META,JSON.stringify(next));
+  meta=next;
+  return true;
+ }catch(e){
+  notice('Garage locations not saved: stored data could not be read safely. Export a backup before retrying.');
+  return false;
+ }
+}
 function notice(msg){const e=$('garageNotice');if(e)e.textContent=msg;else console.info('[Team Jura Garage]',msg)}
 function nice(s){return String(s).replace(/([a-z])([0-9])/g,'$1 $2').replace(/_/g,' ').replace(/\b[a-z]/g,x=>x.toUpperCase())}
 function kind(id){
@@ -31,7 +79,7 @@ function kind(id){
  if(/^(dominator|gauntlet|ruiner|tampa|phoenix|vigero|sabregt|dukes|hotknife)/.test(id))return 'Muscle';
  return 'Unclassified model';
 }
-function saveOwners(){persist();text('ownedCount',Object.keys(gallery.owned).filter(x=>x.startsWith('vehicles5:')&&gallery.owned[x]).length)}
+function saveOwners(id,shouldOwn){const ok=saveOwnedMark(id,shouldOwn);if(ok)text('ownedCount',Object.keys(gallery.owned).filter(x=>x.startsWith('vehicles5:')&&gallery.owned[x]).length);return ok}
 function vehicle(id){return meta.vehicles[id]||{garage:'',paint:'Graphite',secondary:'Midnight',note:'',favorite:false,plate:''}}
 function setVehicle(id,v){
  // Forge and Garage may be open in different tabs. Merge the newest saved model
@@ -51,8 +99,8 @@ function modelInfo(id){const stat=intel[id];return {id,name:stat?.displayName||n
 function getPhoto(r){const img=document.createElement('img');img.loading='lazy';img.decoding='async';img.alt='GTA V archive reference render: '+r.name;img.src=r.image;img.onerror=()=>{img.onerror=null;img.src=r.type==='Boats & Watercraft'?'./art/elario-watercraft-showroom.webp':'./art/jura161-vehicles.webp';img.alt='Original Elario vehicle-showroom concept; a verified model-specific reference render is not available for '+r.name};return img}
 function paintColor(name){return typeof name==='string'&&/^#[0-9a-f]{6}$/i.test(name)?name:PAINTS.find(([n])=>n===name)?.[1]||'#5b6270'}
 function garages(){const select=$('garageLocation');const prior=select.value;select.replaceChildren(new Option('All locations',''));for(const g of meta.garages)select.add(new Option(g,g));select.value=meta.garages.includes(prior)?prior:'';
- const root=$('garageList');root.replaceChildren();for(const g of meta.garages){const row=document.createElement('div');row.className='location-row';const label=document.createElement('span');const count=Object.values(meta.vehicles).filter(x=>x.garage===g).length;label.textContent=g+' · '+count;row.append(label);if(g!=='Main Garage'){const del=document.createElement('button');del.textContent='×';del.title='Remove empty garage';del.setAttribute('aria-label','Remove empty garage '+g);del.type='button';del.onclick=()=>{if(Object.values(meta.vehicles).some(x=>x.garage===g)){notice('Move cars out of this garage before removing it.');return}meta.garages=meta.garages.filter(x=>x!==g);persist();garages();paint()};row.append(del)}root.append(row)} }
-function card(r){const saved=vehicle(r.id),owned=!!gallery.owned['vehicles5:'+r.id];const c=document.createElement('article');c.className='card'+(owned?' owned':'');const photo=document.createElement('div');photo.className='photo';photo.style.setProperty('--paint',paintColor(saved.paint));photo.append(getPhoto(r));const flag=document.createElement('small');flag.textContent=owned?'✓ OWNED':'MODEL REFERENCE';photo.append(flag);c.append(photo);const body=document.createElement('div');body.className='body';const k=document.createElement('span');k.className='kind';k.textContent=r.type+' · '+(saved.garage||'Not assigned');const h=document.createElement('h3');h.textContent=r.name;let quick=null;if(r.spec){quick=document.createElement('p');quick.className='j104-quick';quick.textContent=[r.spec.manufacturer,r.spec.seats!==null?r.spec.seats+' seats':null,r.spec.topSpeedMph!==null?r.spec.topSpeedMph+' mph tested':null].filter(Boolean).join(' · ')}const acts=document.createElement('div');acts.className='actions';const details=document.createElement('button');details.className='primary';details.type='button';details.textContent='Customize';details.onclick=()=>choose(r.id);const own=document.createElement('button');own.type='button';own.textContent=owned?'✓ Owned':'+ Own';own.setAttribute('aria-pressed',String(owned));own.onclick=()=>{gallery.owned['vehicles5:'+r.id]=!owned;if(!gallery.owned['vehicles5:'+r.id])delete gallery.owned['vehicles5:'+r.id];saveOwners();paint()};acts.append(details,own);body.append(k,h);if(quick)body.append(quick);body.append(acts);c.append(body);return c}
+ const root=$('garageList');root.replaceChildren();for(const g of meta.garages){const row=document.createElement('div');row.className='location-row';const label=document.createElement('span');const count=Object.values(meta.vehicles).filter(x=>x.garage===g).length;label.textContent=g+' · '+count;row.append(label);if(g!=='Main Garage'){const del=document.createElement('button');del.textContent='×';del.title='Remove empty garage';del.setAttribute('aria-label','Remove empty garage '+g);del.type='button';del.onclick=()=>{if(saveGarageName(g,true)){garages();paint()}};row.append(del)}root.append(row)} }
+function card(r){const saved=vehicle(r.id),owned=!!gallery.owned['vehicles5:'+r.id];const c=document.createElement('article');c.className='card'+(owned?' owned':'');const photo=document.createElement('div');photo.className='photo';photo.style.setProperty('--paint',paintColor(saved.paint));photo.append(getPhoto(r));const flag=document.createElement('small');flag.textContent=owned?'✓ OWNED':'MODEL REFERENCE';photo.append(flag);c.append(photo);const body=document.createElement('div');body.className='body';const k=document.createElement('span');k.className='kind';k.textContent=r.type+' · '+(saved.garage||'Not assigned');const h=document.createElement('h3');h.textContent=r.name;let quick=null;if(r.spec){quick=document.createElement('p');quick.className='j104-quick';quick.textContent=[r.spec.manufacturer,r.spec.seats!==null?r.spec.seats+' seats':null,r.spec.topSpeedMph!==null?r.spec.topSpeedMph+' mph tested':null].filter(Boolean).join(' · ')}const acts=document.createElement('div');acts.className='actions';const details=document.createElement('button');details.className='primary';details.type='button';details.textContent='Customize';details.onclick=()=>choose(r.id);const own=document.createElement('button');own.type='button';own.textContent=owned?'✓ Owned':'+ Own';own.setAttribute('aria-pressed',String(owned));own.onclick=()=>{if(saveOwners(r.id,!owned))paint()};acts.append(details,own);body.append(k,h);if(quick)body.append(quick);body.append(acts);c.append(body);return c}
 function hasSavedBuild(v){return !!(v.note||v.plate||v.studioName||v.studioBody||v.garage||v.favorite||v.paint&&v.paint!=='Graphite'||v.secondary&&v.secondary!=='Midnight'||v.studioDesign&&Object.keys(v.studioDesign).length)}
 function paint(){const query=$('garageSearch').value.toLowerCase().trim(),type=$('garageFilter').value,where=$('garageLocation').value;
 shown=records.filter(r=>{const v=vehicle(r.id),owned=!!gallery.owned['vehicles5:'+r.id];const cls=$('garageClassFilter')?.value||'all';return (!query||r.name.toLowerCase().includes(query)||r.id.includes(query))&&(cls==='all'||r.type===cls)&&(!where||v.garage===where)&&(type==='all'||type==='owned'&&owned||type==='unowned'&&!owned||type==='assigned'&&!!v.garage||type==='favorites'&&!!v.favorite||type==='saved'&&hasSavedBuild(v))});
@@ -91,7 +139,7 @@ const showroom=part('section','j99-showroom');if(['Boats & Watercraft','Helicopt
  }else window.TeamJuraGarage3D?.mount(showroom,previewOpts);
 function labelText(label,node){const wrap=part('label','',label);wrap.append(node);return node}
 const studio=document.createElement('a');studio.href='./atlas-vehicle-configurator.html?model='+encodeURIComponent(r.id)+'&source=garage';studio.textContent='◈ Open this vehicle in the 3D concept studio';studio.className='j99-studio-link';studio.style.cssText='display:inline-flex;align-items:center;min-height:44px;margin:12px 0;padding:10px 15px;border:1px solid #f5c98c;border-radius:11px;color:#ffe2aa;text-decoration:none;font-weight:750';showroom.after(studio);
-const owned=document.createElement('input');owned.type='checkbox';owned.checked=!!gallery.owned['vehicles5:'+r.id];labelText('Owned / collected',owned);owned.onchange=()=>{if(owned.checked)gallery.owned['vehicles5:'+r.id]=true;else delete gallery.owned['vehicles5:'+r.id];persist();paint()};
+const owned=document.createElement('input');owned.type='checkbox';owned.checked=!!gallery.owned['vehicles5:'+r.id];labelText('Owned / collected',owned);owned.onchange=()=>{if(!saveOwners(r.id,owned.checked))owned.checked=!!gallery.owned['vehicles5:'+r.id];paint()};
 const place=document.createElement('select');place.add(new Option('Unassigned',''));for(const g of meta.garages)place.add(new Option(g,g));place.value=v.garage;labelText('Garage location',place);
 const primary=document.createElement('select');const secondary=document.createElement('select');for(const [n] of PAINTS){primary.add(new Option(n,n));secondary.add(new Option(n,n))}function addCustom(select,value){if(typeof value==='string'&&/^#[0-9a-f]{6}$/i.test(value)&&![...select.options].some(o=>o.value===value))select.add(new Option('Custom concept color · '+value,value))}
 addCustom(primary,v.paint);addCustom(secondary,v.secondary);primary.id='j255-primary';secondary.id='j255-secondary';primary.value=v.paint||'Graphite';secondary.value=v.secondary||'Midnight';
@@ -109,7 +157,7 @@ const link=part('a','','↗ Research vehicle info at GTADB');link.href=data?.sou
 function download(obj,name){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),800)}
 function install(){ $('garageSearch').addEventListener('input',()=>{page=0;paint()});for(const id of ['garageFilter','garageLocation','garageClassFilter'])$(id).addEventListener('change',()=>{page=0;paint()});
 $('showAll').onclick=()=>{$('garageFilter').value='all';$('garageLocation').value='';page=0;paint()};$('showOwned').onclick=()=>{$('garageFilter').value='owned';$('garageLocation').value='';page=0;paint()};$('prevPage').onclick=()=>{page--;paint()};$('nextPage').onclick=()=>{page++;paint()};
-$('addGarage').onclick=()=>{const name=f($('newGarage').value).slice(0,56);if(!name){notice('Enter a garage name.');return}if(meta.garages.includes(name)){notice('This garage already exists.');return}if(meta.garages.length>=40){notice('Maximum 40 garage names.');return}meta.garages.push(name);$('newGarage').value='';persist();garages();paint()};
+$('addGarage').onclick=()=>{const name=f($('newGarage').value).slice(0,56);if(!name){notice('Enter a garage name.');return}if(meta.garages.includes(name)){notice('This garage already exists.');return}if(saveGarageName(name)){$('newGarage').value='';garages();paint()}};
 $('exportGarage').onclick=()=>download({schema:1,app:'team-jura-atlas93-garage',exported:new Date().toISOString(),garage:meta,collection:{owned:gallery.owned,wishlist:gallery.wishlist}},'team-jura-my-garage-backup.json');
 $('importGarage').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{
  if(file.size>2000000)throw Error('Backup exceeds 2 MB');
