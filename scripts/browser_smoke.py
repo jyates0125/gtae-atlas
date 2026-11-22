@@ -1102,6 +1102,15 @@ async def smoke():
                                     await pg.locator('#classicImport').set_input_files(
                                         {'name':'notebook.json','mimeType':'application/json','buffer':backup})
                                     await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='1'",timeout=7000)
+                                    # Re-import a conflicting and a new pin: preserve existing notes and routes.
+                                    if world=='vc':
+                                        original=payload['markers'][0]
+                                        merge_payload={**payload,'markers':[{**original,'name':'Do not overwrite'},{**original,'id':'qa-new-pin','name':'Additional private marker','x':25,'y':75}]}
+                                        await pg.locator('#classicImport').set_input_files({'name':'merge.json','mimeType':'application/json','buffer':json.dumps(merge_payload).encode()})
+                                        await pg.wait_for_function("document.querySelector('#pinCount')?.textContent==='2'",timeout=7000)
+                                        merged=await pg.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas98-classic-vc-v1')).markers")
+                                        if merged[0]['name']!=original['name'] or merged[1]['id']!='qa-new-pin':
+                                            failures.append('Classic merge overwrote an existing note or ignored new pin')
                                     # Atlas 15.0: each of the seven classic worlds must connect
                                     # a numbered checklist slot to a user-placed map-image pin.
                                     if await pg.locator('#j98bGrid .j150-place-pin').count()==0:
