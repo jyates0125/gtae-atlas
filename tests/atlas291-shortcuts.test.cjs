@@ -11,8 +11,8 @@ assert.ok(start !== -1, 'Missing shortcuts disclosure');
 const end = html.indexOf('</details>', start);
 assert.ok(end > start, 'Missing closing disclosure');
 const section = html.slice(start, end);
-assert.equal((section.match(/<nav\\b/g) || []).length, 1);
-assert.equal((section.match(/<\\/nav>/g) || []).length, 1);
+assert.equal((section.match(/<nav\b/g) || []).length, 1);
+assert.equal((section.match(/<\/nav>/g) || []).length, 1);
 assert.equal((section.match(/<a href=/g) || []).length, 13, 'Keep all 13 shortcut links');
 assert.ok(!section.startsWith('<details open'), 'Start collapsed');
 for (const dest of ['maps.html', 'heists.html', 'atlas93-garage.html', 'atlas-research.html']) {
