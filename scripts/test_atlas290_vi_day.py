@@ -23,5 +23,5 @@ for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
     assert html.count('atlas.js?v=290')==1,page
 assert 'atlas-sw.js?v=290' in engine
 assert "const LAYERS=" in engine and "'5':[['radar','In-game radar']" in engine
-assert 'day' not in (R/'atlas.html').read_text(encoding='utf-8').split('<title>')[0]
+assert "SHELL='team-jura-atlas-v290-shell'" in (R/'atlas-sw.js').read_text(encoding='utf-8')
 print('PASS Atlas 29.0: GTADB Day map, native tile bounds, saved keys, legal credits and V/Online isolation')
