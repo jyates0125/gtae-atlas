@@ -1,0 +1,34 @@
+/* Atlas 29.0 — optional private source-backed pins on the official-poster view.
+   Only the reader's image-relative positions are drawn, never unchecked GTADB XY. */
+.j143-official-layer .j290-ui[hidden],.j143-official-layer .j290-drawer[hidden],.j143-official-layer .j290-pins[hidden]{display:none!important}
+.j143-official-layer .j290-ui{position:relative;z-index:7;background:#281a37;color:#f7eaf7;border-top:1px solid #6c476f;flex:none;min-width:0}
+.j143-official-layer .j290-open{display:block;width:100%;min-height:36px;border:0;background:linear-gradient(100deg,#3e234c,#30213f);color:#ffdaa0;font:800 12px/1.3 system-ui,sans-serif;text-align:left;padding:9px 14px;cursor:pointer}
+.j143-official-layer .j290-open[aria-expanded=true]{background:#493054}
+.j143-official-layer .j290-drawer{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;max-height:min(36vh,315px);overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.j143-official-layer .j290-drawer>p,.j143-official-layer .j290-meta,.j143-official-layer .j290-results,.j143-official-layer .j290-selected,.j143-official-layer .j290-inline{grid-column:1/-1}
+.j143-official-layer .j290-drawer>label{display:flex;flex-direction:column;gap:4px;color:#efdbef;font:700 11px/1.3 system-ui}
+.j143-official-layer :is(.j290-search,.j290-category){width:100%;max-width:100%;box-sizing:border-box;min-height:36px;border:1px solid #916796;border-radius:8px;background:#150f22;color:#fff1ff;padding:7px}
+.j143-official-layer .j290-warning,.j143-official-layer .j290-status,.j143-official-layer .j290-meta,.j143-official-layer .j290-muted{font:12px/1.5 system-ui;color:#e8d8eb;margin:0}
+.j143-official-layer .j290-warning{border-left:3px solid #efb669;padding-left:9px}
+.j143-official-layer .j290-warning a{color:#ffd6a5}
+.j143-official-layer .j290-results{display:grid;gap:5px;max-height:170px;overflow-y:auto;border:1px solid #5b3c68;border-radius:8px;padding:5px}
+.j143-official-layer .j290-result{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px;border-radius:8px;background:#382445}
+.j143-official-layer .j290-result-copy{min-width:0;overflow-wrap:anywhere}
+.j143-official-layer .j290-result-copy strong,.j143-official-layer .j290-selected strong{display:block;color:#fff0dc;font:700 12px/1.35 system-ui}
+.j143-official-layer .j290-result-copy small,.j143-official-layer .j290-selected small{display:block;color:#dcc8e1;font:10px/1.4 system-ui}
+.j143-official-layer .j290-inline{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.j143-official-layer .j290-result button,.j143-official-layer .j290-inline button,.j143-official-layer .j290-import{color:#29182c;background:#f2bf7a;border:1px solid #ffe2af;border-radius:8px;padding:7px 10px;min-height:34px;font:800 11px/1.3 system-ui;cursor:pointer;text-align:center;white-space:nowrap}
+.j143-official-layer .j290-import{position:relative;display:inline-flex;align-items:center}
+.j143-official-layer .j290-import input{position:absolute;width:1px;height:1px;opacity:0}
+.j143-official-layer .j290-selected{border:1px solid #b180a6;border-radius:8px;padding:7px;display:grid;gap:6px}
+.j143-official-layer .j290-selected:empty{display:none}
+.j143-official-layer .j290-pins{position:absolute;z-index:4;pointer-events:none;transform-origin:center center}
+.j143-official-layer .j290-pin{pointer-events:auto;position:absolute;width:26px;height:34px;min-width:26px;min-height:34px;padding:0;border:2px solid #fff0c6;border-radius:13px 13px 13px 3px;background:linear-gradient(145deg,#ffc96b,#e39a45);box-shadow:0 2px 8px #10081ae0;color:#371b38;transform:translate(-50%,-100%) rotate(-45deg);font:900 13px/1 system-ui;text-shadow:none;cursor:pointer}
+.j143-official-layer .j290-pin::first-letter{transform:rotate(45deg)}
+.j143-official-layer .j290-pin:hover{filter:brightness(1.15)}
+.j143-official-layer :is(.j290-open,.j290-pin,.j290-result button,.j290-inline button,.j290-import input,.j290-search,.j290-category):focus-visible{outline:3px solid #ffe7a9;outline-offset:2px}
+@media(max-width:650px){
+ .j143-official-layer .j290-drawer{max-height:min(40vh,280px);grid-template-columns:1fr;padding:8px}
+ .j143-official-layer .j290-result button{white-space:normal;min-width:75px}
+ .j143-official-layer .j290-pin{width:24px;height:30px;min-width:24px;min-height:30px}
+}
