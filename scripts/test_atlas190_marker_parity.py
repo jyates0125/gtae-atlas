@@ -113,7 +113,15 @@ print('PASS 320 SA source records across five sets; 70 bounded jump zones')
 vc=json.loads(read('data/atlas-vc-51-source-points.json'))
 assert vc['world']=='vc' and vc['license']=='Apache-2.0' and vc['sourceRevision']=='b06265e1bf37e2b1ed389c58c80679addfbc8f20'
 assert vc['counts']=={'Stunt jumps':36,'Store robberies':15} and len(vc['records'])==51
-assert vc['mapAlignment']=='unverified' and vc['gameplayVerified'] is False
+assert vc['mapAlignment']=='source-transform-matched' and vc['gameplayVerified'] is False
+import hashlib
+image_bytes=(ROOT/'art/atlas128-vice-city-radar.png').read_bytes()
+assert hashlib.sha1(f'blob {len(image_bytes)}\0'.encode()+image_bytes).hexdigest()==vc['projection']['gitBlobSha']=='7ae40595da5d5480c50f6a82c2b20557f1f7f6ae'
+assert vc['projection']['sourceRevision']=='5756e398975ff2fa7dd9b818edda82b46ea4a6a0'
+assert image_bytes[16:24]==bytes.fromhex('0000040000000400')
+for point in vc['records']:
+ assert 0<=point['imageX']<=100 and 0<=point['imageY']<=100
+ assert abs(point['imageX']-(point['x']+2000)/40)<.000001 and abs(point['imageY']-(2000-point['y'])/40)<.000001
 assert len({p['id'] for p in vc['records']})==len({(p['x'],p['y'],p['z']) for p in vc['records']})==51
 for p in vc['records']:
  assert abs(p['sourceZ']+p['zAdjustment']-p['z'])<.00001 and p['sourceUrl']==vc['sourceUrl']

@@ -12,9 +12,9 @@
     "Stunt jumps": 36,
     "Store robberies": 15
   },
-  "mapAlignment": "unverified",
+  "mapAlignment": "source-transform-matched",
   "gameplayVerified": false,
-  "coordinateBasis": "Original source-script reference XYZ; stunt Z includes plugin's explicit subtraction. No pixel placement, road graph or gameplay confirmation.",
+  "coordinateBasis": "Original source-script reference XYZ; stunt Z includes plugin's explicit subtraction. No pixel placement, road graph or gameplay confirmation. Projection now established using exact upstream radar image blob match and documented original world extent. No in-game visual verification.",
   "numbering": "Source array order, not an official guide checklist identity.",
   "records": [
     {
@@ -27,7 +27,9 @@
       "z": 10.6,
       "sourceZ": 10.6,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 28.53,
+      "imageY": 65.81649999999999
     },
     {
       "id": "vc-robbery-02",
@@ -39,7 +41,9 @@
       "z": 10.6,
       "sourceZ": 10.6,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 28.642500000000002,
+      "imageY": 28.75
     },
     {
       "id": "vc-robbery-03",
@@ -51,7 +55,9 @@
       "z": 10.6,
       "sourceZ": 10.6,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 29.24,
+      "imageY": 31.452499999999997
     },
     {
       "id": "vc-robbery-04",
@@ -63,7 +69,9 @@
       "z": 10.8,
       "sourceZ": 10.8,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 28.835,
+      "imageY": 51.815
     },
     {
       "id": "vc-robbery-05",
@@ -75,7 +83,9 @@
       "z": 10.6,
       "sourceZ": 10.6,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 59.4975,
+      "imageY": 44.745
     },
     {
       "id": "vc-robbery-06",
@@ -87,7 +97,9 @@
       "z": 11,
       "sourceZ": 11,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 59.58,
+      "imageY": 31.0075
     },
     {
       "id": "vc-robbery-07",
@@ -99,7 +111,9 @@
       "z": 12.2,
       "sourceZ": 12.2,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 61.25,
+      "imageY": 30.4375
     },
     {
       "id": "vc-robbery-08",
@@ -111,7 +125,9 @@
       "z": 24.5,
       "sourceZ": 24.5,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 58.817499999999995,
+      "imageY": 22.2175
     },
     {
       "id": "vc-robbery-09",
@@ -123,7 +139,9 @@
       "z": 18.1,
       "sourceZ": 18.1,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 60.5875,
+      "imageY": 24.014999999999997
     },
     {
       "id": "vc-robbery-10",
@@ -135,7 +153,9 @@
       "z": 19,
       "sourceZ": 19,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 61.717499999999994,
+      "imageY": 19.835
     },
     {
       "id": "vc-robbery-11",
@@ -147,7 +167,9 @@
       "z": 11,
       "sourceZ": 11,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 20.8225,
+      "imageY": 65.39500000000001
     },
     {
       "id": "vc-robbery-12",
@@ -159,7 +181,9 @@
       "z": 11.1,
       "sourceZ": 11.1,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 20.195,
+      "imageY": 58.092499999999994
     },
     {
       "id": "vc-robbery-13",
@@ -171,7 +195,9 @@
       "z": 10.1,
       "sourceZ": 10.1,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 55.06,
+      "imageY": 61.777499999999996
     },
     {
       "id": "vc-robbery-14",
@@ -183,7 +209,9 @@
       "z": 18,
       "sourceZ": 18,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 59.1125,
+      "imageY": 23.142500000000002
     },
     {
       "id": "vc-robbery-15",
@@ -195,7 +223,9 @@
       "z": 10.3,
       "sourceZ": 10.3,
       "zAdjustment": 0,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 25.905,
+      "imageY": 67.3075
     },
     {
       "id": "vc-jump-01",
@@ -207,7 +237,9 @@
       "z": 15.707,
       "sourceZ": 18.707,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 12.805475000000001,
+      "imageY": 76.11365
     },
     {
       "id": "vc-jump-02",
@@ -219,7 +251,9 @@
       "z": 24.673,
       "sourceZ": 28.673,
       "zAdjustment": -4,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 16.182625,
+      "imageY": 68.8803
     },
     {
       "id": "vc-jump-03",
@@ -231,7 +265,9 @@
       "z": 16,
       "sourceZ": 19,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 19.58775,
+      "imageY": 72.79582500000001
     },
     {
       "id": "vc-jump-04",
@@ -243,7 +279,9 @@
       "z": 19.016,
       "sourceZ": 22.016,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 18.696525,
+      "imageY": 76.367125
     },
     {
       "id": "vc-jump-05",
@@ -255,7 +293,9 @@
       "z": 16.621,
       "sourceZ": 19.121,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 11.207875000000001,
+      "imageY": 76.89185
     },
     {
       "id": "vc-jump-06",
@@ -267,7 +307,9 @@
       "z": 16.568,
       "sourceZ": 19.068,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 10.1072,
+      "imageY": 81.82202500000001
     },
     {
       "id": "vc-jump-07",
@@ -279,7 +321,9 @@
       "z": 14.694,
       "sourceZ": 17.194,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 11.166575,
+      "imageY": 80.77380000000001
     },
     {
       "id": "vc-jump-08",
@@ -291,7 +335,9 @@
       "z": 16.115,
       "sourceZ": 19.115,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 16.499450000000003,
+      "imageY": 74.956425
     },
     {
       "id": "vc-jump-09",
@@ -303,7 +349,9 @@
       "z": 22.603,
       "sourceZ": 25.103,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 50.618025,
+      "imageY": 27.554975000000002
     },
     {
       "id": "vc-jump-10",
@@ -315,7 +363,9 @@
       "z": 39.7731,
       "sourceZ": 42.3731,
       "zAdjustment": -2.6,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 57.930127500000005,
+      "imageY": 55.58003
     },
     {
       "id": "vc-jump-11",
@@ -327,7 +377,9 @@
       "z": 27.416,
       "sourceZ": 29.916,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 33.141375,
+      "imageY": 20.93945
     },
     {
       "id": "vc-jump-12",
@@ -339,7 +391,9 @@
       "z": 95.717,
       "sourceZ": 98.717,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 36.754,
+      "imageY": 29.248450000000002
     },
     {
       "id": "vc-jump-13",
@@ -351,7 +405,9 @@
       "z": 29.44,
       "sourceZ": 31.94,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 29.02445,
+      "imageY": 21.161849999999998
     },
     {
       "id": "vc-jump-14",
@@ -363,7 +419,9 @@
       "z": 45.241,
       "sourceZ": 47.741,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 42.188824999999994,
+      "imageY": 22.270100000000003
     },
     {
       "id": "vc-jump-15",
@@ -375,7 +433,9 @@
       "z": 12.681,
       "sourceZ": 15.181,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 24.710425,
+      "imageY": 50.752449999999996
     },
     {
       "id": "vc-jump-16",
@@ -387,7 +447,9 @@
       "z": 12.681,
       "sourceZ": 15.181,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 26.43245,
+      "imageY": 52.862649999999995
     },
     {
       "id": "vc-jump-17",
@@ -399,7 +461,9 @@
       "z": 13.415,
       "sourceZ": 15.915,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 27.480275,
+      "imageY": 43.4799
     },
     {
       "id": "vc-jump-18",
@@ -411,7 +475,9 @@
       "z": 19.355,
       "sourceZ": 21.855,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 23.952625,
+      "imageY": 64.233075
     },
     {
       "id": "vc-jump-19",
@@ -423,7 +489,9 @@
       "z": 17.467,
       "sourceZ": 19.967,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 55.224824999999996,
+      "imageY": 74.0918
     },
     {
       "id": "vc-jump-20",
@@ -435,7 +503,9 @@
       "z": 23.383,
       "sourceZ": 25.883,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 51.152875,
+      "imageY": 74.110375
     },
     {
       "id": "vc-jump-21",
@@ -447,7 +517,9 @@
       "z": 12.8977,
       "sourceZ": 15.8977,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 60.89635499999999,
+      "imageY": 58.35803
     },
     {
       "id": "vc-jump-22",
@@ -459,7 +531,9 @@
       "z": 33.17,
       "sourceZ": 35.67,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 52.762024999999994,
+      "imageY": 80.765
     },
     {
       "id": "vc-jump-23",
@@ -471,7 +545,9 @@
       "z": 14.252,
       "sourceZ": 17.752,
       "zAdjustment": -3.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 50.185874999999996,
+      "imageY": 81.147375
     },
     {
       "id": "vc-jump-24",
@@ -483,7 +559,9 @@
       "z": 17.861,
       "sourceZ": 20.361,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 50.227575,
+      "imageY": 83.162625
     },
     {
       "id": "vc-jump-25",
@@ -495,7 +573,9 @@
       "z": 7.929,
       "sourceZ": 10.929,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 41.9743,
+      "imageY": 84.48745
     },
     {
       "id": "vc-jump-26",
@@ -507,7 +587,9 @@
       "z": 7.929,
       "sourceZ": 10.929,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 41.9743,
+      "imageY": 81.914725
     },
     {
       "id": "vc-jump-27",
@@ -519,7 +601,9 @@
       "z": 10.34,
       "sourceZ": 12.84,
       "zAdjustment": -2.5,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 55.45125,
+      "imageY": 78.8
     },
     {
       "id": "vc-jump-28",
@@ -531,7 +615,9 @@
       "z": 10.84,
       "sourceZ": 12.84,
       "zAdjustment": -2,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 56.4764,
+      "imageY": 73.645825
     },
     {
       "id": "vc-jump-29",
@@ -543,7 +629,9 @@
       "z": 13,
       "sourceZ": 16,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 61.1125,
+      "imageY": 52.96
     },
     {
       "id": "vc-jump-30",
@@ -555,7 +643,9 @@
       "z": 13,
       "sourceZ": 16,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 57.11183,
+      "imageY": 62.352857500000006
     },
     {
       "id": "vc-jump-31",
@@ -567,7 +657,9 @@
       "z": 16.895,
       "sourceZ": 19.895,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 59.26975,
+      "imageY": 67.746575
     },
     {
       "id": "vc-jump-32",
@@ -579,7 +671,9 @@
       "z": 15.931,
       "sourceZ": 18.931,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 61.539725,
+      "imageY": 63.05575
     },
     {
       "id": "vc-jump-33",
@@ -591,7 +685,9 @@
       "z": 15.931,
       "sourceZ": 18.931,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 61.352625,
+      "imageY": 62.618399999999994
     },
     {
       "id": "vc-jump-34",
@@ -603,7 +699,9 @@
       "z": 11.222,
       "sourceZ": 14.222,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 61.522749999999995,
+      "imageY": 59.584050000000005
     },
     {
       "id": "vc-jump-35",
@@ -615,7 +713,9 @@
       "z": 10.688,
       "sourceZ": 14.688,
       "zAdjustment": -4,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 56.47602500000001,
+      "imageY": 62.01520000000001
     },
     {
       "id": "vc-jump-36",
@@ -627,7 +727,24 @@
       "z": 9.926,
       "sourceZ": 12.926,
       "zAdjustment": -3,
-      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp"
+      "sourceUrl": "https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp",
+      "imageX": 41.32955,
+      "imageY": 57.268525
     }
-  ]
+  ],
+  "projection": {
+    "source": "XiaoNiaoa/vc_lc (noiseXYZ)",
+    "sourceRevision": "5756e398975ff2fa7dd9b818edda82b46ea4a6a0",
+    "sourceUrl": "https://github.com/XiaoNiaoa/vc_lc/blob/5756e398975ff2fa7dd9b818edda82b46ea4a6a0/README.md#map-images",
+    "sourceImage": "maps/vc.png",
+    "localImage": "art/atlas128-vice-city-radar.png",
+    "gitBlobSha": "7ae40595da5d5480c50f6a82c2b20557f1f7f6ae",
+    "width": 1024,
+    "height": 1024,
+    "worldMin": -2000,
+    "worldMax": 2000,
+    "orientation": "north-up",
+    "formula": "pixelX=(x+2000)/4000*1024; pixelY=(2000-y)/4000*1024",
+    "gameplayVerified": false
+  }
 }

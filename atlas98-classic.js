@@ -82,7 +82,9 @@ function renderBackground(){
  b.classList.toggle('has-image',!!img);
  b.querySelector('span').hidden=true;b.querySelector('small').hidden=true;
  const viewport=$('#classicViewport');if(viewport)viewport.dataset.mapImage=highResUrl?'local-highres':state.background?'legacy-local':originalMapReady?'game-original':'original-art';
+ if(viewport){viewport.dataset.sourceImage=!own&&originalMapReady?activeMapUrl||'':'';viewport.dataset.sourceWidth=!own&&originalMapReady?String(originalMapSize?.width||0):'';viewport.dataset.sourceHeight=!own&&originalMapReady?String(originalMapSize?.height||0):'';}
  fitClassicImage();
+ window.dispatchEvent(new CustomEvent('team-jura:classic-map-image-change',{detail:{game:id}}));
 }
 function loadOriginalWorldMap(){
  // Keep the game/era unchanged across every fallback; don't redirect fans to generic city artwork.

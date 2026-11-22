@@ -900,7 +900,7 @@ async def smoke():
                                     if any('oldcity.svg' in x or 'sunset.svg' in x for x in urls):
                                         failures.append('Legacy skyline artwork returned to map covers')
                             if not failures and path=='atlas-sa.html':
-                                await pg.wait_for_function("document.querySelector('#mapped')?.textContent==='150'")
+                                await pg.wait_for_function("document.querySelector('#mapped')?.textContent==='320'")
                                 for label in ['Graffiti Tags','Unique Stunt Jumps','Snapshots']:
                                     await pg.locator('#categories button').filter(has_text=label).click()
                                     status=pg.locator('#mapStatus')
