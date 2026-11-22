@@ -1,3 +1,7 @@
+/* A selected location must sit above the Leonida world-guide dock
+ * (z-index:130), otherwise its summary intercepts the Back button.
+ * Keep the separate official poster overlay (z-index:600) higher. */
+.map-wrap .selected-card:not(.hidden){z-index:180}
 /* Atlas 30.2 · readable, reachable map detail dismissal, including short phones. */
 .map-wrap .selected-card{
  box-sizing:border-box;
