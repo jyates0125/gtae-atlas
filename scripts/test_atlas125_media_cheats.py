@@ -45,7 +45,7 @@ for p in ("index.html","maps.html","map-hub.html","atlas98-style-lab.html"):
             assert current, "Versioned shared portal stylesheet missing"
             version=current[1]
         else:
-            version=212 if p=="maps.html" and asset=="atlas98-portal.js" else 128
+            version=289 if p=="maps.html" else 128
         assert f"./{asset}?v={version}" in html,(p,asset,version)
 
 profiles=json.loads(source("data/atlas-universe-profiles.json"))

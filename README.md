@@ -1,10 +1,16 @@
-# Elario Studios · Team Jura Atlas — active project guide (18 November 2026)
+# Elario Studios · Team Jura Atlas — canonical GTAE project
 
-**Current authority:** [Standing Project Charter](docs/TEAM-JURA-STANDING-CHARTER.md) · [Designed Brand Master](docs/ATLAS92-MASTER-SPEC.md) · [Site Completion Contract](docs/ATLAS-SITE-COMPLETION-CONTRACT.md) · [Credits & Notices](atlas-credits.html). The earlier release notes below are retained for historical context and **must not** override these current project rules.
+**Current live-site identity:** [GTAE — Team Jura Atlas](https://gtae-online.pages.dev/) · **canonical GitHub source:** `jyates0125/team-jura-atlas-preview` · **production branch:** lowercase `development` · **protected reference/release branch:** lowercase `main`. The GitHub repository name is not the visitor-facing website name.
 
-**Branch and visual truth:** `development` is the active **Cloudflare Pages website** and is where source-checked, browser-tested improvements are intentionally merged. `main` is the protected reference/release branch; the one-time owner-approved main update happened November 18, 2026, and **all subsequent merges to `main` require fresh confirmation**. Keep the pre-release main backup. All visitor-facing pages should be brought into the **same current original Elario Designed Brand**, not labeled as an obsolete public legacy website. Existing map data, local player progress and source/MIT/CC BY/Apache notices must remain intact. Full feature parity remains a goal, never a claim.
+**Operating authority:** [Standing Project Charter](docs/TEAM-JURA-STANDING-CHARTER.md), [Canonical Deployment and Release Runbook](docs/TEAM-JURA-CANONICAL-REPO-AND-DEPLOYMENT.md), [Designed Brand Master](docs/ATLAS92-MASTER-SPEC.md), [Site Completion Contract](docs/ATLAS-SITE-COMPLETION-CONTRACT.md) and [Credits & Notices](atlas-credits.html). The old README release notes below are preserved only as history, not deploy instructions.
 
-**Next work:** Complete current-brand unification and visual QA; add source-cleared, game-specific in-app 2D flat maps and trustworthy game-mode coordinates; refine unique page-specific art and compare actual rendered pages against approved references. Preserve browser-local progress and GTADB/other license notices.
+**Build and release:** Open short-lived feature PRs against `development`; require exact-commit provenance, mobile/desktop Chromium+Edge CI, current original art, validated site ZIP, actual deployment verification and owner acceptance. Synchronize `main` only through separately reviewed release PRs, never by forced history rewrite or blind file copying. Preserve rollback refs, prior world and personal-progress data, public credits and legacy guest-export deep links.
+
+**Cloudflare:** Expected project `gtae-online`, production branch `development`, root `.`, build command `node scripts/build-cloudflare.cjs`, output `public`. **A successful GitHub merge is not proof Cloudflare is serving that revision.** Read the generated `atlas-build-identity.json` and inspect live assets. The old `team-jura-atlas-preview.pages.dev` project is retained solely as a carefully managed legacy redirect/export bridge.
+
+**Current focus:** Maintain 13 distinct worlds, accurate collections and routes, Cayo and other heist workspaces, original Elario Forge, vehicles/weapons/characters, navigation and iPhone accessibility. GTA VI public release and speculative individual locations are different evidence questions. Public sign-in remains deferred until the completed website receives its own owner signoff. Do not claim full media/map parity or completed One Last Ride film without delivered and reviewed evidence.
+
+## Historical release notes (not current deployment instructions)
 
 ---
 

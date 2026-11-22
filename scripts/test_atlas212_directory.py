@@ -8,7 +8,7 @@ css=(root/'atlas212-directory-resume.css').read_text(encoding='utf-8')
 world=(root/'atlas98-worlds.js').read_text(encoding='utf-8')
 assert 'id="j212Recent"' in html and 'hidden' in html
 assert 'id="j212RecentLink"' in html
-assert 'atlas98-portal.js?v=212' in html and 'atlas212-directory-resume.css?v=212' in html
+assert 'atlas98-portal.js?v=289' in html and 'atlas212-directory-resume.css?v=212' in html
 for phrase in ("team-jura-directory-last-map-v1","w.id===item.id&&w.href===item.href",
                "save(lastWorldKey,{id:w.id,href:w.href})","lastWorldBox.hidden=!selected"):
  assert phrase in js,phrase
