@@ -22,12 +22,35 @@
  function themeFor(name){return Object.hasOwn(themes,name)?name:'signature'}
  function defaultTheme(kind){return kind==='marine'?'marina':kind==='air'||kind==='rotor'?'hangar':kind==='utility'?'workshop':'signature'}
  function resolveTheme(kind,environment){return environment==='auto'||!environment?defaultTheme(kind):themeFor(environment)}
+ // Artist-authored proportions in normalized display units, NOT measured game dimensions.
+ // V archetypes informed by the checked records in data/atlas-vehicle-intel.json;
+ // VI studies use official named gallery subjects, with speculative shape detail.
+ const profiles=Object.freeze({
+  adder:{kind:'sport',shape:'round',label:'Rounded grand-tourer study',w:1.10,len:2.25,roof:1.02,cab:-.14,wheel:1.43,rad:.39,nose:.76},
+  alpha:{kind:'sport',shape:'coupe',label:'Luxury coupe study',w:.99,len:2.39,roof:1.22,cab:-.24,wheel:1.52,rad:.36,nose:.94},
+  buffalo:{kind:'sport',shape:'sedan',label:'Muscle sedan study',w:1.05,len:2.48,roof:1.30,cab:-.03,wheel:1.55,rad:.39,nose:.98},
+  asea:{kind:'touring',shape:'sedan',label:'Compact sedan study',w:.87,len:2.12,roof:1.32,cab:.05,wheel:1.30,rad:.33,nose:.90},
+  regina:{kind:'touring',shape:'wagon',label:'Long-roof wagon study',w:.94,len:2.48,roof:1.42,cab:-.20,wheel:1.48,rad:.36,nose:.95},
+  rebel:{kind:'utility',shape:'pickup',label:'Rugged pickup study',w:1.02,len:2.37,roof:1.51,cab:.18,wheel:1.60,rad:.46,nose:.91},
+  riata:{kind:'utility',shape:'pickup',label:'Raised vintage pickup study',w:1.13,len:2.50,roof:1.57,cab:.26,wheel:1.62,rad:.49,nose:.97},
+  aleutian:{kind:'utility',shape:'wagon',label:'Full-size SUV study',w:1.15,len:2.54,roof:1.66,cab:-.16,wheel:1.60,rad:.43,nose:.99},
+  rocoto:{kind:'utility',shape:'wagon',label:'Rounded luxury SUV study',w:1.06,len:2.32,roof:1.51,cab:-.03,wheel:1.49,rad:.40,nose:.82},
+  jetmax:{kind:'marine',shape:'powerboat',label:'Sleek performance watercraft study',w:.90,len:1.04,cab:.22},
+  squalo:{kind:'marine',shape:'powerboat',label:'Classic powerboat study',w:1.05,len:.96,cab:-.08},
+  vi_cheetah95:{kind:'sport',shape:'coupe',label:'1990s coupe visual study',w:1.10,len:2.28,roof:1.04,cab:-.26,wheel:1.43,rad:.38,nose:.78},
+  vi_stanier55:{kind:'touring',shape:'sedan',label:'1950s sedan visual study',w:1.04,len:2.57,roof:1.38,cab:-.14,wheel:1.62,rad:.40,nose:1.02},
+  vi_dominator67_buggy:{kind:'utility',shape:'buggy',label:'Off-road buggy visual study',w:1.06,len:2.21,roof:1.45,cab:.10,wheel:1.55,rad:.48,nose:.91},
+  vi_squalo:{kind:'marine',shape:'powerboat',label:'Leonida powerboat visual study',w:1.02,len:1.01,cab:.10}
+ });
+ function modelProfile(type,model){const id=String(model||'').toLowerCase();const p=Object.hasOwn(profiles,id)?profiles[id]:null;return p&&p.kind===classify(type,id)?p:null}
  function build(type,model,paint,settings,environment){
   const kind=classify(type,model),d=normalize(settings),base=hex(paint),accent=hex(d.accent),glass=[.12,.24,.34],dark=[.07,.085,.13],rubber=[.045,.05,.065],chrome=[.56,.64,.73],data=[];
-  const theme=themes[resolveTheme(kind,environment||d.environment)];
+  const theme=themes[resolveTheme(kind,environment||d.environment)],profile=modelProfile(type,model);
   const tint=(c,k)=>c.map(v=>clamp(v*k,0,1));
   const blend=(a,b,f)=>a.map((v,i)=>v*(1-f)+b[i]*f);
+  let transform=null;
   function tri(a,b,c,col,emissive=false){
+   if(transform){a=transform(a);b=transform(b);c=transform(c)}
    const u=b.map((x,i)=>x-a[i]),v=c.map((x,i)=>x-a[i]),n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],l=Math.hypot(...n);if(l<1e-7)return;
    const ny=Math.abs(n[1]/l),light=Math.abs((n[0]*.37+n[1]*.86+n[2]*.35)/l);
    const factor=emissive?1: .53+.46*light+.15*ny;
@@ -68,6 +91,7 @@
   const shell=d.finish==='stealth'?blend(base,[.11,.12,.17],.48):d.finish==='satin'?tint(base,.80):blend(base,[.58,.64,.78],.11);
   const lamp=d.lights?[.73,.94,1]:[.20,.23,.27],tail=d.lights?[1,.12,.24]:[.32,.09,.12];
   if(kind==='marine'){
+   if(profile)transform=p=>[p[0]*profile.w,p[1],p[2]*profile.len+(p[1]>.88?profile.cab*Math.min(1,(p[1]-.88)*4):0)];
    loft([[-2.58,.67,.36,.17],[-2.28,.92,.43,.28],[-1.35,1.01,.46,.32],[.38,.98,.46,.32],[1.53,.68,.56,.25],[2.42,.12,.73,.085],[2.66,.025,.77,.025]],shell,hull);
    loft([[-2.4,.65,.72,.09],[-1.55,.88,.78,.09],[.3,.89,.79,.08],[1.55,.57,.87,.065],[2.55,.075,.83,.02]],tint(shell,1.15));
    loft([[-1.15,.71,.89,.13],[-.53,.74,.98,.16],[.26,.59,1.10,.16],[.65,.45,1.10,.11]],glass);
@@ -84,15 +108,22 @@
    else{for(const sign of [-1,1]){const a=[sign*.3,.74,.76],b=[sign*2.83,.70,-.85],c=[sign*2.66,.70,-1.13],e=[sign*.34,.74,-.8];quad(a,b,c,e,shell);quad(a.map((v,i)=>i===1?v-.10:v),e.map((v,i)=>i===1?v-.10:v),c.map((v,i)=>i===1?v-.10:v),b.map((v,i)=>i===1?v-.10:v),tint(shell,.68));quad([sign*.18,.90,-1.78],[sign*.30,.9,-2.39],[sign*1.18,.90,-2.28],[sign*1.08,.90,-2.13],accent);box(sign*2.57,.75,-.94,.18,.08,.13,lamp,true)}
     quad([-.04,.95,-2.51],[-.04,1.82,-2.32],[-.04,1.76,-1.96],[-.04,.95,-1.57],shell);quad([.04,.95,-2.51],[.04,1.82,-2.32],[.04,1.76,-1.96],[.04,.95,-1.57],shell);}
   }else{
-   const truck=kind==='utility',sport=kind==='sport',shift=d.stance==='low'?-.09:d.stance==='raised'?.15:0,y=.64+shift,w=truck?1.09:1.0,len=truck?2.45:sport?2.22:2.30;
-   loft([[-len,.79*w,y,.18],[-len+.22,w,y,.32],[-1.35,w*1.04,y+.01,.35],[.95,w*1.04,y+.02,.36],[len-.23,w*.91,y-.02,.27],[len,.70*w,y-.07,.14]],shell);
-   const roof=truck?1.43:sport?1.10:1.28;
-   loft([[-1.26,.80,y+.36,.12],[-.76,.76,roof+shift,.20], [.34,.79,roof+shift,.2],[.94,.72,y+.37,.13]],glass);
-   loft([[-.78,.75,roof+shift+.17,.04],[.32,.78,roof+shift+.17,.04],[.53,.67,roof+shift+.10,.04]],shell);
+   const truck=kind==='utility',sport=kind==='sport',shift=d.stance==='low'?-.09:d.stance==='raised'?.15:0,y=.64+shift,w=profile?.w||(truck?1.09:1.0),len=profile?.len||(truck?2.45:sport?2.22:2.30),shape=profile?.shape||'generic',cab=profile?.cab||0,nose=profile?.nose||.70;
+   loft([[-len,(shape==='round'?.66:.79)*w,y,.18],[-len+.22,w,y,.32],[-1.35,w*1.04,y+.01,.35],[.95,w*1.04,y+.02,.36],[len-.23,w*.91,y-.02,.27],[len,nose*w,y-.07,.14]],shell);
+   const roof=profile?.roof||(truck?1.43:sport?1.10:1.28),back=shape==='wagon'?-1.91:shape==='pickup'?-.54:-1.26,topBack=shape==='wagon'?-1.70:shape==='pickup'?-.34:-.76,front=shape==='pickup'?1.10:.94;
+   if(shape==='buggy'){
+    for(const x of [-.67,.67]){box(x,roof/2+.44+shift,-.60,.09,roof-.48,.09,chrome);box(x,roof/2+.44+shift,.43,.09,roof-.48,.09,chrome);box(x,roof+.20+shift,-.085,.09,.09,1.12,chrome);box(x,y+.38,-.12,.40,.32,.48,dark)}
+    box(0,roof+.20+shift,-.60,1.41,.09,.09,chrome);box(0,roof+.20+shift,.43,1.41,.09,.09,chrome);
+   }else{
+    loft([[back+cab,.80*w,y+.36,.12],[topBack+cab,.76*w,roof+shift,.20],[.34+cab,.79*w,roof+shift,.2],[front+cab,.72*w,y+.37,.13]],glass);
+    loft([[topBack+cab,.75*w,roof+shift+.17,.04],[.32+cab,.78*w,roof+shift+.17,.04],[.53+cab,.67*w,roof+shift+.10,.04]],shell);
+    if(shape==='pickup'){box(0,y+.34,-1.46,1.43*w,.055,1.28,dark);for(const x of [-.85*w,.85*w])box(x,y+.40,-1.46,.09,.13,1.40,shell);box(0,y+.40,-2.08,1.75*w,.15,.10,shell)}
+    if(shape==='wagon'||shape==='sedan'){for(const x of [-.77*w,.77*w])box(x,roof+shift-.06,-.13+cab,.042,.29,.055,dark)}
+   }
    // Wheel arch lips, ventilated rims and radial spokes.
-   const rad=truck?.43:.37;const wheelZ=truck?1.53:1.39;
+   const rad=profile?.rad||(truck?.43:.37);const wheelZ=profile?.wheel||(truck?1.53:1.39);
    for(const x of [-w,w])for(const z of [-wheelZ,wheelZ]){
-    const side=x>0?1:-1,mid=.41+(truck?.04:0),axis=x+side*.045,segments=32;
+    const side=x>0?1:-1,mid=rad+.015,axis=x+side*.045,segments=32;
     const at=(a,r,dx)=>[axis+dx,mid+Math.cos(a)*r,z+Math.sin(a)*r];
     for(let i=0;i<segments;i++){const a=i*Math.PI*2/segments,b=(i+1)*Math.PI*2/segments;
      quad(at(a,rad,-.17),at(b,rad,-.17),at(b,rad,.17),at(a,rad,.17),rubber);
@@ -110,7 +141,7 @@
    if(d.kit==='track'){box(0,y+.62,-len+.52,1.81*w,.075,.44,accent);for(const x of [-.59,.59])box(x,y+.40,-len+.52,.08,.47,.09,dark)}
    if(d.lights){for(const side of [-1,1])box(side*.73,.09,0,.08,.015,2.7,accent,true)}
   }
-  return{kind,vertices:new Float32Array(data),settings:d};
+  return{kind,vertices:new Float32Array(data),settings:d,profile:profile?.label||null};
  }
- return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme});
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile});
 });
