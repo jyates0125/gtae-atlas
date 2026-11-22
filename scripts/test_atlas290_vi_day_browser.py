@@ -100,6 +100,14 @@ try:
             expect(page.locator("#j290-pages")).to_contain_text("3,663 matching")
             assert page.locator(".j290-entry a[href^='./atlas-vi.html?place=']").count()==24
             page.locator("#j290-vi-ledger").evaluate("(el) => el.open = false")
+            # Switching the embedded world must not expose VI-only records
+            # inside GTA V/Online; switching back restores the same index.
+            page.locator("#game5").evaluate("(e) => e.click()")
+            assert page.locator("#j290-vi-ledger").evaluate("(e) => e.hidden")
+            page.locator("#gameOnline").evaluate("(e) => e.click()")
+            assert page.locator("#j290-vi-ledger").evaluate("(e) => e.hidden")
+            page.locator("#game6").evaluate("(e) => e.click()")
+            assert not page.locator("#j290-vi-ledger").evaluate("(e) => e.hidden")
             if width == 390:
                 assert page.evaluate(
                     "document.documentElement.scrollWidth <= innerWidth + 1"
