@@ -230,6 +230,11 @@ async function start(){
   if(hit){
    if(scope!=='all'&&scope!==hit.scope){scope=hit.scope;syncDatabase()}
    if(hit.scope==='classic'&&edition!=='all'&&edition!==hit.game){edition=hit.game;editionSelect.value=edition}
+   // A shared link should not open a modal above an empty filtered grid.
+   // Preserve a useful name lookup only when the current search excludes it.
+   const term=searchText(q);
+   const matchesName=[hit.name,...(hit.aliases||[])].some(x=>identityMatch(x,term));
+   if(term&&!matchesName){q=hit.name;search.value=q}
    draw();persist();showProfile(dialog,hit);return
   }
   if(requested){url.searchParams.delete('profile');history.replaceState(history.state,'',url)}
