@@ -20,3 +20,16 @@ body.j120-heist-page .step input:disabled{opacity:.55}
  body.j120-heist-page .j301-checklist-status{font-size:12px;margin:10px 0}
  body.j120-heist-page .j301-rescue button{padding:12px 9px}
 }
+
+/* Cayo's flagship hides the historical layout; show rescue outside it only
+   when a damaged legacy checklist actually needs a user decision. */
+body.j180-cayo #j301-cayo-recovery.j301-cayo-recovery{
+ display:grid!important;gap:10px;max-width:780px;margin:25px auto;
+ padding:clamp(15px,3vw,24px);border:1px solid #ffbf75;
+ border-radius:16px;background:linear-gradient(150deg,#301a40,#19152f);
+ box-shadow:0 12px 45px #060511bb;color:#fff3e8;
+}
+body.j180-cayo .j301-cayo-recovery h2{margin:0;color:#ffdcaa;font:850 clamp(21px,4vw,29px)/1.25 system-ui}
+body.j180-cayo .j301-cayo-recovery>p{margin:0;color:#f1dce8;font:13px/1.65 system-ui}
+body.j180-cayo .j301-cayo-recovery .j301-rescue{display:grid!important}
+@media(max-width:810px){body.j180-cayo #j301-cayo-recovery{margin:18px 12px}}
