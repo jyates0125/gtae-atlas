@@ -53,3 +53,16 @@ for item in snapshot['records']:
  y=5913.52505828*math.log(math.tan(math.pi/4+item['lat']*math.pi/360))-10162.16009065
  assert math.isfinite(x) and math.isfinite(y) and abs(x)<=16384 and abs(y)<=16384
 print('PASS pinned Story community coordinate source, 275 unique bounded records')
+
+# Source-specific numbering audit: do not use an arbitrary list index to claim a match.
+import re
+numbered_types={'Spaceship Part','Letter Scrap','Nuclear Waste','Stunt Jump','Under the Bridge','Knife Flight','Epsilon Tract'}
+numbered=Counter()
+for item in snapshot['records']:
+ if item['type'] in numbered_types:
+  numbered[item['type']]+=1
+  assert int(re.search(r'#(\d+)\b',item['title']).group(1))==numbered[item['type']]
+assert sum(numbered.values())==255
+assert 'mappedProgress[mapped.id]' in (r/'atlas81-hq.js').read_text(encoding='utf-8')
+assert 'routes[\'5\']=[...current,...additions]' in (r/'atlas-completion.js').read_text(encoding='utf-8')
+print('PASS seven Story sets with 255 source-number-matched coordinates')

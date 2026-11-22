@@ -70,6 +70,26 @@ try:
    assert saved['online-playing-cards:2']['done'] and saved['story-letter-scraps:1']['note']=='Story private'
    page.reload(wait_until='domcontentloaded')
    expect(page.locator('#selectedCount')).to_have_text('2 / 54',timeout=15000)
+   page.goto(url+'?collection=story-spaceship-parts#collections',wait_until='domcontentloaded',timeout=45000)
+   page.wait_for_function("document.querySelector('#collectionConfidence').textContent.includes('50 match existing')",timeout=30000)
+   page.evaluate("""() => {
+     localStorage.setItem('team-jura-atlas81-hq-v1',JSON.stringify({schema:1,items:{'story-spaceship-parts:1':{done:true,queue:true,note:'Keep private note'}}}));
+     localStorage.setItem('jura3-progress',JSON.stringify({'jura-story-32':false}));
+   }""")
+   page.reload(wait_until='domcontentloaded')
+   page.wait_for_function("document.querySelector('#collectionConfidence').textContent.includes('50 match existing')",timeout=30000)
+   first=page.get_by_role('checkbox',name='✓ Collected Spaceship Parts item 1',exact=True)
+   expect(first).not_to_be_checked()
+   expect(page.get_by_role('checkbox',name='★ Hunt next Spaceship Parts item 1',exact=True)).to_be_checked()
+   expect(page.get_by_role('textbox',name='Location note Spaceship Parts item 1',exact=True)).to_have_value('Keep private note')
+   first.check()
+   assert page.evaluate("JSON.parse(localStorage.getItem('jura3-progress'))['jura-story-32']") is True
+   page.locator('#filterItems').select_option('identified')
+   expect(page.locator('#itemGrid .itemcard')).to_have_count(50)
+   expect(page.locator('#storyPins')).to_have_attribute('href','./atlas-completion.html?category=Spaceship%20Part')
+   page.goto(url.replace('atlas81-hq.html','atlas-completion.html')+'?category=Spaceship%20Part',wait_until='domcontentloaded')
+   expect(page.locator('#category')).to_have_value('Spaceship Part',timeout=30000)
+   expect(page.locator('#items .item')).to_have_count(50)
    print('PASS Atlas 21.9 '+engine+' '+str(width)+': HQ art, six map cards, 15 heist-specific entries, saves accessible',flush=True)
    ctx.close()
   browser.close()

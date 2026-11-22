@@ -51,7 +51,7 @@ function renderCollections(){
   const mapped=storyCounts[storyTypes[row.id]];
   const evidence=E('td',Number.isInteger(mapped)?mapped+' bundled community-mapped records; not independently gameplay verified':row.locationVerification==='not-imported'?'No individual coordinates in this index':'Review source status');
   const action=E('td');const link=E('a','Open checklist ↗');link.href='./atlas81-hq.html?collection='+encodeURIComponent(row.id)+'#collections';action.append(link);
-  if(Number.isInteger(mapped)){const map=E('a','Mapped Story records ↗');map.href='./atlas-completion.html';action.append(map)}
+  if(Number.isInteger(mapped)){const map=E('a','Mapped Story records ↗');map.href='./atlas-completion.html?category='+encodeURIComponent(storyTypes[row.id]);action.append(map)}
   if(/^https:\/\//.test(row.sourceUrl||'')){const source=E('a','Source ↗');source.href=row.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';action.append(source)}
   tr.append(title,scope,total,required,evidence,action);root.append(tr);
  }
