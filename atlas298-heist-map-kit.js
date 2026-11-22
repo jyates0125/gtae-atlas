@@ -54,10 +54,13 @@
    const old=existing[field].slice();
    const input=unique(incoming[field],allowed);
    const seen=new Set(old);
+   // A valid 150-ID import and a valid 150-ID existing save must never combine
+   // into a record that the next read rejects. Keep every existing ID in order.
    const additional=input.filter(id=>!seen.has(id));
-   const next=old.concat(additional);
-   added[field]=additional.length;
-   skipped+=incoming[field].length-input.length;
+   const fitted=additional.slice(0,Math.max(0,150-old.length));
+   const next=old.concat(fitted);
+   added[field]=fitted.length;
+   skipped+=incoming[field].length-input.length+(additional.length-fitted.length);
    merged[field]=next;
   }
   const changed=Object.values(added).some(Boolean);
@@ -117,6 +120,48 @@
    const message=make('p','j298-message','Backups contain only POI IDs, route order and personal scoped/challenge marks — never map coordinates or free-text notes.');
    message.setAttribute('role','status');
    const key='teamjura-heist-focus-v1:'+id;
+   // Preserve the exact damaged bytes before permitting a mission-only reset.
+   // Never read, export or clear a different heist, notes, checklist or Garage key.
+   const recover=make('section','j298-rescue');
+   recover.id='j298-map-rescue';
+   recover.setAttribute('aria-label','Damaged mission map save recovery');
+   let damagedRaw=null;
+   try{const raw=w.localStorage.getItem(key);readState(raw)}
+   catch{
+    try{damagedRaw=w.localStorage.getItem(key)}catch{}
+   }
+   if(damagedRaw!==null){
+    const recoveryStatus=make('p','j298-rescue-status','Your original data is unchanged. Other mission notes and checklists are unaffected.');
+    recoveryStatus.setAttribute('role','status');
+    const rawDownload=make('button','j298-action','Download damaged map save');
+    rawDownload.type='button';
+    const resetMap=make('button','j298-action','Reset this mission map only');
+    resetMap.type='button';resetMap.disabled=true;
+    let downloaded=false;
+    rawDownload.addEventListener('click',()=>{
+     try{
+      if(w.localStorage.getItem(key)!==damagedRaw)throw Error('Save changed in another tab. Reload before recovering.');
+      const url=w.URL.createObjectURL(new Blob([damagedRaw],{type:'text/plain;charset=utf-8'}));
+      const link=make('a');link.href=url;link.download='team-jura-'+id+'-damaged-map-raw.txt';
+      d.body.append(link);link.click();link.remove();
+      w.setTimeout(()=>w.URL.revokeObjectURL(url),1200);
+      downloaded=true;resetMap.disabled=false;
+      recoveryStatus.textContent='Original raw map data download initiated. You may now choose a mission-only reset, or keep the existing data.';
+     }catch(e){recoveryStatus.textContent='Recovery download blocked: '+e.message}
+    });
+    resetMap.addEventListener('click',()=>{
+     if(!downloaded)return;
+     try{
+      if(w.localStorage.getItem(key)!==damagedRaw)throw Error('Save changed in another tab. Nothing was reset.');
+      if(!w.confirm('Reset damaged map pins and route for '+id+'? Your downloaded raw copy, mission notes and checklists are kept.'))return;
+      if(w.localStorage.getItem(key)!==damagedRaw)throw Error('Save changed during confirmation. Nothing was reset.');
+      w.localStorage.removeItem(key);
+      recoveryStatus.textContent='Only this mission map was reset. Reloading the workspace.';
+      w.location.reload();
+     }catch(e){recoveryStatus.textContent='Reset blocked: '+e.message}
+    });
+    recover.append(make('h4',null,'Damaged mission map save'),make('p',null,'Route changes are paused to protect your original saved bytes. Download the raw backup before any optional reset.'),rawDownload,resetMap,recoveryStatus);
+   }
    download.addEventListener('click',()=>{
     try{
      const state=readState(w.localStorage.getItem(key));
@@ -137,10 +182,10 @@
      const existing=readState(raw);
      const merged=mergeTransfer(existing,input,id,points,focus.querySelectorAll('.j167-award input').length);
      if(!merged.changed){
-      message.textContent='No missing map progress to restore. Existing route and marks remain unchanged.';return;
+      message.textContent='No missing map progress to restore. Existing route and marks remain unchanged.'+(merged.skipped?' '+merged.skipped+' unknown or over-capacity backup entries skipped.':'');return;
      }
      w.localStorage.setItem(key,JSON.stringify(merged.record));
-     message.textContent='Restored '+merged.added.route+' route stop(s), '+merged.added.scoped+' scoped POI(s) and '+merged.added.awards+' challenge(s). Reload to show the refreshed mission map.';
+     message.textContent='Restored '+merged.added.route+' route stop(s), '+merged.added.scoped+' scoped POI(s) and '+merged.added.awards+' challenge(s).'+(merged.skipped?' '+merged.skipped+' unknown or over-capacity entries skipped.':'')+' Reload to show the refreshed mission map.';
      const reload=make('button','j298-action','Show restored map');reload.type='button';reload.id='j298-reload';
      reload.addEventListener('click',()=>w.location.reload());
      const old=section.querySelector('#j298-reload');if(old)old.remove();
@@ -149,7 +194,7 @@
     finally{file.value=''}
    });
    transfer.append(download,restore);
-   section.append(heading,help,tabs,status,transfer,message);
+   section.append(heading,help);if(damagedRaw!==null)section.append(recover);section.append(tabs,status,transfer,message);
    chipBar.before(section);
    chipBar.addEventListener('click',()=>w.queueMicrotask(update));
    search.addEventListener('input',()=>w.queueMicrotask(update));

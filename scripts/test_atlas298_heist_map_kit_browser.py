@@ -117,6 +117,41 @@ try:
    expect(page.locator('#j298-mission-map-kit')).to_be_visible()
    assert page.evaluate("keys=>keys.map(k=>localStorage.getItem(k))",[notes_key,checklist_key])==previous[1:]
    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+2'),width
+
+   # Atlas 31.4: a malformed personal mission map must survive ordinary clicks.
+   # Raw recovery is offered only for that mission; other keys stay untouched.
+   if width==390:
+    damage_key='teamjura-heist-focus-v1:diamond-casino'
+    notes='teamjura-heist-plan-v1:diamond-casino'
+    checklist='teamjura-heist-diamond-casino'
+    bad_bytes='{"route":'
+    page.goto(base+'heist-diamond-casino.html',wait_until='domcontentloaded')
+    page.evaluate("""([k,n,c,raw])=>{
+      localStorage.setItem(k,raw);localStorage.setItem(n,'PRESERVE NOTES');
+      localStorage.setItem(c,'PRESERVE CHECKLIST');
+    }""",[damage_key,notes,checklist,bad_bytes])
+    page.reload(wait_until='domcontentloaded')
+    rescue=page.locator('#j298-map-rescue')
+    expect(rescue).to_be_visible(timeout=20000)
+    reset=rescue.get_by_role('button',name='Reset this mission map only')
+    expect(reset).to_be_disabled()
+    page.locator('#j167-heist-map .j167-pin').first.click()
+    page.locator('.j167-detail-actions').get_by_role('button',name='Add to route').click()
+    assert page.evaluate('k=>localStorage.getItem(k)',damage_key)==bad_bytes,(
+     'Invalid map saves must not be silently replaced by route actions')
+    with page.expect_download() as raw_download:
+     rescue.get_by_role('button',name='Download damaged map save').click()
+    assert Path(raw_download.value.path()).read_text(encoding='utf-8')==bad_bytes
+    expect(reset).to_be_enabled()
+    page.once('dialog',lambda dialog:dialog.dismiss())
+    reset.click()
+    assert page.evaluate('k=>localStorage.getItem(k)',damage_key)==bad_bytes
+    page.once('dialog',lambda dialog:dialog.accept())
+    reset.click()
+    expect(page.locator('#j298-map-rescue')).to_have_count(0,timeout=20000)
+    assert page.evaluate('k=>localStorage.getItem(k)',damage_key) is None
+    assert page.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[notes,checklist])==[
+     'PRESERVE NOTES','PRESERVE CHECKLIST']
    context.close()
   browser.close()
 finally:
