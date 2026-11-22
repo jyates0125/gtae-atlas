@@ -135,7 +135,12 @@ async function loadRecords(){
    const o=elt('option','',tag+' ('+count+')');o.value=tag;category.append(o);
   }
   restore();list();render();
-  message('Loaded '+dataset.length+' source-backed community records. Choose one, then tap the corresponding place on the official map.');
+  // A source-index link may open a reference by ID, never auto-position it.
+  const requested=new URLSearchParams(location.search).get('landmark')||'';
+  if(ID.test(requested)&&records.has(requested)){
+   query.value=requested;list();select(requested);
+   message('Reference '+requested+' opened. Choose Place / move, then tap its actual position on your poster. No coordinates were inferred.');
+  }else message('Loaded '+dataset.length+' source-backed community records. Choose one, then tap the corresponding place on the official map.');
  }catch(err){message('Source list unavailable. Existing poster view still works: '+err.message);}
 }
 function validSourceXY(x){return Array.isArray(x)&&x.length>=2&&x.slice(0,2).every(v=>typeof v==='number'&&Number.isFinite(v));}
