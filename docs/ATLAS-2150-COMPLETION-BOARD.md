@@ -245,3 +245,8 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** 44px Back to map and Escape for III, VC, VCS, LCS, CTW, TLAD, TBOGT notebook markers. Unsaved edits confirm discard; unchanged source, camera, per-world progress and personal storage are retained. No data/editor persistence rewrite.
 - **TEST:** scripts/test_atlas307_classic_return.py and built Chromium scripts/test_atlas307_classic_return_browser.py, seven worlds × four viewports, scoped workflow atlas307-classic-return.yml. Await exact-head CI before merge.
 - **HOLD:** native Safari, complete sources/portraits, full Chromium+Edge+ZIP and owner release approval remain open.
+
+## Atlas 30.8 — San Andreas collector to map return (staging)
+- **SOURCE:** 44px Back to map and Escape from collectible cards, with last-visible-pin or map canvas focus. Keeps active tag/snapshot/horseshoe/oyster/jump category, zoom/pan, per-world progress and attributed map data unchanged.
+- **TEST:** scoped scripts/test_atlas308_sa_return.py and built Chromium scripts/test_atlas308_sa_return_browser.py at phone, landscape and desktop, via atlas308-sa-return.yml. Exact-head green required before staging integration.
+- **HOLD:** All-source completeness, original artwork, native Safari, final Chromium+Edge+ZIP and owner release approval. See docs/ATLAS308-SA-RETURN-ACCEPTANCE.md.

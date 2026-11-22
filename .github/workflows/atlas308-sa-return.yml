@@ -1,0 +1,46 @@
+name: Atlas 30.8 - San Andreas collectible map return
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas-sa.html'
+      - 'atlas308-sa-return.js'
+      - 'atlas308-sa-return.css'
+      - 'scripts/test_atlas308_sa_return.py'
+      - 'scripts/test_atlas308_sa_return_browser.py'
+      - '.github/workflows/atlas308-sa-return.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sa-map-return:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify additive SA return logic
+        run: python scripts/test_atlas308_sa_return.py
+      - name: Build and audit Cloudflare public payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test San Andreas item-to-map return at four viewports
+        run: python scripts/test_atlas308_sa_return_browser.py
+      - name: Save screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas308-sa-map-return
+          path: qa-evidence/chromium/atlas308-sa-*.png
+          if-no-files-found: warn
+          retention-days: 14
