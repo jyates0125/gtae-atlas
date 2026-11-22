@@ -181,6 +181,12 @@ body[data-start-world="6"] .j220-map-back{display:none}
   font:800 14px/1.1 system-ui,sans-serif;
   box-shadow:0 5px 18px #10071dbb;cursor:pointer;
  }
+ /* The back escape occupies the lower-left corner; give the map actions
+    enough clearance so the last action remains tappable on small screens. */
+ body[data-start-world="6"] .map-actions{
+  padding-left:96px;box-sizing:border-box;
+  max-width:calc(100% - 16px);
+ }
  body[data-start-world="6"] .j220-map-back:focus-visible{
   outline:3px solid #fff;outline-offset:3px;
  }
