@@ -38,7 +38,7 @@ for key in ('j290-vi-ledger','j290-search','j290-kind','j290-tag','j290-list','j
 ledger=(R/'atlas290-vi-source-ledger.js').read_text(encoding='utf-8')
 assert 'atlas290-vi-source-ledger.js?v=290' in vi
 assert 'atlas290-vi-source-ledger.css?v=290' in vi
-assert 'validPosition' in ledger and 'Source-only' not in ledger  # uses deliberate human-readable sentence case
+assert 'validPosition' in ledger and 'Search-only · no verified map point' in ledger
 assert "item.mapped?'Community X/Y · provisional':'Search-only · no verified map point'" in ledger
 assert 'textContent' in ledger and 'innerHTML' not in ledger and 'eval(' not in ledger
 assert "encodeURIComponent(item.id)" in ledger
