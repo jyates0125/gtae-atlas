@@ -23,5 +23,8 @@ for x in classic:
     assert 'ELARIO STUDIOS' in xml and 'TEAM JURA ATLAS' in xml,x
     assert not re.search(r'\b(?:href|xlink:href)\s*=\s*["\']https?://',xml),x
     assert path.stat().st_size>16000,x
-assert '150 sourced approximate pins' in source, 'Do not undo San Andreas source-backed pins milestone'
+assert '320 source-backed approximate locations' in source, 'Do not undo San Andreas source-backed pins milestone'
+import json
+for file,expected in [('atlas-sa-150-sourced-pins.json',150),('atlas-sa-100-tag-placements.json',100),('atlas-sa-70-jump-zones.json',70)]:
+    assert len(json.loads((D/'data'/file).read_text(encoding='utf8'))['records'])==expected
 print('PASS Atlas 10.6: 13 resolvable unique map covers, 7 new original game-specific SVG scenes, no remote assets')
