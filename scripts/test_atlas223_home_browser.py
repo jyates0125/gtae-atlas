@@ -37,6 +37,16 @@ try:
    assert menu.get_attribute('open') is None,'Shortcuts did not collapse'
    assert page.locator('.j223-map-actions a[href="./atlas-vi.html?view=rockstar"]').count()>=1,'Missing official VI poster action'
    assert page.locator('.j223-map-actions a[href="./atlas-vi.html"]').count()>=1,'Missing separate interactive VI map action'
+   if width==1440:
+    # Verify that each of the 13 tools and seven featured world destinations
+    # actually returns a built HTML page, without executing unrelated workspaces.
+    hrefs=page.locator('.j223-shortcuts a, .j223-world-card').evaluate_all('(links) => links.map(a => a.getAttribute("href"))')
+    assert len(hrefs)==20,('Dashboard route count',len(hrefs))
+    for href in dict.fromkeys(hrefs+['./atlas-vi.html?view=rockstar']):
+     response=page.request.get(base+href.removeprefix('./'),timeout=15000)
+     assert response.status==200,('Dashboard destination not served',href,response.status)
+     assert '<html' in response.text().lower()[:3000],('Dashboard destination is not HTML',href)
+    print('PASS dashboard route smoke: 13 tools, 7 worlds and official VI map',flush=True)
    expect(page.locator('.j223-feature-panel')).to_have_count(4)
    expect(page.locator('#j223-hero-brief')).to_have_count(0) # correct aside is a class, not duplicate ID
    assert page.locator('.j223-hero-brief .j223-brief-button').get_attribute('href')=='./atlas-vi.html'
