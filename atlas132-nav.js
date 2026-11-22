@@ -11,6 +11,15 @@ const CATEGORIES=[
 ];
 const ALL=new Set(CATEGORIES.flatMap(x=>x.items.map(y=>y[1])));
 const safeHref=x=>/^[a-z0-9-]+\.html$/i.test(x);
+const searchText=value=>String(value??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+const identityMatch=(value,s)=>{
+ const n=searchText(value);
+ if(!s||!n)return false;
+ if(n.includes(s)||n.replace(/ /g,'')===s.replace(/ /g,''))return true;
+ const words=s.split(' ');
+ return words.length>1&&words.every(word=>n.split(' ').some(part=>part.startsWith(word)));
+};
+const recordKey=r=>String(r.id||'').split(':').pop();
 function pageLink(a){const l=document.createElement('a');l.href='./'+a[1];l.textContent=a[0];
  const target=new URL(l.href),current=new URL(location.href);
  const pathnameMatch=current.pathname===target.pathname||(a[1]==='index.html'&&(current.pathname==='/'||current.pathname.endsWith('/index.html')));
@@ -32,7 +41,14 @@ function build(){
   let shown=0;
   for(const group of allCategories){
     if(!q&&group.prefix==='characters')continue; // Search-only results, not an extra 36-item navigation dump.
-    const matches=group.items.filter(([label,url,keywords])=>(label+' '+url+' '+(keywords||'')).toLocaleLowerCase().includes(q));
+    const matches=group.items.filter(([label,url,keywords,record])=>{
+      if(group.prefix!=='characters')return (label+' '+url+' '+(keywords||'')).toLocaleLowerCase().includes(q);
+      const s=searchText(q);
+      if(!s||!record)return false;
+      return [record.name,...(record.aliases||[])].some(x=>identityMatch(x,s))||
+       searchText(recordKey(record)).replace(/ /g,'')===s.replace(/ /g,'')||
+       searchText(keywords).includes(s);
+    });
     if(!matches.length)continue;
     const section=document.createElement('section');section.className='j132-group';
     const title=document.createElement('h3');title.textContent=group.title;section.append(title);
@@ -80,9 +96,10 @@ function build(){
   if(!data||!Array.isArray(data.records))return;
   const worlds={classic:'Classic GTA',story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story'};
   const items=data.records.filter(r=>r?.kind==='character'&&worlds[r.scope]).map(r=>[
-   r.name+' · '+worlds[r.scope],
-   'atlas-characters.html?game='+encodeURIComponent(r.scope)+'&q='+encodeURIComponent(r.name)+'&profile='+encodeURIComponent(r.id)+'#mainCharacterEra',
-   [r.game,r.group,r.region,...(r.aliases||[])].filter(Boolean).join(' ')
+   r.name+' · '+(r.scope==='classic'?r.game:worlds[r.scope]),
+   'atlas-characters.html?game='+encodeURIComponent(r.scope)+(r.scope==='classic'?'&edition='+encodeURIComponent(r.game):'')+'&q='+encodeURIComponent(r.name)+'&profile='+encodeURIComponent(r.id)+'#mainCharacterEra',
+   [r.game,worlds[r.scope],r.group,r.region,...(r.aliases||[])].filter(Boolean).join(' '),
+   r
   ]).sort((a,b)=>a[0].localeCompare(b[0]));
   if(items.length)characterCategories=[{title:'CHARACTERS · SEARCH ALL WORLDS',prefix:'characters',items}];
   rebuildCategories();

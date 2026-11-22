@@ -4,6 +4,14 @@
 const $=id=>document.getElementById(id);
 const ALLOWED=new Set(['all','story','online','vi','classic']);
 const searchText=value=>String(value??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+const identityMatch=(value,s)=>{
+ const n=searchText(value);
+ if(!s||!n)return false;
+ if(n.includes(s)||n.replace(/ /g,'')===s.replace(/ /g,''))return true;
+ const words=s.split(' ');
+ return words.length>1&&words.every(word=>n.split(' ').some(part=>part.startsWith(word)));
+};
+const recordKey=r=>String(r.id||'').split(':').pop();
 const WORLD_SCENES={story:'art/jura155-story.webp',online:'art/jura155-online.webp',vi:'art/jura155-vi.webp',classic:'art/jura155-characters.webp'};
 const CLASSIC={
  'GTA III':'map-hub.html?game=iii','GTA Vice City':'map-hub.html?game=vc',
@@ -170,7 +178,8 @@ async function start(){
   editionLabel.hidden=scope!=='classic';
   // A character-name or alias query is a direct lookup. Do not clutter it with
   // other characters whose biography merely mentions that person's name.
-  const nameMatches=s?scoped.filter(r=>[r.name,...(r.aliases||[])].some(x=>searchText(x).includes(s))):[];
+  const nameMatches=s?scoped.filter(r=>[r.name,...(r.aliases||[])].some(x=>identityMatch(x,s))||
+   searchText(recordKey(r)).replace(/ /g,'')===s.replace(/ /g,'')):[];
   const rows=!s?scoped:nameMatches.length?nameMatches:scoped.filter(r=>
    searchText([worlds[r.scope],r.game,r.group,r.region,r.summary,r.attributes?.affiliation,r.attributes?.performer].join(' ')).includes(s));
   const rank=r=>{
