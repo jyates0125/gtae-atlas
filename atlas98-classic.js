@@ -67,7 +67,7 @@ function mergeNotebook(existing,incoming,world,sets,collections){
 }
 function read(){try{const data=JSON.parse(localStorage.getItem(key)||'null');if(data&&data.schema==='team-jura-atlas98-classic-v1'&&data.world===id&&Array.isArray(data.markers))return data}catch{}return blank()}
 let state=read(),adding=false,editing=null,pendingSlot=null,scale=1,dx=0,dy=0,dragged=false;
-let highResUrl=null,highResSize=null; // personal map raster is stored separately
+let highResUrl=null,highResSize=null,highResFingerprint=''; // personal map raster is stored separately
 let originalMapReady=false,originalMapSize=null,activeMapUrl=null; // source-backed map image, not a world coordinate transform
 const status=message=>{if($('#classicMessage'))$('#classicMessage').textContent=message};
 function persist(){try{localStorage.setItem(key,JSON.stringify(state));window.dispatchEvent(new CustomEvent('team-jura:classic-change',{detail:{world:id}}));return true}catch(e){status('This browser could not save all records. Export a backup, or remove an oversized map image.');return false}}
@@ -96,7 +96,7 @@ function renderBackground(){
  b.classList.toggle('has-image',!!img);
  b.querySelector('span').hidden=true;b.querySelector('small').hidden=true;
  const viewport=$('#classicViewport');if(viewport)viewport.dataset.mapImage=highResUrl?'local-highres':state.background?'legacy-local':originalMapReady?'game-original':'original-art';
- if(viewport){if(own)viewportSourceMismatch(false);viewport.dataset.sourceImage=!own&&originalMapReady?activeMapUrl||'':'';viewport.dataset.sourceWidth=!own&&originalMapReady?String(originalMapSize?.width||0):'';viewport.dataset.sourceHeight=!own&&originalMapReady?String(originalMapSize?.height||0):'';}
+ if(viewport){viewport.dataset.imageFingerprint=highResUrl?highResFingerprint:'';if(own)viewportSourceMismatch(false);viewport.dataset.sourceImage=!own&&originalMapReady?activeMapUrl||'':'';viewport.dataset.sourceWidth=!own&&originalMapReady?String(originalMapSize?.width||0):'';viewport.dataset.sourceHeight=!own&&originalMapReady?String(originalMapSize?.height||0):'';}
  fitClassicImage();
  window.dispatchEvent(new CustomEvent('team-jura:classic-map-image-change',{detail:{game:id}}));
 }
@@ -156,7 +156,8 @@ function loadOriginalWorldMap(){
 
 function activateLocalMap(blob,width,height){
  if(highResUrl)URL.revokeObjectURL(highResUrl);
- highResUrl=URL.createObjectURL(blob);highResSize={width,height};scale=1;dx=0;dy=0;applyTransform();renderBackground();
+ highResUrl=URL.createObjectURL(blob);highResSize={width,height};highResFingerprint='';scale=1;dx=0;dy=0;applyTransform();renderBackground();
+ const active=highResUrl;if(globalThis.crypto?.subtle)blob.arrayBuffer().then(bytes=>crypto.subtle.digest('SHA-256',bytes)).then(hash=>{if(highResUrl!==active)return;highResFingerprint='sha256:'+Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');renderBackground()}).catch(()=>{});
 }
 function measureLegacyMap(){
  if(highResUrl||!state.background)return;
@@ -279,7 +280,7 @@ function bindMap(){const viewport=$('#classicViewport');
   try{
    await window.TeamJuraLocalMap?.remove(id);state.background=null;
    if(highResUrl)URL.revokeObjectURL(highResUrl);
-   highResUrl=null;highResSize=null;scale=1;dx=0;dy=0;persist();applyTransform();renderBackground();
+   highResUrl=null;highResSize=null;highResFingerprint='';scale=1;dx=0;dy=0;persist();applyTransform();renderBackground();
    status('Personal map image removed. Markers and collection progress remain saved.');
   }catch(error){status('Could not remove local map: '+String(error?.message||error))}
  });
