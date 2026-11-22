@@ -146,3 +146,12 @@ assert len(vcde['records'])==len({p['id'] for p in vcde['records']})==171
 assert vcde['mapAlignment']=='edition-unverified' and vcde['gameplayVerified'] is False
 assert all(-2000<=p['x']<=2000 and -2000<=p['y']<=2000 and 'imageX' not in p for p in vcde['records'])
 print('PASS Vice City DE separate reference source, 171 rows')
+
+iii=json.loads(read('data/atlas-iii-160-source-points.json'))
+assert iii['world']=='iii' and iii['sourceRevision']=='aa120220618c4c1314d319bc6210071437d14662' and iii['gameplayVerified'] is False
+assert iii['counts']=={'Hidden packages':100,'Rampages':40,'Unique stunt jumps':20}
+assert len(iii['records'])==len({p['id'] for p in iii['records']})==160
+assert len({p['slot'] for p in iii['records'] if p['category']=='Rampages'})==20
+assert sum(p['z'] is None for p in iii['records'])==14
+assert all(abs(p['imageX']-(p['x']+2000)/40)<.000001 and abs(p['imageY']-(2000-p['y'])/40)<.000001 for p in iii['records'])
+print('PASS GTA III 160 numeric references, 140 objectives, unknown Z preserved')
