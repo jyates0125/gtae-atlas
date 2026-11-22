@@ -299,7 +299,12 @@ try:
    expect(page.locator('#j273-camera-list li').last).to_have_attribute('data-id','ctw-camera-100')
    page.reload(wait_until='domcontentloaded')
    expect(page.locator('#j273-camera .j271-source-progress')).to_contain_text('1 / 100',timeout=15000)
-   page.locator('#j273-camera-list li').first.get_by_role('button',name='Unmark',exact=False).click()
+   expect(page.locator('#j273-camera-list li')).to_have_count(99)
+   expect(page.locator('#j273-camera-list li').first).to_have_attribute('data-id','ctw-camera-2')
+   expect(page.locator('#j273-camera-list li').last).to_have_attribute('data-id','ctw-camera-100')
+   page.get_by_role('button',name='Clear saved route').click()
+   expect(page.locator('#j273-camera-list li')).to_have_count(100)
+   page.locator('#j273-camera-list li[data-id="ctw-camera-1"]').get_by_role('button',name='Unmark',exact=False).click()
    expect(page.locator('#j273-camera .j271-source-progress')).to_contain_text('0 / 100')
    collection=page.locator('#j274-collection')
    collection.select_option('jumps')
@@ -315,6 +320,44 @@ try:
    expect(page.locator('#j273-camera .j271-source-progress')).to_contain_text('0 / 100')
    collection.select_option('jumps')
    expect(page.locator('#j273-camera .j271-source-progress')).to_contain_text('1 / 30')
+   expect(page.locator('#j273-camera-pins')).to_be_hidden()
+   # Import a real generated local raster; this tests Web Crypto and IndexedDB,
+   # not gameplay accuracy. No external map imagery is needed.
+   page.evaluate("""async () => {
+     const c=document.createElement('canvas');c.width=c.height=128;
+     const ctx=c.getContext('2d');ctx.fillStyle='#304050';ctx.fillRect(0,0,128,128);
+     const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));
+     const dt=new DataTransfer();dt.items.add(new File([blob],'ctw-test.png',{type:'image/png'}));
+     const input=document.getElementById('classicImageFile');input.files=dt.files;
+     input.dispatchEvent(new Event('change',{bubbles:true}));
+   }""")
+   page.wait_for_function("document.getElementById('classicViewport').dataset.imageFingerprint?.startsWith('sha256:')",timeout=15000)
+   fp=page.locator('#classicViewport').get_attribute('data-image-fingerprint')
+   result=page.evaluate("""async()=>{const d=await(await fetch('./data/atlas-ctw-85-collection-references.json')).json();const rows=d.sets.find(s=>s.id==='jumps').records;return [rows[0],rows[9],rows[19],rows[29]]}""")
+   page.locator('#j273-calibration summary').click()
+   for row in result:
+    page.locator('#j273-calibration select').select_option(row['id'])
+    page.get_by_role('button',name='Pick matching point on image').click()
+    page.evaluate("""r=>{const v=document.getElementById('classicViewport'),s=document.getElementById('classicMapSurface').getBoundingClientRect(),x=s.left+r.x/4000*s.width,y=s.top+r.y/4000*s.height;for(const type of ['pointerdown','pointerup'])v.dispatchEvent(new PointerEvent(type,{bubbles:true,pointerId:7,clientX:x,clientY:y}))}""",row)
+   expect(page.locator('#j273-camera-pins button')).to_have_count(30)
+   collection.select_option('cameras')
+   expect(page.locator('#j273-camera-pins')).to_be_hidden()
+   collection.select_option('jumps')
+   expect(page.locator('#j273-camera-pins button')).to_have_count(30)
+   page.reload(wait_until='domcontentloaded')
+   page.wait_for_function("document.getElementById('classicViewport').dataset.imageFingerprint?.startsWith('sha256:')",timeout=15000)
+   expect(page.locator('#classicViewport')).to_have_attribute('data-image-fingerprint',fp)
+   collection.select_option('jumps')
+   expect(page.locator('#j273-camera-pins button')).to_have_count(30)
+   page.evaluate("""async () => {
+     const c=document.createElement('canvas');c.width=c.height=128;
+     const ctx=c.getContext('2d');ctx.fillStyle='#703050';ctx.fillRect(0,0,128,128);
+     const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));
+     const dt=new DataTransfer();dt.items.add(new File([blob],'ctw-test.png',{type:'image/png'}));
+     const input=document.getElementById('classicImageFile');input.files=dt.files;
+     input.dispatchEvent(new Event('change',{bubbles:true}));
+   }""")
+   page.wait_for_function("fp=>{const actual=document.getElementById('classicViewport').dataset.imageFingerprint;return actual?.startsWith('sha256:')&&actual!==fp}",arg=fp,timeout=15000)
    expect(page.locator('#j273-camera-pins')).to_be_hidden()
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
    for scope in ('tlad','tbogt'):
