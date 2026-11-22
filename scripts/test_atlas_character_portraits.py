@@ -42,6 +42,12 @@ with ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)
             agent_image.scroll_into_view_if_needed()
             agent_image.evaluate("el => el.decode()")
             assert agent_image.evaluate("el => el.naturalWidth === 640")
+            for slug,scope in (("huang-lee","classic"),("agatha-baker","online"),("bigsmoke","classic")):
+                portrait=cards.locator(f'img[src$="elario-{slug}-portrait.webp"]')
+                portrait.scroll_into_view_if_needed()
+                assert portrait.evaluate("el => el.closest('article').dataset.j222World")==scope
+                portrait.evaluate("el => el.decode()")
+                assert portrait.evaluate("el => el.naturalWidth === 640")
             card = cards.filter(has=page.get_by_role("heading", name="Jason Duval", exact=True))
             card.get_by_text("View profile").click()
             dialog = page.get_by_role("dialog", name="Jason Duval")

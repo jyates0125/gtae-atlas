@@ -203,6 +203,7 @@
     },
     {
       "id": "character:agatha-baker",
+      "conceptPortrait": "art/elario-agatha-baker-portrait.webp",
       "kind": "character",
       "name": "Agatha Baker",
       "scope": "online",
@@ -295,6 +296,7 @@
     },
     {
       "id": "character:bigsmoke",
+      "conceptPortrait": "art/elario-bigsmoke-portrait.webp",
       "kind": "character",
       "name": "Big Smoke",
       "scope": "classic",
@@ -682,6 +684,7 @@
     },
     {
       "id": "character:huang-lee",
+      "conceptPortrait": "art/elario-huang-lee-portrait.webp",
       "name": "Huang Lee",
       "game": "GTA Chinatown Wars",
       "region": "Liberty City",
