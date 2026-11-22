@@ -98,6 +98,8 @@ assert (R/'art/atlas98-approved-hero.webp').is_file()
 # Preserve the original category-colored Yanis/Scaly map markers.
 mapjs=(R/'atlas.js').read_text(encoding='utf-8')
 assert "game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId?'#49315e':conditionPinColor(r,conditionCache)" in mapjs
+assert "const compactViLandmark=game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId" in mapjs
+assert "compactViLandmark||!!r.markerColor&&!r.activityId" in mapjs
 assert "if(game==='6'&&!atlas85Icon&&typeof Path2D==='function')" not in mapjs
 assert "r.category==='collectible'&&!r.activityId" in mapjs
 
