@@ -156,3 +156,11 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE completed:** Garage vehicle saves now read the latest saved Garage snapshot, merge only the selected model, preserve other vehicles edited from another tab and do not rewrite the ownership collection key. Malformed storage fails closed rather than overwriting it.
 - **CI evidence:** focused Chromium and cross-product workflows passed on `1574fbc1b0c4ae75f3db981eee325bdd7cff4e37`; the full-suite Squalo expectation was updated at `5d4801437a016d3c3c8b09c46f947f5dde945632`. New concurrent-tab regression checkpoint `e90cab149aa63218b47948e711664a51913ba94e` requires exact-head CI confirmation.
 - **Still required for release:** exact-head full Chromium/Edge and Safari owner device acceptance; check the final public deployment after approved merge. This milestone is not the same as finishing the complete 2150 Garage showroom/Forge visual and feature ambitions.
+
+
+## Atlas 29.5 — stale Garage tab / guest progress safety (staged)
+
+- **SOURCE:** Independent key-specific ownership and Garage location saves replace the older two-key `persist()` operation. Both reread the latest localStorage snapshot; deleting a now-occupied garage is prevented; corrupted existing records fail closed.
+- **SOURCE:** Garage export uses the latest stored builds and owned marks, not stale page state. Import refuses to overwrite corrupted local data.
+- **TEST:** `scripts/test_atlas295_garage_multitab_browser.py` and `scripts/test_atlas295_garage_safety.py`, with focused workflow `atlas295-garage-preservation.yml`. This tests exactly Garage ownership, multi-tab Forge data, naming and backups on a 390px Chromium viewport and does not run an unrelated Cayo/full-site matrix.
+- **GATE:** CI at exact head, cross-browser release pass, device behavior and owner approval remain unverified. Separate stacked staging candidate based on integrated PR #98, **not a public or protected-main merge**. See `docs/ATLAS295-GARAGE-STORAGE-ACCEPTANCE.md`.
