@@ -33,6 +33,12 @@ try:
     back=page.locator('#j302-back-to-map')
     card=page.locator('#selectedCard')
     expect(back).to_have_count(1,timeout=15000)
+    # atlas.js initializes independently of the additive button and can
+    # re-hide the selection card during its initial game/dataset switch.
+    # Wait until the real close handler is attached and initial local network
+    # requests have settled before injecting long-card fixture content.
+    page.wait_for_function("() => typeof document.getElementById('closeSelected')?.onclick === 'function'",timeout=20000)
+    page.wait_for_load_state('networkidle',timeout=20000)
     assert not back.is_visible(),(name,width,height,'Hidden card return leaked into map')
     before=page.evaluate("""() => ({
       progress:localStorage.getItem('jura3-progress'),
