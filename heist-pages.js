@@ -15,6 +15,9 @@ if(scene && /^[a-z0-9-]+$/.test(heistId)){
 const key='teamjura-heist-'+(document.body.dataset.heist||'unknown');const checks=[...document.querySelectorAll('[data-step]')];let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}const update=()=>{const done=checks.filter(x=>x.checked).length;const p=document.getElementById('progress');if(p)p.textContent=done+' / '+checks.length+' tracked';const b=document.getElementById('progressBar');if(b)b.style.width=(checks.length?done/checks.length*100:0)+'%';try{localStorage.setItem(key,JSON.stringify(Object.fromEntries(checks.map(x=>[x.dataset.step,x.checked]))))}catch(e){}};checks.forEach(x=>{x.checked=!!saved[x.dataset.step];x.addEventListener('change',update)});update();document.getElementById('resetProgress')?.addEventListener('click',()=>{if(!confirm('Clear this heist checklist?'))return;checks.forEach(x=>x.checked=false);update()});document.getElementById('exportProgress')?.addEventListener('click',()=>{const payload=JSON.stringify({heist:document.body.dataset.heist,steps:Object.fromEntries(checks.map(x=>[x.dataset.step,x.checked]))},null,2);const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([payload],{type:'application/json'}));a.download='team-jura-'+document.body.dataset.heist+'-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});const search=document.getElementById('stepSearch');search?.addEventListener('input',()=>{const q=search.value.toLowerCase();checks.forEach(x=>x.closest('.step').classList.toggle('hide',!x.dataset.step.toLowerCase().includes(q)))});// The approved cinematic scenes remain in this page. Add the real map and notes
 // as a separate opt-in enhancement so checklist keys and art never change.
 if(document.body.classList.contains('j120-heist-page')){
+ // One file for guest checklist, notes and personal route; older saves stay in place.
+ const backupStyle=document.createElement('link');backupStyle.rel='stylesheet';backupStyle.href='./atlas299-heist-backup.css?v=299';document.head.append(backupStyle);
+ const backup=document.createElement('script');backup.async=false;backup.src='./atlas299-heist-backup.js?v=299';document.body.append(backup);
  const style=document.createElement('link');style.rel='stylesheet';style.href='./atlas164-heist-workspace.css?v=164';document.head.append(style);
  const planner=document.createElement('script');planner.async=false;planner.src='./atlas164-heist-workspace.js?v=164';document.body.append(planner);
  // Mission-specific mapped POIs and challenges appear ABOVE the optional regional map.
@@ -24,10 +27,6 @@ if(document.body.classList.contains('j120-heist-page')){
  const guide=document.createElement('script');guide.async=false;guide.src='./atlas168-heist-guides.js?v=168';document.body.append(guide);
  const viewsStyle=document.createElement('link');viewsStyle.rel='stylesheet';viewsStyle.href='./atlas169-heist-views.css?v=169';document.head.append(viewsStyle);
  const views=document.createElement('script');views.async=false;views.src='./atlas169-heist-views.js?v=169';document.body.append(views);
- if(heistId!=='cayo-perico'){
-  const phasesStyle=document.createElement('link');phasesStyle.rel='stylesheet';phasesStyle.href='./atlas298-heist-map-kit.css?v=298';document.head.append(phasesStyle);
-  const phases=document.createElement('script');phases.async=false;phases.src='./atlas298-heist-map-kit.js?v=298';document.body.append(phases);
- }
  if(heistId==='cayo-perico'){
   const cayoStyle=document.createElement('link');cayoStyle.rel='stylesheet';cayoStyle.href='./atlas171-cayo-board.css?v=171';document.head.append(cayoStyle);
   const cayo=document.createElement('script');cayo.async=false;cayo.src='./atlas171-cayo-board.js?v=171';document.body.append(cayo);
