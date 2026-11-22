@@ -86,13 +86,16 @@
        const features=E('p','world-feature-summary',w.features.slice(0,3).join(' · '));
        const caption=E('p','world-coverage-note',w.note);
        card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
+     const resetTool=$('#clearWorldSearch');if(resetTool)resetTool.hidden=!(inp.value.trim()||mode!=='all');
      if(count)count.textContent=total+' of '+worlds.length+' destinations';if($('#noWorlds'))$('#noWorlds').hidden=total!==0;
      $('#mainWorlds').hidden=feature.children.length===0;$('#otherWorlds').hidden=additional.children.length===0;
    }
    function syncButtons(){buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.worldFilter===mode)))}
    inp.addEventListener('input',apply);
    buttons.forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.worldFilter;syncButtons();apply()}));
-   $('#resetWorldSearch').onclick=()=>{mode='all';inp.value='';syncButtons();apply();inp.focus()};
+   const resetWorlds=()=>{mode='all';inp.value='';syncButtons();apply();inp.focus()};
+   $('#resetWorldSearch').onclick=resetWorlds;
+   if($('#clearWorldSearch'))$('#clearWorldSearch').onclick=resetWorlds;
    syncButtons();paint();
  }
  const looks=[
