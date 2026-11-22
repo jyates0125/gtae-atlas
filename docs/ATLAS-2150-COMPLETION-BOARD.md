@@ -164,3 +164,11 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Garage export uses the latest stored builds and owned marks, not stale page state. Import refuses to overwrite corrupted local data.
 - **TEST:** `scripts/test_atlas295_garage_multitab_browser.py` and `scripts/test_atlas295_garage_safety.py`, with focused workflow `atlas295-garage-preservation.yml`. This tests exactly Garage ownership, multi-tab Forge data, naming and backups on a 390px Chromium viewport and does not run an unrelated Cayo/full-site matrix.
 - **GATE:** CI at exact head, cross-browser release pass, device behavior and owner approval remain unverified. Separate stacked staging candidate based on integrated PR #98, **not a public or protected-main merge**. See `docs/ATLAS295-GARAGE-STORAGE-ACCEPTANCE.md`.
+
+
+## Atlas 29.6 — Forge hub for saved, not-yet-owned Garage designs
+
+- **SOURCE:** The private Forge Collections page now includes saved Garage concepts without requiring an owned mark. Owned-only, saved-only, and both cases are truthfully distinguished; a model with both flags has one Garage entry, not two. Unsaved/unowned models do not appear as finished builds. GTA VI Forge profiles remain separate.
+- **SOURCE:** Links contain only the public model identity, never saved notes, ownership or personalized design contents. Viewing/searching is read-only; no signup, upload or production database writes.
+- **TEST:** `tests/atlas296-forge-collections.test.cjs` and `scripts/test_atlas296_forge_collections_browser.py`; scope-limited workflow `atlas296-forge-collections.yml`. Screenshots planned at 390px and 1440px on actual built Cloudflare files.
+- **GATES:** Exact-head focused test pass, real iPhone Safari and owner visual approval still pending; this is one Garage/Forge charter step, not the entire Elario 2150 showroom. See `docs/ATLAS296-FORGE-COLLECTIONS-CHECKPOINT.md`.

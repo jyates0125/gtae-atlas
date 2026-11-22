@@ -24,10 +24,30 @@ function collect(stores,weaponNames={}){
   }
  }
  const garage=stores.garage,owned=stores.owned;
- if(object(owned)&&owned.schema===1&&object(owned.owned))for(const [k,val] of Object.entries(owned.owned)){
-  const id=k.startsWith('vehicles5:')?k.slice(10):'';if(val!==true||!modelOK('v',id))continue;
-  const meta=object(garage?.vehicles)&&Object.hasOwn(garage.vehicles,id)?garage.vehicles[id]:null;
-  rows.push({world:'v',kind:'garage',model:id,title:nice(id),subtitle:label(meta?.garage,'Unassigned'),detail:'Marked owned in My Garage',paint:color(meta?.paint),href:'./atlas93-garage.html?addModel='+encodeURIComponent(id)});
+ const ownedMarks=object(owned)&&owned.schema===1&&object(owned.owned)?owned.owned:{};
+ const savedVehicles=object(garage)&&garage.schema===1&&object(garage.vehicles)?garage.vehicles:{};
+ // Ownership and a saved Garage idea are independent. Show a saved concept even
+ // when the visitor has not purchased/marked the model in GTA Online.
+ const hasGarageBuild=v=>object(v)&&!!(
+  v.note||v.plate||v.studioName||v.studioBody||v.garage||v.favorite||
+  v.paint&&v.paint!=='Graphite'||v.secondary&&v.secondary!=='Midnight'||
+  object(v.studioDesign)&&Object.keys(v.studioDesign).length
+ );
+ const garageIds=new Set(Object.keys(savedVehicles));
+ for(const [key,mark] of Object.entries(ownedMarks)){
+  if(mark===true&&key.startsWith('vehicles5:'))garageIds.add(key.slice('vehicles5:'.length));
+ }
+ for(const id of garageIds){
+  if(!modelOK('v',id))continue;
+  const meta=object(savedVehicles[id])?savedVehicles[id]:null;
+  const isOwned=ownedMarks['vehicles5:'+id]===true;
+  const isSaved=hasGarageBuild(meta);
+  if(!isOwned&&!isSaved)continue;
+  rows.push({world:'v',kind:'garage',model:id,
+   title:label(meta?.studioName,nice(id)),
+   subtitle:label(meta?.garage,'Unassigned'),
+   detail:isSaved?(isOwned?'Saved Garage build · marked owned':'Saved Garage build · not marked owned'):'Marked owned in My Garage',
+   paint:color(meta?.paint),href:'./atlas93-garage.html?addModel='+encodeURIComponent(id)});
  }
  for(const [world,store] of [['story',stores.story],['online',stores.online],['vi',stores.viArmory]]){
   if(!object(store)||store.schema!==1||!Array.isArray(store.items))continue;
