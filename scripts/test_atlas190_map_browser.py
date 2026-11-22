@@ -219,6 +219,14 @@ try:
    page.locator('#j240-category').select_option('Unique stunt jumps')
    expect(page.locator('#j240-rows li')).to_have_count(20)
    expect(page.locator('#j240-rows')).to_contain_text('not specified (2D trigger)')
+   for game,count in [('lcs',52),('vcs',51)]:
+    page.goto(base+'map-hub.html?game='+game,wait_until='domcontentloaded',timeout=45000)
+    expect(page.locator('#j247-results li')).to_have_count(count,timeout=15000)
+    expect(page.locator('#j241-source-pins')).to_have_count(0)
+    page.locator('#j247-origin').select_option(game+'-ref-1')
+    page.get_by_role('button',name='Preview reference route').click()
+    expect(page.locator('#j247-results li').first).to_have_attribute('data-id',game+'-ref-1')
+    expect(page.locator('#j247-status')).to_contain_text('not road directions')
    for scope in ('tlad','tbogt'):
     page.goto(base+'map-hub.html?game='+scope,wait_until='domcontentloaded',timeout=45000)
     link=page.locator('#j190-episode-collectibles')

@@ -155,3 +155,11 @@ assert len({p['slot'] for p in iii['records'] if p['category']=='Rampages'})==20
 assert sum(p['z'] is None for p in iii['records'])==14
 assert all(abs(p['imageX']-(p['x']+2000)/40)<.000001 and abs(p['imageY']-(2000-p['y'])/40)<.000001 for p in iii['records'])
 print('PASS GTA III 160 numeric references, 140 objectives, unknown Z preserved')
+
+for w,n in [('lcs',52),('vcs',51)]:
+ p=json.loads(read('data/atlas-'+w+'-psp-reference.json'))
+ assert p['world']==w and p['license']=='MIT' and p['sourceRevision']=='eb962c5bff9c1d94e6cb48077885fde0f5d28317'
+ assert p['mapAlignment']=='unverified' and p['gameplayVerified'] is False
+ assert len(p['records'])==len({r['id'] for r in p['records']})==n
+ assert all(r['id'].startswith(w+'-ref-') and 'imageX' not in r for r in p['records'])
+print('PASS Stories edition-specific reference sources; no invented calibration')
