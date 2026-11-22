@@ -293,3 +293,7 @@ The 28.3 exact-head cross-product, Cayo, focused Chromium/Edge and full Chromium
 
 ### Atlas 28.6 — stable classic calibration reset acceptance
 After successful no-fingerprint CTW personal pin placement, the UI browser regression explicitly opens the collapsed alignment details before clicking Reset. This verifies that resetting an affine model preserves manual pins without accidentally failing on an inaccessible collapsed control. No app runtime, art, source data, or saved user keys changed in this checkpoint. Run full Chromium and Edge acceptance at this exact head before release.
+
+
+### Atlas 28.7 — always-reachable reset for manually positioned classic pins
+The CTW reference menu now places Reset collection alignment directly in its main responsive control toolbar, instead of requiring expanding a collapsed calibration disclosure. This reset removes only the collection-specific affine alignment and preserves manual image-relative markers, per-item visited/found state and the Show/Hide pin toggle; it does not claim publisher XY matches native game coordinates. Regression verifies visible toolbar reset from the closed calibration panel and the manually placed pin remains. Existing 28.6 test/previous features retained. Exact-head browser and ZIP validation required; no development/main merge.

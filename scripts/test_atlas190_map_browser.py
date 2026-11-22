@@ -427,9 +427,8 @@ try:
    expect(page.locator('#j273-camera-pins')).to_be_hidden()
    collection.select_option('dealers')
    expect(page.locator('#j273-camera-pins button')).to_have_count(1)
-   if not page.locator('#j273-calibration').evaluate('(el)=>el.open'):
-    page.locator('#j273-calibration summary').click()
-   page.get_by_role('button',name='Reset collection alignment').click()
+   expect(page.locator('#j273-camera .j240-controls').get_by_role('button',name='Reset collection alignment')).to_be_visible()
+   page.locator('#j273-camera .j240-controls').get_by_role('button',name='Reset collection alignment').click()
    expect(page.locator('#j273-camera-pins button')).to_have_count(1)
    for scope in ('tlad','tbogt'):
     page.goto(base+'map-hub.html?game='+scope,wait_until='domcontentloaded',timeout=45000)
