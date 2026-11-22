@@ -97,7 +97,11 @@ try:
    assert 'Jason' in page.locator('#j222-character-grid h3').inner_text()
    expect(page.locator('#j222-profile-dialog')).to_be_visible(timeout=15000)
    assert page.locator('#j222-profile-dialog h2').inner_text()=='Jason Duval'
-   page.locator('#j222-profile-dialog .u-close').click()
+   modal=page.locator('#j222-profile-dialog')
+   modal.evaluate("(el) => { el.scrollTop=el.scrollHeight; }")
+   close=modal.locator('.u-close')
+   expect(close).to_be_in_viewport()
+   close.click()
    expect(page.locator('#j222-profile-dialog')).to_be_hidden()
    page.wait_for_function("!new URL(location.href).searchParams.has('profile')",timeout=5000)
    assert 'profile=' not in page.url,'Closing a shared character must leave the gallery usable'
