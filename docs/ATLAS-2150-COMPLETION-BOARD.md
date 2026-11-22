@@ -239,3 +239,9 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 - **SOURCE:** Visible, sticky and 44px touch-target Back to map action inside the shared GTA IV source detail. Uses the original Close, Escape support, canvas focus and mobile scroll return; preserves camera/zoom/layer, episode scope, routes and completed bird markers.
 - **TEST:** `scripts/test_atlas306_iv_return.py`, `scripts/test_atlas306_iv_return_browser.py` and path-scoped `atlas306-iv-return.yml` cover 12 episode/viewport journeys in built Chromium. Exact-head CI required before staging integration.
 - **HOLD:** This does not certify the entire 13-world map inventory, accurate road routes, native iPhone Safari, full final release Chromium/Edge/ZIP or owner visual approval. See `docs/ATLAS306-IV-MAP-RETURN-ACCEPTANCE.md`.
+
+
+## Atlas 30.7 — Seven classic world editor exit (staging)
+- **SOURCE:** 44px Back to map and Escape for III, VC, VCS, LCS, CTW, TLAD, TBOGT notebook markers. Unsaved edits confirm discard; unchanged source, camera, per-world progress and personal storage are retained. No data/editor persistence rewrite.
+- **TEST:** scripts/test_atlas307_classic_return.py and built Chromium scripts/test_atlas307_classic_return_browser.py, seven worlds × four viewports, scoped workflow atlas307-classic-return.yml. Await exact-head CI before merge.
+- **HOLD:** native Safari, complete sources/portraits, full Chromium+Edge+ZIP and owner release approval remain open.
