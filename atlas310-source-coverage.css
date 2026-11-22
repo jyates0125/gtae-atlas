@@ -1,0 +1,33 @@
+/* Atlas 31.0 Elario violet/amber source evidence matrix. */
+#j310-evidence{box-sizing:border-box;max-width:100%;min-width:0;margin:20px 0 28px;padding:clamp(13px,2vw,23px);border:1px solid #b17fa7;border-radius:17px;background:linear-gradient(130deg,#28173c,#160f2b 75%);color:#f7e9f3}
+#j310-evidence .j310-head small{font:850 10px/1.4 system-ui;letter-spacing:.09em;color:#ffce91}
+#j310-evidence h2{font:850 clamp(22px,3vw,32px)/1.23 system-ui;color:#ffdda1;margin:8px 0}
+#j310-evidence .j310-head p{font:13px/1.6 system-ui;color:#efdeec;max-width:940px}
+#j310-evidence .j310-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);gap:10px;align-items:end;margin-top:13px}
+#j310-evidence .j310-controls label{display:grid;gap:6px;min-width:0;color:#ffddad;font:750 12px/1.4 system-ui}
+#j310-evidence :is(input,select,button){box-sizing:border-box;min-width:0;width:100%;min-height:44px;padding:10px 12px;border:1px solid #ac8eaf;border-radius:10px;background:#1b102e;color:#fff2e6;font:650 13px/1.3 system-ui}
+#j310-evidence .j310-buttons{grid-column:1/-1;display:flex;justify-content:flex-end;gap:9px}
+#j310-evidence .j310-buttons button{width:auto;min-width:140px;cursor:pointer;background:#523467}
+#j310-evidence #j310-export{background:linear-gradient(100deg,#ffe0a7,#e9b078);color:#2b1737;font-weight:850}
+#j310-evidence button:disabled{opacity:.55;cursor:not-allowed}
+#j310-evidence :is(button,select,input,a,.j310-scroll):focus-visible{outline:3px solid #ffe3a8;outline-offset:3px}
+#j310-status{padding:10px 12px;margin:15px 0;border-left:3px solid #f5c07e;background:#352044;color:#ffe3b0;font:13px/1.5 system-ui}
+#j310-evidence .j310-scroll{max-width:100%;overflow-x:auto;border:1px solid #86668a;border-radius:10px;overscroll-behavior:contain}
+#j310-evidence table{border-collapse:collapse;min-width:940px;width:100%;font:12px/1.45 system-ui}
+#j310-evidence caption{text-align:left;padding:9px 12px;background:#21132f;color:#ebdaef;font-size:11px}
+#j310-evidence th,#j310-evidence td{padding:11px 10px;border-bottom:1px solid #704f7e;text-align:left;vertical-align:top}
+#j310-evidence thead th{background:#472b58;color:#ffdda0;position:sticky;top:0}
+#j310-evidence tbody tr:nth-child(even){background:#2e1d40}
+#j310-evidence tbody th{min-width:160px}
+#j310-evidence tbody :is(th strong,th span,td strong,td small,td code){display:block;overflow-wrap:anywhere}
+#j310-evidence tbody th strong{color:#ffebca}
+#j310-evidence tbody th span{margin-top:5px;font:11px/1.4 system-ui;color:#f0dbe9}
+#j310-evidence tbody td:nth-child(n+2):nth-child(-n+5){white-space:nowrap;font-variant-numeric:tabular-nums}
+#j310-evidence tbody td strong{color:#ffdfa5}
+#j310-evidence tbody td small{margin-top:5px;color:#e0d0e5;font:10px/1.4 system-ui}
+#j310-evidence tbody td code{margin-top:5px;color:#e9b4d5;font:10px/1.4 monospace}
+#j310-evidence tbody a{display:block;min-height:25px;color:#ffe0aa;font-weight:800}
+#j310-evidence .j310-foot{margin:12px 0 0;color:#e6d3e6;font:11px/1.65 system-ui}
+#j310-evidence a{color:#ffdaa1}
+@media(max-width:750px){#j310-evidence .j310-controls{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#j310-evidence .j310-controls label:nth-child(3){grid-column:1/-1}#j310-evidence .j310-buttons{justify-content:stretch}#j310-evidence .j310-buttons button{flex:1}}
+@media(max-width:430px){#j310-evidence .j310-controls{grid-template-columns:minmax(0,1fr)}#j310-evidence .j310-controls label:nth-child(3){grid-column:auto}#j310-evidence .j310-buttons{flex-wrap:wrap}#j310-evidence .j310-buttons button{width:100%}}
