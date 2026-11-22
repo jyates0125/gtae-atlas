@@ -85,6 +85,15 @@ try:
     page.keyboard.press('Escape')
     expect(card).to_be_hidden(timeout=10000)
     expect(page.locator('#atlasCanvas')).to_be_focused(timeout=10000)
+    # The existing × remains operational with an accessible 44px hitbox.
+    page.evaluate("document.getElementById('selectedCard').classList.remove('hidden')")
+    x_button=page.locator('#closeSelected')
+    x_rect=x_button.bounding_box()
+    assert x_rect and x_rect['width']>=44 and x_rect['height']>=44,(
+      name,width,height,'Original close hitbox undersized')
+    x_button.click()
+    expect(card).to_be_hidden(timeout=10000)
+    expect(page.locator('#atlasCanvas')).to_be_focused(timeout=10000)
     after=page.evaluate("""() => ({
       progress:localStorage.getItem('jura3-progress'),
       routes:localStorage.getItem('jura-atlas-routes'),
