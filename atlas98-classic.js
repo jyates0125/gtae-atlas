@@ -65,12 +65,117 @@ function mergeNotebook(existing,incoming,world,sets,collections){
  const completed=[...new Set([...(Array.isArray(existing.completed)?existing.completed:[]),...(Array.isArray(incoming.completed)?incoming.completed:[])].filter(x=>sets.includes(x)))];
  return{state:{...existing,markers,completed},added,kept,skipped};
 }
-function read(){try{const data=JSON.parse(localStorage.getItem(key)||'null');if(data&&data.schema==='team-jura-atlas98-classic-v1'&&data.world===id&&Array.isArray(data.markers))return data}catch{}return blank()}
+// Atlas 30.2: never replace a damaged or concurrently updated classic save.
+let storageIssue=null,lastStoredRaw=null,recoveryDownloaded=false;
+function validNotebook(x){
+ return !!x&&typeof x==='object'&&!Array.isArray(x)&&
+  x.schema==='team-jura-atlas98-classic-v1'&&x.world===id&&
+  Array.isArray(x.markers)&&x.markers.length<=1000&&
+  x.markers.every(m=>m&&typeof m==='object'&&!Array.isArray(m)&&typeof m.id==='string'&&typeof m.name==='string'&&
+   typeof m.category==='string'&&Number.isFinite(m.x)&&Number.isFinite(m.y)&&m.x>=0&&m.x<=100&&m.y>=0&&m.y<=100)&&
+  (x.completed===undefined||Array.isArray(x.completed)&&x.completed.every(n=>typeof n==='string'));
+}
+function read(){
+ let raw=null;
+ try{
+  raw=localStorage.getItem(key);lastStoredRaw=raw;
+  if(raw===null)return blank();
+  const data=JSON.parse(raw);
+  if(validNotebook(data))return {...data,completed:data.completed||[]};
+  storageIssue={kind:'corrupt',raw};
+ }catch(error){storageIssue={kind:raw===null?'unavailable':'corrupt',raw};}
+ // The fallback is strictly display-only until explicit recovery.
+ return blank();
+}
 let state=read(),adding=false,editing=null,pendingSlot=null,scale=1,dx=0,dy=0,dragged=false,notebookHidden=false;
 let highResUrl=null,highResSize=null,highResFingerprint=''; // personal map raster is stored separately
 let originalMapReady=false,originalMapSize=null,activeMapUrl=null; // source-backed map image, not a world coordinate transform
 const status=message=>{if($('#classicMessage'))$('#classicMessage').textContent=message};
-function persist(){try{localStorage.setItem(key,JSON.stringify(state));window.dispatchEvent(new CustomEvent('team-jura:classic-change',{detail:{world:id}}));return true}catch(e){status('This browser could not save all records. Export a backup, or remove an oversized map image.');return false}}
+function exportRecovery(){
+ if(!storageIssue||storageIssue.raw===null)return false;
+ const payload={schema:'team-jura-classic-recovery-v1',world:id,
+  recordedAt:new Date().toISOString(),unreadableRaw:storageIssue.raw,
+  warning:'Keep this file. Original browser storage was not modified.'};
+ try{
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=E('a');a.href=url;
+  a.download='team-jura-'+id+'-notebook-recovery.json';
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1200);recoveryDownloaded=true;
+  showRecovery();status('Recovery copy exported. Your original saved bytes remain in this browser.');
+  return true;
+ }catch(error){status('Could not export the raw notebook. Existing data is unchanged.');return false}
+}
+function showRecovery(){
+ let section=$('#j302-storage-warning');
+ if(!storageIssue){if(section)section.hidden=true;return}
+ if(!section){
+  section=E('section','j302-recovery');section.id='j302-storage-warning';
+  section.setAttribute('role','alert');
+  const heading=E('strong','','Protecting your saved classic map');
+  const description=E('p');description.className='j302-recovery-message';
+  const buttons=E('div','j302-recovery-actions');
+  const download=E('button','','Export original saved bytes');download.type='button';download.id='j302-recovery-export';
+  download.addEventListener('click',exportRecovery);
+  const recover=E('button','','Recover notebook');recover.type='button';recover.id='j302-recovery-action';
+  recover.addEventListener('click',()=>{
+   if(!storageIssue)return;
+   if(storageIssue.kind==='stale'){location.reload();return}
+   if(storageIssue.kind!=='corrupt'||!recoveryDownloaded)return;
+   if(!window.confirm('Start a new empty '+w.name+' notebook? Your earlier unreadable bytes were exported, but this replaces that saved browser record.'))return;
+   try{
+    const actual=localStorage.getItem(key);
+    if(actual!==storageIssue.raw){
+     storageIssue={kind:'stale',raw:actual};
+     recoveryDownloaded=false;showRecovery();status('Newer data detected. Reload to see the latest notebook.');return;
+    }
+    const fresh=blank(),encoded=JSON.stringify(fresh);
+    localStorage.setItem(key,encoded);
+    lastStoredRaw=encoded;storageIssue=null;recoveryDownloaded=false;state=fresh;
+    showRecovery();closeEditor();draw();
+    status('Fresh notebook ready. Separate collections and the downloaded recovery file were not changed.');
+   }catch(error){status('Could not initialize a new notebook. Original saved data is preserved.')}
+  });
+  buttons.append(download,recover);section.append(heading,description,buttons);
+  const near=$('#classicMessage');if(near)near.insertAdjacentElement('afterend',section);
+ }
+ const description=section.querySelector('.j302-recovery-message');
+ const download=section.querySelector('#j302-recovery-export');
+ const action=section.querySelector('#j302-recovery-action');
+ if(storageIssue.kind==='stale'){
+  description.textContent='Another tab changed this world notebook. Unsaved edits here cannot overwrite those newer records. Reload to view the latest data.';
+  action.textContent='Reload latest notebook';action.disabled=false;download.disabled=storageIssue.raw===null;
+ }else if(storageIssue.kind==='corrupt'){
+  description.textContent='This world has an unreadable or incompatible saved record. Original bytes are preserved. Export the raw record before choosing to start fresh.';
+  action.textContent='Start fresh after backup';action.disabled=!recoveryDownloaded;download.disabled=storageIssue.raw===null;
+ }else{
+  description.textContent='Browser storage is unavailable. Notebook writes have been disabled until access is restored.';
+  action.textContent='Storage unavailable';action.disabled=true;download.disabled=true;
+ }
+ section.hidden=false;
+}
+function persist(){
+ if(storageIssue){
+  showRecovery();status('Notebook not saved. Original or newer saved data is protected; see the recovery panel.');
+  return false;
+ }
+ try{
+  const actual=localStorage.getItem(key);
+  if(actual!==lastStoredRaw){
+   storageIssue={kind:'stale',raw:actual};
+   recoveryDownloaded=false;showRecovery();
+   status('Notebook changed in another tab. Save refused to protect that newer edit.');
+   return false;
+  }
+  const encoded=JSON.stringify(state);
+  localStorage.setItem(key,encoded);lastStoredRaw=encoded;
+  window.dispatchEvent(new CustomEvent('team-jura:classic-change',{detail:{world:id}}));
+  return true;
+ }catch(error){
+  status('Browser storage refused the save. Existing notebook was not replaced.');
+  return false;
+ }
+}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function applyTransform(){const s=$('#classicMapSurface');if(s)s.style.transform=`translate(${dx}px,${dy}px) scale(${scale})`;
  const level=$('#classicZoomLevel');if(level)level.textContent=scale.toFixed(1)+'×';
