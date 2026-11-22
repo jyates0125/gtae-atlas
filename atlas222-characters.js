@@ -224,8 +224,16 @@ async function start(){
   if(!dialog)return;
   const url=new URL(location.href);
   const requested=url.searchParams.get('profile');
-  const hit=requested && data.find(r=>r.id===requested&&(scope==='all'||r.scope===scope)&&(scope!=='classic'||edition==='all'||r.game===edition));
-  if(hit){showProfile(dialog,hit);return}
+  // Profile links identify a specific appearance, even when the visitor's
+  // previous filter belongs to another world or classic edition.
+  const hit=requested && data.find(r=>r.id===requested);
+  if(hit){
+   if(scope!=='all'&&scope!==hit.scope){scope=hit.scope;syncDatabase()}
+   if(hit.scope==='classic'&&scope==='classic'&&edition!=='all'&&edition!==hit.game){
+    edition=hit.game;editionSelect.value=edition;
+   }
+   draw();persist();showProfile(dialog,hit);return
+  }
   if(requested){url.searchParams.delete('profile');history.replaceState(history.state,'',url)}
   if(dialog.open)dialog.close();
  }
