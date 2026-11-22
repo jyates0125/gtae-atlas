@@ -25,7 +25,7 @@ function create(w,opts){
  input.onchange=async()=>{const file=input.files?.[0];input.value='';if(!file)return;try{if(file.size>100000)throw Error('Backup too large');const raw=JSON.parse(await file.text());refresh();const previous=done.size;done=new Set(merge([...done],raw,scope,revision,known));const ok=persist();status.textContent=(done.size-previous)+' source objective(s) added. Existing marks kept.'+(ok?'':' Storage unavailable; export your progress.');update()}catch(error){status.textContent='Restore refused: '+error.message}};
  const onStorage=e=>{if(e.key===key||e.key===null){refresh();update()}};w.addEventListener('storage',onStorage);
  refresh();counter.textContent=done.size+' / '+known.size+' '+label+(kind==='visited'?' reference destinations':' source objectives');
- return {isDone,visible,button,set,update,dispose(){w.removeEventListener('storage',onStorage);panel.remove()}};
+ return {isDone,visible,button,set,update,hasUnsaved:()=>unsaved,dispose(){w.removeEventListener('storage',onStorage);panel.remove()}};
 }
 return Object.freeze({schema,makeIndex,clean,merge,create});
 });
