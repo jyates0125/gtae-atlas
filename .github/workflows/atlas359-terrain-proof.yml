@@ -8,6 +8,8 @@ on:
       - 'atlas-vi.html'
       - 'atlas-credits.html'
       - 'scripts/test_atlas359_terrain_proof.cjs'
+      - 'scripts/convert_atlas359_leonida_heightfield.py'
+      - 'scripts/test_atlas359_convert.py'
       - 'docs/ATLAS359-LEONIDA-TERRAIN-PROOF.md'
       - '.github/workflows/atlas359-terrain-proof.yml'
   workflow_dispatch:
@@ -29,4 +31,5 @@ jobs:
       - run: node --check atlas-navigation.js
       - run: node scripts/test_atlas359_terrain_proof.cjs
       - run: node scripts/test_heightfield_import.cjs
+      - run: python -m unittest -v scripts/test_atlas359_convert.py
       - run: python scripts/audit_3d_heightfields.py
