@@ -6,17 +6,17 @@
     game5: {
       cast: 'Story characters', scope: 'story',
       weapons: 'Story weapons', armory: 'atlas90-weapons.html?world=story',
-      vehicles: 'GTA V vehicle archive', garage: 'atlas90-vehicles5.html'
+      vehicles: 'GTA V vehicle archive', vehiclePath: 'atlas90-vehicles5.html?world=story'
     },
     gameOnline: {
       cast: 'Online characters', scope: 'online',
       weapons: 'Online weapons', armory: 'atlas90-weapons.html?world=online',
-      vehicles: 'GTA V vehicle archive', garage: 'atlas90-vehicles5.html'
+      vehicles: 'GTA V vehicle archive', vehiclePath: 'atlas90-vehicles5.html'
     },
     game6: {
       cast: 'VI characters', scope: 'vi',
       weapons: 'VI weapon research', armory: 'atlas90-weapons6.html',
-      vehicles: 'VI vehicle research', garage: 'atlas90-vehicles6.html'
+      vehicles: 'VI vehicle research', vehiclePath: 'atlas90-vehicles6.html'
     }
   };
 
@@ -42,7 +42,7 @@
       const destinations = [
         [catalog.cast, 'atlas-characters.html?game=' + catalog.scope + '#mainCharacterEra'],
         [catalog.weapons, catalog.armory],
-        [catalog.vehicles, catalog.garage]
+        [catalog.vehicles, catalog.vehiclePath]
       ];
       destinations.forEach(([label, path], index) => {
         links[index].textContent = label;

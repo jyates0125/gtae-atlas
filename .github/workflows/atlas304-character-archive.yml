@@ -9,6 +9,7 @@ on:
       - 'scripts/test_atlas334_classic_cast.py'
       - 'scripts/test_atlas335_world_catalogs.py'
       - 'atlas90-shortcuts.js'
+      - 'atlas100-showroom.js'
       - 'data/atlas-universe-profiles.json'
       - 'art/lamar-*.webp'
       - 'scripts/test_atlas293_character_portraits_browser.py'
