@@ -35,7 +35,7 @@ assert "no schema changes" in supabase.lower()
 assert "RLS enabled and FORCE RLS on" in supabase
 assert "main" in supabase and "development" in supabase
 assert "Cloudflare" in audit and "Supabase" in audit and "GitHub" in audit
-assert "public" in audit and "Browser" not in audit or True
+assert "public" in audit and "Cloudflare" in audit
 
 env=os.environ.copy()
 for key in ("CF_PAGES","CF_PAGES_BRANCH","CF_PAGES_URL"):
