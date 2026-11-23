@@ -1,0 +1,44 @@
+name: Atlas 34.2 - read-only live Cloudflare deploy audit
+on:
+  push:
+    branches: [ops/atlas342-cloudflare-live-audit-20261123]
+    paths: ['.github/workflows/atlas342-one-shot-pages-audit.yml']
+permissions:
+  contents: read
+jobs:
+  two-project-public-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read current immutable development HEAD
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin development --depth=1
+          EXPECTED="$(git rev-parse FETCH_HEAD)"
+          [[ "$EXPECTED" =~ ^[a-f0-9]{40}$ ]]
+          echo "$EXPECTED" > expected-development.sha
+          echo "Expected public revision: $EXPECTED"
+      - name: Probe GTAE and old Atlas without credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED="$(cat expected-development.sha)"
+          if python scripts/verify_cloudflare_dual_release.py --expected-sha "$EXPECTED" --check-legacy > cloudflare-audit.json; then
+            cat cloudflare-audit.json
+          else
+            cat cloudflare-audit.json
+            echo "::error::Live Cloudflare public identity/route check failed; do not release or sync branches"
+            exit 1
+          fi
+      - name: Upload public-only evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas342-live-cloudflare-evidence
+          path: |
+            expected-development.sha
+            cloudflare-audit.json
+          if-no-files-found: warn
+          retention-days: 14
