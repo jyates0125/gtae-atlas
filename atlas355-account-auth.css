@@ -18,3 +18,8 @@
 .j355-slot-actions button:disabled{opacity:.5;cursor:not-allowed}
 .j355-slot-status{overflow-wrap:anywhere;min-height:18px}
 @media(max-width:480px){.j355-auth{padding-top:12px}.j355-slot-actions{display:grid;grid-template-columns:1fr 1fr}.j355-slot-actions button{width:100%}}
+
+/* Recovery uses the same HTTPS top-level account page. */
+.j355-auth .j355-text-link{background:transparent;border:0;color:#ffe2a0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:8px 2px;min-height:44px;text-align:left}
+.j355-auth .j355-text-link:hover{color:#fff4d7}
+.j355-auth #j355RecoveryCancel{background:transparent;border:1px solid #b796c7;color:#fbe9ff}

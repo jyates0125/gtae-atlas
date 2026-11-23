@@ -37,3 +37,11 @@ Redeploy a reviewed preview. Keep PRODUCTION settings disabled until owner accep
 Only existing test members can log in at this stage. Initial sync is manual and limited to nine known JSON localStorage categories; it is not complete or background cross-device sync. Some newer Garage and game modes remain uncovered.
 CDN availability and third-party script integrity should be verified or the pinned client library vendored before public release.
 Do not claim real passwords, cross-user isolation or deployed activation have been tested by metadata inspection alone.
+
+## Recovery extension — 2026-11-23
+- Existing-member Forgot password link and secure password-change form added on the protected preview.
+- Supabase `resetPasswordForEmail` redirects back to the same preview's `atlas-account.html`; `PASSWORD_RECOVERY` is handled and the SDK requires a real authenticated session for `updateUser({password})`.
+- Explicit password confirmation, session checking, input clearing and signed-out re-login verification; no public registration or privileged server credential.
+- Delivery not yet proven: Supabase default email service only mails organization team-member addresses. An external address needs custom SMTP.
+- Redirect not yet proven: configure/review Auth redirect allowlist for the specific protected preview or a tightly-scoped preview wildcard.
+- Verify actual email receipt, password change, re-login, Safari/Edge, ownership isolation, CSP and final release gates before main.

@@ -45,6 +45,11 @@
  }
  let client=null,repository=null,transfer=null,memberId=null;
  let loading=false;
+ // Remember recovery redirects before the SDK consumes the URL fragment.
+ let recovering=/(?:^|[&#])type=recovery(?:[&#]|$)/.test(window.location.hash||'');
+ const recoveryToggle=$('j355ForgotToggle');
+ const recoveryRequest=$('j355RecoveryRequestForm');
+ const recoveryPassword=$('j355NewPasswordForm');
  const slots=new Map();
  const labels={
   story_progress:'GTA V story progress',passport:'Atlas Passport',
@@ -123,7 +128,19 @@
    }catch{user=null}
    const id=user?.id||null;
    if(id!==memberId){memberId=id;slots.clear();if($('j355CloudSlots'))$('j355CloudSlots').replaceChildren();}
-   $('j355LoginForm').hidden=!!user;
+   if(recovering){
+     $('j355LoginForm').hidden=true;
+     $('j355SignedIn').hidden=true;
+     $('j355CloudPanel').hidden=true;
+     recoveryToggle.hidden=true;recoveryRequest.hidden=true;
+     recoveryPassword.hidden=!user;
+     status(user?'Recovery link verified. Set your new password below.':'Recovery link is invalid or expired. Request a fresh email.');
+     return;
+   }
+   recoveryPassword.hidden=true;
+   if(user){recoveryToggle.hidden=true;recoveryRequest.hidden=true;}
+   else if(recoveryRequest.hidden)recoveryToggle.hidden=false;
+   $('j355LoginForm').hidden=!!user||!recoveryRequest.hidden;
    $('j355SignedIn').hidden=!user;
    $('j355CloudPanel').hidden=!user;
    if(!user){status('Sign in using one of the two existing confirmed Atlas email accounts.');return;}
@@ -167,6 +184,56 @@
    }catch{status('Sign-out did not complete; try again.');}
    finally{loading=false;$('j355SignOut').disabled=false;}
  });
+ recoveryToggle.addEventListener('click',()=>{
+   $('j355RecoveryEmail').value=$('j355Email').value.trim();
+   recoveryRequest.hidden=false;recoveryToggle.hidden=true;
+   $('j355LoginForm').hidden=true;
+   status('Enter the email of your existing Atlas account.');
+   $('j355RecoveryEmail').focus();
+ });
+ $('j355RecoveryCancel').addEventListener('click',()=>{
+   recoveryRequest.hidden=true;recoveryToggle.hidden=false;
+   $('j355LoginForm').hidden=false;
+   status('Sign in with your existing Atlas account credentials.');
+ });
+ recoveryRequest.addEventListener('submit',async event=>{
+   event.preventDefault();if(!client||loading)return;
+   const email=$('j355RecoveryEmail').value.trim();if(!email)return;
+   loading=true;const submit=recoveryRequest.querySelector('button[type=submit]');
+   submit.disabled=true;status('Requesting a secure reset email...');
+   try{
+     const destination=new URL('atlas-account.html',window.location.href);
+     destination.search='';destination.hash='';
+     const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:destination.href});
+     if(error){status('The reset email could not be requested. Check that this address is authorized to receive Supabase project mail, or configure custom SMTP.');return;}
+     status('If eligible for Atlas recovery mail, check this inbox and spam for a password reset link. Open the link to set your new password.');
+   }catch{status('The recovery request could not connect. Nothing was changed.');}
+   finally{loading=false;submit.disabled=false;}
+ });
+ recoveryPassword.addEventListener('submit',async event=>{
+   event.preventDefault();if(!client||loading||!recovering)return;
+   const password=$('j355NewPassword').value;
+   if(password!==$('j355NewPasswordConfirm').value){status('The passwords do not match.');return;}
+   if(password.length<8){status('Choose at least eight characters and meet the configured password rules.');return;}
+   loading=true;const submit=recoveryPassword.querySelector('button[type=submit]');
+   submit.disabled=true;status('Saving your new Atlas password...');
+   try{
+     const {data,error:sessionError}=await client.auth.getUser();
+     if(sessionError||!data?.user){status('The recovery link expired. Request a new email.');return;}
+     const {error}=await client.auth.updateUser({password});
+     if(error){status('The new password was rejected. Check the current password requirements and try again.');return;}
+     recovering=false;
+     recoveryPassword.hidden=true;recoveryRequest.hidden=true;
+     $('j355NewPassword').value='';$('j355NewPasswordConfirm').value='';
+     await client.auth.signOut();
+     await renderAuth();
+     status('Password updated. Sign in with the new password to confirm it works.');
+   }catch{status('The password change could not be completed. Nothing else was changed.');}
+   finally{
+     loading=false;submit.disabled=false;
+     $('j355NewPassword').value='';$('j355NewPasswordConfirm').value='';
+   }
+ });
  async function init(){
    if(!window.AtlasCloudSaves?.createRepository||!window.AtlasCloudTransfer?.createTransfer){
      status('Cloud-save components are unavailable. Guest backups remain available.');return;
@@ -178,12 +245,13 @@
      });
      repository=window.AtlasCloudSaves.createRepository(client);
      transfer=window.AtlasCloudTransfer.createTransfer({repository,storage:window.localStorage});
-     await renderAuth();
      client.auth.onAuthStateChange((event)=>{
-       if(event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){
+       if(event==='PASSWORD_RECOVERY')recovering=true;
+       if(event==='PASSWORD_RECOVERY'||event==='INITIAL_SESSION'||event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED'){
          queueMicrotask(()=>{renderAuth().catch(()=>status('Unable to refresh the account state.'));});
        }
      });
+     await renderAuth();
    }catch{status('Secure account setup is temporarily unavailable. Continue as guest or use a device backup.');}
  }
  init();

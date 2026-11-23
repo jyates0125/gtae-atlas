@@ -24,6 +24,22 @@
     <label for="j355Password">Password</label><input id="j355Password" type="password" autocomplete="current-password" required>
     <button type="submit" data-atlas-auth-submit class="j131-primary">Sign in securely</button>
   </form>
+  <button type="button" id="j355ForgotToggle" class="j355-text-link">Forgot your Atlas password?</button>
+  <form id="j355RecoveryRequestForm" data-atlas-auth-form hidden>
+    <p class="j355-note">Request a reset link for an existing Atlas member account. No new account will be created.</p>
+    <label for="j355RecoveryEmail">Atlas account email</label>
+    <input id="j355RecoveryEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" required>
+    <button type="submit" data-atlas-auth-submit class="j131-primary">Send password reset email</button>
+    <button type="button" id="j355RecoveryCancel">Back to sign in</button>
+  </form>
+  <form id="j355NewPasswordForm" data-atlas-auth-form hidden>
+    <p class="j355-note">Use your verified Atlas recovery link. Set a password that meets the current account rules.</p>
+    <label for="j355NewPassword">New password</label>
+    <input id="j355NewPassword" type="password" autocomplete="new-password" minlength="8" required>
+    <label for="j355NewPasswordConfirm">Confirm new password</label>
+    <input id="j355NewPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required>
+    <button type="submit" data-atlas-auth-submit class="j131-primary">Set new password</button>
+  </form>
   <div id="j355SignedIn" hidden><p>Signed in as <strong id="j355MemberEmail"></strong></p><button type="button" id="j355SignOut">Sign out</button></div>
   <p id="j355AuthStatus" role="status" aria-live="polite">Account security is initializing.</p>
   <section id="j355CloudPanel" hidden aria-labelledby="j355CloudTitle">
