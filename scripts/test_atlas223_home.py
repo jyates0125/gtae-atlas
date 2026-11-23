@@ -4,10 +4,10 @@ from html.parser import HTMLParser
 from pathlib import Path
 import re,json
 R=Path(__file__).resolve().parents[1]
-page=(R/'atlas-dashboard.html').read_text()
-js=(R/'atlas223-home.js').read_text()
-css=(R/'atlas223-home.css').read_text()
-welcome=(R/'index.html').read_text()
+page=(R/'atlas-dashboard.html').read_text(encoding='utf-8')
+js=(R/'atlas223-home.js').read_text(encoding='utf-8')
+css=(R/'atlas223-home.css').read_text(encoding='utf-8')
+welcome=(R/'index.html').read_text(encoding='utf-8')
 class Parser(HTMLParser):
  def __init__(self):super().__init__();self.links=[];self.images=[];self.anchors=[]
  def handle_starttag(self,t,attrs):
@@ -62,7 +62,7 @@ for src in p.images:
 assert 'https://gtae-online.pages.dev/atlas-dashboard.html' in page
 assert 'team-jura-atlas-preview.pages.dev/atlas-dashboard.html' not in page
 assert 'original' in page.lower() and 'provisional' in page.lower()
-assert 'atlas132-nav.js' in (R/'scripts/build-cloudflare.cjs').read_text(), 'Global page navigation must still load'
+assert 'atlas132-nav.js' in (R/'scripts/build-cloudflare.cjs').read_text(encoding='utf-8'), 'Global page navigation must still load'
 print('PASS GTAE 22.3: actual 7 destination and 13 category links, 4 functional panels, original art, source boundaries and welcome flow')
 
 assert js.index('indexCharacters(featuredFallback);') < js.index('loadCharacterIndex();'), 'Featured search must be active before starting the full index request'
