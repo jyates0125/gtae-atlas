@@ -1,0 +1,26 @@
+name: Atlas 35.2 - retained legacy Pages source path protection
+on:
+  pull_request:
+    branches: [main, development]
+    paths:
+      - '_redirects'
+      - 'scripts/test_atlas352_redirect_boundary.py'
+      - '.github/workflows/atlas352-retained-source-redirects.yml'
+permissions:
+  contents: read
+jobs:
+  static-path-boundary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify Pages redirect rule grammar and private source path coverage
+        run: python scripts/test_atlas352_redirect_boundary.py
+      - name: Confirm actual Cloudflare static output has no internal source
+        run: python scripts/audit_published.py
