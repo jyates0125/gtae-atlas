@@ -4,7 +4,7 @@
 
 ## State of the project
 
-The website includes a **playable, original 36-second motion-poster video with original generated instrumental sound**, nine interactive story chapters, approved ensemble art, and a browser-local memory wall. **This is not a finished animated feature.** Full-action animation, fully mixed dialogue, gameplay recordings and official trailer footage have not been rendered or licensed here. A site-ready proof of concept and a complete shoot/edit blueprint are included.
+The website includes a **playable, 39-second music-only teaser with the Elario score and sound effects**, nine interactive story chapters, approved ensemble art, and a browser-local memory wall. **This is not a finished animated feature.** Full-action animation, fully mixed dialogue, gameplay recordings and official trailer footage have not been rendered or licensed here. A site-ready proof of concept and a complete shoot/edit blueprint are included.
 
 ## Narrative north star
 
@@ -17,7 +17,7 @@ The website includes a **playable, original 36-second motion-poster video with o
 3. `VOICE-AND-SOUND.md` — original voice personas, Foley/effects, original score design and mix guidance.
 4. `ASSET-AND-RIGHTS.md` — verified credits versus community R&D, third-party permissions and public release checklist.
 5. `../../one-last-ride.html` — working public film page and memory wall.
-6. `../assets/one-last-ride-motion-preview.mp4` — 36-second MP4 proof-of-direction.
+6. `../assets/one-last-ride-motion-preview.mp4` — 39-second music-only web cut.
 
 ## Visual continuity
 
@@ -41,4 +41,4 @@ The original extended screenplay and 16-shot, **8:30** planning sheet remain int
 
 Renderer: `../../scripts/render_one_last_ride_animatic.py`. It uses only on-repository original stills plus the existing `../assets/original_teaser_score.wav` as a repeated **temporary audio cue** (not a finished music mix); no Rockstar clips, unauthorized voice samples or remote media. The renderer produces a 1280 × 720 H.264/AAC MP4, a SHA-256 manifest, and explicit unfinished-film labels. The CI artifact is for internal review; no public film URL, page embed or site release is created by the staging workflow.
 
-Release holds: subject-specific approved characters and visual continuity, alternate 9:16 editing, final performance consent and soundtrack, complete animation and mix, rights register, device preview, and explicit owner signoff. The shipped site continues to show its separately verified 36-second motion poster as the only public video.
+Release holds: subject-specific approved characters and visual continuity, alternate 9:16 editing, final performance consent and soundtrack, complete animation and mix, rights register, device preview, and explicit owner signoff. The staging player uses the 39-second music-only teaser. The full animatic remains a separate production review cut.

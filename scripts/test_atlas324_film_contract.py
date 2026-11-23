@@ -28,7 +28,7 @@ assert 'https://gtae-online.pages.dev/art/atlas98-one-last-ride.webp' in site
 assert 'team-jura-atlas-preview.pages.dev/one-last-ride' not in site
 assert 'team-jura-atlas-preview.pages.dev/art/atlas98-one-last-ride' not in site
 assert 'Leonida awaits' not in site
-assert '36-second motion-poster' in site
+assert '39-second music-only teaser' in site
 assert '4:15 editorial storyboard animatic' in site
 assert 'not a finished video or a public film release' in site
 production=(ROOT/'film/production/README.md').read_text(encoding='utf-8')
