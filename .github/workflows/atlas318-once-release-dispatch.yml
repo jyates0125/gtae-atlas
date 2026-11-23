@@ -6,6 +6,7 @@
 # If the release suite or native-device / live-site gates remain unverified,
 # keep protected main untouched and record the release blocker.
 # Never publishes or merges production; the existing manual workflow does QA.
+# Atlas 35.8: run the existing release suite once for the integrated wardrobe and terrain candidate.
 name: Atlas 31.8 - one-time staging full release launch
 on:
   push:
