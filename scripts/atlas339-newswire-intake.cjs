@@ -31,7 +31,7 @@ function publishedDate(raw){
 }
 function suggestedWorld(title){
   if(/\b(grand theft auto vi|gtavi|gta vi)\b/i.test(title))return 'vi';
-  if(/\b(gta online|gta\+|grand theft auto online)\b/i.test(title))return 'online';
+  if(/\b(gta online|grand theft auto online)\b|\bgta\+/i.test(title))return 'online';
   return null;
 }
 function candidates(payload,reviewed,now=new Date()){
