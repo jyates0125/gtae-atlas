@@ -1,0 +1,57 @@
+name: Atlas 32.1 - seven classic collection continuation
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'maps.html'
+      - 'map-hub.html'
+      - 'atlas98b-progress.js'
+      - 'atlas321-classic-continue.js'
+      - 'atlas321-classic-continue.css'
+      - 'tests/atlas321-classic-continue.test.cjs'
+      - 'scripts/test_atlas321_classic_continue_browser.py'
+      - '.github/workflows/atlas321-classic-continue.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas321-classic-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  classic-resume:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate affected source files and saved-data safety contracts
+        run: |
+          node --check atlas321-classic-continue.js
+          node --check atlas98b-progress.js
+          node tests/atlas321-classic-continue.test.cjs
+          python -m py_compile scripts/test_atlas321_classic_continue_browser.py
+      - name: Build and audit exact Cloudflare static files
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium for this changed UI only
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Verify seven classic worlds, phone fit, exact set and raw-save rescue
+        run: python scripts/test_atlas321_classic_continue_browser.py
+      - name: Retain changed-page screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas321-classic-continue-phone-desktop
+          path: qa-evidence/chromium/atlas321-classic-resume-*.png
+          if-no-files-found: warn
+          retention-days: 14
