@@ -28,6 +28,10 @@
 /atlas-account.html
   Cache-Control: no-store
   Referrer-Policy: no-referrer
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://dwqrmgeldssozgdtidla.supabase.co; img-src 'self' data:; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+
+/atlas355-auth-config.js
+  Cache-Control: no-store
 
 
 # Avoid stale legacy UI after a new Cloudflare deployment. Preserve browser
