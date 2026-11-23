@@ -16,7 +16,7 @@ class Parser(HTMLParser):
   if t=='img': self.images.append(d.get('src',''))
   if t in ('form','a','button'):self.anchors.append(d)
 p=Parser();p.feed(page)
-assert 'atlas223-home.css?v=223' in page and 'atlas223-home.js?v=285' in page
+assert 'atlas223-home.css?v=223' in page and 'atlas223-home.js?v=356' in page
 assert '<main id="main"' in page and 'id="heroTitle"' in page
 assert len([c for h,c in p.links if 'j223-world-card' in c])==7
 assert len([c for h,c in p.links if h and 'j223-shortcuts' in c])==0 # links belong to nav, not class
@@ -65,4 +65,4 @@ assert 'original' in page.lower() and 'provisional' in page.lower()
 assert 'atlas132-nav.js' in (R/'scripts/build-cloudflare.cjs').read_text(), 'Global page navigation must still load'
 print('PASS GTAE 22.3: actual 7 destination and 13 category links, 4 functional panels, original art, source boundaries and welcome flow')
 
-assert 'featuredFallback' in js and 'initData(true);initData();' in js, 'Featured search must work without a successful source fetch'
+assert js.index('indexCharacters(featuredFallback);') < js.index('loadCharacterIndex();'), 'Featured search must be active before starting the full index request'
