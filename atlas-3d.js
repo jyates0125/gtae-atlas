@@ -41,7 +41,7 @@ function solveGesture(start,current,view,extent,viewportWidth){
 }
 function create(opts){const canvas=opts.canvas,overlay=opts.overlay,status=opts.status,bridge=opts.bridge;let gl=null,p=null,position=null,uv=null,index=null,tex=null,ready=false,active=false,projectMatrix=null,center={x:0,y:0,z:2},bearing=0,pitch=.86,distance=3200,extent=8000,textureFingerprint='',textured=false,geoKey='',meshPoints=[],sourceHeights=null,heightGame=null,sourceError='',loadToken=0,assetUpdate=0,lastRender=0,pointers=new Map(),gesture=null,renderQueued=false;
 function notice(message){if(status)status.textContent=message}
-function elevation(x,y){if(!sourceHeights)return 0;const d=ELEVATIONS[bridge.game()];if(!d)return 0;const px=d.zero[0]+x*d.scaleXY,py=d.zero[1]-y*d.scaleXY;if(px<0||py<0||px>=d.width-1||py>=d.height-1)return 0;const x0=Math.floor(px),y0=Math.floor(py),fx=px-x0,fy=py-y0,off=y0*d.width+x0;const a=sourceHeights[off]*(1-fx)+sourceHeights[off+1]*fx,b=sourceHeights[off+d.width]*(1-fx)+sourceHeights[off+d.width+1]*fx;return Math.max(-400,Math.min(1800,((a*(1-fy)+b*fy)/d.scaleZ+d.offset)));}
+function elevation(x,y){if(!sourceHeights||heightGame!==String(bridge.game()))return 0;const d=ELEVATIONS[bridge.game()];if(!d)return 0;const px=d.zero[0]+x*d.scaleXY,py=d.zero[1]-y*d.scaleXY;if(px<0||py<0||px>=d.width-1||py>=d.height-1)return 0;const x0=Math.floor(px),y0=Math.floor(py),fx=px-x0,fy=py-y0,off=y0*d.width+x0;const a=sourceHeights[off]*(1-fx)+sourceHeights[off+1]*fx,b=sourceHeights[off+d.width]*(1-fx)+sourceHeights[off+d.width+1]*fx;return Math.max(-400,Math.min(1800,((a*(1-fy)+b*fy)/d.scaleZ+d.offset)));}
 function decodeHeightfield(buffer,definition){
  const expected=definition.width*definition.height*2;
  if(!(buffer instanceof ArrayBuffer)||buffer.byteLength!==expected){
@@ -53,16 +53,39 @@ function decodeHeightfield(buffer,definition){
  }
  return heights;
 }
-async function loadElevation(g){
- if(sourceHeights&&heightGame===String(g)){notice('Locally provided elevation loaded · 3D terrain');geoKey='';render();return}
- // Consent and attribution: GTADB requests clients not to fetch live GTADB media.
- // Only same-origin, user-deployed or explicitly user-imported verified heightfields are loaded.
- sourceHeights=null;heightGame=null;sourceError='';const token=++loadToken;
- const d=ELEVATIONS[g];if(!d){sourceError='No heightfield configuration for this game';notice(sourceError);return}
- try{const res=await fetch('./elevation-'+g+'.bin',{cache:'force-cache'});if(!res.ok)throw Error('No bundled elevation-'+g+'.bin');
- const buffer=await res.arrayBuffer();if(token!==loadToken)return;
- sourceHeights=decodeHeightfield(buffer,d);heightGame=String(g);geoKey='';notice('Local elevation loaded · 3D terrain geometry (community reconstructed)');render();
- }catch(e){if(token!==loadToken)return;sourceError=e.message;notice('3D perspective mode · terrain elevation not installed. Optional local elevation.bin supported.');geoKey='';render()}}
+// Atlas 36.6: never decide a bundled local DEM is missing before attempting
+// to read it. Read ONLY this site's own elevation-[game].bin, not a live GTADB
+// media endpoint. A correct, nonuniform Uint16 grid is a prerequisite for 3D.
+function hasElevation(g=bridge.game()){return !!sourceHeights&&heightGame===String(g);}
+async function prepareElevation(g=bridge.game()){
+ const target=String(g),definition=ELEVATIONS[target];
+ if(target!==String(bridge.game())||!definition){
+  sourceError='Elevation world does not match the selected map';return false;
+ }
+ if(hasElevation(target))return true; // local file import always takes priority
+ const token=++loadToken;
+ sourceError='';
+ try{
+  const response=await fetch('./elevation-'+target+'.bin',{cache:'force-cache',credentials:'same-origin'});
+  if(!response.ok)throw Error('No bundled elevation-'+target+'.bin (HTTP '+response.status+')');
+  const expected=definition.width*definition.height*2;
+  const declared=Number(response.headers?.get?.('content-length')||0);
+  if(declared>0&&declared!==expected)throw Error('Bundled elevation size mismatch');
+  const buffer=await response.arrayBuffer();
+  if(token!==loadToken||target!==String(bridge.game()))return false;
+  const decoded=decodeHeightfield(buffer,definition);
+  sourceHeights=decoded;heightGame=target;sourceError='';
+  geoKey='';textureFingerprint='';
+  notice('Local heightfield ready · GTADB-coordinate reconstructed terrain');
+  if(active)render();
+  return true;
+ }catch(e){
+  if(token!==loadToken||target!==String(bridge.game()))return false;
+  sourceError=e?.message||'Elevation loading failed';
+  if(active)notice('3D terrain unavailable · map preview retained');
+  return false;
+ }
+}
 async function setElevationBinary(buffer,g){
  const d=ELEVATIONS[g];if(!d||bridge.game()!==String(g))throw Error('Choose the matching game first');
  const heights=decodeHeightfield(buffer,d);
@@ -86,9 +109,9 @@ function render(){if(!active||!ensureGL())return;const dpr=Math.min(2,devicePixe
  const now=Date.now();if(!textured||!textureFingerprint||now-assetUpdate>2200){updateTexture();textureFingerprint=key;assetUpdate=now}
  projectMatrix=matrix();gl.useProgram(p);gl.uniformMatrix4fv(gl.getUniformLocation(p,'uMVP'),false,projectMatrix);gl.uniform1f(gl.getUniformLocation(p,'uMapped'),textured?1:0);gl.uniform1f(gl.getUniformLocation(p,'uShade'),1);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(gl.getUniformLocation(p,'uMap'),0);
  gl.bindBuffer(gl.ARRAY_BUFFER,position);const aPos=gl.getAttribLocation(p,'aPos');gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uv);const aUV=gl.getAttribLocation(p,'aUV');gl.enableVertexAttribArray(aUV);gl.vertexAttribPointer(aUV,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.drawElements(gl.TRIANGLES,meshPoints.length,gl.UNSIGNED_SHORT,0);drawOverlays();}
-function activate(){if(!ensureGL())return false;sync();active=true;textured=false;if(canvas.style)canvas.style.touchAction='none';document.body.classList.add('jura-3d-texture-pending');canvas.hidden=false;if(overlay)overlay.hidden=false;notice('Loading GTA '+bridge.game()+' elevation for 3D…');loadElevation(bridge.game());render();return true}
+function activate(){if(!hasElevation()){notice('No elevation data available for true 3D');return false}if(!ensureGL())return false;sync();active=true;textured=false;if(canvas.style)canvas.style.touchAction='none';document.body.classList.add('jura-3d-texture-pending');canvas.hidden=false;if(overlay)overlay.hidden=false;notice('Loading reconstructed 3D terrain…');render();return true}
 function deactivate(){active=false;pointers.clear();gesture=null;if(canvas.style)canvas.style.touchAction='';loadToken++;document.body.classList.remove('jura-3d-texture-pending');canvas.hidden=true;if(overlay){overlay.hidden=true;overlay.replaceChildren()}notice('2D map view');}
-function rebase(){if(!active)return;textured=false;document.body.classList.add('jura-3d-texture-pending');sync();if(heightGame===String(bridge.game())&&sourceHeights){render();return}sourceHeights=null;notice('Loading local elevation for GTA '+bridge.game()+'…');loadElevation(bridge.game());render()}
+function rebase(){if(!active)return;if(!hasElevation()){sourceHeights=null;deactivate();notice('3D terrain is not available for this world');return}textured=false;document.body.classList.add('jura-3d-texture-pending');sync();render()}
 function zoom(factor){distance=Math.max(360,Math.min(40000,distance*factor));render()}
 function beginGesture(){
  const points=[...pointers.values()].map(p=>({...p}));
@@ -124,7 +147,7 @@ canvas.addEventListener('pointerup',release);
 canvas.addEventListener('pointercancel',release);
 canvas.addEventListener('lostpointercapture',release);
 canvas.addEventListener('wheel',e=>{if(!active)return;e.preventDefault();zoom(e.deltaY>0?1.17:.85)},{passive:false});
-return{activate,deactivate,rebase,render,zoom,setElevationBinary,resetNorth(){bearing=0;pitch=.86;render()},isActive:()=>active,hasElevation:()=>!!sourceHeights,getError:()=>sourceError,getView:()=>({bearing,pitch,distance,center:{...center}})};
+return{activate,deactivate,rebase,render,zoom,prepareElevation,setElevationBinary,resetNorth(){bearing=0;pitch=.86;render()},isActive:()=>active,hasElevation,getError:()=>sourceError,getView:()=>({bearing,pitch,distance,center:{...center}})};
 }
 root.JuraTerrain3D=Object.freeze({create,ELEVATIONS,solveGesture});
 })(typeof window!=='undefined'?window:globalThis);

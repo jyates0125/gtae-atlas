@@ -60,7 +60,7 @@ try:
    expect(page.locator('#j362TerrainNotice')).to_be_visible(timeout=15000)
    assert page.evaluate("""() => document.body.classList.contains('jura-perspective-fallback')"""), (
     '3D without an installed grid must NOT activate the untextured WebGL canvas')
-   assert page.locator('#j362TerrainNotice').inner_text().lower().find('no elevation data')>=0
+   expect(page.locator('#j362TerrainNotice')).to_contain_text('No elevation data installed',timeout=15000)
    assert page.evaluate("""() => {
      const canvas=document.getElementById('atlasCanvas');
      const st=getComputedStyle(canvas);

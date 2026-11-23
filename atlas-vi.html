@@ -11,10 +11,10 @@
 <script defer src="./atlas-sources.js?v=70"></script>
 <script defer src="./atlas-route-core.js?v=70"></script>
 <script defer src="./atlas-road-core.js?v=70"></script>
-<script defer src="./atlas-3d.js?v=70"></script>
+<script defer src="./atlas-3d.js?v=366"></script>
 <script defer src="./atlas-terrain-evidence.js?v=359"></script>
 <script defer src="./atlas363-elevation-probe.js?v=363"></script>
-<script defer src="./atlas-navigation.js?v=70"></script>
+<script defer src="./atlas-navigation.js?v=366"></script>
 <script defer src="./atlas-conditions.js?v=70"></script>
 <script defer src="./atlas.js?v=290"></script>
 <script defer src="./atlas290-vi-source-ledger.js?v=290"></script>
@@ -207,7 +207,7 @@
     <div id="jura3dMarkerOverlay" class="jura-3d-overlay" hidden></div>
     <section class="j362-terrain-notice" id="j362TerrainNotice" aria-label="Three-dimensional map availability" role="status" hidden>
       <strong>3D perspective preview</strong>
-      <p>Leonida's illustrated map is visible. Real hills and valleys need a compatible, permitted elevation file. No elevation data is installed yet.</p>
+      <p id="j362TerrainStatus">Leonida's illustrated map remains available. A compatible 3D heightfield is needed to show real relief.</p>
       <div class="j362-terrain-actions"><button id="j362ImportTerrain" type="button">Terrain options</button><button id="j362ClosePreview" type="button">Return to 2D</button></div>
     </section>
     <div class="jura-nav-bar" role="group" aria-label="Navigate and change map dimension"><button type="button" id="juraOpenNav" aria-expanded="false" aria-controls="juraNavPanel">↗ Directions</button><button type="button" id="jura2d">2D</button><button type="button" id="jura3d">3D</button><span id="juraNavDimension">2D</span></div>

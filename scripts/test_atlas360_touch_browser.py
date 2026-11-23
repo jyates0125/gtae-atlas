@@ -16,7 +16,7 @@ with sync_playwright() as pw:
   page.set_content('''<!doctype html><html><body><canvas id="c" style="width:360px;height:300px"></canvas>
     <div id="o"></div><p id="s"></p></body></html>''')
   page.add_script_tag(path=str(ROOT/'atlas-3d.js'))
-  activated=page.evaluate("""() => {
+  activated=page.evaluate("""async () => {
     const canvas=document.getElementById('c');
     const fake=new Proxy({}, {get:(target,key)=>{
       if(key==='isContextLost')return ()=>false;
@@ -39,6 +39,12 @@ with sync_playwright() as pw:
       canvas.dispatchEvent(event);
       return event.defaultPrevented;
     };
+    // Atlas 36.6 activates genuine 3D ONLY with an installed grid. Supply
+    // synthetic memory-only samples; do not fetch or package a fake DEM.
+    const d=JuraTerrain3D.ELEVATIONS['6'];
+    const samples=new Uint16Array(d.width*d.height);
+    samples.fill(28000);samples[0]=28001;samples[samples.length-1]=28111;
+    await terrain.setElevationBinary(samples.buffer,'6');
     return terrain.activate() && canvas.style.touchAction==='none';
   }""")
   assert activated, f'3D activation or mobile touch-action failed at {width}'

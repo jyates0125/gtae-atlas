@@ -4,7 +4,7 @@
 (function(root){'use strict';
 const $=id=>document.getElementById(id),esc=s=>String(s||'').replace(/[&<>"']/g,v=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[v]));
 function create(bridge){const Core=root.JuraRoadCore;if(!Core)throw Error('atlas-road-core.js missing');
-let active=false,waypoints=[null,null],graph=null,plan=null,ordering='manual',dimension='2d',terrain=null,fields=[],resultItems=[],fallback3d=false,localElevation=null;
+let active=false,waypoints=[null,null],graph=null,plan=null,ordering='manual',dimension='2d',terrain=null,fields=[],resultItems=[],fallback3d=false,localElevation=null,terrainViewToken=0;
 const panel=$('juraNavPanel'),container=$('juraNavFields'),results=$('juraNavResults'),mapCanvas=$('jura3dCanvas'),routeStatus=$('juraNavStatus');
 function status(s){routeStatus.textContent=s;bridge.notice(s)}
 function all(){return bridge.records()}
@@ -44,24 +44,46 @@ function syncTerrainNotice(){
 function setDimension(next){
  if(next==='3d'&&!supports3d()){bridge.notice('The original 2D map is the active view for this world. GTA VI research is the current 3D focus.');return}
  if(next===dimension)return;
+ const epoch=++terrainViewToken;
  if(next==='3d'){
-  // Do not hide the known-good illustrated map until *actual* relief is present.
-  // Without a source-cleared imported height grid, a bare WebGL plane can be
-  // visually blank on iOS even when the renderer initialized successfully.
-  const hasRelief=!!terrain?.hasElevation();
-  const ok=hasRelief&&!!terrain.activate();
-  fallback3d=!ok;
-  dimension='3d';document.body.classList.add('jura-in-3d');
-  document.body.classList.toggle('jura-perspective-fallback',fallback3d);
-  $('jura3dStatus').textContent=fallback3d?'Perspective preview · elevation not installed':'3D terrain active · community source';
-  bridge.notice(fallback3d?'Perspective preview: showing your illustrated Leonida map. Real hills require a compatible, permitted elevation grid from Directions → Experimental Leonida 3D terrain.':'3D terrain active. One finger orbits; two fingers pan and pinch to zoom.');
+  const target=bridge.game();
+  dimension='3d';
+  // Keep the illustrated map visible during this asynchronous same-origin
+  // heightfield check. Never reveal a flat WebGL canvas as genuine relief.
+  fallback3d=true;
+  document.body.classList.add('jura-in-3d','jura-perspective-fallback');
+  const message=$('j362TerrainStatus');
+  if(message)message.textContent='Checking this Atlas build for compatible Leonida elevation data… Your map remains available.';
+  $('jura3dStatus').textContent='Checking terrain data…';
+  bridge.notice('Checking bundled Leonida heightfield before switching to real 3D terrain…');
+  syncTerrainNotice();render(false);
+  Promise.resolve(terrain?.prepareElevation(target)??false).then(ready=>{
+   if(epoch!==terrainViewToken||dimension!=='3d'||bridge.game()!==target)return;
+   const ok=!!ready&&!!terrain?.activate();
+   fallback3d=!ok;
+   document.body.classList.toggle('jura-perspective-fallback',fallback3d);
+   $('jura3dStatus').textContent=ok?'3D terrain active · community reconstruction':ready?'WebGL unavailable · illustrated map retained':'Perspective preview · no elevation data installed';
+   if(message){
+    message.textContent=ready
+     ?'A compatible elevation grid is loaded, but this device could not start WebGL. The illustrated 2D map is still available.'
+     :'No elevation data installed yet. The illustrated map remains available. Add a compatible permitted heightfield under Directions → Experimental Leonida 3D terrain.';
+   }
+   bridge.notice(ok?'Reconstructed 3D terrain active. One finger orbits; two fingers pan and pinch to zoom.':'Illustrated 2D perspective preview · '+(ready?'WebGL is unavailable.':'No elevation data installed.'));
+   syncTerrainNotice();render(false);
+  }).catch(()=>{
+   if(epoch!==terrainViewToken||dimension!=='3d'||bridge.game()!==target)return;
+   fallback3d=true;
+   if(message)message.textContent='No elevation data installed yet. The illustrated 2D map is still available.';
+   $('jura3dStatus').textContent='Perspective preview · terrain unavailable';
+   bridge.notice('Terrain could not be loaded; illustrated map retained.');
+   syncTerrainNotice();render(false);
+  });
  }else{
   terrain?.deactivate();dimension='2d';fallback3d=false;
   document.body.classList.remove('jura-in-3d','jura-perspective-fallback');
   bridge.notice('2D illustrated map active.');
+  syncTerrainNotice();render(false);
  }
- syncTerrainNotice();
- render(false);
 }
 function clear(){waypoints=[null,null];plan=null;bridge.clearRoutePlan();render();status('Navigation cleared. Saved collectible progress is unchanged.')}
 function refresh(){if(terrain?.isActive())terrain.render()}

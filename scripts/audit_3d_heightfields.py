@@ -29,8 +29,8 @@ for game, (width, height) in worlds.items():
                    "mode": "terrain" if valid and relief else "perspective-only"})
     if present and not valid:
         errors.append(f"{asset.name} has incorrect size; must not deploy corrupt 3D data")
-for snippet in ("terrain elevation not installed", "flat mesh until licensed heightfield",
-                "setElevationBinary", "sourceHeights=null"):
+for snippet in ("No elevation data available for true 3D", "flat mesh until licensed heightfield",
+                "setElevationBinary", "prepareElevation", "sourceHeights=null"):
     if snippet not in engine:
         errors.append(f"3D fallback or local-import safety contract missing: {snippet}")
 print(json.dumps({"check": "3D geometry availability and honest fallback",

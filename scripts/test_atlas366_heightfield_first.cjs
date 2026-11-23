@@ -1,0 +1,95 @@
+#!/usr/bin/env node
+/* Atlas 36.6: deterministic local terrain readiness. Synthetic bytes only.
+ * No live GTADB requests and no test elevation is shipped or committed. */
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+require('../atlas-3d.js');
+const definition=globalThis.JuraTerrain3D.ELEVATIONS['6'];
+const size=definition.width*definition.height*2;
+function samples(){
+ const grid=new Uint16Array(definition.width*definition.height);
+ grid.fill(28000);grid[0]=28111;grid[grid.length-1]=28333;
+ return grid.buffer;
+}
+function engine(game='6'){
+ return globalThis.JuraTerrain3D.create({
+  canvas:{addEventListener(){},clientWidth:400,hidden:true,style:{}},
+  status:{textContent:''},
+  bridge:{game:()=>game}
+ });
+}
+function validResponse(buffer){
+ return{ok:true,status:200,headers:{get:k=>k.toLowerCase()==='content-length'?String(buffer.byteLength):null},arrayBuffer:async()=>buffer};
+}
+async function test(){
+ assert.equal(samples().byteLength,size);
+ const originalFetch=globalThis.fetch;
+ try{
+  const loaded=engine();let count=0;
+  assert.equal(loaded.hasElevation(),false);
+  globalThis.fetch=async(url,opts)=>{
+   ++count;
+   assert.equal(url,'./elevation-6.bin');
+   assert.equal(opts.credentials,'same-origin');
+   assert.equal(opts.cache,'force-cache');
+   return validResponse(samples());
+  };
+  assert.equal(count,0,'no background terrain download');
+  assert.equal(await loaded.prepareElevation('6'),true);
+  assert.equal(loaded.hasElevation(),true);
+  assert.equal(await loaded.prepareElevation('6'),true);
+  assert.equal(count,1,'an installed heightfield must be reused, not re-downloaded');
+
+  const missing=engine();
+  globalThis.fetch=async()=>({ok:false,status:404});
+  assert.equal(await missing.prepareElevation('6'),false);
+  assert.match(missing.getError(),/No bundled/);
+  assert.equal(missing.hasElevation(),false);
+
+  const wrong=engine();
+  let wrongFetch=0;
+  globalThis.fetch=async()=>{wrongFetch++;return validResponse(samples())};
+  assert.equal(await wrong.prepareElevation('5'),false);
+  assert.equal(wrongFetch,0,'wrong-game file must never be requested');
+
+  const tooSmall=engine();
+  globalThis.fetch=async()=>validResponse(new ArrayBuffer(2));
+  assert.equal(await tooSmall.prepareElevation('6'),false);
+  assert.match(tooSmall.getError(),/size mismatch/);
+
+  const uniform=engine();
+  const flat=new Uint16Array(definition.width*definition.height);flat.fill(28000);
+  globalThis.fetch=async()=>validResponse(flat.buffer);
+  assert.equal(await uniform.prepareElevation('6'),false);
+  assert.match(uniform.getError(),/identical/);
+
+  // A file import while the same-origin request is pending must win.
+  const racing=engine();let resolveRequest;
+  globalThis.fetch=()=>new Promise(resolve=>{resolveRequest=resolve});
+  const pending=racing.prepareElevation('6');
+  assert.equal(typeof resolveRequest,'function');
+  assert.equal(await racing.setElevationBinary(samples(),'6'),true);
+  resolveRequest(validResponse(flat.buffer));
+  assert.equal(await pending,false,'superseded response cannot overwrite an import');
+  assert.equal(racing.hasElevation(),true);
+  assert.equal(await racing.prepareElevation('6'),true);
+
+  // The page must wait for this asynchronous preparation before true 3D.
+  const nav=fs.readFileSync(path.join(__dirname,'../atlas-navigation.js'),'utf8');
+  const map=fs.readFileSync(path.join(__dirname,'../atlas-vi.html'),'utf8');
+  const renderer=fs.readFileSync(path.join(__dirname,'../atlas-3d.js'),'utf8');
+  assert.match(nav,/prepareElevation\(target\)/);
+  assert.match(nav,/epoch!==terrainViewToken/);
+  assert.match(nav,/dimension='3d'/);
+  assert.match(renderer,/function activate\(\)\{if\(!hasElevation\(\)\)/);
+  assert.match(map,/id="j362TerrainStatus"/);
+  assert.match(map,/atlas-3d\.js\?v=366/);
+  assert.match(map,/atlas-navigation\.js\?v=366/);
+  console.log('Atlas 36.6: absent, valid, flat, mismatched, stale, cached and import-race heightfield cases PASS');
+ }finally{
+  globalThis.fetch=originalFetch;
+ }
+}
+test().catch(e=>{console.error(e);process.exitCode=1});
