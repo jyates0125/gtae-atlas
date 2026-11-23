@@ -1,0 +1,48 @@
+name: Atlas 33.8 - verify both Cloudflare public origins
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Exact expected GTAE production deployment commit SHA"
+        required: true
+        type: string
+      check_legacy:
+        description: "Check old Atlas homepage and progress-preserving deep links"
+        required: true
+        default: true
+        type: boolean
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122]
+    paths:
+      - scripts/verify_cloudflare_dual_release.py
+      - scripts/test_atlas338_dual_release.py
+      - .github/workflows/atlas338-dual-cloudflare-release.yml
+permissions:
+  contents: read
+jobs:
+  source-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/test_atlas338_dual_release.py
+  live-verify:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compare actual served GTAE build with expected commit and old Atlas deep links
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          CHECK_LEGACY: ${{ inputs.check_legacy }}
+        run: |
+          if [ "$CHECK_LEGACY" = true ]; then
+            python scripts/verify_cloudflare_dual_release.py --expected-sha "$EXPECTED_SHA" --check-legacy
+          else
+            python scripts/verify_cloudflare_dual_release.py --expected-sha "$EXPECTED_SHA"
+          fi
