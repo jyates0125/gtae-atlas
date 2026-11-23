@@ -11,16 +11,25 @@ function init(){
  function choose(name){const lamp=lamps.find(l=>l[0]===name)||lamps[0];current=lamp[0];document.body.style.setProperty('--showroom-hue',String(lamp[1]));for(const button of spot.querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.lamp===current));try{localStorage.setItem('team-jura-showroom-light-v1',current)}catch{}}
  for(const [name]of lamps){const button=make('button','',name);button.type='button';button.dataset.lamp=name;button.onclick=()=>choose(name);spot.append(button)}
  const links=make('nav','j100-showroom-links');links.setAttribute('aria-label','Related Atlas database pages');
- const edition=document.body.dataset.gallery==='vehicles6'?'vi':document.body.dataset.gallery==='weapons'&&new URLSearchParams(location.search).get('world')==='story'?'story':'online';
+ const requestedWorld=new URLSearchParams(location.search).get('world');
+ const edition=document.body.dataset.gallery==='vehicles6'?'vi':requestedWorld==='story'?'story':'online';
+ // The shared GTA V archive carries the visitor's world into its related pages.
+ for(const link of document.querySelectorAll('.j90-nav a')){
+  const url=new URL(link.href);
+  if(['atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'].includes(url.pathname.split('/').pop())){
+   url.searchParams.set('game',edition);
+   link.href=url.href;
+  }
+ }
  const related=[
  ['◎ Universe database','atlas-database.html?game='+edition],
- ['◆ Vehicle comparison','atlas-database.html?kind=vehicle&game='+edition],
+ ['◆ '+(edition==='story'?'Compare GTA V archive vehicles':'Vehicle comparison'),edition==='story'?'atlas90-vehicles5.html?world=story#j90Cards':'atlas-database.html?kind=vehicle&game='+edition],
  ['⚔ '+(edition==='vi'?'GTA VI Weapon Research':'World-specific weapon details'),edition==='vi'?'atlas90-weapons6.html':'atlas-database.html?kind=weapon&game='+edition],
  ['♟ Characters','atlas-characters.html?game='+edition],
  ['✿ Animals','atlas-animals.html?game='+edition],
  ['◈ Collectibles','atlas-collectibles.html?game='+edition],
  ['▣ '+(edition==='vi'?'GTA Online My Garage':'My Garage & 3D'),'atlas93-garage.html'],
- ['◈ Original 3D configurator','atlas-vehicle-configurator.html']
+ ['◈ Original 3D configurator',edition==='vi'?'atlas-vehicle-configurator.html?world=vi':'atlas-vehicle-configurator.html']
  ];
  for(const [label,href]of related){const a=make('a','',label);a.href='./'+href;links.append(a)}
  panel.append(about,spot,links);tools.insertAdjacentElement('afterend',panel);

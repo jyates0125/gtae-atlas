@@ -339,3 +339,9 @@ The film page uses the owner's 39-second music-only edit with original score and
 ## Atlas 33.4 — classic map and cast navigation
 
 All nine classic titles represented in the archive have a direct cast link on their map. Switching between GTA IV and either episode on the Liberty City map updates the destination. The focused browser check follows each map into its edition, compares the visible character IDs with the roster, and verifies the profile's world-map link at phone and desktop widths.
+
+## Atlas 33.5 — Story, Online and Leonida map catalogs
+
+Each modern explorer links to its own character archive and armory. Switching worlds in the map updates the three shortcuts together. Story and Online identify their shared GTA V vehicle archive, while Leonida links to its separate research catalog. The focused browser check covers direct entry, in-page switching, exact cast membership, and profile return links.
+
+The shared vehicle gallery carries its incoming Story or Online world into cast and database links. Leonida vehicle research opens the VI configurator.
