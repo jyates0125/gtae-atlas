@@ -22,8 +22,25 @@ assert len([c for h,c in p.links if 'j223-world-card' in c])==7
 assert len([c for h,c in p.links if h and 'j223-shortcuts' in c])==0 # links belong to nav, not class
 assert page.count('<article class="j223-feature-panel')==4
 assert page.count('class="j223-world-card')==7
-tool_segment=page.split('<nav class="j223-shortcuts"',1)[1].split('</nav>',1)[0]
-assert tool_segment.count('<a href=')==13
+# The approved accessible shortcut filter added a nav ID and ARIA label.
+# Parse the real DOM instead of requiring a retired exact opening tag.
+class ShortcutParser(HTMLParser):
+ def __init__(self): super().__init__();self.active=False;self.depth=0;self.hrefs=[]
+ def handle_starttag(self,t,attrs):
+  d=dict(attrs)
+  if not self.active and t=='nav' and 'j223-shortcuts' in d.get('class','').split():
+   self.active=True;self.depth=1;return
+  if self.active:
+   if t=='nav':self.depth+=1
+   if t=='a':self.hrefs.append(d.get('href',''))
+ def handle_endtag(self,t):
+  if self.active and t=='nav':
+   self.depth-=1
+   if not self.depth:self.active=False
+shortcuts=ShortcutParser();shortcuts.feed(page)
+assert len(shortcuts.hrefs)==13, ('dashboard shortcut count',shortcuts.hrefs)
+assert len(set(shortcuts.hrefs))==len(shortcuts.hrefs), 'duplicate shortcut destinations'
+assert all(h.startswith('./') for h in shortcuts.hrefs), 'shortcuts must remain local Atlas links'
 assert 'j223-search-results' in page and 'role="search"' in page
 assert 'No account required' in welcome and 'atlas-dashboard.html' in welcome
 assert 'jura155-vi.webp' in css and 'j223-hero' in css
