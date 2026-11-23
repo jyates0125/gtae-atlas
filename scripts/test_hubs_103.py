@@ -35,11 +35,11 @@ class Parser(HTMLParser):
   if tag in ('a','script','link'):
    ref=p.get('src') or p.get('href')
    if ref:self.links.add(ref)
-for page,mode,ver in [('atlas-cheats.html','cheats','131'),('atlas-news.html','news','103a')]:
+for page,mode,js_version,css_version in [('atlas-cheats.html','cheats','131','131'),('atlas-news.html','news','355','103a')]:
  p=Parser();p.feed(read(page));assert p.mode==mode
  assert {'main','hubGame','hubSearch','hubCards','hubCount','hubSources','resultsTitle','resetHub'}.issubset(p.ids)
- assert f'./atlas103-hub.js?v={ver}' in p.links
- assert f'./atlas103-hub.css?v={ver}' in p.links
+ assert f'./atlas103-hub.js?v={js_version}' in p.links
+ assert f'./atlas103-hub.css?v={css_version}' in p.links
  assert './atlas-credits.html' in p.links
  if mode=='cheats':
   assert {'hubPlatform','cheatPlatformHelp'}.issubset(p.ids)
