@@ -1,0 +1,51 @@
+# One-time read-only check of owner-switched main production Cloudflare site.
+# This is not a Cloudflare deployment or a merge. No raw source response is logged.
+name: Atlas 35.0 - live main GTAE source and route audit
+on:
+  push:
+    branches:
+      - ops/atlas350-main-production-live-qa-20261123
+    paths:
+      - '.github/workflows/atlas350-once-main-production-live-qa.yml'
+permissions:
+  contents: read
+jobs:
+  gtae-live-main:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify primary GTAE exact main commit identity and public routes
+        shell: bash
+        run: |
+          mkdir -p qa-evidence
+          set +e
+          python scripts/verify_cloudflare_dual_release.py --expected-sha 8039ee9214fe7bfa3801bcea8f0c95b41f44b94d | tee qa-evidence/atlas350-main-routes.json
+          code=${PIPESTATUS[0]}
+          exit "$code"
+      - name: Check no internal source files are served on official GTAE
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p qa-evidence
+          set +e
+          python - <<'PY' | tee qa-evidence/atlas350-source-boundary.json
+          import json,sys
+          from scripts.audit_atlas345_cloudflare_source_boundary import inspect
+          report=inspect('https://gtae-online.pages.dev/')
+          print(json.dumps(report,indent=2))
+          sys.exit(1 if report['errors'] else 0)
+          PY
+          code=${PIPESTATUS[0]}
+          exit "$code"
+      - name: Store redacted public-only proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas350-live-main-gtae-verification
+          path: qa-evidence/atlas350-*.json
+          if-no-files-found: warn
+          retention-days: 7
