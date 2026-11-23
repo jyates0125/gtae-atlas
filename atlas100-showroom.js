@@ -16,6 +16,7 @@ function init(){
  // The shared GTA V archive carries the visitor's world into its related pages.
  for(const link of document.querySelectorAll('.j90-nav a')){
   const url=new URL(link.href);
+  if(document.body.dataset.gallery==='vehicles5'&&url.pathname.endsWith('/atlas90-weapons.html'))url.searchParams.set('world',edition);
   if(['atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'].includes(url.pathname.split('/').pop())){
    url.searchParams.set('game',edition);
    link.href=url.href;
