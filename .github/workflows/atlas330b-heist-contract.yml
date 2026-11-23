@@ -1,0 +1,26 @@
+name: Atlas 33.0b - heist legacy source contract refresh
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'scripts/test_atlas164_heist_workspace.py'
+      - 'scripts/test_atlas330_heist_notes.py'
+      - '.github/workflows/atlas330b-heist-contract.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mission-source-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check only old/new 15-heist source guards
+        run: |
+          python scripts/test_atlas164_heist_workspace.py
+          python scripts/test_atlas330_heist_notes.py
