@@ -1,0 +1,46 @@
+name: Atlas 36.6 - heightfield-first 3D entry
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas-3d.js'
+      - 'atlas-navigation.js'
+      - 'atlas-vi.html'
+      - 'scripts/test_atlas362_vi_map_clarity_browser.py'
+      - 'scripts/test_atlas366_heightfield_first.cjs'
+      - 'scripts/test_atlas366_heightfield_first_browser.py'
+      - 'docs/ATLAS366-THREE-D-HEIGHTFIELD-LOADING.md'
+      - '.github/workflows/atlas366-heightfield-first.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  terrain-readiness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check JS and existing import integrity
+        run: |
+          node --check atlas-3d.js
+          node --check atlas-navigation.js
+          node scripts/test_heightfield_import.cjs
+          node scripts/test_atlas366_heightfield_first.cjs
+      - name: Build and audit public distribution
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install focused Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test local synthetic grid and honest fallback
+        run: |
+          python scripts/test_atlas366_heightfield_first_browser.py
+          python scripts/test_atlas362_vi_map_clarity_browser.py
