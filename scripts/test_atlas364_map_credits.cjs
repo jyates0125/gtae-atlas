@@ -26,11 +26,12 @@ assert.match(read('atlas-online.html'),/id="mapTitle">GTA Online · Los Santos/)
 assert.match(css,/\.j364-map-source-view\{display:none!important\}/,'long view names hidden on phones');
 assert.match(css,/\.map-actions\{bottom:46px!important\}/,'map buttons clear credit band');
 assert.doesNotMatch(js,/\bfetch\s*\(|localStorage|sessionStorage|XMLHttpRequest/,'credits must do no network/storage');
-let change,observer;
+let change,observer,legendUpdated;
 const select={value:'scaly,view',addEventListener(event,fn){if(event==='change')change=fn;}};
 const note={textContent:''};
 const document={
  readyState:'complete',
+ addEventListener(event,fn){if(event==='jura:legend-updated')legendUpdated=fn;},
  getElementById(id){return id==='layer'?select:id==='j364MapViewCredit'?note:null;}
 };
 const window={addEventListener(){}};
@@ -44,7 +45,7 @@ select.value='dupzor,51';change();
 assert.equal(note.textContent,' · DUPZOR V51 · Loki view');
 select.value='day';observer();
 assert.equal(note.textContent,' · GTA VI in-game Day · Rockstar artwork');
-select.value='radar';change();
+select.value='radar';legendUpdated();
 assert.equal(note.textContent,' · GTA V radar');
 select.value='unknown';change();
 assert.equal(note.textContent,' · GTADB community tiles');

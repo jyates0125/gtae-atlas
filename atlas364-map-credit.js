@@ -22,6 +22,9 @@
    if(!layer||!note)return;
    const render=()=>{note.textContent=' · '+sourceForStyle(layer.value);};
    layer.addEventListener('change',render);
+   // The explorer also changes worlds and selected map styles programmatically.
+   // It emits this existing event after its map/legend state has been updated.
+   document.addEventListener('jura:legend-updated',render);
    // Atlas populates the layer select after startup. Watch options without polling.
    if(typeof MutationObserver==='function'){
      new MutationObserver(render).observe(layer,{childList:true,subtree:true});
