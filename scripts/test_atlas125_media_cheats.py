@@ -37,16 +37,15 @@ for name in ('atlas128-gta3-radar.png','atlas128-vice-city-radar.png','atlas128-
     assert name in classic,name
 assert 'noiseXYZ' in credits and 'images/map4.jpg' in credits
 assert 'id="cover-art"' in credits and 'id="reuse"' in credits
+# Each entry must reference its own cache-busted local portal assets. Do
+# not pin the version on one page to an unrelated page's deployment number.
 for p in ("index.html","maps.html","map-hub.html","atlas98-style-lab.html"):
     html=source(p)
     for asset in ("atlas98-portal.js","atlas98-worlds.js","atlas98-portal.css"):
-        if asset=="atlas98-portal.css":
-            current=re.search(r'\./atlas98-portal\.css\?v=(\d+)',source("maps.html"))
-            assert current, "Versioned shared portal stylesheet missing"
-            version=current[1]
-        else:
-            version=289 if p=="maps.html" else 128
-        assert f"./{asset}?v={version}" in html,(p,asset,version)
+        pattern = r"""(?:src|href)\s*=\s*["']\./""" + re.escape(asset) + r"""\?v=([1-9]\d*)["']"""
+        versions=re.findall(pattern,html)
+        assert len(versions)==1,(p,asset,"missing or duplicate versioned local reference",versions)
+        assert (ROOT/asset).is_file(),(p,asset,"missing local asset")
 
 profiles=json.loads(source("data/atlas-universe-profiles.json"))
 characters=[r for r in profiles["records"] if r["kind"]=="character"]
