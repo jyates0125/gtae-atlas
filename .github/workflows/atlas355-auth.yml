@@ -1,0 +1,31 @@
+name: Atlas 35.5 - focused account and cloud-save security
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-account.html'
+      - 'atlas355-*'
+      - 'atlas140-cloud-saves.js'
+      - 'atlas144-cloud-transfer.js'
+      - '_headers'
+      - 'scripts/build-cloudflare.cjs'
+      - 'scripts/test_atlas355_email_auth.cjs'
+      - '.github/workflows/atlas355-auth.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auth-security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test account feature gate and generated config
+        run: node scripts/test_atlas355_email_auth.cjs
+      - name: Test owner-scoped cloud save and transfer logic
+        run: |
+          node --test tests/atlas140-cloud-saves.test.cjs
+          node --test tests/atlas144-cloud-transfer.test.cjs
