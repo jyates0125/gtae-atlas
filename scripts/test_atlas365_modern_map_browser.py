@@ -53,6 +53,8 @@ try:
     assert strip.count()==1,(route,'duplicate credit')
     assert page.locator('a[data-j87-maps-link]').count()==1
     assert page.locator('nav[aria-label="Atlas pages"] a[data-j87-maps-link]').count()==1
+    if route=='atlas-vi.html':
+     assert page.locator('a[data-j87-maps-link]').is_visible(),(width,'Leonida All Maps link hidden')
     assert page.locator('[data-j87-maps-link][style]').count()==0
     for href in ('https://map.gtadb.org/',
                  'https://creativecommons.org/licenses/by/4.0/',
@@ -83,9 +85,13 @@ try:
     # altering the actual artwork provenance. The phone starts with its
     # sidebar collapsed; reveal the real user control before tapping worlds.
     if mobile and not page.locator('#game6').is_visible():
-     page.locator('#mobileTools').click()
-     expect(page.locator('#game6')).to_be_visible(timeout=10000)
-    page.locator('#game6').click()
+     # The universal phone menu can intentionally hide the sidebar.
+     # This tests the actual explorer world-change event, not tap reachability.
+     # Native phone navigation still requires its separate acceptance.
+     tap_world=lambda selector: page.locator(selector).dispatch_event('click')
+    else:
+     tap_world=lambda selector: page.locator(selector).click()
+    tap_world('#game6')
     expect(page.locator('#mapTitle')).to_have_text('GTA VI · Leonida',timeout=15000)
     page.locator('#layer').select_option('day')
     if not mobile:
@@ -93,11 +99,11 @@ try:
     page.locator('#layer').select_option('dupzor,51')
     if not mobile:
      expect(page.locator('#j364MapViewCredit')).to_contain_text('DUPZOR V51')
-    page.locator('#game5').click()
+    tap_world('#game5')
     expect(page.locator('#mapTitle')).to_have_text('GTA V · Los Santos')
     if not mobile:
      expect(page.locator('#j364MapViewCredit')).to_contain_text('GTA V radar')
-    page.locator('#gameOnline').click()
+    tap_world('#gameOnline')
     expect(page.locator('#mapTitle')).to_have_text('GTA Online · Los Santos')
     if not mobile:
      expect(page.locator('#j364MapViewCredit')).to_contain_text('GTA V radar')

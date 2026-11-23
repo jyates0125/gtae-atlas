@@ -5,6 +5,7 @@ on:
     paths:
       - 'atlas364-map-credit.js'
       - 'atlas364-map-credit.css'
+      - 'atlas220-vi-mobile.css'
       - 'scripts/test_atlas365_modern_map_browser.py'
       - 'docs/ATLAS365-MODERN-MAP-BROWSER-ACCEPTANCE.md'
       - '.github/workflows/atlas365-rendered-map-attribution.yml'

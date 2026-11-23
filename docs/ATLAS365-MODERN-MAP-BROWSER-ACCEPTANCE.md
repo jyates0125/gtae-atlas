@@ -14,3 +14,7 @@ Focused workflow: `.github/workflows/atlas365-rendered-map-attribution.yml`. Fir
 
 ## Source and release truth
 GTADB repo/LICENSE-DATA remain the atlas source and license of record, linked from the small strip and `atlas-credits.html`. The in-game Day art remains Rockstar intellectual property. No new elevation grid is installed; the GTA VI 3D perspective fallback is not full 3D relief. This PR does not change production `main`, `development`, any Cloudflare project, source data, account sign-in, user storage or release approvals.
+
+## Mobile navigation nuance and legacy rule corrected
+- The universal phone menu can hide the in-sidebar world buttons. Built Chromium verifies the explorer's real click handler and source-change propagation with DOM-dispatched clicks when buttons are hidden. This **does not** certify those offscreen buttons as physically tappable; iPhone Safari owner acceptance stays open.
+- The former Leonida mobile rule hid every `a[data-j87-maps-link]` after universal-menu initialization. When Atlas 36.4 moved All Maps into existing top navigation, that rule concealed the new link. It now applies solely to the removed legacy floating direct-child badge. No new floating control is added.
