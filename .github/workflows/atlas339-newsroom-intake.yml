@@ -6,6 +6,8 @@ on:
     paths:
       - scripts/atlas339-newswire-intake.cjs
       - scripts/test_atlas339-newswire-intake.cjs
+      - scripts/test_atlas339_newsroom_browser.py
+      - atlas-news.html
       - data/atlas-news-cheats.json
       - .github/workflows/atlas339-newsroom-intake.yml
   workflow_dispatch:
@@ -31,6 +33,14 @@ jobs:
           if(urls.some(x=>!/^https:\/\/www\.rockstargames\.com\/newswire\/article\/|^https:\/\/support\.rockstargames\.com\/articles\//.test(x)))process.exit(1);
           console.log('PASS official source domains and unique reviewed links');
           NODE
+      - name: Assemble exact Cloudflare build
+        run: node scripts/build-cloudflare.cjs
+      - name: Install focused Chromium browser
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Check actual Newsroom mobile and desktop behavior
+        run: python scripts/test_atlas339_newsroom_browser.py
   remote-intake:
     name: Rockstar discovery artifact only, no publishing
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
