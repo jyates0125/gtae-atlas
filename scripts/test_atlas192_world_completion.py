@@ -17,7 +17,7 @@ story=read('film/atlas192-storyboard.js')
 nav=read('atlas132-nav.js')
 assert 'data-gallery="weapons"' in html
 assert 'atlas192-armory-worlds.css?v=192' in html
-assert 'atlas90-gallery.js?v=336' in html
+assert 'atlas90-gallery.js?v=337' in html
 assert 'j90-image-warning' in gallery and 'Original Elario' in gallery
 showroom=read('atlas100-showroom.css')
 for world,asset in (('vehicles5','jura161-vehicles.webp'),('vehicles6','jura161-vehicles6.webp'),('weapons','jura161-weapons.webp')):
@@ -30,7 +30,7 @@ assert 'atlas90-weapons.html?world=story' in html
 assert 'atlas90-weapons.html?world=online' in html
 assert 'atlas90-weapons6.html' in html
 assert "const weaponWorld=game==='weapons'" in gallery
-assert "'weapons-story':kind)+':'+key" in gallery
+assert "'weapons-story':kind==='vehicles5'" in gallery
 assert "const STORE='team-jura-atlas90-collection-v1'" in gallery
 assert "weaponWorld==='story'?'GTA V Story Weapon References'" in gallery
 assert "GTA V archive reference; availability in Story Mode needs per-item checking." in gallery
