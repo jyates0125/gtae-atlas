@@ -1,8 +1,18 @@
 # Team Jura Atlas — 2150 completion and release board
 **Created:** 2026-11-21 · **Status:** staging working board, not release certification
-**Canonical repository:** `jyates0125/team-jura-atlas-preview` · **Current reviewed baseline:** `development` PR #91 merge `1d86d5c28d63aa6cfd14f48a5da3ed61bba58fcd`; protected `main` PR #90 synchronized as `8039ee9214fe7bfa3801bcea8f0c95b41f44b94d` with 0 tracked-file differences. **Open staged upgrade:** PR #94 Leonida dual-map/source notebook (not live, exact-head CI, Safari/owner gates outstanding).
+**Canonical repository:** `jyates0125/gtae-atlas` · **Current reviewed baseline:** `development` PR #91 merge `1d86d5c28d63aa6cfd14f48a5da3ed61bba58fcd`; protected `main` PR #90 synchronized as `8039ee9214fe7bfa3801bcea8f0c95b41f44b94d` with 0 tracked-file differences. **Open staged upgrade:** PR #94 Leonida dual-map/source notebook (not live, exact-head CI, Safari/owner gates outstanding).
 **Studio authority:** `docs/ELARIO-STUDIOS-OPERATING-CHARTER-V2-PROPOSAL.md` (contents adopted)
 **Project authority:** `docs/TEAM-JURA-STANDING-CHARTER.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md`, approved Designed Brand Master and Original Design Reference Pack.
+
+## November 23 dashboard, wardrobe and terrain acceptance
+
+The owner confirmed on physical iPhone Safari that all five featured dashboard portraits looked right and that Back and Forward moved between the dashboard and the selected profile. [Owner checkpoint](https://github.com/jyates0125/gtae-atlas/pull/98#issuecomment-7114307007)
+
+The Style Lab now preserves private bookmarks across tabs, shows the saved collection, and supports Back, Forward and direct artwork links. The focused Chromium and Windows Edge suites passed at 390 and 1440 pixels. [Browser results](https://github.com/jyates0125/gtae-atlas/actions/runs/45269363218)
+
+The terrain reader rejects blank grids and retains prior terrain if a replacement fails validation. The format and upstream distribution gap are documented in ATLAS341-LEONIDA-3D-SOURCE-FEASIBILITY.md. A distributable Leonida elevation copy and independent control points remain outstanding. [Geometry results](https://github.com/jyates0125/gtae-atlas/actions/runs/45269633451)
+
+The integrated product checkpoint is `e8314b3282e9ea1d161eaee1da3124888f8ef1e5`. Check the full release workflow on the subsequent validation commit for Chromium, Windows Edge and the validated ZIP. Media rights review, remaining physical-device acceptance and production approval remain separate.
 
 ## November 23 integration checkpoint
 
