@@ -1,12 +1,12 @@
 # Atlas 13.8 — Supabase integration security checklist
 
-**Target:** GitHub `development` → Cloudflare Pages. **Project:** Supabase `elario-atlas-dev`.
+**Target:** GitHub `development` for private previews → protected `main` for Cloudflare GTAE production. **Project:** Supabase `elario-atlas-dev`.
 
-## Project settings already chosen
-- Primary site: `https://gtae-online.pages.dev`
-- Allowed redirect URLs: `https://gtae-online.pages.dev/**` and `https://team-jura-atlas-preview.pages.dev/**`
-- Email authentication and confirmation enabled; anonymous and phone sign-in disabled.
-- Supabase database branch `main (PRODUCTION)` is **not** the GitHub website branch `main`. Do not change the protected GitHub `main`.
+## Intended Auth settings — recheck in Supabase dashboard before enabling login
+- Primary GTAE site: `https://gtae-online.pages.dev` (public website on protected GitHub `main`).
+- Historical desired redirect allowlist included GTAE and the older `team-jura-atlas-preview.pages.dev` origin. **The connected Supabase API in this audit does not verify live Auth URL/provider settings.** Recheck settings in the dashboard and retire the old allowed origin only after its Cloudflare project is actually removed.
+- Email confirmation and disabled anonymous/phone sign-in were owner-intended settings, **not re-verified by the available auth-config read tools**. No public signup/login or cloud sync is wired on the GTAE site today.
+- Supabase database branch `main (PRODUCTION)` is not the website's GitHub production branch. Do not confuse independent product branch controls.
 
 ## Key handling
 - Owner supplied a Supabase **publishable** key in conversation. Never store that key in this document, a GitHub commit, or a server-secret field.
@@ -28,6 +28,16 @@
 - Applied and verified migration `20261121043647_harden_atlas_save_table_privileges.sql` directly in the connected Supabase development project. Authenticated retains SELECT, INSERT, UPDATE, DELETE; anonymous has no table privileges; authenticated TRUNCATE, REFERENCES and TRIGGER are false. This removes unnecessary table-wide privileges not governed by row policies.
 - Security Advisor still warns **Leaked Password Protection Disabled**. Before enabling password sign-up, review and enable compromised-password protection where supported, confirm custom Auth SMTP, and test two-account isolation, email confirmation/recovery, device transfer and actual deletion.
 - No Edge Functions are deployed for account deletion; the proposed 14-day cancellation/recovery window is not implemented.
+
+## Live connected review — November 23, 2026
+
+- Supabase `elario-atlas-dev` is `ACTIVE_HEALTHY` on PostgreSQL 17.12, with zero rows in `public.atlas_saves`; this does not mean the Auth user table is empty.
+- The save table has **RLS enabled and FORCE RLS on**, exactly four owner-only `authenticated` CRUD policies, and `anon` has no table grants. `authenticated` has SELECT/INSERT/UPDATE/DELETE only. UPDATE and INSERT have owner-scoped `WITH CHECK`; all grants were read from `information_schema.role_table_grants`. Schema bounds: valid namespace pattern, JSON object up to 131072 bytes, revision >= 1 and schema version 1..100.
+- A `public.rls_auto_enable()` security-definer helper exists, but its observed function ACL allows `postgres` only; do not grant it to `PUBLIC` or API roles.
+- Security Advisor: **Leaked Password Protection Disabled** (WARN), while health/performance advisors report zero lint findings. Supabase currently documents this specific feature as requiring **Pro+**; avoid promising it is free. Consider verified email OTP/magic-link sign-in if appropriate, but do not enable any public flow without testing email delivery.
+- No Supabase Edge Functions are deployed. Account deletion/recovery and two-real-user data isolation remain **not implemented/verified**.
+- **No schema changes were executed** in this review; the existing owner-scoped database security foundation remains unchanged.
+- Binding complete audit matrix: [Atlas 35.4 GitHub, Cloudflare and Supabase readiness](ATLAS354-GIT-CLOUDFLARE-SUPABASE-READINESS-20261123.md).
 
 ## Current implementation status
 The public `atlas-account.html` intentionally displays **sign-in disabled**, and `atlas131-account.js` performs local manual backup. Neither is cloud authentication or sync. Do not present this checklist as a completed integration.

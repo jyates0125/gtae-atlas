@@ -9,6 +9,7 @@ const crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'public');
 const legacy = require('./atlas209-legacy-redirect.cjs');
+const primaryGuards = require('./atlas352-primary-security-redirects.cjs');
 const skipDirs = new Set(['.git','.github','.venv','node_modules','tests','tools','scripts','reference','reference-pack','optional','private-lab','atlas-lab-private','research-private','user-exports','qa-evidence','public','__pycache__','docs','.playwright','.cache']);
 const allowExt = new Set(['.html','.css','.js','.json','.csv','.svg','.png','.jpg','.jpeg','.webp','.gif','.ico','.woff','.woff2','.mp4','.webm','.mp3','.ogg','.wav','.bin','.txt','.md','.xml','.webmanifest','.wasm','.glb','.gltf','.avif']);
 const excludeNames = new Set(['MANIFEST-SHA256.txt','.env','.env.local','atlas-build-identity.json','atlas132-page-directory.json','INSTALL-TO-DEVELOPMENT.ps1','package-lock.json','package.json']);
@@ -73,6 +74,16 @@ if (legacy.isOldRelease(process.env)) {
   bytes+=buf.length;
   manifest.push({path:rel,bytes:buf.length,sha256:crypto.createHash('sha256').update(buf).digest('hex')});
   console.log('Old Pages project root redirects to public GTAE; legacy guest export stays accessible.');
+}
+// Only the official GTAE main release gets cached-source blocking redirects.
+// Keep old Pages root redirect and development/feature builds untouched.
+if (primaryGuards.isPrimaryProduction(process.env)) {
+  primaryGuards.writePrimaryRedirectFile(out);
+  const rel='_redirects';
+  const buf=fs.readFileSync(path.join(out,rel));
+  bytes+=buf.length;
+  manifest.push({path:rel,bytes:buf.length,sha256:crypto.createHash('sha256').update(buf).digest('hex')});
+  console.log('GTAE main production: blocked cached internal source paths.');
 }
 for(const required of ['index.html','maps.html','atlas.html','atlas-online.html','atlas-vi.html','one-last-ride.html','atlas98-data-lab.html','atlas-source-registry.html','film/assets/one-last-ride-motion-preview.mp4','_headers']) {
   if (!fs.existsSync(path.join(out,required))) throw new Error(`Missing required production asset: ${required}`);
