@@ -4,6 +4,7 @@ on:
     paths:
       - atlas223-home.js
       - atlas-dashboard.html
+      - scripts/test_atlas223_home.py
       - scripts/test_atlas223_home_browser.py
       - .github/workflows/dashboard-character-navigation.yml
   workflow_dispatch:
@@ -29,6 +30,7 @@ jobs:
       - run: python -m pip install playwright==1.56.0
       - if: matrix.browser == 'chromium'
         run: python -m playwright install --with-deps chromium
+      - run: python scripts/test_atlas223_home.py
       - run: node scripts/build-cloudflare.cjs
       - run: python scripts/test_atlas223_home_browser.py
         env:
