@@ -16,9 +16,9 @@ concurrency:
   group: atlas324-film-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
-  film-source-and-smoke:
+  film-review-render:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,6 +31,10 @@ jobs:
           python-version: '3.12'
       - name: Install local frame composition dependency
         run: python -m pip install Pillow==11.3.0
+      - name: Install FFmpeg only for this focused film render
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
       - name: Check only the changed film source contracts
         run: |
           python -m py_compile scripts/render_one_last_ride_animatic.py scripts/test_atlas324_film_contract.py
@@ -43,31 +47,10 @@ jobs:
       - name: Render and probe 18-second editorial smoke, including original audio
         run: |
           python scripts/render_one_last_ride_animatic.py --quick --output qa-evidence/film/one-last-ride-animatic-smoke.mp4
-      - name: Retain smoke evidence on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: atlas324-film-smoke-failure
-          path: qa-evidence/film/*
-          if-no-files-found: warn
-          retention-days: 7
-  render-full-animatic:
-    runs-on: ubuntu-24.04
-    needs: [film-source-and-smoke]
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install local frame composition dependency
-        run: python -m pip install Pillow==11.3.0
-      - name: Render and verify full 255-second animatic — not finished film
+      - name: Render and verify full 255-second original-frame animatic
         run: |
           python scripts/render_one_last_ride_animatic.py --output qa-evidence/film/one-last-ride-415-animatic.mp4
-      - name: Keep owner-only GitHub Actions film review artifact
+      - name: Keep private review film in GitHub Actions
         uses: actions/upload-artifact@v4
         with:
           name: atlas324-olr-415-animatic-review-not-final-film
@@ -76,3 +59,11 @@ jobs:
             qa-evidence/film/one-last-ride-415-animatic.manifest.json
           if-no-files-found: error
           retention-days: 30
+      - name: Retain smoke evidence on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas324-film-smoke-failure
+          path: qa-evidence/film/*
+          if-no-files-found: warn
+          retention-days: 7
