@@ -13,7 +13,7 @@ assert 'id="j212RecentLink"' in html
 # exactly one local, versioned reference for each actual dependency instead of
 # pinning the JS to the retired v289 that masked a valid v303 deployment.
 for asset in ('atlas98-portal.js', 'atlas212-directory-resume.css'):
- matches=re.findall(r"""(?:src|href)\\s*=\\s*["']\\./""" + re.escape(asset) + r"""\\?v=([1-9]\\d*)["']""", html)
+ matches=re.findall(r"""(?:src|href)\s*=\s*["']\./""" + re.escape(asset) + r"""\?v=([1-9]\d*)["']""", html)
  assert len(matches)==1, (asset, 'missing or duplicate versioned map directory reference', matches)
  assert (root/asset).is_file(), (asset, 'referenced local asset missing')
 for phrase in ("team-jura-directory-last-map-v1","w.id===item.id&&w.href===item.href",
