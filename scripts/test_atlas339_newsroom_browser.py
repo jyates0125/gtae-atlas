@@ -36,7 +36,8 @@ try:
                 cards=page.locator('#hubCards article.h-card')
                 expect(cards).to_have_count(sum(x['game']=='vi' for x in feed['news']),timeout=15000)
                 assert cards.first.locator('h3').inner_text() == 'Grand Theft Auto VI: The Album Now Available'
-                assert 'November 20, 2026' in cards.first.inner_text()
+                assert 'November 20, 2026' in cards.first.locator('.h-mini').text_content(), cards.first.locator('.h-mini').text_content()
+                expect(cards.first.locator('.h-mini')).to_be_visible()
                 expected_urls={x['url'] for x in feed['news'] if x['game']=='vi'}
                 shown_urls=set(cards.locator('a').evaluate_all('(els)=>els.map(e=>e.href)'))
                 assert shown_urls == expected_urls,(shown_urls,expected_urls)
