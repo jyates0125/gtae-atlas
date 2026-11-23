@@ -1,0 +1,26 @@
+name: Atlas 36.1 - Leonida raster source footprint
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'scripts/audit_atlas361_leonida_source_footprint.py'
+      - 'scripts/test_atlas361_source_footprint.py'
+      - 'scripts/convert_atlas359_leonida_heightfield.py'
+      - 'scripts/test_atlas359_convert.py'
+      - 'docs/ATLAS361-LEONIDA-SOURCE-FOOTPRINT.md'
+      - '.github/workflows/atlas361-source-footprint.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pinned-footprint-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/audit_atlas361_leonida_source_footprint.py
+      - run: python -m unittest -v scripts/test_atlas361_source_footprint.py
+      - run: python -m unittest -v scripts/test_atlas359_convert.py
