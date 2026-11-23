@@ -280,3 +280,25 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 ## Atlas 31.3b — integrated acceptance contract refresh for private Forge handoff (staging)
 - **TEST FIX:** The old Atlas 2150 product integration assertion required a personally named Forge title in a shareable URL hash, contrary to the binding privacy requirement. It now requires one-use privateVariant identity, world/model public link and the absence of the private name in URLs; actual V/VI browser handoff was already verified in Atlas 31.3.
 - **GATE:** Related integrated staging, cross-product and Garage-to-Forge checks must pass on exact head before considering the combined stage fully green. This changes no live runtime behavior or saved data.
+
+
+## Atlas 31.4 — mission-map save-capacity and unreadable-backup rescue (draft staging)
+- **SOURCE:** Non-Cayo mission-map portable backup import now caps each stored route/scoped/award list at the same 150 IDs accepted on load. It reports skipped overflow instead of writing an unreadable oversized record. An isolated damaged-save recovery panel permits exact raw byte export before a confirmed reset of only the affected mission-map key. The mission-map focus writer refuses to overwrite corrupt content; Cayo and other save namespaces remain untouched.
+- **TEST:** Focused import-capacity/overflow/browser corrupted-save recovery CI passed; integrated to draft staging through PR #121. **HOLD:** Native Safari, owner review, full final release/ZIP.
+
+## Atlas 31.5 — current per-page portal stylesheet version contract (draft staging)
+- **SOURCE:** Manual release run on prior staging SHA exposed a test that required the welcome page to reuse the map-directory stylesheet cache version. Current pages intentionally have independently versioned JS/CSS. Test now validates each page's actual one versioned local reference and asset existence; no runtime artwork, maps, or progress changes.
+- **TEST:** Isolated source contract GitHub CI passed; PR #122 merged to draft staging. Old failed release run remains historical evidence.
+
+## Atlas 31.6 — Leonida/Fleeca browser smoke contract repair (draft staging)
+- **SOURCE:** Historical browser smoke miscounted a separate Leonida Day-map option as a duplicate map-jump link due to a shared style class and required an absent first-time Fleeca checklist key. Tests now distinguish the actual map-jump anchor, allow the separate Day button before search, seed an explicit legacy Fleeca checklist, and demand byte-exact preservation after heist interactions. Runtime content, map marker locations and guest data code are unchanged.
+- **TEST:** Real built-page Chromium and Edge focused smoke passed at phone and desktop sizes on repair head, then again on combined staging; PR #123 merged. **HOLD:** Complete manual full run must pass at newer exact staging SHA.
+
+## Atlas 31.7 — remaining static release-test debt and full tail inventory (draft staging)
+- **SOURCE:** Second owner-triggered manual full gate, run #45099090665, passed its initial source/Data Lab checks and stopped on a stale literal map-directory JS cache version (v289 versus real v303). The separate dashboard source contract also relied on an old nav opening tag; latest dashboard has an accessible shortcut filter, nav ID and ARIA metadata. Assertions now check unique versioned local dependencies and structurally validate exactly thirteen unique same-origin shortcut links.
+- **TEST:** The isolated full static tail preflight deliberately executed all **71** relevant commands from the directory contract through the end of that release static step, with **71/71 passing** after fixes (run #45099351696). PR #124 merged into draft staging at `7a282ecf8bd70ee7831bac8e118cd325a96b5878`. Prior full run on earlier SHA remains failed; its Edge smoke may surface independent blockers.
+- **HOLD:** No full Chromium+Edge+validated ZIP has passed on this new staging SHA. Original fan art/rights, live preview identity, device Safari and owner final acceptance still required.
+
+## Atlas 31.8 — one-shot, owner-authorized staging-only release dispatch (pre-merge)
+- **SOURCE:** PR #125 contains a new GitHub Actions workflow whose push event is narrowly scoped to the first addition of its own YAML file onto the draft staging branch. It confirms the exact remote staging HEAD, then asks the existing, unchanged manual `team-jura-release.yml` to run the full Chromium/Edge/ZIP gate. Uses an ephemeral repo GitHub Actions token, no personal token, no public deploy/merge and no periodic background launch; does not fire for routine feature code.
+- **STATUS:** Keep launcher unmerged until all failures from the prior Edge smoke and source tail are resolved; the dispatch itself is not evidence of a green release and may be blocked by repository Actions permissions. Explicit owner authority to run the necessary QA does **not** waive exact-head review, source/visual/rights and native Safari/owner production approval.
