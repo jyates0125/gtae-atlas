@@ -4,6 +4,7 @@ on:
     branches: [feature/atlas294-integrated-staging-20261122, development]
     paths:
       - 'scripts/test_atlas211_mobile_fit_browser.py'
+      - 'scripts/test_atlas201_squalo_browser.py'
       - '.github/workflows/atlas319-mobile-fit-release-tail.yml'
   workflow_dispatch:
 permissions:
@@ -37,7 +38,9 @@ jobs:
       - name: Test phone 375/390px Story Online and VI map return
         env:
           ATLAS_BROWSER: chromium
-        run: python scripts/test_atlas211_mobile_fit_browser.py
+        run: |
+          python scripts/test_atlas211_mobile_fit_browser.py
+          python scripts/test_atlas201_squalo_browser.py
   remaining-edge-release:
     runs-on: windows-latest
     timeout-minutes: 29
