@@ -1,0 +1,94 @@
+name: Atlas 31.9 - phone mobile-fit and remaining Edge release suite
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'scripts/test_atlas211_mobile_fit_browser.py'
+      - 'scripts/test_atlas201_squalo_browser.py'
+      - '.github/workflows/atlas319-mobile-fit-release-tail.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas319-release-suffix-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  focused-chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and audit actual public payload
+        run: |
+          python -m py_compile scripts/test_atlas211_mobile_fit_browser.py
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install chromium
+      - name: Test phone 375/390px Story Online and VI map return
+        env:
+          ATLAS_BROWSER: chromium
+        run: |
+          python scripts/test_atlas211_mobile_fit_browser.py
+          python scripts/test_atlas201_squalo_browser.py
+  remaining-edge-release:
+    runs-on: windows-latest
+    timeout-minutes: 29
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and audit exact public payload
+        run: |
+          python -m py_compile scripts/test_atlas211_mobile_fit_browser.py
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Microsoft Edge
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install msedge
+      - name: Check remaining full release browser scripts and report all failures
+        shell: bash
+        env:
+          ATLAS_BROWSER: msedge
+        run: |
+          python - <<'PY'
+          import subprocess,sys
+          # The previous exact-head Edge run passed the first eight scripts.
+          # Recheck the remaining two without repeating their browser builds.
+          names=('test_atlas201_squalo_browser.py',
+                 'test_atlas191_first_visit_browser.py')
+          # Python's Windows cp1252 stdout cannot display some Playwright
+          # replacement characters in a failure traceback. Keep diagnostics.
+          sys.stdout.reconfigure(encoding='utf-8',errors='backslashreplace')
+          failures=[]
+          for name in names:
+              try:
+                  p=subprocess.run([sys.executable,'scripts/'+name],capture_output=True,text=True,
+                                   encoding='utf-8',errors='replace',timeout=230)
+                  if p.returncode:
+                      failures.append(name)
+                      print('FAIL:',name,'\\n', (p.stdout+'\\n'+p.stderr)[-9000:].encode('ascii','backslashreplace').decode('ascii'),flush=True)
+                  else:print('PASS:',name,flush=True)
+              except Exception as exc:
+                  failures.append(name)
+                  print('ERROR:',name,ascii(exc),flush=True)
+          print(f'Edge release suffix: {len(names)-len(failures)}/{len(names)} pass; failed: {failures}',flush=True)
+          sys.exit(1 if failures else 0)
+          PY

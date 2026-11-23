@@ -30,7 +30,7 @@ engine=os.getenv('ATLAS_BROWSER','chromium')
 def inspect(page, stage, path, width):
     data=page.evaluate("""() => {
       const nav=document.querySelector('.topbar>nav');
-      const shortcut=document.querySelector('#sidebar .j145-open-map');
+      const shortcut=document.querySelector('#sidebar a.j145-open-map[href="#atlasCanvas"]');
       const sidebar=document.querySelector('#sidebar');
       const box=shortcut?.getBoundingClientRect();
       const vw=innerWidth;
@@ -51,7 +51,7 @@ def inspect(page, stage, path, width):
     assert data['scroll']<=width+1, (stage,path,data)
     assert 0<data['navClient']<=width, (stage,path,data)
     assert data['navOverflow'] in ('auto','scroll'),(stage,path,data)
-    assert data['shortcutRight']<=width+1, (stage,path,data)
+    assert data['shortcutRight'] is not None and data['shortcutRight']<=width+1, (stage,path,data)
     assert data['sidebarRight']<=width+1, (stage,path,data)
     return data
 
@@ -66,12 +66,12 @@ try:
             for path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                 page=context.new_page()
                 page.goto(origin+path,wait_until='domcontentloaded',timeout=45000)
-                page.locator('#sidebar .j145-open-map').wait_for(state='visible',timeout=15000)
+                page.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').wait_for(state='visible',timeout=15000)
                 page.wait_for_timeout(350)
                 inspect(page,'loaded',path,width)
                 # This shortcut must retain real map-first interaction and must
                 # not create an offscreen horizontal stripe after sidebar hide.
-                page.locator('#sidebar .j145-open-map').click()
+                page.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').click()
                 page.wait_for_function("document.getElementById('sidebar')?.classList.contains('mobile-collapsed')",
                                        timeout=7000)
                 inspect(page,'map shortcut',path,width)
