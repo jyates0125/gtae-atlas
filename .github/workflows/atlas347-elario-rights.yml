@@ -1,0 +1,32 @@
+name: Atlas 34.7 - original Elario rights and filtered production source
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas-credits.html'
+      - 'atlas-policies.html'
+      - 'docs/ATLAS347-ELARIO-RIGHTS-AND-SOURCE-GOVERNANCE.md'
+      - 'scripts/test_atlas347_rights_boundary.py'
+      - '.github/workflows/atlas347-elario-rights.yml'
+permissions:
+  contents: read
+jobs:
+  rights-and-published-artifact:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert upstream rights and correction links before build
+        run: python scripts/test_atlas347_rights_boundary.py
+      - name: Generate actual approved Pages output
+        run: node scripts/build-cloudflare.cjs
+      - name: Verify no internal source, original rights links and full asset graph
+        run: |
+          python scripts/test_atlas347_rights_boundary.py
+          python scripts/audit_published.py
