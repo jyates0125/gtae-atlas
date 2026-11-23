@@ -94,7 +94,7 @@ All 13 map cards use local original Team Jura cover illustrations. The seven cla
 2. Static regression and real desktop/mobile Chromium + Edge tests pass.
 3. Cloudflare preview verified. The CI deployment preview is **not** the live public deployment.
 4. Branch comparison confirms no map-engine changes on database PRs.
-5. Merge only to `development`, then check live URL. Record unfinished source/art issues instead of declaring completion.
+5. Merge reviewed nonproduction work into `development` for preview and QA. Promote separately approved, fully validated release candidates into protected `main` for the unchanged official `https://gtae-online.pages.dev/` production URL; verify exact live SHA and blocked internal source paths. Record unfinished source/art issues instead of declaring completion. (Owner topology updated November 23, 2026.)
 
 ## Atlas 10.5 San Andreas sourced collectible pins
 - The bundled `art/atlas-sa-vector.svg` is the previously credited Toliak 6000 × 6000 San Andreas vector tracing (Apache-2.0); original Rockstar game-world IP remains with the rightsholder.

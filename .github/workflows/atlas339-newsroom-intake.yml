@@ -1,5 +1,13 @@
 name: Atlas 33.9 - official Newsroom intake
 on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development, main]
+    paths:
+      - atlas103-hub.js
+      - atlas-news.html
+      - data/atlas-news-cheats.json
+      - scripts/*atlas339*
+      - .github/workflows/atlas339-newsroom-intake.yml
   push:
     branches:
       - feature/atlas339-official-newsroom-intake-20261123
