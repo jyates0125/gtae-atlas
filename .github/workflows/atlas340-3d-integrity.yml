@@ -7,6 +7,7 @@ on:
       - 'elevation-5.bin'
       - 'elevation-6.bin'
       - 'scripts/audit_3d_heightfields.py'
+      - 'scripts/test_heightfield_import.cjs'
       - '.github/workflows/atlas340-3d-integrity.yml'
   workflow_dispatch:
 permissions:
@@ -21,3 +22,4 @@ jobs:
         with:
           python-version: '3.12'
       - run: python scripts/audit_3d_heightfields.py
+      - run: node scripts/test_heightfield_import.cjs
