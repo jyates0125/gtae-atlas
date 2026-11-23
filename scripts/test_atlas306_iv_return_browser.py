@@ -39,8 +39,8 @@ try:
     snapshot=page.evaluate("""() => ({
        state:window.TeamJuraIV3DBridge.state(),
        favorites:localStorage.getItem('jura-iv-favorites'),
-       found:localStorage.getItem('jura-iv-birds-found-v1'),
-       route:localStorage.getItem('jura-iv-route-v1')
+       found:localStorage.getItem('team-jura-iv-bird-progress-v1'),
+       route:localStorage.getItem('team-jura-iv-route-v1:'+document.body.dataset.ivScope)
     })""")
     assert snapshot['state']['selectedId'],(scope,width,height,'selected ID missing')
     bounds=back.bounding_box()
@@ -58,8 +58,8 @@ try:
     assert page.evaluate("!new URL(location.href).searchParams.has('loc')")
     assert page.evaluate("""() => ({
        favorites:localStorage.getItem('jura-iv-favorites'),
-       found:localStorage.getItem('jura-iv-birds-found-v1'),
-       route:localStorage.getItem('jura-iv-route-v1')
+       found:localStorage.getItem('team-jura-iv-bird-progress-v1'),
+       route:localStorage.getItem('team-jura-iv-route-v1:'+document.body.dataset.ivScope)
     })""") == {key:snapshot[key] for key in ('favorites','found','route')}
     page.locator('#classicResults .classic-result').first.click()
     expect(back).to_be_visible()

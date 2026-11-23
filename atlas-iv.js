@@ -8,8 +8,66 @@ let landmarkRecords=[],birdRecords={iv:[],tlad:[],tbogt:[]},activeScope='landmar
 let finishId='';
 const routeKey=()=>'team-jura-iv-route-v1:'+activeScope;
 const birdKey='team-jura-iv-bird-progress-v1';
-let birdFound=new Set();try{const x=JSON.parse(localStorage.getItem(birdKey)||'[]');if(Array.isArray(x))birdFound=new Set(x.filter(v=>typeof v==='string'&&/^(iv|tlad|tbogt)-bird-\d{3}$/.test(v)).slice(0,300))}catch(_){}
-const saveBirds=()=>{try{localStorage.setItem(birdKey,JSON.stringify([...birdFound]))}catch(_){}};
+let birdFound=new Set(), birdProblem='', damagedBirdSave=null, savingBird=false;
+function readBirds(){
+ let raw;
+ try{raw=localStorage.getItem(birdKey)}
+ catch{return {error:'Device storage is unavailable. Bird progress cannot be read.'}}
+ if(raw===null)return {found:new Set()};
+ try{
+  const ids=JSON.parse(raw);
+  if(!Array.isArray(ids)||!ids.every(id=>typeof id==='string'&&/^(iv|tlad|tbogt)-bird-\d{3}$/.test(id)))throw Error();
+  return {found:new Set(ids)};
+ }catch{return {error:'Bird progress could not be read. Your original save is available to download.',raw}}
+}
+function refreshBirds(){
+ const saved=readBirds();
+ birdProblem=saved.error||'';
+ damagedBirdSave=saved.raw??null;
+ birdFound=saved.found||new Set();
+}
+function showBirdProgress(){
+ const birds=activeScope!=='landmarks', unavailable=Boolean(birdProblem);
+ $('ivBirdProgress').textContent=birds?(birdProblem||records.filter(r=>birdFound.has(r.id)).length+' of '+records.length+' collected'):'';
+ $('ivBirdDownload').hidden=!birds||damagedBirdSave===null;
+ $('j190-iv-hide-found').disabled=!birds||unavailable;
+ const mark=$('j190-iv-found');
+ mark.hidden=!selected?.isBird;
+ mark.disabled=savingBird||unavailable;
+ mark.textContent=unavailable?'Bird progress unavailable':birdFound.has(selected?.id)?'✓ Mark uncollected':'◇ Mark found';
+}
+async function changeBird(){
+ if(savingBird||birdProblem||!selected?.isBird)return;
+ const id=selected.id, collect=!birdFound.has(id);
+ savingBird=true;showBirdProgress();
+ let failed=false;
+ function write(){
+  refreshBirds();
+  if(birdProblem)return;
+  const next=new Set(birdFound);
+  if(collect)next.add(id);else next.delete(id);
+  localStorage.setItem(birdKey,JSON.stringify([...next]));
+  birdFound=next;
+ }
+ try{
+  if(navigator.locks)await navigator.locks.request(birdKey,write);
+  else write();
+ }catch{failed=true;refreshBirds()}
+ finally{savingBird=false;update()}
+ if(failed&&!birdProblem)$('ivBirdProgress').textContent='Could not save this change. Check device storage and try again.';
+}
+$('ivBirdDownload').addEventListener('click',()=>{
+ refreshBirds();update();
+ if(damagedBirdSave===null)return;
+ const a=document.createElement('a');
+ const url=URL.createObjectURL(new Blob([damagedBirdSave],{type:'application/octet-stream'}));
+ a.href=url;a.download='team-jura-iv-bird-progress-original.txt';a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),30000);
+});
+window.addEventListener('storage',event=>{
+ if(event.storageArea===localStorage&&(event.key===birdKey||event.key===null)){refreshBirds();update()}
+});
+refreshBirds();
 try{favorites=new Set(JSON.parse(localStorage.getItem('jura-iv-favorites')||'[]'))}catch{};const lsSave=()=>{try{localStorage.setItem('jura-iv-favorites',JSON.stringify([...favorites]))}catch{}};const TILE=256,WX=16384,WY=16384;let w=800,h=600,raf=0,loadCount=0,failCount=0,hitTargets=[];const scale=()=>1024*2**zoom/32768;function point(x,y){const s=scale();return{x:w/2+(x-center.x)*s,y:h/2+(center.y-y)*s}}function world(px,py){const s=scale();return{x:center.x+(px-w/2)/s,y:center.y-(py-h/2)/s}}function resize(){const box=shell.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);w=Math.max(280,box.width);h=Math.max(300,box.height);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);render()}function render(){cancelAnimationFrame(raf);raf=requestAnimationFrame(draw)}function fallback(){ctx.fillStyle='#182334';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#334457';ctx.lineWidth=.6;for(let x=0;x<w;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}for(let y=0;y<h;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}ctx.fillStyle='#cbbdc9';ctx.font='13px system-ui';ctx.textAlign='center';ctx.fillText('Map tiles require an internet connection',w/2,h/2)}function draw(){ctx.clearRect(0,0,w,h);fallback();const z=Math.max(0,Math.min(5,Math.ceil(zoom))),sz=TILE*2**(zoom-z),mapSize=1024*2**zoom;const offX=w/2-(center.x+WX)*mapSize/32768,offY=h/2-(WY-center.y)*mapSize/32768;const xmin=Math.floor(-offX/sz),xmax=Math.ceil((w-offX)/sz),ymin=Math.floor(-offY/sz),ymax=Math.ceil((h-offY)/sz),r=ranges[z];for(let y=Math.max(ymin,r[0][1]);y<=Math.min(ymax,r[1][1]);y++)for(let x=Math.max(xmin,r[0][0]);x<=Math.min(xmax,r[1][0]);x++){const tx=offX+x*sz,ty=offY+y*sz,k=`${layer}:${z}:${y}:${x}`;let t=tiles.get(k);if(!t&&tiles.size<1600){t={image:null,state:'loading'};tiles.set(k,t);
   const trySource=index=>{
    const im=new Image();im.crossOrigin='anonymous';t.image=im;
@@ -137,7 +195,7 @@ function setScope(which){
 }
 const perPage=80;
 let resultPage=0,previousFilter='';
-function update(){const term=($('classicSearch').value||'').trim().toLowerCase();filtered=records.filter(r=>(activeScope==='landmarks'||!$('j190-iv-hide-found')?.checked||!birdFound.has(r.id))&&(categories==='all'||r.tags.includes(categories)||(categories==='other'&&!r.tags.length))&&(!onlyFav||favorites.has(r.id))&&(!term||[r.name,r.address,r.hint||'',r.region,r.tags.join(' ')].join(' ').toLowerCase().includes(term)));const sort=$('classicSort').value;
+function update(){showBirdProgress();const term=($('classicSearch').value||'').trim().toLowerCase();filtered=records.filter(r=>(activeScope==='landmarks'||!$('j190-iv-hide-found')?.checked||!birdFound.has(r.id))&&(categories==='all'||r.tags.includes(categories)||(categories==='other'&&!r.tags.length))&&(!onlyFav||favorites.has(r.id))&&(!term||[r.name,r.address,r.hint||'',r.region,r.tags.join(' ')].join(' ').toLowerCase().includes(term)));const sort=$('classicSort').value;
  const filterKey=JSON.stringify([activeScope,term,categories,onlyFav,sort,$('j190-iv-hide-found')?.checked]);
  if(filterKey!==previousFilter){resultPage=0;previousFilter=filterKey}
  filtered.sort((a,b)=>sort==='nearest'?Math.hypot(a.x-center.x,a.y-center.y)-Math.hypot(b.x-center.x,b.y-center.y):sort==='region'?a.region.localeCompare(b.region):a.name.localeCompare(b.name));$('resultCount').textContent=String(filtered.length);$('visibleCount').textContent=String(records.length);$('recordStatus').textContent=records.length+' '+(activeScope==='landmarks'?(source==='full'?'licensed community landmarks':'starter landmarks'):'MIT source collectible positions');const cat=$('categories');cat.replaceChildren();let tags=new Map([['all',records.length]]);for(const r of records){const t=r.tags.length?r.tags:['other'];for(const v of t)tags.set(v,(tags.get(v)||0)+1)}for(const [t,n]of tags){const b=document.createElement('button');b.type='button';b.textContent=`${t==='all'?'All':t==='other'?'Uncategorized':t} (${n})`;b.setAttribute('aria-pressed',String(categories===t));b.addEventListener('click',()=>{categories=t;update()});cat.append(b)}
@@ -158,7 +216,7 @@ for(const [id,step] of [['ivPrev',-1],['ivNext',1]]){
 function select(r,recenter=false){selected=r;$('detailIntro').hidden=true;$('detailContent').hidden=false;$('detailName').textContent=r.name;$('detailRegion').textContent=r.region;$('detailCategory').textContent=r.tags.join(' · ').toUpperCase()||'LANDMARK';$('detailAddress').textContent=r.isBird?(r.hint||'No source clue attached; use the XYZ position and game map.'):(r.address||'No matching real-world reference reported');
  $('detailSource').href=r.isBird?'https://github.com/whampson/pigeon-locator/blob/de21b7df7ec8b10dfe5abe7290d894efbfc1bd11/PigeonLocator/GameData/'+r.sourceFile:'https://github.com/rolux/gtadb.org';
  $('detailSource').textContent=r.isBird?'MIT source coordinates and clues ↗':'GTADB research source ↗';
- const done=$('j190-iv-found');if(done){done.hidden=!r.isBird;done.textContent=birdFound.has(r.id)?'✓ Mark uncollected':'◇ Mark found'};$('detailCoord').textContent=r.x.toFixed(2)+', '+r.y.toFixed(2)+(r.isBird?', Z '+r.z.toFixed(2):'');$('detailFavorite').textContent=favorites.has(r.id)?'★ Unfavorite':'☆ Favorite';$('detailRoute').textContent=route.some(x=>x.id===r.id)?'✓ On route':'+ Route';if(recenter){center={x:r.x,y:r.y};zoom=Math.max(zoom,3.4)}try{const url=new URL(location.href);url.searchParams.set('scope',activeScope);url.searchParams.set('loc',r.id);history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}update()};function restoreRoute(){
+ $('detailCoord').textContent=r.x.toFixed(2)+', '+r.y.toFixed(2)+(r.isBird?', Z '+r.z.toFixed(2):'');$('detailFavorite').textContent=favorites.has(r.id)?'★ Unfavorite':'☆ Favorite';$('detailRoute').textContent=route.some(x=>x.id===r.id)?'✓ On route':'+ Route';if(recenter){center={x:r.x,y:r.y};zoom=Math.max(zoom,3.4)}try{const url=new URL(location.href);url.searchParams.set('scope',activeScope);url.searchParams.set('loc',r.id);history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}update()};function restoreRoute(){
  route=[];finishId='';
  try{
   const saved=JSON.parse(localStorage.getItem(routeKey()));
@@ -247,9 +305,7 @@ $('routeOrder').onclick=()=>{
 };
 $('j190-iv-scope')?.addEventListener('change',e=>setScope(e.target.value));
 $('j190-iv-hide-found')?.addEventListener('change',update);
-$('j190-iv-found')?.addEventListener('click',()=>{if(!selected?.isBird)return;
- if(birdFound.has(selected.id))birdFound.delete(selected.id);else birdFound.add(selected.id);
- saveBirds();select(selected,false);});
+$('j190-iv-found').addEventListener('click',changeBird);
 $('classicSearch').addEventListener('input',update);$('classicSort').addEventListener('change',update);$('classicLayer').addEventListener('change',e=>{layer=e.target.value;loadCount=failCount=0;render()});$('showAll').onclick=()=>{onlyFav=false;categories='all';$('classicSearch').value='';$('showFav').setAttribute('aria-pressed','false');update()};$('showFav').onclick=()=>{onlyFav=!onlyFav;$('showFav').setAttribute('aria-pressed',String(onlyFav));update()};$('classicPins').onclick=()=>{showPins=!showPins;$('classicPins').setAttribute('aria-pressed',String(showPins));render()};$('classicFit').onclick=()=>{center={x:150,y:40};zoom=3.4;update()};$('classicPlus').onclick=()=>{zoom=Math.min(5,zoom+.5);render()};$('classicMinus').onclick=()=>{zoom=Math.max(.2,zoom-.5);render()};$('detailFavorite').onclick=()=>{if(!selected)return;if(favorites.has(selected.id))favorites.delete(selected.id);else favorites.add(selected.id);lsSave();update();$('detailFavorite').textContent=favorites.has(selected.id)?'★ Unfavorite':'☆ Favorite'};$('detailRoute').onclick=addRoute;$('routeFit').onclick=()=>{if(!route.length)return;const xs=route.map(r=>r.x),ys=route.map(r=>r.y);center={x:(Math.min(...xs)+Math.max(...xs))/2,y:(Math.min(...ys)+Math.max(...ys))/2};zoom=Math.max(.6,Math.min(5,Math.log2(Math.min(w/((Math.max(...xs)-Math.min(...xs)+350)/32),h/((Math.max(...ys)-Math.min(...ys)+350)/32)))));render()};$('routeClear').onclick=()=>{route=[];finishId='';saveRoute()};$('routeCopy').onclick=async()=>{const str=route.map((r,i)=>`${i+1}. ${r.name}: ${r.x.toFixed(1)}, ${r.y.toFixed(1)}`).join('\n');try{await navigator.clipboard.writeText(str);$('routeStatus').textContent='Route stops copied.'}catch{$('routeStatus').textContent='Copy requires HTTPS. Select route text manually.'}};$('detailShare').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('loc',selected.id);try{await navigator.clipboard.writeText(url.href);$('detailShare').textContent='✓ Copied'}catch{$('detailShare').textContent='Use browser address bar'}};$('closeDetail').onclick=()=>{selected=null;$('detailIntro').hidden=false;$('detailContent').hidden=true;try{const url=new URL(location.href);url.searchParams.delete('loc');history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}update()};// Atlas 21.0: true two-finger pinch and single-finger pan on iPhone/Android.
 // Preserve the same map-coordinate anchor under the fingers while zooming.
 let dragging=null,moved=false,pinch=null;
