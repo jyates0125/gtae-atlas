@@ -1,0 +1,31 @@
+name: Atlas 35.4 - guest-first Supabase and GitHub Pages security foundation
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'docs/ATLAS138-SUPABASE-SECURITY.md'
+      - 'docs/ATLAS354-GIT-CLOUDFLARE-SUPABASE-READINESS-20261123.md'
+      - 'scripts/test_atlas354_three_system_boundary.py'
+      - 'atlas-account.html'
+      - '_headers'
+      - '.github/workflows/atlas354-three-system-readiness.yml'
+permissions:
+  contents: read
+jobs:
+  security-and-guest-mode:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check owner-scoped save schema and guest-only account UI
+        run: |
+          python scripts/test_atlas138_supabase.py
+          python scripts/test_atlas354_three_system_boundary.py
+      - name: Audit actual filtered Cloudflare output
+        run: python scripts/audit_published.py
