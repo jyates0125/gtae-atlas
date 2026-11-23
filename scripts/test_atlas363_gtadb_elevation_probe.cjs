@@ -52,8 +52,11 @@ async function main(){
  assert.match(vi,/id="j363CheckHeight"/);
  assert.match(vi,/id="j363HeightResult"/);
  assert.match(nav,/JuraElevationPointProbe/);
- assert.match(vi,/Map data:\s*<a href="https:\/\/map\.gtadb\.org\/"/);
- assert.match(vi,/Credits &amp; changes/);
+ assert.match(vi,/class="credits-line"[^>]*aria-label="Map source attribution"/);
+ assert.match(vi,/href="https:\/\/map\.gtadb\.org\/"/);
+ assert.match(vi,/href="https:\/\/creativecommons\.org\/licenses\/by\/4\.0\/"/);
+ assert.match(vi,/href="\.\/atlas-credits\.html#licensed"/);
+ assert.match(vi,/Sources &amp; changes/);
  assert.match(credits,/GTA VI Landmarks Data \(CC BY 4\.0\)/);
  assert.match(credits,/GTA VI Map Tiles \(CC BY 4\.0\)/);
  assert.match(credits,/GTADB\.ORG and contributors/);
