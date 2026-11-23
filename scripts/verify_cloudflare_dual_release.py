@@ -79,7 +79,7 @@ def main():
     parser.add_argument("--primary", default=PRIMARY)
     parser.add_argument("--legacy", default=LEGACY)
     parser.add_argument("--expected-sha", default="", help="Expected deployed production commit SHA")
-    parser.add_argument("--check-legacy", action="store_true", help="Audit legacy origin and progress-preserving deep links")
+    parser.add_argument("--check-legacy", action="store_true", help="Audit both deployment identities and legacy deep links")
     args = parser.parse_args()
     errors = []
     for origin in (args.primary, args.legacy):
@@ -88,7 +88,11 @@ def main():
     identity = check_identity(args.primary, args.expected_sha, errors)
     for path in ROUTES:
         check_page(args.primary, path, errors)
+    legacy_identity = None
     if args.check_legacy:
+        legacy_identity = check_identity(args.legacy, args.expected_sha, errors)
+        if identity and legacy_identity and identity.get("revision") != legacy_identity.get("revision"):
+            errors.append("Cloudflare projects serve different build revisions; both must match development")
         # The legacy home may redirect to GTAE, but deep links must remain
         # usable until old-device progress export is approved.
         check_page(args.legacy, "", errors, allow_redirect=True)
@@ -96,7 +100,7 @@ def main():
             check_page(args.legacy, path, errors)
     print(json.dumps({"primary": args.primary, "legacy": args.legacy,
                       "expected_sha": args.expected_sha or None,
-                      "identity": identity, "legacy_checked": args.check_legacy,
+                      "identity": identity, "legacy_identity": legacy_identity, "legacy_checked": args.check_legacy,
                       "routes_checked": list(ROUTES), "verified": not errors,
                       "errors": errors}, indent=2))
     return 0 if not errors else 1
