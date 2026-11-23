@@ -331,3 +331,7 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 ## Atlas 33.2 — Liberty City bird checklist
 
 The GTA IV map now shows the collected count for the selected edition. It reads current device progress before modifying a bird and uses Web Locks where available to serialize changes from different tabs. Unreadable saves block edits and can be downloaded intact. Failed writes are reported on the map. The focused browser checks cover concurrent edition updates, rejected writes, raw download, and detail-panel return with the actual progress and route keys. Physical iPhone acceptance remains open.
+
+## Atlas 33.3 — One Last Ride staging player
+
+The film page uses the owner's 39-second music-only edit with original score and effects. The 720p H.264/AAC edition matches the voice handoff checksum. The player and its direct MP4 fallback use a versioned URL. The full animatic and voice session remain separate. Public release and physical iPhone playback acceptance are still open.

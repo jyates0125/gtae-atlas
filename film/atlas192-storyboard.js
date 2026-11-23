@@ -1,7 +1,7 @@
 /* Atlas 19.2 · One Last Ride guided 9-chapter storyboard.
  * A user-triggered *still-card* playback, not a fake full animated movie.
  * Works with the original nine-chapter model. Audio is only in the existing
- * approved 36-second teaser, which plays in the browser video element.
+ * 39-second music-only teaser, which plays in the browser video element.
  */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
