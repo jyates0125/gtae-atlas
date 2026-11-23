@@ -1,0 +1,47 @@
+# Team Jura Atlas 34.9 - read-only check after owner changed both Cloudflare Pages build configurations.
+# No site mutation, merge, deployment, custom secrets, or account changes.
+name: Atlas 34.9 - one-shot live Cloudflare post-settings verification
+on:
+  push:
+    branches:
+      - ops/atlas349-after-cloudflare-settings-20261123
+    paths:
+      - .github/workflows/atlas349-one-shot-live-after-settings.yml
+permissions:
+  contents: read
+jobs:
+  check-both-public-origins:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check exact current development identity and routes on both Pages projects
+        shell: bash
+        run: |
+          mkdir -p qa-evidence
+          set +e
+          python scripts/verify_cloudflare_dual_release.py --expected-sha 1d86d5c28d63aa6cfd14f48a5da3ed61bba58fcd --check-legacy | tee qa-evidence/atlas349-dual-pages-summary.json
+          code=${PIPESTATUS[0]}
+          echo "Identity and routes exit code: $code"
+          exit "$code"
+      - name: Check exact source boundaries and generated identity on both Pages sites
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p qa-evidence
+          set +e
+          python scripts/audit_atlas345_cloudflare_source_boundary.py | tee qa-evidence/atlas349-source-boundary-summary.json
+          code=${PIPESTATUS[0]}
+          echo "Raw repository file exposure/identity exit code: $code"
+          exit "$code"
+      - name: Save public-only summaries; never store source body
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas349-post-settings-public-qa
+          path: qa-evidence/atlas349-*.json
+          if-no-files-found: warn
+          retention-days: 7
