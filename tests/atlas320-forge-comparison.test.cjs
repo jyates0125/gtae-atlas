@@ -36,7 +36,7 @@ const fields=compareFields(primary.compare,weekend.compare);
 assert.deepEqual(fields.find(x=>x[0]==='Paint'),['Paint','paint','#c95c22','#4499aa']);
 assert.deepEqual(fields.find(x=>x[0]==='Concept lighting'),['Concept lighting','lights','On','Off']);
 assert(fields.some(x=>x[0]==='Ride height'));
-assert(!fields.some(x=>x[0]==='Aero / deck styling'),'Omit settings absent from both designs');
+assert.deepEqual(fields.find(x=>x[0]==='Aero / deck styling'),['Aero / deck styling','kit','Not saved','sport'],'Show a setting recorded in just one design');
 assert.equal(compareFields(weekend.compare,weekend.compare),null,'Cannot compare a design with itself');
 assert.equal(compareFields(primary.compare,cars.find(x=>x.model==='adder').compare),null,'Only compare the same vehicle');
 assert.equal(compareFields(primary.compare,cars.find(x=>x.world==='vi').compare),null,'Never merge GTA V and VI identity');
