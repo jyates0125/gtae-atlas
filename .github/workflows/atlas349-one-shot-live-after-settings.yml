@@ -1,5 +1,7 @@
 # Team Jura Atlas 34.9 - read-only check after owner changed both Cloudflare Pages build configurations.
 # No site mutation, merge, deployment, custom secrets, or account changes.
+# Follow-up check: owner considering retiring legacy Pages; verify live origins
+# once again before archive/redirect decision; do not assume redeploy completed.
 name: Atlas 34.9 - one-shot live Cloudflare post-settings verification
 on:
   push:
