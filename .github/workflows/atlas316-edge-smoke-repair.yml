@@ -1,0 +1,68 @@
+name: Atlas 31.6 - Leonida map jump and legacy checklist Edge smoke
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'scripts/browser_smoke.py'
+      - '.github/workflows/atlas316-edge-smoke-repair.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas316-edge-smoke-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  smoke-chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build Cloudflare production payload and audit it
+        run: |
+          python -m py_compile scripts/browser_smoke.py
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium for changed map and heist interactions
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install chromium
+      - name: Focused 390px and 1440px Leonida/Fleeca smoke
+        env:
+          ATLAS_BROWSER: chromium
+          ATLAS_SMOKE_ONLY: atlas-vi.html,heist-fleeca.html
+        run: python scripts/browser_smoke.py
+  smoke-edge:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build Cloudflare production payload
+        run: |
+          python -m py_compile scripts/browser_smoke.py
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Microsoft Edge
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install msedge
+      - name: Focused Edge 390px and 1440px Leonida/Fleeca smoke
+        env:
+          ATLAS_BROWSER: msedge
+          ATLAS_SMOKE_ONLY: atlas-vi.html,heist-fleeca.html
+        run: python scripts/browser_smoke.py
