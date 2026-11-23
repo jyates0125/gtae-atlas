@@ -30,7 +30,7 @@ body.j117-map-world .credits-line a:focus-visible{
   outline:2px solid white;outline-offset:2px;border-radius:2px;
 }
 body.j117-map-world .j364-map-source-view{
-  color:#dfcedf;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  min-width:0;color:#dfcedf;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 body.j117-map-world .topbar nav[aria-label="Atlas pages"] [data-j87-maps-link]{
   font-weight:850;color:#fbd69d;
