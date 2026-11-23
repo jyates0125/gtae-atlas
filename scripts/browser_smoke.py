@@ -45,6 +45,13 @@ AUDITED_PAGE_NAMES={p.split('?',1)[0] for p in PAGES}
 PAGES.extend(sorted(p.name for p in ROOT.glob('*.html') if p.name not in AUDITED_PAGE_NAMES))
 assert {p.name for p in ROOT.glob('*.html')}.issubset({p.split('?',1)[0] for p in PAGES})
 
+# Explicitly opt-in to a two-page diagnostic run on staging. With no override,
+# production release validation still audits every page and ancillary journey.
+SMOKE_ONLY = tuple(x.strip() for x in os.getenv('ATLAS_SMOKE_ONLY','').split(',') if x.strip())
+if SMOKE_ONLY:
+    unknown=set(SMOKE_ONLY)-set(PAGES)
+    if unknown:raise SystemExit('Unknown scoped smoke page(s): '+', '.join(sorted(unknown)))
+    PAGES=[x for x in PAGES if x in SMOKE_ONLY]
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -362,6 +369,19 @@ async def smoke():
                             # and must not change the existing mission checklist storage.
                             if path=='heist-fleeca.html' and not failures:
                                 try:
+                                    # Atlas 31.6: a missing key on a first visit is normal.
+                                    # Seed a *real legacy* private checklist value before the
+                                    # planning interactions, then assert byte-for-byte
+                                    # preservation rather than incorrectly requiring a key
+                                    # that no user ever created.
+                                    legacy_checklist='{"Old mission checklist":true,"_future_marker":"KEEP"}'
+                                    seeded=await pg.evaluate("""(raw)=>{
+                                        const k='teamjura-heist-'+document.body.dataset.heist;
+                                        localStorage.setItem(k,raw);
+                                        return localStorage.getItem(k);
+                                    }""",legacy_checklist)
+                                    if seeded!=legacy_checklist:
+                                        failures.append('Could not seed isolated legacy checklist regression')
                                     await pg.locator('#j164-mission-map').wait_for(state='attached',timeout=7000)
                                     mission=path.removeprefix('heist-').removesuffix('.html')
                                     # Atlas 16.7: each heist must show its own focused mission map
@@ -465,8 +485,8 @@ async def smoke():
                                     if await frame.is_visible():
                                         failures.append('Embedded map failed to close')
                                     progress=await pg.evaluate("""() => localStorage.getItem('teamjura-heist-'+document.body.dataset.heist)""")
-                                    if progress is None:
-                                        failures.append('Existing checklist key was not preserved')
+                                    if progress!=legacy_checklist:
+                                        failures.append('Existing legacy checklist bytes changed during mission planning')
                                 except Exception as e:
                                     failures.append('Heist real-map and local note UI: '+str(e)[:330])
 
@@ -670,7 +690,7 @@ async def smoke():
                                             failures.append('Leonida map view buttons contain indistinguishable duplicate labels')
                                         if not any('Loki' in n for n in names) or not any('DUPZOR' in n and 'Source' in n for n in names):
                                             failures.append('Styled Loki and original DUPZOR views must be distinguishable')
-                                    if await pg.locator('#sidebar .j145-open-map').count()!=1:
+                                    if await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').count()!=1:
                                         failures.append('Accessible jump to interactive Leonida map is missing')
                                     # Initial mobile scroll is asserted above, before map controls are interacted with.
                                     if await pg.locator('.mapcontrols .j141-official-flat').count()!=0:
@@ -784,12 +804,12 @@ async def smoke():
                                     if actual!=['facebook','youtube','tiktok','instagram','discord','reddit','more']:failures.append('Social icon buttons use incorrect platform semantics')
                                     if not await icons.first.is_visible():failures.append('Share icons not visible')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html') and width==390:
-                                if await pg.locator('#sidebar .j145-open-map').count()!=1:
+                                if await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').count()!=1:
                                     failures.append('Mobile explorer missing the visible Open interactive map shortcut')
                                 else:
-                                    if not await pg.locator('#sidebar .j145-open-map').is_visible():
+                                    if not await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').is_visible():
                                         failures.append('Mobile Open interactive map shortcut is not visible')
-                                    placed=await pg.locator('#sidebar .j145-open-map').evaluate(
+                                    placed=await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').evaluate(
                                         """(link) => {
                                             const heading=link.closest('#sidebar')?.querySelector('.atlas-explorer-head');
                                             const games=link.closest('#sidebar')?.querySelector('.worlds');
