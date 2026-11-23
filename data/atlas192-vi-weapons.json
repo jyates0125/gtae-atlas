@@ -2,7 +2,7 @@
   "schema": 1,
   "scope": "vi",
   "kind": "weapon",
-  "reviewedAt": "2026-11-20",
+  "reviewedAt": "2026-11-23",
   "status": "Curated research sample, not the full release roster",
   "disclaimer": "GTA VI weapon references are sourced by item. A name shown in official promotional material does not verify weapon performance, pricing, spawn locations or every edition. No GTA V archive art is repurposed as GTA VI in-game photography.",
   "sources": [
@@ -21,6 +21,10 @@
     {
       "name": "GTADB — GTA VI weapon reference and source distinctions",
       "url": "https://gtadb.net/gta-6/weapons/"
+    },
+    {
+      "name": "GamesRadar+ · Ultimate Edition in-game unlocks",
+      "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-ultimate-edition-pre-order-bonuses/"
     }
   ],
   "records": [
@@ -28,21 +32,21 @@
       "id": "girardi-es9",
       "name": "Girardi ES9",
       "group": "Handgun",
-      "evidence": "Named in published edition materials",
-      "grade": "Named official reference",
-      "description": "Jason's personalised sidearm is named in edition descriptions. Combat statistics and map coordinates are not claimed.",
-      "sourceName": "Rockstar Support — Editions",
-      "sourceUrl": "https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions"
+      "evidence": "Ultimate Edition variant · reported unlock",
+      "grade": "Published gameplay report",
+      "description": "GamesRadar+ reports that Jason can collect this personalized Ultimate Edition pistol variant from an in-game Ammu-Nation locker starting in Chapter 1.",
+      "sourceName": "GamesRadar+ · launch gameplay guide",
+      "sourceUrl": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-ultimate-edition-pre-order-bonuses/"
     },
     {
       "id": "klose-k17",
       "name": "Klose K17",
       "group": "Handgun",
-      "evidence": "Named in published edition materials",
-      "grade": "Named official reference",
-      "description": "Lucia's personalised sidearm is named in edition descriptions. Model stats and spawn locations are not established by this record.",
-      "sourceName": "Rockstar Support — Editions",
-      "sourceUrl": "https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions"
+      "evidence": "Ultimate Edition variant · reported unlock",
+      "grade": "Published gameplay report",
+      "description": "GamesRadar+ reports that Lucia can collect this personalized Ultimate Edition pistol variant from an in-game Ammu-Nation locker starting in Chapter 2.",
+      "sourceName": "GamesRadar+ · launch gameplay guide",
+      "sourceUrl": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-ultimate-edition-pre-order-bonuses/"
     },
     {
       "id": "hawk-little-morgan",
