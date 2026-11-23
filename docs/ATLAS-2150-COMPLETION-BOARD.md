@@ -327,3 +327,7 @@ The historical 375px Edge overflow failure above is **not currently reproducing*
 
 - Added separate Story and Online concept portraits to the two existing appearances in [staging PR #137](https://github.com/jyates0125/team-jura-atlas-preview/pull/137). The archive has 15 local illustrations across 40 appearances. The other 25 remain in the reference queue.
 - Both files match the original artwork review package hashes. The character workflow exercises the archive filters and both distinct portraits in cards and profiles. Owner likeness review and physical iPhone Safari acceptance remain open.
+
+## Atlas 33.2 — Liberty City bird checklist
+
+The GTA IV map now shows the collected count for the selected edition. It reads current device progress before modifying a bird and uses Web Locks where available to serialize changes from different tabs. Unreadable saves block edits and can be downloaded intact. Failed writes are reported on the map. The focused browser checks cover concurrent edition updates, rejected writes, raw download, and detail-panel return with the actual progress and route keys. Physical iPhone acceptance remains open.
