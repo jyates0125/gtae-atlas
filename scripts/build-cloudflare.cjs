@@ -79,7 +79,7 @@ const authConfig=Object.freeze({
   url:authEnabled?'https://dwqrmgeldssozgdtidla.supabase.co':null,
   publishableKey:authEnabled?authKey:null
 });
-const authBytes=Buffer.from('window.TeamJuraAuthConfig = Object.freeze('+JSON.stringify(authConfig)+');\\n'.replace('\\\\n','\\n'));
+const authBytes=Buffer.from('window.TeamJuraAuthConfig = Object.freeze('+JSON.stringify(authConfig)+');'+String.fromCharCode(10));
 const authIndex=manifest.findIndex(entry=>entry.path===authConfigName);
 if(authIndex>=0){bytes-=manifest[authIndex].bytes;manifest.splice(authIndex,1);}
 fs.writeFileSync(path.join(out,authConfigName),authBytes);
