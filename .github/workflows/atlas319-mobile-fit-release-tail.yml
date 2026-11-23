@@ -1,4 +1,4 @@
-name: Atlas 31.9 - 375/390 mobile map and remaining Edge release suite
+name: Atlas 31.9 - phone mobile-fit and remaining Edge release suite
 on:
   pull_request:
     branches: [feature/atlas294-integrated-staging-20261122, development]
