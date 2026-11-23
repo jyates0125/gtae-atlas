@@ -80,7 +80,11 @@ try:
     assert geometry['overflow']<=2,(route,'page horizontal overflow',geometry)
 
     # Layer choice and map-world toggle must keep source names fresh without
-    # altering the actual artwork provenance.
+    # altering the actual artwork provenance. The phone starts with its
+    # sidebar collapsed; reveal the real user control before tapping worlds.
+    if mobile and not page.locator('#game6').is_visible():
+     page.locator('#mobileTools').click()
+     expect(page.locator('#game6')).to_be_visible(timeout=10000)
     page.locator('#game6').click()
     expect(page.locator('#mapTitle')).to_have_text('GTA VI · Leonida',timeout=15000)
     page.locator('#layer').select_option('day')
