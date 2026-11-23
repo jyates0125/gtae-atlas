@@ -1,0 +1,6 @@
+/* Atlas 32.3: source-qualified manual Passport reconciliation. */
+.j323-passport-bridge{display:grid;gap:8px;align-content:start;padding:10px 11px;border:1px solid #986fad;border-radius:10px;background:linear-gradient(120deg,#2e193f,#1c112c);min-width:0}
+.j323-passport-status{color:#f0ddef;font:500 12px/1.6 system-ui;margin:0;overflow-wrap:anywhere}
+.j323-passport-bridge a,.j323-passport-bridge button{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 12px;border:1px solid #e7b982;border-radius:9px;background:#53365f;color:#ffe7bd;font:800 12px/1.35 system-ui;text-decoration:none;cursor:pointer;max-width:100%;overflow-wrap:anywhere;text-align:center}
+.j323-passport-bridge button{background:linear-gradient(95deg,#b47a4b,#8e4c68);color:#fff3ec}
+.j323-passport-bridge :is(a,button):focus-visible{outline:3px solid #ffe1ae;outline-offset:3px}
