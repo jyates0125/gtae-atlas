@@ -335,3 +335,7 @@ The GTA IV map now shows the collected count for the selected edition. It reads 
 ## Atlas 33.3 — One Last Ride staging player
 
 The film page uses the owner's 39-second music-only edit with original score and effects. The 720p H.264/AAC edition matches the voice handoff checksum. The player and its direct MP4 fallback use a versioned URL. The full animatic and voice session remain separate. Public release and physical iPhone playback acceptance are still open.
+
+## Atlas 33.4 — classic map and cast navigation
+
+All nine classic titles represented in the archive have a direct cast link on their map. Switching between GTA IV and either episode on the Liberty City map updates the destination. The focused browser check follows each map into its edition, compares the visible character IDs with the roster, and verifies the profile's world-map link at phone and desktop widths.
