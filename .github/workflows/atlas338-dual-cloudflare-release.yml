@@ -1,0 +1,72 @@
+name: Atlas 33.8 - verify both Cloudflare development deployments
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'scripts/verify_cloudflare_dual_release.py'
+      - 'scripts/test_atlas338_dual_release.py'
+      - '.github/workflows/atlas338-dual-cloudflare-release.yml'
+  push:
+    branches: [development]
+  schedule:
+    - cron: '37 13 * * *'
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Expected development commit SHA (blank uses current development HEAD)"
+        required: false
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: atlas338-cloudflare-dual-deployment
+  cancel-in-progress: true
+jobs:
+  source-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/test_atlas338_dual_release.py
+  live-verify:
+    if: github.event_name != 'pull_request'
+    needs: source-contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: development
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Resolve exact development HEAD
+        id: revision
+        env:
+          REQUESTED_SHA: ${{ inputs.expected_sha }}
+        shell: bash
+        run: |
+          SHA="${REQUESTED_SHA:-$(git rev-parse HEAD)}"
+          if [[ ! "$SHA" =~ ^[a-fA-F0-9]{40}$ ]]; then
+            echo "Invalid full expected commit SHA" >&2
+            exit 1
+          fi
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+      - name: Wait for both Pages projects to publish same development SHA
+        env:
+          EXPECTED_SHA: ${{ steps.revision.outputs.sha }}
+        shell: bash
+        run: |
+          # Cloudflare deploys asynchronously after GitHub push. Never force
+          # a redeploy or mark success before both origins match the SHA.
+          for attempt in 1 2 3 4 5; do
+            if python scripts/verify_cloudflare_dual_release.py --expected-sha "$EXPECTED_SHA" --check-legacy; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 5 ]; then sleep 90; fi
+          done
+          echo "One or both Cloudflare deployments are stale/unverified." >&2
+          exit 1

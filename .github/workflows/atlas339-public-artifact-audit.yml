@@ -1,0 +1,40 @@
+name: Atlas 33.9 - Cloudflare published artifact safety
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'scripts/build-cloudflare.cjs'
+      - 'scripts/audit_cloudflare_public.py'
+      - '.github/workflows/atlas339-public-artifact-audit.yml'
+  push:
+    branches: [development]
+    paths:
+      - 'scripts/build-cloudflare.cjs'
+      - 'scripts/audit_cloudflare_public.py'
+      - '.github/workflows/atlas339-public-artifact-audit.yml'
+  schedule:
+    - cron: '19 11 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas339-public-audit-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  public-package-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build exact revision without network
+        env:
+          CF_PAGES_COMMIT_SHA: ${{ github.sha }}
+        run: node scripts/build-cloudflare.cjs
+      - name: Audit production output for private files and required routes
+        run: python scripts/audit_cloudflare_public.py
