@@ -1,6 +1,6 @@
 # One-time read-only check of owner-switched main production Cloudflare site.
 # This is not a Cloudflare deployment or a merge. No raw source response is logged.
-# Retest exact new main commit after Cloudflare Pages published the security build.
+# Retest exact GTAE main 35.2 security release after Cloudflare Pages published its redirect guard; compare production alias with immutable deployment.
 name: Atlas 35.0 - live main GTAE source and route audit
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
         run: |
           mkdir -p qa-evidence
           set +e
-          python scripts/verify_cloudflare_dual_release.py --expected-sha 0b4debbd121c3c63dcc9650caf21deeb6ff69cf9 | tee qa-evidence/atlas350-main-routes.json
+          python scripts/verify_cloudflare_dual_release.py --expected-sha 94a74150a5d7eb3d6b6efa77097a7ce7c13be8b4 | tee qa-evidence/atlas350-main-routes.json
           code=${PIPESTATUS[0]}
           exit "$code"
       - name: Check no internal source files are served on official GTAE
@@ -52,8 +52,8 @@ jobs:
           import json
           from scripts.audit_atlas345_cloudflare_source_boundary import inspect
           from scripts.verify_cloudflare_dual_release import check_identity
-          sha="0b4debbd121c3c63dcc9650caf21deeb6ff69cf9"
-          origin="https://b0451a0e.gtae-online.pages.dev/"
+          sha="94a74150a5d7eb3d6b6efa77097a7ce7c13be8b4"
+          origin="https://bc03b753.gtae-online.pages.dev/"
           errors=[]
           identity=check_identity(origin,sha,errors)
           result=inspect(origin)
