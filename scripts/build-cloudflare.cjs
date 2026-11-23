@@ -64,6 +64,28 @@ for (const rel of files) {
   bytes+=buf.length;
   manifest.push({path:rel.replaceAll('\\','/'),bytes:buf.length,sha256:crypto.createHash('sha256').update(buf).digest('hex')});
 }
+// Atlas 35.5: a deliberately off-by-default browser Auth configuration.
+// Publishable keys are designed for browser use; NEVER accept a service-role,
+// sb_secret_*, legacy privileged key or database password here.
+// This configuration file is generated, not committed with actual keys.
+const authConfigName='atlas355-auth-config.js';
+const authEnabled=process.env.GTAE_ATLAS_AUTH_ENABLED==='true';
+const authKey=(process.env.GTAE_SUPABASE_PUBLISHABLE_KEY||'').trim();
+if(authEnabled&&!/^sb_publishable_[A-Za-z0-9_-]{12,}$/.test(authKey)){
+  throw new Error('GTAE Auth was enabled without a valid Supabase PUBLISHABLE key.');
+}
+const authConfig=Object.freeze({
+  enabled:authEnabled,
+  url:authEnabled?'https://dwqrmgeldssozgdtidla.supabase.co':null,
+  publishableKey:authEnabled?authKey:null
+});
+const authBytes=Buffer.from('window.TeamJuraAuthConfig = Object.freeze('+JSON.stringify(authConfig)+');\\n'.replace('\\\\n','\\n'));
+const authIndex=manifest.findIndex(entry=>entry.path===authConfigName);
+if(authIndex>=0){bytes-=manifest[authIndex].bytes;manifest.splice(authIndex,1);}
+fs.writeFileSync(path.join(out,authConfigName),authBytes);
+bytes+=authBytes.length;
+manifest.push({path:authConfigName,bytes:authBytes.length,sha256:crypto.createHash('sha256').update(authBytes).digest('hex')});
+if(authEnabled) console.log('Atlas email Auth browser config generated with the public, RLS-scoped publishable key.');
 // Redirect the OLD project's advertised root only. Keep its HTML/CSS/JS and
 // /atlas-account.html available so existing guest saves remain exportable.
 // LocalStorage cannot be read across the two independent *.pages.dev origins.
