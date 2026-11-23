@@ -1,0 +1,29 @@
+name: Atlas 34.4 - classic collection save recovery release preflight
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'scripts/test_atlas150_classic_slots.py'
+      - 'atlas98b-progress.js'
+      - 'atlas98-classic.js'
+      - 'atlas98b-collection-data.js'
+      - '.github/workflows/atlas344-classic-release-preflight.yml'
+permissions:
+  contents: read
+jobs:
+  classic-checklist-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and classic safe-save release contract
+        run: |
+          node --check atlas98b-progress.js
+          node --check atlas98-classic.js
+          python scripts/test_atlas150_classic_slots.py
