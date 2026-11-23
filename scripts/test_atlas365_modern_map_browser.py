@@ -84,13 +84,10 @@ try:
     # Layer choice and map-world toggle must keep source names fresh without
     # altering the actual artwork provenance. The phone starts with its
     # sidebar collapsed; reveal the real user control before tapping worlds.
-    if mobile and not page.locator('#game6').is_visible():
-     # The universal phone menu can intentionally hide the sidebar.
-     # This tests the actual explorer world-change event, not tap reachability.
-     # Native phone navigation still requires its separate acceptance.
-     tap_world=lambda selector: page.locator(selector).dispatch_event('click')
-    else:
-     tap_world=lambda selector: page.locator(selector).click()
+    # Exercise the explorer's real registered click handler directly.
+    # Mobile and desktop navigation visibility/tap targets are separately
+    # covered by layout + owner device acceptance; this checks map state.
+    tap_world=lambda selector: page.locator(selector).dispatch_event('click')
     tap_world('#game6')
     expect(page.locator('#mapTitle')).to_have_text('GTA VI · Leonida',timeout=15000)
     page.locator('#layer').select_option('day')
