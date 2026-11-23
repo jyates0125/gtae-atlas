@@ -28,4 +28,6 @@ jobs:
           python scripts/test_atlas352_redirect_boundary.py
           node scripts/test_atlas209_legacy_redirect.cjs
       - name: Confirm actual Cloudflare static output has no internal source
-        run: python scripts/audit_published.py
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
