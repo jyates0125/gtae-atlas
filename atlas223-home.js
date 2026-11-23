@@ -68,7 +68,7 @@ function show(term){
 }
 input?.addEventListener('input',()=>show(input.value.slice(0,120)));
 input?.addEventListener('keydown',e=>{
- if(e.key==='Escape'){show('');input.blur();return}
+ if(e.key==='Escape'){e.preventDefault();show('');return}
  if(e.key==='ArrowDown'){const first=results.querySelector('a');if(first){e.preventDefault();first.focus()}}
 });
 results?.addEventListener('keydown',e=>{
@@ -106,32 +106,34 @@ const featuredFallback=[
  {id:'character:cj',name:'Carl Johnson',scope:'classic',game:'GTA San Andreas',aliases:['CJ','Carl CJ Johnson']},
  {id:'character:dre-quan-priest',name:"Dre'Quan Priest",scope:'vi',game:'GTA VI Story',aliases:['DreQuan',"Dre'Quan Priest"]}
 ];
-catalog.push(...featuredFallback.map(c=>({title:c.name,kind:'Character',keywords:[c.game,c.scope,...(c.aliases||[])].join(' '),record:c,href:characterHref(c)})));
-async function initData(useFallback=false){
- let characters=featuredFallback;
- if(!useFallback)try{
+function indexCharacters(characters){
+ const rows=characters.map(x=>({
+  title:x.name,kind:'Character',
+  keywords:[x.game,x.scope,x.group,x.region,x.summary,...(x.aliases||[])].filter(Boolean).join(' '),
+  record:x,href:characterHref(x)
+ }));
+ catalog=catalog.filter(x=>x.kind!=='Character').concat(rows);
+ if(input&&document.activeElement===input&&input.value.trim())show(input.value.slice(0,120));
+}
+async function loadCharacterIndex(){
+ try{
   const res=await fetch('./data/atlas-universe-profiles.json?v=223',{cache:'no-cache'});
-  if(!res.ok)throw Error('No local character index');
-  characters=(await res.json()).records.filter(x=>x.kind==='character'&&['vi','story','online','classic'].includes(x.scope));
- }catch{characters=featuredFallback}
- if(characters.length){
-  const rows=characters.map(x=>({
-   title:x.name,
-   kind:'Character',
-   keywords:[x.game,x.scope,x.group,x.region,x.summary,...(x.aliases||[])].filter(Boolean).join(' '),
-   record:x,
-   href:characterHref(x)
-  }));
-  catalog=catalog.filter(x=>x.kind!=='Character');catalog.push(...rows);
-  // The user may already have typed while the local character index was loading.
-  if(input&&document.activeElement===input&&input.value.trim())show(input.value.slice(0,120));
-  for(const [title,href,keywords] of staticLinks){
-   if(!catalog.some(x=>x.title===title&&x.href===href))catalog.push({title,href,keywords,kind:'Atlas tool'});
+  if(!res.ok)return;
+  const {records}=await res.json();
+  if(!Array.isArray(records))return;
+  const characters=new Map(featuredFallback.map(c=>[c.id,c]));
+  for(const record of records){
+   if(record?.kind==='character'&&typeof record.id==='string'&&typeof record.name==='string'&&['vi','story','online','classic'].includes(record.scope)){
+    characters.set(record.id,record);
+   }
   }
- }
- const host=q('j223-cast-rail');if(!host||!characters.length)return;
+  indexCharacters([...characters.values()]);
+ }catch{/* The bundled featured search is already active offline. */}
+}
+function renderFeaturedCast(){
+ const host=q('j223-cast-rail');if(!host)return;
  host.replaceChildren();
- const chosen=castId.map(id=>characters.find(c=>c.id===id)).filter(Boolean);
+ const chosen=castId.map(id=>featuredFallback.find(c=>c.id===id)).filter(Boolean);
  for(const c of chosen){
   const a=make('a','');a.href='./'+characterHref(c);
   a.title='Search '+c.name+' · '+c.game;
@@ -170,5 +172,7 @@ document.querySelectorAll('.j223-evidence-card').forEach(card=>{
   feedback.classList.toggle('j223-correct',choice===answer);
  });
 });
-initData(true);initData();
+indexCharacters(featuredFallback);
+renderFeaturedCast();
+loadCharacterIndex();
 })();
