@@ -4,7 +4,7 @@
 (function(root){'use strict';
 const $=id=>document.getElementById(id),esc=s=>String(s||'').replace(/[&<>"']/g,v=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[v]));
 function create(bridge){const Core=root.JuraRoadCore;if(!Core)throw Error('atlas-road-core.js missing');
-let active=false,waypoints=[null,null],graph=null,plan=null,ordering='manual',dimension='2d',terrain=null,fields=[],resultItems=[],fallback3d=false;
+let active=false,waypoints=[null,null],graph=null,plan=null,ordering='manual',dimension='2d',terrain=null,fields=[],resultItems=[],fallback3d=false,localElevation=null;
 const panel=$('juraNavPanel'),container=$('juraNavFields'),results=$('juraNavResults'),mapCanvas=$('jura3dCanvas'),routeStatus=$('juraNavStatus');
 function status(s){routeStatus.textContent=s;bridge.notice(s)}
 function all(){return bridge.records()}
@@ -61,7 +61,24 @@ function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('
  $('juraOpenNav').onclick=()=>active?close():open();$('juraCloseNav').onclick=close;$('juraNavAdd').onclick=()=>{if(waypoints.length>=12)return;waypoints.splice(waypoints.length-1,0,null);invalidate();render();fields.at(-2)?.input.focus()};$('juraNavReverse').onclick=()=>{waypoints.reverse();invalidate();render()};$('juraNavGo').onclick=makeRoute;$('juraNavClear').onclick=clear;$('juraNavOrder').onchange=e=>{ordering=e.target.value};$('juraToggle3d').onclick=()=>setDimension(dimension==='2d'?'3d':'2d');$('jura2d').onclick=()=>setDimension('2d');$('jura3d').onclick=()=>setDimension('3d');$('jura3dNorth').onclick=()=>terrain?.resetNorth();$('jura3dZoomIn').onclick=()=>terrain?.zoom(.8);$('jura3dZoomOut').onclick=()=>terrain?.zoom(1.25);
  $('juraNavExport').onclick=()=>{if(!plan){status('Generate a route first');return}const rows=waypoints.map((r,i)=>`${i===0?'Start':`Stop ${i}`}: ${r.name} (X ${r.x.toFixed(1)}, Y ${r.y.toFixed(1)})`).join('\n');const s='Team Jura Atlas · GTA '+bridge.game()+'\n'+rows+'\n\n'+plan.warning;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(s).then(()=>status('Route summary copied.')).catch(()=>window.prompt('Copy route',s))}else window.prompt('Copy route',s)};
  if($('juraNavCsv'))$('juraNavCsv').onclick=()=>{if(!plan){status('Generate a route first');return}const quote=s=>'"'+String(s??'').replace(/"/g,'""')+'"';const csv=[['order','name','x','y','game','routing'].map(quote).join(','),...waypoints.map((r,i)=>[i,r.name,r.x,r.y,bridge.game(),plan.roadGraphUsed?'imported-road-graph-unverified':'direct-line'].map(quote).join(','))].join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='team-jura-route-'+bridge.game()+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);status('Route CSV exported with coordinate and routing labels.')};
- if($('juraElevationFile'))$('juraElevationFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(!terrain)throw Error('3D renderer unavailable');await terrain.setElevationBinary(await file.arrayBuffer(),bridge.game());status('Local elevation heightfield loaded for GTA '+bridge.game()+'. Switch to 3D to view terrain.')}catch(err){status('Elevation rejected: '+err.message)}finally{e.target.value=''}};
+ if($('juraElevationFile'))$('juraElevationFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{
+  if(!terrain)throw Error('3D renderer unavailable');
+  const g=bridge.game(),d=root.JuraTerrain3D?.ELEVATIONS[g];
+  if(!d)throw Error('No heightfield for this game');
+  if(file.size!==d.width*d.height*2)throw Error('Expected '+(d.width*d.height*2).toLocaleString()+' bytes');
+  const bytes=await file.arrayBuffer();
+  await terrain.setElevationBinary(bytes,g);
+  localElevation={game:g,bytes};
+  status('Private local heightfield loaded · UNVERIFIED community terrain. Switch to 3D to view. Files stay in device memory and are not uploaded.');
+ }catch(err){localElevation=null;status('Elevation rejected: '+err.message)}finally{e.target.value=''}};
+ if($('juraElevationProofFile'))$('juraElevationProofFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{
+  if(!localElevation||localElevation.game!==bridge.game())throw Error('Import matching terrain first');
+  if(!root.JuraTerrainEvidence)throw Error('Terrain evidence validator unavailable');
+  if(file.size>32768)throw Error('Evidence JSON exceeds 32 KB');
+  const result=await root.JuraTerrainEvidence.verify(localElevation.bytes,JSON.parse(await file.text()),
+   root.JuraTerrain3D.ELEVATIONS[localElevation.game],localElevation.game);
+  status('SHA-256 and '+result.pointsChecked+' claimed control points match ('+result.maxResidualMeters.toFixed(2)+' m maximum error). Source rights and independent coordinates still need human review.');
+ }catch(err){status('Evidence rejected: '+err.message+' · Existing personal terrain remains unverified.')}finally{e.target.value=''}};
  $('juraNavRoadFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>16000000)throw Error('Graph exceeds 16 MB limit');const raw=JSON.parse(await file.text());if(String(raw.game)!==bridge.game())throw Error('Road graph must belong to the active GTA game');graph=Core.validateGraph(raw);status('Imported road graph: '+graph.nodes.size+' nodes. UNVERIFIED: map connectivity is not proof of game-road accuracy.');}catch(err){graph=null;status('Road graph rejected: '+err.message)}finally{e.target.value=''}};
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&active&&document.activeElement?.tagName!=='INPUT')close()});syncDimensionControls();render();}
 init();return{open,close,setRoutePoint,setStart,refresh,gameChanged,render,setDimension,getDimension:()=>dimension,getPlan:()=>plan,terrain:()=>terrain};}
