@@ -14,6 +14,18 @@
 - GTADB API source references the input at api/data/6/elevation.bin but it is absent from the public GTADB repository. It has NOT been copied or requested through an unapproved live media endpoint.
 - The separate wpenistone/leonida_gis repository publishes a 2150 x 2736, 16-bit grayscale PNG with a georeferencing world file; its encoding and source bounds are different from Atlas and no explicit repo-wide license was found at this inspection. This file is a research candidate, NOT a licensed Atlas release asset. MelonHell/LeonidaHeightmap also has no explicit repository license listed. Do not redistribute either based solely on public availability.
 
+## Source-matched 16-bit raster conversion tool
+The separate source-only utility scripts/convert_atlas359_leonida_heightfield.py converts a LOCAL, permission-cleared grayscale 16-bit PNG with a six-line ESRI world file into exactly the GTA VI heightfield layout expected by Atlas. It bilinearly resamples in the game coordinate frame, converts the explicitly supplied source raw height datum and vertical units to the GTADB-compatible 16-bit representation, bounds-checks source coverage, records edge clamps and clipping, and writes a SHA-256 research report. It does not call any external service or package input sources.
+
+Example for an independently authorized raster only (replace the file paths, sea datum and raw/meter calibration with those documented by the actual source):
+
+    python -m pip install Pillow
+    python scripts/convert_atlas359_leonida_heightfield.py --png PERMITTED_HEIGHTMAP.png --world-file PERMITTED_HEIGHTMAP.pgw --raw-sea 28150 --raw-per-meter 46.51 --out elevation-6.bin
+
+The raw datum and scale above are a worked example based on public wpenistone/leonida_gis documentation; **that repository's lack of an explicit license is NOT cured by an example command.** Do not publish or bundle its heightmap without asset-specific rights review. Clipped input elevations above the configured 5% threshold are rejected; do not raise that threshold for a release to hide miscalibration. Even when a local conversion succeeds, the terrain remains approximate until independent control points are checked. Run focused converter unit tests with:
+
+    python -m unittest -v scripts/test_atlas359_convert.py
+
 ## Technical evidence manifest requirements
 The JSON file supplied to the optional control must have schema value team-jura-terrain-proof-v1; game number 6; encoding value uint16-le; coordinateSystem value gtadb-game-xy; grid width 1536 and height 1748; sha256 of exactly 64 hexadecimal characters; source object with https URL, rightsEvidenceUrl, license, pinned revision and redistributionPermission true; and 3-32 independent controlPoints.
 
