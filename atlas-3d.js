@@ -16,27 +16,37 @@ function clipPoint(m,p){const x=p[0],y=p[1],z=p[2];const w=m[3]*x+m[7]*y+m[11]*z
 function create(opts){const canvas=opts.canvas,overlay=opts.overlay,status=opts.status,bridge=opts.bridge;let gl=null,p=null,position=null,uv=null,index=null,tex=null,ready=false,active=false,projectMatrix=null,center={x:0,y:0,z:2},bearing=0,pitch=.86,distance=3200,extent=8000,textureFingerprint='',textured=false,geoKey='',meshPoints=[],sourceHeights=null,heightGame=null,sourceError='',loadToken=0,assetUpdate=0,lastRender=0,press=null;
 function notice(message){if(status)status.textContent=message}
 function elevation(x,y){if(!sourceHeights)return 0;const d=ELEVATIONS[bridge.game()];if(!d)return 0;const px=d.zero[0]+x*d.scaleXY,py=d.zero[1]-y*d.scaleXY;if(px<0||py<0||px>=d.width-1||py>=d.height-1)return 0;const x0=Math.floor(px),y0=Math.floor(py),fx=px-x0,fy=py-y0,off=y0*d.width+x0;const a=sourceHeights[off]*(1-fx)+sourceHeights[off+1]*fx,b=sourceHeights[off+d.width]*(1-fx)+sourceHeights[off+d.width+1]*fx;return Math.max(-400,Math.min(1800,((a*(1-fy)+b*fy)/d.scaleZ+d.offset)));}
+function decodeHeightfield(buffer,definition){
+ const expected=definition.width*definition.height*2;
+ if(!(buffer instanceof ArrayBuffer)||buffer.byteLength!==expected){
+   throw Error('Expected '+expected.toLocaleString()+' bytes for this heightfield');
+ }
+ const heights=new Uint16Array(buffer);
+ if(!heights.some(sample=>sample!==heights[0])){
+   throw Error('All elevation samples are identical. This file contains no terrain relief.');
+ }
+ return heights;
+}
 async function loadElevation(g){
  if(sourceHeights&&heightGame===String(g)){notice('Locally provided elevation loaded · 3D terrain');geoKey='';render();return}
  // Consent and attribution: GTADB requests clients not to fetch live GTADB media.
  // Only same-origin, user-deployed or explicitly user-imported verified heightfields are loaded.
  sourceHeights=null;heightGame=null;sourceError='';const token=++loadToken;
  const d=ELEVATIONS[g];if(!d){sourceError='No heightfield configuration for this game';notice(sourceError);return}
- const expected=d.width*d.height*2;
  try{const res=await fetch('./elevation-'+g+'.bin',{cache:'force-cache'});if(!res.ok)throw Error('No bundled elevation-'+g+'.bin');
- const buffer=await res.arrayBuffer();if(token!==loadToken)return;if(buffer.byteLength!==expected)throw Error('Elevation file size mismatch');
- sourceHeights=new Uint16Array(buffer);heightGame=String(g);geoKey='';notice('Local elevation loaded · 3D terrain geometry (community reconstructed)');render();
+ const buffer=await res.arrayBuffer();if(token!==loadToken)return;
+ sourceHeights=decodeHeightfield(buffer,d);heightGame=String(g);geoKey='';notice('Local elevation loaded · 3D terrain geometry (community reconstructed)');render();
  }catch(e){if(token!==loadToken)return;sourceError=e.message;notice('3D perspective mode · terrain elevation not installed. Optional local elevation.bin supported.');geoKey='';render()}}
 async function setElevationBinary(buffer,g){
  const d=ELEVATIONS[g];if(!d||bridge.game()!==String(g))throw Error('Choose the matching game first');
- if(!(buffer instanceof ArrayBuffer)||buffer.byteLength!==d.width*d.height*2)throw Error('Expected '+(d.width*d.height*2).toLocaleString()+' bytes for GTA '+g);
- ++loadToken;sourceHeights=new Uint16Array(buffer);heightGame=String(g);sourceError='';geoKey='';notice('User-supplied heightfield active for GTA '+g+' · reconstructed 3D terrain');render();return true;
+ const heights=decodeHeightfield(buffer,d);
+ ++loadToken;sourceHeights=heights;heightGame=String(g);sourceError='';geoKey='';notice('User-supplied heightfield active for GTA '+g+' · reconstructed 3D terrain');render();return true;
 }
 function ensureGL(){if(ready&&!gl?.isContextLost?.())return true;ready=false;try{gl=canvas.getContext('webgl',{alpha:false,antialias:true,preserveDrawingBuffer:false});if(!gl)throw Error('WebGL not supported');p=program(gl);position=gl.createBuffer();uv=gl.createBuffer();index=gl.createBuffer();tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([40,82,98,255]));ready=true;return true;}catch(e){notice('3D renderer unavailable: '+e.message);return false}}
 function updateMesh(){const num=70,vertices=[],uvs=[],indices=[];const radius=extent/2,step=extent/num;for(let r=0;r<=num;r++)for(let c=0;c<=num;c++){const dx=-radius+c*step,dz=-radius+r*step,wx=center.x+dx,wy=center.y-dz;vertices.push(dx,elevation(wx,wy)*2.1,dz);uvs.push(c/num,r/num)}
  for(let r=0;r<num;r++)for(let c=0;c<num;c++){const i=r*(num+1)+c;indices.push(i,i+num+1,i+1,i+1,i+num+1,i+num+2)}
  gl.bindBuffer(gl.ARRAY_BUFFER,position);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,uv);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(uvs),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices),gl.STATIC_DRAW);meshPoints=indices;}
-function updateTexture(){if(!bridge.textureDraw)return;const off=document.createElement('canvas');off.width=768;off.height=768;const r=extent/2;try{const success=bridge.textureDraw(off,{x0:center.x-r,y0:center.y-r,x1:center.x+r,y1:center.y+r});if(!success){textured=false;notice('3D terrain preview · waiting for map image tiles');return}gl.bindTexture(gl.TEXTURE_2D,tex);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,off);textured=true;document.body.classList.remove('jura-3d-texture-pending');notice(sourceHeights?'Textured 3D terrain · licensed heightfield active':'Textured 3D map · flat mesh until licensed heightfield is available');}catch(e){textured=false;notice('3D elevation view · map imagery not cross-origin enabled (terrain colors shown)')}}
+function updateTexture(){if(!bridge.textureDraw)return;const off=document.createElement('canvas');off.width=768;off.height=768;const r=extent/2;try{const success=bridge.textureDraw(off,{x0:center.x-r,y0:center.y-r,x1:center.x+r,y1:center.y+r});if(!success){textured=false;notice('3D terrain preview · waiting for map image tiles');return}gl.bindTexture(gl.TEXTURE_2D,tex);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,off);textured=true;document.body.classList.remove('jura-3d-texture-pending');notice(sourceHeights?'Textured 3D terrain · local heightfield active':'Textured 3D map · flat mesh until licensed heightfield is available');}catch(e){textured=false;notice('3D elevation view · map imagery not cross-origin enabled (terrain colors shown)')}}
 function sync(){const c=bridge.camera();center={x:c.x,y:c.y,z:c.z};extent=Math.max(1200,Math.min(26000,Math.pow(2,3.2-c.z)*5700));distance=extent*.92;pitch=.83;bearing=0;geoKey='';textureFingerprint='';}
 function matrix(){const w=Math.max(1,canvas.width),h=Math.max(1,canvas.height);const eye=[Math.sin(bearing)*distance*Math.cos(pitch),distance*Math.sin(pitch),Math.cos(bearing)*distance*Math.cos(pitch)],target=[0,0,0];return matmul(perspective(Math.PI/3,w/h,5,90000),lookAt(eye,target,[0,1,0]))}
 function project(x,y){if(!projectMatrix)return null;const pos=[x-center.x,elevation(x,y)*2.1+22,center.y-y],coords=clipPoint(projectMatrix,pos);if(!coords||Math.abs(coords[0])>1.4||Math.abs(coords[1])>1.4)return null;return{x:(coords[0]+1)*canvas.clientWidth/2,y:(1-coords[1])*canvas.clientHeight/2}}
