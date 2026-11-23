@@ -30,7 +30,7 @@ assert 'team-jura-atlas-preview.pages.dev/art/atlas98-one-last-ride' not in site
 assert 'Leonida awaits' not in site
 assert '36-second motion-poster' in site
 assert '4:15 editorial storyboard animatic' in site
-assert 'not a public film release' in site
+assert 'not a finished video or a public film release' in site
 production=(ROOT/'film/production/README.md').read_text(encoding='utf-8')
 assert '8:30' in production and '255-second' in production and 'not a finished' in production.lower()
 class TagParse(HTMLParser):
