@@ -1,32 +1,60 @@
-name: Team Jura - production branch parity guard
+name: Team Jura - production main and development baseline guard
 on:
   push:
     branches: [main, development]
+  pull_request:
+    branches: [development]
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  branch-parity:
-    runs-on: ubuntu-latest
+  production-baseline:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Fetch both release branches
+      - name: Read full main, development and PR ancestry
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Verify main and development publish the same tracked files
+      - name: Verify development retains the current main security baseline
+        env:
+          EVENT: ${{ github.event_name }}
+          TARGET: ${{ github.ref_name }}
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main development
-          echo "main:        $(git rev-parse origin/main)"
-          echo "development: $(git rev-parse origin/development)"
-          if ! git diff --quiet origin/main origin/development -- .; then
-            echo "::error::main and development have different tracked website files. Review the diff before any production sync."
-            git diff --stat origin/main origin/development
+          echo "Protected GTAE production main: $(git rev-parse origin/main)"
+          echo "Team Jura development:         $(git rev-parse origin/development)"
+          if [[ "$EVENT" == "pull_request" ]]; then
+            # Checkout is GitHub's proposed merge, not a stale PR head.
+            candidate=HEAD
+          elif [[ "$TARGET" == "development" ]]; then
+            candidate=origin/development
+          else
+            candidate=origin/main
+          fi
+          if git merge-base --is-ancestor origin/main "$candidate"; then
+            echo "PASS: current verified main history is retained by $candidate."
+          elif [[ "$TARGET" == "main" && "$EVENT" != "pull_request" ]]; then
+            # Main just released; development must pick it up via a follow-up PR.
+            # Never label a healthy production release as failing solely because
+            # the development branch has not yet synchronized.
+            echo "::warning::Production main advanced; merge main into development before the next feature build."
+          else
+            echo "::error::Development/PR lacks the current protected main production baseline."
+            echo "Merge reviewed main into development without force-push before further work."
             exit 1
           fi
-          echo "PASS: branch trees match; differing commit history alone does not change the published files."
-      - name: Explain release policy
+          if git diff --quiet origin/main origin/development -- .; then
+            echo "Both branches currently have identical tracked files."
+          else
+            echo "Branch divergence is expected while developing new features."
+            echo "Only reviewed releases from development may go to protected main."
+            git diff --stat origin/main origin/development | head -35 || true
+          fi
+      - name: Document production/preview separation
         run: |
-          echo "Cloudflare public production must be configured to build development."
-          echo "This workflow only checks parity; it does not merge, deploy or overwrite either branch."
+          echo "PUBLIC PRODUCTION: Cloudflare Pages gtae-online / branch main."
+          echo "DEVELOPMENT: branch development / preview builds; no automatic main merge."
+          echo "OLD CLOUDFLARE: team-jura-atlas-preview is not the canonical production site."
+          echo "Guest saves, rights notices, source asset review and owner release approval remain protected."
