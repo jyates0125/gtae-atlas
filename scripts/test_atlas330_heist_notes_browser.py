@@ -114,6 +114,11 @@ try:
   expect(page.locator('.j164-notes textarea')).to_have_count(5,timeout=20000)
   page.evaluate("localStorage.setItem('teamjura-heist-plan-v1:cayo-perico','{bad')")
   page.reload(wait_until='domcontentloaded')
+  # Cayo intentionally puts its notes in a closed Mission tools drawer.
+  # Opening the actual Notes & strategy control tests the visible user path.
+  notesButton=page.locator('.j180-menu-link').filter(has_text='Notes & strategy')
+  expect(notesButton).to_be_visible(timeout=20000)
+  notesButton.click()
   expect(page.locator('#j330-notes-recovery')).to_be_visible(timeout=20000)
   expect(page.locator('.j164-notes textarea').first).to_be_disabled()
   assert page.evaluate("localStorage.getItem('teamjura-heist-plan-v1:cayo-perico')")=='{bad'
