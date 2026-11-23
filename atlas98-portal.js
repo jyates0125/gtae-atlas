@@ -112,12 +112,113 @@
   {id:'slasher',title:'Slasher Collection',kind:'concept',description:'Horror-inspired red checker, black tactical, and ornate royal outfits.',art:'atlas98-slasher-collection.webp'},
   {id:'original',title:'Neon futuristic portrait',kind:'concept',description:'Experimental sci-fi treatment for special graphics and fan events.',art:'atlas98-original-cinematic.webp'}
  ];
- function styles(){const gallery=$('#styleGallery');if(!gallery)return;const keys='team-jura-atlas98-style-bookmarks-v1';let bookmarks=safe(keys,{}),filter='all';const buttons=$$('[data-style-filter]');const count=$('#savedStylesCount');const dialog=$('#styleDialog');const img=$('#stylePreview');const label=$('#stylePreviewLabel');
-   function render(){gallery.replaceChildren();if(count)count.textContent=Object.values(bookmarks).filter(Boolean).length+' saved looks';
-     for(const look of looks.filter(l=>filter==='all'||l.kind===filter)){
-       const tile=E('article','style-tile');const image=E('img');image.src='./art/'+look.art;image.alt=look.title;image.loading='lazy';const body=E('div','style-body');body.append(E('small','',look.kind==='approved'?'APPROVED REFERENCE':'FUTURE CONCEPT · NOT APPROVED'),E('h3','',look.title),E('p','',look.description));const actions=E('div','style-actions');const zoom=E('button','','View artwork');zoom.type='button';zoom.addEventListener('click',()=>{if(img)img.src=image.src;if(label)label.textContent=look.title;if(dialog?.showModal)dialog.showModal();else window.open(image.src,'_blank','noopener')});const saveBtn=E('button','','☆ Save idea');saveBtn.type='button';if(bookmarks[look.id]){saveBtn.classList.add('is-saved');saveBtn.textContent='★ Saved'}saveBtn.addEventListener('click',()=>{bookmarks[look.id]=!bookmarks[look.id];if(!save(keys,bookmarks)){saveBtn.textContent='Storage unavailable';return}render()});actions.append(zoom,saveBtn);body.append(actions);tile.append(image,body);gallery.append(tile)
+ function styles(){
+   const gallery=$('#styleGallery');
+   if(!gallery)return;
+   const key='team-jura-atlas98-style-bookmarks-v1';
+   const filters=$$('[data-style-filter]');
+   const count=$('#savedStylesCount'),status=$('#styleSaveStatus'),empty=$('#styleEmpty');
+   const dialog=$('#styleDialog'),preview=$('#stylePreview'),label=$('#stylePreviewLabel');
+   const cards=new Map();
+   let filter='all';
+   function readBookmarks(){
+     const raw=localStorage.getItem(key);
+     if(raw===null)return {};
+     const record=JSON.parse(raw);
+     if(!record||typeof record!=='object'||Array.isArray(record)||
+       looks.some(look=>Object.hasOwn(record,look.id)&&typeof record[look.id]!=='boolean')){
+       throw Error('Unreadable style bookmarks');
      }
-   }buttons.forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.styleFilter;buttons.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render()}));render();
+     return record;
+   }
+   function refresh(){
+     let record=null;
+     try{record=readBookmarks()}catch{}
+     if(status)status.textContent=record?'':'Saved looks are unavailable. Your existing bookmarks have been preserved.';
+     let savedCount=0,visibleCount=0;
+     for(const look of looks){
+       const {tile,button}=cards.get(look.id);
+       const saved=record?.[look.id]===true;
+       if(saved)savedCount++;
+       button.disabled=!record;
+       button.setAttribute('aria-pressed',String(saved));
+       button.classList.toggle('is-saved',saved);
+       button.textContent=saved?'★ Saved':'☆ Save idea';
+       const visible=filter==='all'||filter===look.kind||(filter==='saved'&&saved);
+       const containedFocus=tile.contains(document.activeElement);
+       tile.hidden=!visible;
+       if(visible)visibleCount++;
+       if(!visible&&containedFocus)filters.find(b=>b.dataset.styleFilter===filter)?.focus();
+     }
+     count.textContent=record?savedCount+(savedCount===1?' saved look':' saved looks'):'Saved count unavailable';
+     if(empty)empty.hidden=visibleCount>0||!record;
+   }
+   async function setSaved(id,desired){
+     const write=()=>{
+       const record=readBookmarks();
+       record[id]=desired;
+       localStorage.setItem(key,JSON.stringify(record));
+     };
+     try{
+       if(navigator.locks?.request)await navigator.locks.request(key,write);
+       else write();
+       refresh();
+     }catch{
+       refresh();
+       if(status)status.textContent='Could not save this change. Your existing bookmarks have been preserved.';
+     }
+   }
+   function selectedArt(){
+     const id=new URL(location.href).searchParams.get('look');
+     return looks.find(look=>look.id===id);
+   }
+   function syncArtwork(){
+     const look=selectedArt();
+     if(look&&dialog.showModal){
+       preview.src='./art/'+look.art;
+       preview.alt=label.textContent=look.title;
+       if(!dialog.open)dialog.showModal();
+     }else if(dialog.open)dialog.close();
+   }
+   function closeArtwork(){
+     if(history.state?.atlasStyleArt&&selectedArt()){
+       history.back();
+       return;
+     }
+     const url=new URL(location.href);
+     url.searchParams.delete('look');
+     history.replaceState(history.state,'',url);
+     syncArtwork();
+   }
+   dialog.querySelector('form').addEventListener('submit',e=>{e.preventDefault();closeArtwork()});
+   dialog.addEventListener('cancel',e=>{e.preventDefault();closeArtwork()});
+   window.addEventListener('popstate',syncArtwork);
+   for(const look of looks){
+     const tile=E('article','style-tile'),image=E('img'),body=E('div','style-body');
+     image.src='./art/'+look.art;image.alt=look.title;image.loading='lazy';
+     body.append(E('small','',look.kind==='approved'?'APPROVED REFERENCE':'FUTURE CONCEPT · NOT APPROVED'),
+       E('h3','',look.title),E('p','',look.description));
+     const actions=E('div','style-actions'),zoom=E('button','','View artwork'),button=E('button');
+     zoom.type=button.type='button';
+     zoom.addEventListener('click',()=>{
+       if(!dialog.showModal){window.open(image.src,'_blank','noopener');return}
+       const url=new URL(location.href);
+       url.searchParams.set('look',look.id);
+       history.pushState({...history.state,atlasStyleArt:true},'',url);
+       syncArtwork();
+     });
+     button.addEventListener('click',()=>setSaved(look.id,button.getAttribute('aria-pressed')!=='true'));
+     actions.append(zoom,button);body.append(actions);tile.append(image,body);gallery.append(tile);
+     cards.set(look.id,{tile,button});
+   }
+   filters.forEach(b=>b.addEventListener('click',()=>{
+     filter=b.dataset.styleFilter;
+     filters.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+     refresh();
+   }));
+   window.addEventListener('storage',e=>{if(e.key===key||e.key===null)refresh()});
+   window.addEventListener('pageshow',()=>{refresh();syncArtwork()});
+   refresh();syncArtwork();
  }
  function init(){nav();const page=document.body.dataset.page;if(page==='home')homepage();if(page==='maps')directory();if(page==='styles')styles()}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
