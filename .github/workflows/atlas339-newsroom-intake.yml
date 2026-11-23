@@ -1,0 +1,49 @@
+name: Atlas 33.9 - official Newsroom intake
+on:
+  push:
+    branches:
+      - feature/atlas339-official-newsroom-intake-20261123
+    paths:
+      - scripts/atlas339-newswire-intake.cjs
+      - scripts/test_atlas339-newswire-intake.cjs
+      - data/atlas-news-cheats.json
+      - .github/workflows/atlas339-newsroom-intake.yml
+  workflow_dispatch:
+  schedule:
+    - cron: '15 11 * * *'
+permissions:
+  contents: read
+jobs:
+  offline-contract:
+    name: Rockstar link and intake safety tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/test_atlas339-newswire-intake.cjs
+      - run: |
+          node - <<'NODE'
+          const feed=require('./data/atlas-news-cheats.json');
+          const urls=feed.news.map(x=>x.url);
+          if(feed.schema!==1||!urls.length||new Set(urls).size!==urls.length)process.exit(1);
+          if(urls.some(x=>!/^https:\/\/www\.rockstargames\.com\/newswire\/article\/|^https:\/\/support\.rockstargames\.com\/articles\//.test(x)))process.exit(1);
+          console.log('PASS official source domains and unique reviewed links');
+          NODE
+  remote-intake:
+    name: Rockstar discovery artifact only, no publishing
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    needs: offline-contract
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/atlas339-newswire-intake.cjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: atlas339-official-review-candidates
+          path: qa-evidence/atlas339-newswire-candidates.json
+          retention-days: 14
