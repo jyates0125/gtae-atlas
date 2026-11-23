@@ -32,4 +32,13 @@ errors = []
 with patch.object(module, "fetch", return_value={"error": "offline"}):
     module.check_page(module.PRIMARY, "maps.html", errors)
 assert errors and "inaccessible" in errors[0], errors
+# Dual-project identity parity is required; legacy cannot silently lag GTAE.
+workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/atlas338-dual-cloudflare-release.yml").read_text()
+assert "branches: [development]" in workflow
+assert "--check-legacy" in workflow
+assert "schedule:" in workflow
+assert "push:" in workflow
+verifier = path.read_text()
+assert "legacy_identity = check_identity(args.legacy" in verifier
+assert 'identity.get("revision") != legacy_identity.get("revision")' in verifier
 print("PASS Atlas 33.8: revision-null/mismatch, exact match, wrong-origin redirect and offline fail closed")
