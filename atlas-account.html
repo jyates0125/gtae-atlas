@@ -4,9 +4,9 @@
 <meta name="robots" content="noindex,follow">
 <title>Your Atlas Account &amp; Progress | Team Jura Atlas · Elario Studios</title>
 <link rel="icon" href="./art/elario-crest.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./atlas98-portal.css?v=128"><link rel="stylesheet" href="./atlas131-account.css?v=131">
+<link rel="stylesheet" href="./atlas98-portal.css?v=128"><link rel="stylesheet" href="./atlas131-account.css?v=131"><link rel="stylesheet" href="./atlas355-account-auth.css?v=355">
 <script defer src="./atlas98-portal.js?v=128"></script><script defer src="./atlas131-account.js?v=131"></script><script defer src="./atlas144-cloud-transfer.js?v=144"></script><script defer src="./atlas144-device-overview.js?v=144"></script>
-<script defer src="./atlas208-auth-transport.js?v=208"></script>
+<script defer src="./atlas208-auth-transport.js?v=208"></script><script defer src="./atlas355-auth-config.js?v=355"></script><script defer src="./atlas140-cloud-saves.js?v=355"></script><script defer src="./atlas355-account-auth.js?v=355"></script>
 <link rel="stylesheet" href="./atlas160-premium-headers.css?v=160"><link rel="stylesheet" href="./atlas162-subject-heroes.css?v=162"><link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script><link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=222"></script><link rel="stylesheet" href="./atlas131-social-icons.css?v=133"><script defer src="./atlas131-social-icons.js?v=133"></script></head><body class="j131-account" data-page="account">
 <a class="skip" href="#main">Skip to account</a>
 <header class="topbar"><a class="brand" href="./index.html"><img class="brand-crown" src="./art/elario-crest.svg" width="42" height="42" alt=""><span class="brand-copy"><small>ELARIO STUDIOS PRESENTS</small><strong>TEAM JURA <em>ATLAS</em></strong><small>MANY CREWS · ONE VISION</small></span></a>
@@ -15,7 +15,23 @@
 <section class="j131-account-hero" aria-labelledby="accountTitle"><div><p class="eyebrow">ELARIO STUDIOS · OPTIONAL ACCOUNTS</p><h1 id="accountTitle">Your Atlas.<br><span>Your progress.</span></h1><p>Explore as a guest today. When secure cloud accounts are ready, you can choose to sign in and sync your own saves across devices.</p><div class="j131-account-pills"><span>✓ No account required</span><span>✓ Your device, your data</span><span>✓ Portable backup</span></div></div><img src="./art/atlas98-approved-hero.webp" alt="Original Elario Studios Team Jura cinematic artwork"></section>
 <div class="j131-account-grid">
 <section class="j131-account-panel" aria-labelledby="guestTitle"><p class="eyebrow">AVAILABLE NOW</p><h2 id="guestTitle">Continue as a guest</h2><p>Use maps, My Garage and collectibles without entering a name, password or email. Progress saves in the browser used for that game/tool.</p><a class="j131-primary" href="./atlas-dashboard.html">Enter Atlas as a guest ›</a><a href="./atlas-passport.html">Open Passport ›</a></section>
-<section class="j131-account-panel" aria-labelledby="cloudTitle"><p class="eyebrow">SECURE CLOUD ACCOUNT · NOT ENABLED YET</p><h2 id="cloudTitle">Save across your devices</h2><p>Our next account upgrade will securely connect your progress to your own account, with a clear choice to sync or continue as a guest.</p><button type="button" disabled aria-describedby="accountNotice">Sign in · Coming after secure setup</button><p id="accountNotice" class="j131-honesty">No account provider or cloud save service is connected. This page does not collect a password or email. Logging in elsewhere will <strong>not</strong> preserve your Atlas data yet.</p></section>
+<section class="j131-account-panel" aria-labelledby="cloudTitle"><p class="eyebrow">SECURE CLOUD ACCOUNT · NOT ENABLED YET</p><h2 id="cloudTitle">Save across your devices</h2><p>Our next account upgrade will securely connect your progress to your own account, with a clear choice to sync or continue as a guest.</p><button type="button" disabled aria-describedby="accountNotice">Sign in · Coming after secure setup</button><p id="accountNotice" class="j131-honesty">No account provider or cloud save service is connected. This page does not collect a password or email. Logging in elsewhere will <strong>not</strong> preserve your Atlas data yet.</p>
+<section id="j355AuthPanel" class="j355-auth" hidden aria-labelledby="j355AuthTitle">
+  <h3 id="j355AuthTitle">Your private Atlas account</h3>
+  <p class="j355-note">Existing, confirmed email accounts only during our controlled launch. You may always continue as a guest.</p>
+  <form id="j355LoginForm" data-atlas-auth-form autocomplete="on">
+    <label for="j355Email">Email</label><input id="j355Email" type="email" inputmode="email" autocomplete="username" maxlength="254" required>
+    <label for="j355Password">Password</label><input id="j355Password" type="password" autocomplete="current-password" required>
+    <button type="submit" data-atlas-auth-submit class="j131-primary">Sign in securely</button>
+  </form>
+  <div id="j355SignedIn" hidden><p>Signed in as <strong id="j355MemberEmail"></strong></p><button type="button" id="j355SignOut">Sign out</button></div>
+  <p id="j355AuthStatus" role="status" aria-live="polite">Account security is initializing.</p>
+  <section id="j355CloudPanel" hidden aria-labelledby="j355CloudTitle">
+    <h3 id="j355CloudTitle">Your cloud saves</h3>
+    <p class="j355-note">Your existing device progress is not uploaded automatically. Review each category and choose when to copy it. Back up your Atlas progress below before replacing anything.</p>
+    <div id="j355CloudSlots" class="j355-slots"></div>
+  </section>
+</section></section>
 </div>
 <section class="j131-account-panel" aria-labelledby="j207PolicyTitle"><p class="eyebrow">YOUR CHOICE · PRIVACY</p><h2 id="j207PolicyTitle">Guest saves, future sign-in and deletion</h2><p>Guest progress stays on this browser and can be lost if you clear site data or change devices without a backup. Cloud sign-in and automatic syncing are not active yet. We do not sell account data or game progress. Our planned 14-day deletion recovery period is a future Elario policy, not a legal requirement.</p><a href="./atlas-policies.html">Read all policies &amp; disclaimers ›</a></section>
 <section class="j131-account-panel" aria-labelledby="j209LegacyTitle"><p class="eyebrow">OLD SITE · KEEP YOUR SAVES</p><h2 id="j209LegacyTitle">Did you save progress on our old Team Jura URL?</h2><p>Progress stored at team-jura-atlas-preview.pages.dev stays in that older browser origin. A redirect to gtae-online.pages.dev does not automatically move it. If you played there, open the old site's guest-backup page, export your progress, and then restore the backup using the controls below on GTAE. This transfer is optional and manual.</p><a href="https://team-jura-atlas-preview.pages.dev/atlas-account.html" target="_blank" rel="noopener noreferrer">Open old site to back up progress ›</a></section>
