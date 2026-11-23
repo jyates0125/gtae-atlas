@@ -1,0 +1,26 @@
+name: Atlas 32.2 - scoped Edge and mobile check relevance
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122]
+    paths:
+      - '.github/workflows/atlas316-edge-smoke-repair.yml'
+      - '.github/workflows/atlas319-mobile-fit-release-tail.yml'
+      - 'scripts/atlas300-ci-delta.py'
+      - 'scripts/test_atlas322_edge_delta.py'
+      - '.github/workflows/atlas322-ci-relevance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scope-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate only changed-scope CI contracts
+        run: |
+          python -m py_compile scripts/atlas300-ci-delta.py scripts/test_atlas322_edge_delta.py
+          python scripts/test_atlas322_edge_delta.py
