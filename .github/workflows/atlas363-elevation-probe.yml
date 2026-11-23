@@ -29,6 +29,7 @@ jobs:
       - run: node --check atlas363-elevation-probe.js
       - run: node --check atlas-navigation.js
       - run: node scripts/test_atlas363_gtadb_elevation_probe.cjs
+      - run: python scripts/test_atlas290_vi_day.py
       - run: node scripts/test_atlas359_terrain_proof.cjs
       - run: node scripts/test_heightfield_import.cjs
       - run: node scripts/build-cloudflare.cjs
