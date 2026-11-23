@@ -30,7 +30,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python scripts/test_atlas338_dual_release.py
+      - run: |
+          python scripts/test_atlas338_dual_release.py
+          python -m py_compile scripts/audit_atlas345_cloudflare_source_boundary.py
   live-verify:
     if: github.event_name != 'pull_request'
     needs: source-contract
@@ -70,3 +72,5 @@ jobs:
           done
           echo "One or both Cloudflare deployments are stale/unverified." >&2
           exit 1
+      - name: Reject raw repository files served by either Cloudflare Pages project
+        run: python scripts/audit_atlas345_cloudflare_source_boundary.py
