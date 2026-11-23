@@ -67,7 +67,7 @@ try:
                 assert page.evaluate("k=>localStorage.getItem(k)", key) == damaged
             other.evaluate("k=>localStorage.removeItem(k)", key)
             expect(bookmark(page, 0)).to_be_enabled()
-            page.evaluate("Storage.prototype.setItem=()=>{throw Error('QuotaExceededError')}")
+            page.evaluate("() => { Storage.prototype.setItem=()=>{throw Error('QuotaExceededError')} }")
             bookmark(page, 0).click()
             expect(page.locator("#styleSaveStatus")).to_contain_text("Could not save")
             expect(bookmark(page, 0)).to_have_attribute("aria-pressed","false")
