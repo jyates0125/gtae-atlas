@@ -1,5 +1,6 @@
 # One-time read-only check of owner-switched main production Cloudflare site.
 # This is not a Cloudflare deployment or a merge. No raw source response is logged.
+# Retest exact new main commit after Cloudflare Pages published the security build.
 name: Atlas 35.0 - live main GTAE source and route audit
 on:
   push:
@@ -23,7 +24,7 @@ jobs:
         run: |
           mkdir -p qa-evidence
           set +e
-          python scripts/verify_cloudflare_dual_release.py --expected-sha 8039ee9214fe7bfa3801bcea8f0c95b41f44b94d | tee qa-evidence/atlas350-main-routes.json
+          python scripts/verify_cloudflare_dual_release.py --expected-sha 0b4debbd121c3c63dcc9650caf21deeb6ff69cf9 | tee qa-evidence/atlas350-main-routes.json
           code=${PIPESTATUS[0]}
           exit "$code"
       - name: Check no internal source files are served on official GTAE
