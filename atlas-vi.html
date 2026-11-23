@@ -12,6 +12,7 @@
 <script defer src="./atlas-route-core.js?v=70"></script>
 <script defer src="./atlas-road-core.js?v=70"></script>
 <script defer src="./atlas-3d.js?v=70"></script>
+<script defer src="./atlas-terrain-evidence.js?v=359"></script>
 <script defer src="./atlas-navigation.js?v=70"></script>
 <script defer src="./atlas-conditions.js?v=70"></script>
 <script defer src="./atlas.js?v=290"></script>
@@ -210,6 +211,14 @@
       <div class="jura-nav-row"><button type="button" id="juraNavGo" class="jura-nav-primary">↗ Generate route</button><button type="button" id="juraNavClear">Clear</button><button type="button" id="juraNavExport">Copy</button><button type="button" id="juraNavCsv">Export CSV</button></div>
       <p id="juraNavStatus" class="jura-nav-caption" role="status">Choose locations to build a route.</p>
       <div id="juraNavResults" class="jura-nav-results" aria-live="polite"></div>
+      <details class="jura-nav-data"><summary>Experimental Leonida 3D terrain · local import</summary>
+        <p>Optional 1536 × 1748 16-bit little-endian GTA VI heightfield (5,369,856 bytes). Import permitted terrain, then switch to 3D. The reconstructed hills are UNVERIFIED until independently aligned. Files stay on this device and are not saved across page reloads or sent to a server.</p>
+        <label for="juraElevationFile">Choose elevation-6.bin</label>
+        <input type="file" id="juraElevationFile" accept=".bin,application/octet-stream" aria-label="Import local GTA VI 16-bit heightfield">
+        <label for="juraElevationProofFile">Optional SHA-256 / alignment evidence JSON</label>
+        <input type="file" id="juraElevationProofFile" accept=".json,application/json" aria-label="Import heightfield evidence JSON">
+        <p>Evidence-file checks do not independently establish rights, source authenticity or game accuracy. <a href="./atlas-credits.html">Source credits and reuse conditions</a>.</p>
+      </details>
       <details class="jura-nav-data"><summary>Optional licensed road-network data</summary><p>Import a permitted GTA VI road graph to preview graph-following paths. Imported geometry is UNVERIFIED until checked against released gameplay; it must never be labeled verified driving directions. Without one, routes are direct-line previews.</p><input type="file" id="juraNavRoadFile" accept=".json,application/json" aria-label="Import road network file"><a href="./road-graph-example.json" download>Road graph example</a></details>
     </section>
     <div id="jura3dTools" class="jura-3d-tools" aria-label="3D navigation controls"><button type="button" id="juraToggle3d" aria-pressed="false">3D</button><button type="button" id="jura3dNorth">N ↑</button><button type="button" id="jura3dZoomIn">+</button><button type="button" id="jura3dZoomOut">−</button><small id="jura3dStatus">3D terrain inactive</small></div>
