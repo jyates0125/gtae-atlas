@@ -21,7 +21,12 @@ assert "id==='cayo-perico'?'./atlas-cayo.html':'./atlas-online.html'" in js
 assert 'teamjura-heist-plan-v1:' in js and 'localStorage.setItem' in js
 assert 'frame.src=map' in js and 'frame.hidden=!visible' in js
 assert 'j164-frame[hidden]' in css
-assert "incoming.heist!==id" in js and "if(t.value.trim()){preserved++;continue}" in js
+assert "incoming.heist!==id" in js and "if(typeof next[name]==='string'&&next[name].trim()){preserved++;continue;}" in js
+# Atlas 33.0 now re-reads the latest browser record, preserves other-tab fields
+# and blocks damaged data; source-contract changes must not weaken those gates.
+assert "function readNotes()" in js and "if(!setSafety(latest))throw Error" in js
+assert "localStorage.getItem(key)!==expectedRaw" in js
+assert "downloadText(raw," in js and "delete next[name]" in js
 assert 'j228-import' in css
 assert 'test_atlas164_heist_workspace.py' in wf
 headers=(p/'_headers').read_text()
