@@ -7,7 +7,7 @@ css=(root/'atlas85-sa.css').read_text()
 new=(root/'atlas309-sa-hero.css').read_text()
 art=root/'art'/'jura157-sa-cinematic.webp'
 assert art.is_file() and art.stat().st_size>25000
-assert html.count('jura157-sa-cinematic.webp')==1
+assert html.count('<img src="./art/jura157-sa-cinematic.webp"')==1  # One rendered hero; OG/Twitter references are legitimate
 assert html.count('atlas309-sa-hero.css?v=309')==1
 assert 'j309-sa-hero-art' in html
 assert 'not a game map or gameplay screenshot' in html
