@@ -55,6 +55,22 @@ try:
                 expect(cards).to_have_count(len(feed['news']))
                 assert all(a.get_attribute('href').startswith('https://') for a in cards.locator('a').all())
                 assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 2'),f'Newsroom horizontal overflow at {width}px'
+                # Simulate two published editions and a failed subsequent fetch.
+                current = dict(feed, checkedAt='2026-11-24', news=list(feed['news']))
+                update = dict(feed['news'][0], title='Reviewed fixture update', game='online')
+                current['news'] = [update] + [x for x in current['news'] if x['url'] != update['url']]
+                page.route('**/data/atlas-news-cheats.json', lambda route: route.fulfill(json=current))
+                page.locator('#hubGame').select_option('online')
+                page.locator('#hubSearch').fill('fixture')
+                page.evaluate("window.dispatchEvent(new Event('online'))")
+                expect(cards).to_have_count(1)
+                expect(cards.first).to_contain_text('Reviewed fixture update')
+                expect(page.locator('.h-notice time')).to_have_attribute('datetime','2026-11-24')
+                current['news'] = [dict(update, url='https://example.org/unreviewed')]
+                with page.expect_response('**/data/atlas-news-cheats.json'):
+                    page.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
+                expect(cards.first).to_contain_text('Reviewed fixture update')
+                expect(page.locator('#hubSearch')).to_have_value('fixture')
                 assert not errors,errors
                 page.close()
         finally:

@@ -4,6 +4,12 @@
 **Studio authority:** `docs/ELARIO-STUDIOS-OPERATING-CHARTER-V2-PROPOSAL.md` (contents adopted)
 **Project authority:** `docs/TEAM-JURA-STANDING-CHARTER.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md`, approved Designed Brand Master and Original Design Reference Pack.
 
+## November 23 integration checkpoint
+
+1. Draft integrated build includes development be7971d8 and staging 1f05c94f. The four Atlas 35.1–35.4 build, redirect, branch and guest-access suites passed locally on the combined site. GTAE served main 94a74150. The legacy identity endpoint returned HTTP 503 from the build environment. Legacy origin access and saved-progress export still need live verification.
+2. Newsroom now rechecks the reviewed snapshot while visible and on reconnect, preserving search and game filters. The intake rejects tomorrow's articles. Browser and intake tests are in the focused Newsroom workflow. Automated discovery from protected main still requires workflow promotion.
+3. Leonida geometry and source-specific rights, final character and vehicle media coverage, all-world device acceptance, final release package and owner signoff remain open. See the pinned toolkit investigation in ATLAS341-LEONIDA-3D-SOURCE-FEASIBILITY.md.
+
 ## Meaning of the evidence labels
 - **SOURCE:** code or asset exists; not proof of working rendered behavior.
 - **CI:** automated tests passed on an immutable commit; list the commit.

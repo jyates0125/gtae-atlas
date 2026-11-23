@@ -39,7 +39,7 @@ function candidates(payload,reviewed,now=new Date()){
   if(!Array.isArray(reviewed?.news))throw Error('Reviewed snapshot invalid');
   const existing=new Set(reviewed.news.map(x=>officialURL(x.url)).filter(Boolean));
   const seen=new Set(),out=[];
-  const maxDate=new Date(now.getTime()+86400000).toISOString().slice(0,10);
+  const maxDate=now.toISOString().slice(0,10);
   for(const p of payload.data.posts.results){
     const url=officialURL(p?.url),date=publishedDate(p?.created);
     const title=typeof p?.title==='string'?p.title.trim():'';

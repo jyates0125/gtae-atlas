@@ -18,3 +18,7 @@
 6. Source monitoring may propose research updates but cannot silently replace 3D assets.
 
 Status: candidate sources researched, not yet integrated or verified in production.
+
+### Pinned toolkit review, November 23
+
+Reviewed `rolux/gtamaplib-vc` revision `98b858fe6cbb3ea0bffa94aa53d86c1d6b0d5a02`. Its LICENSE dedicates the software to the public domain. Its README explains that bootstrap downloads upstream gtamaplib assets and GTADB tiles. The toolkit tracks only config.json and special.json under data/. Before importing terrain, identify the upstream elevation payload, its grant, units and control-point residuals. Leonida State credits GTADB tiles separately from its own buildings and elevation fields. These are separate rights checks. No new mesh was imported.

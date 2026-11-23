@@ -18,7 +18,7 @@ const input={data:{posts:{results:[
 {id:'3',url:'https://www.rockstargames.com/newswire/article/k4a8955a93o747/grand-theft-auto-vi-the-album-now-available',title:'Grand Theft Auto VI: The Album Now Available',created:'11/20/26'},
 {id:'4',url:'https://evil.example/newswire/article/abc/malware',title:'GTA Online malware',created:'11/20/26'},
 {id:'5',url:'/newswire/article/3456/unknown-event',title:'Unclassified bulletin',created:'11/21/26'},
-{id:'6',url:'/newswire/article/5678/future',title:'Grand Theft Auto VI future news',created:'12/25/26'}
+{id:'6',url:'/newswire/article/5678/future',title:'Grand Theft Auto VI future news',created:'11/24/26'}
 ]}}};
 const found=n.candidates(input,{news:[{url:official}]},new Date('2026-11-23T12:00:00Z'));
 a.equal(found.length,2);a.equal(found[0].date,'2026-11-21');a.equal(found[0].suggestedGame,null);
