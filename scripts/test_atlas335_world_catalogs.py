@@ -49,6 +49,12 @@ with ThreadingHTTPServer(('127.0.0.1', 0), partial(SimpleHTTPRequestHandler, dir
                 page.goto(origin + vehicles, wait_until='domcontentloaded')
                 showroom = page.locator('.j100-showroom-links')
                 expect(showroom.get_by_role('link', name='Characters')).to_have_attribute('href', './atlas-characters.html?game=' + scope)
+                if scope == 'story':
+                    comparison = showroom.get_by_role('link', name='Compare GTA V archive vehicles')
+                    expect(comparison).to_have_attribute('href', './atlas90-vehicles5.html?world=story#j90Cards')
+                    compare_button = page.locator('#j90Cards button').filter(has_text='+ Compare').first
+                    compare_button.click()
+                    expect(page.locator('#j90Compare')).to_be_visible()
                 top_cast = page.locator('.j90-nav').get_by_role('link', name='Characters')
                 assert top_cast.evaluate("a => new URL(a.href).searchParams.get('game')") == scope
                 forge = showroom.get_by_role('link', name='Original 3D configurator')

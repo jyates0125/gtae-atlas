@@ -23,7 +23,7 @@ function init(){
  }
  const related=[
  ['◎ Universe database','atlas-database.html?game='+edition],
- ['◆ Vehicle comparison','atlas-database.html?kind=vehicle&game='+edition],
+ ['◆ '+(edition==='story'?'Compare GTA V archive vehicles':'Vehicle comparison'),edition==='story'?'atlas90-vehicles5.html?world=story#j90Cards':'atlas-database.html?kind=vehicle&game='+edition],
  ['⚔ '+(edition==='vi'?'GTA VI Weapon Research':'World-specific weapon details'),edition==='vi'?'atlas90-weapons6.html':'atlas-database.html?kind=weapon&game='+edition],
  ['♟ Characters','atlas-characters.html?game='+edition],
  ['✿ Animals','atlas-animals.html?game='+edition],
