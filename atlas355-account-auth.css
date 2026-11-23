@@ -1,0 +1,20 @@
+/* Atlas 35.5 · optional HTTPS email login and owner-scoped cloud save controls. */
+.j355-auth{margin-top:18px;padding:16px 0 0;border-top:1px solid #78538f}
+.j355-auth[hidden],.j355-auth [hidden]{display:none!important}
+.j355-auth h3{font-size:20px;color:#ffdeab;margin:4px 0 9px}
+.j355-auth .j355-note{color:#e8d4ef;line-height:1.5;font-size:13px}
+.j355-auth form{display:grid;gap:10px;max-width:450px;margin:14px 0}
+.j355-auth label{font-weight:750;font-size:13px;color:#ffeddf}
+.j355-auth input{width:100%;min-width:0;min-height:46px;padding:10px 12px;color:#fff9f2;background:#130c20;border:1px solid #ba91ca;border-radius:9px;font:inherit}
+.j355-auth input:focus-visible,.j355-auth button:focus-visible{outline:3px solid #ffe4a0;outline-offset:3px}
+.j355-auth button{min-height:44px;white-space:normal}
+.j355-auth #j355AuthStatus{min-height:24px;overflow-wrap:anywhere;color:#ffe3b3;font-size:13px}
+.j355-slots{display:grid;gap:10px;margin-top:14px}
+.j355-slot{padding:13px;border-radius:11px;border:1px solid #8967a0;background:#160e28}
+.j355-slot strong{display:block;color:#ffdda2;font-size:14px;margin-bottom:5px}
+.j355-slot p{font-size:12px;margin:6px 0;color:#e7d2e9}
+.j355-slot-actions{display:flex;flex-wrap:wrap;gap:6px}
+.j355-auth .j355-slot-actions button{margin:3px 0;padding:9px 12px;font-size:12px}
+.j355-slot-actions button:disabled{opacity:.5;cursor:not-allowed}
+.j355-slot-status{overflow-wrap:anywhere;min-height:18px}
+@media(max-width:480px){.j355-auth{padding-top:12px}.j355-slot-actions{display:grid;grid-template-columns:1fr 1fr}.j355-slot-actions button{width:100%}}
