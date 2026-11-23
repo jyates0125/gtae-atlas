@@ -32,7 +32,18 @@ try:
    fixture=json.dumps({'schema':1,'items':{'snapshots:1':{'done':True,'note':'Important prior progress'}}})
    page.evaluate("([k,v])=>localStorage.setItem(k,v)",[key,fixture])
    page.reload(wait_until='domcontentloaded')
+   # The bundled source load deliberately switches its default from Tags (100)
+   # to Snapshots (50). Assert both real category counts, then restore the
+   # source-preserved initial state before testing map exit and saved progress.
+   expect(page.locator('#items .item')).to_have_count(50,timeout=30000)
+   assert page.locator('#setTitle').inner_text().endswith('Snapshots')
+   assert page.locator('body').get_attribute('data-jura-sa-set') == 'snapshots'
+   page.locator('#categories .cat',has_text='Graffiti Tags').click()
    expect(page.locator('#items .item')).to_have_count(100,timeout=30000)
+   assert page.locator('body').get_attribute('data-jura-sa-set') == 'tags'
+   page.locator('#categories .cat',has_text='Snapshots').click()
+   expect(page.locator('#items .item')).to_have_count(50,timeout=30000)
+   assert page.locator('body').get_attribute('data-jura-sa-set') == 'snapshots'
    back=page.locator('#j308-back-map')
    expect(back).to_be_visible()
    dims=back.bounding_box()
