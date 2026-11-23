@@ -1,0 +1,60 @@
+name: Atlas 32.5 - GTAE social previews and canonical links
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'index.html'
+      - 'maps.html'
+      - 'atlas.html'
+      - 'atlas-online.html'
+      - 'atlas-vi.html'
+      - 'atlas-sa.html'
+      - 'atlas-iv.html'
+      - 'heists.html'
+      - 'atlas-characters.html'
+      - 'atlas93-garage.html'
+      - 'atlas-passport.html'
+      - 'atlas-credits.html'
+      - 'atlas-database.html'
+      - 'atlas-research.html'
+      - 'leonida-hq.html'
+      - 'atlas81-hq.html'
+      - 'atlas-collectibles.html'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - 'scripts/test_atlas325_social_metadata.py'
+      - '.github/workflows/atlas325-social-metadata.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  social-meta-static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify only GTAE canonical, OG images and sitemap changes
+        run: |
+          python -m py_compile scripts/test_atlas325_social_metadata.py
+          python scripts/test_atlas325_social_metadata.py
+      - name: Audit exact static Cloudflare delivery
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('public')
+          assert (root/'sitemap.xml').is_file()
+          for page in ('maps.html','atlas.html','atlas-online.html','atlas-vi.html','heists.html','atlas-characters.html','atlas93-garage.html','atlas-passport.html'):
+              text=(root/page).read_text()
+              assert 'rel="canonical"' in text and 'property="og:image"' in text,page
+          print('GTAE built static social metadata found for featured public entry points')
+          PY
