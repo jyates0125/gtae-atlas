@@ -1,0 +1,22 @@
+name: Atlas 34.8 - policy and rights section link integrity
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'scripts/test_atlas207_policies.py'
+      - 'atlas-policies.html'
+      - 'atlas-credits.html'
+      - '.github/workflows/atlas348-policy-fragments.yml'
+permissions:
+  contents: read
+jobs:
+  policy-links:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate policies, guest truth, linked file paths and real fragment IDs
+        run: python scripts/test_atlas207_policies.py
