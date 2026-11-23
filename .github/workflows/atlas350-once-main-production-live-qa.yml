@@ -42,6 +42,25 @@ jobs:
           PY
           code=${PIPESTATUS[0]}
           exit "$code"
+      - name: Compare fresh immutable production deployment URL with GTAE production alias
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p qa-evidence
+          set +e
+          python - <<'PY' | tee qa-evidence/atlas350-immutable-source-boundary.json
+          import json
+          from scripts.audit_atlas345_cloudflare_source_boundary import inspect
+          from scripts.verify_cloudflare_dual_release import check_identity
+          sha="0b4debbd121c3c63dcc9650caf21deeb6ff69cf9"
+          origin="https://b0451a0e.gtae-online.pages.dev/"
+          errors=[]
+          identity=check_identity(origin,sha,errors)
+          result=inspect(origin)
+          print(json.dumps({"origin":origin,"identity_matches":bool(identity and identity.get("revision")==sha),"identity_errors":errors,"probes":result["probes"],"source_errors":result["errors"]},indent=2))
+          PY
+          code=${PIPESTATUS[0]}
+          exit "$code"
       - name: Store redacted public-only proof
         if: always()
         uses: actions/upload-artifact@v4
