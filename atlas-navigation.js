@@ -77,6 +77,30 @@ function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('
    }
  };
  syncTerrainNotice();
+ if($('j363CheckHeight'))$('j363CheckHeight').onclick=async()=>{
+  const button=$('j363CheckHeight'),note=$('j363HeightResult'),api=root.JuraElevationPointProbe;
+  if(!api){note.textContent='The elevation inspector is unavailable. Try reloading this staging page.';return}
+  if(button.disabled)return;
+  const x=bridge.camera()?.x,y=bridge.camera()?.y,g=bridge.game();
+  button.disabled=true;note.textContent='Checking one community ground-height sample…';
+  const controller=typeof AbortController==='function'?new AbortController():null;
+  const timer=controller?setTimeout(()=>controller.abort(),9000):null;
+  try{
+   const request=(url,opts)=>root.fetch(url,{...opts,...(controller?{signal:controller.signal}:{})});
+   const reference=await api.check(g,x,y,request);
+   let message='GTADB estimated ground height: '+reference.meters.toFixed(2)+' m at X '+reference.x+', Y '+reference.y+'.';
+   const comparison=api.compare(localElevation,g,x,y,reference);
+   if(comparison)message+=' Your imported local grid: '+comparison.localMeters.toFixed(2)+' m (difference '+comparison.differenceMeters.toFixed(2)+' m).';
+   message+=' Community reconstruction, not independent or official game verification.';
+   note.textContent=message;
+  }catch(err){
+   note.textContent='GTADB point lookup unavailable: '+(err?.name==='AbortError'?'timed out':err?.message||'network blocked')+
+     '. No map data was changed. The source is experimental; try later or use a local permitted heightfield.';
+  }finally{
+   if(timer!==null)clearTimeout(timer);
+   button.disabled=false;
+  }
+ };
  $('juraOpenNav').onclick=()=>active?close():open();$('juraCloseNav').onclick=close;$('juraNavAdd').onclick=()=>{if(waypoints.length>=12)return;waypoints.splice(waypoints.length-1,0,null);invalidate();render();fields.at(-2)?.input.focus()};$('juraNavReverse').onclick=()=>{waypoints.reverse();invalidate();render()};$('juraNavGo').onclick=makeRoute;$('juraNavClear').onclick=clear;$('juraNavOrder').onchange=e=>{ordering=e.target.value};$('juraToggle3d').onclick=()=>setDimension(dimension==='2d'?'3d':'2d');$('jura2d').onclick=()=>setDimension('2d');$('jura3d').onclick=()=>setDimension('3d');$('jura3dNorth').onclick=()=>terrain?.resetNorth();$('jura3dZoomIn').onclick=()=>terrain?.zoom(.8);$('jura3dZoomOut').onclick=()=>terrain?.zoom(1.25);
  $('juraNavExport').onclick=()=>{if(!plan){status('Generate a route first');return}const rows=waypoints.map((r,i)=>`${i===0?'Start':`Stop ${i}`}: ${r.name} (X ${r.x.toFixed(1)}, Y ${r.y.toFixed(1)})`).join('\n');const s='Team Jura Atlas · GTA '+bridge.game()+'\n'+rows+'\n\n'+plan.warning;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(s).then(()=>status('Route summary copied.')).catch(()=>window.prompt('Copy route',s))}else window.prompt('Copy route',s)};
  if($('juraNavCsv'))$('juraNavCsv').onclick=()=>{if(!plan){status('Generate a route first');return}const quote=s=>'"'+String(s??'').replace(/"/g,'""')+'"';const csv=[['order','name','x','y','game','routing'].map(quote).join(','),...waypoints.map((r,i)=>[i,r.name,r.x,r.y,bridge.game(),plan.roadGraphUsed?'imported-road-graph-unverified':'direct-line'].map(quote).join(','))].join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='team-jura-route-'+bridge.game()+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);status('Route CSV exported with coordinate and routing labels.')};

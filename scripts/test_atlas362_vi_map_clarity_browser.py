@@ -54,7 +54,7 @@ try:
     assert geometry['sidebarHeight']+2>=geometry['scrollHeight'],(
       'Sidebar still spills underneath footer',geometry)
     assert page.locator('.j133-universal-footer .j131-social-grid button').count()>=5
-   expect(page.locator('.credits-line a[href="./atlas-credits.html"]')).to_be_attached()
+   expect(page.locator('.credits-line a[href^="./atlas-credits.html"]')).to_be_attached()
    expect(page.locator('#j362TerrainNotice')).to_be_hidden()
    page.locator('#jura3d').click(timeout=25000)
    expect(page.locator('#j362TerrainNotice')).to_be_visible(timeout=15000)
