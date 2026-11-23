@@ -85,7 +85,10 @@ try:
    assert page.locator('#j190-iv-scope').input_value()=='iv'
    page.locator('.classic-result').first.click()
    page.locator('#j190-iv-found').click()
-   assert 'Mark uncollected' in page.locator('#j190-iv-found').inner_text()
+   # The bird write is serialized with Web Locks; Edge may finish the click
+   # before the async storage write resolves. Wait for the actual saved state.
+   expect(page.locator('#j190-iv-found')).to_contain_text('Mark uncollected',timeout=15000)
+   assert page.evaluate("JSON.parse(localStorage.getItem('team-jura-iv-bird-progress-v1')).includes(new URL(location.href).searchParams.get('loc'))"), 'Collected bird was not saved'
    page.locator('#j190-iv-hide-found').check()
    assert page.locator('#resultCount').inner_text()=='199'
    assert page.locator('#visibleCount').inner_text()=='200'
