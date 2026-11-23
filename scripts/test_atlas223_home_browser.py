@@ -20,10 +20,34 @@ try:
    ctx=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
    page=ctx.new_page();errors=[]
    if width==1440:page.route('**/data/atlas-universe-profiles.json*',lambda route:route.abort()) # Prove offline featured search/cast fallback
+   if width==390:
+    # Hold only the index response so the cast can receive focus before it arrives.
+    page.add_init_script("""{
+     const originalFetch = window.fetch.bind(window);
+     const gate = new Promise(resolve => { window.releaseCharacterIndex = resolve });
+     window.fetch = async (...args) => {
+      if (!String(args[0]).includes('atlas-universe-profiles.json')) return originalFetch(...args);
+      await gate;
+      return new Response(JSON.stringify({records:[{id:'character:index-fixture',kind:'character',
+       scope:'story',game:'GTA V',name:'Index Fixture'}]}), {headers:{'Content-Type':'application/json'}});
+     };
+    }""")
    page.on('pageerror',lambda ex:errors.append(str(ex)))
    page.goto(base+'atlas-dashboard.html',wait_until='domcontentloaded',timeout=60000)
    expect(page.locator('.j223-world-card')).to_have_count(7,timeout=20000)
    expect(page.locator('.j223-shortcuts a')).to_have_count(13)
+   if width==390:
+    first_cast=page.locator('#j223-cast-rail a').first
+    search_box=page.locator('#j223-search-input')
+    first_cast.focus()
+    page.evaluate('window.releaseCharacterIndex()')
+    # Let the index request and its JSON body finish, then observe the original focus.
+    page.evaluate("() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))")
+    assert first_cast.evaluate('el => el === document.activeElement'),'Index replaced focused cast link'
+    search_box.fill('Index Fixture')
+    expect(page.locator('#j223-search-results a')).to_contain_text(['Index Fixture'])
+    search_box.press('Escape')
+    expect(search_box).to_be_focused()
    # The 13 tools must be accessible but not overwhelm the initial phone view.
    menu=page.locator('.j223-shortcuts-menu')
    expect(menu).to_have_count(1)
