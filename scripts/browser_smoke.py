@@ -811,11 +811,15 @@ async def smoke():
                                         failures.append('Mobile Open interactive map shortcut is not visible')
                                     placed=await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').evaluate(
                                         """(link) => {
-                                            const heading=link.closest('#sidebar')?.querySelector('.atlas-explorer-head');
-                                            const games=link.closest('#sidebar')?.querySelector('.worlds');
-                                            return !!heading && !!games
-                                                && link.nextElementSibling===heading
-                                                && !!(games.compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING);
+                                            const sidebar=link.closest('#sidebar');
+                                            const heading=sidebar?.querySelector('.atlas-explorer-head');
+                                            const gameNav=[...(sidebar?.querySelectorAll('.worlds,.j83-worldnav')||[])];
+                                            // The optional Day-layer toggle is intentionally
+                                            // placed between map jump and search heading.
+                                            // Check semantic order, not stale adjacency.
+                                            return !!heading && gameNav.length>0
+                                                && gameNav.every(nav=>!!(nav.compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING))
+                                                && !!(link.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING);
                                         }""")
                                     if not placed:
                                         failures.append('Mobile Open interactive map shortcut must follow all game nav before explorer search')
