@@ -23,3 +23,5 @@
 .j355-auth .j355-text-link{background:transparent;border:0;color:#ffe2a0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:8px 2px;min-height:44px;text-align:left}
 .j355-auth .j355-text-link:hover{color:#fff4d7}
 .j355-auth #j355RecoveryCancel{background:transparent;border:1px solid #b796c7;color:#fbe9ff}
+
+.j355-auth #j355CodeCancel{background:transparent;border:1px solid #b796c7;color:#fbe9ff}

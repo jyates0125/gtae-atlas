@@ -19,7 +19,8 @@ for(const path of ['atlas355-account-auth.js','atlas355-auth-config.js','atlas14
 }
 for(const needle of ['id="j355LoginForm"','data-atlas-auth-form','id="j355CloudSlots"','id="j355SignOut"',
     'id="j131Export"','id="j131Import"','Sign in · Coming after secure setup',
-    'id="j355ForgotToggle"','id="j355RecoveryRequestForm"','id="j355NewPasswordForm"']){
+    'id="j355ForgotToggle"','id="j355RecoveryRequestForm"','id="j355RecoveryCodeForm"',
+    'id="j355RecoveryCode"','id="j355NewPasswordForm"']){
   assert(html.includes(needle),'missing account/guest guard '+needle);
 }
 assert(source.includes('auth.signInWithPassword'));
@@ -27,6 +28,11 @@ assert(source.includes('auth.signOut'));
 assert(source.includes('auth.resetPasswordForEmail'));
 assert(source.includes('auth.updateUser({password})'));
 assert(source.includes("event==='PASSWORD_RECOVERY'"));
+assert(source.includes("client.auth.verifyOtp({email,token,type:'recovery'})"));
+assert(source.includes("client.auth.verifyOtp({token_hash:recoveryTokenHash,type:'recovery'})"));
+assert(source.includes("error.code==='over_email_send_rate_limit'"));
+assert(source.includes("window.history.replaceState"));
+assert(source.includes("if(!client||loading||!recoveryVerified)return"));
 assert(source.includes('AtlasCloudTransfer.createTransfer'));
 assert(source.includes('consent:true'));
 assert(source.includes('window.confirm'));

@@ -32,6 +32,15 @@
     <button type="submit" data-atlas-auth-submit class="j131-primary">Send password reset email</button>
     <button type="button" id="j355RecoveryCancel">Back to sign in</button>
   </form>
+  <form id="j355RecoveryCodeForm" data-atlas-auth-form hidden>
+    <p class="j355-note">If your <strong>Supabase password recovery email</strong> contains a six-digit code, enter it here instead of following the email link. This does not create a new account.</p>
+    <label for="j355RecoveryCodeEmail">Atlas account email</label>
+    <input id="j355RecoveryCodeEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" required>
+    <label for="j355RecoveryCode">Six-digit recovery code</label>
+    <input id="j355RecoveryCode" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required>
+    <button type="submit" data-atlas-auth-submit class="j131-primary">Verify recovery code</button>
+    <button type="button" id="j355CodeCancel">Back to sign in</button>
+  </form>
   <form id="j355NewPasswordForm" data-atlas-auth-form hidden>
     <p class="j355-note">Use your verified Atlas recovery link. Set a password that meets the current account rules.</p>
     <label for="j355NewPassword">New password</label>

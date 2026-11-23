@@ -45,3 +45,14 @@ Do not claim real passwords, cross-user isolation or deployed activation have be
 - Delivery not yet proven: Supabase default email service only mails organization team-member addresses. An external address needs custom SMTP.
 - Redirect not yet proven: configure/review Auth redirect allowlist for the specific protected preview or a tightly-scoped preview wildcard.
 - Verify actual email receipt, password change, re-login, Safari/Edge, ownership isolation, CSP and final release gates before main.
+
+## Recovery hardening / OTP fallback checkpoint — 2026-11-23
+Observed actual Supabase auth logs: recovery `mail.send` success; following verification returned `403 One-time token not found`; subsequent requests hit `429 over_email_send_rate_limit`. Do **not** report live password change verified. This update adds:
+- User-entered six-digit **Supabase recovery OTP** with `verifyOtp({ email, token, type: 'recovery' })`; separate from Cloudflare Access PIN. Existing account required; no signup.
+- Optional custom recovery template URL using `token_hash` and `verifyOtp({ token_hash, type: 'recovery' })`; app-side POST verification avoids default GET token prefetch.
+- Handles invalid redirect query, strips token hash from browser address bar, only shows password-update UI after a verified recovery event or OTP, surfaces mail rate-limit message, and keeps an accessible retry/cancel route. No automatic mail resend.
+- **UI setup still required:** In Supabase Auth > Email Templates > Reset Password, prefer a code-only email that includes `{{ .Token }}` (six digits) and clearly identifies GTAE Atlas. This removes the need to click a consumable link. Do not modify confirmation, invite or magic-link templates.
+- Alternatively a **custom link** can point to `{{ .RedirectTo }}?type=recovery&token_hash={{ .TokenHash }}`; test query handling and allowlisted redirects before relying on it. Prefer OTP-only email for preview.
+- Supabase Auth > URL Configuration must allow the exact active protected preview account URL for default Supabase recovery links. The live Cloudflare Pages preview route and email-template setup remain unverified externally.
+- **Do not increase SMTP limits just to bypass failed loops.** Wait for rate limit to clear; then test one code from one freshly issued recovery email.
+- Preserve production disabled; finalize real browser reset, cross-device sign-in, SMTP, actual password update, RLS isolation before release.
