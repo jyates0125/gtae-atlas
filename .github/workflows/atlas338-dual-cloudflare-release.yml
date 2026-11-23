@@ -1,5 +1,11 @@
 name: Atlas 33.8 - verify both Cloudflare development deployments
 on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'scripts/verify_cloudflare_dual_release.py'
+      - 'scripts/test_atlas338_dual_release.py'
+      - '.github/workflows/atlas338-dual-cloudflare-release.yml'
   push:
     branches: [development]
   schedule:
@@ -26,6 +32,7 @@ jobs:
           python-version: '3.12'
       - run: python scripts/test_atlas338_dual_release.py
   live-verify:
+    if: github.event_name != 'pull_request'
     needs: source-contract
     runs-on: ubuntu-24.04
     timeout-minutes: 18
