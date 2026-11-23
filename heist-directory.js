@@ -24,25 +24,33 @@
  heading.append(title,help);
  const savedLinks=document.createElement('div');savedLinks.className='j297-resume-list';
  resume.append(heading,savedLinks);controls.before(resume);
+ // A damaged per-heist save is NOT the same as no progress. Do not rewrite it.
  const safeJson=key=>{
   try{
-   const value=JSON.parse(localStorage.getItem(key)||'null');
-   return value&&typeof value==='object'&&!Array.isArray(value)?value:{};
-  }catch{return {}}
+   const raw=localStorage.getItem(key);
+   if(raw===null)return{value:{},damaged:false};
+   const value=JSON.parse(raw);
+   if(!value||typeof value!=='object'||Array.isArray(value))
+    return{value:{},damaged:true};
+   return{value,damaged:false};
+  }catch{return{value:{},damaged:true}}
  };
  const fields=['approach','entry','exit','poi','crew'];
  function progress(item){
-  const checked=Object.values(safeJson(item.key)).filter(v=>v===true).length;
+  const check=safeJson(item.key);
   const notes=safeJson('teamjura-heist-plan-v1:'+item.id);
-  const noteCount=fields.filter(k=>typeof notes[k]==='string'&&notes[k].trim()).length;
   const focus=safeJson('teamjura-heist-focus-v1:'+item.id);
-  const scoped=Array.isArray(focus.scoped)?focus.scoped.filter(v=>typeof v==='string').length:0;
-  const route=Array.isArray(focus.route)?focus.route.filter(v=>typeof v==='string').length:0;
-  const awards=Array.isArray(focus.awards)?focus.awards.filter(v=>typeof v==='string').length:0;
-  const updated=Math.max(Date.parse(notes.updatedAt||'')||0,Date.parse(focus.updatedAt||'')||0);
-  return {checked,noteCount,scoped,route,awards,updated,hasProgress:!!(checked||noteCount||scoped||route||awards)};
+  const checked=Object.values(check.value).filter(v=>v===true).length;
+  const noteCount=fields.filter(k=>typeof notes.value[k]==='string'&&notes.value[k].trim()).length;
+  const scoped=Array.isArray(focus.value.scoped)?focus.value.scoped.filter(v=>typeof v==='string').length:0;
+  const route=Array.isArray(focus.value.route)?focus.value.route.filter(v=>typeof v==='string').length:0;
+  const awards=Array.isArray(focus.value.awards)?focus.value.awards.filter(v=>typeof v==='string').length:0;
+  const updated=Math.max(Date.parse(notes.value.updatedAt||'')||0,Date.parse(focus.value.updatedAt||'')||0);
+  const damaged=check.damaged||notes.damaged||focus.damaged;
+  return {checked,noteCount,scoped,route,awards,damaged,updated,hasProgress:!!(damaged||checked||noteCount||scoped||route||awards)};
  }
  const summaryText=p=>[
+  p.damaged?'Saved data needs recovery':null,
   p.checked?p.checked+' checklist step'+(p.checked===1?'':'s'):null,
   p.noteCount?p.noteCount+' note'+(p.noteCount===1?'':'s'):null,
   p.scoped?p.scoped+' scoped POI'+(p.scoped===1?'':'s'):null,
@@ -62,6 +70,7 @@
    const p=progress(item);
    item.summary.textContent=summaryText(p);
    item.summary.hidden=!p.hasProgress;
+   item.card.dataset.recoveryRequired=String(p.damaged);
    item.card.hidden=!query.split(/\s+/).every(term=>item.keywords.includes(term))||(started.checked&&!p.hasProgress);
    if(p.hasProgress)resumable.push({...item,p});
    if(!item.card.hidden)visible++;
@@ -73,7 +82,7 @@
    link.className='j297-resume-card';link.href=item.href;
    const strong=document.createElement('strong');strong.textContent=item.name;
    const meta=document.createElement('small');meta.textContent=summaryText(item.p);
-   const action=document.createElement('span');action.textContent='Resume workspace';
+   const action=document.createElement('span');action.textContent=item.p.damaged?'Open workspace · recover save':'Resume workspace';
    link.append(strong,meta,action);savedLinks.append(link);
   }
   resume.hidden=!resumable.length;
@@ -84,6 +93,10 @@
  started.addEventListener('change',render);
  reset.onclick=()=>{search.value='';started.checked=false;saveQuery();render();search.focus()};
  window.addEventListener('pageshow',render);
- window.addEventListener('storage',e=>{if(!e.key||e.key.startsWith('teamjura-heist-'))render()});
+ window.addEventListener('storage',e=>{
+  if(!e.key||e.key.startsWith('teamjura-heist-')||
+     e.key.startsWith('teamjura-heist-plan-v1:')||
+     e.key.startsWith('teamjura-heist-focus-v1:'))render();
+ });
  controls.hidden=false;render();
 })();
