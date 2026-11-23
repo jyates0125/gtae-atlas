@@ -1,6 +1,10 @@
 # Team Jura Atlas 31.8 — one-shot owner-authorized full release validation.
-# Deliberately triggers ONLY when this workflow file itself first reaches the
-# draft staging branch. Subsequent feature commits do NOT rerun the huge gate.
+# Deliberately triggers ONLY when this workflow file itself changes on the
+# draft staging branch. Ordinary feature commits do NOT rerun the huge gate.
+# Atlas 34.3 owner-authorized release validation: one exact-head re-dispatch
+# following 39/39 green scoped checks on dc619b0, before GTAE development release.
+# If the release suite or native-device / live-site gates remain unverified,
+# keep protected main untouched and record the release blocker.
 # Never publishes or merges production; the existing manual workflow does QA.
 name: Atlas 31.8 - one-time staging full release launch
 on:
