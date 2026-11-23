@@ -10,6 +10,7 @@ on:
       - '_headers'
       - 'scripts/build-cloudflare.cjs'
       - 'scripts/test_atlas355_email_auth.cjs'
+      - 'tests/atlas355-recovery-flow.test.cjs'
       - '.github/workflows/atlas355-auth.yml'
   workflow_dispatch:
 permissions:
@@ -25,6 +26,8 @@ jobs:
           node-version: '22'
       - name: Test account feature gate and generated config
         run: node scripts/test_atlas355_email_auth.cjs
+      - name: Simulate Supabase recovery code and new-password UI
+        run: node --test tests/atlas355-recovery-flow.test.cjs
       - name: Test owner-scoped cloud save and transfer logic
         run: |
           node --test tests/atlas140-cloud-saves.test.cjs
