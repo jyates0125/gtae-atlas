@@ -158,13 +158,26 @@ try:
    card=page.locator('#forgeCollectionRows .fc-entry')
    expect(card).to_have_count(1,timeout=20000)
    expect(card).to_contain_text('Jetmax')
-   expect(card.get_by_role('link',name='Open in Forge Studio')).to_have_attribute('href','./atlas-vehicle-configurator.html?model=jetmax#variant=QA%20Marina%20Edition')
-   card.get_by_role('link',name='Open in Forge Studio').click()
+   # Atlas 31.3: named design titles never belong in a shareable URL.
+   # The private name is handed to Forge through a single-use same-tab session
+   # value and consumed on arrival; both V and VI collections remain isolated.
+   open_studio=card.get_by_role('link',name='Open in Forge Studio')
+   expect(open_studio).to_have_attribute('href','./atlas-vehicle-configurator.html?model=jetmax&source=collection')
+   assert 'QA Marina Edition' not in open_studio.get_attribute('href')
+   open_studio.click()
    expect(page.locator('#buildName')).to_have_value('QA Marina Edition',timeout=20000)
    expect(page.locator('#concept3d [data-forge-control="environment"]')).to_have_value('marina')
+   assert '#variant=' not in page.url and 'QA%20Marina' not in page.url,'Private design title leaked into URL'
+   assert page.evaluate('sessionStorage.getItem("team-jura-forge-private-handoff-v1")') is None,'One-time handoff not consumed'
+   # Reload must not expose/replay a private URL payload. The named design is
+   # still saved and can be re-opened explicitly from the local selector.
    page.reload(wait_until='domcontentloaded')
+   expect(page.locator('#forgeVariant option[value="QA Marina Edition"]')).to_have_count(1,timeout=20000)
+   page.locator('#forgeVariant').select_option('QA Marina Edition')
+   page.locator('#loadVariant').click()
    expect(page.locator('#buildName')).to_have_value('QA Marina Edition',timeout=20000)
    expect(page.locator('#concept3d [data-forge-control="environment"]')).to_have_value('marina')
+   assert '#variant=' not in page.url and 'QA%20Marina' not in page.url
    page.goto(base+'atlas-vehicle-configurator.html?world=vi&model=vi_squalo',wait_until='domcontentloaded')
    expect(page.locator('#modelSelect')).to_have_value('vi_squalo',timeout=20000)
    expect(page.locator('#concept3d')).to_have_attribute('data-forge-fidelity','model-study')
