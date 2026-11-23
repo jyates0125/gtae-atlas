@@ -1,0 +1,38 @@
+# Team Jura Atlas 31.8 — one-shot owner-authorized full release validation.
+# Deliberately triggers ONLY when this workflow file itself first reaches the
+# draft staging branch. Subsequent feature commits do NOT rerun the huge gate.
+# Never publishes or merges production; the existing manual workflow does QA.
+name: Atlas 31.8 - one-time staging full release launch
+on:
+  push:
+    branches:
+      - feature/atlas294-integrated-staging-20261122
+    paths:
+      - .github/workflows/atlas318-once-release-dispatch.yml
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch-full-staging-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify exact staging head and dispatch full release QA once
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          STAGING_REF: ${{ github.ref_name }}
+          EXPECTED_HEAD: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$STAGING_REF" = "feature/atlas294-integrated-staging-20261122"
+          head_now="$(gh api "repos/$GH_REPO/git/ref/heads/$STAGING_REF" --jq '.object.sha')"
+          if [ "$head_now" != "$EXPECTED_HEAD" ]; then
+            echo "::error::Staging head changed; refusing to validate a stale candidate."
+            exit 1
+          fi
+          echo "Owner-authorized full staging QA on $EXPECTED_HEAD"
+          gh workflow run team-jura-release.yml --ref "$STAGING_REF" --repo "$GH_REPO"
+          echo "Dispatched existing full Chromium + Edge + validated ZIP release workflow."
+          echo "The candidate is NOT owner-approved for public release by this dispatch."
