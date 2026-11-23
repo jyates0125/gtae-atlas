@@ -64,6 +64,20 @@ with ThreadingHTTPServer(('127.0.0.1', 0), partial(SimpleHTTPRequestHandler, dir
                 # Responsive layouts may hide the original controls behind the map menu.
                 page.locator('#' + button).evaluate('el => el.click()')
                 check_catalog(page, scope, armory, vehicles)
+            page.goto(origin + 'atlas90-vehicles6.html', wait_until='domcontentloaded')
+            for term in ('Dinka Enduro', 'Crest Kayak', 'Ganado Retro Build', 'Dominator Buggy'):
+                page.locator('#j90Search').fill(term)
+                result = page.locator('#j90Cards article')
+                expect(result).to_have_count(1)
+                expect(result).to_contain_text(term)
+                assert result.get_by_role('link', name='Research source').get_attribute('href').startswith('https://www.rockstargames.com/VI/')
+            page.goto(origin + 'atlas-database.html?game=vi&kind=property&q=Shore%20Court', wait_until='domcontentloaded')
+            expect(page.locator('#recordGrid .u-card')).to_contain_text('Ocean Beach')
+            page.goto(origin + 'atlas90-weapons6.html', wait_until='domcontentloaded')
+            for item, chapter in [('girardi-es9', 1), ('klose-k17', 2)]:
+                row = page.locator(f'[data-weapon-id="{item}"]')
+                expect(row).to_contain_text(f'Chapter {chapter}')
+                assert row.get_by_role('link', name='Check evidence').get_attribute('href').startswith('https://www.gamesradar.com/')
             page.close()
         browser.close()
     server.shutdown()

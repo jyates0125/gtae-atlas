@@ -345,3 +345,7 @@ All nine classic titles represented in the archive have a direct cast link on th
 Each modern explorer links to its own character archive and armory. Switching worlds in the map updates the three shortcuts together. Story and Online identify their shared GTA V vehicle archive, while Leonida links to its separate research catalog. The focused browser check covers direct entry, in-page switching, exact cast membership, and profile return links.
 
 The shared vehicle gallery carries its incoming Story or Online world into cast and database links. Leonida vehicle research opens the VI configurator.
+
+## Atlas 33.6 — November 23 Leonida source review
+
+Rockstar's screenshot index names the Dinka Enduro, Crest Kayak and Ganado Retro Build. The VI vehicle gallery links those additions and its four existing edition vehicles to individual source pages. The armory attributes the chapter-specific Girardi ES9 and Klose K17 variant unlocks to GamesRadar+'s launch gameplay report. Shore Court garage is searchable under VI properties using Rockstar's Ocean Beach description. It has no measured coordinate. GTADB's remote HEAD matched the already-pinned d406fea099e1df2bce42fd6b87eed04bce646629 revision; the existing 3,754-record community snapshot is retained. These are additions to Atlas, with no claim of a new game patch.
