@@ -11,7 +11,7 @@
 | Cloudflare-connected production source | lowercase `development` | Reviewed feature PRs merge here; intended public release does **not** equal a finished Cloudflare deploy |
 | Protected reference branch | lowercase `main` | Separately owner-approved release snapshots only; never automatically synchronize with each feature |
 | Temporary work | `feature/*`, `docs/*`, `fix/*` | Branch from current `development`, review/test via PR, then archive only after safety audit |
-| Legacy site | `https://team-jura-atlas-preview.pages.dev/` | Conditional **homepage-only** redirect; keep deep links for guest-progress export until migration review |
+| Secondary Cloudflare deployment | `https://team-jura-atlas-preview.pages.dev/` | Owner confirms this project also deploys lowercase `development`; preserve deep links and guest-progress export until migration review |
 
 **A single repository with two permanent branches is the intended topology.** It does not imply deleting open PR heads, safety refs, incomplete research or an older Cloudflare project without separate review. No second GitHub repository is authoritative merely because a second site URL exists.
 
@@ -46,7 +46,7 @@
 
 ## Cloudflare configuration and troubleshooting
 
-Expected Cloudflare Pages config: production branch `development`, command `node scripts/build-cloudflare.cjs`, output directory `public`, root `.`. The old project is not the canonical output. `_headers` should prevent sticky JS/CSS/HTML caches, but only inspecting real response headers and served asset bytes can prove whether visitors see a release.
+**Owner-confirmed configuration (2026-11-23): both Cloudflare Pages projects publish from lowercase `development`.** GTAE remains the canonical URL; the older Atlas address is a second deployment, not a separate source branch. Expected build command for each: `node scripts/build-cloudflare.cjs`, output `public`, root `.`. Verify both projects independently because shared source does not guarantee both deploys succeeded. A push to `development` triggers a read-only dual-site verification workflow; a daily check repeats it, and the workflow fails closed if the served revision is missing, stale, or different. The workflow does not deploy, redirect, or merge branches. `_headers` should prevent sticky JS/CSS/HTML caches, but only inspecting real response headers and served asset bytes can prove whether visitors see a release.
 
 When source branch is correct but the site looks old, check in order: deployment **project and production branch**, recent build status/SHA, build output artifact, `atlas-build-identity.json`, actual requested JS/CSS URLs and cache headers, then device cache/service worker. Do **not** merge `main` reflexively as a cache fix. A browser snapshot cannot establish source-version identity.
 
