@@ -110,7 +110,7 @@ body[data-start-world="6"] .j362-terrain-actions button:focus-visible{
  body[data-start-world="6"] .map-status{
   position:absolute!important;top:auto!important;left:8px!important;
   bottom:150px!important;transform:none!important;
-  max-width:calc(100% - 16px)!important;
+  max-width:55%!important;
   font-size:10px!important;padding:5px 9px!important;
   overflow-wrap:anywhere;
  }
@@ -135,5 +135,14 @@ body[data-start-world="6"] .j362-terrain-actions button:focus-visible{
  body[data-start-world="6"]:has(#selectedCard:not(.hidden)) #j171-map-tools,
  body[data-start-world="6"]:has(#selectedCard:not(.hidden)) .j362-terrain-notice{
   display:none!important;
+ }
+}
+
+/* The preview banner is the foreground explanation; avoid a duplicate 2D status
+ * tooltip covering it. The aria-live text stays in the accessibility tree. */
+@media(max-width:700px){
+ body[data-start-world="6"].jura-perspective-fallback .map-status{
+  clip-path:inset(50%)!important;width:1px!important;height:1px!important;
+  overflow:hidden!important;padding:0!important;border:0!important;
  }
 }
