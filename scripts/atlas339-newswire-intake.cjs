@@ -4,7 +4,7 @@
 const fs=require('node:fs');
 const path=require('node:path');
 const ENDPOINT='https://graph.rockstargames.com/';
-const QUERY='{posts(locale:"en_us",limit:50){results{id title url created}}}';
+const QUERY='query NewswireList($locale: String!, $page: Int!, $limit: Int) { posts(page: $page, locale: $locale, limit: $limit) { results { id: id_hash url title created } } }';
 function officialURL(raw) {
   if(typeof raw!=='string'||raw.length>400)return null;
   try {
@@ -54,7 +54,7 @@ function candidates(payload,reviewed,now=new Date()){
 async function retrieve(fetcher=fetch){
   const response=await fetcher(ENDPOINT,{method:'POST',redirect:'error',
     headers:{'content-type':'application/json',accept:'application/json'},
-    body:JSON.stringify({query:QUERY}),signal:AbortSignal.timeout(16000)});
+    body:JSON.stringify({query:QUERY,variables:{locale:'en_us',page:1,limit:50}}),signal:AbortSignal.timeout(16000)});
   if(!response.ok)throw Error('Newswire HTTP '+response.status);
   const body=await response.text();
   if(body.length>750000)throw Error('Newswire result too large');
