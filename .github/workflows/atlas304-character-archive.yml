@@ -6,6 +6,7 @@ on:
       - 'atlas222-characters.js'
       - 'atlas222-characters.css'
       - 'atlas-characters.html'
+      - 'scripts/test_atlas334_classic_cast.py'
       - 'data/atlas-universe-profiles.json'
       - 'art/lamar-*.webp'
       - 'scripts/test_atlas293_character_portraits_browser.py'
@@ -46,6 +47,7 @@ jobs:
         run: |
           python scripts/test_atlas304_character_archive_browser.py
           python scripts/test_atlas293_character_portraits_browser.py
+          python scripts/test_atlas334_classic_cast.py
       - name: Save owner review evidence
         if: always()
         uses: actions/upload-artifact@v4
