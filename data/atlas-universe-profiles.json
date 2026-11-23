@@ -55,6 +55,8 @@
     },
     {
       "id": "character:lamar",
+      "conceptPortrait": "art/lamar-gta-online.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Lamar Davis",
       "scope": "online",
@@ -1109,6 +1111,8 @@
     },
     {
       "id": "character:lamar-story",
+      "conceptPortrait": "art/lamar-gta-v-story.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Lamar Davis",
       "scope": "story",

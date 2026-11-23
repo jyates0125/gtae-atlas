@@ -45,8 +45,15 @@ try:
                 card=page.locator(f'[data-character-id="{id}"]')
                 expect(card.locator('h3')).to_have_text('Lamar Davis')
                 assert card.get_attribute('data-j222-world')==world
-                expect(card.locator('.j222-character-media')).to_have_attribute('data-art-status','portrait-pending',timeout=20000)
-                expect(card.get_by_role('group',name='Individual portrait unavailable for Lamar Davis')).to_be_visible()
+                asset = 'lamar-gta-v-story.webp' if world == 'story' else 'lamar-gta-online.webp'
+                portrait = card.locator('img.jura-concept-portrait')
+                expect(portrait).to_have_attribute('src', './art/' + asset)
+                portrait.evaluate('img => img.decode()')
+                assert portrait.evaluate('img => [img.naturalWidth, img.naturalHeight]') == [765, 1024]
+                card.get_by_role('link', name='View profile').click()
+                modal = page.locator('#j222-profile-dialog')
+                expect(modal.locator('img.jura-concept-portrait')).to_have_attribute('src', './art/' + asset)
+                close_profile_and_settle_history(page, modal)
                 expected='atlas.html' if world=='story' else 'atlas-online.html'
                 assert expected in card.locator('.j222-card-actions a').nth(1).get_attribute('href')
             for name,id,asset in [
