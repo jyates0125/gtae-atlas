@@ -13,6 +13,7 @@
 <script defer src="./atlas-road-core.js?v=70"></script>
 <script defer src="./atlas-3d.js?v=70"></script>
 <script defer src="./atlas-terrain-evidence.js?v=359"></script>
+<script defer src="./atlas363-elevation-probe.js?v=363"></script>
 <script defer src="./atlas-navigation.js?v=70"></script>
 <script defer src="./atlas-conditions.js?v=70"></script>
 <script defer src="./atlas.js?v=290"></script>
@@ -222,6 +223,13 @@
         <input type="file" id="juraElevationFile" accept=".bin,application/octet-stream" aria-label="Import local GTA VI 16-bit heightfield">
         <label for="juraElevationProofFile">Optional SHA-256 / alignment evidence JSON</label>
         <input type="file" id="juraElevationProofFile" accept=".json,application/json" aria-label="Import heightfield evidence JSON">
+        <section class="j363-height-probe" aria-label="On-demand GTADB elevation comparison">
+          <strong>Ground-height inspector · GTA VI research</strong>
+          <p>Check a single point using GTADB's experimental elevation API, then compare it with an imported local heightfield. Your current map-center X/Y is sent to GTADB <em>only if you tap Check</em>. No background requests, API key or bulk downloads.</p>
+          <button type="button" id="j363CheckHeight">Check GTADB height at map center</button>
+          <p id="j363HeightResult" role="status" aria-live="polite">No height query made. Elevation samples are community research, not official terrain.</p>
+          <a href="./atlas-credits.html#licensed">GTADB source, license and contributor details</a>
+        </section>
         <p>Evidence-file checks do not independently establish rights, source authenticity or game accuracy. <a href="./atlas-credits.html">Source credits and reuse conditions</a>.</p>
       </details>
       <details class="jura-nav-data"><summary>Optional licensed road-network data</summary><p>Import a permitted GTA VI road graph to preview graph-following paths. Imported geometry is UNVERIFIED until checked against released gameplay; it must never be labeled verified driving directions. Without one, routes are direct-line previews.</p><input type="file" id="juraNavRoadFile" accept=".json,application/json" aria-label="Import road network file"><a href="./road-graph-example.json" download>Road graph example</a></details>
