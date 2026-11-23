@@ -37,27 +37,46 @@ function syncDimensionControls(){
  document.body.classList.toggle('jura-2d-only',!on);
  if(!on&&dimension==='3d')setDimension('2d');
 }
+function syncTerrainNotice(){
+ const note=$('j362TerrainNotice');
+ if(note)note.hidden=!(dimension==='3d'&&fallback3d);
+}
 function setDimension(next){
  if(next==='3d'&&!supports3d()){bridge.notice('The original 2D map is the active view for this world. GTA VI research is the current 3D focus.');return}
  if(next===dimension)return;
  if(next==='3d'){
-  const ok=!!terrain&&terrain.activate();
+  // Do not hide the known-good illustrated map until *actual* relief is present.
+  // Without a source-cleared imported height grid, a bare WebGL plane can be
+  // visually blank on iOS even when the renderer initialized successfully.
+  const hasRelief=!!terrain?.hasElevation();
+  const ok=hasRelief&&!!terrain.activate();
   fallback3d=!ok;
   dimension='3d';document.body.classList.add('jura-in-3d');
   document.body.classList.toggle('jura-perspective-fallback',fallback3d);
-  $('jura3dStatus').textContent=fallback3d?'3D perspective fallback · native WebGL unavailable':'3D loading · illustrated 2D perspective remains visible until texture is ready';
-  bridge.notice(fallback3d?'3D-style perspective shown using the working illustrated map. Native 3D unavailable on this device.':'3D map enabled. Drag to rotate, shift-drag to pan, wheel to zoom.');
+  $('jura3dStatus').textContent=fallback3d?'Perspective preview · elevation not installed':'3D terrain active · community source';
+  bridge.notice(fallback3d?'Perspective preview: showing your illustrated Leonida map. Real hills require a compatible, permitted elevation grid from Directions → Experimental Leonida 3D terrain.':'3D terrain active. One finger orbits; two fingers pan and pinch to zoom.');
  }else{
   terrain?.deactivate();dimension='2d';fallback3d=false;
   document.body.classList.remove('jura-in-3d','jura-perspective-fallback');
-  bridge.notice('2D map active.');
+  bridge.notice('2D illustrated map active.');
  }
+ syncTerrainNotice();
  render(false);
 }
 function clear(){waypoints=[null,null];plan=null;bridge.clearRoutePlan();render();status('Navigation cleared. Saved collectible progress is unchanged.')}
 function refresh(){if(terrain?.isActive())terrain.render()}
 function gameChanged(){graph=null;waypoints=[null,null];plan=null;syncDimensionControls();render();if(dimension==='3d')terrain?.rebase();}
 function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('jura3dMarkerOverlay'),status:$('jura3dStatus'),bridge})||null;
+ if($('j362ClosePreview'))$('j362ClosePreview').onclick=()=>setDimension('2d');
+ if($('j362ImportTerrain'))$('j362ImportTerrain').onclick=()=>{
+   open();
+   const section=$('juraElevationFile')?.closest('details');
+   if(section){
+    section.open=true;
+    section.scrollIntoView({block:'nearest',behavior:'auto'});
+   }
+ };
+ syncTerrainNotice();
  $('juraOpenNav').onclick=()=>active?close():open();$('juraCloseNav').onclick=close;$('juraNavAdd').onclick=()=>{if(waypoints.length>=12)return;waypoints.splice(waypoints.length-1,0,null);invalidate();render();fields.at(-2)?.input.focus()};$('juraNavReverse').onclick=()=>{waypoints.reverse();invalidate();render()};$('juraNavGo').onclick=makeRoute;$('juraNavClear').onclick=clear;$('juraNavOrder').onchange=e=>{ordering=e.target.value};$('juraToggle3d').onclick=()=>setDimension(dimension==='2d'?'3d':'2d');$('jura2d').onclick=()=>setDimension('2d');$('jura3d').onclick=()=>setDimension('3d');$('jura3dNorth').onclick=()=>terrain?.resetNorth();$('jura3dZoomIn').onclick=()=>terrain?.zoom(.8);$('jura3dZoomOut').onclick=()=>terrain?.zoom(1.25);
  $('juraNavExport').onclick=()=>{if(!plan){status('Generate a route first');return}const rows=waypoints.map((r,i)=>`${i===0?'Start':`Stop ${i}`}: ${r.name} (X ${r.x.toFixed(1)}, Y ${r.y.toFixed(1)})`).join('\n');const s='Team Jura Atlas · GTA '+bridge.game()+'\n'+rows+'\n\n'+plan.warning;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(s).then(()=>status('Route summary copied.')).catch(()=>window.prompt('Copy route',s))}else window.prompt('Copy route',s)};
  if($('juraNavCsv'))$('juraNavCsv').onclick=()=>{if(!plan){status('Generate a route first');return}const quote=s=>'"'+String(s??'').replace(/"/g,'""')+'"';const csv=[['order','name','x','y','game','routing'].map(quote).join(','),...waypoints.map((r,i)=>[i,r.name,r.x,r.y,bridge.game(),plan.roadGraphUsed?'imported-road-graph-unverified':'direct-line'].map(quote).join(','))].join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='team-jura-route-'+bridge.game()+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);status('Route CSV exported with coordinate and routing labels.')};
@@ -69,7 +88,16 @@ function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('
   const bytes=await file.arrayBuffer();
   await terrain.setElevationBinary(bytes,g);
   localElevation={game:g,bytes};
-  status('Private local heightfield loaded · UNVERIFIED community terrain. Switch to 3D to view. Files stay in device memory and are not uploaded.');
+  if(dimension==='3d'&&fallback3d){
+   const ok=terrain.activate();
+   if(ok){
+    fallback3d=false;
+    document.body.classList.remove('jura-perspective-fallback');
+    syncTerrainNotice();
+    render(false);
+   }
+  }
+  status('Private community heightfield loaded · UNVERIFIED. '+(dimension==='3d'&&!fallback3d?'Actual WebGL terrain active.':'Switch to 3D to see terrain.')+' File remains on this device; not uploaded.');
  }catch(err){localElevation=null;status('Elevation rejected: '+err.message)}finally{e.target.value=''}};
  if($('juraElevationProofFile'))$('juraElevationProofFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{
   if(!localElevation||localElevation.game!==bridge.game())throw Error('Import matching terrain first');
