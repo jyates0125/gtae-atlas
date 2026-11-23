@@ -1,0 +1,43 @@
+name: Atlas 36.2 - Leonida map clarity and share footer
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas-vi.html'
+      - 'atlas-navigation.js'
+      - 'atlas362-vi-map-clarity.css'
+      - 'scripts/test_atlas362_vi_map_clarity_browser.py'
+      - 'docs/ATLAS362-LEONIDA-MOBILE-MAP-CLARITY.md'
+      - '.github/workflows/atlas362-vi-map-clarity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  vi-visibility-and-footer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node --check atlas-navigation.js
+      - run: node scripts/test_heightfield_import.cjs
+      - run: node scripts/build-cloudflare.cjs
+      - run: python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test map clarity at 390px, 430px and desktop, including footer
+        run: python scripts/test_atlas362_vi_map_clarity_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas362-vi-map-clarity-chromium
+          path: qa-evidence/atlas362-map-clarity/
+          if-no-files-found: ignore
+          retention-days: 7
