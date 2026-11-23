@@ -67,16 +67,13 @@ jobs:
         run: |
           python - <<'PY'
           import subprocess,sys
-          names=('test_atlas211_mobile_fit_browser.py',
-                 'test_atlas212_directory_browser.py',
-                 'test_atlas217_vi_world_browser.py',
-                 'test_atlas222_vi_browser.py',
-                 'test_atlas223_home_browser.py',
-                 'test_atlas218_yanis_v18_browser.py',
-                 'test_atlas219_hq_browser.py',
-                 'test_atlas220_vi_mobile_browser.py',
-                 'test_atlas201_squalo_browser.py',
+          # The previous exact-head Edge run passed the first eight scripts.
+          # Recheck the remaining two without repeating their browser builds.
+          names=('test_atlas201_squalo_browser.py',
                  'test_atlas191_first_visit_browser.py')
+          # Python's Windows cp1252 stdout cannot display some Playwright
+          # replacement characters in a failure traceback. Keep diagnostics.
+          sys.stdout.reconfigure(encoding='utf-8',errors='backslashreplace')
           failures=[]
           for name in names:
               try:
@@ -84,11 +81,11 @@ jobs:
                                    encoding='utf-8',errors='replace',timeout=230)
                   if p.returncode:
                       failures.append(name)
-                      print('FAIL:',name,'\\n', (p.stdout+'\\n'+p.stderr)[-9000:],flush=True)
+                      print('FAIL:',name,'\\n', (p.stdout+'\\n'+p.stderr)[-9000:].encode('ascii','backslashreplace').decode('ascii'),flush=True)
                   else:print('PASS:',name,flush=True)
               except Exception as exc:
                   failures.append(name)
-                  print('ERROR:',name,repr(exc),flush=True)
+                  print('ERROR:',name,ascii(exc),flush=True)
           print(f'Edge release suffix: {len(names)-len(failures)}/{len(names)} pass; failed: {failures}',flush=True)
           sys.exit(1 if failures else 0)
           PY
