@@ -1,0 +1,22 @@
+/* Atlas 32.0 · private, read-only saved Forge comparison.
+   Subject-specific Elario violet and amber treatment; no page-level overrides. */
+.fc-compare{margin-top:20px;padding:clamp(12px,2.6vw,22px);min-width:0;border:1px solid #aa7bb7;border-radius:14px;background:linear-gradient(135deg,#382048,#1d112a 65%,#2c1938);box-shadow:0 8px 25px #0004}
+.fc-compare[hidden]{display:none!important}
+.fc-compare-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.fc-compare-heading h3{margin:3px 0;color:#ffd8a0;font-size:clamp(19px,2.4vw,27px)}
+.fc-compare-heading button,.fc-compare-toggle{min-height:44px;padding:9px 12px;border:1px solid #bd8ba4;border-radius:9px;background:#553467;color:#ffe8c1;font:750 12px/1.35 system-ui;cursor:pointer}
+.fc-compare-heading button:disabled{opacity:.6}
+.fc-compare-toggle[aria-pressed=true]{background:#f0b66e;color:#2b173a;border-color:#ffdc9b}
+.fc-compare :is(button,a):focus-visible,.fc-compare-toggle:focus-visible{outline:3px solid #ffe1a8;outline-offset:3px}
+#forgeCompareStatus{font-size:13px;color:#eed9e9;line-height:1.5}
+.fc-compare-note{font-size:12px;color:#d9c1db;line-height:1.6}
+.fc-compare-scroll{overflow-x:auto;max-width:100%;border-radius:10px;border:1px solid #805b91}
+.fc-compare-table{width:100%;min-width:400px;border-collapse:collapse;text-align:left;table-layout:fixed;color:#fff0fa}
+.fc-compare-table :is(th,td){padding:11px 10px;overflow-wrap:anywhere;vertical-align:middle;border-bottom:1px solid #775986}
+.fc-compare-table thead th{background:#4e305f;color:#ffdc9f;font-size:12px}
+.fc-compare-table tbody th{font-size:12px;color:#ffd2a0;width:32%}
+.fc-compare-table td{font-size:12px}
+.fc-compare-table tr:last-child :is(th,td){border-bottom:0}
+.fc-mini-paint{display:inline-block;vertical-align:middle;width:20px;height:20px;margin-right:7px;border:1px solid #fff9;border-radius:6px;background:var(--fc-paint)}
+.fc-entry .fc-compare-toggle{width:100%;margin-top:4px;text-align:center}
+@media(max-width:620px){.fc-compare{padding:12px}.fc-compare-heading button{width:100%}.fc-compare-table{min-width:375px}.fc-compare-table :is(th,td){padding:9px 7px}}
