@@ -62,7 +62,7 @@ try:
         page.goto(base+'/map-hub.html?game=vcs&collection=Red%20balloons',wait_until='domcontentloaded')
         expect(page.locator('#j98bSet')).to_have_value('Red balloons')
         expect(page.locator('#j321-checklist-warning')).to_be_visible()
-        expect(page.locator('#j98bGrid button[aria-label*="Red balloons slot 1"]')).to_be_disabled()
+        expect(page.get_by_role("button",name="Red balloons slot 1 not completed",exact=True)).to_be_disabled()
         expect(page.locator('#j98bImport')).to_be_disabled()
         with page.expect_download() as info:
             page.locator('#j321-checklist-raw').click()
@@ -75,7 +75,7 @@ try:
                       {'key':vcs_key,'value':{'schema':'team-jura-atlas98b-items-v1','game':'vcs','done':{}}})
         page.reload(wait_until='domcontentloaded')
         expect(page.locator('#j321-checklist-warning')).to_be_hidden()
-        first=page.locator('#j98bGrid button[aria-label*="Red balloons slot 1"]')
+        first=page.get_by_role("button",name="Red balloons slot 1 not completed",exact=True)
         expect(first).to_be_enabled()
         first.click()
         current=page.evaluate('k=>JSON.parse(localStorage.getItem(k))',vcs_key)
