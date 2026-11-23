@@ -30,5 +30,6 @@ a.throws(()=>n.candidates({data:{}},{news:[]}),/unavailable/);
  const got=await n.retrieve(async(url,opt)=>{called={url,opt};return {ok:true,text:async()=>JSON.stringify(input)}});
  a.deepEqual(got,input);a.equal(called.url,'https://graph.rockstargames.com/');
  a.equal(called.opt.method,'POST');a.equal(called.opt.redirect,'error');
+const body=JSON.parse(called.opt.body);a.equal(body.variables.locale,'en_us');a.equal(body.variables.page,1);a.equal(body.variables.limit,50);a.match(body.query,/id: id_hash/);a.match(body.query,/posts\(page: \$page/);
  console.log('PASS Atlas 33.9 offline Newswire URL/date/edition/dedup/source/transport tests');
 })().catch(e=>{console.error(e);process.exitCode=1});
