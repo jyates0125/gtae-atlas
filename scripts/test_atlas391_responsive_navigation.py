@@ -12,8 +12,8 @@ PUBLIC = ROOT / "public"
 width = int(os.environ.get("ATLAS_AUDIT_WIDTH", "390"))
 height = {390: 844, 820: 1180, 1440: 900}[width]
 routes = [item["path"] for item in json.loads((PUBLIC / "atlas132-page-directory.json").read_text())["pages"]]
-routes += ["map-hub.html?game=" + game for game in ("vc","iii","vcs","lcs","ctw","tlad","tbogt")]
-routes += ["atlas-vi.html?view=rockstar"]
+routes += ["map-hub.html?game=" + game for game in ("vc","iii","vcs","lcs","ctw")]
+routes += ["atlas-iv.html?scope=tlad","atlas-iv.html?scope=tbogt","atlas-vi.html?view=rockstar"]
 routes = list(dict.fromkeys(routes))
 out = ROOT / "qa-evidence" / "atlas391"
 out.mkdir(parents=True, exist_ok=True)
