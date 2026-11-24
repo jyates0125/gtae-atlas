@@ -59,16 +59,20 @@ function setDimension(next){
   syncTerrainNotice();render(false);
   Promise.resolve(terrain?.prepareElevation(target)??false).then(ready=>{
    if(epoch!==terrainViewToken||dimension!=='3d'||bridge.game()!==target)return;
-   const ok=!!ready&&!!terrain?.activate();
+   // An explicit local import can supersede the same-origin request at any
+   // point. Its validated grid takes priority even when the stale fetch
+   // resolves false; never relabel a real running renderer as unavailable.
+   const available=!!terrain?.hasElevation(target);
+   const ok=available&&(!!terrain?.isActive()||!!terrain?.activate());
    fallback3d=!ok;
    document.body.classList.toggle('jura-perspective-fallback',fallback3d);
-   $('jura3dStatus').textContent=ok?'3D terrain active · community reconstruction':ready?'WebGL unavailable · illustrated map retained':'Perspective preview · no elevation data installed';
+   $('jura3dStatus').textContent=ok?'3D terrain active · community reconstruction':available?'WebGL unavailable · illustrated map retained':'Perspective preview · no elevation data installed';
    if(message){
-    message.textContent=ready
+    message.textContent=available
      ?'A compatible elevation grid is loaded, but this device could not start WebGL. The illustrated 2D map is still available.'
      :'No elevation data installed yet. The illustrated map remains available. Add a compatible permitted heightfield under Directions → Experimental Leonida 3D terrain.';
    }
-   bridge.notice(ok?'Reconstructed 3D terrain active. One finger orbits; two fingers pan and pinch to zoom.':'Illustrated 2D perspective preview · '+(ready?'WebGL is unavailable.':'No elevation data installed.'));
+   bridge.notice(ok?'Reconstructed 3D terrain active. One finger orbits; two fingers pan and pinch to zoom.':'Illustrated 2D perspective preview · '+(available?'WebGL is unavailable.':'No elevation data installed.'));
    syncTerrainNotice();render(false);
   }).catch(()=>{
    if(epoch!==terrainViewToken||dimension!=='3d'||bridge.game()!==target)return;
@@ -126,25 +130,36 @@ function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('
  $('juraOpenNav').onclick=()=>active?close():open();$('juraCloseNav').onclick=close;$('juraNavAdd').onclick=()=>{if(waypoints.length>=12)return;waypoints.splice(waypoints.length-1,0,null);invalidate();render();fields.at(-2)?.input.focus()};$('juraNavReverse').onclick=()=>{waypoints.reverse();invalidate();render()};$('juraNavGo').onclick=makeRoute;$('juraNavClear').onclick=clear;$('juraNavOrder').onchange=e=>{ordering=e.target.value};$('juraToggle3d').onclick=()=>setDimension(dimension==='2d'?'3d':'2d');$('jura2d').onclick=()=>setDimension('2d');$('jura3d').onclick=()=>setDimension('3d');$('jura3dNorth').onclick=()=>terrain?.resetNorth();$('jura3dZoomIn').onclick=()=>terrain?.zoom(.8);$('jura3dZoomOut').onclick=()=>terrain?.zoom(1.25);
  $('juraNavExport').onclick=()=>{if(!plan){status('Generate a route first');return}const rows=waypoints.map((r,i)=>`${i===0?'Start':`Stop ${i}`}: ${r.name} (X ${r.x.toFixed(1)}, Y ${r.y.toFixed(1)})`).join('\n');const s='Team Jura Atlas · GTA '+bridge.game()+'\n'+rows+'\n\n'+plan.warning;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(s).then(()=>status('Route summary copied.')).catch(()=>window.prompt('Copy route',s))}else window.prompt('Copy route',s)};
  if($('juraNavCsv'))$('juraNavCsv').onclick=()=>{if(!plan){status('Generate a route first');return}const quote=s=>'"'+String(s??'').replace(/"/g,'""')+'"';const csv=[['order','name','x','y','game','routing'].map(quote).join(','),...waypoints.map((r,i)=>[i,r.name,r.x,r.y,bridge.game(),plan.roadGraphUsed?'imported-road-graph-unverified':'direct-line'].map(quote).join(','))].join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='team-jura-route-'+bridge.game()+'.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);status('Route CSV exported with coordinate and routing labels.')};
- if($('juraElevationFile'))$('juraElevationFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{
-  if(!terrain)throw Error('3D renderer unavailable');
-  const g=bridge.game(),d=root.JuraTerrain3D?.ELEVATIONS[g];
-  if(!d)throw Error('No heightfield for this game');
-  if(file.size!==d.width*d.height*2)throw Error('Expected '+(d.width*d.height*2).toLocaleString()+' bytes');
-  const bytes=await file.arrayBuffer();
-  await terrain.setElevationBinary(bytes,g);
-  localElevation={game:g,bytes};
-  if(dimension==='3d'&&fallback3d){
-   const ok=terrain.activate();
-   if(ok){
-    fallback3d=false;
-    document.body.classList.remove('jura-perspective-fallback');
-    syncTerrainNotice();
-    render(false);
+ if($('juraElevationFile'))$('juraElevationFile').onchange=async e=>{
+  const file=e.target.files?.[0];if(!file)return;
+  const previous=localElevation; // invalid replacement never destroys earlier evidence
+  try{
+   if(!terrain)throw Error('3D renderer unavailable');
+   const g=bridge.game(),d=root.JuraTerrain3D?.ELEVATIONS[g];
+   if(!d)throw Error('No heightfield for this game');
+   if(file.size!==d.width*d.height*2)throw Error('Expected '+(d.width*d.height*2).toLocaleString()+' bytes');
+   const bytes=await file.arrayBuffer();
+   if(g!==bridge.game())throw Error('The active GTA world changed while importing');
+   await terrain.setElevationBinary(bytes,g);
+   localElevation={game:g,bytes};
+   // Invalidate the pending button load: the local upload is authoritative,
+   // and late async 404/corrupt responses must not overwrite its status.
+   ++terrainViewToken;
+   if(dimension==='3d'){
+    const ok=!!terrain.isActive()||!!terrain.activate();
+    fallback3d=!ok;
+    document.body.classList.toggle('jura-perspective-fallback',fallback3d);
+    $('jura3dStatus').textContent=ok?'3D terrain active · locally imported':'WebGL unavailable · illustrated map retained';
+    const preview=$('j362TerrainStatus');
+    if(preview)preview.textContent=ok?'Local reconstructed terrain loaded.':'Your compatible terrain file was accepted. WebGL is unavailable on this device; the illustrated map remains usable.';
+    syncTerrainNotice();render(false);
    }
-  }
-  status('Private community heightfield loaded · UNVERIFIED. '+(dimension==='3d'&&!fallback3d?'Actual WebGL terrain active.':'Switch to 3D to see terrain.')+' File remains on this device; not uploaded.');
- }catch(err){localElevation=null;status('Elevation rejected: '+err.message)}finally{e.target.value=''}};
+   status('Private community heightfield loaded · UNVERIFIED. '+(dimension==='3d'&&!fallback3d?'Actual WebGL terrain active.':dimension==='3d'?'WebGL unavailable; map retained.':'Switch to 3D to see terrain.')+' File remains on this device; not uploaded.');
+  }catch(err){
+   localElevation=previous;
+   status('Elevation rejected: '+err.message+(previous?' · Previously accepted terrain and evidence preserved.':''));
+  }finally{e.target.value=''}
+ };
  if($('juraElevationProofFile'))$('juraElevationProofFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{
   if(!localElevation||localElevation.game!==bridge.game())throw Error('Import matching terrain first');
   if(!root.JuraTerrainEvidence)throw Error('Terrain evidence validator unavailable');
