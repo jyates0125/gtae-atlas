@@ -230,13 +230,24 @@ function mount(){
     panel.querySelector('.j143-advanced').open=true;
    }
    }
+ // The official poster owns the map foreground while open. Keep the
+ // covered research controls out of the tab order and pointer hit testing.
+ const covered=new Map();
+ function coverResearch(){
+  for(const child of map.children){
+   if(child===panel||covered.has(child))continue;
+   covered.set(child,child.inert);child.inert=true;
+  }
+ }
+ function uncoverResearch(){for(const [child,wasInert] of covered)child.inert=wasInert;covered.clear()}
+ new MutationObserver(()=>{if(!panel.hidden)coverResearch()}).observe(map,{childList:true});
  function openView({focus=true}={}){
   // Rockstar's official poster has a different coordinate frame. Cancel
   // any pending/active research terrain before opening it; retain the map
   // selection and private notes, but never drape research relief onto it.
   window.teamJuraNav?.setDimension('2d');
   updateViewUrl(true);
-  panel.hidden=false;button.setAttribute('aria-expanded','true');
+  panel.hidden=false;coverResearch();button.setAttribute('aria-expanded','true');
   button.setAttribute('aria-pressed','true');
   if(focus)panel.querySelector('[data-j143="close"]').focus();
   if(!loaded)runOperation(async serial=>{
@@ -258,7 +269,7 @@ function mount(){
   if(pendingPosterFetch)pendingPosterFetch.abort();
   ++posterOperation;
   setBusy(false);
-  panel.hidden=true;button.setAttribute('aria-expanded','false');button.setAttribute('aria-pressed','false');
+  panel.hidden=true;uncoverResearch();button.setAttribute('aria-expanded','false');button.setAttribute('aria-pressed','false');
   // Tell optional personal-poster tools to disarm pending placement on exit.
   window.dispatchEvent(new CustomEvent('jura:poster:visibility',{detail:{open:false}}));
   if(!button.hidden)button.focus();
