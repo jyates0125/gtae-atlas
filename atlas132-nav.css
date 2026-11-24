@@ -82,3 +82,17 @@
   width:auto!important;max-height:min(79dvh,670px)!important;
  }
 }
+
+/* Tablet audit: the old floating world switcher covered All Maps and Find
+   on SA/Discovery. Keep those links, but give both docks normal flow. */
+.j132-nav.j391-inline{flex-wrap:wrap;align-items:center;gap:8px}
+.j132-nav.j391-inline > a[data-j87-maps-link]{position:static!important;inset:auto!important;z-index:auto!important;display:inline-flex!important;align-items:center;min-height:44px;box-sizing:border-box;max-width:100%;white-space:normal}
+body:has(#j132-nav-toggle) > #j98-flow{
+ position:relative!important;inset:auto!important;z-index:auto!important;
+ width:fit-content!important;max-width:calc(100% - 24px)!important;
+ box-sizing:border-box;margin:8px auto 12px!important;flex-wrap:wrap;
+}
+body:has(#j132-nav-toggle) > #j98-flow .j98-flow-sub{
+ position:static!important;inset:auto!important;max-width:100%;box-sizing:border-box;
+}
+body:has(#j132-nav-toggle) > #j98-flow .j98-flow-worlds{min-width:0;max-width:100%}
