@@ -45,6 +45,15 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(root/'publi
                 expect(page.locator('#j190-iv-scope')).to_have_value(scope)
                 expect(page.locator('#visibleCount')).to_have_text('50')
                 assert page.locator('#classicViewport').count()==0
+            page.goto(base+'atlas-cayo.html',wait_until='domcontentloaded')
+            expect(page.locator('#j180-shell')).to_be_visible(timeout=30000)
+            assert '/heist-cayo-perico.html' in page.url
+            assert page.locator('#j121Original').count()==0
+            assert page.locator('#j169-cayo-frame').get_attribute('src') is None
+            expect(page.locator('#j180-shell')).to_have_count(1)
+            page.goto(base+'atlas-cayo.html?recovery=1',wait_until='domcontentloaded')
+            expect(page.locator('#j121Original')).to_have_count(1)
+            assert 'recovery=1' in page.url
             page.close()
             print(f'PASS {width}px: both episode cards, native map, 50 birds, optional notebook and old bookmark redirects')
         browser.close()
