@@ -12,3 +12,9 @@
 
 .j88-event-card.j393-closed .j88-event-top strong{text-decoration:line-through;color:#c8b8d1}
 .j88-event-card.j393-closed .j88-status{border:1px solid #a79ab0}
+
+#j393-online-activity-slot .j88-panel{margin:12px 0;min-width:0}
+#j393-online-activity-slot .j88-actions{flex-wrap:wrap}
+#j393-online-activity-slot .j393-event-switch{min-height:40px}
+#j393-online-activity-slot .j393-event-switch[aria-pressed=false]{opacity:.75;text-decoration:line-through}
+#j393-online-activity-slot .j88-panel[hidden]{display:none!important}
