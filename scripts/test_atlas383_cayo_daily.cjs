@@ -33,6 +33,11 @@ for(const flag of Object.keys(slasher.slasherSession))assert.equal(C.markerAvail
 assert.equal(C.markerAvailability('slashers',{...slasher,state:{}}).availability,'unconfirmed');
 assert.equal(C.markerAvailability('slashers',{...slasher,now:t}).availability,'inactive');
 const anchors=Object.values(JSON.parse(fs.readFileSync('data/gtadb-5.json','utf8')).records);
-assert.equal(C.SLASHER_ZONES.length,6);
+assert.equal(C.SLASHER_ZONES.length,7);
 for(const z of C.SLASHER_ZONES){assert.ok(anchors.some(a=>a[0].includes(z.anchor)&&a[1][0]===z.x&&a[1][1]===z.y),z.anchor);assert.ok(z.radius>0);}
 console.log('PASS Slasher event, hour, session prerequisites, expiry and licensed regional anchors');
+
+assert.equal(C.markerAvailability('slashers',{...slasher,mode:'story'}).hide,true);
+assert.ok(C.rulesForMode('vi').some(r=>r.id==='vi-story-launch'));
+assert.ok(!C.rulesForMode('vi').some(r=>r.id==='slashers'));
+assert.match(fs.readFileSync('atlas-credits.html','utf8'),/id="activity-evidence"/);
