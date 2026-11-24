@@ -54,12 +54,13 @@ const STORY_RULES=[
  {id:'story-strangers',name:'Strangers and Freaks',kind:'prerequisite',group:'Story missions',requires:['story-progress'],source:'https://gtadb.net/gta-5-map/',detail:'Individual missions become available as the relevant character and story progress unlocks them.'}
 ];
 const VI_RULES=[
+ {id:'vi-story-launch',name:'GTA VI Story · launch and gameplay evidence',kind:'research',group:'Leonida research',source:'https://www.rockstargames.com/newswire/article/39akk424a9oo53/grand-theft-auto-vi-now-available',detail:'Released November 19, 2026. Track Story discoveries separately; new coordinates, prerequisites, mission and collectible facts require evidence.'},
  {id:'vi-trailer',name:'Trailer landmark research',kind:'research',group:'Leonida research',source:'https://gtadb.net/gta-6-map/interactive/',detail:'Trailer-identification records are community research, not verified playable game map locations.'},
  {id:'vi-screenshots',name:'Screenshot landmarks',kind:'research',group:'Leonida research',source:'https://gtadb.net/gta-6-map/interactive/',detail:'Search photographs and official footage, retaining sources and uncertainty.'},
  {id:'vi-regions',name:'Officially named regions',kind:'research',group:'Leonida research',source:'https://www.rockstargames.com/VI',detail:'Official region names; map boundaries and coordinates remain community estimated.'},
  {id:'vi-roads',name:'Road-network verification',kind:'unreleased',group:'Post-release verification',source:'https://gtadb.net/gta-6-map/interactive/',detail:'Do not advertise driving directions as verified until real gameplay routes and road restrictions are tested.'},
- {id:'vi-heists',name:'Future heist and mission research',kind:'unreleased',group:'Post-release verification',source:'https://www.rockstargames.com/VI',detail:'Add confirmed missions and locations after gameplay evidence. Do not import GTA Online missions as GTA VI activities.'},
- {id:'vi-online',name:'GTA VI multiplayer activities',kind:'unreleased',group:'Post-release verification',source:'https://www.rockstargames.com/VI',detail:'No GTA Online pumpkin, Gun Van, dealer or seasonal schedules should carry into GTA VI without separate evidence.'}
+ {id:'vi-heists',name:'Story mission and heist verification',kind:'unreleased',group:'Post-release verification',source:'https://www.rockstargames.com/VI',detail:'Add confirmed missions and locations after gameplay evidence. Do not import GTA Online missions as GTA VI activities.'},
+ {id:'vi-online',name:'GTA VI multiplayer activities',kind:'unreleased',group:'Post-release verification',source:'https://www.rockstargames.com/VI',detail:'Reserved for a separately verified GTA VI multiplayer release and its own rules; do not import GTA V Online events or progress.'}
 ];
 for(const r of RULES)r.mode='online';
 for(const r of STORY_RULES)r.mode='story';
@@ -133,6 +134,7 @@ function evaluate(id,ctx={}){
  // Radii are Elario planning estimates, NOT extracted game triggers.
  const SLASHER_ZONES=Object.freeze([
  {name:'Clown · central Los Santos',anchor:'Legion Square',x:200.249,y:-932.407,radius:1100},
+ {name:'Driver · La Puerta',anchor:'Maze Bank Arena',x:-321.916,y:-1969.598,radius:500},
  {name:'Driver · Redwood Lights Track',anchor:'Redwood Lights Track',x:1054.028,y:2305.528,radius:350},
  {name:'Psycho · Vinewood Hills',anchor:'Galileo Observatory',x:-437.147,y:1069.517,radius:650},
  {name:'Psycho · Tongva Hills',anchor:'Marlowe Vineyard',x:-1887.22,y:2055.021,radius:550},
@@ -142,7 +144,7 @@ function evaluate(id,ctx={}){
  function markerAvailability(id,ctx={}){
  const rule=BY_ID[id];if(!rule)return {status:'unknown',hide:false};
  const result=evaluate(id,ctx),feed=rule.kind==='rotation'?rotationFeed(ctx.snapshot,id,ctx.now??Date.now()):null;
- const off=result.status==='closed'||(rule.kind==='clock'&&result.status==='possible')||Boolean(feed&&feed.active.size===rule.today&&ctx.markerId!=null&&!feed.active.has(String(ctx.markerId)));
+ const off=result.status==='closed'||result.status==='excluded'||(rule.kind==='clock'&&result.status==='possible')||Boolean(feed&&feed.active.size===rule.today&&ctx.markerId!=null&&!feed.active.has(String(ctx.markerId)));
  // On the mainland, time-limited pins need current evidence before display.
  // Unknown is NOT an assertion that the event has ended.
  const timed=['rotation','clock','clock-parent','seasonal'].includes(rule.kind);
