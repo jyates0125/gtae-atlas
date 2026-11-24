@@ -1041,9 +1041,12 @@ function init(){
  if(cat&&CATEGORIES[cat]){active[filterScope()]=new Set([cat]);showTab('Services')}
  if(q||cat)render();readPacks();renderSources();loadDataset('5');loadDataset('6');loadSources();
  if(document.body.dataset.startWorld==='online'&&window.JuraConditions){
-  fetch('./data/online-rotation-current.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Rotation feed unavailable');return r.json()}).then(data=>{reviewedRotationSnapshot=window.JuraConditions.safeSnapshot(data);renderFind();updateSelected();schedulePaint()}).catch(()=>{});
-  const refresh=()=>{if(!document.hidden&&mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint()}};
-  setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
+  let rotationLastAttempt=0,rotationPending=false;
+  const pullRotation=async()=>{if(rotationPending||Date.now()-rotationLastAttempt<300000)return;rotationPending=true;rotationLastAttempt=Date.now();
+   try{const r=await fetch('./data/online-rotation-current.json?update=1',{cache:'no-cache'});if(!r.ok)throw Error('Rotation feed unavailable');reviewedRotationSnapshot=window.JuraConditions.safeSnapshot(await r.json());if(mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint()}}catch{}finally{rotationPending=false}
+  };
+  const refresh=()=>{if(!document.hidden&&mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint();void pullRotation()}};
+  void pullRotation();setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
   window.addEventListener('storage',e=>{if(['jura68-rotation-feed','jura68-conditions-online','jura68-online-hour'].includes(e.key))refresh()});
  }
  if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=290',{scope:'./'}).catch(()=>{});

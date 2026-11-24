@@ -8,8 +8,10 @@ const selected=C.rulesForMode('online').filter(r=>r.kind==='rotation');
 const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch{return d}};
 let reviewed={schema:1,rotations:{}};
 const getFeed=()=>{let personal;try{personal=C.safeSnapshot(read('jura68-rotation-feed',{schema:1,rotations:{}}))}catch{}return C.selectRotationSnapshot(personal,reviewed)};
+let lastAttempt=0,pending=false;
 async function autoFeed(){
- try{const res=await fetch('./data/online-rotation-current.json',{cache:'no-cache'});if(res.ok)reviewed=C.safeSnapshot(await res.json())}catch(_){}
+ if(pending||Date.now()-lastAttempt<300000)return;pending=true;lastAttempt=Date.now();
+ try{const res=await fetch('./data/online-rotation-current.json?update=1',{cache:'no-cache'});if(res.ok)reviewed=C.safeSnapshot(await res.json())}catch(_){}finally{pending=false}
  dashboard();
  if($('#j87-daily-panel')){$('#j87-daily-panel').remove();panel()}
 }
@@ -34,9 +36,9 @@ function init(){
  if(path==='atlas87-daily.html')dashboard();panel();autoFeed();
  if(path==='atlas87-daily.html'){const id=location.hash.slice(1);if(selected.some(r=>r.id===id))requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:'start'}))}
  window.addEventListener('storage',e=>{if(e.key==='jura68-rotation-feed')refreshStatus()});
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshStatus()});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){refreshStatus();void autoFeed()}});
  // Refresh evidence at most once a minute even if a player leaves the tab open through reset.
- setInterval(()=>{if(!document.hidden)refreshStatus()},60000);
+ setInterval(()=>{if(!document.hidden){refreshStatus();void autoFeed()}},60000);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
