@@ -35,6 +35,7 @@ const RULES=[
  {id:'vehicle-delivery',name:'Personal vehicle delivery points',kind:'prerequisite',group:'Player / session conditions',requires:['owned-vehicle'],source:'https://gtadb.net/gta-online-map/interactive/',detail:'Availability depends on owned service vehicles and the current game/session.'},
  {id:'gun-van-stock',name:'Gun Van inventory',kind:'weekly',group:'Weekly & seasonal',source:'https://gtadb.net/gta-online-map/gun-van/',detail:'Stock/discounts change weekly independently from the daily Gun Van position.'},
  {id:'peyote',name:'Peyote Plants',kind:'seasonal',group:'Weekly & seasonal',event:'peyote',source:'https://gtadb.net/gta-online-map/interactive/',detail:'Only eligible during enabled events; map markers should not claim plants are currently active without an event source.'},
+ {id:'slashers',name:'Halloween free-roam Slashers',kind:'seasonal',group:'Weekly & seasonal',event:'halloween',source:'https://www.rockstargames.com/newswire/article/39a22k25434a53/experience-halloween-thrills-all-throughout-october-in-gta-online',detail:'Seasonal freemode encounters, not a guarantee of a spawn or a claim about permanent Adversary Mode jobs.'},
  {id:'pumpkins',name:'Jack O’Lanterns',kind:'seasonal',group:'Weekly & seasonal',event:'halloween',pool:200,source:'https://gtadb.net/gta-online-map/interactive/',detail:'Show every known pumpkin position. Track the current collection run independently from lifetime discoveries.'},
  {id:'ufo',name:'UFO sightings',kind:'seasonal',group:'Weekly & seasonal',event:'halloween',source:'https://gtadb.net/gta-online-map/interactive/',detail:'Needs a dated schedule plus hour/visibility rules; do not infer active sightings from season alone.'},
  {id:'snowmen',name:'Snowmen',kind:'seasonal',group:'Weekly & seasonal',event:'holiday',source:'https://gtadb.net/gta-online-map/interactive/',detail:'Seasonal only; track progress separately from current game availability.'},
@@ -118,6 +119,15 @@ function evaluate(id,ctx={}){
  if(r.kind==='weekly')return{status:'unknown',reason:'Needs a dated weekly inventory feed, independent of location'};
  return{status:'possible',reason:'Prerequisites satisfied; does not guarantee a spawn'};
 }
+// Availability is separate from player progress and layer visibility. Only an
+// explicitly closed event, a full dated pair/pool selection, or a known hour
+// mismatch establishes that a location is unavailable now.
+function markerAvailability(id,ctx={}){
+ const rule=BY_ID[id];if(!rule)return {status:'unknown',hide:false};
+ const result=evaluate(id,ctx),feed=rule.kind==='rotation'?rotationFeed(ctx.snapshot,id,ctx.now??Date.now()):null;
+ const off=result.status==='closed'||(rule.kind==='clock'&&result.status==='possible')||Boolean(feed&&feed.active.size===rule.today&&ctx.markerId!=null&&!feed.active.has(String(ctx.markerId)));
+ return {...result,hide:off};
+}
 function markerColor(status){return {active:'#facc15',possible:'#f8fafc',closed:'#f8fafc',locked:'#94a3b8',complete:'#64748b',unknown:'#38bdf8',research:'#38bdf8',excluded:'#64748b','available-feed':'#38bdf8'}[status]||'#38bdf8';}
 function statusText(status){return {active:'Eligible / selected (not verified live)',possible:'Possible · not currently selected',locked:'Locked · prerequisite',closed:'Not active',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
 function emptyState(){return {completed:{},seen:{},flags:{},events:{}};}
@@ -163,5 +173,5 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
  if(responses.every(r=>r.status==='rejected'))throw Error('Both daily feeds unavailable');
  return mergePublishedRotations([...responses.filter(r=>r.status==='fulfilled').map(r=>r.value),previous],now);
 }
-return{cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
