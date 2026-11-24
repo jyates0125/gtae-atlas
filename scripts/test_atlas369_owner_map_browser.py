@@ -80,6 +80,16 @@ try:
    expect(page.locator('#j362TerrainNotice')).to_be_hidden()
    expect(page.locator('#jura3dCanvas')).to_be_visible()
    page.screenshot(path=str(out/f'actual-gtadb-textured-{width}.png'),animations='disabled')
+   page.locator('#j368CoverageToggle').click()
+   expect(page.locator('#j368CoverageToggle')).to_have_attribute('aria-pressed','true')
+   expect(page.locator('#j368CoverageLegend')).to_be_visible()
+   page.wait_for_function("""() => {
+      const z=document.querySelector('.zoom').getBoundingClientRect();
+      const l=document.getElementById('j368CoverageLegend').getBoundingClientRect();
+      return z.top>=l.bottom-1;
+   }""")
+   page.locator('#j368CoverageToggle').click()
+   expect(page.locator('#j368CoverageLegend')).to_be_hidden()
    page.locator('#jura2d').click()
    expect(page.locator('#atlasCanvas')).to_be_visible()
    assert not page.evaluate('teamJuraNav.terrain().isActive()')

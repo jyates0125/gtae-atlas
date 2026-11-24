@@ -55,3 +55,12 @@ body[data-start-world="6"] .j362-terrain-notice{max-height:calc(100% - 220px);ov
 body.j117-map-world .map-actions{gap:6px!important}
 body[data-start-world="6"] .jura-nav-bar #j143-official-button:focus-visible{outline:3px solid #fff;outline-offset:2px}
 @media(max-width:700px){body[data-start-world="6"] .jura-nav-bar #juraNavDimension{flex:0 0 auto}body[data-start-world="6"] .jura-nav-bar #j368CoverageToggle{min-height:38px!important}}
+
+/* Rendered owner test: measured toolbar/legend height reserves the right column. */
+body[data-start-world="6"] .jura-nav-bar{
+ top:var(--j369-toolbar-top,90px)!important;z-index:125!important
+}
+body[data-start-world="6"] .zoom{top:var(--j369-next-top,205px)!important}
+body[data-start-world="6"] .j217-vi-hub{top:var(--j369-next-top,158px)!important}
+body[data-start-world="6"] .jura-nav-panel{top:var(--j369-next-top,150px)!important}
+body[data-start-world="6"] .jura-nav-bar #j368CoverageLegend{z-index:2}
