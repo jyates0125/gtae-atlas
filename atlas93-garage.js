@@ -205,6 +205,23 @@ const fav=document.createElement('input');fav.type='checkbox';fav.checked=!!v.fa
 const save=part('button','save','Save custom build');save.type='button';save.onclick=()=>{const saved=setVehicle(r.id,{garage:place.value,paint:primary.value,secondary:secondary.value,plate:f(plate.value),note:f(note.value),favorite:fav.checked,studioDesign:window.JuraForge?.normalize(studioDesign)||{},...(studioBody?{studioBody}:{}),...(studioName?{studioName}:{})});garages();paint();if(saved)notice('Saved '+r.name+' on this device.')};
 const link=part('a','','↗ Research vehicle info at GTADB');link.href=data?.sourceUrl?.startsWith('https://gtadb.net/')?data.sourceUrl:'https://gtadb.net/vehicles/';link.target='_blank';link.rel='noopener noreferrer';part('p','status','Save notes to keep these settings after refreshing.');}
 function download(obj,name){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),800)}
+// Retry only same-origin, read-only catalog requests after transient failures.
+// Do not change local saves, source IDs, or ownership on connection failure.
+async function readGarageCatalog(url,validate){
+ let error;
+ for(let attempt=0;attempt<3;attempt++){
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
+  try{
+   const response=await fetch(url,{cache:attempt?'reload':'default',signal:controller.signal});
+   if(!response.ok)throw Error('Catalog HTTP '+response.status);
+   const data=await response.json();
+   if(!validate(data))throw Error('Invalid catalog data');
+   return data;
+  }catch(e){error=e;if(attempt<2)await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)))}
+  finally{clearTimeout(timer)}
+ }
+ throw error;
+}
 function install(){ $('garageSearch').addEventListener('input',()=>{page=0;paint()});for(const id of ['garageFilter','garageLocation','garageClassFilter'])$(id).addEventListener('change',()=>{page=0;paint()});
 $('showAll').onclick=()=>{$('garageFilter').value='all';$('garageLocation').value='';page=0;paint()};$('showOwned').onclick=()=>{$('garageFilter').value='owned';$('garageLocation').value='';page=0;paint()};$('prevPage').onclick=()=>{page--;paint()};$('nextPage').onclick=()=>{page++;paint()};
 $('addGarage').onclick=()=>{const name=f($('newGarage').value).slice(0,56);if(!name){notice('Enter a garage name.');return}if(meta.garages.includes(name)){notice('This garage already exists.');return}if(saveGarageName(name)){$('newGarage').value='';garages();paint()}};
@@ -231,7 +248,7 @@ $('importGarage').onchange=async e=>{const file=e.target.files?.[0];if(!file)ret
  notice('Merged '+result.added+' new builds, '+result.addedGarages+' garages and '+result.marks+' collection marks. '+result.kept+' existing builds kept; '+result.skipped+' invalid/unknown skipped. Keep the original file for conflicting builds.');
  }catch(err){notice('Import rejected: '+err.message)}finally{e.target.value=''}};
 $('discoverArchive').onclick=async()=>{const btn=$('discoverArchive');btn.disabled=true;btn.textContent='Checking archive…';try{const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000),r=await fetch(TREE,{signal:controller.signal});clearTimeout(timeout);if(!r.ok)throw Error('Archive HTTP '+r.status);const data=await r.json();const models=(data.tree||[]).map(x=>/^vehicles\/([a-z0-9_]+)\.webp$/.exec(x.path||'')?.[1]).filter(Boolean);if(!models.length)throw Error('No image IDs available');const ids=new Set(records.map(x=>x.id));for(const id of models)if(!ids.has(id))records.push(modelInfo(id));records.sort((a,b)=>a.name.localeCompare(b.name));localStorage.setItem(CACHE,JSON.stringify({ids:[...new Set(models)],checkedAt:new Date().toISOString()}));paint();notice('Indexed '+models.length+' archive model IDs. These prove image availability, not complete verified game-model coverage.')}catch(err){notice('Archive discovery unavailable: '+err.message)}finally{btn.disabled=false;btn.textContent='Discover more pictured model IDs'}};
-Promise.all([fetch('./atlas90-seed.json').then(r=>{if(!r.ok)throw Error('Missing model image catalog');return r.json()}),fetch('./data/atlas-vehicle-intel.json').then(r=>{if(!r.ok)throw Error('Vehicle intelligence unavailable');return r.json()}).catch(()=>({vehicles:{}}))]).then(([data,sources])=>{intel=sources?.vehicles&&typeof sources.vehicles==='object'?sources.vehicles:{};const ids=[...new Set([...(data.vehicles||[]),...(safeParse(CACHE,{ids:[]}).ids||[])])].filter(x=>/^[a-z0-9_]{1,65}$/.test(x));records=ids.map(modelInfo).sort((a,b)=>a.name.localeCompare(b.name));const classes=[...new Set(records.map(x=>x.type))].sort();const classFilter=$('garageClassFilter');if(classFilter){const current=classFilter.value;classFilter.replaceChildren(new Option('All vehicle classes','all'));for(const cls of classes)classFilter.add(new Option(cls,cls));classFilter.value=classes.includes(current)?current:'all'}garages();paint();
+Promise.all([readGarageCatalog('./atlas90-seed.json',data=>Array.isArray(data?.vehicles)&&data.vehicles.some(id=>typeof id==='string'&&/^[a-z0-9_]{1,65}$/.test(id))),readGarageCatalog('./data/atlas-vehicle-intel.json',data=>plain(data?.vehicles)).catch(()=>({vehicles:{}}))]).then(([data,sources])=>{intel=sources?.vehicles&&typeof sources.vehicles==='object'?sources.vehicles:{};const ids=[...new Set([...(data.vehicles||[]),...(safeParse(CACHE,{ids:[]}).ids||[])])].filter(x=>/^[a-z0-9_]{1,65}$/.test(x));records=ids.map(modelInfo).sort((a,b)=>a.name.localeCompare(b.name));const classes=[...new Set(records.map(x=>x.type))].sort();const classFilter=$('garageClassFilter');if(classFilter){const current=classFilter.value;classFilter.replaceChildren(new Option('All vehicle classes','all'));for(const cls of classes)classFilter.add(new Option(cls,cls));classFilter.value=classes.includes(current)?current:'all'}garages();paint();
  // Preview exactly the requested model. Do not alter previously stored ownership or builds.
  const requested=new URLSearchParams(location.search).get('addModel');
  if(requested){
@@ -241,7 +258,7 @@ Promise.all([fetch('./atlas90-seed.json').then(r=>{if(!r.ok)throw Error('Missing
    notice('Viewing '+nice(requested)+' from the gallery. Ownership and saved builds unchanged.');
   }else notice('Requested model is not in the indexed catalog. Browse available models instead.');
  }
- }).catch(err=>{ $('garageCards').textContent='Catalog unavailable: '+err.message;notice('Confirm atlas90-seed.json exists at site root.');});
+ }).catch(err=>{ $('garageCards').textContent='Catalog unavailable: '+err.message;notice('Vehicle catalog unavailable after retries. Your saved builds are unchanged. Reload this page to retry.');});
 window.addEventListener('storage',e=>{if(e.key===S){gallery=safeParse(S,gallery);paint()}if(e.key===META){meta=safeParse(META,meta);garages();paint()}});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();

@@ -112,8 +112,24 @@ try:
    expect(page.locator('#concept3d [data-forge-control="accent"]')).to_have_value('#10abcf')
    expect(page.locator('#concept3d [data-forge-control="kit"]')).to_have_value('track')
    expect(page.locator('#concept3d [data-forge-control="lights"]')).not_to_be_checked()
+   expect(page.locator('#modelSelect')).to_have_value('squalo')
+   expect(page.locator('#addToGarage')).to_have_attribute('href','./atlas93-garage.html?addModel=squalo')
+   # Simulate a transient failed local catalog request during Studio handoff.
+   # Do not retry the whole navigation or weaken the destination assertions.
+   attempts={'seed':0}
+   def transient_seed(route):
+    if '/atlas93-garage.html' in route.request.frame.url:
+     attempts['seed']+=1
+     if attempts['seed']==1:
+      route.abort('connectionreset')
+      return
+    route.continue_()
+   page.route('**/atlas90-seed.json',transient_seed)
    page.locator('#addToGarage').click()
+   page.wait_for_url('**/atlas93-garage.html?addModel=squalo')
    expect(page.locator('#garageDetails h2')).to_have_text('Squalo',timeout=20000)
+   assert attempts['seed']>=2,'Garage did not recover from injected catalog failure'
+   page.unroute('**/atlas90-seed.json',transient_seed)
    page.get_by_role('button',name='Use studio concept in build editor').click()
    page.get_by_role('button',name='Launch class-specific 2150 concept').click()
    expect(page.locator('#garageDetails .j256-forge')).to_have_attribute('data-forge-class','marine')
