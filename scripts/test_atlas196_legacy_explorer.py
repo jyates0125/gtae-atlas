@@ -10,7 +10,7 @@ for name in ('legacy-explorer.html','online-explorer.html'):
  assert 'renderer:markerRenderer' in s, name
  assert 'renderer:L.canvas()' not in s, name
  assert "FALLBACK.map(d=>({...d,tags:Array.isArray(d.tags)" in s, name
- assert "atlas132-nav.js?v=222" in s, "Legacy explorers must load updated universal search, not the stale v192 script"
+ assert "atlas132-nav.js?v=375" in s, "Legacy explorers must load current GTAE universal search"
  assert 'oldExport' not in s, name
  assert "teamjura" not in s or 'gme-v9-pins' in s, name
 assert "switchGame(5);populateCategories();restoreDeepLink();loadFullData();" in (r/'online-explorer.html').read_text()
