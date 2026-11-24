@@ -23,7 +23,7 @@ assert 'j158-verification-link' in maps
 assert 'const premiumClassicArt' in classic
 assert "'./art/jura157-'+id+'-cinematic.webp'" in classic
 assert 'classicWorldArt.onerror' in classic
-for href in ['./atlas.html','./atlas-online.html','./atlas-vi.html','./atlas-cayo.html','./atlas-iv.html','./atlas-sa.html']:
+for href in ['./atlas.html','./atlas-online.html','./atlas-vi.html','./heist-cayo-perico.html','./atlas-iv.html','./atlas-sa.html']:
     assert href in dashboard,href
 for href in ['map-hub.html?game=vc','map-hub.html?game=iii','map-hub.html?game=vcs','map-hub.html?game=lcs','map-hub.html?game=ctw','atlas-iv.html?scope=tlad','atlas-iv.html?scope=tbogt']:
     assert href in dashboard,href
