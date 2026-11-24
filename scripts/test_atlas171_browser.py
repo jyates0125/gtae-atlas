@@ -73,7 +73,10 @@ try:
         assert page.locator('.j180-chest').count()==19,'All 19 possible chest references render'
         assert page.locator('.j180-chest-active:visible').count()==2,'Current pair is visible on the Cayo island map'
         assert page.locator('.j180-chest:visible').count()==2,'Current daily pair is the default map view'
-        assert page.locator('.j180-chest-row.j393-inactive:disabled').count()==17,'Inactive chest rows remain listed but inaccessible in daily view'
+        assert page.locator('.j180-chest-row.j393-inactive:enabled').count()==17,'Inactive entries remain inspectable without spawning pins'
+        page.locator('.j180-chest-row.j393-inactive').first.click()
+        assert 'not selected this cycle' in page.locator('.j180-daily-status').inner_text()
+        assert page.locator('.j180-chest:visible').count()==2
         assert page.locator('.j180-chest-row').count()==19,'All chest references stay in the daily legend list'
         page.get_by_role('button',name='Today’s two',exact=True).click()
         assert page.locator('.j180-chest:visible').count()==2,'Today filter shows only the current pair on Cayo'
