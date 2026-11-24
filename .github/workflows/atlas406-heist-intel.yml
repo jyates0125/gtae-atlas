@@ -1,0 +1,40 @@
+name: Atlas 40.6 - guest heist intel recovery
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas93-heist-intel.js'
+      - 'atlas93-heist-intel.css'
+      - 'heist-directory.js'
+      - 'scripts/test_atlas406_heist_intel_browser.py'
+      - '.github/workflows/atlas406-heist-intel.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  guest-intel-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate scripts and build public site
+        run: |
+          node --check atlas93-heist-intel.js
+          node --check heist-directory.js
+          python scripts/test_atlas297_heist_resume.py
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install browser
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install --with-deps chromium
+      - name: Run guest intel and recovery at phone and desktop sizes
+        run: python scripts/test_atlas406_heist_intel_browser.py
