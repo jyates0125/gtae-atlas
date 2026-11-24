@@ -1,0 +1,42 @@
+name: Atlas 40.3 - centralized classic credits
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-credits.html'
+      - 'map-hub.html'
+      - 'atlas98b-sources.js'
+      - 'atlas240-classic-coordinate-index.js'
+      - 'atlas244-vc-de.js'
+      - 'atlas247-stories-reference.js'
+      - 'atlas273-ctw-cameras.js'
+      - 'scripts/test_atlas403_classic_credits.py'
+      - '.github/workflows/atlas403-classic-credits.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  classic-credits:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node --check atlas98b-sources.js
+          node --check atlas240-classic-coordinate-index.js
+          node --check atlas244-vc-de.js
+          node --check atlas247-stories-reference.js
+          node --check atlas273-ctw-cameras.js
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+          python -m pip install playwright==1.58.0
+          python -m playwright install chromium
+      - run: python scripts/test_atlas403_classic_credits.py
