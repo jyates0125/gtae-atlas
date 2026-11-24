@@ -1043,7 +1043,7 @@ function init(){
  if(document.body.dataset.startWorld==='online'&&window.JuraConditions){
   let rotationLastAttempt=0,rotationPending=false;
   const pullRotation=async()=>{if(rotationPending||Date.now()-rotationLastAttempt<300000)return;rotationPending=true;rotationLastAttempt=Date.now();
-   try{const r=await fetch('./data/online-rotation-current.json?update=1',{cache:'no-cache'});if(!r.ok)throw Error('Rotation feed unavailable');reviewedRotationSnapshot=window.JuraConditions.safeSnapshot(await r.json());if(mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint()}}catch{}finally{rotationPending=false}
+   try{reviewedRotationSnapshot=await window.JuraConditions.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedRotationSnapshot);if(mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint()}}catch{}finally{rotationPending=false}
   };
   const refresh=()=>{if(!document.hidden&&mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint();void pullRotation()}};
   void pullRotation();setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);

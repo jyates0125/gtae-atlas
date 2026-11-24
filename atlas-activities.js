@@ -11,9 +11,7 @@ async function loadReviewedRotations(force=false){
  rotationPending=true;lastRotationAttempt=Date.now();
  const status=$('autoRotationStatus');
  try{
-  const response=await fetch('./data/online-rotation-current.json?update=1',{cache:'no-cache'});
-  if(!response.ok)throw Error('Reviewed data unavailable');
-  const reviewed=C.safeSnapshot(await response.json());reviewedSnapshot=reviewed;
+  const reviewed=await C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedSnapshot);reviewedSnapshot=reviewed;
   // A personal import is kept separate and never replaced or described as verified.
   const personal=load(FEED,null);
   if(personal&&Object.keys(personal.rotations||{}).length){
@@ -21,7 +19,7 @@ async function loadReviewedRotations(force=false){
     if(status)status.textContent='Personal rotation file detected. This was not verified by Team Jura; official current positions are not guaranteed.';
   }else{
     snapshot={schema:1,rotations:{}};
-    sourceLabel='Bundled source-reviewed selection';
+    sourceLabel='Published or bundled source-reviewed selection';
     if(status)status.textContent=Object.keys(reviewed.rotations).length
       ? 'Automatically loaded '+Object.keys(reviewed.rotations).length+' reviewed rotation group(s). Each position is subject to its dated validity window.'
       : 'Automatic data loaded. No currently verified daily positions are published; possible locations remain visible but are not marked Available now.';
@@ -40,7 +38,7 @@ function build(){document.title='Atlas Activities · '+titles[mode];$('headline'
   for(const [key,label]of C.PREREQS.filter(([key])=>!key.startsWith('story-')))$('prereqs').append(checkedRow(key,label,state.flags[key],v=>{state.flags[key]=v;save();render()}));
   $('gameHour').value=load('jura68-online-hour','');$('gameHour').addEventListener('input',()=>{localStorage.setItem('jura68-online-hour',$('gameHour').value);render()});
   $('importSnapshot').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>100000)throw Error('File is too large');const obj=JSON.parse(await file.text());snapshot=C.safeSnapshot(obj);sourceLabel='Personal imported snapshot · not verified';localStorage.setItem(FEED,JSON.stringify(snapshot));render();setMsg('Personal snapshot imported; positions are NOT verified live locations.')}catch(err){setMsg('Import rejected: '+err.message)}finally{e.target.value=''}});
-  $('clearSnapshot').onclick=()=>{snapshot={schema:1,rotations:{}};localStorage.removeItem(FEED);sourceLabel='Bundled source-reviewed selection';render();loadReviewedRotations(true);setMsg('Personal import cleared; restored site-reviewed automatic data.')};
+  $('clearSnapshot').onclick=()=>{snapshot={schema:1,rotations:{}};localStorage.removeItem(FEED);sourceLabel='Published or bundled source-reviewed selection';render();loadReviewedRotations(true);setMsg('Personal import cleared; restored site-reviewed automatic data.')};
   updateResets();
  }else if(mode==='story'){
   for(const [key,label]of C.PREREQS.filter(([key])=>key.startsWith('story-')))$('storyFlags').append(checkedRow(key,label,state.flags[key],v=>{state.flags[key]=v;save();render()}));

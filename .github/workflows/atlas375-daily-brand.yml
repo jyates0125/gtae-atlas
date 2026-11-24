@@ -1,0 +1,28 @@
+name: Atlas 37.5 independent daily channel and brand
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-conditions.js'
+      - 'atlas.js'
+      - 'atlas87-daily.js'
+      - 'atlas-activities.js'
+      - 'atlas155-art-review.html'
+      - 'atlas-dashboard.html'
+      - 'atlas132-nav.js'
+      - 'scripts/test_atlas375_published_daily.cjs'
+      - '.github/workflows/atlas375-daily-brand.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  daily-brand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas.js && node --check atlas-conditions.js && node --check atlas87-daily.js && node --check atlas-activities.js
+      - run: node scripts/test_atlas374_daily.cjs && node scripts/test_atlas375_published_daily.cjs

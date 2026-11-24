@@ -124,5 +124,35 @@ function emptyState(){return {completed:{},seen:{},flags:{},events:{}};}
 function safeState(s){const o=emptyState();if(!s||typeof s!=='object')return o;for(const k of Object.keys(o)){if(!s[k]||typeof s[k]!=='object'||Array.isArray(s[k]))continue;for(const [key,val] of Object.entries(s[k]))if(/^[a-z0-9-]{1,70}$/i.test(key)&&typeof val==='boolean')o[k][key]=val;}return o;}
 function safeSnapshot(s){if(!s||typeof s!=='object'||s.schema!==1||!s.rotations||typeof s.rotations!=='object')throw Error('Expected schema 1 with a rotations object.');const a={schema:1,rotations:{}};for(const [id,v] of Object.entries(s.rotations)){const r=BY_ID[id];if(!r||r.kind!=='rotation')continue;if(!v||!Array.isArray(v.activeIds)||v.activeIds.length>200||v.activeIds.some(i=>!/^[-a-z0-9_:]{1,80}$/i.test(String(i)))||!validIso(v.checkedAtUtc)||!validIso(v.validUntilUtc))throw Error('Invalid position data for '+id);
  a.rotations[id]={checkedAtUtc:v.checkedAtUtc,validUntilUtc:v.validUntilUtc,activeIds:v.activeIds.map(String),source:String(v.source||'User-supplied').slice(0,200)};}return a;}
-return{RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+// Read-only public data channel, independent of Cloudflare code deployments.
+const PUBLISHED_ROTATIONS_URL='https://raw.githubusercontent.com/jyates0125/gtae-atlas/refs/heads/data/online-rotations/online-rotation-current.json';
+function mergePublishedRotations(snapshots,now=Date.now()){
+ const out={schema:1,rotations:{}};
+ for(const rule of RULES.filter(r=>r.kind==='rotation')){
+  let chosen=null;
+  for(const snapshot of snapshots){
+   const candidate=snapshot?.rotations?.[rule.id],valid=rotationFeed(snapshot,rule.id,now);
+   if(!valid||candidate.activeIds.length!==rule.today)continue;
+   if(!chosen||Date.parse(candidate.checkedAtUtc)>Date.parse(chosen.checkedAtUtc))chosen=candidate;
+  }
+  if(chosen)out.rotations[rule.id]=chosen;
+ }
+ return out;
+}
+async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-current.json?update=1',previous={schema:1,rotations:{}},now=Date.now()){
+ async function read(url){
+  const controller=typeof AbortController==='function'?new AbortController():null;
+  const timer=controller?setTimeout(()=>controller.abort(),8000):null;
+  try{
+   const r=await fetcher(url,{cache:'no-cache',credentials:'omit',referrerPolicy:'no-referrer',...(controller?{signal:controller.signal}:{})});
+   if(!r.ok)throw Error('Daily source unavailable');
+   const body=await r.text();if(body.length>100000)throw Error('Daily feed too large');
+   return safeSnapshot(JSON.parse(body));
+  }finally{if(timer!==null)clearTimeout(timer)}
+ }
+ const responses=await Promise.allSettled([read(localURL),read(PUBLISHED_ROTATIONS_URL)]);
+ if(responses.every(r=>r.status==='rejected'))throw Error('Both daily feeds unavailable');
+ return mergePublishedRotations([...responses.filter(r=>r.status==='fulfilled').map(r=>r.value),previous],now);
+}
+return{loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
