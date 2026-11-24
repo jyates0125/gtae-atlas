@@ -18,7 +18,7 @@ function create(w,opts){
  const warning=make('p');warning.className='j400-source-warning';warning.setAttribute('role','alert');warning.hidden=true;
  const hideLabel=make('label'),hide=make('input');hide.type='checkbox';hideLabel.append(hide,d.createTextNode(' Hide '+label+' locations'));
  const actions=make('div');actions.className='j240-controls';const exportButton=make('button','Export source progress');exportButton.type='button';const rawButton=make('button','Download original unreadable source progress');rawButton.type='button';rawButton.hidden=true;const importLabel=make('label','Merge source progress'),input=make('input');input.type='file';input.accept='.json,application/json';importLabel.append(input);actions.append(exportButton,importLabel,rawButton);
- const status=make('p');status.setAttribute('role','status');panel.append(header,counter,help,warning,hideLabel,actions,status);const list=host.querySelector('ol');if(list)list.before(panel);else host.append(panel);
+ const status=make('p');status.setAttribute('role','status');panel.append(header,counter,help,warning,hideLabel,actions,status);const list=host.querySelector(':scope > ol');if(list)list.before(panel);else host.append(panel);
  const isDone=row=>done.has(index.get(row.id)),visible=row=>!hide.checked||!isDone(row);
  function sync(){warning.hidden=!blocked;warning.textContent=blocked+(blocked&&pending.size?' Unsaved working edits can still be exported separately.':'');rawButton.hidden=rawRecovery===null;input.disabled=!!blocked;exportButton.disabled=!!blocked&&!pending.size;counter.textContent=(blocked?'Last readable working state · ':'')+done.size+' / '+known.size+' '+label+(kind==='visited'?' reference destinations':' source objectives')}
  function update(){sync();onChange()}
