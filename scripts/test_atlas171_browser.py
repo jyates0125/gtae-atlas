@@ -112,6 +112,15 @@ try:
         page.locator('.j181-hotspot[data-category="control"]').first.click()
         assert page.locator('.j180-pin-info').is_visible(),'Existing colorful source icon click opens map details'
         assert page.locator('.j185-cluster-choices').is_visible(),'Overlapping icons should expose a specific-target picker'
+        # Every eligible entry must appear; the chooser must not silently truncate.
+        choices=page.locator('.j185-cluster-choice')
+        note=page.locator('.j180-pin-info > p').first.inner_text()
+        assert choices.count()==int(note.split()[0]), 'All nearby markers must be selectable'
+        origin=page.locator('.j181-hotspot[data-category="control"]').first
+        page.get_by_role('button',name='Close nearby locations').click()
+        assert page.locator('.j180-pin-info').is_hidden(),'Close hides nearby chooser'
+        assert origin.evaluate('(node)=>document.activeElement===node'),'Closing chooser restores marker focus'
+        origin.click()
         option=page.locator('.j185-cluster-choice').filter(has_text='Airstrip infiltration')
         assert option.count()==1,'Crowded entry marker remains individually selectable'
         option.click()
@@ -133,6 +142,17 @@ try:
         )
         page.keyboard.press('Escape')
         assert page.locator('.j180-pin-info').is_hidden(),'Escape closes marker details'
+        # Keyboard activation identifies the exact focused marker; no pointer
+        # collision chooser should intercept its Enter/Space activation.
+        entry=page.locator('.j181-hotspot[data-category="entry"]').first
+        for key in ('Enter','Space'):
+            entry.focus()
+            entry.press(key)
+            assert page.locator('.j180-pin-info').is_visible(),'Keyboard activates the focused pin'
+            assert 'Airstrip infiltration' in page.locator('.j180-pin-info').inner_text()
+            assert page.locator('.j185-cluster-choices').count()==0,'Keyboard activation selects the exact pin'
+            page.keyboard.press('Escape')
+            assert page.locator('.j180-pin-info').is_hidden()
         page.locator('#j180-shell').screenshot(path=str(path/('cayo-180-map-'+kind+'.png')),animations='disabled',timeout=35000)
         page.locator('.j180-menu-link').filter(has_text='Entry & exit planning').click()
         page.locator('#j171-cayo-board').wait_for(state='visible',timeout=10000)
