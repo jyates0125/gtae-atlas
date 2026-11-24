@@ -32,6 +32,9 @@ try:
             expect(switch).to_have_attribute("aria-pressed","true")
             zones=lambda:page.evaluate("window.JuraAtlasEventLocations.zones().length")
             assert zones()==0
+            card.locator('.j395-guide summary').click()
+            expect(card.locator('.j395-guide')).to_contain_text('At least 16 minutes in session')
+            expect(card.locator('.j395-guide')).to_contain_text('In-game time 01:00–06:00')
             panel.get_by_text("Halloween event active in my session",exact=True).click()
             panel.locator(".j88-time select").select_option("2")
             panel.locator(".j393-slasher summary").click()
