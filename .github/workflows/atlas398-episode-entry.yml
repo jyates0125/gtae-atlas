@@ -6,6 +6,11 @@ on:
       - 'atlas98-worlds.js'
       - 'atlas98-classic.js'
       - 'atlas-iv.*'
+      - 'atlas-cayo.html'
+      - 'atlas399-cayo-entry.js'
+      - 'heist-cayo-perico.html'
+      - 'atlas164-heist-workspace.js'
+      - 'atlas169-heist-views.js'
       - 'atlas132-nav.js'
       - 'atlas98-flow.js'
       - 'atlas-dashboard.html'
@@ -33,6 +38,9 @@ jobs:
           node --check atlas98-worlds.js
           node --check atlas98-classic.js
           node --check atlas-iv.js
+          node --check atlas399-cayo-entry.js
+          node --check atlas164-heist-workspace.js
+          node --check atlas169-heist-views.js
           node scripts/build-cloudflare.cjs
           python scripts/test_atlas158_premium_experiences.py
           python -m pip install playwright==1.58.0
