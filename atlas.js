@@ -532,8 +532,25 @@ function switchGame(g){if(!['5','6','online'].includes(g))return;dropEventFocus(
 const TILE_HOSTS=[UPSTREAM+'maps/tiles/','https://raw.githubusercontent.com/rolux/gtadb.org/d406fea099e1df2bce42fd6b87eed04bce646629/maps/tiles/']; // Same CC BY 4.0 publisher; reviewed immutable fallback if main changes.
 function sourceUrl(g,style,z,tx,ty,host=0){return `${TILE_HOSTS[host]}${g}/${style}/${z}/${z},${ty},${tx}.jpg`+(host?'?atlas_tiles=62':'');}
 function tileHealth(){const el=$('tileHealth');if(!el)return;const current=styles[game],all=[...tileStore.values()].filter(t=>t.game===game);const valid=new Set([mapView(current,game).base,...sourceTileStyles(current,0,1,1,game)]);const group=all.filter(t=>valid.has(t.path));const good=group.filter(t=>t.state==='ok').length,loading=group.filter(t=>t.state==='loading').length,bad=group.filter(t=>t.state==='error').length;
- el.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`:bad?'Map artwork unavailable · retry a different layer or connection':'Preparing artwork…';
- el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='GTADB CC BY 4.0 sourced map tiles; GTA VI Day uses in-game map imagery © Rockstar, while Scaly/Loki are historic community reconstructions. Atlas markers still require independent verification.';}
+ // Preserve the real Retry button when status text changes; do not replace
+ // interactive descendants via textContent after an image load/failure.
+ const label=$('tileHealthText')||el;
+ label.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`:bad?'Map artwork unavailable · tap Retry artwork':'Preparing artwork…';
+ const retry=$('retryMapArtwork');if(retry){retry.hidden=bad===0;retry.disabled=bad===0;}
+ el.classList.toggle('atlas-tiles-error',bad>0&&!good);
+ el.classList.toggle('atlas-retry-available',bad>0);
+ el.title='GTADB CC BY 4.0 sourced map tiles; GTA VI Day uses in-game map imagery © Rockstar, while Scaly/Loki are historic community reconstructions. Atlas markers still require independent verification.';}
+function recoverMapArtwork(reason='manual'){
+ // Delete only *failed* images for the active GTA world. Preserve healthy
+ // tiles and still-loading requests, every personal pin, map camera and
+ // stored collectible completion. A redraw retries only currently visible
+ // tiles; revisiting an offscreen tile can load it later as usual.
+ const recovered=window.JuraTileRecovery?.clearFailed(tileStore,game)||0;
+ if(recovered){tilesErrors=Math.max(0,tilesErrors-recovered);tileHealth();schedulePaint();
+   announce((reason==='online'?'Connection restored. ':'')+'Retrying '+recovered+' unavailable GTA '+game+' artwork tile'+(recovered===1?'':'s')+'…');}
+ else if(reason==='manual'){announce('No failed artwork tiles to retry in the current world.');tileHealth();}
+ return recovered;
+}
 
 function within(style,z,x,y,g=game){const r=BOUNDS[mapView(style,g).base]?.[z];return !!r&&x>=r[0]&&x<=r[2]&&y>=r[1]&&y<=r[3]}
 function tileImage(style,z,x,y,g=game){
@@ -1000,6 +1017,8 @@ function init(){
  }
 };$('addPin').onclick=()=>beginSpecialPin('user');$('addCollectible').onclick=()=>beginSpecialPin('collectible');$('addVehicle').onclick=()=>beginSpecialPin('vehicle');$('loadPack').onclick=()=>$('packFile').click();$('packFile').onchange=e=>readPack(e.target.files?.[0]);
  $('routeVisible').onclick=autoRouteVisible;$('pickRouteStart').onclick=()=>{chooseRouteStartMode=true;addPinMode=false;announce('Tap a marker or an empty map position to select your starting point.');if(innerWidth<=700){$('sidebar').classList.add('mobile-collapsed');window.scrollTo({top:0,behavior:'smooth'})}};$('optimize').onclick=optimizeRoute;$('fitRoute').onclick=fitRoute;$('clearRoute').onclick=()=>{routes[routeScope()]=[];persist();render();toast('GTA '+game+' route cleared.')};$('copyRoute').onclick=async()=>{const s=routeRecords().map((r,i)=>`${i+1}. ${r.name} (X ${r.x.toFixed(0)}, Y ${r.y.toFixed(0)})`).join('\n');if(!s)return toast('No stops to copy.');try{await navigator.clipboard.writeText(s);toast('Route copied.')}catch{toast('Clipboard unavailable; use Export backup instead.')}};
+ if($('retryMapArtwork'))$('retryMapArtwork').onclick=()=>recoverMapArtwork('manual');
+ window.addEventListener('online',()=>{if(!document.hidden)recoverMapArtwork('online')});
  $('exportData').onclick=exportBackup;$('importData').onclick=()=>$('importFile').click();$('importFile').onchange=e=>importBackup(e.target.files?.[0]);$('refresh').onclick=async()=>{dataNotice('Checking our GTA VI licensed data snapshot…');await loadDataset('6',true);render()};$('saveOffline').onclick=saveOffline;$('stopOffline').onclick=()=>{offlineStop=true;$('offlineStatus').textContent='Stopping after current tiles finish…'};
  document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||'')){e.preventDefault();$('search').focus()}if(e.key==='Escape'){selected=null;addPinMode=false;chooseRouteStartMode=false;updateSelected();schedulePaint()}});
  window.addEventListener('storage',e=>{if(e.key==='jura3-progress'){progress=loadStore('jura3-progress',{});render()}if(e.key==='jura-atlas-routes'){routes=loadStore('jura-atlas-routes',{'5':[],'6':[]});render()}});

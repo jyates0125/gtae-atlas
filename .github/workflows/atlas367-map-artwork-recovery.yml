@@ -1,0 +1,47 @@
+name: Atlas 36.7 - three-map artwork recovery
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas.js'
+      - 'atlas.html'
+      - 'atlas-online.html'
+      - 'atlas-vi.html'
+      - 'atlas367-tile-recovery.js'
+      - 'atlas367-map-artwork-recovery.css'
+      - 'scripts/test_atlas367_tile_recovery.cjs'
+      - 'scripts/test_atlas367_map_recovery_browser.py'
+      - 'docs/ATLAS367-THREE-MAP-ARTWORK-RECOVERY.md'
+      - '.github/workflows/atlas367-map-artwork-recovery.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  map-artwork-resilience:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check helper and source contracts
+        run: |
+          node --check atlas367-tile-recovery.js
+          node --check atlas.js
+          node scripts/test_atlas367_tile_recovery.cjs
+      - name: Validate Cloudflare public build
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Exercise failed tile retry in all three world maps
+        run: |
+          python scripts/test_atlas367_map_recovery_browser.py
+          python scripts/test_atlas365_modern_map_browser.py
