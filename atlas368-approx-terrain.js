@@ -37,8 +37,9 @@ function decode(data,definition=root.JuraTerrain3D?.ELEVATIONS?.['6']){
  if(!data.stats||counts.some((v,i)=>v!==data.stats.coverageCells?.[String(i)]))fail('coverage totals do not match');
  const [west,south,east,north]=data.bounds;
  function sample(x,y){
-  if(!Number.isFinite(x)||!Number.isFinite(y)||x<west||x>east||y<south||y>north)return{height:0,coverage:1};
-  const gx=(x-west)/(east-west)*(WIDTH-1),gy=(north-y)/(north-south)*(HEIGHT-1);
+  const epsilon=1e-7;
+  if(!Number.isFinite(x)||!Number.isFinite(y)||x<west-epsilon||x>east+epsilon||y<south-epsilon||y>north+epsilon)return{height:0,coverage:1};
+  const gx=Math.max(0,Math.min(WIDTH-1,(x-west)/(east-west)*(WIDTH-1))),gy=Math.max(0,Math.min(HEIGHT-1,(north-y)/(north-south)*(HEIGHT-1)));
   const x0=Math.floor(gx),y0=Math.floor(gy),x1=Math.min(WIDTH-1,x0+1),y1=Math.min(HEIGHT-1,y0+1);
   const dx=gx-x0,dy=gy-y0;
   const coverage=support[Math.round(gy)*WIDTH+Math.round(gx)];
