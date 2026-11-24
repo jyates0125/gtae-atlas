@@ -23,3 +23,16 @@ for(const id of ['pumpkins','slashers','ghosts-exposed'])assert.equal(C.markerAv
 assert.equal(C.markerAvailability('snowmen',ctx).availability,'unconfirmed');
 assert.equal(C.markerAvailability('story-letters',{mode:'story',now:t}).hide,false);
 console.log('PASS explicit inactive, active, expired/unknown, seasonal and Story separation');
+
+const october=Date.parse('2026-10-25T12:00:00Z');
+const slasher={mode:'online',now:october,state:{events:{halloween:true}},hour:1,slasherSession:{freeroam:true,elapsed:true,vehicle:true,cooldown:true}};
+assert.equal(C.markerAvailability('slashers',slasher).status,'active');
+assert.equal(C.markerAvailability('slashers',{...slasher,hour:5}).hide,false);
+for(const hour of [0,6,23])assert.equal(C.markerAvailability('slashers',{...slasher,hour}).hide,true);
+for(const flag of Object.keys(slasher.slasherSession))assert.equal(C.markerAvailability('slashers',{...slasher,slasherSession:{...slasher.slasherSession,[flag]:false}}).hide,true);
+assert.equal(C.markerAvailability('slashers',{...slasher,state:{}}).availability,'unconfirmed');
+assert.equal(C.markerAvailability('slashers',{...slasher,now:t}).availability,'inactive');
+const anchors=Object.values(JSON.parse(fs.readFileSync('data/gtadb-5.json','utf8')).records);
+assert.equal(C.SLASHER_ZONES.length,6);
+for(const z of C.SLASHER_ZONES){assert.ok(anchors.some(a=>a[0].includes(z.anchor)&&a[1][0]===z.x&&a[1][1]===z.y),z.anchor);assert.ok(z.radius>0);}
+console.log('PASS Slasher event, hour, session prerequisites, expiry and licensed regional anchors');
