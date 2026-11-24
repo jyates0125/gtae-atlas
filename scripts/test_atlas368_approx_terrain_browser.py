@@ -49,7 +49,8 @@ try:
    expect(page.locator('#juraNavDimension')).to_contain_text('Approx.')
    expect(page.locator('#j362TerrainNotice')).to_be_hidden()
    assert page.evaluate("""() => getComputedStyle(document.getElementById('jura3dCanvas')).opacity==='1'"""),'approximate geometry is hidden waiting for texture'
-   expect(page.locator('#j368CoverageToggle')).to_be_visible()
+   expect(page.locator('.jura-nav-bar #j368CoverageToggle')).to_be_visible()
+   expect(page.locator('#jura3dTools #j368CoverageToggle')).to_have_count(0)
    assert page.evaluate("""() => document.documentElement.scrollWidth<=innerWidth+2""")
    page.locator('#j368CoverageToggle').click()
    expect(page.locator('#j368CoverageToggle')).to_have_attribute('aria-pressed','true')

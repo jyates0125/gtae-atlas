@@ -27,3 +27,27 @@ body.j368-approximate #jura3dMarkerOverlay{display:block}
  body.j368-approximate .jura-3d-tools{max-width:calc(100% - 16px);justify-content:flex-end}
  body.j368-approximate #j368CoverageLegend{background:#20142aee;border-radius:7px}
 }
+
+/* Atlas 36.8: coverage lives in the primary navigation bar, not the
+   legacy 3D tools hidden by the mobile clarity rules. One accessible owner. */
+body[data-start-world="6"].j368-approximate .jura-nav-bar{
+ max-width:calc(100% - 16px);flex-wrap:wrap;box-sizing:border-box
+}
+body[data-start-world="6"] #j368CoverageToggle{
+ flex:0 0 auto;white-space:nowrap
+}
+body[data-start-world="6"].j368-approximate #j368CoverageLegend{
+ position:absolute;right:0;top:calc(100% + 5px);
+ box-sizing:border-box;width:min(270px,calc(100vw - 24px));
+ border:1px solid #9a839f;border-radius:8px;
+ background:#20142af5;box-shadow:0 5px 15px #0005;
+}
+body[data-start-world="6"].j368-approximate #j368CoverageLegend span{
+ display:inline-block!important;padding:0!important;font-size:10px;
+ color:#f7e7d6;white-space:nowrap
+}
+@media(max-width:700px){
+ body[data-start-world="6"].j368-approximate #j368CoverageToggle{
+  min-height:42px;font-size:10px;padding:5px 6px
+ }
+}
