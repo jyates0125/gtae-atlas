@@ -1,0 +1,54 @@
+name: Atlas 36.8 - approximate Leonida relief interaction
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas368-approx-terrain.js'
+      - 'atlas368-approx-terrain.css'
+      - 'data/atlas368-approx-terrain.json'
+      - 'scripts/test_atlas368_approx_terrain.cjs'
+      - 'scripts/test_atlas368_approx_terrain_browser.py'
+      - '.github/workflows/atlas368-approx-terrain.yml'
+      - 'atlas-3d.js'
+      - 'atlas-navigation.js'
+      - 'atlas-vi.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-relief:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate actual grid, boundaries, coverage and SHA
+        run: |
+          node --check atlas368-approx-terrain.js
+          node --check atlas-3d.js
+          node --check atlas-navigation.js
+          node scripts/test_atlas368_approx_terrain.cjs
+      - name: Build and check actual published payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          node scripts/test_atlas368_approx_terrain.cjs
+          node scripts/audit_atlas367_heightfield_release.cjs
+          python scripts/audit_published.py
+      - name: Install focused Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Actual approximate 3D browser interaction
+        run: python scripts/test_atlas368_approx_terrain_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas368-approximate-terrain-visual-evidence
+          path: qa-evidence/atlas368-browser/
+          if-no-files-found: warn
+          retention-days: 14

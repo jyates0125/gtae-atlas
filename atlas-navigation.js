@@ -105,13 +105,16 @@ async function openApproximateTerrain(){
   const surface=await root.JuraApproxTerrain.load();
   if(epoch!==terrainViewToken||dimension!=='3d'||bridge.game()!=='6')return;
   // An accepted local/dense import always outranks this illustrative surface.
-  if(terrain.hasElevation())return;
-  terrain.setApproximateSurface(surface);
-  const ok=terrain.activate();
+  const dense=terrain.hasElevation();
+  if(!dense)terrain.setApproximateSurface(surface);
+  const ok=terrain.isActive()||terrain.activate();
   fallback3d=!ok;
   document.body.classList.toggle('jura-perspective-fallback',fallback3d);
-  if(!ok){terrain.clearApproximateSurface();if(message)message.textContent='Approximate terrain loaded, but WebGL is unavailable. Your illustrated map remains usable.';}
-  else{
+  if(!ok){terrain.clearApproximateSurface();if(message)message.textContent=(dense?'A dense heightfield':'Approximate terrain')+' loaded, but WebGL is unavailable. Your illustrated map remains usable.';}
+  else if(dense){
+   $('jura3dStatus').textContent='3D terrain active · local heightfield';
+   bridge.notice('A compatible local heightfield finished loading; it takes priority over the approximate surface.');
+  }else{
    $('jura3dStatus').textContent='Approximate terrain · GTADB community reconstruction';
    bridge.notice('Approximate 3D active · interpolated community terrain, not measured game elevations. Coverage shows distance to source observations.');
   }
