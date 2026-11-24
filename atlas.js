@@ -687,9 +687,9 @@ function conditionForRecord(r,storeCache){
   const daily=engine.rulesForMode('online').filter(rule=>rule.kind==='rotation');
   activityId=daily.find(rule=>matchesEventResearch(rule,r))?.id;
   if(!activityId&&/\b(?:pumpkins?|jack.o.lanterns?)\b/i.test(name))activityId='pumpkins';
-  else if(/\bghosts? exposed\b/i.test(name))activityId='ghosts-exposed';
-  else if(/\b(?:halloween|free.roam)\b.{0,30}\bslashers?\b|\bslashers?\b.{0,30}\b(?:halloween|free.roam)\b/i.test(name))activityId='slashers';
-  else if(/\b(?:snowmen|snowman)\b/i.test(name))activityId='snowmen';
+  else if(!activityId&&/\bghosts? exposed\b/i.test(name))activityId='ghosts-exposed';
+  else if(!activityId&&/\b(?:halloween|free.roam)\b.{0,30}\bslashers?\b|\bslashers?\b.{0,30}\b(?:halloween|free.roam)\b/i.test(name))activityId='slashers';
+  else if(!activityId&&/\b(?:snowmen|snowman)\b/i.test(name))activityId='snowmen';
  }
  if(!activityId)return null;
  const required=game==='6'?'vi':mode==='online'?'online':'story';
@@ -697,9 +697,24 @@ function conditionForRecord(r,storeCache){
  const save=storeCache?.save||engine.safeState(loadStore('jura68-conditions-'+required,{}));
  const feed=storeCache?.feed||currentRotationSnapshot();
  const storedHour=storeCache?.hour??loadStore('jura68-online-hour',null);const gameHour=storedHour===null||storedHour===''?NaN:Number(storedHour);
- return engine.markerAvailability(activityId,{mode:required,state:save,snapshot:feed,markerId:r.rotationMarkerId,hour:gameHour,now:storeCache?.now??Date.now()});
+ return (engine.markerAvailability||engine.evaluate)(activityId,{mode:required,state:save,snapshot:feed,markerId:r.rotationMarkerId,hour:gameHour,slasherSession:window.JuraSlasherSession,now:storeCache?.now??Date.now()});
 }
 function activityCache(){const engine=window.JuraConditions;return engine?{save:engine.safeState(loadStore('jura68-conditions-'+(game==='6'?'vi':mode),{})),feed:currentRotationSnapshot(),hour:loadStore('jura68-online-hour',null),now:Date.now()}:null}
+function slasherZones(){
+ const C=window.JuraConditions;if(game!=='5'||mode!=='online'||!pinsVisible()||eventHidden.has('slashers')||!C?.SLASHER_ZONES)return [];
+ if(eventFocusIds&&eventFocusName!==C.BY_ID.slashers.name)return [];
+ const cache=activityCache();if(!cache)return [];
+ const hour=cache.hour===null||cache.hour===''?NaN:Number(cache.hour);
+ const state=C.markerAvailability('slashers',{mode:'online',state:cache.save,hour,now:cache.now,slasherSession:window.JuraSlasherSession});
+ return state.status==='active'&&!state.hide?C.SLASHER_ZONES:[];
+}
+function drawActivityZones(){
+ for(const z of slasherZones()){
+  const p=toScreen(z.x,z.y),radius=z.radius*scale();
+  if(p.x+radius<0||p.y+radius<0||p.x-radius>width||p.y-radius>height)continue;
+  ctx.save();ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.fillStyle='rgba(216,43,60,.18)';ctx.fill();ctx.strokeStyle='#ff5366';ctx.lineWidth=2;ctx.setLineDash([7,5]);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#ffe1e4';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.shadowColor='#19080e';ctx.shadowBlur=4;ctx.fillText(z.name+' · approx.',p.x,p.y);ctx.restore();
+ }
+}
 function activityPinVisible(r,cache){
  if(game==='5'&&mode==='online'){
   if(matchesEventResearch({id:'cayo-chests'},r)||matchesEventResearch({id:'cayo-stashes'},r))return false;
@@ -731,7 +746,7 @@ function drawMarkers(){hitRegions=[];if(!pinsVisible()&&!selected)return;
 }
 function drawCoordinateTarget(){if(!coordinateTarget||coordinateTarget.game!==game)return;const p=toScreen(coordinateTarget.x,coordinateTarget.y);if(p.x<-40||p.x>width+40||p.y<-40||p.y>height+40)return;
  ctx.save();ctx.strokeStyle='#fff9d2';ctx.lineWidth=3;ctx.shadowBlur=7;ctx.shadowColor='#000';ctx.beginPath();ctx.arc(p.x,p.y,16,0,Math.PI*2);ctx.moveTo(p.x-26,p.y);ctx.lineTo(p.x+26,p.y);ctx.moveTo(p.x,p.y-26);ctx.lineTo(p.x,p.y+26);ctx.stroke();ctx.restore();}
-function draw(){if(!width||!height)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#163441';ctx.fillRect(0,0,width,height);ctx.save();ctx.strokeStyle='#294a56';ctx.lineWidth=1;for(let x=0;x<width;x+=96){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke()}for(let y=0;y<height;y+=96){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke()}ctx.restore();drawTiles();drawRoute();drawMarkers();drawCoordinateTarget();if(window.teamJuraNav?.getDimension()==="3d")window.teamJuraNav.refresh()}
+function draw(){if(!width||!height)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#163441';ctx.fillRect(0,0,width,height);ctx.save();ctx.strokeStyle='#294a56';ctx.lineWidth=1;for(let x=0;x<width;x+=96){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke()}for(let y=0;y<height;y+=96){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke()}ctx.restore();drawTiles();drawActivityZones();drawRoute();drawMarkers();drawCoordinateTarget();if(window.teamJuraNav?.getDimension()==="3d")window.teamJuraNav.refresh()}
 const pointers=new Map();let gesture=null;
 function position(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
 canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{...position(e),start:position(e)});canvas.classList.add('dragging');if(pointers.size===2){const ps=[...pointers.values()];gesture={distance:Math.hypot(ps[0].x-ps[1].x,ps[0].y-ps[1].y),zoom:camera.z};}else gesture=null});
@@ -956,6 +971,7 @@ function matchesEventResearch(rule,r){
 }
 window.JuraAtlasEventLocations=Object.freeze({
  count:rule=>game==='5'&&mode==='online'?records().filter(r=>matchesEventResearch(rule,r)).length:0,
+ zones:()=>slasherZones().map(z=>({...z})),
  enabled:id=>!eventHidden.has(id),
  setEnabled:(id,on)=>{if(game!=='5'||mode!=='online'||!window.JuraConditions?.BY_ID[id])return false;dropEventFocus();if(on){eventHidden.delete(id);showPins=true;}else eventHidden.add(id);page=0;render();return true;},
  availableCount:rule=>{if(game!=='5'||mode!=='online')return 0;const cache=activityCache();return records().filter(r=>matchesEventResearch(rule,r)&&activityPinVisible(r,cache)).length;},
