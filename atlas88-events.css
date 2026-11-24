@@ -18,3 +18,8 @@
 #j393-online-activity-slot .j393-event-switch{min-height:40px}
 #j393-online-activity-slot .j393-event-switch[aria-pressed=false]{opacity:.75;text-decoration:line-through}
 #j393-online-activity-slot .j88-panel[hidden]{display:none!important}
+
+.j393-slasher{margin:10px 0;padding:8px;border:1px solid #94648b;border-radius:9px;min-width:0}
+.j393-slasher summary{cursor:pointer;font-weight:800;color:#ffcb96;min-height:30px}
+.j393-slasher .j88-event-toggle{padding:5px 0;min-height:36px}
+.j393-slasher a{color:#ffd69a;overflow-wrap:anywhere}
