@@ -224,7 +224,7 @@ function renderDaily(){
  for(const s of list){
   const inactive=current&&!activeIds.includes(s.id);
   const row=btn('','j180-chest-row',()=>{
-   if(inactive&&todayOnly)return;
+   if(inactive&&todayOnly){dailyStatus.textContent='Chest #'+s.id+' · '+s.landmark+' is not selected this cycle. It may return on a later daily reset at 06:00 UTC. All 19 possible opens reference positions; today’s two remain highlighted.';return;}
    if(focus.dataset.mapSource!=='original')activate('original');
    const pin=chestLayer.querySelector('[data-chest="'+s.id+'"]');
    pin?.focus({preventScroll:true});pin?.click();
@@ -233,7 +233,7 @@ function renderDaily(){
   row.append(el('span','j180-chest-dot'+(activeIds.includes(s.id)?' is-active':''),'●'),
              el('span','', '#'+s.id+' · '+s.landmark),
              el('small','',(s.kind==='land'?'LAND':'UNDERWATER')+' · '+(activeIds.includes(s.id)?'TODAY':inactive?'NOT ACTIVE':'UNCONFIRMED')));
-  row.classList.toggle('j393-inactive',inactive);row.disabled=inactive&&todayOnly;
+  row.classList.toggle('j393-inactive',inactive);row.setAttribute('data-availability',inactive?'inactive':activeIds.includes(s.id)?'active':'unconfirmed');
   row.title=inactive?'Not available this cycle; All 19 possible opens archived/reference locations':'Chest location reference';
   dailyList.append(row);
  }
