@@ -20,7 +20,7 @@ assert "LICENSE-DATA" in credits and 'creativecommons.org/licenses/by/4.0/' in c
 map_versions=set()
 for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
     html=(R/page).read_text(encoding='utf-8')
-    matches=re.findall(r'src=["\\']\\./atlas\\.js\\?v=(\\d+)["\\']',html)
+    matches=re.findall(r'<script defer src="\\./atlas\\.js\\?v=(\\d+)"></script>',html)
     assert len(matches)==1,(page,'map engine must be loaded exactly once',matches)
     assert int(matches[0])>=290,(page,'stale map engine',matches[0])
     map_versions.add(matches[0])
