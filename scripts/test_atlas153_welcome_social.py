@@ -16,11 +16,11 @@ assert 'j130-public-hero j132-poster-welcome' in index
 assert index.index('j132-poster-welcome') < index.index('id="featuredGrid"')
 assert "url('./art/atlas97-proposed-loki-scaly-hero.webp')" in css
 assert 'href="./atlas-dashboard.html">✦ Enter Atlas · Continue as Guest' in index
-assert 'href="./atlas-account.html">◎ Sign-in &amp; Progress Options' in index
+assert 'href="./atlas-account.html">◎ Guest Progress &amp; Backups' in index
 assert 'id="publicEntryNote"' in index and 'No download or account is required' in index
 assert 'id="featuredGrid"' in dashboard
 assert 'href="./atlas-dashboard.html">Enter Atlas as a guest' in account
-assert 'Sign in · Coming after secure setup' in account and 'disabled aria-describedby=' in account
+assert 'Sign in · Deferred' in account and 'disabled aria-describedby=' in account
 
 # The simpler premium poster must not be surrounded by the rejected 14.8 SVG collage panels.
 assert 'j132-poster-art' not in index
