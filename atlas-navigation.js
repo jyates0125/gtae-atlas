@@ -137,6 +137,7 @@ async function openApproximateTerrain(){
 }
 function clear(){waypoints=[null,null];plan=null;bridge.clearRoutePlan();render();status('Navigation cleared. Saved collectible progress is unchanged.')}
 function refresh(){if(terrain?.isActive())terrain.render()}
+
 function gameChanged(){graph=null;waypoints=[null,null];plan=null;syncDimensionControls();render();if(dimension==='3d')terrain?.rebase();}
 function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('jura3dMarkerOverlay'),status:$('jura3dStatus'),bridge})||null;
  if($('j362ClosePreview'))$('j362ClosePreview').onclick=()=>setDimension('2d');
@@ -217,6 +218,7 @@ function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('
   status('SHA-256 and '+result.pointsChecked+' claimed control points match ('+result.maxResidualMeters.toFixed(2)+' m maximum error). Source rights and independent coordinates still need human review.');
  }catch(err){status('Evidence rejected: '+err.message+' · Existing personal terrain remains unverified.')}finally{e.target.value=''}};
  $('juraNavRoadFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>16000000)throw Error('Graph exceeds 16 MB limit');const raw=JSON.parse(await file.text());if(String(raw.game)!==bridge.game())throw Error('Road graph must belong to the active GTA game');graph=Core.validateGraph(raw);status('Imported road graph: '+graph.nodes.size+' nodes. UNVERIFIED: map connectivity is not proof of game-road accuracy.');}catch(err){graph=null;status('Road graph rejected: '+err.message)}finally{e.target.value=''}};
+ document.addEventListener('jura:terrain-frame-lost',()=>{if(dimension==='3d'){setDimension('2d');bridge.notice('3D graphics were interrupted. The working 2D map has been restored.')}});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.activeElement?.tagName!=='INPUT'){if(active)close();else if(dimension==='3d')setDimension('2d')}});syncDimensionControls();render();}
 init();return{open,close,setRoutePoint,setStart,refresh,gameChanged,render,setDimension,getDimension:()=>dimension,getPlan:()=>plan,terrain:()=>terrain};}
 root.JuraNavigation=Object.freeze({create});

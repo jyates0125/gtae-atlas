@@ -64,3 +64,8 @@ body[data-start-world="6"] .zoom{top:var(--j369-next-top,205px)!important}
 body[data-start-world="6"] .j217-vi-hub{top:var(--j369-next-top,158px)!important}
 body[data-start-world="6"] .jura-nav-panel{top:var(--j369-next-top,150px)!important}
 body[data-start-world="6"] .jura-nav-bar #j368CoverageLegend{z-index:2}
+
+/* Avoid a centered announcement overlay covering the primary right toolbar. */
+body[data-start-world="6"].jura-in-3d:not(.jura-perspective-fallback) .map-status{visibility:hidden!important}
+body[data-start-world="6"] .jura-nav-bar #j368CoverageLegend{position:absolute!important;top:100%!important;right:0!important;left:auto!important}
+body[data-start-world="6"]:has(#j368CoverageLegend:not([hidden])) .zoom{visibility:hidden!important}

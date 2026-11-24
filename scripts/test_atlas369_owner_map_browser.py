@@ -76,6 +76,9 @@ try:
    page.locator('#jura3d').click()
    page.wait_for_function('teamJuraNav.terrain().isActive()&&teamJuraNav.terrain().hasApproximate()',timeout=30000)
    page.wait_for_function('teamJuraNav.terrain().hasMapTexture()',timeout=35000)
+   assert page.evaluate('teamJuraNav.terrain().hasVisibleFrame()'), '3D activated without a drawn frame'
+   assert page.evaluate('teamJuraNav.terrain().verifyFrame()'), '3D framebuffer contains only clear color'
+   assert page.evaluate('jura3dCanvas.width>100&&jura3dCanvas.height>100'), '3D rendered at hidden canvas dimensions'
    expect(page.locator('#juraNavDimension')).to_contain_text('Approx.')
    expect(page.locator('#j362TerrainNotice')).to_be_hidden()
    expect(page.locator('#jura3dCanvas')).to_be_visible()
@@ -83,18 +86,16 @@ try:
    page.locator('#j368CoverageToggle').click()
    expect(page.locator('#j368CoverageToggle')).to_have_attribute('aria-pressed','true')
    expect(page.locator('#j368CoverageLegend')).to_be_visible()
-   page.wait_for_function("""() => {
-      const z=document.querySelector('.zoom').getBoundingClientRect();
-      const l=document.getElementById('j368CoverageLegend').getBoundingClientRect();
-      return z.top>=l.bottom-1;
-   }""")
+   expect(page.locator('.zoom')).to_be_hidden()
    page.locator('#j368CoverageToggle').click()
    expect(page.locator('#j368CoverageLegend')).to_be_hidden()
    page.locator('#jura2d').click()
    expect(page.locator('#atlasCanvas')).to_be_visible()
    assert not page.evaluate('teamJuraNav.terrain().isActive()')
+   page.wait_for_load_state('networkidle',timeout=25000)
    page.locator('#jura3d').click()
    page.wait_for_function('teamJuraNav.terrain().isActive()',timeout=30000)
+   assert page.evaluate('teamJuraNav.terrain().verifyFrame()'), 'Cached reentry blank frame'
    page.keyboard.press('Escape')
    assert page.evaluate('teamJuraNav.getDimension()')=='2d'
    page.locator('#j143-official-button').click()

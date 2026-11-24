@@ -57,10 +57,10 @@ function build(){
   if(!shown){const msg=document.createElement('p');msg.textContent='No pages matched. Try a game or feature name.';list.append(msg)}
  }
  const open=()=>{
-   drawer.hidden=false;button.setAttribute('aria-expanded','true');wrap.classList.add('is-open');render(input.value);input.focus();
+   drawer.hidden=false;button.setAttribute('aria-expanded','true');wrap.classList.add('is-open');render(input.value);if(mapHost)drawer.querySelector('.j132-close').focus({preventScroll:true});else input.focus({preventScroll:true});
  };
  const close=(restoreFocus=true)=>{
-   drawer.hidden=true;button.setAttribute('aria-expanded','false');wrap.classList.remove('is-open');if(restoreFocus)button.focus();
+   drawer.hidden=true;button.setAttribute('aria-expanded','false');wrap.classList.remove('is-open');if(restoreFocus)button.focus({preventScroll:true});
  };
  button.addEventListener('click',()=>drawer.hidden?open():close());drawer.querySelector('.j132-close').addEventListener('click',close);
  input.addEventListener('input',()=>render(input.value));
