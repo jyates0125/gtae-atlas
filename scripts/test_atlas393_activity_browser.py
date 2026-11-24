@@ -82,6 +82,36 @@ try:
             expect(launch.locator(".j396-guidance")).to_contain_text("Research information only")
             assert page.locator(".rule").filter(has_text="Halloween free-roam Slashers").count()==0
             assert page.locator(".rule").filter(has_text="Nuclear Waste").count()==0
+            # Synthetic local fixture only: exact ID matching, no invented production data.
+            page.evaluate("""() => {
+                const rows=[
+                  {id:'qa-existing',game:'5',scope:'online',name:'QA existing route',x:50,y:50,category:'landmark'},
+                  {id:'qa-current',game:'5',scope:'online',name:'QA current van',x:100,y:100,category:'activity',activityId:'gun-van',rotationMarkerId:'qa-van-1'},
+                  {id:'qa-old',game:'5',scope:'online',name:'QA other van',x:200,y:200,category:'activity',activityId:'gun-van',rotationMarkerId:'qa-van-2'},
+                  {id:'qa-dealer',game:'5',scope:'online',name:'QA incomplete dealer',x:300,y:300,category:'activity',activityId:'street-dealers',rotationMarkerId:'qa-dealer-1'}];
+                localStorage.setItem('jura-atlas-v5-packs',JSON.stringify({qa:{records:rows}}));
+                localStorage.setItem('jura-atlas-routes',JSON.stringify({'5':[],online:['qa-existing'],'6':[]}));
+                localStorage.setItem('jura68-rotation-feed',JSON.stringify({schema:1,rotations:{
+                  'gun-van':{activeIds:['qa-van-1'],checkedAtUtc:'2026-11-24T06:00:00Z',validUntilUtc:'2026-11-25T06:00:00Z',source:'QA fixture'},
+                  'street-dealers':{activeIds:['qa-dealer-1','qa-dealer-2','qa-dealer-3'],checkedAtUtc:'2026-11-24T07:00:00Z',validUntilUtc:'2026-11-25T07:00:00Z',source:'QA fixture'}}}));
+            }""")
+            page.goto(url,wait_until="domcontentloaded")
+            page.locator("#tabRoute").click()
+            daily=page.locator("#j397-daily-route")
+            expect(daily).to_be_visible()
+            expect(daily.locator("small")).to_contain_text("1 unfinished dated mainland stops")
+            daily.locator("button").click()
+            saved=lambda:page.evaluate("JSON.parse(localStorage.getItem('jura-atlas-routes'))")
+            assert saved()["online"]==["qa-existing","qa-current"]
+            daily.locator("button").click()
+            assert saved()["online"]==["qa-existing","qa-current"]
+            assert saved()["5"]==[] and saved()["6"]==[]
+            page.clock.set_fixed_time(datetime(2026,11,25,8,tzinfo=timezone.utc))
+            page.reload(wait_until="domcontentloaded")
+            page.locator("#tabRoute").click()
+            expect(daily.locator("small")).to_contain_text("0 unfinished dated mainland stops")
+            expect(page.locator("#routeList")).to_contain_text("Saved stop")
+            assert saved()["online"]==["qa-existing","qa-current"]
             context.close()
             print(f"PASS {width}px: left sidebar, session and hour gates, switch, expired season, no horizontal overflow")
         browser.close()

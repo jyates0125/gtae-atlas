@@ -449,7 +449,31 @@ function autoRouteVisible(){const origin=currentRouteStart()||(selected?.game===
  toast('Smart route: '+result.stops.length+' stops · ~'+result.units.toLocaleString()+' straight-line units'+(result.omitted?' · '+result.omitted+' not included: narrow filters for smaller hunts':'')+'.');
 }
 
+function dailyRouteCandidates(){
+ const C=window.JuraConditions,cache=activityCache();if(game!=='5'||mode!=='online'||!C||!cache)return [];
+ const rows=records(),out=[];
+ for(const rule of C.rulesForMode('online')){
+  if(rule.kind!=='rotation'||['cayo-chests','cayo-stashes'].includes(rule.id)||eventHidden.has(rule.id))continue;
+  const feed=C.rotationFeed(cache.feed,rule.id,cache.now);if(!feed||feed.active.size!==rule.today)continue;
+  // Require exact IDs, a unique match for every dated selection and explicit rule scope.
+  const group=[...feed.active].map(id=>rows.filter(r=>r.scope==='online'&&r.activityId===rule.id&&r.rotationMarkerId===id&&!r.uncertain));
+  if(group.some(items=>items.length!==1))continue;
+  for(const [r] of group)if(!progress[doneKey(r)]&&activityPinVisible(r,cache))out.push(r);
+ }
+ return out;
+}
+function addDailyRoute(){
+ const candidates=dailyRouteCandidates(),ids=routeIds(),fresh=candidates.filter(r=>!ids.includes(r.id));
+ if(!fresh.length)return toast(candidates.length?'All eligible daily stops already in your route.':'No complete dated mainland selection has matched coordinates yet. Check Activity Intelligence; Cayo is separate.');
+ const planner=window.JuraRoutePlanner;if(!planner)return toast('Route planner unavailable.');
+ const tail=routeRecords().filter(r=>activityPinVisible(r,activityCache())).at(-1),origin=tail||currentRouteStart()||{x:camera.x,y:camera.y,name:'Map center'};
+ const result=planner.plan(origin,fresh);routes[routeScope()]=[...ids,...result.stops.map(r=>r.id)];
+ if(!currentRouteStart())routeStarts[routeScope()]={x:camera.x,y:camera.y,name:'Map center'};
+ navPlan=null;navPlanScope=null;persist();showTab('Route');render();toast('Added '+result.stops.length+' dated mainland stops; existing route preserved. Straight-line order, not verified driving directions.');
+}
 function routeRecords(){const by=new Map(records().map(r=>[r.id,r]));return routeIds().map(id=>by.get(id)).filter(Boolean)}
+// Saved stops are never deleted when a dated activity expires. Only its live route overlay pauses.
+function routeReadyRecords(){const cache=activityCache();return routeRecords().filter(r=>!conditionForRecord(r,cache)?.hide)}
 function toggleRoute(r){routes[routeScope()]=routeIds().includes(r.id)?routeIds().filter(id=>id!==r.id):[...routeIds(),r.id];persist();render();updateSelected()}
 function toggleFound(r){
  const done=!progress[doneKey(r)], oldRoute=routeIds().slice();progress[doneKey(r)]=done;
@@ -498,8 +522,9 @@ function renderFind(){const all=orderedMatches(),root=$('results');root.replaceC
  $('resultCount').textContent=all.length.toLocaleString()+' locations';$('foundCount').textContent=records().filter(r=>progress[doneKey(r)]).length.toLocaleString()+' found';
  const PER_PAGE=40, pages=Math.max(1,Math.ceil(all.length/PER_PAGE));page=clamp(page,0,pages-1);for(const r of all.slice(page*PER_PAGE,(page+1)*PER_PAGE))root.append(card(r));if(!all.length){const p=document.createElement('p');p.className='hint';p.textContent='No places match. Turn a category on, clear search, or update your GTADB data.';root.append(p)}$('pageStatus').textContent=(page+1)+' / '+pages;$('prev').disabled=page===0;$('next').disabled=page>=pages-1;
 }
-function renderRoute(){const root=$('routeList'),list=routeRecords(),origin=currentRouteStart();root.replaceChildren();$('routeCount').textContent=list.length;if($('routeStartStatus'))$('routeStartStatus').textContent=origin?'Starting at '+origin.name+' · X '+origin.x.toFixed(0)+' Y '+origin.y.toFixed(0):'No start selected: click “Pick start on map” or choose a marker’s Start here button.';if(!list.length){const p=document.createElement('p');p.className='hint';p.textContent='No stops yet. Find a place, then tap + Route.';root.append(p)}
- for(let i=0;i<list.length;i++){const r=list[i],d=document.createElement('article');d.className='result';const name=document.createElement('strong');name.textContent=(i+1)+'. '+r.name;const actions=document.createElement('div');actions.className='result-actions';actions.append(btn('↑',()=>moveStop(i,-1)),btn('↓',()=>moveStop(i,1)),btn('Find',()=>choosePlace(r)),btn('−',()=>toggleRoute(r)));d.append(name,actions);root.append(d)}
+function renderRoute(){const root=$('routeList'),list=routeRecords(),origin=currentRouteStart(),cache=activityCache();root.replaceChildren();
+ const daily=$('j397-daily-route');if(daily){daily.hidden=game!=='5'||mode!=='online';if(!daily.hidden){const count=dailyRouteCandidates().length;daily.querySelector('small').textContent=count+' unfinished dated mainland stops with matched coordinates. Cayo has its own map.';}}$('routeCount').textContent=list.length;if($('routeStartStatus'))$('routeStartStatus').textContent=origin?'Starting at '+origin.name+' · X '+origin.x.toFixed(0)+' Y '+origin.y.toFixed(0):'No start selected: click “Pick start on map” or choose a marker’s Start here button.';if(!list.length){const p=document.createElement('p');p.className='hint';p.textContent='No stops yet. Find a place, then tap + Route.';root.append(p)}
+ for(let i=0;i<list.length;i++){const r=list[i],d=document.createElement('article');d.className='result';const name=document.createElement('strong');name.textContent=(i+1)+'. '+r.name;const actions=document.createElement('div');actions.className='result-actions';actions.append(btn('↑',()=>moveStop(i,-1)),btn('↓',()=>moveStop(i,1)),btn('Find',()=>choosePlace(r)),btn('−',()=>toggleRoute(r)));d.append(name);const status=conditionForRecord(r,cache);if(status?.hide){const hint=document.createElement('small');hint.className='j393-record-status';hint.textContent='Saved stop · paused on live route · '+window.JuraConditions.statusText(status.status)+' — '+status.reason;d.append(hint)}d.append(actions);root.append(d)}
 }
 function moveStop(i,delta){const list=[...routeIds()],j=i+delta;if(j<0||j>=list.length)return;[list[i],list[j]]=[list[j],list[i]];routes[routeScope()]=list;persist();render()}
 function renderPins(){const root=$('pinsList');root.replaceChildren();const list=personal.filter(p=>p.game===game&&(game==='6'||(p.scope||'story')===mode));if(!list.length){const p=document.createElement('p');p.className='hint';p.textContent='No custom pins for this game yet.';root.append(p)}for(const r of list){const d=card(r);d.append(btn('Delete pin',()=>{if(!confirm('Delete this pin?'))return;personal=personal.filter(p=>p.id!==r.id);routes[routeScope()]=routeIds().filter(id=>id!==r.id);if(selected?.id===r.id)selected=null;persist();render()}));root.append(d)}}
@@ -627,7 +652,7 @@ function drawRoute(){
   const line=navPlan.points;ctx.save();ctx.lineWidth=4;ctx.strokeStyle='#ffd37e';ctx.setLineDash(navPlan.drivingVerified?[]:[9,6]);ctx.beginPath();let first=true;for(const r of line){const p=toScreen(r.x,r.y);if(first){ctx.moveTo(p.x,p.y);first=false;}else ctx.lineTo(p.x,p.y)}ctx.stroke();ctx.setLineDash([]);
   for(const [i,r] of navPlan.waypoints.entries()){const p=toScreen(r.x,r.y);if(p.x<-30||p.y<-30||p.x>width+30||p.y>height+30)continue;ctx.beginPath();ctx.arc(p.x,p.y,12,0,2*Math.PI);ctx.fillStyle=i===0?'#8ce7be':'#ffe09e';ctx.strokeStyle='#173643';ctx.lineWidth=2;ctx.fill();ctx.stroke();ctx.fillStyle='#173643';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText(i===0?'A':String(i),p.x,p.y+4)}ctx.restore();return;
  }
- const list=routeRecords(),origin=currentRouteStart();if(!list.length&&!origin)return;ctx.save();ctx.lineWidth=3;ctx.strokeStyle='#ffc36d';ctx.setLineDash([9,7]);ctx.beginPath();let first=true;
+ const list=routeReadyRecords(),origin=currentRouteStart();if(!list.length&&!origin)return;ctx.save();ctx.lineWidth=3;ctx.strokeStyle='#ffc36d';ctx.setLineDash([9,7]);ctx.beginPath();let first=true;
  for(const r of [...(origin?[origin]:[]),...list]){const p=toScreen(r.x,r.y);if(first){ctx.moveTo(p.x,p.y);first=false}else ctx.lineTo(p.x,p.y)}ctx.stroke();ctx.setLineDash([]);
  for(const [i,r] of list.entries()){const p=toScreen(r.x,r.y);if(p.x<0||p.x>width||p.y<0||p.y>height)continue;ctx.beginPath();ctx.fillStyle='#ffe09c';ctx.strokeStyle='#1b3441';ctx.lineWidth=2;ctx.arc(p.x,p.y,11,0,2*Math.PI);ctx.fill();ctx.stroke();ctx.fillStyle='#172936';ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillText(String(i+1),p.x,p.y+4)}
  if(origin){const p=toScreen(origin.x,origin.y);if(p.x>=-15&&p.x<=width+15&&p.y>=-15&&p.y<=height+15){ctx.beginPath();ctx.arc(p.x,p.y,13,0,Math.PI*2);ctx.fillStyle='#7ee6bc';ctx.strokeStyle='#193643';ctx.lineWidth=3;ctx.fill();ctx.stroke();ctx.fillStyle='#193643';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText('S',p.x,p.y+4)}}ctx.restore()}
@@ -801,7 +826,7 @@ function getNearbyOrigin(){const choice=$('nearbyOrigin').value;
  return{x:camera.x,y:camera.y,title:'Map center'};
 }
 function nearbyWithin(){const origin=getNearbyOrigin(),radius=Number($('nearbyRadius').value)||500,radius2=radius*radius;
- const close=[];for(const r of matches()){const d2=(r.x-origin.x)**2+(r.y-origin.y)**2;if(d2<=radius2)close.push({record:r,distance:Math.sqrt(d2)})}
+ const cache=activityCache();const close=[];for(const r of matches()){if(!activityPinVisible(r,cache))continue;const d2=(r.x-origin.x)**2+(r.y-origin.y)**2;if(d2<=radius2)close.push({record:r,distance:Math.sqrt(d2)})}
  close.sort((a,b)=>a.distance-b.distance);return{origin,radius,close};
 }
 function renderNearby(){const root=$('nearbyResults');if(!root)return;const{origin,radius,close}=nearbyWithin();nearbyLast=close;root.replaceChildren();
@@ -933,11 +958,11 @@ function optimizeRoute(){const r=routeRecords();if(r.length<2)return toast('Add 
  const origin=currentRouteStart()||r[0],stops=currentRouteStart()?r:r.slice(1);const result=window.JuraRoutePlanner.plan(origin,stops);
  routes[routeScope()]=currentRouteStart()?result.stops.map(p=>p.id):[r[0].id,...result.stops.map(p=>p.id)];persist();render();toast('Optimized '+r.length+' stops using straight-line GTA world distance (not road directions).')}
 
-function fitRoute(){const r=routeRecords();if(!r.length)return toast('Add locations to your route first.');if(r.length===1)return choosePlace(r[0]);
+function fitRoute(){const r=routeReadyRecords();if(!r.length)return toast('No currently available saved stops to show. Your saved route is unchanged.');if(r.length===1)return choosePlace(r[0]);
  const plotted=currentRouteStart()?[currentRouteStart(),...r]:r;const xs=plotted.map(p=>p.x),ys=plotted.map(p=>p.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys),dx=Math.max(180,xmax-xmin),dy=Math.max(180,ymax-ymin);camera.x=(xmin+xmax)/2;camera.y=(ymin+ymax)/2;camera.z=clamp(Math.log2(Math.min((width-120)/dx,(height-170)/dy)*32),0,5);schedulePaint();toast('Showing route on GTA '+game+' map.')}
 const juraBridge={
  game:()=>game,scope:()=>routeScope(),camera:()=>({...camera}),records:()=>records(),places:()=>{const cache=activityCache();return pinsVisible()?matches().filter(r=>activityPinVisible(r,cache)).slice(0,12000):[]},
- route:()=>navPlan&&navPlanScope===routeScope()?navPlan.points:[...(currentRouteStart()?[currentRouteStart()]:[]),...routeRecords()],
+ route:()=>navPlan&&navPlanScope===routeScope()?navPlan.points:[...(currentRouteStart()?[currentRouteStart()]:[]),...routeReadyRecords()],
  color:(cat,record)=>isViLandmark(record)?'#49315e':record?conditionPinColor(record):CATEGORIES[cat]?.[1]||'#e8c998',symbol:cat=>CATEGORY_SYMBOLS[cat]||'✦',compactLandmark:isViLandmark,
  select:place=>{choosePlace(place);window.teamJuraNav?.terrain()?.rebase()},notice:msg=>announce(msg),textureDraw:(target,box)=>drawTerrainTexture(target,box),textureRevision:()=>tilesLoaded,
  setRoutePlan:(plan,places)=>{navPlan=plan;navPlanScope=routeScope();render()},
@@ -989,7 +1014,7 @@ window.JuraAtlasEventLocations=Object.freeze({
   return {count:found.length,available:found.filter(r=>activityPinVisible(r,activityCache())).length};
  },
  clear:()=>{dropEventFocus();page=0;render()},
- refresh:()=>{if(game==='5'&&mode==='online'){renderNamedLayers();renderFind();updateSelected();schedulePaint()}},
+ refresh:()=>{if(game==='5'&&mode==='online'){renderNamedLayers();renderFind();renderRoute();if(nearbyActive)renderNearby();updateSelected();schedulePaint()}},
  focused:()=>!!eventFocusIds
 });
 
@@ -1069,7 +1094,7 @@ function init(){
   announce('Share link displayed. Copy it to share this mapped landmark.');
  }
 };$('addPin').onclick=()=>beginSpecialPin('user');$('addCollectible').onclick=()=>beginSpecialPin('collectible');$('addVehicle').onclick=()=>beginSpecialPin('vehicle');$('loadPack').onclick=()=>$('packFile').click();$('packFile').onchange=e=>readPack(e.target.files?.[0]);
- $('routeVisible').onclick=autoRouteVisible;$('pickRouteStart').onclick=()=>{chooseRouteStartMode=true;addPinMode=false;announce('Tap a marker or an empty map position to select your starting point.');if(innerWidth<=700){$('sidebar').classList.add('mobile-collapsed');window.scrollTo({top:0,behavior:'smooth'})}};$('optimize').onclick=optimizeRoute;$('fitRoute').onclick=fitRoute;$('clearRoute').onclick=()=>{routes[routeScope()]=[];persist();render();toast('GTA '+game+' route cleared.')};$('copyRoute').onclick=async()=>{const s=routeRecords().map((r,i)=>`${i+1}. ${r.name} (X ${r.x.toFixed(0)}, Y ${r.y.toFixed(0)})`).join('\n');if(!s)return toast('No stops to copy.');try{await navigator.clipboard.writeText(s);toast('Route copied.')}catch{toast('Clipboard unavailable; use Export backup instead.')}};
+ const dailyRouteButton=$('j397-add-daily');if(dailyRouteButton)dailyRouteButton.onclick=addDailyRoute;$('routeVisible').onclick=autoRouteVisible;$('pickRouteStart').onclick=()=>{chooseRouteStartMode=true;addPinMode=false;announce('Tap a marker or an empty map position to select your starting point.');if(innerWidth<=700){$('sidebar').classList.add('mobile-collapsed');window.scrollTo({top:0,behavior:'smooth'})}};$('optimize').onclick=optimizeRoute;$('fitRoute').onclick=fitRoute;$('clearRoute').onclick=()=>{routes[routeScope()]=[];persist();render();toast('GTA '+game+' route cleared.')};$('copyRoute').onclick=async()=>{const s=routeRecords().map((r,i)=>`${i+1}. ${r.name} (X ${r.x.toFixed(0)}, Y ${r.y.toFixed(0)})`).join('\n');if(!s)return toast('No stops to copy.');try{await navigator.clipboard.writeText(s);toast('Route copied.')}catch{toast('Clipboard unavailable; use Export backup instead.')}};
  $('exportData').onclick=exportBackup;$('importData').onclick=()=>$('importFile').click();$('importFile').onchange=e=>importBackup(e.target.files?.[0]);$('refresh').onclick=async()=>{dataNotice('Checking our GTA VI licensed data snapshot…');await loadDataset('6',true);render()};$('saveOffline').onclick=saveOffline;$('stopOffline').onclick=()=>{offlineStop=true;$('offlineStatus').textContent='Stopping after current tiles finish…'};
  document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||'')){e.preventDefault();$('search').focus()}if(e.key==='Escape'){selected=null;addPinMode=false;chooseRouteStartMode=false;updateSelected();schedulePaint()}});
  window.addEventListener('storage',e=>{if(e.key==='jura3-progress'){progress=loadStore('jura3-progress',{});render()}if(e.key==='jura-atlas-routes'){routes=loadStore('jura-atlas-routes',{'5':[],'6':[]});render()}});
@@ -1093,9 +1118,9 @@ function init(){
  if(document.body.dataset.startWorld==='online'&&window.JuraConditions){
   let rotationLastAttempt=0,rotationPending=false;
   const pullRotation=async()=>{if(rotationPending||Date.now()-rotationLastAttempt<300000)return;rotationPending=true;rotationLastAttempt=Date.now();
-   try{reviewedRotationSnapshot=await window.JuraConditions.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedRotationSnapshot);if(mode==='online'&&game==='5'){renderNamedLayers();renderFind();updateSelected();schedulePaint()}}catch{}finally{rotationPending=false}
+   try{reviewedRotationSnapshot=await window.JuraConditions.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedRotationSnapshot);if(mode==='online'&&game==='5'){renderNamedLayers();renderFind();renderRoute();if(nearbyActive)renderNearby();updateSelected();schedulePaint()}}catch{}finally{rotationPending=false}
   };
-  const refresh=()=>{if(!document.hidden&&mode==='online'&&game==='5'){renderNamedLayers();renderFind();updateSelected();schedulePaint();void pullRotation()}};
+  const refresh=()=>{if(!document.hidden&&mode==='online'&&game==='5'){renderNamedLayers();renderFind();renderRoute();if(nearbyActive)renderNearby();updateSelected();schedulePaint();void pullRotation()}};
   void pullRotation();setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
   window.addEventListener('storage',e=>{if(['jura68-rotation-feed','jura68-conditions-online','jura68-online-hour'].includes(e.key))refresh()});
  }
