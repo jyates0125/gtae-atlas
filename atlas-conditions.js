@@ -126,7 +126,12 @@ function markerAvailability(id,ctx={}){
  const rule=BY_ID[id];if(!rule)return {status:'unknown',hide:false};
  const result=evaluate(id,ctx),feed=rule.kind==='rotation'?rotationFeed(ctx.snapshot,id,ctx.now??Date.now()):null;
  const off=result.status==='closed'||(rule.kind==='clock'&&result.status==='possible')||Boolean(feed&&feed.active.size===rule.today&&ctx.markerId!=null&&!feed.active.has(String(ctx.markerId)));
- return {...result,hide:off};
+ // On the mainland, time-limited pins need current evidence before display.
+ // Unknown is NOT an assertion that the event has ended.
+ const timed=['rotation','clock','clock-parent','seasonal'].includes(rule.kind);
+ const eligible=result.status==='active'||(rule.kind==='seasonal'&&result.status==='possible'&&ctx.state?.events?.[rule.event]===true);
+ const awaiting=timed&&!eligible&&!off;
+ return {...result,hide:off||awaiting,availability:off?'inactive':awaiting?'unconfirmed':'available'};
 }
 function markerColor(status){return {active:'#facc15',possible:'#f8fafc',closed:'#f8fafc',locked:'#94a3b8',complete:'#64748b',unknown:'#38bdf8',research:'#38bdf8',excluded:'#64748b','available-feed':'#38bdf8'}[status]||'#38bdf8';}
 function statusText(status){return {active:'Eligible / selected (not verified live)',possible:'Possible · not currently selected',locked:'Locked · prerequisite',closed:'Not active',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
