@@ -32,6 +32,7 @@ function init(){
  const closeCard=()=>{if(card&&!card.classList.contains('hidden'))$('closeSelected')?.click()};
  const closeRoute=()=>{if(panel&&!panel.hidden)$('juraCloseNav')?.click()};
  const closeHub=()=>{if(hub)hub.open=false};
+ $('j391-guide-back')?.addEventListener('click',()=>{closeHub();hub?.querySelector('summary')?.focus({preventScroll:true})});
  hub?.addEventListener('toggle',()=>{if(hub.open){closeRoute();closeCard()}});
  const observe=(el,attribute,fn)=>{if(el)new MutationObserver(fn).observe(el,{attributes:true,attributeFilter:[attribute]})};
  observe(panel,'hidden',()=>{if(!panel.hidden){closeHub();closeCard()}});
