@@ -24,7 +24,7 @@ for path in ('project.html','atlas98b-test.html','atlas-checklist.html'):
     assert 'ELARIO STUDIOS' in text,path
     assert '7.0 Preview' not in text and 'TEAM JURA ATLAS 7.4' not in text and 'ATLAS 9.3' not in text,path
     if path=='project.html':
-        assert 'atlas116-showcase.css?v=116' in text
+        assert 'atlas116-showcase.css?v=379' in text
         assert 'j116-showcase' in text and 'MANY CREWS · ONE VISION' in text
         assert 'https://github.com/jyates0125/team-jura-atlas-preview' in text
         assert 'leonida-explorer' not in text
@@ -41,7 +41,7 @@ for path in ('project.html','atlas98b-test.html','atlas-checklist.html'):
             assert control in p.ids,control
 showcase=(ROOT/'atlas116-showcase.css').read_text(encoding='utf-8')
 assert showcase.count('{') == showcase.count('}')
-assert "atlas98-neon-poster.webp" in showcase
-assert (ROOT/'art/atlas98-neon-poster.webp').stat().st_size>100_000
+assert "jura155-studio.webp" in showcase
+assert (ROOT/'art/jura155-studio.webp').stat().st_size>100_000
 assert (ROOT/'art/elario-crest.svg').stat().st_size>100
 print('Atlas 11.6 project, QA and collection visual parity PASS')

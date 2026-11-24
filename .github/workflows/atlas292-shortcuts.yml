@@ -1,0 +1,44 @@
+name: Atlas 29.2 - focused dashboard shortcuts
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas223-home.js'
+      - 'atlas-dashboard.html'
+      - 'atlas291-shortcuts.css'
+      - 'atlas292-shortcut-filter.css'
+      - 'atlas292-shortcut-filter.js'
+      - 'scripts/test_atlas292_shortcuts.py'
+      - 'scripts/test_atlas223_home_browser.py'
+      - '.github/workflows/atlas292-shortcuts.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  shortcuts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas292-shortcuts.yml
+      - run: python scripts/test_atlas292_shortcuts.py
+        if: steps.scope.outputs.run == 'true'
+      - run: node --check atlas292-shortcut-filter.js
+        if: steps.scope.outputs.run == 'true'
+      - run: node scripts/build-cloudflare.cjs
+        if: steps.scope.outputs.run == 'true'
+      - run: python scripts/audit_published.py
+        if: steps.scope.outputs.run == 'true'

@@ -1,0 +1,3 @@
+# Atlas 38.2 — safer modern navigation
+
+Private road imports now preserve the last valid graph and route on a rejected replacement, cancel stale reads on newer selections or world switches, explicitly remove the graph, invalidate route geometry and instructions when inputs change, label endpoints A/B, use actual active 3D camera center, and export accurate mixed/unverified routing labels with spreadsheet-safe text. No fabricated road network, no changes to Cayo or classic maps, no authentication or guest-save changes. Exact-head focused tests added; owner browser validation still needed. Both charters require non-regression and truthful source grades.

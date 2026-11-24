@@ -1,0 +1,36 @@
+name: Atlas 36.3 - GTADB source credit and elevation probe
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas-vi.html'
+      - 'atlas-credits.html'
+      - 'atlas-navigation.js'
+      - 'atlas363-elevation-probe.js'
+      - 'atlas363-elevation-probe.css'
+      - 'scripts/test_atlas363_gtadb_elevation_probe.cjs'
+      - 'docs/ATLAS363-GTADB-ELEVATION-PROBE.md'
+      - '.github/workflows/atlas363-elevation-probe.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  single-point-elevation-reference:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node --check atlas363-elevation-probe.js
+      - run: node --check atlas-navigation.js
+      - run: node scripts/test_atlas363_gtadb_elevation_probe.cjs
+      - run: python scripts/test_atlas290_vi_day.py
+      - run: node scripts/test_atlas359_terrain_proof.cjs
+      - run: node scripts/test_heightfield_import.cjs
+      - run: node scripts/build-cloudflare.cjs
+      - run: python scripts/audit_published.py

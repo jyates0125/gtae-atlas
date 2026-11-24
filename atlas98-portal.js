@@ -69,6 +69,10 @@
        lastWorldLink.textContent='Continue '+selected.name+' ›'}
    }
    renderLastWorld();
+   // A Back navigation may restore this page from the browser's page cache.
+   // Refresh only the allowlisted recent-world link; keep search/filter state.
+   window.addEventListener('pageshow',renderLastWorld);
+   window.addEventListener('storage',event=>{if(event.key===lastWorldKey)renderLastWorld()});
    function apply(){
      const url=new URL(location.href);
      for(const [key,value] of [['q',inp.value.trim()],['filter',mode==='all'?'':mode]]){
@@ -86,31 +90,149 @@
        const features=E('p','world-feature-summary',w.features.slice(0,3).join(' · '));
        const caption=E('p','world-coverage-note',w.note);
        card.querySelector('.world-copy').append(features,caption);(w.group==='featured'?feature:additional).append(card);total++}
+     const resetTool=$('#clearWorldSearch');if(resetTool)resetTool.hidden=!(inp.value.trim()||mode!=='all');
      if(count)count.textContent=total+' of '+worlds.length+' destinations';if($('#noWorlds'))$('#noWorlds').hidden=total!==0;
      $('#mainWorlds').hidden=feature.children.length===0;$('#otherWorlds').hidden=additional.children.length===0;
    }
    function syncButtons(){buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.worldFilter===mode)))}
    inp.addEventListener('input',apply);
    buttons.forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.worldFilter;syncButtons();apply()}));
-   $('#resetWorldSearch').onclick=()=>{mode='all';inp.value='';syncButtons();apply();inp.focus()};
+   const resetWorlds=()=>{mode='all';inp.value='';syncButtons();apply();inp.focus()};
+   $('#resetWorldSearch').onclick=resetWorlds;
+   if($('#clearWorldSearch'))$('#clearWorldSearch').onclick=resetWorlds;
    syncButtons();paint();
  }
  const looks=[
-  {id:'hero',title:'Original cinematic crew identity',kind:'approved',description:'Approved Team Jura character direction featuring the red-hatted Loki and Scaly Man.',art:'atlas98-approved-hero.webp'},
-  {id:'home',title:'Approved universe homepage concept',kind:'approved',description:'Approved navigation and flagship-world visual reference; individual UI controls are built as real HTML.',art:'atlas98-approved-home-reference.webp'},
-  {id:'loki',title:'Loki · five outfit explorations',kind:'concept',description:'Red top hat, red hair and slasher-inspired future variations.',art:'atlas98-loki-style-concept.webp'},
-  {id:'scaly',title:'Scaly Man · wardrobe builds',kind:'concept',description:'Black tactical vest, short green/dark hair, painted slasher face and alternative outfits.',art:'atlas98-scaly-builds.webp'},
-  {id:'styles',title:'Team Jura Style Lab concept boards',kind:'concept',description:'Galaxy textures, checker suits, gold trim and event-ready outfits.',art:'atlas98-style-lab.webp'},
-  {id:'duo',title:'Crew Wardrobe Gallery',kind:'concept',description:'Coordinated Loki and Scaly looks from classic style to futuristic neon.',art:'atlas98-wardrobe-concept.webp'},
-  {id:'slasher',title:'Slasher Collection',kind:'concept',description:'Horror-inspired red checker, black tactical, and ornate royal outfits.',art:'atlas98-slasher-collection.webp'},
-  {id:'original',title:'Neon futuristic portrait',kind:'concept',description:'Experimental sci-fi treatment for special graphics and fan events.',art:'atlas98-original-cinematic.webp'}
+  {id:'hero',title:'Original cinematic crew identity',kind:'approved',description:'Approved Team Jura character direction featuring the red-hatted Loki and Scaly Man.',art:'atlas97-proposed-loki-scaly-hero.webp'},
+  {id:'home',title:'GTAE universe artwork',kind:'approved',description:'Cinematic map-world artwork; interactive navigation is built as real HTML.',art:'jura158-map-world-cinematic.webp'},
+  {id:'loki',title:'Loki · five outfit explorations',kind:'concept',description:'Red top hat, red hair and slasher-inspired future variations.',art:'atlas98-loki-style-concept.webp',crop:[495,250,1140,390]},
+  {id:'scaly',title:'Scaly Man · wardrobe builds',kind:'concept',description:'Black tactical vest, short green/dark hair, painted slasher face and alternative outfits.',art:'atlas98-scaly-builds.webp',crop:[425,245,1100,380]},
+  {id:'styles',title:'Team Jura Style Lab concept boards',kind:'concept',description:'Galaxy textures, checker suits, gold trim and event-ready outfits.',art:'atlas98-style-lab.webp',crop:[545,225,1090,445]},
+  {id:'duo',title:'Crew Wardrobe Gallery',kind:'concept',description:'Coordinated Loki and Scaly looks from classic style to futuristic neon.',art:'atlas98-wardrobe-concept.webp',crop:[225,415,1405,345]},
+  {id:'slasher',title:'Slasher Collection',kind:'concept',description:'Horror-inspired red checker, black tactical, and ornate royal outfits.',art:'atlas98-slasher-collection.webp',crop:[270,370,1100,305]},
+  {id:'original',title:'Neon futuristic outfit concept',kind:'concept',description:'Experimental sci-fi treatment for special graphics and fan events.',art:'atlas98-style-lab.webp',crop:[1270,450,360,215]}
  ];
- function styles(){const gallery=$('#styleGallery');if(!gallery)return;const keys='team-jura-atlas98-style-bookmarks-v1';let bookmarks=safe(keys,{}),filter='all';const buttons=$$('[data-style-filter]');const count=$('#savedStylesCount');const dialog=$('#styleDialog');const img=$('#stylePreview');const label=$('#stylePreviewLabel');
-   function render(){gallery.replaceChildren();if(count)count.textContent=Object.values(bookmarks).filter(Boolean).length+' saved looks';
-     for(const look of looks.filter(l=>filter==='all'||l.kind===filter)){
-       const tile=E('article','style-tile');const image=E('img');image.src='./art/'+look.art;image.alt=look.title;image.loading='lazy';const body=E('div','style-body');body.append(E('small','',look.kind==='approved'?'APPROVED REFERENCE':'FUTURE CONCEPT · NOT APPROVED'),E('h3','',look.title),E('p','',look.description));const actions=E('div','style-actions');const zoom=E('button','','View artwork');zoom.type='button';zoom.addEventListener('click',()=>{if(img)img.src=image.src;if(label)label.textContent=look.title;if(dialog?.showModal)dialog.showModal();else window.open(image.src,'_blank','noopener')});const saveBtn=E('button','','☆ Save idea');saveBtn.type='button';if(bookmarks[look.id]){saveBtn.classList.add('is-saved');saveBtn.textContent='★ Saved'}saveBtn.addEventListener('click',()=>{bookmarks[look.id]=!bookmarks[look.id];if(!save(keys,bookmarks)){saveBtn.textContent='Storage unavailable';return}render()});actions.append(zoom,saveBtn);body.append(actions);tile.append(image,body);gallery.append(tile)
+ function styles(){
+   const gallery=$('#styleGallery');
+   if(!gallery)return;
+   const key='team-jura-atlas98-style-bookmarks-v1';
+   const filters=$$('[data-style-filter]');
+   const count=$('#savedStylesCount'),status=$('#styleSaveStatus'),empty=$('#styleEmpty');
+   const dialog=$('#styleDialog'),preview=$('#stylePreview'),label=$('#stylePreviewLabel');
+   const cards=new Map();
+   let filter='all';
+   function readBookmarks(){
+     const raw=localStorage.getItem(key);
+     if(raw===null)return {};
+     const record=JSON.parse(raw);
+     if(!record||typeof record!=='object'||Array.isArray(record)||
+       looks.some(look=>Object.hasOwn(record,look.id)&&typeof record[look.id]!=='boolean')){
+       throw Error('Unreadable style bookmarks');
      }
-   }buttons.forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.styleFilter;buttons.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render()}));render();
+     return record;
+   }
+   function refresh(){
+     let record=null;
+     try{record=readBookmarks()}catch{}
+     if(status)status.textContent=record?'':'Saved looks are unavailable. Your existing bookmarks have been preserved.';
+     let savedCount=0,visibleCount=0;
+     for(const look of looks){
+       const {tile,button}=cards.get(look.id);
+       const saved=record?.[look.id]===true;
+       if(saved)savedCount++;
+       button.disabled=!record;
+       button.setAttribute('aria-pressed',String(saved));
+       button.classList.toggle('is-saved',saved);
+       button.textContent=saved?'★ Saved':'☆ Save idea';
+       const visible=filter==='all'||filter===look.kind||(filter==='saved'&&saved);
+       const containedFocus=tile.contains(document.activeElement);
+       tile.hidden=!visible;
+       if(visible)visibleCount++;
+       if(!visible&&containedFocus)filters.find(b=>b.dataset.styleFilter===filter)?.focus();
+     }
+     count.textContent=record?savedCount+(savedCount===1?' saved look':' saved looks'):'Saved count unavailable';
+     if(empty)empty.hidden=visibleCount>0||!record;
+   }
+   async function setSaved(id,desired){
+     const write=()=>{
+       const record=readBookmarks();
+       record[id]=desired;
+       localStorage.setItem(key,JSON.stringify(record));
+     };
+     try{
+       if(navigator.locks?.request)await navigator.locks.request(key,write);
+       else write();
+       refresh();
+     }catch{
+       refresh();
+       if(status)status.textContent='Could not save this change. Your existing bookmarks have been preserved.';
+     }
+   }
+   function selectedArt(){
+     const id=new URL(location.href).searchParams.get('look');
+     return looks.find(look=>look.id===id);
+   }
+   // Present only the outfit panels from historic concept boards; old logo and mock UI stay out of the visible gallery.
+   function applyArt(frame,img,look){
+     img.src='./art/'+look.art;img.alt=look.title;
+     if(look.crop){
+       const [x,y,w,h]=look.crop;
+       frame.classList.add('gtae-art-crop');
+       frame.style.aspectRatio=w+' / '+h;
+       img.style.width=(1648/w*100)+'%';img.style.height=(928/h*100)+'%';
+       img.style.left=(-x/w*100)+'%';img.style.top=(-y/h*100)+'%';
+     }else{
+       frame.classList.remove('gtae-art-crop');frame.style.aspectRatio='';
+       for(const prop of ['width','height','left','top'])img.style[prop]='';
+     }
+   }
+   function syncArtwork(){
+     const look=selectedArt();
+     if(look&&dialog.showModal){
+       applyArt(preview.parentElement,preview,look);
+       label.textContent=look.title;
+       if(!dialog.open)dialog.showModal();
+     }else if(dialog.open)dialog.close();
+   }
+   function closeArtwork(){
+     if(history.state?.atlasStyleArt&&selectedArt()){
+       history.back();
+       return;
+     }
+     const url=new URL(location.href);
+     url.searchParams.delete('look');
+     history.replaceState(history.state,'',url);
+     syncArtwork();
+   }
+   dialog.querySelector('form').addEventListener('submit',e=>{e.preventDefault();closeArtwork()});
+   dialog.addEventListener('cancel',e=>{e.preventDefault();closeArtwork()});
+   window.addEventListener('popstate',syncArtwork);
+   for(const look of looks){
+     const tile=E('article','style-tile'),image=E('img'),body=E('div','style-body');
+     const frame=E('div','style-art-frame');frame.append(image);applyArt(frame,image,look);image.loading='lazy';
+     body.append(E('small','',look.kind==='approved'?'APPROVED REFERENCE':'FUTURE CONCEPT · NOT APPROVED'),
+       E('h3','',look.title),E('p','',look.description));
+     const actions=E('div','style-actions'),zoom=E('button','','View artwork'),button=E('button');
+     zoom.type=button.type='button';
+     zoom.addEventListener('click',()=>{
+       if(!dialog.showModal){tile.scrollIntoView({block:'nearest'});return}
+       const url=new URL(location.href);
+       url.searchParams.set('look',look.id);
+       history.pushState({...history.state,atlasStyleArt:true},'',url);
+       syncArtwork();
+     });
+     button.addEventListener('click',()=>setSaved(look.id,button.getAttribute('aria-pressed')!=='true'));
+     actions.append(zoom,button);body.append(actions);tile.append(frame,body);gallery.append(tile);
+     cards.set(look.id,{tile,button});
+   }
+   filters.forEach(b=>b.addEventListener('click',()=>{
+     filter=b.dataset.styleFilter;
+     filters.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+     refresh();
+   }));
+   window.addEventListener('storage',e=>{if(e.key===key||e.key===null)refresh()});
+   window.addEventListener('pageshow',()=>{refresh();syncArtwork()});
+   refresh();syncArtwork();
  }
  function init(){nav();const page=document.body.dataset.page;if(page==='home')homepage();if(page==='maps')directory();if(page==='styles')styles()}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();

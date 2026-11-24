@@ -18,7 +18,7 @@ assert "<h2>Activity directory · active and inactive</h2>" in activities
 js=src("atlas-activities.js")
 daily=src("atlas87-daily.js")
 for value in (js,daily):
- assert "fetch('./data/online-rotation-current.json'" in value
+ assert "C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1'" in value
 assert "loadReviewedRotations();" in js
 assert "seasonExpired" in src("atlas88-events.js")
 assert "checkbox.disabled=true" in src("atlas88-events.js")

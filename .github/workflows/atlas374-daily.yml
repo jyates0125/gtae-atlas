@@ -1,0 +1,25 @@
+name: Atlas 37.4 daily refresh
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas.js'
+      - 'atlas87-daily.js'
+      - 'atlas-activities.js'
+      - 'atlas-conditions.js'
+      - 'data/online-rotation-current.json'
+      - 'scripts/test_atlas374_daily.cjs'
+      - '.github/workflows/atlas374-daily.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas.js && node --check atlas87-daily.js && node --check atlas-activities.js
+      - run: node scripts/test_atlas374_daily.cjs

@@ -1,0 +1,24 @@
+name: Atlas 35.3 - main production and development preview topology
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - '.github/workflows/atlas2150-branch-parity.yml'
+      - '.github/workflows/atlas353-branch-topology.yml'
+      - 'docs/TEAM-JURA-STANDING-CHARTER.md'
+      - 'docs/TEAM-JURA-CANONICAL-REPO-AND-DEPLOYMENT.md'
+      - 'docs/ATLAS-SITE-COMPLETION-CONTRACT.md'
+      - 'scripts/test_atlas353_branch_roles.py'
+permissions:
+  contents: read
+jobs:
+  check-branch-topology:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert main is official production; dev is non-production
+        run: python scripts/test_atlas353_branch_roles.py

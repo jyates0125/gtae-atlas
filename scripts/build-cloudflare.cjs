@@ -32,6 +32,36 @@ function walk(dir, prefix='') {
 if(fs.existsSync(out)) fs.rmSync(out,{recursive:true,force:true});
 fs.mkdirSync(out,{recursive:true});
 const files=walk(root);
+// Explicit per-page artwork selection; missing or changed selected art fails
+// in every build. The optional smaller concept pack never auto-activates.
+const headerPack=JSON.parse(fs.readFileSync(path.join(root,'docs/ATLAS3904-HEADER-ART.json'),'utf8')).images;
+const selectedPaths=new Set(), selectedHashes=new Set();
+const headerRules=Object.entries(headerPack).map(([key,entry])=>{
+ if(!/^[a-z0-9-]+$/.test(key)||!['existing','new'].includes(entry.selected))throw new Error('Invalid header selection: '+key);
+ const existing=entry.selected==='existing';
+ const rel=existing?entry.fallback:entry.path;
+ if(!/^art\/[a-zA-Z0-9-]+\.webp$/.test(rel)||!files.includes(rel))throw new Error('Missing selected cinematic header: '+key);
+ const bytes=fs.readFileSync(path.join(root,rel));
+ if(bytes.length<12||bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP')throw new Error('Invalid WebP header: '+key);
+ const sha256=crypto.createHash('sha256').update(bytes).digest('hex');
+ const gitBlob=crypto.createHash('sha1').update('blob '+bytes.length+'\0').update(bytes).digest('hex');
+ if(existing?gitBlob!==entry.fallbackGitBlob:sha256!==entry.sha256)throw new Error('Selected header identity mismatch: '+key);
+ if(selectedPaths.has(rel)||selectedHashes.has(sha256))throw new Error('Repeated selected cinematic header: '+key);
+ selectedPaths.add(rel);selectedHashes.add(sha256);
+ const page=fs.readFileSync(path.join(root,entry.page),'utf8');
+ if(!page.includes('data-gtae-header="'+key+'"')||!page.includes('atlas3903-header-refresh.css'))throw new Error('Header wiring missing: '+key);
+ return '[data-gtae-header="'+key+'"]{--j3904-art:url("./'+rel+'")}';
+});
+if(headerRules.length!==9)throw new Error('Expected nine selected cinematic headers');
+const portraitPack=JSON.parse(fs.readFileSync(path.join(root,'docs/ATLAS3907-PORTRAIT-MEDIA.json'),'utf8')).files;
+if(Object.keys(portraitPack).length!==2)throw new Error('Expected two cinematic portraits');
+for(const [key,entry] of Object.entries(portraitPack)){
+ if(!/^art\/[a-zA-Z0-9-]+\.webp$/.test(entry.path)||!files.includes(entry.path))throw new Error('Missing portrait: '+key);
+ if(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,entry.path))).digest('hex')!==entry.sha256)throw new Error('Portrait identity mismatch: '+key);
+ if(!fs.readFileSync(path.join(root,'atlas8-preview.html'),'utf8').includes('src="./'+entry.path+'"'))throw new Error('Portrait wiring missing: '+key);
+}
+const headerOverride='\n/* Validated selected cinematic headers */\n'+headerRules.join('\n')+'\n';
+console.log('Cinematic headers: '+headerRules.length+'/9 selected images verified; visual release review remains separate.');
 const pages = files.filter(rel => rel.endsWith('.html') && !rel.includes('/')).sort().map(rel => {
   const source=fs.readFileSync(path.join(root,rel),'utf8');
   const lower=source.toLowerCase();
@@ -60,6 +90,7 @@ for (const rel of files) {
     }
   }
   fs.copyFileSync(src,dst);
+  if(rel==='atlas3903-header-refresh.css'&&headerOverride)fs.appendFileSync(dst,headerOverride);
   const buf=fs.readFileSync(dst);
   bytes+=buf.length;
   manifest.push({path:rel.replaceAll('\\','/'),bytes:buf.length,sha256:crypto.createHash('sha256').update(buf).digest('hex')});

@@ -1,0 +1,14 @@
+/* Atlas 30.7 · Elario classic mobile marker editor back. */
+body[data-page="classic"] .classic-editor{box-sizing:border-box;max-width:100%;min-width:0;scroll-margin-top:14px}
+body[data-page="classic"] .j307-editor-toolbar{position:sticky;top:0;z-index:6;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;margin:0 0 13px;padding:10px 0 13px;background:linear-gradient(110deg,#261333,#352144);border-bottom:1px solid #b981a4;color:#ffdda8}
+body[data-page="classic"] .j307-editor-toolbar strong{font:800 12px/1.4 system-ui;letter-spacing:.08em}
+body[data-page="classic"] #j307-back-map{min-height:44px;min-width:135px;max-width:100%;padding:9px 14px;box-sizing:border-box;cursor:pointer;border:1px solid #ffdd9d;border-radius:10px;background:linear-gradient(112deg,#714277,#432754);color:#ffebcc;font:800 13px/1.25 system-ui}
+body[data-page="classic"] #j307-back-map[hidden]{display:none!important}
+body[data-page="classic"] #j307-back-map:focus-visible{outline:3px solid #ffe2a3;outline-offset:3px}
+body[data-page="classic"] .classic-editor-buttons button{min-height:44px;min-width:44px}
+@media(max-width:570px){body[data-page="classic"] .j307-editor-toolbar{align-items:stretch}body[data-page="classic"] #j307-back-map{width:100%}body[data-page="classic"] .classic-editor-buttons{flex-wrap:wrap}body[data-page="classic"] .classic-editor-buttons button{flex:1 1 auto}}
+@media(max-height:540px){body[data-page="classic"] .j307-editor-toolbar{padding:6px 0}}
+
+/* The toolbar becomes first child; explicitly restore the original three-field grid. */
+body[data-page="classic"] .classic-editor>.j307-editor-toolbar+div{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr) minmax(0,1.4fr);gap:9px}
+@media(max-width:570px){body[data-page="classic"] .classic-editor>.j307-editor-toolbar+div{grid-template-columns:minmax(0,1fr)}}

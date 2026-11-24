@@ -36,7 +36,7 @@ for value in (robots,sitemap,share,launch,icons):
  assert OLD not in value,'Old preview links must not be promoted'
 assert '<link rel="canonical" href="'+SITE+'/atlas-share.html">' in share
 assert '<meta property="og:url" content="'+SITE+'/atlas-share.html">' in share
-assert '<meta property="og:image" content="'+SITE+'/art/atlas98-approved-hero.webp">' in share
+assert '<meta property="og:image" content="'+SITE+'/art/atlas97-proposed-loki-scaly-hero.webp">' in share
 assert "const SITE='"+SITE+"/';" in launch
 assert "const URL='"+SITE+"/';" in icons
 assert "here.origin==='"+SITE+"'" in icons
@@ -44,7 +44,7 @@ assert 'navigator.share' in launch and 'navigator.share' in icons
 assert 'navigator.clipboard.writeText' in icons
 # Preserve existing, user-initiated share mechanism and Elario art.
 assert "kind==='open-social'" in launch and 'data-j131-social-host' in home
-assert 'art/atlas98-approved-hero.webp' in home
+assert 'art/atlas97-proposed-loki-scaly-hero.webp' in home
 # No unsolicited trackers or fake donation endpoint.
 for value in (launch,icons):
  for forbidden in ('cloudflareinsights.com', 'googletagmanager.com', 'adsbygoogle', 'ko-fi.com/'):

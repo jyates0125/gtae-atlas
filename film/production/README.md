@@ -4,7 +4,7 @@
 
 ## State of the project
 
-The website includes a **playable, original 36-second motion-poster video with original generated instrumental sound**, nine interactive story chapters, approved ensemble art, and a browser-local memory wall. **This is not a finished animated feature.** Full-action animation, fully mixed dialogue, gameplay recordings and official trailer footage have not been rendered or licensed here. A site-ready proof of concept and a complete shoot/edit blueprint are included.
+The website includes a **playable, 39-second music-only teaser with the Elario score and sound effects**, nine interactive story chapters, approved ensemble art, and a browser-local memory wall. **This is not a finished animated feature.** Full-action animation, fully mixed dialogue, gameplay recordings and official trailer footage have not been rendered or licensed here. A site-ready proof of concept and a complete shoot/edit blueprint are included.
 
 ## Narrative north star
 
@@ -17,7 +17,7 @@ The website includes a **playable, original 36-second motion-poster video with o
 3. `VOICE-AND-SOUND.md` — original voice personas, Foley/effects, original score design and mix guidance.
 4. `ASSET-AND-RIGHTS.md` — verified credits versus community R&D, third-party permissions and public release checklist.
 5. `../../one-last-ride.html` — working public film page and memory wall.
-6. `../assets/one-last-ride-motion-preview.mp4` — 36-second MP4 proof-of-direction.
+6. `../assets/one-last-ride-motion-preview.mp4` — 39-second music-only web cut.
 
 ## Visual continuity
 
@@ -34,3 +34,11 @@ The website includes a **playable, original 36-second motion-poster video with o
 ## Deployment
 
 Deploy website files into **`atlas-7-dev`** first; do **not** merge over `main` until visual review of laptop/phone, map tiles and research dataset permissions. This ZIP contains the website root; `index.html` stays at repository root. The film page is `/one-last-ride.html`. Changes must be tested in a served HTTPS preview (not `file://`) because service workers and map fetching need a proper origin.
+
+## Atlas 32.4 — condensed 4:15 editorial animatic (staging only)
+
+The original extended screenplay and 16-shot, **8:30** planning sheet remain intact. The owner's requested **3–5-minute** tribute is represented by a separate, exact **4:15 / 255-second** nine-chapter editorial cut at `CONDENSED-CUT-255S.json`. It is a *timed storyboard animatic* rendered from the nine original, locally bundled JPEG concept frames. It is **not** proof of full motion-character animation, recorded actors, a final soundtrack, or rights clearances.
+
+Renderer: `../../scripts/render_one_last_ride_animatic.py`. It uses only on-repository original stills plus the existing `../assets/original_teaser_score.wav` as a repeated **temporary audio cue** (not a finished music mix); no Rockstar clips, unauthorized voice samples or remote media. The renderer produces a 1280 × 720 H.264/AAC MP4, a SHA-256 manifest, and explicit unfinished-film labels. The CI artifact is for internal review; no public film URL, page embed or site release is created by the staging workflow.
+
+Release holds: subject-specific approved characters and visual continuity, alternate 9:16 editing, final performance consent and soundtrack, complete animation and mix, rights register, device preview, and explicit owner signoff. The staging player uses the 39-second music-only teaser. The full animatic remains a separate production review cut.

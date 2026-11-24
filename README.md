@@ -36,7 +36,7 @@ The connected GitHub `development` branch contains more current work than the ol
 
 # Atlas 7.4.1 · Polished combined preview (Nov 13, 2026)
 
-**Team Jura / Elario Studios · GTA map portal + One Last Ride studio preview.** This snapshot combines the holiday homepage / map browser design, existing maps and research tools, Atlas Passport, Leonida HQ, One Last Ride 36-second motion-poster MP4, original score, 9-scene interactive storyboard and [production master](film/production/README.md).
+**Team Jura / Elario Studios · GTA map portal + One Last Ride studio preview.** This snapshot combines the holiday homepage / map browser design, existing maps and research tools, Atlas Passport, Leonida HQ, One Last Ride 39-second music-only teaser, original score, 9-scene interactive storyboard and [production master](film/production/README.md).
 
 **What is verified here:** valid local file and asset references, JavaScript syntax, HTML parse, included preview MP4 stream, production document and CSV integrity, working source file paths, ZIP CRC. **What still requires browser and real-device review:** third-party map tile availability, dynamic map usability, service worker behavior, 3D support, all game-data coordinates, accessibility layout on every phone/browser and legal clearance of any eventual full animated film. Never claim feature parity or a completed feature film without QA.
 

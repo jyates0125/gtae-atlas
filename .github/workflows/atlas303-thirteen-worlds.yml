@@ -1,0 +1,61 @@
+name: Atlas 30.3 - thirteen world destinations and mobile return
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas98-worlds.js'
+      - 'atlas98-portal.js'
+      - 'maps.html'
+      - 'map-hub.html'
+      - 'atlas.html'
+      - 'atlas-online.html'
+      - 'atlas-vi.html'
+      - 'atlas-sa.html'
+      - 'atlas-iv.html'
+      - 'scripts/test_atlas303_thirteen_worlds.py'
+      - 'scripts/test_atlas303_thirteen_worlds_browser.py'
+      - '.github/workflows/atlas303-thirteen-worlds.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas303-worlds-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  destinations-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Skip unrelated PR synchronization commits
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas303-thirteen-worlds.yml
+      - name: Verify all thirteen world and episode routes
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          python scripts/test_atlas303_thirteen_worlds.py
+          python -m py_compile scripts/test_atlas303_thirteen_worlds_browser.py
+      - name: Build complete browser-tested Cloudflare payload
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium for thirteen destination pages
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test source-matched destinations and back/resume at 390px and 1440px
+        if: steps.scope.outputs.run == 'true'
+        run: python scripts/test_atlas303_thirteen_worlds_browser.py

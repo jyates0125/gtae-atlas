@@ -51,6 +51,18 @@
       "name": "Rockstar — official in-game radio / soundtrack",
       "url": "https://www.rockstargames.com/VI/music",
       "sourceTier": "primary"
+    },
+    {
+      "id": "rockstar-edition",
+      "name": "Rockstar Games · Ultimate Edition",
+      "url": "https://www.rockstargames.com/VI/editions/ultimate-edition",
+      "sourceTier": "primary"
+    },
+    {
+      "id": "rockstar-vintage",
+      "name": "Rockstar Games · Vintage Vice City Pack",
+      "url": "https://www.rockstargames.com/VI/add-ons/vintage-vice-city",
+      "sourceTier": "primary"
     }
   ],
   "regions": [
@@ -100,17 +112,17 @@
       "id": "vehicles",
       "label": "Vehicles",
       "status": "Source-by-item",
-      "note": "Named promotional references and community research are separate; vehicle stats, spawns and complete roster not claimed.",
+      "note": "Look up edition vehicles, including the Enduro and Crest Kayak. Each sourced gallery card links to its evidence.",
       "href": "atlas90-vehicles6.html",
-      "sourceId": "rockstar-gallery"
+      "sourceId": "rockstar-edition"
     },
     {
       "id": "weapons",
       "label": "Weapons",
       "status": "Source-by-item",
-      "note": "Curated item references are not complete release inventory or verified location/damage stats.",
+      "note": "The armory distinguishes named edition items from unlock details reported in release gameplay.",
       "href": "atlas90-weapons6.html",
-      "sourceId": "rockstar-vi"
+      "sourceId": "rockstar-edition"
     },
     {
       "id": "businesses",
@@ -124,9 +136,9 @@
       "id": "properties",
       "label": "Properties",
       "status": "Research",
-      "note": "No blanket claim of purchasability or verified interiors. Map locations and ownership require gameplay checking.",
+      "note": "Shore Court personal garage is listed near Ocean Beach with the Vintage Vice City Pack. Its exact map position is unverified.",
       "href": "atlas-database.html?game=vi&kind=property",
-      "sourceId": "rockstar-gallery"
+      "sourceId": "rockstar-vintage"
     },
     {
       "id": "collectibles",

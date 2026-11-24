@@ -20,3 +20,45 @@ body.j120-heist-page .j164-msg{color:#dbd0e7;font-size:12px;line-height:1.5;marg
 .j228-import{display:grid;gap:6px;padding:12px;border:1px solid #a67ab1;border-radius:10px;color:#ffe4bb;font:750 13px/1.4 system-ui;min-width:0}
 .j228-import input{width:100%;max-width:100%;min-width:0;min-height:44px;color:#fff;font:14px system-ui}
 .j228-import small{font-weight:400;color:#e1cee5;line-height:1.55}
+
+/* Atlas 29.8 — source-graded heist site links, never extra floating map pins. */
+body.j120-heist-page .j298-mission-sites{
+ min-width:0;margin:12px 0 16px;padding:13px;border:1px solid #9776a9;
+ border-radius:12px;background:#20132f;
+}
+body.j120-heist-page .j298-mission-sites h4{
+ margin:0 0 10px;color:#ffe0b0;font:800 15px/1.35 system-ui,sans-serif;
+}
+.j298-site-links{display:flex;flex-wrap:wrap;gap:8px}
+body.j120-heist-page .j298-site-link{
+ display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+ max-width:100%;padding:10px 13px;border:1px solid #d9a2a1;border-radius:10px;
+ color:#fff5db;background:#3c2950;text-decoration:none;
+ overflow-wrap:anywhere;font:750 13px/1.45 system-ui,sans-serif;
+}
+body.j120-heist-page .j298-site-link:hover{border-color:#ffe4ad;background:#54366a}
+body.j120-heist-page .j298-site-link:focus-visible{outline:3px solid #ffe0a0;outline-offset:3px}
+body.j120-heist-page .j298-source-note{margin:8px 0 0;color:#dccadd;font:12px/1.5 system-ui,sans-serif}
+@media(max-width:700px){
+ body.j120-heist-page .j298-site-links{display:grid;grid-template-columns:minmax(0,1fr)}
+ body.j120-heist-page .j298-site-link{width:100%;box-sizing:border-box}
+}
+
+
+/* Atlas 33.0 · prevent corrupted guest mission notes from looking like a blank save. */
+body.j120-heist-page #j330-notes-recovery{
+ box-sizing:border-box;display:grid;gap:8px;min-width:0;
+ padding:clamp(12px,2vw,17px);border-radius:12px;border:1px solid #f4bb86;
+ background:linear-gradient(125deg,#482637,#25182f);color:#fff2e8;
+}
+body.j120-heist-page #j330-notes-recovery[hidden]{display:none!important}
+#j330-notes-recovery strong{font:800 15px/1.4 system-ui;color:#ffdda8}
+#j330-notes-recovery p{font:13px/1.6 system-ui;margin:0;color:#f5dfe6}
+#j330-raw-notes{min-height:44px;min-width:0;max-width:100%;padding:10px 13px;
+ border:1px solid #ffdaa0;border-radius:9px;background:#62405c;color:#fff7e9;
+ font:750 13px/1.4 system-ui;cursor:pointer;overflow-wrap:anywhere}
+#j330-raw-notes:focus-visible{outline:3px solid #ffe2aa;outline-offset:2px}
+body.j120-heist-page .j164-field textarea:disabled{opacity:.68;cursor:not-allowed}
+body.j120-heist-page .j164-buttons button:disabled,body.j120-heist-page .j228-import input:disabled{opacity:.55;cursor:not-allowed}
+body.j119-heists .cards .card[data-recovery-required=true]{border-color:#e0a87a}
+body.j119-heists .cards .card[data-recovery-required=true]>small{color:#ffd3a3}

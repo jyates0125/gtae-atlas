@@ -1,0 +1,33 @@
+name: Atlas 31.3b - private Forge integration contract compatibility
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'scripts/test_atlas2150_product_contracts.py'
+      - 'atlas263-forge-collections.js'
+      - 'atlas101-configurator.js'
+      - '.github/workflows/atlas313b-integration-contract.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  private-handoff-integrations:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check updated 2150 cross-product contract and original Forge privacy
+        run: |
+          python scripts/test_atlas2150_product_contracts.py
+          node tests/atlas296-forge-collections.test.cjs
+          python scripts/test_atlas313_private_forge.py
+      - name: Audit built public Cloudflare payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py

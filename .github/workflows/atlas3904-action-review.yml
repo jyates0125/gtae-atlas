@@ -1,0 +1,38 @@
+name: Atlas 39.0.4 - One Last Ride action review
+on:
+  push:
+    branches: [feature/atlas294-integrated-staging-20261122]
+    paths:
+      - scripts/render_one_last_ride_action_review.py
+      - .github/workflows/atlas3904-action-review.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas-action-review-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  action-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install numpy
+      - name: Use runner FFmpeg or install only if missing
+        run: |
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=20 update -qq
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
+      - run: python scripts/render_one_last_ride_action_review.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: one-last-ride-39s-action-review
+          path: qa-evidence/film-action/
+          if-no-files-found: error
+          retention-days: 30

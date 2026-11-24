@@ -1,0 +1,56 @@
+name: Atlas 32.3 - passport classic checklist bridge
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas-passport.js'
+      - 'atlas-passport.html'
+      - 'atlas323-passport-bridge.js'
+      - 'atlas323-passport-bridge.css'
+      - 'tests/atlas323-passport-bridge.test.cjs'
+      - 'scripts/test_atlas323_passport_browser.py'
+      - '.github/workflows/atlas323-passport-bridge.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas323-passport-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  passport-bridge:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check Passport bridge and source privacy contracts
+        run: |
+          node --check atlas323-passport-bridge.js
+          node --check atlas-passport.js
+          node tests/atlas323-passport-bridge.test.cjs
+          python -m py_compile scripts/test_atlas323_passport_browser.py
+      - name: Build and audit production-equivalent Cloudflare payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium for Passport pages only
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Verify Passport counts, confirmation, LCS and privacy at phone and desktop sizes
+        run: python scripts/test_atlas323_passport_browser.py
+      - name: Save Passport screenshots for visual acceptance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas323-passport-phone-desktop
+          path: qa-evidence/chromium/atlas323-passport-*.png
+          if-no-files-found: warn
+          retention-days: 14

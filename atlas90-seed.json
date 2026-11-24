@@ -311,28 +311,36 @@
       "archive": "stanier",
       "type": "Sedans",
       "brand": "Vapid",
-      "confidence": "Named edition item"
+      "confidence": "Rockstar edition listing · Vintage Vice City Pack",
+      "sourceUrl": "https://www.rockstargames.com/VI/add-ons/vintage-vice-city",
+      "displayName": "’55 Vapid Stanier"
     },
     {
       "name": "Cheetah 95",
       "archive": "cheetah",
       "type": "Sports Classics",
       "brand": "Grotti",
-      "confidence": "Named edition item"
+      "confidence": "Rockstar edition listing · Ultimate Edition",
+      "sourceUrl": "https://www.rockstargames.com/VI/editions/ultimate-edition",
+      "displayName": "’95 Grotti Cheetah"
     },
     {
       "name": "Buggy",
       "archive": "bifta",
       "type": "Off-Road",
       "brand": "Vapid",
-      "confidence": "Named edition item"
+      "confidence": "Rockstar edition listing · Ultimate Edition",
+      "sourceUrl": "https://www.rockstargames.com/VI/editions/ultimate-edition",
+      "displayName": "’67 Vapid Dominator Buggy"
     },
     {
       "name": "Squalo",
       "archive": "squalo",
       "type": "Boats",
       "brand": "Shitzu",
-      "confidence": "Named edition item"
+      "confidence": "Rockstar edition listing · Ultimate Edition",
+      "sourceUrl": "https://www.rockstargames.com/VI/editions/ultimate-edition",
+      "displayName": "Shitzu Squalo"
     },
     {
       "name": "Buccaneer",
@@ -592,6 +600,30 @@
       "type": "Sedans",
       "brand": "Albany",
       "confidence": "Community-identified"
+    },
+    {
+      "name": "Dinka Enduro",
+      "type": "Motorcycles",
+      "brand": "Dinka",
+      "archive": "",
+      "confidence": "Rockstar screenshot gallery · Ultimate Edition",
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
+    },
+    {
+      "name": "Crest Kayak",
+      "type": "Boats",
+      "brand": "",
+      "archive": "",
+      "confidence": "Rockstar screenshot gallery · Ultimate Edition",
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
+    },
+    {
+      "name": "Ganado Retro Build",
+      "type": "Pickup build",
+      "brand": "",
+      "archive": "",
+      "confidence": "Rockstar screenshot gallery · Ultimate Edition",
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
     }
   ]
 }

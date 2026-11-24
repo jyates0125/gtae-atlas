@@ -56,7 +56,7 @@ function findRows(term){
 }
 function show(term){
  const rows=findRows(term);results.replaceChildren();
- if(!term){results.hidden=true;input.setAttribute('aria-expanded','false');return rows}
+ if(!term){results.hidden=true;input.setAttribute('aria-expanded','false');input.removeAttribute('aria-activedescendant');return rows}
  if(!rows.length){results.append(make('p','','No direct matches. Press Search to explore all records.'))}
  else for(const row of rows){
   const href=toLink(row.href);if(!href)continue;
@@ -64,14 +64,23 @@ function show(term){
   a.href=href;if(href.startsWith('https:')){a.target='_blank';a.rel='noopener noreferrer'}
   a.append(small);results.append(a);
  }
- results.hidden=false;input.setAttribute('aria-expanded','true');return rows;
+ results.hidden=false;input.setAttribute('aria-expanded','true');input.removeAttribute('aria-activedescendant');return rows;
 }
 input?.addEventListener('input',()=>show(input.value.slice(0,120)));
 input?.addEventListener('keydown',e=>{
- if(e.key==='Escape'){show('');input.blur();return}
+ if(e.key==='Escape'){e.preventDefault();show('');return}
  if(e.key==='ArrowDown'){const first=results.querySelector('a');if(first){e.preventDefault();first.focus()}}
 });
-results?.addEventListener('keydown',e=>{if(e.key==='Escape'){show('');input.focus()}});
+results?.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){e.preventDefault();show('');input.focus();return}
+ if(!['ArrowDown','ArrowUp','Home','End'].includes(e.key))return;
+ const links=[...results.querySelectorAll('a[href]')];
+ if(!links.length)return;
+ const current=links.indexOf(document.activeElement);
+ const index=e.key==='Home'?0:e.key==='End'?links.length-1:
+  e.key==='ArrowDown'?Math.min(current+1,links.length-1):current<=0?0:current-1;
+ e.preventDefault();links[index].focus();
+});
 document.addEventListener('pointerdown',e=>{if(form&&!form.contains(e.target))show('')});
 form?.addEventListener('submit',e=>{
  const text=input.value.trim().slice(0,120);
@@ -97,32 +106,34 @@ const featuredFallback=[
  {id:'character:cj',name:'Carl Johnson',scope:'classic',game:'GTA San Andreas',aliases:['CJ','Carl CJ Johnson']},
  {id:'character:dre-quan-priest',name:"Dre'Quan Priest",scope:'vi',game:'GTA VI Story',aliases:['DreQuan',"Dre'Quan Priest"]}
 ];
-catalog.push(...featuredFallback.map(c=>({title:c.name,kind:'Character',keywords:[c.game,c.scope,...(c.aliases||[])].join(' '),record:c,href:characterHref(c)})));
-async function initData(useFallback=false){
- let characters=featuredFallback;
- if(!useFallback)try{
+function indexCharacters(characters){
+ const rows=characters.map(x=>({
+  title:x.name,kind:'Character',
+  keywords:[x.game,x.scope,x.group,x.region,x.summary,...(x.aliases||[])].filter(Boolean).join(' '),
+  record:x,href:characterHref(x)
+ }));
+ catalog=catalog.filter(x=>x.kind!=='Character').concat(rows);
+ if(input&&document.activeElement===input&&input.value.trim())show(input.value.slice(0,120));
+}
+async function loadCharacterIndex(){
+ try{
   const res=await fetch('./data/atlas-universe-profiles.json?v=223',{cache:'no-cache'});
-  if(!res.ok)throw Error('No local character index');
-  characters=(await res.json()).records.filter(x=>x.kind==='character'&&['vi','story','online','classic'].includes(x.scope));
- }catch{characters=featuredFallback}
- if(characters.length){
-  const rows=characters.map(x=>({
-   title:x.name,
-   kind:'Character',
-   keywords:[x.game,x.scope,x.group,x.region,x.summary,...(x.aliases||[])].filter(Boolean).join(' '),
-   record:x,
-   href:characterHref(x)
-  }));
-  catalog=catalog.filter(x=>x.kind!=='Character');catalog.push(...rows);
-  // The user may already have typed while the local character index was loading.
-  if(input&&document.activeElement===input&&input.value.trim())show(input.value.slice(0,120));
-  for(const [title,href,keywords] of staticLinks){
-   if(!catalog.some(x=>x.title===title&&x.href===href))catalog.push({title,href,keywords,kind:'Atlas tool'});
+  if(!res.ok)return;
+  const {records}=await res.json();
+  if(!Array.isArray(records))return;
+  const characters=new Map(featuredFallback.map(c=>[c.id,c]));
+  for(const record of records){
+   if(record?.kind==='character'&&typeof record.id==='string'&&typeof record.name==='string'&&['vi','story','online','classic'].includes(record.scope)){
+    characters.set(record.id,record);
+   }
   }
- }
- const host=q('j223-cast-rail');if(!host||!characters.length)return;
+  indexCharacters([...characters.values()]);
+ }catch{/* The bundled featured search is already active offline. */}
+}
+function renderFeaturedCast(){
+ const host=q('j223-cast-rail');if(!host)return;
  host.replaceChildren();
- const chosen=castId.map(id=>characters.find(c=>c.id===id)).filter(Boolean);
+ const chosen=castId.map(id=>featuredFallback.find(c=>c.id===id)).filter(Boolean);
  for(const c of chosen){
   const a=make('a','');a.href='./'+characterHref(c);
   a.title='Search '+c.name+' · '+c.game;
@@ -130,7 +141,16 @@ async function initData(useFallback=false){
   img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
   const scene=()=>{img.dataset.art='world';img.alt='Original Elario world scene; not a likeness of '+c.name;
    credit.textContent='World scene';a.title='Elario world scene, not a portrait of '+c.name;img.src=localFallback(c.scope)};
-  img.addEventListener('error',()=>{if(img.dataset.art==='world'){img.remove();credit.textContent='Art unavailable';return}scene()});
+  let localRetry=false;
+  img.addEventListener('error',()=>{
+   // A canceled local image transfer is not proof the approved portrait is missing.
+   if(img.dataset.art==='concept'&&!localRetry){
+    localRetry=true;const retry=new URL('./'+c.conceptPortrait,location.href);
+    retry.searchParams.set('retry','1');img.src=retry.href;return;
+   }
+   if(img.dataset.art==='world'){img.remove();credit.textContent='Art unavailable';return}
+   scene()
+  });
   if(typeof c.conceptPortrait==='string'&&/^art\/[a-z0-9-]+\.(?:webp|png|jpe?g)$/i.test(c.conceptPortrait)){
    img.dataset.art='concept';img.alt='Elario fan concept of '+c.name;credit.textContent='Fan concept';
    a.title=c.name+' · Elario illustrated fan concept';img.src='./'+c.conceptPortrait;
@@ -161,5 +181,7 @@ document.querySelectorAll('.j223-evidence-card').forEach(card=>{
   feedback.classList.toggle('j223-correct',choice===answer);
  });
 });
-initData(true);initData();
+indexCharacters(featuredFallback);
+renderFeaturedCast();
+loadCharacterIndex();
 })();

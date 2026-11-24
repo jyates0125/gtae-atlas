@@ -17,7 +17,7 @@ assert 'premium=false' in engine and 'completed=false' in engine
 assert "!!progress[doneKey(r)]" in engine,'Completion must use original scoped saved state'
 assert 'const APP=\'team-jura-atlas-v41\'' in engine,'Do not mutate main saved data schema'
 assert 'const LEGEND_GROUPS=' in engine and 'aria-pressed' in engine
-assert 'atlas220-vi-mobile.css?v=220' in html and 'atlas220-vi-mobile.js?v=220' in html
+assert 'atlas220-vi-mobile.css?v=220' in html and 'atlas220-vi-mobile.js?v=369' in html
 assert 'id="selectedCard"' in html and 'id="closeSelected"' in html
 assert 'id="atlasCanvas"' in html
 assert 'canvas.addEventListener(\'pointerup\'' in code and 'p.multi' in code

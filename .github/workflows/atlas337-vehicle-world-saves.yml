@@ -1,0 +1,50 @@
+name: Atlas 33.7 - separate GTA V Story and Online vehicle saves
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas90-gallery.js'
+      - 'atlas90-vehicles5.html'
+      - 'atlas90-vehicles6.html'
+      - 'atlas90-weapons.html'
+      - 'atlas100-showroom.js'
+      - 'scripts/test_atlas192_world_completion.py'
+      - 'scripts/test_universe_100.py'
+      - 'scripts/test_atlas337_vehicle_world_saves.py'
+      - '.github/workflows/atlas337-vehicle-world-saves.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas337-vehicles-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  vehicle-worlds:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check only related gallery source contracts
+        run: |
+          node --check atlas90-gallery.js
+          node --check atlas100-showroom.js
+          python scripts/test_atlas192_world_completion.py
+          python scripts/test_universe_100.py
+      - name: Build and audit real Cloudflare output
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install focused Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Check 390px and 1440px world saves plus existing catalogs
+        run: |
+          python scripts/test_atlas337_vehicle_world_saves.py
+          python scripts/test_atlas335_world_catalogs.py

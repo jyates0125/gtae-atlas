@@ -1,0 +1,7 @@
+/* Atlas 30.8 · premium San Andreas collector-to-map return control. */
+#j308-back-map{min-width:135px;min-height:44px;box-sizing:border-box;padding:10px 14px;border-radius:10px;border:1px solid #ffe0a1;background:linear-gradient(105deg,#713e7c,#422459);color:#ffebcd;font:800 13px/1.25 system-ui;cursor:pointer}
+#j308-back-map:focus-visible{outline:3px solid #ffe0a1;outline-offset:3px}
+#j308-back-map:hover{background:linear-gradient(105deg,#854f91,#51346e)}
+#mapContainer{scroll-margin-block:15px}
+@media(max-width:650px){.itemToolbar{min-width:0;gap:8px}.itemToolbar input{min-width:0;flex:1 1 190px}.itemToolbar span{flex:1 1 auto}#j308-back-map{flex:1 1 135px}}
+@media(max-height:540px){#j308-back-map{padding:8px 11px}}

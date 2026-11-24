@@ -1,0 +1,36 @@
+name: Style Lab guest saves and artwork navigation
+on:
+  pull_request:
+    paths:
+      - atlas98-portal.js
+      - atlas98-portal.css
+      - atlas98-style-lab.html
+      - scripts/test_style_lab_browser.py
+      - .github/workflows/style-lab-guest.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  wardrobe:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-2022
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install playwright==1.56.0
+      - if: matrix.browser == 'chromium'
+        run: python -m playwright install chromium
+      - run: node scripts/build-cloudflare.cjs
+      - run: python scripts/test_style_lab_browser.py
+        env:
+          ATLAS_BROWSER: ${{ matrix.browser }}

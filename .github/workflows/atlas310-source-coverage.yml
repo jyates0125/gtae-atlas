@@ -1,0 +1,48 @@
+name: Atlas 31.0 - 13-world source evidence and export
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas-coverage.html'
+      - 'atlas310-source-coverage.js'
+      - 'atlas310-source-coverage.css'
+      - 'data/atlas310-coverage-config.json'
+      - 'data/atlas310-coverage-matrix.json'
+      - 'scripts/test_atlas310_source_coverage.py'
+      - 'scripts/test_atlas310_source_coverage_browser.py'
+      - '.github/workflows/atlas310-source-coverage.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  coverage-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate all 54 source rows against sixteen packed files
+        run: python scripts/test_atlas310_source_coverage.py
+      - name: Build and audit the actual Cloudflare site payload
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium for coverage page interactions
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Verify phone landscape desktop filters CSV and error handling
+        run: python scripts/test_atlas310_source_coverage_browser.py
+      - name: Keep actual design evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas310-evidence-phone-desktop
+          path: qa-evidence/chromium/atlas310-coverage-*.png
+          if-no-files-found: warn
+          retention-days: 14

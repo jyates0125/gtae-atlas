@@ -1,0 +1,57 @@
+name: Atlas 29.8 - heist cited map links
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-online.html'
+      - 'atlas.js'
+      - 'atlas164-heist-workspace.js'
+      - 'atlas164-heist-workspace.css'
+      - 'scripts/test_atlas298_heist_landmark_links.py'
+      - 'scripts/test_atlas298_heist_landmark_browser.py'
+      - '.github/workflows/atlas298-heist-landmark-links.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas298-heists-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  heist-landmark-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas298-heist-landmark-links.yml
+      - name: Confirm exact GTADB 5 IDs and unchanged heist contracts
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          python scripts/test_atlas298_heist_landmark_links.py
+          python scripts/test_atlas164_heist_workspace.py
+          node --check atlas164-heist-workspace.js
+      - name: Build and audit Cloudflare artifacts
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium for linked-source journey
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install --with-deps chromium
+      - name: Open six matching source locations from heist pages on phone and desktop
+        if: steps.scope.outputs.run == 'true'
+        run: python scripts/test_atlas298_heist_landmark_browser.py

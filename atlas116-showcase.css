@@ -12,7 +12,7 @@ body.j116-showcase{background:radial-gradient(ellipse at 88% -10%,#54236a 0,tran
 .j116-showcase .rail-link{color:#f5e8f8}
 .j116-showcase .rail-link.current,.j116-showcase .rail-link:hover{background:#4c2556;border-color:#ac6eac;color:#ffd7a0}
 .j116-showcase .rail-bottom{color:#e8cae2}
-.j116-showcase .studio-hero{position:relative;isolation:isolate;overflow:hidden;min-height:460px;border:2px solid #f2a94f;border-radius:19px;background:linear-gradient(90deg,#170a21f5 0%,#261135ec 45%,#28103688 76%,#29123220),url('./art/atlas98-neon-poster.webp') 50% 50% / cover;box-shadow:0 0 26px #b33ba65b,0 14px 35px #06020caa;padding:clamp(27px,4.2vw,64px)}
+.j116-showcase .studio-hero{position:relative;isolation:isolate;overflow:hidden;min-height:460px;border:2px solid #f2a94f;border-radius:19px;background:linear-gradient(90deg,#170a21f5 0%,#261135ec 45%,#28103688 76%,#29123220),url('./art/jura155-studio.webp') 50% 50% / cover;box-shadow:0 0 26px #b33ba65b,0 14px 35px #06020caa;padding:clamp(27px,4.2vw,64px)}
 .j116-showcase .studio-hero:after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 30px #c742d544}
 .j116-showcase .studio-hero>*{position:relative;z-index:1}
 .j116-showcase .studio-hero h1{font-size:clamp(36px,5.2vw,72px);font-weight:950;line-height:1.03;letter-spacing:-.045em;text-shadow:0 4px 15px #090412;margin:11px 0 17px;max-width:850px}

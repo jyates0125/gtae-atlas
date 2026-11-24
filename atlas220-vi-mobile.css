@@ -48,7 +48,7 @@ body[data-start-world="6"] #selectedCard .selected-actions :is(button,a){
  /* One accessible universal menu replaces overlapping legacy phone docks.
     The source map/All Maps remain reachable through the universal menu. */
  body[data-start-world="6"]:has(#j132-nav-toggle) #j89-shell,
- body[data-start-world="6"]:has(#j132-nav-toggle) a[data-j87-maps-link]{
+ body[data-start-world="6"]:has(#j132-nav-toggle) > a[data-j87-maps-link]{
   display:none!important;
  }
  /* The route bar owns Directions / 2D / 3D; sidebar owns source photos.

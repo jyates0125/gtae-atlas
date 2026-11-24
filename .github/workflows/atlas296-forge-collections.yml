@@ -1,0 +1,65 @@
+name: Atlas 29.6 - Forge saved Garage collections
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas93-garage.js'
+      - 'atlas101-configurator.js'
+      - 'atlas263-forge-collections.js'
+      - 'atlas-forge-collections.html'
+      - 'tests/atlas296-forge-collections.test.cjs'
+      - 'scripts/test_atlas296_forge_collections_browser.py'
+      - '.github/workflows/atlas296-forge-collections.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas296-forge-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  saved-garage-chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas296-forge-collections.yml
+      - name: Check collection identity and privacy contracts
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          node --check atlas263-forge-collections.js
+          node tests/atlas296-forge-collections.test.cjs
+          python -m py_compile scripts/test_atlas296_forge_collections_browser.py
+      - name: Build and audit Cloudflare payload
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install real Chromium
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test Forge hub and Garage deep-link at 390px and 1440px
+        if: steps.scope.outputs.run == 'true'
+        run: python scripts/test_atlas296_forge_collections_browser.py
+      - name: Save actual Forge collection viewport evidence
+        if: always() && steps.scope.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas296-forge-collection-phone-desktop
+          path: qa-evidence/chromium/atlas296-forge-collections-*.png
+          if-no-files-found: warn
+          retention-days: 14

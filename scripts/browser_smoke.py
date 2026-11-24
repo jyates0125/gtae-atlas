@@ -45,6 +45,13 @@ AUDITED_PAGE_NAMES={p.split('?',1)[0] for p in PAGES}
 PAGES.extend(sorted(p.name for p in ROOT.glob('*.html') if p.name not in AUDITED_PAGE_NAMES))
 assert {p.name for p in ROOT.glob('*.html')}.issubset({p.split('?',1)[0] for p in PAGES})
 
+# Explicitly opt-in to a two-page diagnostic run on staging. With no override,
+# production release validation still audits every page and ancillary journey.
+SMOKE_ONLY = tuple(x.strip() for x in os.getenv('ATLAS_SMOKE_ONLY','').split(',') if x.strip())
+if SMOKE_ONLY:
+    unknown=set(SMOKE_ONLY)-set(PAGES)
+    if unknown:raise SystemExit('Unknown scoped smoke page(s): '+', '.join(sorted(unknown)))
+    PAGES=[x for x in PAGES if x in SMOKE_ONLY]
 
 class Server(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
@@ -362,6 +369,19 @@ async def smoke():
                             # and must not change the existing mission checklist storage.
                             if path=='heist-fleeca.html' and not failures:
                                 try:
+                                    # Atlas 31.6: a missing key on a first visit is normal.
+                                    # Seed a *real legacy* private checklist value before the
+                                    # planning interactions, then assert byte-for-byte
+                                    # preservation rather than incorrectly requiring a key
+                                    # that no user ever created.
+                                    legacy_checklist='{"Old mission checklist":true,"_future_marker":"KEEP"}'
+                                    seeded=await pg.evaluate("""(raw)=>{
+                                        const k='teamjura-heist-'+document.body.dataset.heist;
+                                        localStorage.setItem(k,raw);
+                                        return localStorage.getItem(k);
+                                    }""",legacy_checklist)
+                                    if seeded!=legacy_checklist:
+                                        failures.append('Could not seed isolated legacy checklist regression')
                                     await pg.locator('#j164-mission-map').wait_for(state='attached',timeout=7000)
                                     mission=path.removeprefix('heist-').removesuffix('.html')
                                     # Atlas 16.7: each heist must show its own focused mission map
@@ -465,8 +485,8 @@ async def smoke():
                                     if await frame.is_visible():
                                         failures.append('Embedded map failed to close')
                                     progress=await pg.evaluate("""() => localStorage.getItem('teamjura-heist-'+document.body.dataset.heist)""")
-                                    if progress is None:
-                                        failures.append('Existing checklist key was not preserved')
+                                    if progress!=legacy_checklist:
+                                        failures.append('Existing legacy checklist bytes changed during mission planning')
                                 except Exception as e:
                                     failures.append('Heist real-map and local note UI: '+str(e)[:330])
 
@@ -663,14 +683,15 @@ async def smoke():
                                         inner=await docked.bounding_box()
                                         if not outer or not inner or inner['x']<outer['x']-3 or inner['x']+inner['width']>outer['x']+outer['width']+3:
                                             failures.append('Leonida map view control panel is clipped outside the sidebar')
-                                        if await docked.locator('button[data-view]').count()<5:
-                                            failures.append('Moving Leonida map controls lost native view switches')
+                                        view_keys=await docked.locator('button[data-view]').evaluate_all("(buttons)=>buttons.map(b=>b.dataset.view)")
+                                        if view_keys!=['day','scaly,view','dupzor,51']:
+                                            failures.append('Leonida must retain exactly the approved Day, Scaly and Loki native view switches')
                                         names=await docked.locator('button[data-view]').all_inner_texts()
                                         if len(names)!=len(set(names)):
                                             failures.append('Leonida map view buttons contain indistinguishable duplicate labels')
-                                        if not any('Loki' in n for n in names) or not any('DUPZOR' in n and 'Source' in n for n in names):
-                                            failures.append('Styled Loki and original DUPZOR views must be distinguishable')
-                                    if await pg.locator('#sidebar .j145-open-map').count()!=1:
+                                        if len(names)!=3 or not all(any(term in n for n in names) for term in ('In-game Map','Scaly','YANIS V18','Loki','DUPZOR V51')):
+                                            failures.append('Leonida view names must retain their distinct source labels')
+                                    if await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').count()!=1:
                                         failures.append('Accessible jump to interactive Leonida map is missing')
                                     # Initial mobile scroll is asserted above, before map controls are interacted with.
                                     if await pg.locator('.mapcontrols .j141-official-flat').count()!=0:
@@ -784,18 +805,22 @@ async def smoke():
                                     if actual!=['facebook','youtube','tiktok','instagram','discord','reddit','more']:failures.append('Social icon buttons use incorrect platform semantics')
                                     if not await icons.first.is_visible():failures.append('Share icons not visible')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html') and width==390:
-                                if await pg.locator('#sidebar .j145-open-map').count()!=1:
+                                if await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').count()!=1:
                                     failures.append('Mobile explorer missing the visible Open interactive map shortcut')
                                 else:
-                                    if not await pg.locator('#sidebar .j145-open-map').is_visible():
+                                    if not await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').is_visible():
                                         failures.append('Mobile Open interactive map shortcut is not visible')
-                                    placed=await pg.locator('#sidebar .j145-open-map').evaluate(
+                                    placed=await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').evaluate(
                                         """(link) => {
-                                            const heading=link.closest('#sidebar')?.querySelector('.atlas-explorer-head');
-                                            const games=link.closest('#sidebar')?.querySelector('.worlds');
-                                            return !!heading && !!games
-                                                && link.nextElementSibling===heading
-                                                && !!(games.compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING);
+                                            const sidebar=link.closest('#sidebar');
+                                            const heading=sidebar?.querySelector('.atlas-explorer-head');
+                                            const gameNav=[...(sidebar?.querySelectorAll('.worlds,.j83-worldnav')||[])];
+                                            // The optional Day-layer toggle is intentionally
+                                            // placed between map jump and search heading.
+                                            // Check semantic order, not stale adjacency.
+                                            return !!heading && gameNav.length>0
+                                                && gameNav.every(nav=>!!(nav.compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING))
+                                                && !!(link.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING);
                                         }""")
                                     if not placed:
                                         failures.append('Mobile Open interactive map shortcut must follow all game nav before explorer search')
@@ -920,7 +945,7 @@ async def smoke():
                                     failures.append('Map header must show exactly one Atlas HQ link')
                                 if not await pg.locator('body.j117-map-world').count():
                                     failures.append('Current Elario flagship map brand missing')
-                                if await pg.locator('header.topbar img[src="./art/elario-crest.svg"]').count()!=1:
+                                if await pg.locator('header.topbar .brand img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Original Elario crest missing from active map')
                                 if 'ATLAS 9.3' in await pg.title():
                                     failures.append('Retired map title presented as current Atlas')
@@ -1329,16 +1354,56 @@ async def smoke():
                                     failures.append('One Last Ride current film identity missing')
                                 if await pg.locator('header .portal-logo img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Film project Elario crest missing')
-                                if await pg.locator('video source[src*="one-last-ride-motion-preview.mp4"]').count()==0:failures.append('Film preview source missing')
+                                if await pg.locator('video source[src*="one-last-ride-action-cut-3906.mp4"]').count()==0:failures.append('Film preview source missing')
                                 if await pg.locator('.olr-scene-btn').count()!=9:failures.append('One Last Ride nine film chapters missing')
                                 if await pg.locator('.j130-olr-share').count():failures.append('Discontinued film share kit still interrupts content')
                                 if await pg.locator('[data-j131-social-host] [data-j131-platform]').count()<4:
                                     failures.append('Bottom-of-page community social buttons missing on film')
+                            if not failures and path in ('legacy-explorer.html','online-explorer.html') and width<=390:
+                                for selector in ('header.top .brand','header.top #game5','header.top #game6'):
+                                    control=pg.locator(selector)
+                                    bounds=await control.bounding_box()
+                                    if not bounds or bounds['x']<0 or bounds['x']+bounds['width']>width+1:
+                                        failures.append('Legacy header item outside phone viewport: '+selector)
+                                    if bounds and selector.endswith(('game5','game6')) and bounds['height']<43:
+                                        failures.append('Legacy game switch is not touch sized: '+selector)
+                            
+                            header_cases={"atlas-dashboard.html":"dashboard","guides.html":"guides","atlas-news.html":"news","atlas-cheats.html":"cheats","atlas-activities.html":"activities","atlas-account.html":"account","atlas-toolkit.html":"toolkit","atlas-checklist.html":"checklist","atlas8-preview.html":"studio-preview"}
+                            if path in header_cases:
+                                hero=pg.locator('[data-gtae-header="'+header_cases[path]+'"]')
+                                if await hero.count()!=1 or not await hero.is_visible():
+                                    failures.append('Cinematic header missing: '+path)
+                                else:
+                                    background=await hero.evaluate('(el)=>getComputedStyle(el).backgroundImage')
+                                    if 'url(' not in background:
+                                        failures.append('Cinematic header lost its image: '+path)
+                                    else:
+                                        decoded=await hero.evaluate(r"""async (el) => {
+                                          const raw=getComputedStyle(el).backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
+                                          if(!raw)return false;
+                                          const image=new Image();image.src=raw[1];
+                                          try{await image.decode();return image.naturalWidth>100}catch{return false}
+                                        }""")
+                                        if not decoded:failures.append('Cinematic header image failed to decode: '+path)
+                                    bounds=await hero.bounding_box()
+                                    if not bounds or bounds['x']< -1 or bounds['x']+bounds['width']>width+2:
+                                        failures.append('Refreshed header overflows viewport: '+path)
                             # Generic, non-destructive UX checks after individual page tests.
                             # Do not click destructive/financial/account/import actions automatically.
                             if not failures:
                                 try:
                                     disclosures=pg.locator('details > summary')
+                                    if path=='atlas-vi.html' and width==390:
+                                        # After the detailed legend smoke has scrolled the
+                                        # off-canvas sidebar, the generic disclosure probe
+                                        # must exercise a *map-visible* control, not the
+                                        # sidebar's offscreen source-index summary.
+                                        # Dedicated Atlas 29.0 browser acceptance separately
+                                        # opens Map Tools and tests that source index end-to-end.
+                                        side=pg.locator('#sidebar')
+                                        if await side.count() and not await side.evaluate("(e)=>e.classList.contains('mobile-collapsed')"):
+                                            await pg.locator('#mobileTools').click(timeout=5500)
+                                        disclosures=pg.locator('#j217-vi-hub > summary')
                                     if path=='atlas-research.html':
                                         # The map-first phone layout intentionally keeps
                                         # research accordion filters inside the Filters /

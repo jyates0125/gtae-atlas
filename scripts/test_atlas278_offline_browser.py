@@ -43,7 +43,7 @@ try:
    fingerprint=page.locator('#classicViewport').get_attribute('data-image-fingerprint')
    page.get_by_role('button',name='Prepare local offline tools').click()
    expect(page.locator('#j277-offline [role=status]')).to_contain_text('listed local files cached',timeout=120000)
-   page.wait_for_function("navigator.serviceWorker.controller?.scriptURL.endsWith('/atlas-sw.js?v=277')",timeout=60000)
+   page.wait_for_function("navigator.serviceWorker.controller?.scriptURL.endsWith('/atlas-sw.js?v=290')",timeout=60000)
    state=page.evaluate("""async()=>{const c=await caches.open('team-jura-atlas-v41-tiles');return await (await c.match('https://raw.githubusercontent.com/rolux/gtadb.org/main/maps/tiles/5/0/0/0.png')).text()}""")
    assert state=='legacy-tile'
    page.unroute('**/*')

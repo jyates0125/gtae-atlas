@@ -11,7 +11,7 @@ assert 'id="j144Summary"' in page
 assert 'id="j144Entries"' in page
 assert './atlas144-cloud-transfer.js?v=144' in page
 assert './atlas144-device-overview.js?v=144' in page
-assert 'type="button" disabled' in page and 'Sign in · Coming after secure setup' in page
+assert 'type="button" disabled' in page and 'Sign in · Deferred' in page
 assert 'No data was uploaded' in inventory
 assert "window.AtlasCloudTransfer" in inventory
 assert 'localStorage.getItem' in inventory

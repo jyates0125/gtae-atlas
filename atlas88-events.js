@@ -10,7 +10,7 @@ const icons=[[/ghost/i,'👻'],[/gun van/i,'🚐'],[/shipwreck/i,'⚓'],[/street
 const icon=(r)=>icons.find(([re])=>re.test(r.name||''))?.[1]||'✦';
 window.TeamJuraEventIcon88=Object.freeze({forName:n=>icon({name:n}),forRecord:r=>r?.activityId?icon(C.BY_ID[r.activityId]||r):null});
 const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch{return d}};
-let reviewedFeed={schema:1,rotations:{}};
+let reviewedFeed={schema:1,rotations:{}},lastAttempt=0,pending=false;
 const rotationFeed=()=>{let personal;try{personal=C.safeSnapshot(read('jura68-rotation-feed',{schema:1,rotations:{}}))}catch{}return C.selectRotationSnapshot(personal,reviewedFeed)};
 const statusFor=r=>{const state=C.safeState(read('jura68-conditions-online',{}));if(/^ghost-/i.test(r.id)&&state.events.halloween!==true)return{status:'closed',reason:'Halloween mode is not enabled in this tracker. This is not a claim about Rockstar event availability.'};const raw=rotationFeed();let feed;try{feed=C.safeSnapshot(raw)}catch{feed={schema:1,rotations:{}}};const hour=read('jura68-online-hour',null);return C.evaluate(r.id,{mode:'online',state,snapshot:feed,hour:hour===null?NaN:Number(hour),now:Date.now()})};
 const human=s=>({active:'ELIGIBLE · NOT LIVE VERIFIED',possible:'POSSIBLE · WHITE PIN',unknown:'NOT CONFIRMED',closed:'NOT ACTIVE',locked:'LOCKED',complete:'COMPLETED',research:'RESEARCH',excluded:'NOT IN THIS GAME', 'available-feed':'DATED SELECTION'})[s]||s.toUpperCase();
@@ -57,10 +57,11 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  }if(!num)results.append(mk('p','j88-note','No matching event rules.'));}
  const redrawMap=()=>{if(mapPage)window.JuraAtlasEventLocations?.refresh()};
  document.addEventListener('jura:event-focus-cleared',()=>{clear.hidden=true;focused.textContent='Returned to your usual map filters.'});
- search.oninput=render;refresh.onclick=()=>{render();redrawMap()};hour.onchange=()=>{try{localStorage.setItem('jura68-online-hour',JSON.stringify(hour.value))}catch{}render();redrawMap()};checkbox.onchange=()=>{if(checkbox.disabled)return;let state=C.safeState(read('jura68-conditions-online',{}));state.events.halloween=checkbox.checked;try{localStorage.setItem('jura68-conditions-online',JSON.stringify(state))}catch{}render();redrawMap()};
+ search.oninput=render;refresh.onclick=()=>{render();redrawMap();void loadReviewed(true)};hour.onchange=()=>{try{localStorage.setItem('jura68-online-hour',JSON.stringify(hour.value))}catch{}render();redrawMap()};checkbox.onchange=()=>{if(checkbox.disabled)return;let state=C.safeState(read('jura68-conditions-online',{}));state.events.halloween=checkbox.checked;try{localStorage.setItem('jura68-conditions-online',JSON.stringify(state))}catch{}render();redrawMap()};
  window.addEventListener('storage',e=>{if(['jura68-conditions-online','jura68-online-hour','jura68-rotation-feed'].includes(e.key)){render();redrawMap()}});
  let lastEvidence='';function refreshEvidence(){
   if(document.hidden)return;
+  void loadReviewed();
   const signature=groups().map(r=>{const s=statusFor(r);return r.id+':'+s.status+':'+s.reason}).join('|');
   if(signature!==lastEvidence){lastEvidence=signature;render();redrawMap()}
  }
@@ -76,10 +77,13 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
   setTimeout(tryFocus,500);
  };setTimeout(tryFocus,100);}
  render();
- // The sidebar shares the same bundled, reviewed feed as the full daily dashboard.
- // Missing or empty current data means unknown/possible, never invented active pins.
- fetch('./data/online-rotation-current.json',{cache:'no-cache'}).then(resp=>{if(!resp.ok)throw Error('No reviewed feed');return resp.json()})
-  .then(data=>{reviewedFeed=C.safeSnapshot(data);render()}).catch(()=>{});
+ // Shared published/bundled rotation selection. Expired data remains unknown.
+ async function loadReviewed(force=false){
+  if(pending||(!force&&Date.now()-lastAttempt<300000))return;
+  pending=true;lastAttempt=Date.now();
+  try{reviewedFeed=await C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedFeed);render();redrawMap()}catch{}finally{pending=false}
+ }
+ void loadReviewed();
 
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();

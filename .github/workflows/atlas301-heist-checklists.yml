@@ -1,0 +1,54 @@
+name: Atlas 30.1 - heist checklist guest progress safety
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'heist-pages.js'
+      - 'heist-theme.css'
+      - 'scripts/test_atlas301_heist_checklist.py'
+      - 'scripts/test_atlas301_heist_checklist_browser.py'
+      - '.github/workflows/atlas301-heist-checklists.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas301-heist-checklists-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  fifteen-checklists:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Skip unrelated PR synchronization commits
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas301-heist-checklists.yml
+      - name: Verify 15 shared heist checklist contracts and syntax
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          python scripts/test_atlas301_heist_checklist.py
+          python -m py_compile scripts/test_atlas301_heist_checklist_browser.py
+      - name: Build and audit real Cloudflare payload
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium only for changed heist checklist behavior
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test fifteen heist checklists, phone and desktop data isolation
+        if: steps.scope.outputs.run == 'true'
+        run: python scripts/test_atlas301_heist_checklist_browser.py

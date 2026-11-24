@@ -8,7 +8,8 @@ headers=(R/'_headers').read_text(encoding='utf8')
 cayo=(R/'heist-cayo-perico.html').read_text(encoding='utf8')
 assert 'atlas208-auth-transport.js?v=208' in account
 assert 'No HTTP sign-ins' in account
-assert 'Sign in · Coming after secure setup' in account and 'type="button" disabled' in account
+assert 'Sign in · Deferred' in account and 'type="button" disabled' in account
+assert 'This page does not collect a password or email' in account
 assert 'window.location.protocol===\'https:\'' in guard
 assert 'window.isSecureContext === true' in guard and 'window.top === window.self' in guard
 assert "document.addEventListener('submit',refuseInsecureAccountAction,true)" in guard

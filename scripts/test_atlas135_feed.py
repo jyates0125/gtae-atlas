@@ -6,8 +6,10 @@ sidebar=(R/'atlas88-events.js').read_text(encoding='utf8')
 dashboard=(R/'atlas87-daily.js').read_text(encoding='utf8')
 activities=(R/'atlas-activities.js').read_text(encoding='utf8')
 for js in [sidebar,dashboard,activities]:
- assert "fetch('./data/online-rotation-current.json'" in js, 'Missing auto-loading feed for one Online surface'
-assert 'reviewedFeed=C.safeSnapshot(data)' in sidebar
+ assert "C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1'" in js, 'Missing shared automatic feed for one Online surface'
+assert 'reviewedFeed=await C.loadPublishedRotations' in sidebar
+assert 'lastAttempt' in sidebar and 'pending' in sidebar
+assert 'mergePublishedRotations' in (R/'atlas-conditions.js').read_text(encoding='utf8')
 assert 'const raw=rotationFeed();' in sidebar
-assert 'No reviewed feed' in sidebar
+assert 'finally{pending=false}' in sidebar
 print('PASS Atlas 13.5: consistent automatic Online rotation feed on map/sidebar/daily/activities')

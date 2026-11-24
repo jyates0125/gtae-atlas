@@ -71,7 +71,7 @@ assert.equal(forge.modelProfile('Utility','adder'),null,'Class override uses mat
 console.log('PASS fifteen targeted model geometry studies');
 """], cwd=ROOT, check=True)
 
-# Read-only collection hub: world isolation, private named-build deep links and ownership semantics.
+# Read-only collection hub: world isolation, one-time private named-build handoff and ownership semantics.
 require("atlas-forge-collections.html", 'id="forgeCollectionRows"', 'id="forgeCollectionWorld"', 'id="forgeCollectionKind"', "atlas263-forge-collections.js")
 for page in ("atlas-vehicle-configurator.html", "atlas93-garage.html", "atlas90-weapons.html", "atlas90-weapons6.html"):
     require(page, "atlas-forge-collections.html")
@@ -90,7 +90,7 @@ const rows = hub.collect({
 },{'girardi-es9':'Girardi ES9'});
 assert.equal(rows.length,7);
 assert.deepEqual(rows.filter(x=>x.kind==='armory').map(x=>x.world),['story','online','vi']);
-assert.ok(rows.some(x=>x.href.includes('#variant=Sun%20%26%20Moon')&&!x.href.includes('&variant=')));
+assert.ok(rows.some(x=>x.title==='Sun & Moon'&&x.privateVariant?.name==='Sun & Moon'&&x.href.includes('model=adder&source=collection')&&!x.href.includes('Sun%20')&&!x.href.includes('#variant=')), 'Named version opens privately without exposing its title in a URL');
 assert.ok(rows.some(x=>x.href.includes('world=vi&model=vi_squalo')));
 assert.ok(rows.some(x=>x.kind==='garage'&&x.subtitle==='Main Garage'));
 assert.ok(!rows.some(x=>x.model==='bison'));
@@ -108,7 +108,7 @@ for path in ("index.html", "atlas-dashboard.html", "maps.html",
 
 # Flagship header must use the already-approved cinematic asset.
 require("atlas100-universe.css", 'body[data-atlas-kind="all"] .u-hero-art',
-        "atlas98-approved-hero.webp")
+        "jura155-map.webp")
 assert (ROOT / "art/atlas98-approved-hero.webp").is_file(), "Approved hero artwork missing"
 
 # Confirm the stage-gate rules and the adopted studio vision stay discoverable.

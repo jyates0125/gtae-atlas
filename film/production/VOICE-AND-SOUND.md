@@ -6,11 +6,22 @@ We aim for recognizable dramatic energy, **not voice cloning, unauthorized imper
 |---|---|---|---|
 | Loki | Lively rough-edged British/Irish-influenced streetwise cadence, fast and slightly gravelly; original boxer-film *energy* only | “Aye, and who's gonna keep you out of trouble?” | Jokes under pressure; voice cracks when Scaly vanishes |
 | Scaly Man | Relaxed Midwestern US adult voice, warm low-mid register, clipped confidence | “Man, I'm not leaving you.” | Calm until a friend is at risk, then intense |
-| Cmac | Distinctively animated and emphatic *fictional performance*, not a replication of a real person's timbre | “ON FIFTY FIIIIIFTH STRRRREET! YA FIVE ME?!” | Humor, optimism, sudden earnest encouragement |
+| Cmac / Crip Mac (fictionalized cameo) | South Central Los Angeles / 55th Street, fierce pride in his Crip identity; very animated and emphatic, **never** voice-cloned from the real person | “ON FIFTY FIIIIIFTH STRRRREET! YOU FIVE ME?!” / “EVERYTHANG GON' C ALRIGHT.” | The humor is sincere conviction in an absurd Yeti encounter, followed by real care for the creature; not a caricature or a joke at his expense |
+| CJ | West Coast Los Santos / 1990s San Andreas, unmistakably rooted in Grove Street and family | “Grove Street. Family first.” | Different era from Franklin and Lamar; his appearance is crossover **fan fiction**, never an official GTA VI/Online claim |
+| Franklin | GTA V / modern Los Santos, measured, smart, wry | “Keep it movin'. I know the route.” | Calm leadership, not CJ's identical voice |
+| Lamar | GTA V Story and Online / Los Santos, quick and expressive comic timing | “Man, look who's here!” | Knows Franklin and Los Santos; distinct from CJ and Cmac |
 | Imani | Focused, unhurried radio precision | “I found a way through.” | Gives the crew a tactical anchor |
 | Trevor | Abrasive and explosive original performance | “That better include my truck!” | Comic release without duplicating existing official dialogue |
 | Michael | Tired, sarcastic and grounded | “We really doing this?” | Audience surrogate |
 | Jason / Lucia | Distinct original young adult voices | “Where'd this come from?” | Keep mystery understated |
+
+## Owner lock — 55th Street authenticity and intentional humor (November 2026)
+
+Cmac is **funny but serious about his Cripping** and his 55th Street Los Angeles roots. His personality, large expressive energy, blue clothing, and **C-based vocabulary** are essential, not a generic gangster trope. Do not casually write B-based words in his mouth; preserve authentic known C substitutions (such as **“C alright”**) and **“you five me”**. Do not turn every English word into random fake slang. His humorous scene is that he takes *helping the Yeti* earnestly. He raises his hands, tries to make peace and says, **“EVERYTHANG GON' C ALRIGHT. YOU FIVE ME?”**, then softly, **“DON'T COMMIT SUICIDE. STAY UP, HOMIE.”** After a comic pause the Yeti roars; Cmac is not made into a clown and never confirmed dead.
+
+**Do not use unauthorized soundalike recordings, ripped Rockstar character lines, YouTube interview audio, voice cloning or an actor’s protected performance.** Original cast actors can be directed toward distinctive *geographic and personality* energy, without pretending to be the named performers. The current local 64-second motion-previs uses **synthetic scratch voices only**, never final acting. Its playable MP4 and editable renderer are saved in the user-delivered production ZIP; the video binary has **not** been published or committed to this repository. The existing on-site 36-second motion poster and the separate 4:15 still-card animatic remain honest, different production milestones.
+
+Keep the originally approved homecoming sequence: bus arrives, Lupe hugs Cmac once and exits, CJ is rooted in *Grove Street / San Andreas* while Franklin and Lamar are Los Santos characters, Loki and Scaly’s own partnership remains primary, and Jason/Lucia appear only in the speculative **Leonida** epilogue. These are **fictional crossover beats** and must not imply Rockstar canon or endorsement by any real person.
 
 **Cue palette:**
 - 01 Homecoming — soft warm bass, sparse guitars or plucked synth, gentle city ambience, bus brakes / footsteps.

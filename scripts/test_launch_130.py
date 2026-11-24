@@ -59,7 +59,7 @@ assert 'Full animation' in film or 'full animated film' in film
 assert 'j130-film-plan' in film and 'data-j131-social-host' in film
 assert 'data-j130-action="share-page"' not in film
 assert 'og:image' in film and 'atlas98-one-last-ride.webp' in film
-assert 'atlas98-approved-hero.webp' in style and 'atlas130-launch.css' in index
+assert 'atlas97-proposed-loki-scaly-hero.webp' in style and 'atlas130-launch.css' in index
 for name,html in [('index.html',index),('atlas-dashboard.html',dash),('atlas-share.html',social),('one-last-ride.html',film)]:
  local_ok(name,html)
 robots=read('robots.txt')

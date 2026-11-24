@@ -55,6 +55,8 @@
     },
     {
       "id": "character:lamar",
+      "conceptPortrait": "art/lamar-gta-online.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Lamar Davis",
       "scope": "online",
@@ -273,7 +275,10 @@
       "id": "character:cj",
       "conceptPortrait": "art/jura221-cj-cinematic.webp",
       "preferConceptPortrait": true,
-      "aliases": ["CJ", "Carl CJ Johnson"],
+      "aliases": [
+        "CJ",
+        "Carl CJ Johnson"
+      ],
       "kind": "character",
       "name": "Carl Johnson",
       "scope": "classic",
@@ -1109,6 +1114,8 @@
     },
     {
       "id": "character:lamar-story",
+      "conceptPortrait": "art/lamar-gta-v-story.webp",
+      "preferConceptPortrait": true,
       "kind": "character",
       "name": "Lamar Davis",
       "scope": "story",
@@ -1186,6 +1193,18 @@
         "Agency",
         "The Contract"
       ]
+    },
+    {
+      "id": "vi:property:shore-court-garage",
+      "kind": "property",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Shore Court personal garage",
+      "group": "Garage",
+      "region": "Ocean Beach vicinity",
+      "summary": "Rockstar places this garage near Ocean Beach and pairs it with the 1955 Vapid Stanier in the Vintage Vice City Pack. The garage includes a weapon locker.",
+      "verification": "Publisher location description · exact coordinates unverified",
+      "sourceUrl": "https://www.rockstargames.com/VI/add-ons/vintage-vice-city"
     }
   ]
 }

@@ -36,3 +36,32 @@ assert len(set(accept['approved_world_covers'].values()))==13
 for path in accept['approved_world_covers'].values():
     assert (r/path).is_file(),path
 print('Atlas 16.2: 5 unique premium subjects, 13 owner-reviewed covers and signed release status PASS')
+
+# Atlas 39.0.4: all selected headers have real local artwork. The new
+# image pack may be absent on intermediate staging, never on final release.
+import re, hashlib
+header_manifest=json.loads((r/'docs/ATLAS3904-HEADER-ART.json').read_text(encoding='utf-8'))['images']
+refresh=(r/'atlas3903-header-refresh.css').read_text(encoding='utf-8')
+assert len(header_manifest)==9
+assert len({v['sha256'] for v in header_manifest.values()})==9
+fallbacks=[]
+for key,entry in header_manifest.items():
+    html=(r/entry['page']).read_text(encoding='utf-8')
+    assert html.count('data-gtae-header="'+key+'"')==1,entry['page']
+    assert html.count('atlas3903-header-refresh.css?v=')==1,entry['page']
+    rule=re.search(r'\[data-gtae-header="'+key+r'"\]\s*\{([^}]+)\}',refresh)
+    assert rule and 'background-image:' in rule.group(1),key
+    assert entry['fallback'] in rule.group(1),key
+    assert (r/entry['fallback']).is_file(),key
+    fallbacks.append(entry['fallback'])
+    asset=r/entry['path']
+    if asset.is_file():
+        assert hashlib.sha256(asset.read_bytes()).hexdigest()==entry['sha256'],key
+assert len(set(fallbacks))==len(header_manifest)
+preview=(r/'atlas8-preview.html').read_text(encoding='utf-8')
+for image in ('jura155-story.webp','jura3904-scaly-profile.webp','jura3904-loki-profile.webp','atlas98-one-last-ride.webp'):
+    assert image in preview,image
+assert 'Approved character paintings must be integrated' not in preview
+assert 'interface-illustration.webp' not in preview
+assert 'art/oldcity.svg' not in (r/'guides.html').read_text(encoding='utf-8')
+print('Atlas 39.0.4: distinct cinematic treatments, existing world assets intact; final new-art pack validated if installed')

@@ -1,0 +1,9 @@
+/* Atlas 30.6 · map-first return for GTA IV, TLAD and TBOGT. */
+body.j119-iv #classicDetail .detail-head{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 0;background:linear-gradient(95deg,#21162c,#2e213d)}
+body.j119-iv #j306-return-map{min-height:44px;min-width:132px;padding:9px 12px;border:1px solid #efc08c;border-radius:9px;background:linear-gradient(105deg,#773d77,#422756);color:#ffedca;font:800 13px/1.3 system-ui;cursor:pointer}
+body.j119-iv #j306-return-map[hidden]{display:none!important}
+body.j119-iv #closeDetail{min-width:44px;min-height:44px;border:1px solid #b788a8;border-radius:9px}
+body.j119-iv #j306-return-map:focus-visible,body.j119-iv #closeDetail:focus-visible{outline:3px solid #ffdf9b;outline-offset:2px}
+body.j119-iv #classicDetail{overscroll-behavior:contain}
+@media(max-width:700px){body.j119-iv #classicDetail .detail-head{justify-content:flex-start}body.j119-iv #classicDetail .detail-head>span{flex-basis:100%}}
+@media(max-height:540px){body.j119-iv #classicDetail{max-height:calc(100dvh - 18px);overflow-y:auto}}

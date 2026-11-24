@@ -15,3 +15,11 @@ body[data-start-world="6"] .map-wrap.j171-full-map #atlasCanvas{height:100%!impo
 @media(max-width:700px){body[data-start-world="6"] .map-wrap{height:77dvh!important;min-height:530px!important}body[data-start-world="6"] .map-wrap.j171-full-map{height:100dvh!important;min-height:0!important}body[data-start-world="6"] .j171-tools{left:8px;bottom:85px;max-width:calc(100% - 100px)}body[data-start-world="6"] .j171-tools button{font-size:11px;padding:7px}body[data-start-world="6"] .map-wrap .maptitle small{color:#fff0ef!important;font-size:10px!important}}
 @media(max-width:390px){body[data-start-world="6"] .j171-tools{max-width:61%}}
 @media(prefers-reduced-motion:reduce){body[data-start-world="6"] .j171-tools *{transition:none!important}}
+
+/* On compact phones the translucent research toolbar can visually border the
+   map's Pins/Source actions. Its EMPTY padding must never eat taps intended
+   for those controls; only the actual Expand/Brighten buttons capture input. */
+@media(max-width:700px){
+ body[data-start-world="6"] .j171-tools{pointer-events:none}
+ body[data-start-world="6"] .j171-tools button{pointer-events:auto}
+}

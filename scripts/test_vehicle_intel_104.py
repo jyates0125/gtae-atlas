@@ -33,7 +33,10 @@ html=(D/'atlas93-garage.html').read_text(encoding='utf-8')
 assert "data/atlas-vehicle-intel.json" in js
 assert "function modelInfo(id)" in js and "r.spec" in js
 assert "j104-intelligence" in js and "View individual GTADB vehicle facts" in js
-assert "j104-no-car" in js and "This '+r.type.toLowerCase()+' needs a craft-specific licensed mesh" in js
+assert "j104-no-car" in js
+assert "This '+r.type.toLowerCase()+' has an original Elario class-specific 3D concept" in js
+assert "It is not the exact '+r.name+' game model" in js
+assert "has no verified matching 3D vehicle mesh here" in js
 assert "garageClassFilter" in js and 'id="garageClassFilter"' in html
 assert "atlas104-garage-intel.css?v=201" in html
 assert "team-jura-atlas90-collection-v1" in js
@@ -53,7 +56,8 @@ for page in ('heists.html','heist-fleeca.html','heist-cayo-perico.html'):
     assert "./atlas93-global.js?v=93" in (D/page).read_text(encoding='utf-8')
 for page in ('atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'):
     text=(D/page).read_text(encoding='utf-8')
-    assert "atlas100-universe.css?v=130" in text and re.search(r"atlas100-universe\.js\?v=\d+", text)
+    css_version='377' if page=='atlas-database.html' else '130'
+    assert f"atlas100-universe.css?v={css_version}" in text and re.search(r"atlas100-universe\.js\?v=\d+", text)
 assert "document.body.dataset.activeWorld=game" in (D/'atlas100-universe.js').read_text(encoding='utf-8')
 assert "https://www.rockstargames.com/VI/media/screenshots" in (D/'atlas-animals.html').read_text(encoding='utf-8')
 print('PASS Atlas 10.4 source-checked craft specs, separate concepts, original E crest, dedicated heist ops and game-specific artwork')

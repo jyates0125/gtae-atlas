@@ -103,3 +103,18 @@ body[data-atlas-kind="character"] .j224-brand-crest{width:44px;height:44px;objec
   aspect-ratio: 4 / 3;
  }
 }
+
+/* Atlas 30.4 · honest portrait coverage and fast in-dialog browsing. */
+.j304-art-toolbar{padding:14px 16px;margin:4px 0 16px;border:1px solid #986da0;border-radius:15px;background:linear-gradient(115deg,#271631,#382248);min-width:0}
+.j304-art-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;color:#ffe0aa;font:750 13px/1.4 system-ui}
+.j304-art-header span{color:#f5dfe9;font-weight:600}
+.j304-art-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.j304-art-buttons button{min-height:44px;min-width:120px;padding:9px 14px;border:1px solid #c69bae;border-radius:11px;color:#ffebd1;background:#422b51;font:750 13px/1.3 system-ui;cursor:pointer}
+.j304-art-buttons button[aria-pressed="true"]{background:linear-gradient(110deg,#f8d797,#eeb27d);color:#2d1835;border-color:#ffe2b3}
+.j304-art-toolbar p{font:12px/1.55 system-ui;color:#e8d3de;margin:10px 0 0}
+.j304-profile-browse{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;border-top:1px solid #a06e91;padding-top:14px}
+.j304-profile-browse .j222-action{display:flex;align-items:center;justify-content:center;min-height:44px;background:#462955;cursor:pointer}
+.j304-profile-position{text-align:center;font:750 12px/1.45 system-ui;color:#ffe0aa}
+.j304-art-buttons button:focus-visible,.j304-profile-browse button:focus-visible{outline:3px solid #ffe09e;outline-offset:3px}
+@media(max-width:600px){.j304-art-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.j304-art-buttons button{min-width:0;padding:8px}.j304-art-buttons button:first-child{grid-column:1/-1}.j304-profile-browse{grid-template-columns:repeat(2,minmax(0,1fr))}.j304-profile-position{grid-column:1/-1;grid-row:1}}
+@media(max-height:540px){#j222-profile-dialog{box-sizing:border-box;max-height:calc(100dvh - 24px);max-width:calc(100vw - 22px)}}

@@ -13,7 +13,7 @@ function init(){
  if(official){
   const small=window.matchMedia('(max-width:700px)');
   const syncOfficial=()=>{
-   official.textContent=small.matches?'▧ Rockstar map':'▧ Rockstar · Official Map';
+   official.textContent='Official';
    official.setAttribute('aria-label',
     official.getAttribute('aria-expanded')==='true'
      ?'Close Rockstar map and return to interactive Leonida map'
@@ -42,6 +42,8 @@ function init(){
   if(hub?.open){hub.open=false;return}
   const official=document.getElementById('j143-official-button');
   if(official?.getAttribute('aria-expanded')==='true'){official.click();return}
+  if(window.teamJuraNav?.getDimension()==='3d'){window.teamJuraNav.setDimension('2d');return}
+  const expand=document.getElementById('j171-expand-map');if(expand?.getAttribute('aria-pressed')==='true'){expand.click();return}
   // Use the real Atlas directory, never rely on a browser gesture to escape.
   window.location.assign('./maps.html');
  });
