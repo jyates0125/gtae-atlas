@@ -1,0 +1,51 @@
+name: Atlas 39.1 — public route responsive navigation
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas132-nav.*'
+      - 'atlas369-map-controls.*'
+      - 'atlas-vi.html'
+      - 'scripts/test_atlas391_responsive_navigation.py'
+      - '.github/workflows/atlas391-responsive-navigation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  layout:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        width: [390, 820, 1440]
+    env:
+      ATLAS_AUDIT_WIDTH: ${{ matrix.width }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate changed navigation JavaScript and preview
+        run: |
+          node --check atlas132-nav.js
+          node --check atlas369-map-controls.js
+          node scripts/build-cloudflare.cjs
+      - name: Install focused browser harness
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install chromium
+      - name: Audit public navigation and candidate control overlaps
+        run: python scripts/test_atlas391_responsive_navigation.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas391-layout-${{ matrix.width }}
+          path: qa-evidence/atlas391/
+          if-no-files-found: warn
+          retention-days: 14

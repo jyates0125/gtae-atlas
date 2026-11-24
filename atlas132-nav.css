@@ -60,3 +60,46 @@
 @media(max-width:820px){
  body:has(#j132-nav-toggle) #j89-shell{display:none!important}
 }
+
+/* Atlas 39.1: shared menu owns a normal-flow row, not a floating hit target.
+   Existing map/Cayo inline hosts and expanded-map portal retain their placement. */
+.j132-nav.j391-inline{
+ position:relative!important;inset:auto!important;display:flex;justify-content:flex-end;
+ width:auto!important;max-width:100%!important;min-width:0;box-sizing:border-box;
+ margin:0!important;padding:8px max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left));
+ z-index:auto!important;
+}
+.j132-nav.j391-inline #j132-nav-toggle{position:relative;max-width:100%;min-height:44px!important}
+.j132-nav.j391-inline.is-open{z-index:2147483000!important}
+.j132-nav.j391-inline #j132-nav-drawer{
+ position:fixed!important;inset:12px 12px auto auto!important;
+ width:min(460px,calc(100vw - 24px))!important;max-width:none!important;
+ max-height:calc(100dvh - 24px)!important;box-sizing:border-box;margin:0!important;
+}
+@media(max-width:820px){
+ .j132-nav.j391-inline #j132-nav-drawer{
+  inset:auto 12px max(12px,env(safe-area-inset-bottom)) 12px!important;
+  width:auto!important;max-height:min(79dvh,670px)!important;
+ }
+}
+
+/* Tablet audit: the old floating world switcher covered All Maps and Find
+   on SA/Discovery. Keep those links, but give both docks normal flow. */
+.j132-nav.j391-inline{flex-wrap:wrap;align-items:center;gap:8px}
+.j132-nav.j391-inline > a[data-j87-maps-link]{position:static!important;inset:auto!important;z-index:auto!important;display:inline-flex!important;align-items:center;min-height:44px;box-sizing:border-box;max-width:100%;white-space:normal}
+body:has(#j132-nav-toggle) > #j98-flow{
+ position:relative!important;inset:auto!important;z-index:auto!important;
+ width:fit-content!important;max-width:calc(100% - 24px)!important;
+ box-sizing:border-box;margin:8px auto 12px!important;flex-wrap:wrap;
+}
+body:has(#j132-nav-toggle) > #j98-flow .j98-flow-sub{
+ position:static!important;inset:auto!important;max-width:100%;box-sizing:border-box;
+}
+body:has(#j132-nav-toggle) > #j98-flow .j98-flow-worlds{min-width:0;max-width:100%}
+
+/* Desktop audit: the old universal menu intercepts the current menu.
+   All of its destinations remain available through the current directory. */
+body:has(#j132-nav-toggle) #j89-shell{display:none!important}
+/* Three older workspaces apply mobile off-canvas transforms to every aside.
+   The current directory is a separate viewport drawer, not their sidebar. */
+#j132-nav-drawer{transform:none!important;transition:none!important}
