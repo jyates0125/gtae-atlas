@@ -1,7 +1,19 @@
 {
   "schema": 1,
-  "rotations": {},
-  "checkedAtUtc": "2026-11-18T00:00:00Z",
-  "status": "no-current-position-verification",
-  "notes": "Officially verified daily location selections have not been supplied. An empty pack intentionally claims no live spawn IDs. Refresh source-checked pack through reviewed site deployment."
+  "rotations": {
+    "cayo-chests": {
+      "activeIds": [
+        "cayo-chest-10",
+        "cayo-chest-18"
+      ],
+      "checkedAtUtc": "2026-11-23T06:00:00Z",
+      "validUntilUtc": "2026-11-24T06:00:00Z",
+      "source": "https://gtamap.io/gta-online/daily/treasure-chests/",
+      "confidence": "calculated_unconfirmed_in_game",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies"
+    }
+  },
+  "checkedAtUtc": "2026-11-23T06:00:00Z",
+  "status": "partially-populated-calculated-not-gameplay-verified",
+  "notes": "Cayo source date and existing catalog matched. Other categories are absent until their exact Atlas marker IDs and source evidence are established."
 }

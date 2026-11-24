@@ -1,0 +1,3 @@
+# Cayo chest selection, 2026-11-23 06 UTC to 2026-11-24 06 UTC
+
+Calculated, not gameplay verified. GTAMap.io explicitly dated November 23 06 UTC: its #10 is (4854.8,-5162.7,1.4), #18 is (4777.6,-5394.6,-5.0). These match existing Atlas catalog IDs 10 and 18. GTA Boss daily overview reported its distinct land 09 and water 09; its static catalog identifies those by red crane at Main Dock and west of the dirt roundabout, respectively. Do not assume matching numbering across providers. Sources: https://gtamap.io/gta-online/daily/treasure-chests/ ; https://www.gtaboss.gg/gta-5-online/dailies ; https://www.gtaboss.gg/gta-5-online/collectibles/treasure-chests . Minimal dated numeric facts and links only, no provider text/image copied. No other category asserted.
