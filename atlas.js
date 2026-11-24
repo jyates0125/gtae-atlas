@@ -535,7 +535,7 @@ function tileHealth(){const el=$('tileHealth');if(!el)return;const current=style
  // Preserve the real Retry button when status text changes; do not replace
  // interactive descendants via textContent after an image load/failure.
  const label=$('tileHealthText')||el;
- label.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`:bad?'Map artwork unavailable · tap Retry artwork':'Preparing artwork…';
+ label.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`+(bad?` · ${bad} unavailable`:''):bad?'Map artwork unavailable · tap Retry artwork':'Preparing artwork…';
  const retry=$('retryMapArtwork');if(retry){retry.hidden=bad===0;retry.disabled=bad===0;}
  el.classList.toggle('atlas-tiles-error',bad>0&&!good);
  el.classList.toggle('atlas-retry-available',bad>0);
