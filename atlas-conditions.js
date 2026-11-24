@@ -103,6 +103,13 @@ function evaluate(id,ctx={}){
  if(r.event&&events[r.event]!==true){return events[r.event]===false?{status:'closed',reason:'Event set to off on this device'}:{status:'unknown',reason:'Event availability not confirmed'};}
  const needs=r.requires||[];for(const f of needs){if(f==='ghosts-nine'){if(!GH.slice(0,9).every(row=>completed[row[0]]))return{status:'locked',reason:'Photograph ghosts #1–9 first'};continue;}
   if(!flags[f])return{status:'locked',reason:'Requires: '+(PREREQS.find(a=>a[0]===f)?.[1]||f)};}
+ if(r.id==='slashers'){
+  const session=ctx.slasherSession||{};
+  if(!Number.isInteger(ctx.hour)||ctx.hour<0||ctx.hour>23)return{status:'unknown',reason:'Enter your current in-game hour (not local time).'};
+  if(ctx.hour<1||ctx.hour>=6)return{status:'closed',reason:'Outside the reported 01:00–06:00 in-game window.'};
+  if(!session.freeroam||!session.elapsed||!session.vehicle||!session.cooldown)return{status:'locked',reason:'Confirm freemode outdoors, 16+ minutes in session, eligible travel and encounter cooldown.'};
+  return{status:'active',reason:'Reported prerequisites met; random encounter only, not guaranteed. Approximate red search areas.'};
+ }
  if(r.kind==='rotation'){
   const feed=rotationFeed(ctx.snapshot,id,now);if(!feed)return{status:'unknown',reason:'No current dated position snapshot. Possible locations only; no yellow active pins.'};
   const marker=ctx.markerId!=null?String(ctx.markerId):null;
@@ -122,14 +129,24 @@ function evaluate(id,ctx={}){
 // Availability is separate from player progress and layer visibility. Only an
 // explicitly closed event, a full dated pair/pool selection, or a known hour
 // mismatch establishes that a location is unavailable now.
-function markerAvailability(id,ctx={}){
+// Original approximate search-area guides, centered on licensed GTADB landmarks.
+ // Radii are Elario planning estimates, NOT extracted game triggers.
+ const SLASHER_ZONES=Object.freeze([
+ {name:'Clown · central Los Santos',anchor:'Legion Square',x:200.249,y:-932.407,radius:1100},
+ {name:'Driver · Redwood Lights Track',anchor:'Redwood Lights Track',x:1054.028,y:2305.528,radius:350},
+ {name:'Psycho · Vinewood Hills',anchor:'Galileo Observatory',x:-437.147,y:1069.517,radius:650},
+ {name:'Psycho · Tongva Hills',anchor:'Marlowe Vineyard',x:-1887.22,y:2055.021,radius:550},
+ {name:'Psycho · Great Chaparral',anchor:'Route 68 Church',x:-316.726,y:2799.203,radius:500},
+ {name:'Sack Slasher · northern Blaine County',anchor:'Paleto Bay Church',x:-317.764,y:6143.679,radius:1000}
+ ].map(Object.freeze));
+ function markerAvailability(id,ctx={}){
  const rule=BY_ID[id];if(!rule)return {status:'unknown',hide:false};
  const result=evaluate(id,ctx),feed=rule.kind==='rotation'?rotationFeed(ctx.snapshot,id,ctx.now??Date.now()):null;
  const off=result.status==='closed'||(rule.kind==='clock'&&result.status==='possible')||Boolean(feed&&feed.active.size===rule.today&&ctx.markerId!=null&&!feed.active.has(String(ctx.markerId)));
  // On the mainland, time-limited pins need current evidence before display.
  // Unknown is NOT an assertion that the event has ended.
  const timed=['rotation','clock','clock-parent','seasonal'].includes(rule.kind);
- const eligible=result.status==='active'||(rule.kind==='seasonal'&&result.status==='possible'&&ctx.state?.events?.[rule.event]===true);
+ const eligible=result.status==='active'||(rule.kind==='seasonal'&&rule.id!=='slashers'&&rule.id!=='ufo'&&result.status==='possible'&&ctx.state?.events?.[rule.event]===true);
  const awaiting=timed&&!eligible&&!off;
  return {...result,hide:off||awaiting,availability:off?'inactive':awaiting?'unconfirmed':'available'};
 }
@@ -178,5 +195,5 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
  if(responses.every(r=>r.status==='rejected'))throw Error('Both daily feeds unavailable');
  return mergePublishedRotations([...responses.filter(r=>r.status==='fulfilled').map(r=>r.value),previous],now);
 }
-return{markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
