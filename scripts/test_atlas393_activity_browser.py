@@ -37,15 +37,15 @@ try:
             panel.locator(".j393-slasher summary").click()
             assert zones()==0
             for box in panel.locator(".j393-slasher input[type=checkbox]").all(): box.check()
-            page.wait_for_function("window.JuraAtlasEventLocations.zones().length===6")
+            page.wait_for_function("window.JuraAtlasEventLocations.zones().length===7")
             switch.click()
             assert zones()==0
             switch.click()
-            assert zones()==6
+            assert zones()==7
             panel.locator(".j88-time select").select_option("6")
             assert zones()==0
             panel.locator(".j88-time select").select_option("1")
-            assert zones()==6
+            assert zones()==7
             panel.get_by_role("button",name="Reset session conditions").click()
             assert zones()==0
             page.clock.set_fixed_time(datetime(2026,11,24,12,tzinfo=timezone.utc))
