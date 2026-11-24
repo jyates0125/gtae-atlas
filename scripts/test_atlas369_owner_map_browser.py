@@ -83,7 +83,9 @@ try:
    # Canonical VI page: no second confirmation step, no import required.
    page.wait_for_function('typeof window.teamJuraNav?.getDimension==="function"')
    expect(page.locator('.jura-nav-bar #j143-official-button')).to_be_visible()
-   assert page.locator('#layer option').evaluate_all('(nodes)=>nodes.map(n=>n.textContent)')==['In-game Map','Scaly · YANIS V18','Loki · DUPZOR V51']
+   expect(page.locator('#layer option')).to_have_count(3)
+   labels=page.locator('#layer option').evaluate_all('(nodes)=>nodes.map(n=>n.textContent)')
+   assert labels==['In-game Map','Scaly · YANIS V18','Loki · DUPZOR V51'], labels
    page.locator('#layer').select_option('scaly,view')
    page.locator('#jura3d').click()
    page.wait_for_function('teamJuraNav.terrain().isActive()||teamJuraNav.terrain().getFrameReport()!==null',timeout=30000)

@@ -12,25 +12,16 @@ function leonida(){
  if(trailer){trailer.open=false;trailer.querySelector('summary')?.replaceChildren(document.createTextNode('🎞 Trailer & scene research · provisional'));}
  const stack=document.querySelector('.j86-legend-stack');
  if(stack){stack.classList.add('j94-research-stack');const heading=stack.querySelector('.j86-stack-heading');if(heading)heading.textContent='OPTIONAL RESEARCH REFERENCES';if(!sidebar.contains(stack))sidebar.append(stack);}
- // Regression repair: the native map engine supports Loki/Dupzor, but the option
- // disappeared from its static layer table. Restore the option, then dispatch
- // the native change event instead of constructing a competing map layer engine.
+ // The canonical map engine owns the three approved Leonida styles.
+ // The old Loki alias insertion created a fourth duplicate option.
  const layer=document.getElementById('layer');
- function restoreLoki(){
-  if(!layer||layer.querySelector('option[value="loki,view"]'))return;
-  if(!layer.querySelector('option[value="scaly,view"]'))return;
-  const opt=new Option('Loki · Styled V51','loki,view');
-  layer.querySelector('option[value="scaly,view"]').after(opt);
- }
- restoreLoki();
- if(layer){const observer=new MutationObserver(()=>{if(layer.querySelector('option[value="scaly,view"]')&&!layer.querySelector('option[value="loki,view"]'))restoreLoki()});observer.observe(layer,{childList:true});
- const original=layer;original.addEventListener('change',()=>{document.body.dataset.j94View=original.value});}
+ if(layer)layer.addEventListener('change',()=>{document.body.dataset.j94View=layer.value});
 
  const quick=document.getElementById('threeDReference');
  if(quick){quick.hidden=true;quick.inert=true;quick.setAttribute('aria-hidden','true');}
  const tools=document.getElementById('jura3dTools'),toggle=document.getElementById('juraToggle3d');
- if(toggle){toggle.title='WebGL perspective; real relief requires an installed local heightfield';toggle.setAttribute('aria-label','Toggle 3D perspective (heightfield optional)');}
- if(tools&&!tools.querySelector('.j94-3d-note'))tools.append(make('small','j94-3d-note','3D is WebGL perspective. Terrain is flat if no local heightfield is installed. Use 2D to see the full illustrated map.'));
+ if(toggle){toggle.title='Approximate research terrain; optional compatible dense heightfield';toggle.setAttribute('aria-label','Toggle research 3D');}
+ if(tools&&!tools.querySelector('.j94-3d-note'))tools.append(make('small','j94-3d-note','3D uses approximate community elevations unless a compatible local heightfield is installed.'));
 }
 function research(){
  const rail=document.getElementById('rail');if(!rail)return;
