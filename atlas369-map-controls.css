@@ -49,3 +49,9 @@ body[data-start-world="6"] .j143-stage{min-height:120px}
  body[data-start-world="6"] .j143-actions button{min-height:40px}
  body[data-start-world="6"] .j143-foot{padding:5px;font-size:10px}
 }
+
+body[data-start-world="6"].j368-approximate .jura-nav-bar #juraNavDimension{display:inline-block!important}
+body[data-start-world="6"] .j362-terrain-notice{max-height:calc(100% - 220px);overflow:auto;overscroll-behavior:contain}
+body.j117-map-world .map-actions{gap:6px!important}
+body[data-start-world="6"] .jura-nav-bar #j143-official-button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+@media(max-width:700px){body[data-start-world="6"] .jura-nav-bar #juraNavDimension{flex:0 0 auto}body[data-start-world="6"] .jura-nav-bar #j368CoverageToggle{min-height:38px!important}}

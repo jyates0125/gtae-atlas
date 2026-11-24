@@ -1,0 +1,52 @@
+name: Atlas 36.9 - owner device map controls and actual source texture
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas369-*'
+      - 'atlas.js'
+      - 'atlas-3d.js'
+      - 'atlas-navigation.js'
+      - 'atlas-vi.html'
+      - 'scripts/test_atlas369_owner_map_browser.py'
+      - '.github/workflows/atlas369-owner-map.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-texture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source and terrain regression
+        run: |
+          node --check atlas.js
+          node --check atlas-3d.js
+          node --check atlas-navigation.js
+          node --check atlas369-map-controls.js
+          node scripts/test_atlas366_heightfield_first.cjs
+          node scripts/test_atlas368_approx_terrain.cjs
+      - name: Build and audit public artifact
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Prepare Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Owner phone/laptop paths and real pinned GTADB texture
+        run: python scripts/test_atlas369_owner_map_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas369-owner-map-device-screenshots
+          path: qa-evidence/atlas369/
+          if-no-files-found: warn
+          retention-days: 14
