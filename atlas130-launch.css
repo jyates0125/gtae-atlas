@@ -4,7 +4,7 @@
 .j130-home .site-shell,.j130-share .site-shell{max-width:1510px}
 .j130-home .topbar,.j130-share .topbar{background:#120823f4}
 .j130-public-hero{position:relative;overflow:hidden;isolation:isolate;border:1px solid #f5c16f;border-radius:24px;min-height:570px;display:grid;align-items:end;background:#25104b;box-shadow:0 18px 55px #000a,0 0 0 1px #f5c17424}
-.j130-public-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0f061f35 0%,#14072012 20%,#1407203d 48%,#0d071de8 100%),linear-gradient(90deg,#150a24bb,#20082938 62%,#20092926),url('./art/atlas98-approved-hero.webp') center 39%/cover;transform:scale(1.012)}
+.j130-public-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0f061f35 0%,#14072012 20%,#1407203d 48%,#0d071de8 100%),linear-gradient(90deg,#150a24bb,#20082938 62%,#20092926),url('./art/atlas97-proposed-loki-scaly-hero.webp') center 39%/cover;transform:scale(1.012)}
 .j130-public-hero::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 50px #160526}
 .j130-public-copy{position:relative;z-index:1;text-align:center;padding:66px clamp(18px,5vw,76px) 45px;max-width:1040px;margin:auto}
 .j130-brand-signal{display:inline-flex;align-items:center;gap:10px;text-transform:uppercase;letter-spacing:.19em;color:#ffdc94;font-size:11px;font-weight:900;text-shadow:0 2px 8px #150920}
@@ -49,7 +49,7 @@
 .j130-social-inline a{background:#29153c;border:1px solid #bf79ac;color:#ffeccc;display:inline-flex;padding:12px 14px;text-decoration:none;border-radius:9px;font-weight:800}
 .j130-feature.j130-community .j130-social-inline a:hover{background:#562864}
 .j130-footer-note{text-align:center;padding:16px 12px 32px;color:#dfcbe3;font-size:12px}
-.j130-share-hero{border:1px solid #e7b568;border-radius:22px;position:relative;overflow:hidden;padding:clamp(27px,4.5vw,65px);background:linear-gradient(96deg,#160922ec 8%,#2a1046da 66%,#270e4055),url('./art/atlas98-approved-hero.webp') center/cover;min-height:280px;box-shadow:0 10px 35px #0008}
+.j130-share-hero{border:1px solid #e7b568;border-radius:22px;position:relative;overflow:hidden;padding:clamp(27px,4.5vw,65px);background:linear-gradient(96deg,#160922ec 8%,#2a1046da 66%,#270e4055),url('./art/atlas97-proposed-loki-scaly-hero.webp') center/cover;min-height:280px;box-shadow:0 10px 35px #0008}
 .j130-share-hero h1{margin:5px 0 10px;font-size:clamp(36px,5vw,65px);max-width:800px;line-height:1.05}
 .j130-share-hero p{color:#f3dcef;max-width:690px}
 .j130-share-stacks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:20px 0}
@@ -91,7 +91,7 @@
 /* Poster-first visual storytelling for Elario's public arrival. Uses preapproved original art.
    The independent high-resolution social poster is a separate artifact, not falsely bundled. */
 .j132-poster-welcome{min-height:min(740px,90svh);align-items:end;border-width:2px;border-color:#f7c77a;box-shadow:0 22px 65px #000b,0 0 35px #bd4dcd55}
-.j132-poster-welcome::before{background:linear-gradient(180deg,#11062122 0%,#16092039 38%,#11061de8 97%),url('./art/atlas98-approved-hero.webp') center 38%/cover;transform:none}
+.j132-poster-welcome::before{background:linear-gradient(180deg,#11062122 0%,#16092039 38%,#11061de8 97%),url('./art/atlas97-proposed-loki-scaly-hero.webp') center 38%/cover;transform:none}
 .j132-poster-welcome .j130-public-copy{padding-top:clamp(105px,16vw,210px);padding-bottom:clamp(30px,5vw,65px)}
 .j132-poster-welcome .j130-public-copy h1{font-size:clamp(66px,10vw,139px);text-shadow:0 6px 16px #080217,0 12px 38px #100520,0 0 24px #b453df4d}
 .j132-poster-welcome .j130-preview-band{font-size:clamp(18px,2.2vw,28px);border-width:2px}
