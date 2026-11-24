@@ -32,7 +32,7 @@ assert "Regional support map Â· optional" in src and "Original Cayo island map Â
 
 assert 'jura159-heist-' in loader and 'atlas167-heist-focus.js?v=191' in loader
 assert 'atlas167-heist-focus.css?v=167' in loader
-assert 'teamjura-heist-plan-v1:' in old and "id==='cayo-perico'?'./atlas-cayo.html':'./atlas-online.html'" in old
+assert 'teamjura-heist-plan-v1:' in old and "const map='./atlas-online.html'" in old
 assert 'Wider GTA route-planning map' in old
 assert css.count('{')==css.count('}')
 assert '.j167-pin' in css and '@media(max-width:440px)' in css
