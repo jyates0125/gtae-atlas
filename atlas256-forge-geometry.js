@@ -3,7 +3,7 @@
  'use strict';
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n)),hex=(s,fallback=[.42,.29,.65])=>typeof s==='string'&&/^#[a-f0-9]{6}$/i.test(s)?[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)/255):fallback;
  const defaults={finish:'metallic',accent:'#eab56a',stance:'street',kit:'sport',lights:true};
- function normalize(d){d=d&&typeof d==='object'?d:{};return{finish:['metallic','satin','stealth'].includes(d.finish)?d.finish:defaults.finish,accent:typeof d.accent==='string'&&/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent.toLowerCase():defaults.accent,stance:['street','low','raised'].includes(d.stance)?d.stance:defaults.stance,kit:['clean','sport','track'].includes(d.kit)?d.kit:defaults.kit,lights:typeof d.lights==='boolean'?d.lights:defaults.lights,environment:['signature','marina','hangar','workshop'].includes(d.environment)?d.environment:'auto'}}
+ function normalize(d){d=d&&typeof d==='object'?d:{};return{finish:['metallic','satin','stealth'].includes(d.finish)?d.finish:defaults.finish,accent:typeof d.accent==='string'&&/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent.toLowerCase():defaults.accent,stance:['street','low','raised'].includes(d.stance)?d.stance:defaults.stance,kit:['clean','sport','track'].includes(d.kit)?d.kit:defaults.kit,lights:typeof d.lights==='boolean'?d.lights:defaults.lights,environment:['signature','marina','hangar','workshop'].includes(d.environment)?d.environment:'auto',wheels:['classic','mesh','deepdish'].includes(d.wheels)?d.wheels:'classic',rim:['silver','gold','black'].includes(d.rim)?d.rim:'silver',stripe:['none','single','dual'].includes(d.stripe)?d.stripe:'none'}}
  function classify(type,model=''){
   const t=String(type||'').toLowerCase(),m=String(model||'').toLowerCase();
   if(/watercraft|boat|marine|submarine/.test(t)||/^(jetmax|squalo|dinghy|speeder|longfin|tropic|suntrap|seashark|marquis|tug|kosatka|avisa|kraken|submersible)/.test(m))return 'marine';
@@ -26,6 +26,11 @@
  // V archetypes informed by the checked records in data/atlas-vehicle-intel.json;
  // VI studies use official named gallery subjects, with speculative shape detail.
  const profiles=Object.freeze({
+  ellie:{kind:'touring',shape:'fastback',label:'Late-sixties fastback muscle study',w:1.06,len:2.53,roof:1.17,cab:-.25,wheel:1.55,rad:.41,nose:.98},
+  dominator:{kind:'touring',shape:'fastback',label:'Modern long-hood muscle coupe study',w:1.10,len:2.44,roof:1.22,cab:-.13,wheel:1.53,rad:.43,nose:.99},
+  gauntlet:{kind:'touring',shape:'coupe',label:'Wide modern muscle coupe study',w:1.15,len:2.54,roof:1.30,cab:-.20,wheel:1.60,rad:.43,nose:1.0},
+  cheetah2:{kind:'sport',shape:'wedge',label:'Eighties mid-engine wedge study',w:1.11,len:2.38,roof:1.02,cab:.06,wheel:1.49,rad:.38,nose:.88},
+  banshee:{kind:'sport',shape:'coupe',label:'Long-hood sports coupe study',w:1.12,len:2.42,roof:1.06,cab:-.40,wheel:1.52,rad:.40,nose:.78},
   adder:{kind:'sport',shape:'round',label:'Rounded grand-tourer study',w:1.10,len:2.25,roof:1.02,cab:-.14,wheel:1.43,rad:.39,nose:.76},
   alpha:{kind:'sport',shape:'coupe',label:'Luxury coupe study',w:.99,len:2.39,roof:1.22,cab:-.24,wheel:1.52,rad:.36,nose:.94},
   buffalo:{kind:'sport',shape:'sedan',label:'Muscle sedan study',w:1.05,len:2.48,roof:1.30,cab:-.03,wheel:1.55,rad:.39,nose:.98},
@@ -37,7 +42,7 @@
   rocoto:{kind:'utility',shape:'wagon',label:'Rounded luxury SUV study',w:1.06,len:2.32,roof:1.51,cab:-.03,wheel:1.49,rad:.40,nose:.82},
   jetmax:{kind:'marine',shape:'powerboat',label:'Sleek performance watercraft study',w:.90,len:1.04,cab:.22},
   squalo:{kind:'marine',shape:'powerboat',label:'Classic powerboat study',w:1.05,len:.96,cab:-.08},
-  vi_cheetah95:{kind:'sport',shape:'coupe',label:'1990s coupe visual study',w:1.10,len:2.28,roof:1.04,cab:-.26,wheel:1.43,rad:.38,nose:.78},
+  vi_cheetah95:{kind:'sport',shape:'wedge',label:'1990s coupe visual study',w:1.10,len:2.28,roof:1.04,cab:-.26,wheel:1.43,rad:.38,nose:.78},
   vi_stanier55:{kind:'touring',shape:'sedan',label:'1950s sedan visual study',w:1.04,len:2.57,roof:1.38,cab:-.14,wheel:1.62,rad:.40,nose:1.02},
   vi_dominator67_buggy:{kind:'utility',shape:'buggy',label:'Off-road buggy visual study',w:1.06,len:2.21,roof:1.45,cab:.10,wheel:1.55,rad:.48,nose:.91},
   vi_squalo:{kind:'marine',shape:'powerboat',label:'Leonida powerboat visual study',w:1.02,len:1.01,cab:.10}
@@ -109,34 +114,61 @@
     quad([-.04,.95,-2.51],[-.04,1.82,-2.32],[-.04,1.76,-1.96],[-.04,.95,-1.57],shell);quad([.04,.95,-2.51],[.04,1.82,-2.32],[.04,1.76,-1.96],[.04,.95,-1.57],shell);}
   }else{
    const truck=kind==='utility',sport=kind==='sport',shift=d.stance==='low'?-.09:d.stance==='raised'?.15:0,y=.64+shift,w=profile?.w||(truck?1.09:1.0),len=profile?.len||(truck?2.45:sport?2.22:2.30),shape=profile?.shape||'generic',cab=profile?.cab||0,nose=profile?.nose||.70;
-   loft([[-len,(shape==='round'?.66:.79)*w,y,.18],[-len+.22,w,y,.32],[-1.35,w*1.04,y+.01,.35],[.95,w*1.04,y+.02,.36],[len-.23,w*.91,y-.02,.27],[len,nose*w,y-.07,.14]],shell);
-   const roof=profile?.roof||(truck?1.43:sport?1.10:1.28),back=shape==='wagon'?-1.91:shape==='pickup'?-.54:-1.26,topBack=shape==='wagon'?-1.70:shape==='pickup'?-.34:-.76,front=shape==='pickup'?1.10:.94;
+   const bodyRows=[[-len,(shape==='round'?.66:.79)*w,y,.18],[-len+.22,w,y,.32],[-1.35,w*1.04,y+.01,.35],[.95,w*1.04,y+.02,.36],[len-.23,w*.91,y-.02,shape==='wedge'?.19:.27],[len,nose*w,y-.07,shape==='wedge'?.09:.14]];
+   loft(bodyRows,shell);
+   function stripes(rows){
+    if(d.stripe==='none')return;
+    const lanes=d.stripe==='dual'?[[-.24,-.10],[.10,.24]]:[[-.10,.10]];
+    for(let i=0;i<rows.length-1;i++){const [z,,cy,h]=rows[i], [nz,,ncy,nh]=rows[i+1];
+     for(const [a,b] of lanes)quad([a*w,cy+h+.008,z],[b*w,cy+h+.008,z],[b*w,ncy+nh+.008,nz],[a*w,ncy+nh+.008,nz],accent);
+    }
+   }
+   stripes(bodyRows);
+   const roof=profile?.roof||(truck?1.43:sport?1.10:1.28),back=shape==='wagon'?-1.91:shape==='pickup'?-.54:shape==='fastback'?-1.91:shape==='wedge'?-1.45:-1.26,topBack=shape==='wagon'?-1.70:shape==='pickup'?-.34:shape==='fastback'?-.56:shape==='wedge'?-.93:-.76,front=shape==='pickup'?1.10:shape==='wedge'?1.10:.94;
    if(shape==='buggy'){
     for(const x of [-.67,.67]){box(x,roof/2+.44+shift,-.60,.09,roof-.48,.09,chrome);box(x,roof/2+.44+shift,.43,.09,roof-.48,.09,chrome);box(x,roof+.20+shift,-.085,.09,.09,1.12,chrome);box(x,y+.38,-.12,.40,.32,.48,dark)}
     box(0,roof+.20+shift,-.60,1.41,.09,.09,chrome);box(0,roof+.20+shift,.43,1.41,.09,.09,chrome);
    }else{
     loft([[back+cab,.80*w,y+.36,.12],[topBack+cab,.76*w,roof+shift,.20],[.34+cab,.79*w,roof+shift,.2],[front+cab,.72*w,y+.37,.13]],glass);
-    loft([[topBack+cab,.75*w,roof+shift+.17,.04],[.32+cab,.78*w,roof+shift+.17,.04],[.53+cab,.67*w,roof+shift+.10,.04]],shell);
+    const roofRows=[[topBack+cab,.75*w,roof+shift+.17,.04],[.32+cab,.78*w,roof+shift+.17,.04],[.53+cab,.67*w,roof+shift+.10,.04]];
+    loft(roofRows,shell);stripes(roofRows);
+    if(shape==='fastback'){
+     // Original side louvers, hood scoops and sloping rear-quarter structure.
+     for(const sign of [-1,1]){
+      for(let i=0;i<3;i++)box(sign*.76*w,roof+shift-.12-i*.09,-.91+cab-i*.20,.065,.035,.20,dark);
+      box(sign*.40*w,y+.39,1.42,.22,.045,.49,dark);
+     }
+    }
+    if(shape==='wedge'){
+     for(const sign of [-1,1])for(let i=0;i<5;i++)box(sign*1.045*w,y+.09-i*.045,-.76,.028,.025,1.03,dark);
+    }
     if(shape==='pickup'){box(0,y+.34,-1.46,1.43*w,.055,1.28,dark);for(const x of [-.85*w,.85*w])box(x,y+.40,-1.46,.09,.13,1.40,shell);box(0,y+.40,-2.08,1.75*w,.15,.10,shell)}
     if(shape==='wagon'||shape==='sedan'){for(const x of [-.77*w,.77*w])box(x,roof+shift-.06,-.13+cab,.042,.29,.055,dark)}
    }
    // Wheel arch lips, ventilated rims and radial spokes.
    const rad=profile?.rad||(truck?.43:.37);const wheelZ=profile?.wheel||(truck?1.53:1.39);
+   const rim=d.rim==='gold'?[.86,.58,.23]:d.rim==='black'?[.14,.15,.18]:chrome;
+   const spokes=d.wheels==='mesh'?12:d.wheels==='deepdish'?5:6;
    for(const x of [-w,w])for(const z of [-wheelZ,wheelZ]){
     const side=x>0?1:-1,mid=rad+.015,axis=x+side*.045,segments=32;
     const at=(a,r,dx)=>[axis+dx,mid+Math.cos(a)*r,z+Math.sin(a)*r];
     for(let i=0;i<segments;i++){const a=i*Math.PI*2/segments,b=(i+1)*Math.PI*2/segments;
      quad(at(a,rad,-.17),at(b,rad,-.17),at(b,rad,.17),at(a,rad,.17),rubber);
-     for(const s of [-.17,.17]){quad(at(a,rad,s),at(b,rad,s),at(b,rad*.71,s),at(a,rad*.71,s),rubber);quad(at(a,rad*.71,s),at(b,rad*.71,s),at(b,rad*.62,s+.004*side),at(a,rad*.62,s+.004*side),chrome)}
+     for(const s of [-.17,.17]){quad(at(a,rad,s),at(b,rad,s),at(b,rad*.71,s),at(a,rad*.71,s),rubber);quad(at(a,rad*.71,s),at(b,rad*.71,s),at(b,rad*.62,s+.004*side),at(a,rad*.62,s+.004*side),rim)}
      tri([axis+side*.165,mid,z],at(a,rad*.60,side*.165),at(b,rad*.60,side*.165),dark);
     }
-    for(let i=0;i<6;i++){const a=i*Math.PI/3;quad(at(a-.07,rad*.62,side*.183),at(a+.07,rad*.62,side*.183),at(a+.17,rad*.16,side*.183),at(a-.17,rad*.16,side*.183),chrome)}
+    for(let i=0;i<spokes;i++){const a=i*2*Math.PI/spokes;const depth=side*(d.wheels==='deepdish'?.145:.183);quad(at(a-.07,rad*.62,depth),at(a+.07,rad*.62,depth),at(a+.17,rad*.16,depth),at(a-.17,rad*.16,depth),rim)}
     box(axis+side*.189,mid,z,.022,.12,.12,accent);
     for(let i=0;i<14;i++){const a=i*Math.PI/14,b=(i+1)*Math.PI/14;quad(at(a-Math.PI/2,rad+.065,side*.04),at(b-Math.PI/2,rad+.065,side*.04),at(b-Math.PI/2,rad+.085,side*.04),at(a-Math.PI/2,rad+.085,side*.04),shell)}
    }
    for(const side of [-1,1]){box(side*.67*w,y+.07,len-.006,.31,.08,.06,lamp,true);box(side*.69*w,y+.13,-len+.008,.30,.09,.07,tail,true);box(side*w*.97,y-.13,0,.07,.10,2.0,accent,true);box(side*.83,y+.55,.5,.20,.10,.28,shell)}
    box(0,y-.13,len-.002,.90,.14,.07,dark);box(0,y-.14,-len+.02,.84,.14,.08,dark);
    for(let i=-3;i<=3;i++)box(i*.11,y-.13,len+.04,.016,.11,.02,chrome);
+   if(shape==='fastback'){
+    for(const sign of [-1,1])for(const x of [sign*.70*w,sign*.38*w]){
+     const radius=.105;for(let i=0;i<20;i++){const a=i*Math.PI/10,b=(i+1)*Math.PI/10;tri([x,y+.07,len+.04],[x+Math.cos(a)*radius,y+.07+Math.sin(a)*radius,len+.04],[x+Math.cos(b)*radius,y+.07+Math.sin(b)*radius,len+.04],lamp,true)}
+    }
+   }
    if(d.kit!=='clean'){box(0,y-.27,len-.13,1.87*w,.07,.45,dark);box(0,y-.26,-len+.13,1.76*w,.07,.34,dark)}
    if(d.kit==='track'){box(0,y+.62,-len+.52,1.81*w,.075,.44,accent);for(const x of [-.59,.59])box(x,y+.40,-len+.52,.08,.47,.09,dark)}
    if(d.lights){for(const side of [-1,1])box(side*.73,.09,0,.08,.015,2.7,accent,true)}
