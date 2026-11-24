@@ -235,3 +235,9 @@ body.j128-map-chrome #juraMapLegend .j220-dual-symbol{
 body.j128-map-chrome #juraMapLegend .j220-dual-symbol svg{
  width:19px;height:19px;display:block;
 }
+
+/* Atlas 39.3: activity availability does not change the user's layer selection. */
+.named-layer-choice[data-availability="inactive"]{text-decoration:line-through;color:#c3b5c9}
+.named-layer-choice .j393-layer-status{display:block;font-size:10px;color:#ffe1ab;text-decoration:none;line-height:1.35;margin-top:3px}
+.result.j393-unavailable .atlas-list-title{text-decoration:line-through}
+.j393-record-status{display:block;margin:4px 0;color:#e0cde5}
