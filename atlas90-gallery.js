@@ -95,12 +95,12 @@ function imageFallback(r){
 function formatState(id){return STATE.owned[id]?'Collected':STATE.wishlist[id]?'Wishlisted':'Not tracked'}
 function setFlag(id,field,value){updateFlag(id,field,value)}
 function el(t,c,v){const n=document.createElement(t);if(c)n.className=c;if(v!==undefined)n.textContent=v;return n}
-function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo');const img=document.createElement('img');const flags=el('div','j90-flags');let caption;const status=el('span','j90-photo-status','Checking archive image…');status.setAttribute('aria-live','polite');
+function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo');const img=document.createElement('img');const flags=el('div','j90-flags');let caption,photoStatus='Checking archive image…';
  flags.append(el('span','',r.kind==='vehicles6'?'VI RESEARCH':r.kind==='weapons'?'WEAPON':'VEHICLE'));
  img.loading='lazy';
- const captionText=()=>r.kind==='vehicles6'?r.confidence:r.kind==='weapons'?(weaponWorld==='story'?'GTA V archive ID; Story availability needs per-item checking. ':'GTA Online archive ID; availability may vary by update and edition. ')+'Model ID '+r.archive:'Archive model ID '+r.archive+' · availability is not confirmed by an image.';
+ const captionText=()=>r.kind==='vehicles6'?r.confidence:r.kind==='weapons'?(weaponWorld==='story'?'GTA V archive reference; availability in Story Mode needs per-item checking. ':'GTA Online archive ID; availability may vary by update and edition. ')+'Model ID '+r.archive:'Archive model ID '+r.archive+' · availability is not confirmed by an image.';
  function setPhotoState(state,text){
-  root.dataset.imageState=state;status.textContent=text;
+  root.dataset.imageState=state;photoStatus=text;
   if(caption)caption.textContent=captionText()+' · '+text;
  }
  function showConcept(){
@@ -119,7 +119,7 @@ function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo')
   img.alt='Archive reference for '+r.name;setPhotoState('pending','Checking archive image…');img.onload=()=>setPhotoState('archive','Archive reference image');img.onerror=showConcept;img.src=r.image;
  }else {showConcept();if(r.kind==='vehicles6')setPhotoState('concept','Original Leonida concept · not a game screenshot');}
  photo.append(img);if(STATE.owned[r.id])flags.append(el('span','j90-flag-done','✓ COLLECTED'));photo.append(flags);root.append(photo);
- const body=el('div','j90-card-body');body.append(el('div','j90-micro',r.brand?(r.brand+' · '+r.group):r.group),el('h3','',r.name));caption=el('p','j90-caption',captionText()+' · '+status.textContent);body.append(caption);const actions=el('div','j90-actions');const own=el('button','',STATE.owned[r.id]?'✓ Collected':'+ Collect');own.type='button';own.setAttribute('aria-pressed',String(!!STATE.owned[r.id]));own.onclick=()=>setFlag(r.id,'owned',!STATE.owned[r.id]);const wish=el('button','',STATE.wishlist[r.id]?'★ Wanted':'☆ Wishlist');wish.type='button';wish.setAttribute('aria-pressed',String(!!STATE.wishlist[r.id]));wish.onclick=()=>setFlag(r.id,'wishlist',!STATE.wishlist[r.id]);const cmp=el('button','',compare.includes(r.id)?'✓ Compare':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.includes(r.id)));cmp.disabled=compare.length>=3&&!compare.includes(r.id);cmp.onclick=()=>{compare=compare.includes(r.id)?compare.filter(i=>i!==r.id):compare.length<3?[...compare,r.id]:compare;render()};actions.append(own,wish,cmp);if(r.kind==='vehicles5'&&/^[a-z0-9_]{1,65}$/.test(r.archive||'')){
+ const body=el('div','j90-card-body');body.append(el('div','j90-micro',r.brand?(r.brand+' · '+r.group):r.group),el('h3','',r.name));caption=el('p','j90-caption',captionText()+' · '+photoStatus);body.append(caption);const actions=el('div','j90-actions');const own=el('button','',STATE.owned[r.id]?'✓ Collected':'+ Collect');own.type='button';own.setAttribute('aria-pressed',String(!!STATE.owned[r.id]));own.onclick=()=>setFlag(r.id,'owned',!STATE.owned[r.id]);const wish=el('button','',STATE.wishlist[r.id]?'★ Wanted':'☆ Wishlist');wish.type='button';wish.setAttribute('aria-pressed',String(!!STATE.wishlist[r.id]));wish.onclick=()=>setFlag(r.id,'wishlist',!STATE.wishlist[r.id]);const cmp=el('button','',compare.includes(r.id)?'✓ Compare':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.includes(r.id)));cmp.disabled=compare.length>=3&&!compare.includes(r.id);cmp.onclick=()=>{compare=compare.includes(r.id)?compare.filter(i=>i!==r.id):compare.length<3?[...compare,r.id]:compare;render()};actions.append(own,wish,cmp);if(r.kind==='vehicles5'&&/^[a-z0-9_]{1,65}$/.test(r.archive||'')){
  const park=el('a','j96-park-link',vehicleWorld==='story'?'▣ Explore Online Garage concept':'▣ Park in My Garage');
  park.href='./atlas93-garage.html?addModel='+encodeURIComponent(r.archive);
  actions.append(park);
