@@ -96,3 +96,10 @@ body:has(#j132-nav-toggle) > #j98-flow .j98-flow-sub{
  position:static!important;inset:auto!important;max-width:100%;box-sizing:border-box;
 }
 body:has(#j132-nav-toggle) > #j98-flow .j98-flow-worlds{min-width:0;max-width:100%}
+
+/* Desktop audit: the old universal menu intercepts the current menu.
+   All of its destinations remain available through the current directory. */
+body:has(#j132-nav-toggle) #j89-shell{display:none!important}
+/* Three older workspaces apply mobile off-canvas transforms to every aside.
+   The current directory is a separate viewport drawer, not their sidebar. */
+#j132-nav-drawer{transform:none!important;transition:none!important}
