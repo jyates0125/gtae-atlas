@@ -24,7 +24,7 @@ jobs:
         run: |
           mkdir -p qa-evidence
           set +e
-          python scripts/verify_cloudflare_dual_release.py --expected-sha 94a74150a5d7eb3d6b6efa77097a7ce7c13be8b4 | tee qa-evidence/atlas350-main-routes.json
+          python scripts/verify_cloudflare_dual_release.py --expected-sha 1ec1f97ccd0ebff80d48c894db494520669e0a39 | tee qa-evidence/atlas350-main-routes.json
           code=${PIPESTATUS[0]}
           exit "$code"
       - name: Check no internal source files are served on official GTAE
@@ -51,13 +51,15 @@ jobs:
           python - <<'PY' | tee qa-evidence/atlas350-immutable-source-boundary.json
           import json
           from scripts.audit_atlas345_cloudflare_source_boundary import inspect
+          import sys
           from scripts.verify_cloudflare_dual_release import check_identity
-          sha="94a74150a5d7eb3d6b6efa77097a7ce7c13be8b4"
-          origin="https://bc03b753.gtae-online.pages.dev/"
+          sha="1ec1f97ccd0ebff80d48c894db494520669e0a39"
+          origin="https://10412d3c.gtae-online.pages.dev/"
           errors=[]
           identity=check_identity(origin,sha,errors)
           result=inspect(origin)
           print(json.dumps({"origin":origin,"identity_matches":bool(identity and identity.get("revision")==sha),"identity_errors":errors,"probes":result["probes"],"source_errors":result["errors"]},indent=2))
+          sys.exit(1 if errors or result["errors"] else 0)
           PY
           code=${PIPESTATUS[0]}
           exit "$code"
