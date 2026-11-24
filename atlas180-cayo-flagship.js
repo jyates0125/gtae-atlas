@@ -46,7 +46,7 @@ const legendEntries=[
 const categoryDefaults={'entry':true,'exit':true,'loot':true,'intel':true,'ref-loot':true,'ref-bolts':true,'ref-grapple':true,'ref-clothes':true,'ref-truck':true,'ref-powder':true,'ref-water':true,'chest':true};
 const disabled=new Set();
 function repaintLegend(){
- for(const b of legendRows.querySelectorAll('button'))b.setAttribute('aria-pressed',String(!disabled.has(b.dataset.cat)));
+ for(const b of legendRows.querySelectorAll('button:not([data-j181-cat])'))b.setAttribute('aria-pressed',String(!disabled.has(b.dataset.cat)));
  for(const b of refLayer.querySelectorAll('.j180-refpin'))b.hidden=disabled.has(b.dataset.cat)||focus.dataset.mapSource!=='original';
  for(const b of chestLayer.querySelectorAll('.j180-chest'))b.hidden=disabled.has('chest')||focus.dataset.mapSource!=='original'||(todayOnly&&Boolean(activeIds.length)&&!activeIds.includes(+b.dataset.chest));
 }
