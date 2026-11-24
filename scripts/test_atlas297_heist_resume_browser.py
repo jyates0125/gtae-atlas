@@ -42,12 +42,16 @@ try:
    page.reload(wait_until='domcontentloaded')
    resume=page.locator('.j297-heist-resume')
    expect(resume).to_be_visible(timeout=15000)
-   expect(resume.locator('.j297-resume-card')).to_have_count(3)
+   expect(resume.locator('.j297-resume-card')).to_have_count(4)
+   # A damaged save must be discoverable for explicit recovery, not hidden as empty.
+   recovery=resume.locator('a[href="./heist-diamond-casino.html"]')
+   expect(recovery).to_contain_text('Saved data needs recovery')
+   expect(recovery).to_contain_text('Open workspace · recover save')
    urls=set(resume.locator('a').evaluate_all("(items)=>items.map(x=>x.getAttribute('href'))"))
-   assert urls=={'./heist-fleeca.html','./heist-doomsday-act-3.html','./heist-kortz-center.html'},urls
+   assert urls=={'./heist-fleeca.html','./heist-doomsday-act-3.html','./heist-kortz-center.html','./heist-diamond-casino.html'},urls
    assert page.evaluate("localStorage.getItem('teamjura-heist-plan-v1:diamond-casino')")=='{not json'
    page.locator('#heistStarted').check()
-   expect(page.locator('#heistCount')).to_have_text('3 of 15 workspaces')
+   expect(page.locator('#heistCount')).to_have_text('4 of 15 workspaces')
    page.locator('#heistSearch').fill('kortz')
    expect(page.locator('#heistCount')).to_have_text('1 of 15 workspaces')
    page.locator('#heistReset').click()

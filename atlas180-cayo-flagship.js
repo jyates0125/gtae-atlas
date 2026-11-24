@@ -92,7 +92,7 @@ const dailyButtons=el('div','j180-daily-buttons');
 const allBtn=btn('All 19 possible','j180-action',()=>{todayOnly=false;allBtn.setAttribute('aria-pressed','true');todayBtn.setAttribute('aria-pressed','false');repaintLegend();renderDaily();});
 const todayBtn=btn('Today’s two','j180-action',()=>{if(!activeIds.length){todayOnly=false;renderDaily();return;}todayOnly=true;allBtn.setAttribute('aria-pressed','false');todayBtn.setAttribute('aria-pressed','true');repaintLegend();renderDaily();});
 allBtn.setAttribute('aria-pressed','true');todayBtn.setAttribute('aria-pressed','false');
-const checkLink=el('a','j180-action','Check current daily ↗');checkLink.href='https://gtalens.com/map/cayo-treasure-chests';checkLink.target='_blank';checkLink.rel='noopener noreferrer';
+const checkLink=el('a','j180-action','Check current daily ↗');checkLink.href='https://gtamap.io/gta-online/daily/treasure-chests/';checkLink.target='_blank';checkLink.rel='noopener noreferrer';
 dailyButtons.append(allBtn,todayBtn,checkLink);dailyHead.append(dailyButtons);daily.append(dailyHead);
 const dailyStatus=el('p','j180-daily-status','Loading chest reference data…');dailyStatus.setAttribute('role','status');dailyStatus.setAttribute('aria-live','polite');daily.append(dailyStatus);
 const dailyList=el('div','j180-chest-list');daily.append(dailyList);
