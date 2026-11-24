@@ -586,18 +586,32 @@ function drawTiles(){const style=styles[game],view=mapView(style),z=Math.min(vie
   }else if(!fallbackTile(z,x,y,dx,dy,tile)){ctx.fillStyle='#1f4050';ctx.fillRect(dx,dy,tile+.5,tile+.5);ctx.strokeStyle='#375769';ctx.strokeRect(dx,dy,tile,tile)}}
  ctx.restore();
 }
-function drawTerrainTexture(target,box){const c=target.getContext('2d'),W=target.width,H=target.height,spanX=box.x1-box.x0,spanY=box.y1-box.y0;let loaded=0;if(!c||!Number.isFinite(spanX)||!Number.isFinite(spanY)||spanX<=0||spanY<=0)return false;
- c.fillStyle='#1b4050';c.fillRect(0,0,W,H);
- const zm=clamp(Math.round(Math.log2(W/spanX*32)),0,5),worldTile=8192/2**zm,tx0=Math.floor((box.x0+16384)/worldTile),tx1=Math.floor((box.x1+16384)/worldTile),ty0=Math.floor((16384-box.y1)/worldTile),ty1=Math.floor((16384-box.y0)/worldTile);const style=styles[game],view=mapView(style,game);
+function drawTerrainTexture(target,box){
+ const c=target.getContext('2d'),W=target.width,H=target.height,spanX=box.x1-box.x0,spanY=box.y1-box.y0;
+ if(!c||!Number.isFinite(spanX)||!Number.isFinite(spanY)||spanX<=0||spanY<=0)return false;
+ // Transparent missing areas reveal shaded relief, never an invented basemap.
+ c.clearRect(0,0,W,H);
+ const zm=clamp(Math.round(Math.log2(W/spanX*32)),0,5),worldTile=8192/2**zm;
+ const tx0=Math.floor((box.x0+16384)/worldTile),tx1=Math.floor((box.x1+16384)/worldTile),ty0=Math.floor((16384-box.y1)/worldTile),ty1=Math.floor((16384-box.y0)/worldTile);
+ const style=styles[game],view=mapView(style,game);let loaded=0,missing=0;
+ const safe=t=>t?.state==='ok'&&t.corsSafe===true;
  c.save();if(view.filter)c.filter=view.filter;
  for(let ty=ty0;ty<=ty1;ty++)for(let tx=tx0;tx<=tx1;tx++){
-  const tile=tileImage(style,zm,tx,ty,game);if(tile?.state!=='ok'||!tile.corsSafe)continue;
+  if(!within(style,zm,tx,ty,game))continue;
   const wx0=tx*worldTile-16384,wy1=16384-ty*worldTile,dx=(wx0-box.x0)/spanX*W,dy=(box.y1-wy1)/spanY*H,dw=worldTile/spanX*W,dh=worldTile/spanY*H;
+  if(dx>=W||dy>=H||dx+dw<=0||dy+dh<=0)continue;
+  const tile=tileImage(style,zm,tx,ty,game);let painted=false;
   try{
-   if(view.overlay&&overlayOpacity<100&&tile.path!==view.base){const base=tileImage(view.base,zm,tx,ty,game);if(base?.state==='ok'){c.drawImage(base.img,dx,dy,dw+.25,dh+.25);c.globalAlpha=overlayOpacity/100;c.drawImage(tile.img,dx,dy,dw+.25,dh+.25);c.globalAlpha=1;}else c.drawImage(tile.img,dx,dy,dw+.25,dh+.25);}
-   else c.drawImage(tile.img,dx,dy,dw+.25,dh+.25);loaded++;
-  }catch{} }
- c.restore();return loaded>0;
+   if(safe(tile)){c.drawImage(tile.img,dx,dy,dw+.5,dh+.5);painted=true;}
+   else for(let p=zm-1;p>=0;p--){
+    const factor=2**(zm-p),px=Math.floor(tx/factor),py=Math.floor(ty/factor),parent=tileImage(style,p,px,py,game);
+    if(!safe(parent))continue;
+    const size=256/factor;c.drawImage(parent.img,(tx-px*factor)*size,(ty-py*factor)*size,size,size,dx,dy,dw+.5,dh+.5);painted=true;break;
+   }
+  }catch{}
+  if(painted)loaded++;else missing++;
+ }
+ c.restore();return {loaded,missing,complete:loaded>0&&missing===0};
 }
 function drawRoute(){
  if(navPlan&&navPlanScope===routeScope()){
@@ -871,10 +885,10 @@ function optimizeRoute(){const r=routeRecords();if(r.length<2)return toast('Add 
 function fitRoute(){const r=routeRecords();if(!r.length)return toast('Add locations to your route first.');if(r.length===1)return choosePlace(r[0]);
  const plotted=currentRouteStart()?[currentRouteStart(),...r]:r;const xs=plotted.map(p=>p.x),ys=plotted.map(p=>p.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys),dx=Math.max(180,xmax-xmin),dy=Math.max(180,ymax-ymin);camera.x=(xmin+xmax)/2;camera.y=(ymin+ymax)/2;camera.z=clamp(Math.log2(Math.min((width-120)/dx,(height-170)/dy)*32),0,5);schedulePaint();toast('Showing route on GTA '+game+' map.')}
 const juraBridge={
- game:()=>game,scope:()=>routeScope(),camera:()=>({...camera}),records:()=>records(),places:()=>matches().slice(0,12000),
+ game:()=>game,scope:()=>routeScope(),camera:()=>({...camera}),records:()=>records(),places:()=>pinsVisible()?matches().slice(0,12000):[],
  route:()=>navPlan&&navPlanScope===routeScope()?navPlan.points:[...(currentRouteStart()?[currentRouteStart()]:[]),...routeRecords()],
  color:(cat,record)=>record?.markerColor||CATEGORIES[cat]?.[1]||'#e8c998',symbol:cat=>CATEGORY_SYMBOLS[cat]||'✦',
- select:place=>{choosePlace(place);window.teamJuraNav?.terrain()?.rebase()},notice:msg=>announce(msg),textureDraw:(target,box)=>drawTerrainTexture(target,box),
+ select:place=>{choosePlace(place);window.teamJuraNav?.terrain()?.rebase()},notice:msg=>announce(msg),textureDraw:(target,box)=>drawTerrainTexture(target,box),textureRevision:()=>tilesLoaded,
  setRoutePlan:(plan,places)=>{navPlan=plan;navPlanScope=routeScope();render()},
  clearRoutePlan:()=>{navPlan=null;navPlanScope=null;render()},
  fitPoints:places=>{const xs=places.map(p=>p.x),ys=places.map(p=>p.y);if(!xs.length)return;const dx=Math.max(250,Math.max(...xs)-Math.min(...xs)),dy=Math.max(250,Math.max(...ys)-Math.min(...ys));camera.x=(Math.min(...xs)+Math.max(...xs))/2;camera.y=(Math.min(...ys)+Math.max(...ys))/2;camera.z=clamp(Math.log2(Math.min((Math.max(width,350)-120)/dx,(Math.max(height,400)-170)/dy)*32),0,5);schedulePaint();window.teamJuraNav?.terrain()?.rebase();}
@@ -987,7 +1001,7 @@ function init(){
  if(threeD)threeD.onclick=()=>window.teamJuraNav?.setDimension('3d');
  if($('overlayOpacity')){$('overlayOpacity').value=String(overlayOpacity);$('opacityValue').textContent=overlayOpacity+'%';$('overlayOpacity').oninput=()=>{overlayOpacity=Number($('overlayOpacity').value);$('opacityValue').textContent=overlayOpacity+'%';store('jura60-overlay-opacity',overlayOpacity);schedulePaint()};}
  if($('atlasListSort'))$('atlasListSort').onchange=e=>{listOrder=e.target.value;page=0;renderFind();schedulePaint()};if($('atlasExportVisible'))$('atlasExportVisible').onclick=exportVisibleCSV;
- $('layer').onchange=()=>{styles[game]=$('layer').value;document.dispatchEvent(new Event('jura:legend-updated'));tilesErrors=0;tilesLoaded=0;tileHealth();schedulePaint();window.teamJuraNav?.terrain()?.rebase();announce('Loading GTA '+game+' '+$('layer').selectedOptions[0].textContent+' map view…')};$('resetView').onclick=()=>{fitGame();announce('Showing the whole GTA '+game+' map.')};$('zoomIn').onclick=()=>zoomBy(.5);$('zoomOut').onclick=()=>zoomBy(-.5);
+ $('layer').onchange=()=>{styles[game]=$('layer').value;document.dispatchEvent(new Event('jura:legend-updated'));tilesErrors=0;tilesLoaded=0;tileHealth();schedulePaint();window.teamJuraNav?.terrain()?.rebase();announce('Loading GTA '+game+' '+$('layer').selectedOptions[0].textContent+' map view…')};$('resetView').onclick=()=>{fitGame();window.teamJuraNav?.terrain()?.rebase();announce('Showing the whole GTA '+game+' map.')};$('zoomIn').onclick=()=>zoomBy(.5);$('zoomOut').onclick=()=>zoomBy(-.5);
  $('togglePins').onclick=()=>{const wasVisible=pinsVisible();dropEventFocus();showPins=!wasVisible;$('togglePins').textContent=showPins?'📍 Pins on':'📍 Pins off';$('togglePins').setAttribute('aria-pressed',String(showPins));schedulePaint()};$('mobileTools').onclick=()=>{$('sidebar').classList.toggle('mobile-collapsed');if(!$('sidebar').classList.contains('mobile-collapsed'))$('sidebar').scrollIntoView({behavior:'smooth',block:'start'})};$('original').onclick=()=>window.open('https://map.gtadb.org/','_blank','noopener,noreferrer');
  $('selectedStart').onclick=()=>{if(selected){setRouteStart(selected);window.teamJuraNav?.setStart(selected);showTab('Route')}};if($('selectedNavigate'))$('selectedNavigate').onclick=()=>{if(selected)window.teamJuraNav?.setRoutePoint(selected)};$('closeSelected').onclick=()=>{selected=null;updateSelected();schedulePaint()};$('selectedFound').onclick=()=>{if(selected)toggleFound(selected)};$('selectedRoute').onclick=()=>{if(selected)toggleRoute(selected)};$('shareSelected').onclick=async()=>{
  if(!selected)return;
