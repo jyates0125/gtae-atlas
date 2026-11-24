@@ -30,7 +30,7 @@ try:
    # Preload isolated guest fixtures through the real current save namespace.
    # The genuine selection engine must own marker state, including during
    # asynchronous daily-data refreshes that re-render the detail card.
-   context.add_init_script("""() => {
+   context.add_init_script("""(() => {
      const key='team-jura-atlas-v41-pins';
      if(localStorage.getItem(key)!==null)return;
      localStorage.setItem(key,JSON.stringify([
@@ -42,7 +42,7 @@ try:
        address:'Additional local source information. '.repeat(30),
        source:'My saved location',uncertain:false
      }))));
-   }""")
+   })();""")
    page=context.new_page()
    for name in pages:
     page.goto(base+name,wait_until='domcontentloaded',timeout=45000)
@@ -75,7 +75,8 @@ try:
     page.evaluate("""() => {
       const figure=document.getElementById('selectedPhotoFigure');
       figure.hidden=false;
-      figure.innerHTML='<div style="height:380px">Source media placeholder sizing only</div>';
+      const media=document.createElement('div');media.style.height='380px';
+      media.textContent='Source media placeholder sizing only';figure.append(media);
     }""")
     rect=back.bounding_box()
     card_rect=card.bounding_box()

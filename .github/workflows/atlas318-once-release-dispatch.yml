@@ -14,6 +14,7 @@
 # Atlas 38.8: reconcile deferred account and three-view Leonida HQ copy with the verified map controls.
 # Atlas 38.9: correct the two alternate explorer phone headers after full browser sweep; repeat frozen release QA.
 # Atlas 39.0: replace DOM-only marker fixture with real guest selection and current save-key assertions.
+# Atlas 39.0.1: invoke fixture bootstrap on each isolated page and preserve original photo node.
 name: Atlas 31.8 - one-time staging full release launch
 on:
   push:
