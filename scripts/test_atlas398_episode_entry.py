@@ -28,8 +28,14 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(root/'publi
                 assert page.locator('#classicViewport').count()==0
                 assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
                 note=page.locator('#j398-episode-notebook')
-                expect(note).to_have_attribute('href','./map-hub.html?game='+scope+'&notebook=1')
-                note.click()
+                if scope=='tbogt':
+                    expect(note).to_be_hidden()
+                    assert note.get_attribute('href') is None
+                    # Recovery is deliberately not advertised in Tony's normal UI.
+                    page.goto(base+'map-hub.html?game=tbogt&notebook=1',wait_until='domcontentloaded')
+                else:
+                    expect(note).to_have_attribute('href','./map-hub.html?game=tlad&notebook=1')
+                    note.click()
                 expect(page.locator('#classicViewport')).to_have_count(1)
                 link=page.locator('#j190-episode-collectibles')
                 expect(link).to_have_attribute('href','./atlas-iv.html?scope='+scope)
