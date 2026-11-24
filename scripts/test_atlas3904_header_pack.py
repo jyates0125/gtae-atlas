@@ -8,6 +8,21 @@ p.add_argument('--require',action='store_true')
 a=p.parse_args()
 entries=json.loads((R/'docs/ATLAS3904-HEADER-ART.json').read_text())['images']
 assert len(entries)==9
+# Mixed approved art must remain a real, distinct image for every header,
+# including direct-source previews before the new pack is installed.
+fallbacks=[entry['fallback'] for entry in entries.values()]
+assert len(set(fallbacks))==len(entries),'Repeated fallback header artwork'
+css=(R/'atlas3903-header-refresh.css').read_text()
+for key,entry in entries.items():
+    fallback=R/entry['fallback']
+    assert fallback.is_file(),f'{key}: missing cinematic fallback'
+    with fallback.open('rb') as f:
+        signature=f.read(12)
+    assert signature[:4]==b'RIFF' and signature[8:12]==b'WEBP',key
+    assert './'+entry['fallback'] in css,key
+    page=(R/entry['page']).read_text()
+    assert 'data-gtae-header="'+key+'"' in page,key
+    assert 'atlas3903-header-refresh.css' in page,key
 present=[]
 for key,entry in entries.items():
     source=R/entry['path']
