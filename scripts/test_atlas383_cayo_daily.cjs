@@ -41,3 +41,8 @@ assert.equal(C.markerAvailability('slashers',{...slasher,mode:'story'}).hide,tru
 assert.ok(C.rulesForMode('vi').some(r=>r.id==='vi-story-launch'));
 assert.ok(!C.rulesForMode('vi').some(r=>r.id==='slashers'));
 assert.match(fs.readFileSync('atlas-credits.html','utf8'),/id="activity-evidence"/);
+
+assert.equal(C.activityGuidance('slashers',slasher).length,6);
+assert.ok(C.activityGuidance('slashers',slasher).every(step=>step.met));
+assert.ok(C.activityGuidance('ls-tags',{}).some(step=>step.label==='Collected a spray can'&&!step.met));
+assert.ok(C.activityGuidance('story-nuclear',{}).some(step=>!step.met));

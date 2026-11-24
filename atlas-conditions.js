@@ -152,8 +152,21 @@ function evaluate(id,ctx={}){
  const awaiting=timed&&!eligible&&!off;
  return {...result,hide:off||awaiting,availability:off?'inactive':awaiting?'unconfirmed':'available'};
 }
+// Read-only guide: report every prerequisite independently of current availability.
+function activityGuidance(id,ctx={}){
+ const r=BY_ID[id];if(!r)return [];
+ const state=ctx.state||{},flags=state.flags||{},completed=state.completed||{};
+ const steps=(r.requires||[]).map(key=>({label:key==='ghosts-nine'?'Photograph ghosts #1–9 first':(PREREQS.find(p=>p[0]===key)?.[1]||key),met:key==='ghosts-nine'?GH.slice(0,9).every(row=>completed[row[0]]):!!flags[key]}));
+ if(r.event)steps.unshift({label:'Event enabled in GTA Online',met:state.events?.[r.event]===true});
+ if(r.kind==='clock')steps.push({label:'In-game time '+String(r.hour).padStart(2,'0')+':00–'+String((r.hour+1)%24).padStart(2,'0')+':00',met:ctx.hour===r.hour});
+ if(r.id==='slashers'){
+  steps.push({label:'In-game time 01:00–06:00',met:Number.isInteger(ctx.hour)&&ctx.hour>=1&&ctx.hour<6});
+  for(const [key,label] of [['freeroam','Outside in freemode'],['elapsed','At least 16 minutes in session'],['vehicle','On foot or eligible ordinary vehicle'],['cooldown','15-minute encounter cooldown clear']])steps.push({label,met:!!ctx.slasherSession?.[key]});
+ }
+ return steps;
+}
 function markerColor(status){return {active:'#facc15',possible:'#f8fafc',closed:'#f8fafc',locked:'#94a3b8',complete:'#64748b',unknown:'#38bdf8',research:'#38bdf8',excluded:'#64748b','available-feed':'#38bdf8'}[status]||'#38bdf8';}
-function statusText(status){return {active:'Eligible / selected (not verified live)',possible:'Possible · not currently selected',locked:'Locked · prerequisite',closed:'Not active',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
+function statusText(status){return {active:'Eligible / selected (not verified live)',possible:'Possible · not currently selected',locked:'Requirements to meet',closed:'Not active',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
 function emptyState(){return {completed:{},seen:{},flags:{},events:{}};}
 function safeState(s){const o=emptyState();if(!s||typeof s!=='object')return o;for(const k of Object.keys(o)){if(!s[k]||typeof s[k]!=='object'||Array.isArray(s[k]))continue;for(const [key,val] of Object.entries(s[k]))if(/^[a-z0-9-]{1,70}$/i.test(key)&&typeof val==='boolean')o[k][key]=val;}return o;}
 function safeSnapshot(s){if(!s||typeof s!=='object'||s.schema!==1||!s.rotations||typeof s.rotations!=='object')throw Error('Expected schema 1 with a rotations object.');const a={schema:1,rotations:{}};for(const [id,v] of Object.entries(s.rotations)){const r=BY_ID[id];if(!r||r.kind!=='rotation')continue;if(!v||!Array.isArray(v.activeIds)||v.activeIds.length>200||v.activeIds.some(i=>!/^[-a-z0-9_:]{1,80}$/i.test(String(i)))||!validIso(v.checkedAtUtc)||!validIso(v.validUntilUtc))throw Error('Invalid position data for '+id);
@@ -197,5 +210,5 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
  if(responses.every(r=>r.status==='rejected'))throw Error('Both daily feeds unavailable');
  return mergePublishedRotations([...responses.filter(r=>r.status==='fulfilled').map(r=>r.value),previous],now);
 }
-return{SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
