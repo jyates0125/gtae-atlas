@@ -53,6 +53,13 @@ const headerRules=Object.entries(headerPack).map(([key,entry])=>{
  return '[data-gtae-header="'+key+'"]{--j3904-art:url("./'+rel+'")}';
 });
 if(headerRules.length!==9)throw new Error('Expected nine selected cinematic headers');
+const portraitPack=JSON.parse(fs.readFileSync(path.join(root,'docs/ATLAS3907-PORTRAIT-MEDIA.json'),'utf8')).files;
+if(Object.keys(portraitPack).length!==2)throw new Error('Expected two cinematic portraits');
+for(const [key,entry] of Object.entries(portraitPack)){
+ if(!/^art\/[a-zA-Z0-9-]+\.webp$/.test(entry.path)||!files.includes(entry.path))throw new Error('Missing portrait: '+key);
+ if(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,entry.path))).digest('hex')!==entry.sha256)throw new Error('Portrait identity mismatch: '+key);
+ if(!fs.readFileSync(path.join(root,'atlas8-preview.html'),'utf8').includes('src="./'+entry.path+'"'))throw new Error('Portrait wiring missing: '+key);
+}
 const headerOverride='\n/* Validated selected cinematic headers */\n'+headerRules.join('\n')+'\n';
 console.log('Cinematic headers: '+headerRules.length+'/9 selected images verified; visual release review remains separate.');
 const pages = files.filter(rel => rel.endsWith('.html') && !rel.includes('/')).sort().map(rel => {

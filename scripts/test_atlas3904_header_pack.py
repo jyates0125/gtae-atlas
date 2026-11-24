@@ -45,3 +45,16 @@ for key,entry in entries.items():
     # The release static suite may run before the build. Source selection is
     # mandatory then; the Cloudflare build separately verifies published bytes.
 print(f'Atlas 39.0.5: {len(paths)}/9 selected cinematic images verified; {installed}/9 optional concept images installed')
+
+# Exact uploaded portraits, independent of the deferred alternate film.
+portraits=json.loads((R/'docs/ATLAS3907-PORTRAIT-MEDIA.json').read_text())['files']
+assert len(portraits)==2
+assert installed==9 and all(entry['selected']=='new' for entry in entries.values())
+preview=(R/'atlas8-preview.html').read_text()
+for key,entry in portraits.items():
+    raw=webp(R/entry['path'])
+    assert hashlib.sha256(raw).hexdigest()==entry['sha256'],key
+    assert 'src="./'+entry['path']+'"' in preview,key
+    if (R/'public/atlas8-preview.html').is_file():
+        assert (R/'public'/entry['path']).read_bytes()==raw,key
+print('PASS nine uploaded headers and two exact cinematic portraits')

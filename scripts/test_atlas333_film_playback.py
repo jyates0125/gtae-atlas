@@ -13,8 +13,10 @@ from playwright.sync_api import expect, sync_playwright
 from RangeHTTPServer import RangeRequestHandler
 
 public = Path(__file__).resolve().parents[1] / 'public'
-asset = public / 'film/assets/one-last-ride-motion-preview.mp4'
-assert hashlib.sha256(asset.read_bytes()).hexdigest() == 'ddd2d44c6d58b114cceb523fea47dfce9fbe3259a449a3ce8e61d8b5b002798f'
+master = public / 'film/assets/one-last-ride-motion-preview.mp4'
+assert hashlib.sha256(master.read_bytes()).hexdigest() == 'ddd2d44c6d58b114cceb523fea47dfce9fbe3259a449a3ce8e61d8b5b002798f'
+asset = public / 'film/assets/one-last-ride-action-cut-3906.mp4'
+assert hashlib.sha256(asset.read_bytes()).hexdigest() == '290a1f34f3bee6f1af99efd5205dbeb1edcbf8aa8c4cb152866b950681cbd3f4'
 probe = json.loads(subprocess.check_output([
     'ffprobe', '-v', 'error', '-show_entries', 'stream=codec_name,width,height:format=duration',
     '-of', 'json', str(asset),
@@ -38,7 +40,7 @@ with ThreadingHTTPServer(('127.0.0.1', 0), partial(RangeRequestHandler, director
             assert video.evaluate('v => v.duration === 39 && v.paused && !v.muted && v.controls && v.playsInline')
             src = video.evaluate('v => v.currentSrc')
             assert src == video.locator('a').evaluate('a => a.href')
-            assert urlsplit(src).query == 'v=ddd2d44c'
+            assert urlsplit(src).query == 'v=290a1f34'
             video.evaluate('v => v.play()')
             page.wait_for_function("document.querySelector('#watch video').currentTime > 0.2")
             video.evaluate('v => { v.currentTime = 38.5 }')

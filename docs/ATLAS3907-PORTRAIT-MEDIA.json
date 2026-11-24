@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "source": "Owner-uploaded original cinematic portrait details; alternate rain-chase teaser deferred on immutable review branch.",
+  "reviewCommit": "72ce4bfdcde697de13e08184308d03f67ab2fdac",
+  "files": {
+    "loki-profile": {
+      "path": "art/jura3904-loki-profile.webp",
+      "sha256": "28c14a252fa83fd5720b663957160dbe00b6f4c363ee0915d752e2438c1deb7d"
+    },
+    "scaly-profile": {
+      "path": "art/jura3904-scaly-profile.webp",
+      "sha256": "eb69001cb42878119508bdbc18d01d3efe0d443ec5a93f7718eb7b8bfb0d56f6"
+    }
+  }
+}
