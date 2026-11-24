@@ -1,0 +1,24 @@
+name: Atlas 38.3 independent Cayo daily data
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-conditions.js'
+      - 'atlas180-cayo-flagship.js'
+      - 'heist-cayo-perico.html'
+      - 'scripts/test_atlas383_cayo_daily.cjs'
+      - '.github/workflows/atlas383-cayo-daily.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cayo-daily:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas180-cayo-flagship.js && node scripts/test_atlas374_daily.cjs && node scripts/test_atlas375_published_daily.cjs && node scripts/test_atlas383_cayo_daily.cjs
+      - run: python scripts/test_atlas180_cayo_flagship.py && python scripts/test_atlas186_cayo_route.py

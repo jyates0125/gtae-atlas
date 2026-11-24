@@ -31,7 +31,7 @@ for key in ('j180-shell','j180-legend','j180-drawer','j180-map-frame','j180-ches
 assert 'body.j180-cayo' in style
 assert "jura159-heist-cayo-perico.webp" in style
 assert "atlas180-cayo-flagship.css?v=180" in loader
-assert "atlas180-cayo-flagship.js?v=180" in loader
+assert "atlas180-cayo-flagship.js?v=383" in loader
 assert "if(heistId==='cayo-perico')" in loader
 assert style.count('{')==style.count('}')
 assert style.count('(')>=style.count(')')
