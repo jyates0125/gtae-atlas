@@ -18,6 +18,7 @@
 # Atlas 39.0.2: recover transient same-origin Garage catalog requests; verify Forge return with failure injection.
 # Atlas 39.0.3: scoped older/duplicated decorative header refresh; preserve all approved worlds and maps.
 # Atlas 39.0.3a: ensure dashboard header overrides the older high-specificity important background at both breakpoints.
+# Atlas 39.0.6a: freeze approved action cut and corrected cinematic headers for full nonpublishing release QA.
 name: Atlas 31.8 - one-time staging full release launch
 on:
   push:

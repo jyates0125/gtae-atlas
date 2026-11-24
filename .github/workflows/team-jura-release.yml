@@ -105,6 +105,7 @@ jobs:
           check python scripts/test_atlas161_quality_gate.py
           check python scripts/test_atlas162_subject_heroes.py
           check python scripts/test_atlas3904_header_pack.py --require
+          check python scripts/test_atlas3906_action_cut.py
           check python scripts/test_atlas163_premium_asset_ledger.py
           check python scripts/test_atlas164_heist_workspace.py
           check python scripts/test_atlas165_evidence_brand.py
@@ -187,7 +188,10 @@ jobs:
       - name: Desktop and mobile browser QA on served production files
         env:
           ATLAS_BROWSER: chromium
-        run: python scripts/browser_smoke.py
+        run: |
+          python scripts/test_atlas3905_header_browser.py
+          python scripts/test_atlas3906_action_cut.py
+          python scripts/browser_smoke.py
       - name: Verify Cayo mission board and capture phone/desktop screenshots
         env:
           ATLAS_BROWSER: chromium
@@ -221,7 +225,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: team-jura-atlas-design-review-chromium
-          path: qa-evidence/chromium/
+          path: |
+            qa-evidence/chromium/
+            qa-evidence/atlas3905-cinematic-headers/
           if-no-files-found: warn
           retention-days: 14
   microsoft-edge:
@@ -253,7 +259,10 @@ jobs:
       - name: Microsoft Edge desktop/mobile functional smoke tests
         env:
           ATLAS_BROWSER: msedge
-        run: python scripts/browser_smoke.py
+        run: |
+          python scripts/test_atlas3905_header_browser.py
+          python scripts/test_atlas3906_action_cut.py
+          python scripts/browser_smoke.py
       - name: Verify Cayo mission board and capture phone/desktop screenshots
         # Git Bash uses fail-fast (-e); PowerShell otherwise hides an earlier
         # native Python failure when a later command exits successfully.
@@ -290,7 +299,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: team-jura-atlas-design-review-edge
-          path: qa-evidence/msedge/
+          path: |
+            qa-evidence/msedge/
+            qa-evidence/atlas3905-cinematic-headers/
           if-no-files-found: warn
           retention-days: 14
   # Fast, isolated Atlas 22.0 gate. Finds phone popup regressions before the
