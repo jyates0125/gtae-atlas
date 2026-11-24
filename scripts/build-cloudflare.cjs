@@ -32,6 +32,16 @@ function walk(dir, prefix='') {
 if(fs.existsSync(out)) fs.rmSync(out,{recursive:true,force:true});
 fs.mkdirSync(out,{recursive:true});
 const files=walk(root);
+// New header assets are installed as one verified pack. Never request missing
+// or partial image files on a preview; production cannot use interim fallbacks.
+const headerPack=JSON.parse(fs.readFileSync(path.join(root,'docs/ATLAS3904-HEADER-ART.json'),'utf8')).images;
+const headerArtReady=Object.values(headerPack).every(entry=>{
+ const file=path.join(root,entry.path);
+ return fs.existsSync(file)&&crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')===entry.sha256;
+});
+if(!headerArtReady&&primaryGuards.isPrimaryProduction(process.env))throw new Error('Atlas 39.0.4 cinematic header pack missing or invalid; production promotion blocked.');
+const headerOverride=headerArtReady?'\n/* Original validated cinematic header pack */\n'+Object.entries(headerPack).map(([key,entry])=>'[data-gtae-header="'+key+'"]{--j3904-art:url("./'+entry.path+'")}').join('\n')+'\n':'';
+if(!headerArtReady)console.log('Interim cinematic header assets retained; new header pack not yet installed.');
 const pages = files.filter(rel => rel.endsWith('.html') && !rel.includes('/')).sort().map(rel => {
   const source=fs.readFileSync(path.join(root,rel),'utf8');
   const lower=source.toLowerCase();
@@ -60,6 +70,7 @@ for (const rel of files) {
     }
   }
   fs.copyFileSync(src,dst);
+  if(rel==='atlas3903-header-refresh.css'&&headerOverride)fs.appendFileSync(dst,headerOverride);
   const buf=fs.readFileSync(dst);
   bytes+=buf.length;
   manifest.push({path:rel.replaceAll('\\','/'),bytes:buf.length,sha256:crypto.createHash('sha256').update(buf).digest('hex')});

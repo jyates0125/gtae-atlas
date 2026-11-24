@@ -37,24 +37,31 @@ for path in accept['approved_world_covers'].values():
     assert (r/path).is_file(),path
 print('Atlas 16.2: 5 unique premium subjects, 13 owner-reviewed covers and signed release status PASS')
 
-# Atlas 39.0.3: selected formerly repeated headers become distinct compact UI
-# surfaces, without introducing decorative headers into functional maps.
-header_cases={"atlas-dashboard.html":"dashboard","atlas-news.html":"news","atlas-cheats.html":"cheats","atlas-activities.html":"activities","atlas-account.html":"account","atlas-toolkit.html":"toolkit","atlas-checklist.html":"checklist"}
+# Atlas 39.0.4: all selected headers have real local artwork. The new
+# image pack may be absent on intermediate staging, never on final release.
+import re, hashlib
+header_manifest=json.loads((r/'docs/ATLAS3904-HEADER-ART.json').read_text(encoding='utf-8'))['images']
 refresh=(r/'atlas3903-header-refresh.css').read_text(encoding='utf-8')
-import re
-backgrounds=[]
-for page,key in header_cases.items():
-    html=(r/page).read_text(encoding='utf-8')
-    assert html.count('data-gtae-header="'+key+'"')==1,page
-    assert html.count('atlas3903-header-refresh.css?v=3903')==1,page
+assert len(header_manifest)==9
+assert len({v['sha256'] for v in header_manifest.values()})==9
+fallbacks=[]
+for key,entry in header_manifest.items():
+    html=(r/entry['page']).read_text(encoding='utf-8')
+    assert html.count('data-gtae-header="'+key+'"')==1,entry['page']
+    assert html.count('atlas3903-header-refresh.css?v=')==1,entry['page']
     rule=re.search(r'\[data-gtae-header="'+key+r'"\]\s*\{([^}]+)\}',refresh)
-    assert rule and 'background-image:' in rule.group(1),page
-    value=re.search(r'background-image:([^;]+)',rule.group(1)).group(1)
-    assert 'url(' not in value,page
-    backgrounds.append(value)
-assert len(set(backgrounds))==len(header_cases)
-for page in r.glob('*.html'):
-    if page.name not in header_cases:
-        assert 'atlas3903-header-refresh.css' not in page.read_text(encoding='utf-8'),page.name
-assert 'atlas97-proposed-loki-scaly-hero.webp' not in (r/'atlas-account.html').read_text(encoding='utf-8')
-print('Atlas 39.0.3: seven distinct scoped header treatments; all other pages unaffected PASS')
+    assert rule and 'background-image:' in rule.group(1),key
+    assert entry['fallback'] in rule.group(1),key
+    assert (r/entry['fallback']).is_file(),key
+    fallbacks.append(entry['fallback'])
+    asset=r/entry['path']
+    if asset.is_file():
+        assert hashlib.sha256(asset.read_bytes()).hexdigest()==entry['sha256'],key
+assert len(set(fallbacks))==len(header_manifest)
+preview=(r/'atlas8-preview.html').read_text(encoding='utf-8')
+for image in ('jura155-story.webp','atlas86-scaly-approved.webp','atlas86-loki-approved.webp','atlas98-one-last-ride.webp'):
+    assert image in preview,image
+assert 'Approved character paintings must be integrated' not in preview
+assert 'interface-illustration.webp' not in preview
+assert 'art/oldcity.svg' not in (r/'guides.html').read_text(encoding='utf-8')
+print('Atlas 39.0.4: distinct cinematic treatments, existing world assets intact; final new-art pack validated if installed')

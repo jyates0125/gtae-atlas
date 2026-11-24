@@ -1,34 +1,55 @@
-/* Atlas 39.0.3 — targeted decorative header refresh only.
- * Keep approved cinematic covers, map surfaces, mission art and the film intact.
- * The selected older utility/operations headers use intentionally art-free,
- * distinct premium UI backgrounds; no fabricated screenshots or reused posters. */
-[data-gtae-header] { background-repeat:no-repeat!important; background-size:cover!important; background-position:center!important }
+/* Atlas 39.0.4: restore full cinematic artwork to all selected headers.
+ * Never replace map surfaces, approved world covers, mission artwork or film.
+ * The nine new original images activate together after local SHA-256 validation
+ * by build-cloudflare.cjs. Until the art pack is installed, retain real existing
+ * cinematic assets (interim only; NOT final unique-header acceptance). */
+[data-gtae-header] {background-repeat:no-repeat!important;background-size:cover!important}
 body.j223-home[data-j130-surface="dashboard"] .hero.j223-hero[data-gtae-header="dashboard"] {
- background-image:radial-gradient(ellipse at 75% 12%,#955bb552,transparent 52%),linear-gradient(115deg,#1b102b 0%,#331a49 62%,#211d38 100%)!important;
- background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;
+ background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/jura155-vi.webp'))!important;
+ background-size:cover!important;background-position:50% 43%!important;background-repeat:no-repeat!important;
+}
+[data-gtae-header="guides"] {
+ background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/jura165-parity.webp'))!important;
+ background-size:cover!important;background-position:70% 50%!important;background-repeat:no-repeat!important;
 }
 [data-gtae-header="news"] {
- background-image:repeating-linear-gradient(0deg,#efc18115 0 1px,transparent 1px 24px),linear-gradient(104deg,#29133f 0%,#33224f 61%,#493653 100%)!important;
- background-blend-mode:normal;
- min-height:0;
+ background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/atlas93-dispatch-hero.webp'))!important;
+ background-size:cover!important;background-position:70% center!important;background-repeat:no-repeat!important;
 }
 [data-gtae-header="cheats"] {
- background-image:repeating-linear-gradient(90deg,#a78cc315 0 1px,transparent 1px 30px),linear-gradient(125deg,#201735,#3a2648 62%,#483048)!important;
- min-height:0;
+ background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/jura161-weapons.webp'))!important;
+ background-size:cover!important;background-position:70% center!important;background-repeat:no-repeat!important;
 }
 [data-gtae-header="activities"] {
- background-image:radial-gradient(ellipse at 88% 25%,#b77a4140,transparent 48%),linear-gradient(110deg,#251133,#3a224e 63%,#302338)!important;
+ background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/jura159-heist-hq.webp'))!important;
+ background-size:cover!important;background-position:70% center!important;background-repeat:no-repeat!important;
 }
 [data-gtae-header="account"] {
- background-image:radial-gradient(ellipse at 90% 10%,#80569b4d,transparent 48%),linear-gradient(125deg,#2d1941,#171127)!important;
- min-height:0;
+ background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/jura165-coverage.webp'))!important;
+ background-size:cover!important;background-position:75% center!important;background-repeat:no-repeat!important;
 }
 [data-gtae-header="toolkit"] {
- background-image:repeating-linear-gradient(45deg,#caa0ff0b 0 1px,transparent 1px 20px),linear-gradient(110deg,#23162f,#38334d)!important;
+ background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/atlas93-garage-hero.webp'))!important;
+ background-size:cover!important;background-position:75% center!important;background-repeat:no-repeat!important;
 }
 [data-gtae-header="checklist"] {
- background-image:repeating-linear-gradient(0deg,#f6cc9510 0 1px,transparent 1px 25px),linear-gradient(105deg,#301b3c,#3d2a3e)!important;
+ background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/jura161-collectibles.webp'))!important;
+ background-size:cover!important;background-position:75% center!important;background-repeat:no-repeat!important;
 }
+[data-gtae-header="studio-preview"] {
+ background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/jura155-map.webp'))!important;
+ background-size:cover!important;background-position:70% center!important;background-repeat:no-repeat!important;
+}
+/* Preserve readability but let the art remain visible across mobile widths. */
 @media(max-width:720px){
+ [data-gtae-header]{background-position:65% center!important}
+ body.j223-home[data-j130-surface="dashboard"] .hero.j223-hero[data-gtae-header="dashboard"]{background-position:65% center!important}
  [data-gtae-header="news"],[data-gtae-header="cheats"],[data-gtae-header="account"]{min-height:0!important}
 }
+body.community-page .portal-logo .logo-mark{background:transparent!important;box-shadow:none!important;border:0!important;display:grid;place-items:center}
+body.community-page .portal-logo .logo-mark img{width:40px;height:40px;display:block;object-fit:contain}
+[data-gtae-header="studio-preview"]::after{display:none}
+.j3904-crew-portraits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:9px}
+.j3904-crew-portraits a{display:grid;gap:4px;min-width:0;color:#ffdfaa;font-weight:800;text-align:center}
+.j3904-crew-portraits img{width:100%;height:clamp(95px,15vw,155px);object-fit:cover;object-position:50% 28%;border:1px solid #e2b16e;border-radius:10px}
+.j3904-film-image{display:block;width:calc(100% - 20px);height:auto;aspect-ratio:16/9;object-fit:cover;margin:10px;border-radius:10px;border:1px solid #e2b16e}

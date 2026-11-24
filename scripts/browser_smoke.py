@@ -1368,15 +1368,23 @@ async def smoke():
                                     if bounds and selector.endswith(('game5','game6')) and bounds['height']<43:
                                         failures.append('Legacy game switch is not touch sized: '+selector)
                             
-                            header_cases={"atlas-dashboard.html":"dashboard","atlas-news.html":"news","atlas-cheats.html":"cheats","atlas-activities.html":"activities","atlas-account.html":"account","atlas-toolkit.html":"toolkit","atlas-checklist.html":"checklist"}
+                            header_cases={"atlas-dashboard.html":"dashboard","guides.html":"guides","atlas-news.html":"news","atlas-cheats.html":"cheats","atlas-activities.html":"activities","atlas-account.html":"account","atlas-toolkit.html":"toolkit","atlas-checklist.html":"checklist","atlas8-preview.html":"studio-preview"}
                             if path in header_cases:
                                 hero=pg.locator('[data-gtae-header="'+header_cases[path]+'"]')
                                 if await hero.count()!=1 or not await hero.is_visible():
-                                    failures.append('Scoped refreshed header missing: '+path)
+                                    failures.append('Cinematic header missing: '+path)
                                 else:
                                     background=await hero.evaluate('(el)=>getComputedStyle(el).backgroundImage')
-                                    if 'url(' in background or 'gradient(' not in background:
-                                        failures.append('Repeated poster or missing premium header treatment: '+path)
+                                    if 'url(' not in background:
+                                        failures.append('Cinematic header lost its image: '+path)
+                                    else:
+                                        decoded=await hero.evaluate("""async (el) => {
+                                          const raw=getComputedStyle(el).backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
+                                          if(!raw)return false;
+                                          const image=new Image();image.src=raw[1];
+                                          try{await image.decode();return image.naturalWidth>100}catch{return false}
+                                        }""")
+                                        if not decoded:failures.append('Cinematic header image failed to decode: '+path)
                                     bounds=await hero.bounding_box()
                                     if not bounds or bounds['x']< -1 or bounds['x']+bounds['width']>width+2:
                                         failures.append('Refreshed header overflows viewport: '+path)

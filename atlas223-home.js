@@ -141,7 +141,16 @@ function renderFeaturedCast(){
   img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
   const scene=()=>{img.dataset.art='world';img.alt='Original Elario world scene; not a likeness of '+c.name;
    credit.textContent='World scene';a.title='Elario world scene, not a portrait of '+c.name;img.src=localFallback(c.scope)};
-  img.addEventListener('error',()=>{if(img.dataset.art==='world'){img.remove();credit.textContent='Art unavailable';return}scene()});
+  let localRetry=false;
+  img.addEventListener('error',()=>{
+   // A canceled local image transfer is not proof the approved portrait is missing.
+   if(img.dataset.art==='concept'&&!localRetry){
+    localRetry=true;const retry=new URL('./'+c.conceptPortrait,location.href);
+    retry.searchParams.set('retry','1');img.src=retry.href;return;
+   }
+   if(img.dataset.art==='world'){img.remove();credit.textContent='Art unavailable';return}
+   scene()
+  });
   if(typeof c.conceptPortrait==='string'&&/^art\/[a-z0-9-]+\.(?:webp|png|jpe?g)$/i.test(c.conceptPortrait)){
    img.dataset.art='concept';img.alt='Elario fan concept of '+c.name;credit.textContent='Fan concept';
    a.title=c.name+' · Elario illustrated fan concept';img.src='./'+c.conceptPortrait;

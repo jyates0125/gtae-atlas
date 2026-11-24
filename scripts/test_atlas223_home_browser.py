@@ -32,6 +32,15 @@ try:
        scope:'story',game:'GTA V',name:'Index Fixture'}]}), {headers:{'Content-Type':'application/json'}});
      };
     }""")
+   if width==375:
+    # A single interrupted image transfer must retry the original art, not
+    # permanently replace an approved character portrait with a world scene.
+    interrupted={'once':False}
+    def interrupt_portrait(route):
+     if not interrupted['once']:
+      interrupted['once']=True;route.abort('connectionreset')
+     else:route.continue_()
+    page.route('**/art/jura221-lucia-cinematic.webp*',interrupt_portrait)
    page.on('pageerror',lambda ex:errors.append(str(ex)))
    page.goto(base+'atlas-dashboard.html',wait_until='domcontentloaded',timeout=60000)
    expect(page.locator('.j223-world-card')).to_have_count(7,timeout=20000)
