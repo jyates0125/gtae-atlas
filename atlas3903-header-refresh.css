@@ -3,11 +3,12 @@
  * The selected older utility/operations headers use intentionally art-free,
  * distinct premium UI backgrounds; no fabricated screenshots or reused posters. */
 [data-gtae-header] { background-repeat:no-repeat!important; background-size:cover!important; background-position:center!important }
-[data-gtae-header="dashboard"] {
+body.j223-home[data-j130-surface="dashboard"] .hero.j223-hero[data-gtae-header="dashboard"] {
  background-image:radial-gradient(ellipse at 75% 12%,#955bb552,transparent 52%),linear-gradient(115deg,#1b102b 0%,#331a49 62%,#211d38 100%)!important;
+ background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;
 }
 [data-gtae-header="news"] {
- background-image:linear-gradient(104deg,#29133f 0%,#33224f 61%,#493653 100%),repeating-linear-gradient(0deg,#efc18115 0 1px,transparent 1px 24px)!important;
+ background-image:repeating-linear-gradient(0deg,#efc18115 0 1px,transparent 1px 24px),linear-gradient(104deg,#29133f 0%,#33224f 61%,#493653 100%)!important;
  background-blend-mode:normal;
  min-height:0;
 }
