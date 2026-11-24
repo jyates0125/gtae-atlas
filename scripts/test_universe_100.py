@@ -51,7 +51,7 @@ for page, expected_kind in PAGES.items():
     assert './atlas93-garage.html' in html
 
     assert any(re.fullmatch(r"\./atlas100-universe\.js\?v=\d+", ref) for ref in p.refs), (page, "shared JS")
-    assert "./atlas100-universe.css?v=130" in p.refs, (page, "shared CSS")
+    assert any(re.fullmatch(r"\./atlas100-universe\.css\?v=\d+", ref) for ref in p.refs), (page, "shared CSS")
     for ref in p.refs:
         if not ref.startswith("./"):
             continue

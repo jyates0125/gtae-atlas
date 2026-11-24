@@ -103,14 +103,14 @@
    syncButtons();paint();
  }
  const looks=[
-  {id:'hero',title:'Original cinematic crew identity',kind:'approved',description:'Approved Team Jura character direction featuring the red-hatted Loki and Scaly Man.',art:'atlas98-approved-hero.webp'},
-  {id:'home',title:'Approved universe homepage concept',kind:'approved',description:'Approved navigation and flagship-world visual reference; individual UI controls are built as real HTML.',art:'atlas98-approved-home-reference.webp'},
-  {id:'loki',title:'Loki · five outfit explorations',kind:'concept',description:'Red top hat, red hair and slasher-inspired future variations.',art:'atlas98-loki-style-concept.webp'},
-  {id:'scaly',title:'Scaly Man · wardrobe builds',kind:'concept',description:'Black tactical vest, short green/dark hair, painted slasher face and alternative outfits.',art:'atlas98-scaly-builds.webp'},
-  {id:'styles',title:'Team Jura Style Lab concept boards',kind:'concept',description:'Galaxy textures, checker suits, gold trim and event-ready outfits.',art:'atlas98-style-lab.webp'},
-  {id:'duo',title:'Crew Wardrobe Gallery',kind:'concept',description:'Coordinated Loki and Scaly looks from classic style to futuristic neon.',art:'atlas98-wardrobe-concept.webp'},
-  {id:'slasher',title:'Slasher Collection',kind:'concept',description:'Horror-inspired red checker, black tactical, and ornate royal outfits.',art:'atlas98-slasher-collection.webp'},
-  {id:'original',title:'Neon futuristic portrait',kind:'concept',description:'Experimental sci-fi treatment for special graphics and fan events.',art:'atlas98-original-cinematic.webp'}
+  {id:'hero',title:'Original cinematic crew identity',kind:'approved',description:'Approved Team Jura character direction featuring the red-hatted Loki and Scaly Man.',art:'atlas97-proposed-loki-scaly-hero.webp'},
+  {id:'home',title:'GTAE universe artwork',kind:'approved',description:'Cinematic map-world artwork; interactive navigation is built as real HTML.',art:'jura158-map-world-cinematic.webp'},
+  {id:'loki',title:'Loki · five outfit explorations',kind:'concept',description:'Red top hat, red hair and slasher-inspired future variations.',art:'atlas98-loki-style-concept.webp',crop:[495,250,1140,390]},
+  {id:'scaly',title:'Scaly Man · wardrobe builds',kind:'concept',description:'Black tactical vest, short green/dark hair, painted slasher face and alternative outfits.',art:'atlas98-scaly-builds.webp',crop:[425,245,1100,380]},
+  {id:'styles',title:'Team Jura Style Lab concept boards',kind:'concept',description:'Galaxy textures, checker suits, gold trim and event-ready outfits.',art:'atlas98-style-lab.webp',crop:[545,225,1090,445]},
+  {id:'duo',title:'Crew Wardrobe Gallery',kind:'concept',description:'Coordinated Loki and Scaly looks from classic style to futuristic neon.',art:'atlas98-wardrobe-concept.webp',crop:[225,415,1405,345]},
+  {id:'slasher',title:'Slasher Collection',kind:'concept',description:'Horror-inspired red checker, black tactical, and ornate royal outfits.',art:'atlas98-slasher-collection.webp',crop:[270,370,1100,305]},
+  {id:'original',title:'Neon futuristic outfit concept',kind:'concept',description:'Experimental sci-fi treatment for special graphics and fan events.',art:'atlas98-style-lab.webp',crop:[1270,450,360,215]}
  ];
  function styles(){
    const gallery=$('#styleGallery');
@@ -172,11 +172,25 @@
      const id=new URL(location.href).searchParams.get('look');
      return looks.find(look=>look.id===id);
    }
+   // Present only the outfit panels from historic concept boards; old logo and mock UI stay out of the visible gallery.
+   function applyArt(frame,img,look){
+     img.src='./art/'+look.art;img.alt=look.title;
+     if(look.crop){
+       const [x,y,w,h]=look.crop;
+       frame.classList.add('gtae-art-crop');
+       frame.style.aspectRatio=w+' / '+h;
+       img.style.width=(1648/w*100)+'%';img.style.height=(928/h*100)+'%';
+       img.style.left=(-x/w*100)+'%';img.style.top=(-y/h*100)+'%';
+     }else{
+       frame.classList.remove('gtae-art-crop');frame.style.aspectRatio='';
+       for(const prop of ['width','height','left','top'])img.style[prop]='';
+     }
+   }
    function syncArtwork(){
      const look=selectedArt();
      if(look&&dialog.showModal){
-       preview.src='./art/'+look.art;
-       preview.alt=label.textContent=look.title;
+       applyArt(preview.parentElement,preview,look);
+       label.textContent=look.title;
        if(!dialog.open)dialog.showModal();
      }else if(dialog.open)dialog.close();
    }
@@ -195,20 +209,20 @@
    window.addEventListener('popstate',syncArtwork);
    for(const look of looks){
      const tile=E('article','style-tile'),image=E('img'),body=E('div','style-body');
-     image.src='./art/'+look.art;image.alt=look.title;image.loading='lazy';
+     const frame=E('div','style-art-frame');frame.append(image);applyArt(frame,image,look);image.loading='lazy';
      body.append(E('small','',look.kind==='approved'?'APPROVED REFERENCE':'FUTURE CONCEPT · NOT APPROVED'),
        E('h3','',look.title),E('p','',look.description));
      const actions=E('div','style-actions'),zoom=E('button','','View artwork'),button=E('button');
      zoom.type=button.type='button';
      zoom.addEventListener('click',()=>{
-       if(!dialog.showModal){window.open(image.src,'_blank','noopener');return}
+       if(!dialog.showModal){tile.scrollIntoView({block:'nearest'});return}
        const url=new URL(location.href);
        url.searchParams.set('look',look.id);
        history.pushState({...history.state,atlasStyleArt:true},'',url);
        syncArtwork();
      });
      button.addEventListener('click',()=>setSaved(look.id,button.getAttribute('aria-pressed')!=='true'));
-     actions.append(zoom,button);body.append(actions);tile.append(image,body);gallery.append(tile);
+     actions.append(zoom,button);body.append(actions);tile.append(frame,body);gallery.append(tile);
      cards.set(look.id,{tile,button});
    }
    filters.forEach(b=>b.addEventListener('click',()=>{

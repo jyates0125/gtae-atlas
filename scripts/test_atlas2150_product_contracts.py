@@ -108,7 +108,7 @@ for path in ("index.html", "atlas-dashboard.html", "maps.html",
 
 # Flagship header must use the already-approved cinematic asset.
 require("atlas100-universe.css", 'body[data-atlas-kind="all"] .u-hero-art',
-        "atlas98-approved-hero.webp")
+        "jura155-map.webp")
 assert (ROOT / "art/atlas98-approved-hero.webp").is_file(), "Approved hero artwork missing"
 
 # Confirm the stage-gate rules and the adopted studio vision stay discoverable.

@@ -14,7 +14,7 @@ css = read('atlas130-launch.css')
 # Owner-approved public FB poster is first; the complete interactive dashboard is a distinct second step.
 assert 'j130-public-hero j132-poster-welcome' in index
 assert index.index('j132-poster-welcome') < index.index('id="featuredGrid"')
-assert "url('./art/atlas98-approved-hero.webp')" in css
+assert "url('./art/atlas97-proposed-loki-scaly-hero.webp')" in css
 assert 'href="./atlas-dashboard.html">✦ Enter Atlas · Continue as Guest' in index
 assert 'href="./atlas-account.html">◎ Sign-in &amp; Progress Options' in index
 assert 'id="publicEntryNote"' in index and 'No download or account is required' in index
