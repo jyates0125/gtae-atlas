@@ -23,3 +23,8 @@
 .j393-slasher summary{cursor:pointer;font-weight:800;color:#ffcb96;min-height:30px}
 .j393-slasher .j88-event-toggle{padding:5px 0;min-height:36px}
 .j393-slasher a{color:#ffd69a;overflow-wrap:anywhere}
+
+.j395-guide{margin:7px 0;border-left:2px solid #bb925b;padding:5px 9px;overflow-wrap:anywhere}
+.j395-guide summary{cursor:pointer;color:#ffda98;font-weight:800;min-height:28px}
+.j395-guide p,.j395-guide li{font-size:12px;line-height:1.4;color:#e6d7ec}
+.j395-guide ul{padding-left:18px}
