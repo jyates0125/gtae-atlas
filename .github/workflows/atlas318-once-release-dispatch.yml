@@ -11,6 +11,7 @@
 # Atlas 38.5: freeze and repeat the full release gate after repairing the owner-approved three-view tests, heist recovery regression and phone navigation row.
 # Atlas 38.6: run all static assertions with aggregate failure reporting; no gate is waived.
 # Atlas 38.7: reconcile all reported first-block failures; unify daily sidebar source and restore static-tail parsing.
+# Atlas 38.8: reconcile deferred account and three-view Leonida HQ copy with the verified map controls.
 name: Atlas 31.8 - one-time staging full release launch
 on:
   push:
