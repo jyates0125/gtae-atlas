@@ -23,16 +23,47 @@ function shortest(graph,from,to){if(!valid(from)||!valid(to))throw Error('Point 
  const push=(id,cost)=>{heap.push([cost,id]);let i=heap.length-1;while(i){let p=(i-1)>>1;if(heap[p][0]<=cost)break;heap[i]=heap[p];i=p;}heap[i]=[cost,id];};
  const pop=()=>{if(!heap.length)return null;const result=heap[0],last=heap.pop();if(heap.length){let i=0;while(2*i+1<heap.length){let j=2*i+1;if(j+1<heap.length&&heap[j+1][0]<heap[j][0])j++;if(heap[j][0]>=last[0])break;heap[i]=heap[j];i=j;}heap[i]=last;}return result;};
  push(start.id,0);
- while(heap.length){const [cost,id]=pop();if(visited.has(id))continue;visited.add(id);if(id===goal.id)break;for(const edge of graph.links.get(id)||[]){const candidate=(distances.get(id)||0)+edge.length;if(candidate<(distances.get(edge.id)??Infinity)){distances.set(edge.id,candidate);prev.set(edge.id,{from:id,road:edge.name});push(edge.id,candidate);}}}
+ while(heap.length){const [cost,id]=pop();if(visited.has(id))continue;visited.add(id);if(id===goal.id)break;for(const edge of graph.links.get(id)||[]){const candidate=(distances.get(id)||0)+edge.length;if(candidate<(distances.get(edge.id)??Infinity)){distances.set(edge.id,candidate);prev.set(edge.id,{from:id,road:edge.name,length:edge.length});push(edge.id,candidate);}}}
  if(!distances.has(goal.id))return null;
- const points=[],roads=[];let id=goal.id;for(let limit=0;limit<=graph.nodes.size;limit++){points.push(graph.nodes.get(id));if(id===start.id)break;const item=prev.get(id);if(!item)return null;roads.push(item.road);id=item.from;}
- points.reverse();roads.reverse();return{points:[{...from},...points.map(p=>({...p})),{...to}],roads,length:distances.get(goal.id)+distance(from,start)+distance(to,goal),method:'road-graph',verified:false};
+ const points=[],roads=[],edgeLengths=[];let id=goal.id;for(let limit=0;limit<=graph.nodes.size;limit++){points.push(graph.nodes.get(id));if(id===start.id)break;const item=prev.get(id);if(!item)return null;roads.push(item.road);edgeLengths.push(item.length);id=item.from;}
+ points.reverse();roads.reverse();edgeLengths.reverse();return{points:[{...from},...points.map(p=>({...p})),{...to}],roads,edgeLengths,length:distances.get(goal.id)+distance(from,start)+distance(to,goal),method:'road-graph',verified:false};
 }
 function route(waypoints,graph=null){if(!Array.isArray(waypoints)||waypoints.length<2||waypoints.length>12||!waypoints.every(valid))throw Error('Use 2–12 valid waypoints');const pieces=[];let length=0,allRoads=!!graph;
  for(let i=1;i<waypoints.length;i++){const a=waypoints[i-1],b=waypoints[i];let segment=graph?shortest(graph,a,b):null;if(!segment){segment={points:[{...a},{...b}],roads:[],length:distance(a,b),method:'direct-line',verified:false};allRoads=false;}pieces.push(segment);length+=segment.length;}
  const points=pieces.flatMap((p,i)=>i?p.points.slice(1):p.points);
  return{points,pieces,length,waypoints:waypoints.map(p=>({...p})),method:allRoads?'road-graph':pieces.some(p=>p.method==='road-graph')?'mixed':'direct-line',roadGraphUsed:pieces.some(p=>p.method==='road-graph'),drivingVerified:false,warning:allRoads?'UNVERIFIED ROAD GRAPH: route follows an imported graph but has NOT been validated against in-game roads or turn restrictions. Not verified driving directions.':pieces.some(p=>p.method==='road-graph')?'MIXED ROUTE: some segments use an unverified road graph and other segments are straight lines. Not verified driving directions.':'Direct-line preview only. Not actual streets, driving directions, or a travel-time estimate.'};}
 function heading(a,b){const t=Math.atan2(b.x-a.x,b.y-a.y)*180/Math.PI;const dirs=['north','northeast','east','southeast','south','southwest','west','northwest'];return dirs[Math.round(((t+360)%360)/45)%8];}
-function instructions(r,places){return r.pieces.map((segment,i)=>({step:i+1,label:segment.method==='road-graph'?`Unverified graph path toward ${places[i+1]?.name||'stop '+(i+1)}`:`Direct line ${heading(segment.points[0],segment.points.at(-1))} toward ${places[i+1]?.name||'stop '+(i+1)}`,length:segment.length,verified:segment.verified}));}
-return Object.freeze({validateGraph,shortest,route,instructions,distance,heading});
+function turn(a,b,c){
+ const before=Math.atan2(b.x-a.x,b.y-a.y),after=Math.atan2(c.x-b.x,c.y-b.y);
+ const delta=((after-before)*180/Math.PI+540)%360-180,abs=Math.abs(delta);
+ return abs>=150?'U-turn':abs>=35?(delta>0?'Turn right':'Turn left'):abs>=15?(delta>0?'Bear right':'Bear left'):'Continue';
+}
+function instructions(r,places){
+ const rows=[];const add=(label,length,kind)=>rows.push({step:rows.length+1,label,length,kind,verified:false});
+ for(const [i,s] of r.pieces.entries()){
+  const dest=places[i+1]?.name||'stop '+(i+1),p=s.points;
+  if(s.method!=='road-graph'){add('Direct line '+heading(p[0],p.at(-1))+' toward '+dest,s.length,'direct');continue}
+  const entry=distance(p[0],p[1]),exit=distance(p.at(-2),p.at(-1));
+  if(entry>0.01)add('Off-road connection '+heading(p[0],p[1])+' to graph',entry,'connector');
+  let run=null;
+  for(let j=0;j<s.roads.length;j++){
+   const from=p[j+1],to=p[j+2],name=s.roads[j],len=s.edgeLengths?.[j]??distance(from,to);
+   const maneuver=j===0?'Head '+heading(from,to):turn(p[j],from,to);
+   if(run&&run.name===name&&maneuver==='Continue'){run.length+=len;continue}
+   if(run)add(run.label,run.length,'graph');
+   run={name,label:maneuver+(j===0?' on ':' onto ')+name,length:len};
+  }
+  if(run)add(run.label,run.length,'graph');
+  if(exit>0.01)add('Off-road connection '+heading(p.at(-2),p.at(-1))+' toward '+dest,exit,'connector');
+  add('Arrive at '+dest,0,'arrival');
+ }
+ return rows;
+}
+function nearestOrder(places){
+ if(!Array.isArray(places)||places.length<2||!places.every(valid))throw Error('Valid waypoints required');
+ const rem=places.slice(1,-1),out=[places[0]];
+ while(rem.length){let best=0;for(let i=1;i<rem.length;i++)if(distance(out.at(-1),rem[i])<distance(out.at(-1),rem[best]))best=i;out.push(rem.splice(best,1)[0])}
+ return [...out,places.at(-1)];
+}
+return Object.freeze({validateGraph,shortest,route,instructions,distance,heading,nearestOrder,turn});
 });
