@@ -31,10 +31,11 @@ function solveGesture(start,current,view,extent,viewportWidth){
  const out={bearing:view.bearing,pitch:view.pitch,distance:view.distance,centerX:view.centerX,centerY:view.centerY};
  if(!start?.length||start.length!==current?.length)return out;
  const scale=Math.max(360,view.distance)*1.2/Math.max(200,viewportWidth||1);
+ const pan=(dx,dy)=>{const c=Math.cos(view.bearing),s=Math.sin(view.bearing);out.centerX+=(-dx*c+dy*s)*scale;out.centerY+=(dx*s+dy*c)*scale;};
  if(start.length===1){
   const dx=current[0].x-start[0].x,dy=current[0].y-start[0].y;
   if(start[0].shift){
-   out.centerX-=dx*scale;out.centerY+=dy*scale;
+   pan(dx,dy);
   }else{
    out.bearing+=dx*.007;
    out.pitch=Math.max(.24,Math.min(1.43,out.pitch-dy*.005));
@@ -43,8 +44,7 @@ function solveGesture(start,current,view,extent,viewportWidth){
   const a=start[0],bb=start[1],c=current[0],d=current[1];
   const startWidth=Math.max(1,Math.hypot(a.x-bb.x,a.y-bb.y));
   const nowWidth=Math.max(1,Math.hypot(c.x-d.x,c.y-d.y));
-  out.centerX-=((c.x+d.x)-(a.x+bb.x))*.5*scale;
-  out.centerY+=((c.y+d.y)-(a.y+bb.y))*.5*scale;
+  pan(((c.x+d.x)-(a.x+bb.x))*.5,((c.y+d.y)-(a.y+bb.y))*.5);
   out.distance=Math.max(360,Math.min(40000,view.distance*(startWidth/nowWidth)));
  }
  return out;
@@ -251,5 +251,5 @@ canvas.addEventListener('lostpointercapture',release);
 canvas.addEventListener('wheel',e=>{if(!active)return;e.preventDefault();zoom(e.deltaY>0?1.17:.85)},{passive:false});
 return{activate,deactivate,rebase,refreshTexture,render,zoom,fit,prepareElevation,setElevationBinary,hasApproximate,setApproximateSurface,clearApproximateSurface,setCoverageVisible,getCoverageVisible:()=>showCoverage,resetNorth(){bearing=0;pitch=.86;queueRender()},isActive:()=>active,hasElevation,getError:()=>sourceError,hasMapTexture:()=>textured,hasVisibleFrame:()=>frameVerified,verifyFrame,getFrameReport:()=>frameReport,getView:()=>({bearing,pitch,distance,extent,center:{...center}})};
 }
-root.JuraTerrain3D=Object.freeze({create,ELEVATIONS,solveGesture,cameraMatrix});
+root.JuraTerrain3D=Object.freeze({create,ELEVATIONS,solveGesture,cameraMatrix,terrainExtent});
 })(typeof window!=='undefined'?window:globalThis);
