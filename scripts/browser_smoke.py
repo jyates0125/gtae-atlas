@@ -1378,7 +1378,7 @@ async def smoke():
                                     if 'url(' not in background:
                                         failures.append('Cinematic header lost its image: '+path)
                                     else:
-                                        decoded=await hero.evaluate("""async (el) => {
+                                        decoded=await hero.evaluate(r"""async (el) => {
                                           const raw=getComputedStyle(el).backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
                                           if(!raw)return false;
                                           const image=new Image();image.src=raw[1];

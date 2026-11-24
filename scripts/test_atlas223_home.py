@@ -16,7 +16,7 @@ class Parser(HTMLParser):
   if t=='img': self.images.append(d.get('src',''))
   if t in ('form','a','button'):self.anchors.append(d)
 p=Parser();p.feed(page)
-assert 'atlas223-home.css?v=223' in page and 'atlas223-home.js?v=356' in page
+assert 'atlas223-home.css?v=223' in page and 'atlas223-home.js?v=3904' in page
 assert '<main id="main"' in page and 'id="heroTitle"' in page
 assert len([c for h,c in p.links if 'j223-world-card' in c])==7
 assert len([c for h,c in p.links if h and 'j223-shortcuts' in c])==0 # links belong to nav, not class

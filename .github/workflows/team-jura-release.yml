@@ -104,6 +104,7 @@ jobs:
           check python scripts/test_atlas158_premium_experiences.py
           check python scripts/test_atlas161_quality_gate.py
           check python scripts/test_atlas162_subject_heroes.py
+          check python scripts/test_atlas3904_header_pack.py --require
           check python scripts/test_atlas163_premium_asset_ledger.py
           check python scripts/test_atlas164_heist_workspace.py
           check python scripts/test_atlas165_evidence_brand.py
