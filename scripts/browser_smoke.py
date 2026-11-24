@@ -1359,6 +1359,15 @@ async def smoke():
                                 if await pg.locator('.j130-olr-share').count():failures.append('Discontinued film share kit still interrupts content')
                                 if await pg.locator('[data-j131-social-host] [data-j131-platform]').count()<4:
                                     failures.append('Bottom-of-page community social buttons missing on film')
+                            if not failures and path in ('legacy-explorer.html','online-explorer.html') and width<=390:
+                                for selector in ('header.top .brand','header.top #game5','header.top #game6'):
+                                    control=pg.locator(selector)
+                                    bounds=await control.bounding_box()
+                                    if not bounds or bounds['x']<0 or bounds['x']+bounds['width']>width+1:
+                                        failures.append('Legacy header item outside phone viewport: '+selector)
+                                    if bounds and selector.endswith(('game5','game6')) and bounds['height']<43:
+                                        failures.append('Legacy game switch is not touch sized: '+selector)
+                            
                             # Generic, non-destructive UX checks after individual page tests.
                             # Do not click destructive/financial/account/import actions automatically.
                             if not failures:

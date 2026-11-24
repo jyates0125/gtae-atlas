@@ -11,6 +11,10 @@ for name in ('legacy-explorer.html','online-explorer.html'):
  assert 'renderer:L.canvas()' not in s, name
  assert "FALLBACK.map(d=>({...d,tags:Array.isArray(d.tags)" in s, name
  assert "atlas132-nav.js?v=375" in s, "Legacy explorers must load current GTAE universal search"
+ assert 'id="j389-legacy-mobile-header"' in s, name
+ assert 'header.top>.brand{flex:1 1 0;min-width:0;white-space:normal' in s, name
+ assert 'header.top>.games{flex:0 0 auto' in s, name
+ assert 'min-height:44px;min-width:44px' in s, name
  assert 'oldExport' not in s, name
  assert "teamjura" not in s or 'gme-v9-pins' in s, name
 assert "switchGame(5);populateCategories();restoreDeepLink();loadFullData();" in (r/'online-explorer.html').read_text()
