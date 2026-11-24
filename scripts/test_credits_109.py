@@ -35,7 +35,12 @@ for needed in ('https://gtamap.io/disclaimer/','https://github.com/rolux/gtadb.o
     assert needed in linkurls,needed
 for href,target,rel in p.links:
     if href.startswith('./'):
-        assert (ROOT/href[2:].split('?',1)[0]).is_file(),href
+        target_path, _, fragment=href[2:].partition('#')
+        target_file=ROOT/target_path.split('?',1)[0]
+        assert target_file.is_file(),href
+        if fragment and target_file.suffix=='.html':
+            target_reader=Reader();target_reader.feed(target_file.read_text(encoding='utf-8'))
+            assert fragment in target_reader.ids,href
     if href.startswith('https://') and target=='_blank':
         assert 'noopener' in rel and 'noreferrer' in rel,href
 manifest=json.loads((ROOT/'data/atlas98-source-rights.json').read_text(encoding='utf-8'))

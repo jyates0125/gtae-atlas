@@ -28,9 +28,9 @@ jobs:
           python - <<'PY'
           import pathlib, shlex, subprocess, sys
           workflow=pathlib.Path('.github/workflows/team-jura-release.yml').read_text(encoding='utf-8').splitlines()
-          start=next(i for i,line in enumerate(workflow) if line.strip()=='python scripts/test_atlas212_directory.py')
+          start=next(i for i,line in enumerate(workflow) if line.strip().removeprefix('check ')=='python scripts/test_atlas212_directory.py')
           end=next(i for i in range(start+1,len(workflow)) if workflow[i].startswith('      - name:'))
-          commands=[line.strip() for line in workflow[start:end] if line.startswith('          ') and line.strip()]
+          commands=[line.strip().removeprefix('check ') for line in workflow[start:end] if line.strip().removeprefix('check ').startswith(('python ','node '))]
           assert len(commands)>=55, f'Release command tail unexpectedly truncated: {len(commands)}'
           errors=[]
           for command in commands:

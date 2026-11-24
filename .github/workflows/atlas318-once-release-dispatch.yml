@@ -10,6 +10,7 @@
 # Atlas 38.4: owner requested tonight's release preparation; dispatch the complete non-publishing QA gate on the new GTAE branding, GPS and daily-data candidate.
 # Atlas 38.5: freeze and repeat the full release gate after repairing the owner-approved three-view tests, heist recovery regression and phone navigation row.
 # Atlas 38.6: run all static assertions with aggregate failure reporting; no gate is waived.
+# Atlas 38.7: reconcile all reported first-block failures; unify daily sidebar source and restore static-tail parsing.
 name: Atlas 31.8 - one-time staging full release launch
 on:
   push:
