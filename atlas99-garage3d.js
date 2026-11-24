@@ -38,6 +38,11 @@ function mount(target,opts={}){
  const finish=select('Surface finish',[['metallic','Metallic'],['satin','Satin'],['stealth','Stealth']], 'finish');
  const accent=E('input');accent.type='color';accent.value=design.accent||'#eab56a';accent.dataset.forgeControl='accent';accent.oninput=()=>change({accent:accent.value});control('Accent RGB',accent);
  const road=['sport','touring','utility'].includes(profile);
+ if(road){
+  select('Wheel design',[['classic','Classic six-spoke'],['mesh','Fine twelve-spoke'],['deepdish','Deep-dish five-spoke']],'wheels');
+  select('Wheel finish',[['silver','Polished silver'],['gold','Warm gold'],['black','Satin black']],'rim');
+  select('Racing stripe',[['none','None'],['single','Single accent stripe'],['dual','Twin accent stripes']],'stripe');
+ }
  if(road)select('Ride height',[['street','Street'],['low','Low'],['raised','Raised']], 'stance');
  if(road||profile==='marine')select(road?'Aero styling':'Deck styling',[['clean','Clean'],['sport','Sport'],['track','Track']], 'kit');
  const lights=E('input');lights.type='checkbox';lights.checked=design.lights!==false;lights.dataset.forgeControl='lights';lights.onchange=()=>change({lights:lights.checked});control('Concept lighting',lights);
