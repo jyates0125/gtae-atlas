@@ -41,6 +41,7 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  const focused=mk('p','j88-note','');focused.setAttribute('role','status');panel.insertBefore(focused,results);
  const clear=mk('button','','Clear event focus');clear.type='button';clear.hidden=true;clear.onclick=()=>{window.JuraAtlasEventLocations?.clear();focused.textContent='Event map filter cleared.';clear.hidden=true};panel.insertBefore(clear,results);
  function locate(r){
+  if(r.id==='cayo-chests'){window.location.href='./heist-cayo-perico.html';return}
   if(!mapPage){window.location.href='./atlas-online.html?event='+encodeURIComponent(r.id);return}
   const bridge=window.JuraAtlasEventLocations;
   if(!bridge){focused.textContent='The map is still loading its sources. Use the map search or try again.';return}
@@ -52,8 +53,8 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  function render(){results.replaceChildren();let num=0;for(const r of groups()){
   const matchType=category==='all'||category==='ghost'&&/ghost/i.test(r.name)||category==='daily'&&r.kind==='rotation'||category==='other'&&r.kind!=='rotation'&&!/ghost/i.test(r.name);if(!matchType)continue;
   if(search.value&&![r.name,r.group,r.detail].join(' ').toLowerCase().includes(search.value.toLowerCase()))continue;
-  const st=statusFor(r),card=mk('article','j88-event-card'),top=mk('div','j88-event-top'),symbol=mk('span','j88-emoji',icon(r)),name=mk('strong','',r.name),badge=mk('span','j88-status j88-'+st.status,human(st.status));top.append(symbol,name,badge);card.append(top);
-  const desc=mk('small','',st.reason||'Status currently unavailable');card.append(desc);const actions=mk('div','j88-actions'),map=mk('button','','Find on map'),source=mk('a','','Source ↗');map.type='button';map.onclick=()=>locate(r);source.href=r.source||'./atlas-credits.html';if(/^https?:/.test(source.href)){source.target='_blank';source.rel='noopener noreferrer'}actions.append(map,source);card.append(actions);results.append(card);num++;
+  const st=statusFor(r),card=mk('article','j88-event-card'+(st.status==='closed'?' j393-closed':'')),top=mk('div','j88-event-top'),symbol=mk('span','j88-emoji',icon(r)),name=mk('strong','',r.name),badge=mk('span','j88-status j88-'+st.status,human(st.status));top.append(symbol,name,badge);card.append(top);
+  const desc=mk('small','',st.reason||'Status currently unavailable');card.append(desc);const actions=mk('div','j88-actions'),map=mk('button','','Find on map'),source=mk('a','','Source ↗');map.type='button';map.textContent=r.id==='cayo-chests'?'Open Cayo map':st.status==='closed'?'Toggle / inspect archived layer':'Find on map';map.onclick=()=>locate(r);source.href=r.source||'./atlas-credits.html';if(/^https?:/.test(source.href)){source.target='_blank';source.rel='noopener noreferrer'}actions.append(map,source);card.append(actions);results.append(card);num++;
  }if(!num)results.append(mk('p','j88-note','No matching event rules.'));}
  const redrawMap=()=>{if(mapPage)window.JuraAtlasEventLocations?.refresh()};
  document.addEventListener('jura:event-focus-cleared',()=>{clear.hidden=true;focused.textContent='Returned to your usual map filters.'});
