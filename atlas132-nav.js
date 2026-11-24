@@ -91,6 +91,9 @@ function build(){
    // A dedicated normal-flow menu row cannot cover another page action.
    // Prefer the page header when it is in flow, otherwise use the existing footer position.
    wrap.classList.add('j391-inline');
+   // Rehome a legacy standalone All Maps link without changing its destination.
+   const standaloneMaps=document.querySelector('body > a[data-j87-maps-link]');
+   if(standaloneMaps)wrap.prepend(standaloneMaps);
    const header=document.querySelector('body > header');
    if(header&&!['fixed','absolute'].includes(getComputedStyle(header).position))header.after(wrap);
    else document.body.append(wrap);
