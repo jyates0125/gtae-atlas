@@ -29,6 +29,31 @@ try{adopt(readCollection())}catch{saveBlocked=true}
 let data=[],needle='',klass='all',ownership='all',page=0,view='grid',compare=[],sourcesReady=false;
 const PAGE=60;
 let vehicleFacts={};
+let resetFilters;
+function applyLocation(){
+ const params=new URL(location.href).searchParams;
+ needle=(params.get('q')||'').slice(0,120).trim().toLowerCase();
+ klass=(params.get('class')||'all').slice(0,100);
+ const requested=params.get('collection');
+ ownership=['owned','wanted'].includes(requested)?requested:'all';
+ const requestedPage=Number(params.get('page')||1);
+ page=Number.isSafeInteger(requestedPage)&&requestedPage>0?requestedPage-1:0;
+ $('j90Search').value=needle;
+ $('j90Ownership').value=ownership;
+}
+function syncLocation(){
+ const url=new URL(location.href);
+ for(const [key,value] of [['q',needle],['class',klass==='all'?'':klass],['collection',ownership==='all'?'':ownership],['page',page?String(page+1):'']]){
+  if(value)url.searchParams.set(key,value);else url.searchParams.delete(key);
+ }
+ if(url.href!==location.href)history.replaceState(history.state,'',url);
+ if(resetFilters)resetFilters.hidden=!needle&&klass==='all'&&ownership==='all'&&!page;
+}
+function clearFilters(){
+ needle='';klass='all';ownership='all';page=0;
+ $('j90Search').value='';$('j90Class').value='all';$('j90Ownership').value='all';
+ render();$('j90Search').focus();
+}
 function safe(s){return String(s||'').slice(0,120)}
 function storageWarning(){return 'Saved collection data cannot be read safely. Changes are blocked to preserve your existing records. Use Export collection for an exact raw recovery copy.'}
 function exportCollection(){
@@ -70,13 +95,20 @@ function imageFallback(r){
 function formatState(id){return STATE.owned[id]?'Collected':STATE.wishlist[id]?'Wishlisted':'Not tracked'}
 function setFlag(id,field,value){updateFlag(id,field,value)}
 function el(t,c,v){const n=document.createElement(t);if(c)n.className=c;if(v!==undefined)n.textContent=v;return n}
-function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo');const img=document.createElement('img');const flags=el('div','j90-flags');
+function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo');const img=document.createElement('img');const flags=el('div','j90-flags');let caption,photoStatus='Checking archive image…';
  flags.append(el('span','',r.kind==='vehicles6'?'VI RESEARCH':r.kind==='weapons'?'WEAPON':'VEHICLE'));
  img.loading='lazy';
+ const captionText=()=>r.kind==='vehicles6'?r.confidence:r.kind==='weapons'?(weaponWorld==='story'?'GTA V archive reference; availability in Story Mode needs per-item checking. ':'GTA Online archive ID; availability may vary by update and edition. ')+'Model ID '+r.archive:'Archive model ID '+r.archive+' · availability is not confirmed by an image.';
+ function setPhotoState(state,text){
+  root.dataset.imageState=state;photoStatus=text;
+  if(caption)caption.textContent=captionText()+' · '+text;
+ }
  function showConcept(){
+  img.onload=null;
+  setPhotoState('concept','Illustrative concept · exact archive image unavailable');
   img.alt='Original Elario '+(r.group==='Boats'?'watercraft':r.kind==='weapons'?'weapon showcase':'vehicle showcase')+' concept art; not an exact game render of '+r.name;
   img.onerror=()=>{
-   img.onerror=null;img.remove();photo.classList.add('j90-image-unavailable');
+   img.onerror=null;img.remove();photo.classList.add('j90-image-unavailable');setPhotoState('unavailable','Image unavailable');
    const warning=el('span','j90-image-warning','Artwork unavailable · '+r.name);
    warning.setAttribute('role','status');photo.append(warning);
   };
@@ -84,10 +116,10 @@ function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo')
   photo.classList.add('j90-fallback');flags.append(el('span','','Original Elario concept · illustrative'));
  }
  if(r.image&&r.kind!=='vehicles6'){
-  img.alt='Archive reference for '+r.name;img.onerror=showConcept;img.src=r.image;
- }else showConcept();
+  img.alt='Archive reference for '+r.name;setPhotoState('pending','Checking archive image…');img.onload=()=>setPhotoState('archive','Archive reference image');img.onerror=showConcept;img.src=r.image;
+ }else {showConcept();if(r.kind==='vehicles6')setPhotoState('concept','Original Leonida concept · not a game screenshot');}
  photo.append(img);if(STATE.owned[r.id])flags.append(el('span','j90-flag-done','✓ COLLECTED'));photo.append(flags);root.append(photo);
- const body=el('div','j90-card-body');body.append(el('div','j90-micro',r.brand?(r.brand+' · '+r.group):r.group),el('h3','',r.name));body.append(el('p','j90-caption',r.kind==='vehicles6'?r.confidence:r.kind==='weapons'?(weaponWorld==='story'?'GTA V archive reference; availability in Story Mode needs per-item checking. ':'GTA Online archive reference; availability may depend on update and edition. ')+ 'Model ID '+r.archive:'Archive reference image · game-model ID '+r.archive));const actions=el('div','j90-actions');const own=el('button','',STATE.owned[r.id]?'✓ Collected':'+ Collect');own.type='button';own.setAttribute('aria-pressed',String(!!STATE.owned[r.id]));own.onclick=()=>setFlag(r.id,'owned',!STATE.owned[r.id]);const wish=el('button','',STATE.wishlist[r.id]?'★ Wanted':'☆ Wishlist');wish.type='button';wish.setAttribute('aria-pressed',String(!!STATE.wishlist[r.id]));wish.onclick=()=>setFlag(r.id,'wishlist',!STATE.wishlist[r.id]);const cmp=el('button','',compare.includes(r.id)?'✓ Compare':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.includes(r.id)));cmp.disabled=compare.length>=3&&!compare.includes(r.id);cmp.onclick=()=>{compare=compare.includes(r.id)?compare.filter(i=>i!==r.id):compare.length<3?[...compare,r.id]:compare;render()};actions.append(own,wish,cmp);if(r.kind==='vehicles5'&&/^[a-z0-9_]{1,65}$/.test(r.archive||'')){
+ const body=el('div','j90-card-body');body.append(el('div','j90-micro',r.brand?(r.brand+' · '+r.group):r.group),el('h3','',r.name));caption=el('p','j90-caption',captionText()+' · '+photoStatus);body.append(caption);const actions=el('div','j90-actions');const own=el('button','',STATE.owned[r.id]?'✓ Collected':'+ Collect');own.type='button';own.setAttribute('aria-pressed',String(!!STATE.owned[r.id]));own.onclick=()=>setFlag(r.id,'owned',!STATE.owned[r.id]);const wish=el('button','',STATE.wishlist[r.id]?'★ Wanted':'☆ Wishlist');wish.type='button';wish.setAttribute('aria-pressed',String(!!STATE.wishlist[r.id]));wish.onclick=()=>setFlag(r.id,'wishlist',!STATE.wishlist[r.id]);const cmp=el('button','',compare.includes(r.id)?'✓ Compare':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.includes(r.id)));cmp.disabled=compare.length>=3&&!compare.includes(r.id);cmp.onclick=()=>{compare=compare.includes(r.id)?compare.filter(i=>i!==r.id):compare.length<3?[...compare,r.id]:compare;render()};actions.append(own,wish,cmp);if(r.kind==='vehicles5'&&/^[a-z0-9_]{1,65}$/.test(r.archive||'')){
  const park=el('a','j96-park-link',vehicleWorld==='story'?'▣ Explore Online Garage concept':'▣ Park in My Garage');
  park.href='./atlas93-garage.html?addModel='+encodeURIComponent(r.archive);
  actions.append(park);
@@ -123,9 +155,16 @@ function renderComparison(){
   card.append(remove);panel.append(card);
  }
 }
-function filtered(){return data.filter(r=>(klass==='all'||r.group===klass)&&(ownership==='all'||(ownership==='owned'?STATE.owned[r.id]:STATE.wishlist[r.id]))&&(!needle||[r.name,r.group,r.brand,r.archive].join(' ').toLowerCase().includes(needle)))}
-function render(){const rows=filtered();page=Math.min(page,Math.max(0,Math.ceil(rows.length/PAGE)-1));const categories=[...new Set(data.map(r=>r.group))].sort();const select=$('j90Class');if(select.dataset.signature!==categories.join('|')){const prev=klass;select.replaceChildren(new Option('All classes','all'));categories.forEach(c=>select.add(new Option(c,c)));select.value=categories.includes(prev)?prev:'all';klass=select.value;select.dataset.signature=categories.join('|')}
- $('j90Total').textContent=data.length.toLocaleString();$('j90Owned').textContent=data.filter(r=>STATE.owned[r.id]).length.toLocaleString();$('j90Wish').textContent=data.filter(r=>STATE.wishlist[r.id]).length.toLocaleString();$('j90Results').textContent=rows.length.toLocaleString()+' visible · '+(page+1)+' / '+Math.max(1,Math.ceil(rows.length/PAGE))+' pages';const root=$('j90Cards');root.replaceChildren();rows.slice(page*PAGE,(page+1)*PAGE).forEach(r=>root.append(card(r)));if(!rows.length)root.append(el('p','j90-empty','No records match. Try clearing a filter.'));$('j90Prev').disabled=page===0;$('j90Next').disabled=(page+1)*PAGE>=rows.length;renderComparison();
+function filtered(){
+ const terms=needle.split(/\s+/).filter(Boolean);
+ return data.filter(r=>{
+  const facts=game==='vehicles5'&&vehicleWorld==='online'?vehicleFacts[r.archive]:null;
+  const haystack=[r.name,r.group,r.brand,r.archive,facts?.manufacturer,facts?.displayName,facts?.category].join(' ').toLowerCase();
+  return (klass==='all'||r.group===klass)&&(ownership==='all'||(ownership==='owned'?STATE.owned[r.id]:STATE.wishlist[r.id]))&&terms.every(term=>haystack.includes(term));
+ });
+}
+function render(){const categories=[...new Set(data.map(r=>r.group))].sort();const select=$('j90Class');if(select.dataset.signature!==categories.join('|')){select.replaceChildren(new Option('All classes','all'));categories.forEach(c=>select.add(new Option(c,c)));select.dataset.signature=categories.join('|')}klass=categories.includes(klass)?klass:'all';select.value=klass;const rows=filtered();page=Math.min(page,Math.max(0,Math.ceil(rows.length/PAGE)-1));
+ $('j90Total').textContent=data.length.toLocaleString();$('j90Owned').textContent=data.filter(r=>STATE.owned[r.id]).length.toLocaleString();$('j90Wish').textContent=data.filter(r=>STATE.wishlist[r.id]).length.toLocaleString();$('j90Results').textContent=rows.length.toLocaleString()+' visible · '+(page+1)+' / '+Math.max(1,Math.ceil(rows.length/PAGE))+' pages';const root=$('j90Cards');root.replaceChildren();rows.slice(page*PAGE,(page+1)*PAGE).forEach(r=>root.append(card(r)));if(!rows.length)root.append(el('p','j90-empty','No records match. Try clearing a filter.'));$('j90Prev').disabled=page===0;$('j90Next').disabled=(page+1)*PAGE>=rows.length;renderComparison();syncLocation();
 }
 function initialize(seed){if(game==='weapons')data=seed.weapons.map(k=>make(k,'weapons',weaponNames[k]||''));else if(game==='vehicles5')data=seed.vehicles.map(k=>make(k,'vehicles5'));else data=seed.vi.map(x=>{
   const id=x.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
@@ -135,10 +174,15 @@ function initialize(seed){if(game==='weapons')data=seed.weapons.map(k=>make(k,'w
  });data=unique(data);render();if(saveBlocked){message(storageWarning());return}message(game==='vehicles6'?'Research catalog with original Leonida concept art. The known GTA VI roster is incomplete.':game==='weapons'?'GTA '+(weaponWorld==='story'?'V Story':'Online')+' image reference catalog loaded. Weapons are scoped by world for your saved progress; per-item availability still needs verification.':'GTA '+(vehicleWorld==='story'?'V Story':'Online')+' reference gallery loaded. Personal vehicle flags are separate by world; existing shared flags remain in Online.');}
 async function discover(){if(game==='vehicles6'){message('GTA VI records require individual evidence; the GTA V image archive cannot prove GTA VI inclusion.');return}const btn=$('j90Discover');btn.disabled=true;message('Checking source archive for additional images and model IDs…');try{const c=new AbortController(),timer=setTimeout(()=>c.abort(),14000);let r=await fetch(ARCHIVE,{signal:c.signal});clearTimeout(timer);if(!r.ok)throw Error('Archive request HTTP '+r.status);let j=await r.json();if(!Array.isArray(j.tree))throw Error('Archive format changed');const folder=game==='weapons'?'weapons/':'vehicles/',re=game==='weapons'?/^weapons\/weapon_([a-z0-9_]+)\.webp$/:/^vehicles\/([a-z0-9_]+)\.webp$/;const imported=[];for(const f of j.tree){const m=f.path?.match(re);if(m)imported.push(make(m[1],game,game==='weapons'?(weaponNames[m[1]]||''):''))}data=unique([...data,...imported]);sourcesReady=true;page=0;render();message('Source archive indexed: '+imported.length+' picture files. These are image IDs, not a verified complete official vehicle/weapon roster.');}catch(err){message('Archive discovery unavailable ('+err.message+'). Curated starting catalog remains usable.')}finally{btn.disabled=false}}
 function init(){
+ applyLocation();
+ $('j90Search').maxLength=120;
+ resetFilters=el('button','','Clear filters');resetFilters.type='button';resetFilters.id='j408ClearFilters';resetFilters.hidden=true;resetFilters.onclick=clearFilters;
+ $('j90Export').before(resetFilters);
+ window.addEventListener('popstate',()=>{applyLocation();if(data.length)render()});
  if(game==='vehicles5')fetch('./data/atlas-vehicle-intel.json').then(response=>{
   if(!response.ok)throw Error('Vehicle facts unavailable');
   return response.json();
- }).then(pack=>{vehicleFacts=pack.vehicles||{};renderComparison()}).catch(()=>{});
- document.title=(game==='weapons'?(weaponWorld==='story'?'GTA V Story Weapon References':'GTA Online Weapon Armory'):game==='vehicles5'?(vehicleWorld==='story'?'GTA V Story Vehicle Archive':'GTA Online Vehicle Archive'):CATEGORY[game])+' · GTAE';$('j90Header').textContent=game==='weapons'?(weaponWorld==='story'?'GTA V Story Armory':'GTA Online Armory'):game==='vehicles5'?(vehicleWorld==='story'?'GTA V STORY MOTORPOOL':'GTA ONLINE MOTORPOOL'):CATEGORY[game];$('j90Intro').textContent=game==='weapons'?(weaponWorld==='story'?'GTA V Story weapon image references with separate local review progress. GTA Online-only equipment is NOT confirmed as a Story weapon without game-specific evidence.':'GTA Online weapon image references, searches, collection and wishlist. GTA V Story progress stays in its own world.') :game==='vehicles5'?'GTA '+(vehicleWorld==='story'?'V Story':'Online')+' image archive. Search by class; this world keeps its own private collected and wishlist flags. Image presence never proves edition availability.':'Explore Leonida vehicle research. Cards show evidence for each entry with original catalog concept art.';if(game==='weapons'||game==='vehicles5'){const active=game==='weapons'?weaponWorld:vehicleWorld;document.body.dataset.activeWorld=active;document.querySelectorAll('.j192-world-link').forEach(a=>a.setAttribute('aria-current',String(a.dataset.world===active)));}$('j90Search').addEventListener('input',e=>{needle=e.target.value.trim().toLowerCase();page=0;render()});$('j90Class').addEventListener('change',e=>{klass=e.target.value;page=0;render()});$('j90Ownership').addEventListener('change',e=>{ownership=e.target.value;page=0;render()});$('j90Prev').onclick=()=>{page--;render();window.scrollTo({top:100,behavior:'smooth'})};$('j90Next').onclick=()=>{page++;render();window.scrollTo({top:100,behavior:'smooth'})};$('j90Export').onclick=backup;window.addEventListener('storage',event=>{if(event.key!==STORE)return;try{adopt(readCollection());saveBlocked=false;render();message('Collection progress refreshed from another tab.')}catch{saveBlocked=true;message(storageWarning())}});$('j90Discover').onclick=discover;if(game==='vehicles6')$('j90Discover').hidden=true;fetch('./atlas90-seed.json').then(r=>{if(!r.ok)throw Error('Seed data unavailable ('+r.status+')');return r.json()}).then(initialize).catch(e=>{message(e.message)});}
+ }).then(pack=>{vehicleFacts=pack.vehicles||{};if(data.length)render()}).catch(()=>{});
+ document.title=(game==='weapons'?(weaponWorld==='story'?'GTA V Story Weapon References':'GTA Online Weapon Armory'):game==='vehicles5'?(vehicleWorld==='story'?'GTA V Story Vehicle Archive':'GTA Online Vehicle Archive'):CATEGORY[game])+' · GTAE';$('j90Header').textContent=game==='weapons'?(weaponWorld==='story'?'GTA V Story Armory':'GTA Online Armory'):game==='vehicles5'?(vehicleWorld==='story'?'GTA V STORY MOTORPOOL':'GTA ONLINE MOTORPOOL'):CATEGORY[game];$('j90Intro').textContent=game==='weapons'?(weaponWorld==='story'?'GTA V Story weapon image references with separate local review progress. GTA Online-only equipment is NOT confirmed as a Story weapon without game-specific evidence.':'GTA Online weapon image references, searches, collection and wishlist. GTA V Story progress stays in its own world.') :game==='vehicles5'?'GTA '+(vehicleWorld==='story'?'V Story':'Online')+' image archive. Search by class; this world keeps its own private collected and wishlist flags. Image presence never proves edition availability.':'Explore Leonida vehicle research. Cards show evidence for each entry with original catalog concept art.';if(game==='weapons'||game==='vehicles5'){const active=game==='weapons'?weaponWorld:vehicleWorld;document.body.dataset.activeWorld=active;document.querySelectorAll('.j192-world-link').forEach(a=>a.setAttribute('aria-current',String(a.dataset.world===active)));}$('j90Search').addEventListener('input',e=>{needle=e.target.value.slice(0,120).trim().toLowerCase();page=0;if(data.length)render()});$('j90Class').addEventListener('change',e=>{klass=e.target.value;page=0;if(data.length)render()});$('j90Ownership').addEventListener('change',e=>{ownership=e.target.value;page=0;if(data.length)render()});$('j90Prev').onclick=()=>{page--;render();window.scrollTo({top:100,behavior:'smooth'})};$('j90Next').onclick=()=>{page++;render();window.scrollTo({top:100,behavior:'smooth'})};$('j90Export').onclick=backup;window.addEventListener('storage',event=>{if(event.key!==STORE)return;try{adopt(readCollection());saveBlocked=false;render();message('Collection progress refreshed from another tab.')}catch{saveBlocked=true;message(storageWarning())}});$('j90Discover').onclick=discover;if(game==='vehicles6')$('j90Discover').hidden=true;fetch('./atlas90-seed.json').then(r=>{if(!r.ok)throw Error('Seed data unavailable ('+r.status+')');return r.json()}).then(initialize).catch(e=>{message(e.message)});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
