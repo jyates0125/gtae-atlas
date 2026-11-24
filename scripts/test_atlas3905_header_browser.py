@@ -55,6 +55,21 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Quiet,dir
                                 assert result['box']['height']>0 and result['box']['x']>=-1,(key,result)
                                 assert result['box']['x']+result['box']['width']<=width+2,(key,result)
                                 assert result['scrollWidth']<=width+1,(key,result)
+                                if key=='studio-preview' and width==1440:
+                                    layout=page.evaluate("""() => {
+                                      const get=s=>{const el=document.querySelector(s),r=el.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,bottom:r.bottom,right:r.right}};
+                                      return {note:get('main.dashboard > #j97-legacy-note'),worlds:get('main.dashboard > .worlds'),
+                                        center:get('main.dashboard > .center'),right:get('main.dashboard > .right'),hero:get('[data-gtae-header="studio-preview"]')};
+                                    }""")
+                                    assert layout['note']['bottom']<=layout['worlds']['y']+1,(key,layout)
+                                    assert layout['note']['w']>=width*.85,(key,layout)
+                                    assert layout['center']['w']>=width*.45,(key,layout)
+                                    assert abs(layout['worlds']['y']-layout['center']['y'])<=2,(key,layout)
+                                    assert abs(layout['right']['y']-layout['center']['y'])<=2,(key,layout)
+                                    assert layout['worlds']['right']<=layout['center']['x']+1,(key,layout)
+                                    assert layout['center']['right']<=layout['right']['x']+1,(key,layout)
+                                    assert layout['hero']['w']>=layout['center']['w']*.95,(key,layout)
+                                    result['studioGrid']=layout
                                 image_response=page.request.get(base+rel,timeout=15000)
                                 assert image_response.ok,(key,'image request')
                                 assert hashlib.sha256(image_response.body()).digest()==hashlib.sha256((ROOT/rel).read_bytes()).digest(),key

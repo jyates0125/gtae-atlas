@@ -52,3 +52,12 @@ body.community-page .portal-logo .logo-mark img{width:40px;height:40px;display:b
 .j3904-crew-portraits a{display:grid;gap:4px;min-width:0;color:#ffdfaa;font-weight:800;text-align:center}
 .j3904-crew-portraits img{width:100%;height:clamp(95px,15vw,155px);object-fit:cover;object-position:50% 28%;border:1px solid #e2b16e;border-radius:10px}
 .j3904-film-image{display:block;width:calc(100% - 20px);height:auto;aspect-ratio:16/9;object-fit:cover;margin:10px;border-radius:10px;border:1px solid #e2b16e}
+
+/* The legacy navigation notice is injected as the first child of the
+ * studio dashboard. Give it a full row so it cannot consume a map column
+ * or force the main hero into the narrow right rail. */
+main.dashboard > #j97-legacy-note {
+ grid-column:1 / -1;
+ width:100%;max-width:none;margin:0;
+ align-self:start;
+}
