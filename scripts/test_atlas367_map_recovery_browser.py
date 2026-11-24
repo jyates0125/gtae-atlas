@@ -28,9 +28,7 @@ try:
   for filename in ('atlas.html','atlas-online.html','atlas-vi.html'):
    for width,height in ((390,844),(1440,900)):
     ctx=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
-    ctx.add_init_script("""() => {
-      localStorage.setItem('jura3-progress','{"test-source-id":true}');
-    }""")
+    ctx.add_init_script("""localStorage.setItem('jura3-progress','{"test-source-id":true}');""")
     page=ctx.new_page()
     phase={'working':False,'seen':0}
     ctx.route('https://**/*',lambda route:route.abort())
