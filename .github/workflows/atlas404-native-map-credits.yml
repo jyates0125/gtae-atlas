@@ -1,0 +1,31 @@
+name: Atlas 40.4 - native map credits
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-sa.html'
+      - 'atlas-iv.html'
+      - 'atlas-credits.html'
+      - 'scripts/test_atlas404_native_map_credits.py'
+      - '.github/workflows/atlas404-native-map-credits.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-map-credits:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+          python scripts/test_atlas404_native_map_credits.py
