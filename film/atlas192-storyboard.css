@@ -1,9 +1,0 @@
-/* Atlas 19.2 · accessible chapter storyboard controls, same cinematic visual family. */
-.j192-storyboard-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:14px 0 9px;padding:12px 13px;border:1px solid #ad7c9f;border-radius:12px;background:linear-gradient(115deg,#2c163e,#20132e);color:#f8e4f0}
-.j192-storyboard-controls button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 13px;border:1px solid #f0c78c;border-radius:9px;background:#f1d093;color:#281533;font:850 12px system-ui;cursor:pointer}
-.j192-storyboard-controls button[aria-pressed="true"]{background:#482555;color:#ffe6af;border-color:#ffe0a9}
-.j192-storyboard-controls button.j192-storyboard-restart{background:#422952;color:#ffe1b5}
-.j192-storyboard-controls button:focus-visible{outline:3px solid #fff0c6;outline-offset:3px}
-.j192-storyboard-controls progress{display:block;flex:1 1 160px;min-width:100px;height:12px;accent-color:#ffc986;overflow:hidden;border-radius:8px}
-.j192-storyboard-caption{color:#d7bedf;font:700 11px/1.55 system-ui;flex:1 1 100%}
-@media(max-width:630px){.j192-storyboard-controls{gap:8px;padding:10px}.j192-storyboard-controls button{flex:1 1 145px}.j192-storyboard-controls progress{order:3;flex-basis:100%}.j192-storyboard-caption{order:4}}

@@ -1,4 +1,0 @@
-/* Team Jura 9.6 catalog→garage action. Uses approved brand violet/amber/gold. */
-body[data-gallery="vehicles5"] .j90-actions .j96-park-link{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:8px 11px;border:1px solid #ffc16d;border-radius:8px;background:linear-gradient(120deg,#ffcb7d,#ed9b5f);color:#321330;font:800 12px system-ui,sans-serif;text-decoration:none;min-height:37px}
-body[data-gallery="vehicles5"] .j90-actions .j96-park-link:focus-visible{outline:3px solid #ffda92;outline-offset:3px}
-body[data-gallery="vehicles5"] .j90-actions .j96-park-link:hover{filter:brightness(1.06)}

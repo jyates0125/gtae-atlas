@@ -1,8 +1,0 @@
-/* Historical Atlas 15.2 character shell retained only for compatibility.
- * Atlas 22.2 supersedes the original low-resolution era-vector gallery with
- * source-linked imagery and explicitly labeled premium Elario world scenes. */
-body[data-atlas-kind="character"] .u-hero .u-hero-art{
- background:linear-gradient(90deg,#250e388c,transparent 70%),
- url('./art/jura155-characters.webp') center/cover!important;min-height:290px;
-}
-@media(max-width:500px){body[data-atlas-kind="character"] .u-hero .u-hero-art{min-height:220px}}
