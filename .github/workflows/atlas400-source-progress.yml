@@ -1,0 +1,40 @@
+name: Atlas 40.0 - classic source progress safety
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas271-source-progress.js'
+      - 'atlas240-classic-coordinate-index.js'
+      - 'atlas244-vc-de.js'
+      - 'atlas247-stories-reference.js'
+      - 'atlas273-ctw-cameras.js'
+      - 'map-hub.html'
+      - 'scripts/test_atlas400_source_progress.py'
+      - 'tests/atlas400-source-progress.test.cjs'
+      - '.github/workflows/atlas400-source-progress.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-progress:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node --check atlas271-source-progress.js
+          node tests/atlas400-source-progress.test.cjs
+          python -m py_compile scripts/test_atlas400_source_progress.py
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+          python -m pip install playwright==1.58.0
+          python -m playwright install chromium
+      - run: python scripts/test_atlas400_source_progress.py
