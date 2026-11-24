@@ -59,52 +59,64 @@ print('Atlas static regression PASS: GTADB VI Day plus distinct Scaly and Loki c
 
 # Universe database, showroom and gallery integration regression.
 import runpy
-runpy.run_path(str(D / 'scripts/test_universe_100.py'), run_name='__main__')
+import traceback
+failures=[]
+def check_script(path, **kwargs):
+    try:
+        runpy.run_path(path, **kwargs)
+    except (Exception, SystemExit) as exc:
+        if isinstance(exc, SystemExit) and exc.code in (0,None):
+            return
+        failures.append(path)
+        traceback.print_exc()
+check_script(str(D / 'scripts/test_universe_100.py'), run_name='__main__')
 
 # Original licensed-reference 3D concept builder contract.
-runpy.run_path(str(D / 'scripts/test_configurator_101.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_configurator_101.py'),run_name='__main__')
 
 # Standalone sourced cheat and official-news hub validation.
-runpy.run_path(str(D / 'scripts/test_hubs_103.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_hubs_103.py'),run_name='__main__')
 
 # Source-checked craft facts and mission-specific heist command presentation.
-runpy.run_path(str(D / 'scripts/test_vehicle_intel_104.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_vehicle_intel_104.py'),run_name='__main__')
 
 # 150 licensed San Andreas collectible locations, existing saves intact.
-runpy.run_path(str(D / 'scripts/test_sa_pins_105.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_sa_pins_105.py'),run_name='__main__')
 
 # 7 original game-specific covers, 13 map directory, SVG safety and correct prior pin metadata.
-runpy.run_path(str(D / 'scripts/test_cover_art_106.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_cover_art_106.py'),run_name='__main__')
 
 # Centralized, source-checked credits including Rockstar policy and GTADB MIT notice.
-runpy.run_path(str(D / 'scripts/test_credits_109.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_credits_109.py'),run_name='__main__')
 
 # Original designed-brand alignment across primary and earlier-built public workspaces.
-runpy.run_path(str(D / 'scripts/test_visual_unification_112.py'), run_name='__main__')
+check_script(str(D / 'scripts/test_visual_unification_112.py'), run_name='__main__')
 
 # Current project showcase, QA crest and collectables visual/version labels.
-runpy.run_path(str(D / 'scripts/test_showcase_116.py'), run_name='__main__')
+check_script(str(D / 'scripts/test_showcase_116.py'), run_name='__main__')
 
 # Continue current Elario designed-brand parity to personally saved catalogs and reference tools.
-runpy.run_path(str(D / 'scripts/test_workspace_design_113.py'), run_name='__main__')
+check_script(str(D / 'scripts/test_workspace_design_113.py'), run_name='__main__')
 
 # Verification, calibration, source-pack and quality assurance pages follow the same Elario design.
-runpy.run_path(str(D / 'scripts/test_research_design_115.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_research_design_115.py'),run_name='__main__')
 
 # Game-specific authentic classic flat-map references; maintain local marker storage.
-runpy.run_path(str(D / 'scripts/test_classic_flat_106.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_classic_flat_106.py'),run_name='__main__')
 
 # Current flagship Elario map/film identity, untouched source libraries and player controls.
-runpy.run_path(str(D / 'scripts/test_flagship_brand_117.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_flagship_brand_117.py'),run_name='__main__')
 
 # Design-comparison screenshots stay isolated from generated public site assets.
-runpy.run_path(str(D / 'scripts/test_design_review_118.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_design_review_118.py'),run_name='__main__')
 
 # GTA IV, source-aware research, heist HQ and Data Lab current Elario identity.
-runpy.run_path(str(D / 'scripts/test_workspace_brand_119.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_workspace_brand_119.py'),run_name='__main__')
 
 # Fifteen unique Elario mission artworks and original heist source/guide controls.
-runpy.run_path(str(D / 'scripts/test_heist_art_120.py'),run_name='__main__')
+check_script(str(D / 'scripts/test_heist_art_120.py'),run_name='__main__')
 
 # Original game-map imagery and source rights, player progress unchanged.
-runpy.run_path(str(D / 'scripts/test_game_art_121.py'), run_name='__main__')
+check_script(str(D / 'scripts/test_game_art_121.py'), run_name='__main__')
+
+assert not failures, ('Nested static regressions failed', failures)
