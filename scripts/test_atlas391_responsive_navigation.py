@@ -36,7 +36,7 @@ probe = """() => {
     if([...ancestors(el)].some(d=>!d.open&&!d.querySelector(':scope > summary')?.contains(el)))continue;
     if(el.checkVisibility&&!el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true,contentVisibilityAuto:true}))continue;
     const r=el.getBoundingClientRect(),s=getComputedStyle(el);
-    if(r.width<12||r.height<12||r.left<0||r.top<0||r.right>innerWidth||r.bottom>innerHeight||s.visibility!=='visible'||s.display==='none'||el.closest('[hidden],[aria-hidden=true]'))continue;
+    if(r.width<12||r.height<12||r.left<0||r.top<0||r.right>innerWidth||r.bottom>innerHeight||s.visibility!=='visible'||s.display==='none'||el.closest('[hidden],[aria-hidden=true],[inert]'))continue;
     const hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
     if(!hit||el.contains(hit)||hit.contains(el))continue;
     const covering=hit.closest('button,a[href],summary,input,select');
@@ -75,6 +75,8 @@ try:
                 expect(menu).to_have_attribute("aria-expanded","false")
                 expect(menu).to_be_focused()
                 record["menu"]="passed"
+                legacy=page.locator("#j89-shell")
+                if legacy.count(): expect(legacy).to_be_hidden()
                 dock=page.locator("body > #j98-flow")
                 if dock.count() and dock.is_visible():
                     assert dock.evaluate("(node)=>getComputedStyle(node).position")!="fixed", "Legacy world dock still floats"
@@ -100,6 +102,14 @@ try:
                     expand.click()
                     expect(expand).to_have_attribute("aria-pressed","false")
                     record["viGuide"]="passed (normal and expanded)"
+                if route=="atlas-vi.html?view=rockstar":
+                    official=page.locator("#j143-official-layer")
+                    expect(official).to_be_visible()
+                    assert page.locator(".zoom").evaluate("(node)=>!!node.closest('[inert]')")
+                    official.locator('[data-j143="close"]').click()
+                    expect(official).to_be_hidden()
+                    assert not page.locator(".zoom").evaluate("(node)=>!!node.closest('[inert]')")
+                    record["officialReturn"]="passed"
                 if route in ("atlas-dashboard.html","atlas-vi.html"):
                     page.screenshot(path=str(out/f"{width}-{route}.png"),animations="disabled")
             except Exception as exc:
