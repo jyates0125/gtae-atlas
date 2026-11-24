@@ -26,7 +26,7 @@ class Server(ThreadingHTTPServer):
 server=Server(('127.0.0.1',0),partial(Quiet,directory=str(PUBLIC)))
 Thread(target=server.serve_forever,daemon=True).start()
 BASE=f'http://127.0.0.1:{server.server_port}/'
-INTERCEPT="""() => {
+INTERCEPT="""(() => {
  const original=window.fetch.bind(window);
  window.__j367FetchCount=0;
  window.fetch=(input,options)=>{
@@ -36,7 +36,7 @@ INTERCEPT="""() => {
   }
   return original(input,options);
  };
-}"""
+})()"""
 try:
  with sync_playwright() as pw:
   browser=pw.chromium.launch(headless=True,args=['--enable-webgl','--use-angle=swiftshader'])
