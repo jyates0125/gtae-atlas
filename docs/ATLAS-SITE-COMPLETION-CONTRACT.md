@@ -113,3 +113,21 @@ All 13 map cards use local original Team Jura cover illustrations. The seven cla
 
 ## Post-launch GTA VI correction · November 21, 2026
 The November 17 snapshot above predates release and is retained as an implementation history, **not current GTA VI release status**. Rockstar's November 19 Newswire confirms GTA VI available worldwide on PS5 and Xbox Series X|S (https://www.rockstargames.com/it/newswire/article/39akk424a9oo53/grand-theft-auto-vi-now-available). GTA VI Story is a released world, while unsourced individual map pins, vehicle names, stats and community theories still require per-claim verification. The source hierarchy is official Rockstar post-launch materials and game captures, then sourced guides and independently checked community findings. Official gallery: https://www.rockstargames.com/VI/media/screenshots . Never imply screenshots grant unrestricted redistribution rights. The standing charter's post-launch and portrait/model-accuracy gates supersede older blanket pre-release labels. See docs/ATLAS-2150-COMPLETION-BOARD.md for the unresolved release blockers.
+
+
+## November 24 — binding acceptance additions
+See the [consolidated Standing Project Charter](TEAM-JURA-STANDING-CHARTER.md#november-24-2026--consolidated-owner-directed-operating-and-gameplay-standards-binding). The following requirements apply to every relevant page and world, and remain open where no test evidence exists:
+
+| Acceptance area | Required evidence |
+| --- | --- |
+| Open activity guidance | Every supported activity remains inspectable when inactive or requirements are unmet; details explain eligibility, time, unlocks and cooldown where applicable. |
+| Live versus reference | Correct active colors and textual statuses, strike-through known inactive rows, no unavailable timed pins; unknown is distinct from inactive. Explicit reference-only views clearly labeled. |
+| Source accuracy | Exact sourced marker/area and game scope where supported; label approximations, validate rotation IDs, current validity and expiration. Never claim exact trigger shapes from landmark-based circles. |
+| Online and Cayo | Left sidebar activity controls, independent toggles; Cayo current pair cyan, island-only and all 19 references retained; no mainland duplication. |
+| All worlds | Story/Online/VI/classic isolation, guest progress preserved, post-launch VI facts individually verified. |
+| Responsive interaction | All public pages: desktop/tablet/phone controls, menus, modals, fixed/sticky overlays and return paths; keyboard/touch usable. |
+| Current visual authority | Preserve newer approved subject-specific cinematic art and video, not old placeholder/SVG hero artwork; One Last Ride historical exception; no map replacement merely for header restyling. |
+| Source credits | Centralized game-scoped attribution, including activity evidence, with compact links and legally required notices. |
+| Engineering and release | Focused affected-feature tests for development; full production validation, real device and specific owner approval before protected main. Guest-first; accounts deferred. |
+
+The latest canonical repo is `jyates0125/gtae-atlas`; `development` is nonproduction and `main` is protected live-production source. Older deployment/cover descriptions above are history, not authorization to regress art, restore old deployment topology or enable public sign-ins.
