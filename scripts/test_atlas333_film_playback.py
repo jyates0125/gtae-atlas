@@ -13,8 +13,11 @@ from playwright.sync_api import expect, sync_playwright
 from RangeHTTPServer import RangeRequestHandler
 
 public = Path(__file__).resolve().parents[1] / 'public'
-asset = public / 'film/assets/one-last-ride-motion-preview.mp4'
-assert hashlib.sha256(asset.read_bytes()).hexdigest() == 'ddd2d44c6d58b114cceb523fea47dfce9fbe3259a449a3ce8e61d8b5b002798f'
+locked = public / 'film/assets/one-last-ride-motion-preview.mp4'
+assert hashlib.sha256(locked.read_bytes()).hexdigest() == 'ddd2d44c6d58b114cceb523fea47dfce9fbe3259a449a3ce8e61d8b5b002798f'
+asset = public / 'film/assets/one-last-ride-39s-action-review.mp4'
+assert hashlib.sha256(asset.read_bytes()).hexdigest() == 'bf719d7fd784a4cfdda6bb2baeda86b4c09c00aeadb4cd91ea7795c712694b37'
+assert hashlib.sha256((public/'film/assets/one-last-ride-action-poster.webp').read_bytes()).hexdigest() == '64da76e2911a11d7c1a6f2d7087ab8d5301921ac2a171629de5128a5021bfc72'
 probe = json.loads(subprocess.check_output([
     'ffprobe', '-v', 'error', '-show_entries', 'stream=codec_name,width,height:format=duration',
     '-of', 'json', str(asset),
@@ -38,7 +41,8 @@ with ThreadingHTTPServer(('127.0.0.1', 0), partial(RangeRequestHandler, director
             assert video.evaluate('v => v.duration === 39 && v.paused && !v.muted && v.controls && v.playsInline')
             src = video.evaluate('v => v.currentSrc')
             assert src == video.locator('a').evaluate('a => a.href')
-            assert urlsplit(src).query == 'v=ddd2d44c'
+            assert urlsplit(src).query == 'v=bf719d7f'
+            assert urlsplit(src).path.endswith('/'+asset.name)
             video.evaluate('v => v.play()')
             page.wait_for_function("document.querySelector('#watch video').currentTime > 0.2")
             video.evaluate('v => { v.currentTime = 38.5 }')

@@ -54,6 +54,12 @@ const headerRules=Object.entries(headerPack).map(([key,entry])=>{
 });
 if(headerRules.length!==9)throw new Error('Expected nine selected cinematic headers');
 const headerOverride='\n/* Validated selected cinematic headers */\n'+headerRules.join('\n')+'\n';
+// New media review: exact approved package only; preserve the previous master.
+const actionMedia=JSON.parse(fs.readFileSync(path.join(root,'docs/ATLAS3906-TEASER-MEDIA.json'),'utf8')).files;
+for(const [key,entry] of Object.entries(actionMedia)){
+ if(!/^(?:art|film\/assets)\/[a-zA-Z0-9-]+\.(?:webp|mp4)$/.test(entry.path)||!files.includes(entry.path))throw new Error('Missing selected cinematic review media: '+key);
+ if(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,entry.path))).digest('hex')!==entry.sha256)throw new Error('Cinematic review media identity mismatch: '+key);
+}
 console.log('Cinematic headers: '+headerRules.length+'/9 selected images verified; visual release review remains separate.');
 const pages = files.filter(rel => rel.endsWith('.html') && !rel.includes('/')).sort().map(rel => {
   const source=fs.readFileSync(path.join(root,rel),'utf8');

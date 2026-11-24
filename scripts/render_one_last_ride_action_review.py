@@ -92,9 +92,9 @@ def music(path):
     mix=np.tanh(mix*1.25)
     mix[:int(.018*SR)]*=np.linspace(0,1,int(.018*SR))[:,None]
     mix[-int(.45*SR):]*=np.linspace(1,0,int(.45*SR))[:,None]
-    peak=float(np.max(np.abs(mix)));mix*=.90/max(peak,.001)
+    peak=float(np.max(np.abs(mix)));mix*=.78/max(peak,.001)
     rms=float(np.sqrt(np.mean(mix**2)))
-    assert .06<rms<.45 and np.max(np.abs(mix))<=.901
+    assert .06<rms<.45 and np.max(np.abs(mix))<=.781
     with wave.open(str(path),'wb') as w:
         w.setnchannels(2);w.setsampwidth(2);w.setframerate(SR)
         w.writeframes((mix*32767).astype('<i2').tobytes())
@@ -110,7 +110,7 @@ def compare_picture(target):
     # Objective evidence that the old opening was replaced and later scenes
     # survived the re-encode. This is not a judgment of cinematic quality.
     old=sample_frame(SOURCE,.5)
-    expected=sample_frame(SOURCE,22.5)
+    expected=sample_frame(SOURCE,8.5)
     actual=sample_frame(target,.5)
     difference=lambda a,b:float(np.mean(np.abs(a-b)))
     new_error=difference(expected,actual)
@@ -131,11 +131,11 @@ def main():
     stats=music(score)
     target=OUT/'one-last-ride-39s-action-review.mp4'
     # Owner explicitly requested the old opening picture removed. Replace the
-    # original 0–4s with the existing dock rescue action beat at 22–26s.
+    # original 0–4s with the inspected rainy Los Santos chase at 8–12s.
     # All original footage from 4s to 39s stays in order; no voice is embedded.
     # The replacement opening requires visual/voice-timing review.
     run(['ffmpeg','-hide_banner','-loglevel','error','-y','-i',str(SOURCE),'-i',str(score),
-         '-filter_complex','[0:v]trim=start=22:end=26,setpts=PTS-STARTPTS[a];[0:v]trim=start=4:end=39,setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1:a=0[v]',
+         '-filter_complex','[0:v]trim=start=8:end=12,setpts=PTS-STARTPTS[a];[0:v]trim=start=4:end=39,setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1:a=0[v]',
          '-map','[v]','-map','1:a:0','-c:v','libx264','-preset','fast','-crf','19','-pix_fmt','yuv420p','-c:a','aac','-b:a','192k','-t','39','-movflags','+faststart',str(target)])
     p=probe(target)
     assert abs(float(p['format']['duration'])-39)<.12,p
@@ -145,7 +145,7 @@ def main():
         run(['ffmpeg','-hide_banner','-loglevel','error','-y','-ss',str(second),'-i',str(target),'-frames:v','1',str(OUT/(label+'.jpg'))])
     picture=compare_picture(target)
     assert sha(SOURCE)==LOCK,'Source was modified'
-    manifest={'reviewOnly':True,'runtimeSeconds':39,'sourceSha256':LOCK,'outputSha256':sha(target),'scoreSha256':sha(score),'score':stats,'pictureVerification':picture,'opening':'Existing 22–26s dock action replaces original 0–4s; original 4–39s retained. First shot and score require owner visual/listening approval. No dialogue, no third-party samples.','disclosure':'Original concept motion teaser, not finished feature animation. Original score replaces the prior combined score/FX track; final separate foley/voices remain open.'}
+    manifest={'reviewOnly':True,'runtimeSeconds':39,'sourceSha256':LOCK,'outputSha256':sha(target),'scoreSha256':sha(score),'score':stats,'pictureVerification':picture,'opening':'Existing 8–12s rainy Los Santos chase replaces original 0–4s; original 4–39s retained. First shot and score require owner visual/listening approval. No dialogue, no third-party samples.','disclosure':'Original concept motion teaser, not finished feature animation. Original score replaces the prior combined score/FX track; final separate foley/voices remain open.'}
     (OUT/'ACTION-REVIEW-MANIFEST.json').write_text(json.dumps(manifest,indent=2)+'\n')
     print(json.dumps(manifest,indent=2))
 if __name__=='__main__':main()

@@ -59,7 +59,7 @@ for key,entry in header_manifest.items():
         assert hashlib.sha256(asset.read_bytes()).hexdigest()==entry['sha256'],key
 assert len(set(fallbacks))==len(header_manifest)
 preview=(r/'atlas8-preview.html').read_text(encoding='utf-8')
-for image in ('jura155-story.webp','atlas86-scaly-approved.webp','atlas86-loki-approved.webp','atlas98-one-last-ride.webp'):
+for image in ('jura155-story.webp','jura3904-scaly-profile.webp','jura3904-loki-profile.webp','one-last-ride-action-poster.webp'):
     assert image in preview,image
 assert 'Approved character paintings must be integrated' not in preview
 assert 'interface-illustration.webp' not in preview

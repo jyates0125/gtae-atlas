@@ -45,3 +45,17 @@ for key,entry in entries.items():
     # The release static suite may run before the build. Source selection is
     # mandatory then; the Cloudflare build separately verifies published bytes.
 print(f'Atlas 39.0.5: {len(paths)}/9 selected cinematic images verified; {installed}/9 optional concept images installed')
+
+media=json.loads((R/'docs/ATLAS3906-TEASER-MEDIA.json').read_text())['files']
+for key,entry in media.items():
+    source=R/entry['path']
+    assert source.is_file(),key
+    assert hashlib.sha256(source.read_bytes()).hexdigest()==entry['sha256'],key
+    if (R/'public/one-last-ride.html').is_file():
+        assert (R/'public'/entry['path']).read_bytes()==source.read_bytes(),key
+film=(R/'one-last-ride.html').read_text()
+assert 'film/assets/one-last-ride-39s-action-review.mp4?v=bf719d7f' in film
+assert 'poster="./film/assets/one-last-ride-action-poster.webp"' in film
+preview=(R/'atlas8-preview.html').read_text()
+assert 'jura3904-scaly-profile.webp' in preview and 'jura3904-loki-profile.webp' in preview
+print('Atlas 39.0.6: all four exact selected action/portrait assets verified')

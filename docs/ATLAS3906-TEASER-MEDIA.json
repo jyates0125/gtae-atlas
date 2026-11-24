@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "source": "Owner-requested new 39-second music-only review. Source master retained. Original 8–12s rainy chase replaces original 0–4s; remaining 4–39s retained. New original 132 BPM soundtrack. No new voices or external samples.",
+  "files": {
+    "loki-profile": {
+      "path": "art/jura3904-loki-profile.webp",
+      "sha256": "28c14a252fa83fd5720b663957160dbe00b6f4c363ee0915d752e2438c1deb7d"
+    },
+    "scaly-profile": {
+      "path": "art/jura3904-scaly-profile.webp",
+      "sha256": "eb69001cb42878119508bdbc18d01d3efe0d443ec5a93f7718eb7b8bfb0d56f6"
+    },
+    "video": {
+      "path": "film/assets/one-last-ride-39s-action-review.mp4",
+      "sha256": "bf719d7fd784a4cfdda6bb2baeda86b4c09c00aeadb4cd91ea7795c712694b37"
+    },
+    "poster": {
+      "path": "film/assets/one-last-ride-action-poster.webp",
+      "sha256": "64da76e2911a11d7c1a6f2d7087ab8d5301921ac2a171629de5128a5021bfc72"
+    }
+  },
+  "technicalReview": {
+    "durationSeconds": 39,
+    "width": 1280,
+    "height": 720,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "decodedPeakDb": -1.1,
+    "bpm": 132,
+    "sourceSha256": "ddd2d44c6d58b114cceb523fea47dfce9fbe3259a449a3ce8e61d8b5b002798f"
+  },
+  "ownerListeningVisualApproval": "pending"
+}
