@@ -5,9 +5,9 @@ const valid=new Set(['fleeca','prison-break','humane-labs','series-a','pacific-s
 if(!valid.has(id)||!document.body.classList.contains('j120-heist-page'))return;
 const box=document.querySelector('.mapbox');if(!box||document.getElementById('j164-mission-map'))return;
 const node=(tag,cl,txt)=>{const x=document.createElement(tag);if(cl)x.className=cl;if(txt!==undefined)x.textContent=txt;return x};
-const map=id==='cayo-perico'?'./atlas-cayo.html':'./atlas-online.html';
+const map='./atlas-online.html'; // Mainland support for setups; native Cayo already lives on this page.
 const section=node('section','j164-mission-map');section.id='j164-mission-map';section.setAttribute('aria-label','Live Atlas map and personal mission plan');
-section.append(node('span','j164-kicker','OPTIONAL REGIONAL MAP · FULL-SIZE ENGINE'),node('h3','j164-title',id==='cayo-perico'?'Original Cayo island & scoping layers':'Wider GTA route-planning map'));
+section.append(node('span','j164-kicker','OPTIONAL REGIONAL MAP · FULL-SIZE ENGINE'),node('h3','j164-title',id==='cayo-perico'?'Mainland setup map':'Wider GTA route-planning map'));
 section.append(node('p','j164-desc','Your dedicated mission-specific map and POI tracker are above. Open the wider map here when a setup spans multiple locations. This does not assert verified heist entrances, exits or loot coordinates. Your notes stay in your browser.'));
 const bar=node('div','j164-buttons');
 const load=node('button','j164-main','Load interactive map');load.type='button';load.setAttribute('aria-expanded','false');load.setAttribute('aria-controls','j164-map-frame');
