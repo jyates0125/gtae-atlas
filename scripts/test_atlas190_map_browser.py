@@ -458,7 +458,8 @@ try:
    page.locator('.directory-card').click()
    expect(page.locator('#j190-iv-scope')).to_have_value('tbogt')
    expect(page.locator('#visibleCount')).to_have_text('50')
-   expect(page.locator('#j398-episode-notebook')).to_have_attribute('href','./map-hub.html?game=tbogt&notebook=1')
+   expect(page.locator('#j398-episode-notebook')).to_be_hidden()
+   assert page.locator('#j398-episode-notebook').get_attribute('href') is None
    page.goto(base+'map-hub.html?game=tbogt',wait_until='domcontentloaded')
    expect(page.locator('#j190-iv-scope')).to_have_value('tbogt')
    page.goto(base+'maps.html?q=tbogt&filter=limited',wait_until='domcontentloaded')
