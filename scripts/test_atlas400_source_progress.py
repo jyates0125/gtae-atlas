@@ -99,7 +99,7 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
                 with page.expect_download() as info:
                     panel.get_by_role('button',name='Export source progress',exact=True).click()
                 assert set(json.loads(Path(info.value.path()).read_text())['done'])=={first,second}
-                page.evaluate('window.restoreSourceSetItem()')
+                page.evaluate('() => { window.restoreSourceSetItem(); }')
                 third='iii-package-3'
                 host.locator('li[data-id="'+third+'"] .j271-mark').click()
                 assert set(page.evaluate('k=>JSON.parse(localStorage.getItem(k)).done',key))=={first,second,third}
