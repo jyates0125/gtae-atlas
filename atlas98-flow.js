@@ -16,8 +16,8 @@
   ['Vice City Stories','map-hub.html?game=vcs'],
   ['Liberty City Stories','map-hub.html?game=lcs'],
   ['Chinatown Wars','map-hub.html?game=ctw'],
-  ['Lost and Damned','map-hub.html?game=tlad'],
-  ['Ballad of Gay Tony','map-hub.html?game=tbogt']
+  ['Lost and Damned','atlas-iv.html?scope=tlad'],
+  ['Ballad of Gay Tony','atlas-iv.html?scope=tbogt']
  ]){const a=get('a','',label);a.href='./'+href;if(href===(file+location.search))a.setAttribute('aria-current','page');else if(href===file)a.setAttribute('aria-current','page');sub.append(a)}details.append(sub);dock.append(details);
   const NEXT={
   'atlas.html':['Collectibles','atlas81-hq.html#collections'],
