@@ -87,6 +87,7 @@ try:
    labels=page.locator('#layer option').evaluate_all('(nodes)=>nodes.map(n=>n.textContent)')
    assert labels==['In-game Map','Scaly · YANIS V18','Loki · DUPZOR V51'], labels
    page.locator('#layer').select_option('scaly,view')
+   expect(page.locator('#legend .j371-landmark-legend')).to_have_count(1)
    page.locator('#jura3d').click()
    page.wait_for_function('teamJuraNav.terrain().isActive()||teamJuraNav.terrain().getFrameReport()!==null',timeout=30000)
    assert page.evaluate('teamJuraNav.terrain().isActive()'),page.evaluate('teamJuraNav.terrain().getFrameReport()')
@@ -97,6 +98,10 @@ try:
    expect(page.locator('#juraNavDimension')).to_contain_text('Approx.')
    expect(page.locator('#j362TerrainNotice')).to_be_hidden()
    expect(page.locator('#jura3dCanvas')).to_be_visible()
+   pins=page.locator('.jura-3d-pin.j371-landmark-pin')
+   if pins.count():
+    style=pins.first.evaluate('(p)=>({width:p.offsetWidth,color:getComputedStyle(p).backgroundColor,border:getComputedStyle(p).borderTopColor,symbol:p.textContent})')
+    assert style=={'width':16,'color':'rgb(73, 49, 94)','border':'rgb(233, 189, 121)','symbol':'◆'},style
    page.screenshot(path=str(out/f'actual-gtadb-textured-{width}.png'),animations='disabled')
    # The orbit gesture must change the camera, not pan the hidden 2D canvas.
    page.locator('#togglePins').click()

@@ -389,7 +389,7 @@ function renderLegend(){
     if(active[filterScope()].has(cat))active[filterScope()].delete(cat);else active[filterScope()].add(cat);
     showPins=true;page=0;render();announce(`${title} ${active[filterScope()].has(cat)?'shown':'hidden'} on map`);
    });toggle.className='legend-choice';toggle.setAttribute('aria-pressed',String(on));toggle.title=`${on?'Hide':'Show'} ${title} pins`;
-   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
+   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;if(game==='6'&&cat==='landmark'){dot.classList.add('j371-landmark-legend');dot.textContent='◆';}else dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
    const only=btn('Only',()=>{dropEventFocus();active[filterScope()]=new Set([cat]);showPins=true;page=0;render();announce('Showing only '+title+' on map');},'legend-only');
    row.append(toggle,only);group.append(row);
   }root.append(group);
@@ -682,6 +682,13 @@ function conditionForRecord(r,storeCache){
  return engine.evaluate(r.activityId,{mode:required,state:save,snapshot:feed,markerId:r.rotationMarkerId,hour:gameHour,now:Date.now()});
 }
 function conditionPinColor(r,storeCache){const c=conditionForRecord(r,storeCache);if(c&&/^ghost-/i.test(r.activityId||'')&&['closed','unknown','possible'].includes(c.status))return '#f8fafc';return c?window.JuraConditions.markerColor(c.status):r.markerColor||CATEGORIES[r.category]?.[1]||'#f7c97b';}
+function isViLandmark(r){return game==='6'&&r?.category==='landmark'&&!r.markerColor&&!r.activityId}
+function drawViLandmark(x,y,selected=false){
+ const r=selected?10:7.5;
+ ctx.save();ctx.shadowColor='#170c25a0';ctx.shadowBlur=3;ctx.shadowOffsetY=1;
+ ctx.beginPath();ctx.moveTo(x,y+2*r);ctx.bezierCurveTo(x-r*1.2,y+r*.55,x-r*1.15,y-r*.9,x,y-r*.9);ctx.bezierCurveTo(x+r*1.15,y-r*.9,x+r*1.2,y+r*.55,x,y+2*r);ctx.closePath();ctx.fillStyle='#49315e';ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#e9bd79';ctx.lineWidth=selected?2:1.4;ctx.stroke();
+ const d=selected?4:3;ctx.beginPath();ctx.moveTo(x,y-d);ctx.lineTo(x+d,y);ctx.lineTo(x,y+d);ctx.lineTo(x-d,y);ctx.closePath();ctx.fillStyle='#fff1cf';ctx.fill();ctx.restore();
+}
 function drawMarkers(){hitRegions=[];if(!pinsVisible()&&!selected)return;
  // One physical pin per visible record: GTADB-style ungrouped locations.
  // Cap only at extremely large source-object loads to prevent phone freezes.
@@ -690,12 +697,11 @@ function drawMarkers(){hitRegions=[];if(!pinsVisible()&&!selected)return;
   if(drawn>=20000)break;drawn++;
   // Keep original colored pins intact; tone down ONLY the default gold landmarks.
   // Explicit source marker colors and event/collectible colors take precedence.
-  const color=game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId?'#49315e':conditionPinColor(r,conditionCache);
-  const compactViLandmark=game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId;
-  pin(p.x,p.y,color,false,null,r.category,compactViLandmark||!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r),!!progress[doneKey(r)],r.category==='collectible'&&!r.activityId);
+  if(isViLandmark(r))drawViLandmark(p.x,p.y);
+  else pin(p.x,p.y,conditionPinColor(r,conditionCache),false,null,r.category,!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r),!!progress[doneKey(r)],r.category==='collectible'&&!r.activityId);
   hitRegions.push({x:p.x,y:p.y,r:12,record:r});
  }
- if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected),!!progress[doneKey(selected)],selected.category==='collectible'&&!selected.activityId);hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
+ if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){if(isViLandmark(selected))drawViLandmark(p.x,p.y,true);else pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected),!!progress[doneKey(selected)],selected.category==='collectible'&&!selected.activityId);hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
 }
 function drawCoordinateTarget(){if(!coordinateTarget||coordinateTarget.game!==game)return;const p=toScreen(coordinateTarget.x,coordinateTarget.y);if(p.x<-40||p.x>width+40||p.y<-40||p.y>height+40)return;
  ctx.save();ctx.strokeStyle='#fff9d2';ctx.lineWidth=3;ctx.shadowBlur=7;ctx.shadowColor='#000';ctx.beginPath();ctx.arc(p.x,p.y,16,0,Math.PI*2);ctx.moveTo(p.x-26,p.y);ctx.lineTo(p.x+26,p.y);ctx.moveTo(p.x,p.y-26);ctx.lineTo(p.x,p.y+26);ctx.stroke();ctx.restore();}
@@ -887,7 +893,7 @@ function fitRoute(){const r=routeRecords();if(!r.length)return toast('Add locati
 const juraBridge={
  game:()=>game,scope:()=>routeScope(),camera:()=>({...camera}),records:()=>records(),places:()=>pinsVisible()?matches().slice(0,12000):[],
  route:()=>navPlan&&navPlanScope===routeScope()?navPlan.points:[...(currentRouteStart()?[currentRouteStart()]:[]),...routeRecords()],
- color:(cat,record)=>record?.markerColor||CATEGORIES[cat]?.[1]||'#e8c998',symbol:cat=>CATEGORY_SYMBOLS[cat]||'✦',
+ color:(cat,record)=>isViLandmark(record)?'#49315e':record?.markerColor||CATEGORIES[cat]?.[1]||'#e8c998',symbol:cat=>CATEGORY_SYMBOLS[cat]||'✦',compactLandmark:isViLandmark,
  select:place=>{choosePlace(place);window.teamJuraNav?.terrain()?.rebase()},notice:msg=>announce(msg),textureDraw:(target,box)=>drawTerrainTexture(target,box),textureRevision:()=>tilesLoaded,
  setRoutePlan:(plan,places)=>{navPlan=plan;navPlanScope=routeScope();render()},
  clearRoutePlan:()=>{navPlan=null;navPlanScope=null;render()},
