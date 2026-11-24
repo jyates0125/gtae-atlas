@@ -87,6 +87,8 @@ let researchOverlays=loadStore('jura99-research-overlays',{'5-story':true,'5-onl
 if(!researchOverlays||typeof researchOverlays!=='object'||Array.isArray(researchOverlays))researchOverlays={'5-story':true,'5-online':true,'6':true};
 const researchOn=()=>researchOverlays[filterScope()]!==false;
 let eventFocusIds=null,eventFocusName='';
+const eventHidden=new Set(); // independent session-only event category switches
+
 function dropEventFocus(){
  if(!eventFocusIds)return;
  eventFocusIds=null;eventFocusName='';
@@ -310,10 +312,10 @@ function renderNamedLayers(){const root=$('namedLayers');if(!root)return;root.re
  const q=($('namedLayerSearch')?.value||'').trim().toLowerCase();let rendered=0;
  const cache=activityCache();
  for(const {id,title,count,predicate}of layers){if(q&&!title.toLowerCase().includes(q))continue;rendered++;
-  const members=rows.filter(predicate),off=members.filter(r=>!activityPinVisible(r,cache)).length;
+  const members=rows.filter(predicate),off=members.filter(r=>conditionForRecord(r,cache)?.hide).length,closed=members.filter(r=>conditionForRecord(r,cache)?.availability==='inactive').length;
   const b=btn(`${title} · ${count.toLocaleString()}`,()=>{updateNamedLayerVisibility([id],hidden.has(id));},'named-layer-choice');
   b.setAttribute('aria-pressed',String(!hidden.has(id)));b.setAttribute('aria-label',(hidden.has(id)?'Show ':'Hide ')+title+' pins');
-  if(off){b.dataset.availability=off===count?'inactive':'partial';const status=document.createElement('small');status.className='j393-layer-status';status.textContent=off===count?'Not active · 0 available':`${count-off} visible candidates · ${off} inactive`;b.append(status);b.title=status.textContent;}
+  if(off){b.dataset.availability=closed===count?'inactive':off===count?'unconfirmed':'partial';const status=document.createElement('small');status.className='j393-layer-status';status.textContent=closed===count?'Not active · 0 available':off===count?'No current confirmed pins':`${count-off} eligible candidates · ${off} unavailable/unconfirmed`;b.append(status);b.title=status.textContent;}
   root.append(b);
  }
  if(!rendered){const note=document.createElement('small');note.textContent=layers.length?'No matching layer names. Clear layer search.':'No named layers have mapped coordinates in this game yet.';root.append(note)}
@@ -480,14 +482,14 @@ function card(r){const d=document.createElement('article');d.className='result'+
  const title=btn((progress[doneKey(r)]?'✓ ':'')+r.name,()=>{choosePlace(r);renderFind()},'atlas-list-title');title.title='Find '+r.name+' on the map';
  const f=btn(favorites[r.id]?'★':'☆',()=>{favorites[r.id]=!favorites[r.id];persist();render()},'fav');f.title='Favorite';f.setAttribute('aria-label','Favorite '+r.name);head.append(marker,title,f);
  const desc=document.createElement('small');desc.textContent=(r.address&&r.address!=='?'?r.address+' · ':'')+(CATEGORIES[r.category]?.[0]||'Other')+' · '+(r.uncertain?'Provisional':'Mapped source');
- const actions=document.createElement('div');actions.className='result-actions';actions.append(btn('📍 Map',()=>{choosePlace(r);renderFind()},'primary'),btn(progress[doneKey(r)]?'✓ Visited':'Visited',()=>toggleFound(r)),btn(routeIds().includes(r.id)?'− Route':'+ Route',()=>toggleRoute(r)),btn('↗ Nav',()=>window.teamJuraNav?.setRoutePoint(r)));d.append(head,desc);if(status){const availability=document.createElement('small');availability.className='j393-record-status';availability.textContent=window.JuraConditions.statusText(status.status)+' · '+status.reason;if(status.hide){d.classList.add('j393-unavailable');availability.textContent='Not active now · '+status.reason;}d.append(availability)}d.append(actions);return d;
+ const actions=document.createElement('div');actions.className='result-actions';actions.append(btn('📍 Map',()=>{choosePlace(r);renderFind()},'primary'),btn(progress[doneKey(r)]?'✓ Visited':'Visited',()=>toggleFound(r)),btn(routeIds().includes(r.id)?'− Route':'+ Route',()=>toggleRoute(r)),btn('↗ Nav',()=>window.teamJuraNav?.setRoutePoint(r)));d.append(head,desc);if(status){const availability=document.createElement('small');availability.className='j393-record-status';availability.textContent=window.JuraConditions.statusText(status.status)+' · '+status.reason;if(status.hide){d.classList.add('j393-unavailable');availability.textContent=(status.availability==='inactive'?'Not active now · ':'Not currently confirmed · ')+status.reason;}d.append(availability)}d.append(actions);return d;
 }
 function renderFind(){const all=orderedMatches(),root=$('results');root.replaceChildren();
  let focusNotice=$('j232-event-focus-notice');
  if(!focusNotice){focusNotice=document.createElement('div');focusNotice.id='j232-event-focus-notice';focusNotice.className='hint';focusNotice.setAttribute('role','status');root.before(focusNotice)}
  focusNotice.hidden=!eventFocusIds;focusNotice.replaceChildren();
  if(eventFocusIds){
-  const label=document.createElement('p');label.textContent='Temporary event focus: '+eventFocusName+'. Showing source possibilities, not verified current locations. Your regular map filters are unchanged.';
+  const label=document.createElement('p');label.textContent='Temporary event focus: '+eventFocusName+'. Archived and unconfirmed entries remain listed; only eligible activity pins appear on the map. Your regular map filters are unchanged.';
   focusNotice.append(label,btn('Return to my map filters',()=>{dropEventFocus();page=0;render()}));
  }
  $('resultCount').textContent=all.length.toLocaleString()+' locations';$('foundCount').textContent=records().filter(r=>progress[doneKey(r)]).length.toLocaleString()+' found';
@@ -682,7 +684,9 @@ function conditionForRecord(r,storeCache){
  let activityId=r.activityId;
  if(!activityId&&game==='5'&&mode==='online'&&!/^user-/.test(r.id||'')&&r.scope!=='story'){
   const name=[r.name,r.collectionType,...(r.tags||[])].join(' ');
-  if(/\b(?:pumpkins?|jack.o.lanterns?)\b/i.test(name))activityId='pumpkins';
+  const daily=engine.rulesForMode('online').filter(rule=>rule.kind==='rotation');
+  activityId=daily.find(rule=>matchesEventResearch(rule,r))?.id;
+  if(!activityId&&/\b(?:pumpkins?|jack.o.lanterns?)\b/i.test(name))activityId='pumpkins';
   else if(/\bghosts? exposed\b/i.test(name))activityId='ghosts-exposed';
   else if(/\b(?:halloween|free.roam)\b.{0,30}\bslashers?\b|\bslashers?\b.{0,30}\b(?:halloween|free.roam)\b/i.test(name))activityId='slashers';
   else if(/\b(?:snowmen|snowman)\b/i.test(name))activityId='snowmen';
@@ -696,7 +700,13 @@ function conditionForRecord(r,storeCache){
  return engine.markerAvailability(activityId,{mode:required,state:save,snapshot:feed,markerId:r.rotationMarkerId,hour:gameHour,now:storeCache?.now??Date.now()});
 }
 function activityCache(){const engine=window.JuraConditions;return engine?{save:engine.safeState(loadStore('jura68-conditions-'+(game==='6'?'vi':mode),{})),feed:currentRotationSnapshot(),hour:loadStore('jura68-online-hour',null),now:Date.now()}:null}
-function activityPinVisible(r,cache){return !conditionForRecord(r,cache)?.hide}
+function activityPinVisible(r,cache){
+ if(game==='5'&&mode==='online'){
+  if(matchesEventResearch({id:'cayo-chests'},r)||matchesEventResearch({id:'cayo-stashes'},r))return false;
+  for(const id of eventHidden)if(matchesEventResearch({id},r))return false;
+ }
+ return !conditionForRecord(r,cache)?.hide;
+}
 function conditionPinColor(r,storeCache){const c=conditionForRecord(r,storeCache);if(c&&/^ghost-/i.test(r.activityId||'')&&['closed','unknown','possible'].includes(c.status))return '#f8fafc';return c?window.JuraConditions.markerColor(c.status):r.markerColor||CATEGORIES[r.category]?.[1]||'#f7c97b';}
 function isViLandmark(r){return game==='6'&&r?.category==='landmark'&&!r.markerColor&&!r.activityId}
 function drawViLandmark(x,y,selected=false){
@@ -946,6 +956,9 @@ function matchesEventResearch(rule,r){
 }
 window.JuraAtlasEventLocations=Object.freeze({
  count:rule=>game==='5'&&mode==='online'?records().filter(r=>matchesEventResearch(rule,r)).length:0,
+ enabled:id=>!eventHidden.has(id),
+ setEnabled:(id,on)=>{if(game!=='5'||mode!=='online'||!window.JuraConditions?.BY_ID[id])return false;dropEventFocus();if(on){eventHidden.delete(id);showPins=true;}else eventHidden.add(id);page=0;render();return true;},
+ availableCount:rule=>{if(game!=='5'||mode!=='online')return 0;const cache=activityCache();return records().filter(r=>matchesEventResearch(rule,r)&&activityPinVisible(r,cache)).length;},
  focus:rule=>{
   if(game!=='5'||mode!=='online')return {count:0};
   const found=records().filter(r=>matchesEventResearch(rule,r));
@@ -953,7 +966,7 @@ window.JuraAtlasEventLocations=Object.freeze({
   eventFocusIds=new Set(found.map(r=>r.id));eventFocusName=String(rule.name||rule.id).slice(0,120);
   if(selected&&!eventFocusIds.has(selected.id))selected=null;
   page=0;showTab('Find');render();
-  return {count:found.length};
+  return {count:found.length,available:found.filter(r=>activityPinVisible(r,activityCache())).length};
  },
  clear:()=>{dropEventFocus();page=0;render()},
  refresh:()=>{if(game==='5'&&mode==='online'){renderNamedLayers();renderFind();updateSelected();schedulePaint()}},
