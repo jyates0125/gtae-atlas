@@ -11,10 +11,11 @@
 <script defer src="./atlas-sources.js?v=70"></script>
 <script defer src="./atlas-route-core.js?v=70"></script>
 <script defer src="./atlas-road-core.js?v=70"></script>
-<script defer src="./atlas-3d.js?v=366"></script>
+<script defer src="./atlas-3d.js?v=368"></script>
+<script defer src="./atlas368-approx-terrain.js?v=368"></script>
 <script defer src="./atlas-terrain-evidence.js?v=359"></script>
 <script defer src="./atlas363-elevation-probe.js?v=363"></script>
-<script defer src="./atlas-navigation.js?v=367"></script>
+<script defer src="./atlas-navigation.js?v=368"></script>
 <script defer src="./atlas-conditions.js?v=70"></script>
 <script defer src="./atlas.js?v=290"></script>
 <script defer src="./atlas290-vi-source-ledger.js?v=290"></script>
@@ -42,6 +43,7 @@
 <link rel="stylesheet" href="./atlas117-world-brand.css?v=117"><link rel="stylesheet" href="./atlas128-map-chrome.css?v=128"><link rel="stylesheet" href="./atlas141-leonida-views.css?v=141"><link rel="stylesheet" href="./atlas143-official-map-view.css?v=143"><script defer src="./atlas143-official-map-view.js?v=153"></script><link rel="stylesheet" href="./atlas290-official-landmarks.css?v=291"><script defer src="./atlas290-official-landmarks.js?v=291"></script><link rel="stylesheet" href="./atlas145-leonida-map-ux.css?v=145"><script defer src="./atlas145-leonida-map-ux.js?v=145"></script>
 <link rel="stylesheet" href="./atlas145-mobile-map-entry.css?v=211"><script defer src="./atlas145-mobile-map-entry.js?v=156"></script><link rel="stylesheet" href="./atlas154-map-zoom.css?v=154"><script defer src="./atlas154-map-zoom.js?v=154"></script><link rel="stylesheet" href="./atlas171-research-usability.css?v=171"><script defer src="./atlas171-research-usability.js?v=171"></script><link rel="stylesheet" href="./atlas217-vi-world.css?v=217"><script defer src="./atlas217-vi-world.js?v=217"></script><link rel="stylesheet" href="./atlas220-vi-mobile.css?v=220"><script defer src="./atlas220-vi-mobile.js?v=220"></script><link rel="stylesheet" href="./atlas222-vi-release.css?v=222"><script defer src="./atlas222-vi-release.js?v=222"></script><link rel="stylesheet" href="./atlas160-premium-headers.css?v=160"><link rel="stylesheet" href="./atlas162-subject-heroes.css?v=162"><link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script><link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=222"></script><link rel="stylesheet" href="./atlas131-social-icons.css?v=133"><script defer src="./atlas131-social-icons.js?v=133"></script><link rel="stylesheet" href="./atlas302-map-marker-exit.css?v=302"><script defer src="./atlas302-map-marker-exit.js?v=302"></script><link rel="stylesheet" href="./atlas362-vi-map-clarity.css?v=362"><link rel="stylesheet" href="./atlas363-elevation-probe.css?v=363"><link rel="stylesheet" href="./atlas364-map-credit.css?v=364">
 <script defer src="./atlas364-map-credit.js?v=364"></script>
+<link rel="stylesheet" href="./atlas368-approx-terrain.css?v=368">
 </head>
 <body data-start-world="6" class="j117-map-world j128-map-chrome">
 <header class="topbar">
@@ -208,7 +210,7 @@
     <section class="j362-terrain-notice" id="j362TerrainNotice" aria-label="Three-dimensional map availability" role="status" hidden>
       <strong>3D perspective preview</strong>
       <p id="j362TerrainStatus">Leonida's illustrated map remains available. A compatible 3D heightfield is needed to show real relief.</p>
-      <div class="j362-terrain-actions"><button id="j362ImportTerrain" type="button">Terrain options</button><button id="j362ClosePreview" type="button">Return to 2D</button></div>
+      <p class="j368-preview-explanation">Optional: explore terrain estimated from GTADB community mapping observations. Approximate 3D is not the original elevation grid or verified gameplay.</p><div class="j362-terrain-actions"><button id="j368UseApproximate" type="button">Approximate 3D</button><button id="j362ImportTerrain" type="button">Terrain options</button><button id="j362ClosePreview" type="button">Return to 2D</button></div>
     </section>
     <div class="jura-nav-bar" role="group" aria-label="Navigate and change map dimension"><button type="button" id="juraOpenNav" aria-expanded="false" aria-controls="juraNavPanel">↗ Directions</button><button type="button" id="jura2d">2D</button><button type="button" id="jura3d">3D</button><span id="juraNavDimension">2D</span></div>
     <section id="juraNavPanel" class="jura-nav-panel" hidden aria-label="GTA route planner">
@@ -236,7 +238,7 @@
       </details>
       <details class="jura-nav-data"><summary>Optional licensed road-network data</summary><p>Import a permitted GTA VI road graph to preview graph-following paths. Imported geometry is UNVERIFIED until checked against released gameplay; it must never be labeled verified driving directions. Without one, routes are direct-line previews.</p><input type="file" id="juraNavRoadFile" accept=".json,application/json" aria-label="Import road network file"><a href="./road-graph-example.json" download>Road graph example</a></details>
     </section>
-    <div id="jura3dTools" class="jura-3d-tools" aria-label="3D navigation controls"><button type="button" id="juraToggle3d" aria-pressed="false">3D</button><button type="button" id="jura3dNorth">N ↑</button><button type="button" id="jura3dZoomIn">+</button><button type="button" id="jura3dZoomOut">−</button><small id="jura3dStatus">3D terrain inactive</small></div>
+    <div id="jura3dTools" class="jura-3d-tools" aria-label="3D navigation controls"><button type="button" id="juraToggle3d" aria-pressed="false">3D</button><button type="button" id="jura3dNorth">N ↑</button><button type="button" id="jura3dZoomIn">+</button><button type="button" id="jura3dZoomOut">−</button><button id="j368CoverageToggle" type="button" aria-pressed="false" title="Show distance to source observations, not measured accuracy" hidden>Coverage off</button><small id="jura3dStatus">3D terrain inactive</small><div id="j368CoverageLegend" hidden><strong>Source distance, not accuracy</strong><span><i class="j368-near"></i> Near (≤650 m)</span><span><i class="j368-mid"></i> 650–1,800 m</span><span><i class="j368-far"></i> Sparse / flat estimate</span><span><i class="j368-water"></i> Approx. ocean</span></div></div>
     <div class="jura-brand-map">ELARIO STUDIOS <span>× TEAM JURA</span> · UNOFFICIAL GTA MAP</div>
     <canvas id="atlasCanvas" tabindex="0" aria-label="GTA game map. Drag to move. Scroll or use plus and minus to zoom."></canvas>
     <!-- Team Jura 10.1: single sidebar legend; no duplicate floating or trailer panels. -->

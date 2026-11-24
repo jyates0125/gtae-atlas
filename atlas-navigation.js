@@ -19,7 +19,7 @@ function renderInstructions(){results.replaceChildren();if(!plan){const p=docume
  const summary=document.createElement('div');summary.className='jura-summary';summary.innerHTML=`<strong>${plan.waypoints.length-1} segment${plan.waypoints.length>2?'s':''} · ${Math.round(plan.length).toLocaleString()} GTA world units</strong><small>${esc(plan.roadGraphUsed?'Imported road graph · UNVERIFIED':'Direct-line preview — not drivable road directions')}</small>`;results.append(summary);
  for(const segment of Core.instructions(plan,waypoints)){const p=document.createElement('div');p.className='jura-route-step';const b=document.createElement('b');b.textContent=segment.step+'.';const t=document.createElement('span');t.textContent=segment.label+' · '+Math.round(segment.length)+' units';p.append(b,t);results.append(p)}
  const warn=document.createElement('p');warn.className='jura-route-warning';warn.textContent=plan.warning;results.append(warn)}
-function render(fieldsToo=true){if(fieldsToo)renderFields();renderInstructions();$('juraNavAdd').disabled=waypoints.length>=12;const el=$('juraNavDimension');el.textContent=dimension.toUpperCase();$('juraToggle3d').textContent=dimension==='2d'?'3D':'2D';$('juraToggle3d').setAttribute('aria-pressed',String(dimension==='3d'));}
+function render(fieldsToo=true){if(fieldsToo)renderFields();renderInstructions();$('juraNavAdd').disabled=waypoints.length>=12;const el=$('juraNavDimension');el.textContent=dimension==='3d'&&!fallback3d&&terrain?.hasApproximate()?'3D · Approx.':dimension.toUpperCase();$('juraToggle3d').textContent=dimension==='2d'?'3D':'2D';$('juraToggle3d').setAttribute('aria-pressed',String(dimension==='3d'));}
 function setRoutePoint(place){if(!place)return;const i=waypoints.findIndex((p,j)=>j>0&&!p);if(i>=0)waypoints[i]=place;else if(waypoints.length<12)waypoints.splice(waypoints.length-1,0,place);else{status('Maximum 12 named stops');return}invalidate();open();render();}
 function setStart(place){waypoints[0]=place;plan=null;open();render()}
 function open(){active=true;panel.hidden=false;document.body.classList.add('jura-nav-open');$('juraOpenNav').setAttribute('aria-expanded','true');render();}
@@ -40,6 +40,12 @@ function syncDimensionControls(){
 function syncTerrainNotice(){
  const note=$('j362TerrainNotice');
  if(note)note.hidden=!(dimension==='3d'&&fallback3d);
+ const approximate=dimension==='3d'&&!fallback3d&&!!terrain?.hasApproximate();
+ document.body.classList.toggle('j368-approximate',approximate);
+ const toggle=$('j368CoverageToggle'),legend=$('j368CoverageLegend');
+ const coverage=approximate&&!!terrain?.getCoverageVisible();
+ if(toggle){toggle.hidden=!approximate;toggle.setAttribute('aria-pressed',String(coverage));toggle.textContent=coverage?'Coverage on':'Coverage off';}
+ if(legend)legend.hidden=!coverage;
 }
 function setDimension(next){
  if(next==='3d'&&!supports3d()){bridge.notice('The original 2D map is the active view for this world. GTA VI research is the current 3D focus.');return}
@@ -89,11 +95,40 @@ function setDimension(next){
   syncTerrainNotice();render(false);
  }
 }
+
+async function openApproximateTerrain(){
+ if(dimension!=='3d'||bridge.game()!=='6'||!fallback3d||!terrain||!root.JuraApproxTerrain)return;
+ const epoch=++terrainViewToken,button=$('j368UseApproximate'),message=$('j362TerrainStatus');
+ if(button)button.disabled=true;
+ if(message)message.textContent='Loading the local GTADB-derived approximate terrain…';
+ try{
+  const surface=await root.JuraApproxTerrain.load();
+  if(epoch!==terrainViewToken||dimension!=='3d'||bridge.game()!=='6')return;
+  // An accepted local/dense import always outranks this illustrative surface.
+  if(terrain.hasElevation())return;
+  terrain.setApproximateSurface(surface);
+  const ok=terrain.activate();
+  fallback3d=!ok;
+  document.body.classList.toggle('jura-perspective-fallback',fallback3d);
+  if(!ok){terrain.clearApproximateSurface();if(message)message.textContent='Approximate terrain loaded, but WebGL is unavailable. Your illustrated map remains usable.';}
+  else{
+   $('jura3dStatus').textContent='Approximate terrain · GTADB community reconstruction';
+   bridge.notice('Approximate 3D active · interpolated community terrain, not measured game elevations. Coverage shows distance to source observations.');
+  }
+  syncTerrainNotice();render(false);
+ }catch(err){
+  if(epoch!==terrainViewToken||dimension!=='3d')return;
+  if(message)message.textContent='Approximate terrain is unavailable: '+String(err?.message||'could not load')+'. Your illustrated map remains usable.';
+  syncTerrainNotice();render(false);
+ }finally{if(button)button.disabled=false;}
+}
 function clear(){waypoints=[null,null];plan=null;bridge.clearRoutePlan();render();status('Navigation cleared. Saved collectible progress is unchanged.')}
 function refresh(){if(terrain?.isActive())terrain.render()}
 function gameChanged(){graph=null;waypoints=[null,null];plan=null;syncDimensionControls();render();if(dimension==='3d')terrain?.rebase();}
 function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('jura3dMarkerOverlay'),status:$('jura3dStatus'),bridge})||null;
  if($('j362ClosePreview'))$('j362ClosePreview').onclick=()=>setDimension('2d');
+ if($('j368UseApproximate'))$('j368UseApproximate').onclick=openApproximateTerrain;
+ if($('j368CoverageToggle'))$('j368CoverageToggle').onclick=()=>{if(terrain?.hasApproximate()){terrain.setCoverageVisible(!terrain.getCoverageVisible());syncTerrainNotice();}};
  if($('j362ImportTerrain'))$('j362ImportTerrain').onclick=()=>{
    open();
    const section=$('juraElevationFile')?.closest('details');
