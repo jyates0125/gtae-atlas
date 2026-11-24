@@ -103,7 +103,7 @@ async function test(){
   assert.match(renderer,/function activate\(\)\{if\(!hasElevation\(\)&&!hasApproximate\(\)\)/);
   assert.match(map,/id="j362TerrainStatus"/);
   assert.match(map,/atlas-3d\.js\?v=3721/);
-  assert.match(map,/atlas-navigation\.js\?v=377/);
+  assert.match(map,/atlas-navigation\.js\?v=382/);
   console.log('Atlas 36.6: absent, valid, flat, mismatched, stale, cached and import-race heightfield cases PASS');
  }finally{
   globalThis.fetch=originalFetch;

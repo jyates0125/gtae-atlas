@@ -65,5 +65,36 @@ function nearestOrder(places){
  while(rem.length){let best=0;for(let i=1;i<rem.length;i++)if(distance(out.at(-1),rem[i])<distance(out.at(-1),rem[best]))best=i;out.push(rem.splice(best,1)[0])}
  return [...out,places.at(-1)];
 }
-return Object.freeze({validateGraph,shortest,route,instructions,distance,heading,nearestOrder,turn});
+// Gate asynchronous private graph imports against world switches and newer selections.
+function createGraphLoader(scope,validate=validateGraph){
+ let epoch=0,current=null;
+ return {
+  reset(){++epoch;current=null;},
+  get(){return current;},
+  async load(file,game){
+   const token=++epoch,world=scope();
+   try{
+    if(!file||file.size>16000000)throw Error('Graph exceeds 16 MB limit');
+    const raw=JSON.parse(await file.text());
+    if(token!==epoch||scope()!==world)return {superseded:true};
+    if(raw.game!==game)throw Error('Road graph must belong to the active GTA game');
+    const next=validate(raw);
+    if(token!==epoch||scope()!==world)return {superseded:true};
+    current=next;return {graph:next};
+   }catch(error){if(token!==epoch||scope()!==world)return {superseded:true};throw error;}
+  }
+ };
+}
+function routeCSV(places,game,plan){
+ // Prevent spreadsheet formula execution from source/user-supplied text;
+ // numeric signed coordinates remain numeric content.
+ const quote=value=>{
+  let text=String(value??'');
+  if(typeof value!=='number'&&/^[\s\uFEFF]*[=+\-@]/.test(text))text="'"+text;
+  return '"'+text.replace(/"/g,'""')+'"';
+ };
+ const label=plan.method==='mixed'?'mixed-unverified':plan.method==='road-graph'?'imported-road-graph-unverified':'direct-line';
+ return [['order','name','x','y','game','routing'],...places.map((p,i)=>[i,p.name,p.x,p.y,game,label])].map(row=>row.map(quote).join(',')).join('\r\n');
+}
+return Object.freeze({validateGraph,shortest,route,instructions,distance,heading,nearestOrder,turn,createGraphLoader,routeCSV});
 });

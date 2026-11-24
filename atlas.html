@@ -10,9 +10,9 @@
 <script defer src="./atlas-intelligence.js?v=70"></script>
 <script defer src="./atlas-sources.js?v=70"></script>
 <script defer src="./atlas-route-core.js?v=70"></script>
-<script defer src="./atlas-road-core.js?v=373"></script>
+<script defer src="./atlas-road-core.js?v=382"></script>
 <script defer src="./atlas-3d.js?v=3721"></script>
-<script defer src="./atlas-navigation.js?v=377"></script>
+<script defer src="./atlas-navigation.js?v=382"></script>
 <script defer src="./atlas-conditions.js?v=375"></script>
 <script defer src="./atlas.js?v=375"></script>
 
@@ -158,7 +158,7 @@
       <div class="jura-nav-row"><button type="button" id="juraNavGo" class="jura-nav-primary">↗ Generate route</button><button type="button" id="juraNavClear">Clear</button><button type="button" id="juraNavExport">Copy</button><button type="button" id="juraNavCsv">Export CSV</button></div>
       <p id="juraNavStatus" class="jura-nav-caption" role="status">Choose locations to build a route.</p>
       <div id="juraNavResults" class="jura-nav-results" aria-live="polite"></div>
-      <details class="jura-nav-data"><summary>Optional licensed road-network data</summary><p>Import a properly licensed, validated GTA road graph in Team Jura format for road-following routes. Without one, routes are clearly labeled straight-line previews, not driving instructions.</p><input type="file" id="juraNavRoadFile" accept=".json,application/json" aria-label="Import road network file"><a href="./road-graph-example.json" download>Road graph example</a></details>
+      <details class="jura-nav-data"><summary>Optional licensed road-network data</summary><p>Import a properly licensed, validated GTA road graph in Team Jura format for road-following routes. Without one, routes are clearly labeled straight-line previews, not driving instructions.</p><input type="file" id="juraNavRoadFile" accept=".json,application/json" aria-label="Import road network file"><button id="juraNavRoadReset" type="button">Remove imported graph</button> <a href="./road-graph-example.json" download>Road graph example</a></details>
     </section>
     <div id="jura3dTools" class="jura-3d-tools" aria-label="3D navigation controls"><button type="button" id="juraToggle3d" aria-pressed="false">3D</button><button type="button" id="jura3dNorth">N ↑</button><button type="button" id="jura3dZoomIn">+</button><button type="button" id="jura3dZoomOut">−</button><small id="jura3dStatus">3D terrain inactive</small></div>
     <div class="jura-brand-map">ELARIO STUDIOS <span>× TEAM JURA</span> · UNOFFICIAL GTA MAP</div>

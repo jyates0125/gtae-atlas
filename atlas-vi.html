@@ -10,12 +10,12 @@
 <script defer src="./atlas-intelligence.js?v=70"></script>
 <script defer src="./atlas-sources.js?v=70"></script>
 <script defer src="./atlas-route-core.js?v=70"></script>
-<script defer src="./atlas-road-core.js?v=373"></script>
+<script defer src="./atlas-road-core.js?v=382"></script>
 <script defer src="./atlas-3d.js?v=3721"></script>
 <script defer src="./atlas368-approx-terrain.js?v=368"></script>
 <script defer src="./atlas-terrain-evidence.js?v=359"></script>
 <script defer src="./atlas363-elevation-probe.js?v=363"></script>
-<script defer src="./atlas-navigation.js?v=377"></script>
+<script defer src="./atlas-navigation.js?v=382"></script>
 <script defer src="./atlas-conditions.js?v=375"></script>
 <script defer src="./atlas.js?v=375"></script>
 <script defer src="./atlas290-vi-source-ledger.js?v=290"></script>
@@ -238,7 +238,7 @@
         </section>
         <p>Evidence-file checks do not independently establish rights, source authenticity or game accuracy. <a href="./atlas-credits.html">Source credits and reuse conditions</a>.</p>
       </details>
-      <details class="jura-nav-data"><summary>Optional licensed road-network data</summary><p>Import a permitted GTA VI road graph to preview graph-following paths. Imported geometry is UNVERIFIED until checked against released gameplay; it must never be labeled verified driving directions. Without one, routes are direct-line previews.</p><input type="file" id="juraNavRoadFile" accept=".json,application/json" aria-label="Import road network file"><a href="./road-graph-example.json" download>Road graph example</a></details>
+      <details class="jura-nav-data"><summary>Optional licensed road-network data</summary><p>Import a permitted GTA VI road graph to preview graph-following paths. Imported geometry is UNVERIFIED until checked against released gameplay; it must never be labeled verified driving directions. Without one, routes are direct-line previews.</p><input type="file" id="juraNavRoadFile" accept=".json,application/json" aria-label="Import road network file"><button id="juraNavRoadReset" type="button">Remove imported graph</button> <a href="./road-graph-example.json" download>Road graph example</a></details>
     </section>
     <div id="jura3dTools" class="jura-3d-tools" aria-label="3D navigation controls"><button type="button" id="juraToggle3d" aria-pressed="false">3D</button><button type="button" id="jura3dNorth">N ↑</button><button type="button" id="jura3dZoomIn">+</button><button type="button" id="jura3dZoomOut">−</button><small id="jura3dStatus">3D terrain inactive</small></div>
     <div class="jura-brand-map">ELARIO STUDIOS <span>× TEAM JURA</span> · UNOFFICIAL GTA MAP</div>
