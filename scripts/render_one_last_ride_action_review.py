@@ -99,6 +99,31 @@ def music(path):
         w.setnchannels(2);w.setsampwidth(2);w.setframerate(SR)
         w.writeframes((mix*32767).astype('<i2').tobytes())
     return {'bpm':BPM,'durationSeconds':DURATION,'peak':float(np.max(np.abs(mix))),'rms':rms}
+def sample_frame(path,seconds):
+    raw=run(['ffmpeg','-hide_banner','-loglevel','error','-ss',str(seconds),
+             '-i',str(path),'-frames:v','1','-vf','scale=160:90,format=gray',
+             '-f','rawvideo','-pix_fmt','gray','-'])
+    assert len(raw)==160*90,(path,seconds,len(raw))
+    return np.frombuffer(raw,dtype=np.uint8).astype(np.float32)
+
+def compare_picture(target):
+    # Objective evidence that the old opening was replaced and later scenes
+    # survived the re-encode. This is not a judgment of cinematic quality.
+    old=sample_frame(SOURCE,.5)
+    expected=sample_frame(SOURCE,22.5)
+    actual=sample_frame(target,.5)
+    difference=lambda a,b:float(np.mean(np.abs(a-b)))
+    new_error=difference(expected,actual)
+    old_error=difference(old,actual)
+    assert new_error<12 and new_error<old_error,(new_error,old_error)
+    retained={}
+    for second in (5,10,18,27,35):
+        error=difference(sample_frame(SOURCE,second),sample_frame(target,second))
+        assert error<12,(second,error)
+        retained[str(second)]=round(error,3)
+    return {'firstFrameExpectedMAE':round(new_error,3),
+            'firstFrameOldMAE':round(old_error,3),'retainedFrameMAE':retained}
+
 def main():
     assert sha(SOURCE)==LOCK,'Wrong locked source master'
     OUT.mkdir(parents=True,exist_ok=True)
@@ -118,8 +143,9 @@ def main():
     assert (p['streams'][0]['width'],p['streams'][0]['height'])==(1280,720)
     for label,second in [('new-opening',.2),('after-opening',4.4),('action-middle',22.3)]:
         run(['ffmpeg','-hide_banner','-loglevel','error','-y','-ss',str(second),'-i',str(target),'-frames:v','1',str(OUT/(label+'.jpg'))])
+    picture=compare_picture(target)
     assert sha(SOURCE)==LOCK,'Source was modified'
-    manifest={'reviewOnly':True,'runtimeSeconds':39,'sourceSha256':LOCK,'outputSha256':sha(target),'scoreSha256':sha(score),'score':stats,'opening':'Existing 22–26s dock action replaces original 0–4s; original 4–39s retained. First shot and score require owner visual/listening approval. No dialogue, no third-party samples.','disclosure':'Original concept motion teaser, not finished feature animation. Original score replaces the prior combined score/FX track; final separate foley/voices remain open.'}
+    manifest={'reviewOnly':True,'runtimeSeconds':39,'sourceSha256':LOCK,'outputSha256':sha(target),'scoreSha256':sha(score),'score':stats,'pictureVerification':picture,'opening':'Existing 22–26s dock action replaces original 0–4s; original 4–39s retained. First shot and score require owner visual/listening approval. No dialogue, no third-party samples.','disclosure':'Original concept motion teaser, not finished feature animation. Original score replaces the prior combined score/FX track; final separate foley/voices remain open.'}
     (OUT/'ACTION-REVIEW-MANIFEST.json').write_text(json.dumps(manifest,indent=2)+'\n')
     print(json.dumps(manifest,indent=2))
 if __name__=='__main__':main()
