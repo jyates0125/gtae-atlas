@@ -10,3 +10,16 @@ assert.equal(C.cayoChestSelection(s,end),null);assert.deepEqual(C.mergePublished
 const f=fs.readFileSync('atlas180-cayo-flagship.js','utf8');assert.match(f,/C\.loadPublishedRotations/);assert.match(f,/personal\?\.day===key/);assert.match(f,/lastDailyAttempt<300000/);assert.match(f,/teamjura-cayo-daily-choice-v1/);
 assert.match(fs.readFileSync('heist-cayo-perico.html','utf8'),/atlas-conditions\.js\?v=383/);
 console.log('PASS Cayo published rotation, exact island IDs, one land/one underwater, expiry and guest override');
+
+// Availability must not convert missing evidence into a false inactive claim.
+const snapshot={schema:1,rotations:{'gun-van':{activeIds:['van-1'],checkedAtUtc:'2026-11-24T06:00:00Z',validUntilUtc:'2026-11-25T06:00:00Z',source:'QA'}}};
+const t=Date.parse('2026-11-24T12:00:00Z');
+const ctx={mode:'online',now:t,snapshot};
+assert.equal(C.markerAvailability('gun-van',{...ctx,markerId:'van-1'}).hide,false);
+assert.equal(C.markerAvailability('gun-van',{...ctx,markerId:'van-2'}).hide,true);
+assert.equal(C.markerAvailability('gun-van',{...ctx,markerId:'van-2',now:Date.parse('2026-11-25T06:00:00Z')}).hide,false);
+assert.equal(C.markerAvailability('gun-van',ctx).hide,false);
+for(const id of ['pumpkins','slashers','ghosts-exposed'])assert.equal(C.markerAvailability(id,ctx).hide,true);
+assert.equal(C.markerAvailability('snowmen',ctx).hide,false);
+assert.equal(C.markerAvailability('story-letters',{mode:'story',now:t}).hide,false);
+console.log('PASS explicit inactive, active, expired/unknown, seasonal and Story separation');
