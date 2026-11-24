@@ -433,6 +433,9 @@ function updateSelected(){const card=$('selectedCard');if(!selected||selected.ga
  $('selectedSource').classList.toggle('hidden',!selected.sourceUrl);if(selected.sourceUrl)$('selectedSource').href=selected.sourceUrl;
  if($('selectedAddress')){$('selectedAddress').textContent=selected.address&&selected.address!=='?'?'Real-world reference: '+selected.address:'Real-world reference: not provided by source';}
  $('selectedInfo').textContent=(CATEGORIES[selected.category]?.[0]||'Location')+' · X '+selected.x.toFixed(0)+' · Y '+selected.y.toFixed(0)+(selected.confidence?' · '+selected.confidence.toUpperCase():(selected.uncertain?' · UNVERIFIED':''))+(selected.evidence?' · Evidence: '+selected.evidence:'')+(selected.detail?' · '+selected.detail:'')+' · '+(selected.source||'My pin');
+ const availability=conditionForRecord(selected);let guide=$('j395-selected-guide');
+ if(!guide){guide=document.createElement('p');guide.id='j395-selected-guide';guide.className='hint';guide.setAttribute('role','status');$('selectedInfo').after(guide)}
+ guide.hidden=!availability;guide.textContent=availability?window.JuraConditions.statusText(availability.status)+' · '+availability.reason:'';
  $('selectedFound').textContent=!['collectible','vehicle','weapon','activity'].includes(selected.category)?(progress[doneKey(selected)]?'✓ Visited (undo)':'Mark visited'):(progress[doneKey(selected)]?'✓ Found (undo)':'Mark found');$('selectedRoute').textContent=routeIds().includes(selected.id)?'− Remove route':'+ Route';
 }
 function routeIds(){return Array.isArray(routes[routeScope()])?routes[routeScope()]:[]}
@@ -440,7 +443,7 @@ function currentRouteStart(){const p=routeStarts[routeScope()];return p&&Number.
 function setRouteStart(p){routeStarts[routeScope()]={x:Number(p.x),y:Number(p.y),name:String(p.name||p.title||'Selected map point').slice(0,100)};chooseRouteStartMode=false;persist();render();announce('Route starts at '+routeStarts[routeScope()].name+'. Choose Smart route to generate nearest stops.');}
 function autoRouteVisible(){const origin=currentRouteStart()||(selected?.game===game?selected:{x:camera.x,y:camera.y,name:'Map center'}),planner=window.JuraRoutePlanner;
  if(!planner)return toast('Route engine missing. Upload atlas-route-core.js and refresh.');
- const available=matches().filter(r=>!progress[doneKey(r)]);if(!available.length)return toast('No unfinished visible locations. Enable categories or clear your search.');
+ const cache=activityCache();const available=matches().filter(r=>!progress[doneKey(r)]&&activityPinVisible(r,cache));if(!available.length)return toast('No unfinished visible locations. Enable categories or clear your search.');
  if(!currentRouteStart()){routeStarts[routeScope()]={x:origin.x,y:origin.y,name:origin.name||'Map center'};}
  const result=planner.plan(origin,available);routes[routeScope()]=result.stops.map(r=>r.id);persist();showTab('Route');render();fitRoute();
  toast('Smart route: '+result.stops.length+' stops · ~'+result.units.toLocaleString()+' straight-line units'+(result.omitted?' · '+result.omitted+' not included: narrow filters for smaller hunts':'')+'.');
