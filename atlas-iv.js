@@ -177,7 +177,7 @@ function setScope(which){
  document.body.dataset.ivScope=which;
  const episode={tlad:'The Lost and Damned',tbogt:'The Ballad of Gay Tony'}[which];
  const castEdition=episode?'GTA '+episode:'GTA IV';
- const notebook=$('j398-episode-notebook');if(notebook){notebook.hidden=!episode;if(episode)notebook.href='./map-hub.html?game='+which+'&notebook=1';}
+ const notebook=$('j398-episode-notebook');if(notebook){notebook.hidden=which!=='tlad';if(which==='tlad')notebook.href='./map-hub.html?game=tlad&notebook=1';else notebook.removeAttribute('href');}
  const castLink=$('classicCastLink');
  castLink.href='./atlas-characters.html?game=classic&edition='+encodeURIComponent(castEdition)+'#mainCharacterEra';
  castLink.textContent='Browse '+(episode||'GTA IV')+' characters';
