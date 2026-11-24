@@ -83,10 +83,10 @@ async function test(){
   assert.match(nav,/prepareElevation\(target\)/);
   assert.match(nav,/epoch!==terrainViewToken/);
   assert.match(nav,/dimension='3d'/);
-  assert.match(renderer,/function activate\(\)\{if\(!hasElevation\(\)\)/);
+  assert.match(renderer,/function activate\(\)\{if\(!hasElevation\(\)&&!hasApproximate\(\)\)/);
   assert.match(map,/id="j362TerrainStatus"/);
-  assert.match(map,/atlas-3d\.js\?v=366/);
-  assert.match(map,/atlas-navigation\.js\?v=367/);
+  assert.match(map,/atlas-3d\.js\?v=368/);
+  assert.match(map,/atlas-navigation\.js\?v=368/);
   console.log('Atlas 36.6: absent, valid, flat, mismatched, stale, cached and import-race heightfield cases PASS');
  }finally{
   globalThis.fetch=originalFetch;

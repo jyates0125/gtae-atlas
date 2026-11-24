@@ -229,6 +229,10 @@ function mount(){
    }
    }
  function openView({focus=true}={}){
+  // Rockstar's official poster has a different coordinate frame. Cancel
+  // any pending/active research terrain before opening it; retain the map
+  // selection and private notes, but never drape research relief onto it.
+  window.teamJuraNav?.setDimension('2d');
   updateViewUrl(true);
   panel.hidden=false;button.setAttribute('aria-expanded','true');
   button.setAttribute('aria-pressed','true');
