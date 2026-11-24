@@ -68,6 +68,26 @@ try:
    page.locator('#j368UseApproximate').click()
    page.wait_for_function("""() => teamJuraNav.terrain().hasApproximate()&&teamJuraNav.terrain().isActive()""",timeout=30000)
    assert sum('atlas368-approx-terrain.json' in x for x in requests)==1,'approximation not cached in session'
+   # Opening the actual Rockstar viewer must return to 2D, without mixing
+   # the two coordinate systems, losing the selected research layer or
+   # dropping the locally cached source grid. No external poster download.
+   layer=page.locator('#layer')
+   original_layer=layer.input_value()
+   expect(layer.locator('option[value="dupzor,51"]')).to_have_count(1)
+   expect(page.locator('#j143-official-button')).to_be_visible()
+   page.locator('#j143-official-button').click()
+   expect(page.locator('#j143-official-layer')).to_be_visible()
+   expect(page.locator('#juraNavDimension')).to_have_text('2D')
+   assert not page.evaluate('teamJuraNav.terrain().isActive()')
+   assert not page.evaluate('teamJuraNav.terrain().hasApproximate()')
+   page.locator('[data-j143="close"]').click()
+   expect(page.locator('#j143-official-layer')).to_be_hidden()
+   expect(layer).to_have_value(original_layer)
+   page.locator('#jura3d').click()
+   expect(page.locator('#j362TerrainNotice')).to_contain_text('No elevation data installed',timeout=15000)
+   page.locator('#j368UseApproximate').click()
+   page.wait_for_function("""() => teamJuraNav.terrain().hasApproximate()&&teamJuraNav.terrain().isActive()""",timeout=30000)
+   assert sum('atlas368-approx-terrain.json' in x for x in requests)==1
    # Real file input can replace the approximation without losing map mode.
    fixture=array('H',[28000])*(1536*1748);fixture[0]=28113;fixture[-1]=28317
    page.locator('#juraElevationFile').set_input_files({'name':'synthetic-local.bin','mimeType':'application/octet-stream','buffer':fixture.tobytes()})

@@ -11,6 +11,7 @@ on:
       - '.github/workflows/atlas368-approx-terrain.yml'
       - 'atlas-3d.js'
       - 'atlas-navigation.js'
+      - 'atlas143-official-map-view.js'
       - 'atlas-vi.html'
   workflow_dispatch:
 permissions:

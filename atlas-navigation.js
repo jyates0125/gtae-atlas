@@ -4,7 +4,7 @@
 (function(root){'use strict';
 const $=id=>document.getElementById(id),esc=s=>String(s||'').replace(/[&<>"']/g,v=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[v]));
 function create(bridge){const Core=root.JuraRoadCore;if(!Core)throw Error('atlas-road-core.js missing');
-let active=false,waypoints=[null,null],graph=null,plan=null,ordering='manual',dimension='2d',terrain=null,fields=[],resultItems=[],fallback3d=false,localElevation=null,terrainViewToken=0;
+let active=false,waypoints=[null,null],graph=null,plan=null,ordering='manual',dimension='2d',terrain=null,fields=[],resultItems=[],fallback3d=false,localElevation=null,terrainViewToken=0,densePending=false,approxPending=false;
 const panel=$('juraNavPanel'),container=$('juraNavFields'),results=$('juraNavResults'),mapCanvas=$('jura3dCanvas'),routeStatus=$('juraNavStatus');
 function status(s){routeStatus.textContent=s;bridge.notice(s)}
 function all(){return bridge.records()}
@@ -19,7 +19,7 @@ function renderInstructions(){results.replaceChildren();if(!plan){const p=docume
  const summary=document.createElement('div');summary.className='jura-summary';summary.innerHTML=`<strong>${plan.waypoints.length-1} segment${plan.waypoints.length>2?'s':''} · ${Math.round(plan.length).toLocaleString()} GTA world units</strong><small>${esc(plan.roadGraphUsed?'Imported road graph · UNVERIFIED':'Direct-line preview — not drivable road directions')}</small>`;results.append(summary);
  for(const segment of Core.instructions(plan,waypoints)){const p=document.createElement('div');p.className='jura-route-step';const b=document.createElement('b');b.textContent=segment.step+'.';const t=document.createElement('span');t.textContent=segment.label+' · '+Math.round(segment.length)+' units';p.append(b,t);results.append(p)}
  const warn=document.createElement('p');warn.className='jura-route-warning';warn.textContent=plan.warning;results.append(warn)}
-function render(fieldsToo=true){if(fieldsToo)renderFields();renderInstructions();$('juraNavAdd').disabled=waypoints.length>=12;const el=$('juraNavDimension');el.textContent=dimension==='3d'&&!fallback3d&&terrain?.hasApproximate()?'3D · Approx.':dimension.toUpperCase();$('juraToggle3d').textContent=dimension==='2d'?'3D':'2D';$('juraToggle3d').setAttribute('aria-pressed',String(dimension==='3d'));}
+function render(fieldsToo=true){if(fieldsToo)renderFields();renderInstructions();$('juraNavAdd').disabled=waypoints.length>=12;const el=$('juraNavDimension');el.textContent=dimension==='3d'&&!fallback3d&&terrain?.hasApproximate()?'3D · Approx.':dimension.toUpperCase();$('juraToggle3d').textContent=dimension==='2d'?'3D':'2D';$('juraToggle3d').setAttribute('aria-pressed',String(dimension==='3d'));$('jura2d')?.setAttribute('aria-pressed',String(dimension==='2d'));$('jura3d')?.setAttribute('aria-pressed',String(dimension==='3d'));}
 function setRoutePoint(place){if(!place)return;const i=waypoints.findIndex((p,j)=>j>0&&!p);if(i>=0)waypoints[i]=place;else if(waypoints.length<12)waypoints.splice(waypoints.length-1,0,place);else{status('Maximum 12 named stops');return}invalidate();open();render();}
 function setStart(place){waypoints[0]=place;plan=null;open();render()}
 function open(){active=true;panel.hidden=false;document.body.classList.add('jura-nav-open');$('juraOpenNav').setAttribute('aria-expanded','true');render();}
@@ -42,6 +42,8 @@ function syncTerrainNotice(){
  if(note)note.hidden=!(dimension==='3d'&&fallback3d);
  const approximate=dimension==='3d'&&!fallback3d&&!!terrain?.hasApproximate();
  document.body.classList.toggle('j368-approximate',approximate);
+ const use=$('j368UseApproximate');
+ if(use){use.hidden=!!terrain?.hasElevation();use.disabled=densePending||approxPending||!!terrain?.hasElevation();}
  const toggle=$('j368CoverageToggle'),legend=$('j368CoverageLegend');
  const coverage=approximate&&!!terrain?.getCoverageVisible();
  if(toggle){toggle.hidden=!approximate;toggle.setAttribute('aria-pressed',String(coverage));toggle.textContent=coverage?'Coverage on':'Coverage off';}
@@ -53,7 +55,7 @@ function setDimension(next){
  const epoch=++terrainViewToken;
  if(next==='3d'){
   const target=bridge.game();
-  dimension='3d';
+  dimension='3d';densePending=true;approxPending=false;
   // Keep the illustrated map visible during this asynchronous same-origin
   // heightfield check. Never reveal a flat WebGL canvas as genuine relief.
   fallback3d=true;
@@ -65,6 +67,7 @@ function setDimension(next){
   syncTerrainNotice();render(false);
   Promise.resolve(terrain?.prepareElevation(target)??false).then(ready=>{
    if(epoch!==terrainViewToken||dimension!=='3d'||bridge.game()!==target)return;
+   densePending=false;
    // An explicit local import can supersede the same-origin request at any
    // point. Its validated grid takes priority even when the stale fetch
    // resolves false; never relabel a real running renderer as unavailable.
@@ -82,6 +85,7 @@ function setDimension(next){
    syncTerrainNotice();render(false);
   }).catch(()=>{
    if(epoch!==terrainViewToken||dimension!=='3d'||bridge.game()!==target)return;
+   densePending=false;
    fallback3d=true;
    if(message)message.textContent='No elevation data installed yet. The illustrated 2D map is still available.';
    $('jura3dStatus').textContent='Perspective preview · terrain unavailable';
@@ -89,7 +93,7 @@ function setDimension(next){
    syncTerrainNotice();render(false);
   });
  }else{
-  terrain?.deactivate();dimension='2d';fallback3d=false;
+  terrain?.deactivate();dimension='2d';fallback3d=false;densePending=false;approxPending=false;
   document.body.classList.remove('jura-in-3d','jura-perspective-fallback');
   bridge.notice('2D illustrated map active.');
   syncTerrainNotice();render(false);
@@ -97,9 +101,9 @@ function setDimension(next){
 }
 
 async function openApproximateTerrain(){
- if(dimension!=='3d'||bridge.game()!=='6'||!fallback3d||!terrain||!root.JuraApproxTerrain)return;
+ if(dimension!=='3d'||bridge.game()!=='6'||!fallback3d||!terrain||!root.JuraApproxTerrain||densePending||approxPending||terrain.hasElevation())return;
  const epoch=++terrainViewToken,button=$('j368UseApproximate'),message=$('j362TerrainStatus');
- if(button)button.disabled=true;
+ approxPending=true;syncTerrainNotice();
  if(message)message.textContent='Loading the local GTADB-derived approximate terrain…';
  try{
   const surface=await root.JuraApproxTerrain.load();
@@ -123,7 +127,7 @@ async function openApproximateTerrain(){
   if(epoch!==terrainViewToken||dimension!=='3d')return;
   if(message)message.textContent='Approximate terrain is unavailable: '+String(err?.message||'could not load')+'. Your illustrated map remains usable.';
   syncTerrainNotice();render(false);
- }finally{if(button)button.disabled=false;}
+ }finally{if(epoch===terrainViewToken){approxPending=false;syncTerrainNotice();}}
 }
 function clear(){waypoints=[null,null];plan=null;bridge.clearRoutePlan();render();status('Navigation cleared. Saved collectible progress is unchanged.')}
 function refresh(){if(terrain?.isActive())terrain.render()}
@@ -182,7 +186,7 @@ function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('
    localElevation={game:g,bytes};
    // Invalidate the pending button load: the local upload is authoritative,
    // and late async 404/corrupt responses must not overwrite its status.
-   ++terrainViewToken;
+   ++terrainViewToken;densePending=false;approxPending=false;
    if(dimension==='3d'){
     const ok=!!terrain.isActive()||!!terrain.activate();
     fallback3d=!ok;
