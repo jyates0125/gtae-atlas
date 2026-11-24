@@ -10,9 +10,19 @@ const compile=(gl,type,source)=>{const s=gl.createShader(type);gl.shaderSource(s
 function program(gl){const p=gl.createProgram();gl.attachShader(p,compile(gl,gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(p)||'GL link');return p}
 function perspective(fov,ratio,near,far){const f=1/Math.tan(fov/2),m=new Float32Array(16);m[0]=f/ratio;m[5]=f;m[10]=(far+near)/(near-far);m[11]=-1;m[14]=2*far*near/(near-far);return m}
 function lookAt(eye,target,up){let z=normalize(sub(eye,target)),x=normalize(cross(up,z)),y=cross(z,x),m=new Float32Array(16);m[0]=x[0];m[1]=y[0];m[2]=z[0];m[4]=x[1];m[5]=y[1];m[6]=z[1];m[8]=x[2];m[9]=y[2];m[10]=z[2];m[12]=-dot(x,eye);m[13]=-dot(y,eye);m[14]=-dot(z,eye);m[15]=1;return m}
-const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],sub=(a,b)=>a.map((v,i)=>v-b[i]),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2]],normalize=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l)};
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],sub=(a,b)=>a.map((v,i)=>v-b[i]),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],normalize=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l)};
 function matmul(a,b){const out=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)for(let i=0;i<4;i++)out[c*4+r]+=a[i*4+r]*b[c*4+i];return out}
-function clipPoint(m,p){const x=p[0],y=p[1],z=p[2];const w=m[3]*x+m[7]*y+m[11]*z+m[15];if(w<=.001)return null;return[(m[0]*x+m[4]*y+m[8]*z+m[12])/w,(m[1]*x+m[5]*y+m[9]*z+m[13])/w]}
+// Pure, independently testable camera transformation.
+function cameraMatrix(bearing,pitch,distance,width,height){
+ const finite=(v,fallback)=>Number.isFinite(v)?v:fallback;
+ const b=finite(bearing,0)%(Math.PI*2),t=Math.max(.24,Math.min(1.43,finite(pitch,.83))),d=Math.max(360,Math.min(40000,finite(distance,3200)));
+ const ratio=Math.max(.1,Math.min(10,Math.max(1,finite(width,1))/Math.max(1,finite(height,1))));
+ const eye=[Math.sin(b)*d*Math.cos(t),d*Math.sin(t),Math.cos(b)*d*Math.cos(t)];
+ const m=matmul(perspective(Math.PI/3,ratio,5,90000),lookAt(eye,[0,0,0],[0,1,0]));
+ if(!Array.from(m).every(Number.isFinite))throw Error('Non-finite terrain camera matrix');
+ return m;
+}
+function clipPoint(m,p){const x=p[0],y=p[1],z=p[2];const w=m[3]*x+m[7]*y+m[11]*z+m[15];if(!Number.isFinite(w)||w<=.001)return null;return[(m[0]*x+m[4]*y+m[8]*z+m[12])/w,(m[1]*x+m[5]*y+m[9]*z+m[13])/w]}
 
 /** Stateless camera gesture transform. Single drag orbits, Shift-drag pans;
  * two touchpoints pan and pinch. Pure so gesture math can be unit tested.
@@ -115,7 +125,7 @@ function updateTexture(){
  }catch(e){textured=false;document.body.classList.remove('jura-3d-texture-pending');notice('3D terrain · map imagery unavailable; relief colors shown')}
 }
 function sync(){const c=bridge.camera();center={x:c.x,y:c.y,z:c.z};extent=Math.max(1200,Math.min(26000,Math.pow(2,3.2-c.z)*5700));distance=extent*.92;pitch=.83;bearing=0;geoKey='';textureFingerprint='';}
-function matrix(){const w=Math.max(1,canvas.width),h=Math.max(1,canvas.height);const eye=[Math.sin(bearing)*distance*Math.cos(pitch),distance*Math.sin(pitch),Math.cos(bearing)*distance*Math.cos(pitch)],target=[0,0,0];return matmul(perspective(Math.PI/3,w/h,5,90000),lookAt(eye,target,[0,1,0]))}
+function matrix(){return cameraMatrix(bearing,pitch,distance,canvas.width,canvas.height)}
 function project(x,y){if(!projectMatrix)return null;const pos=[x-center.x,elevation(x,y)*2.1+22,center.y-y],coords=clipPoint(projectMatrix,pos);if(!coords||Math.abs(coords[0])>1.4||Math.abs(coords[1])>1.4)return null;return{x:(coords[0]+1)*canvas.clientWidth/2,y:(1-coords[1])*canvas.clientHeight/2}}
 function drawOverlays(){if(!overlay)return;overlay.replaceChildren();const places=bridge.places().filter(r=>Math.abs(r.x-center.x)<extent*.4&&Math.abs(r.y-center.y)<extent*.4).slice(0,1200),route=bridge.route(),points=[];
  for(const r of places){const q=project(r.x,r.y);if(!q)continue;const b=document.createElement('button');b.type='button';b.className='jura-3d-pin';b.textContent=r.markerColor?'':bridge.symbol(r.category);b.title=r.name;b.setAttribute('aria-label','Find '+r.name);b.style.left=q.x+'px';b.style.top=q.y+'px';b.style.background=bridge.color(r.category,r);if(r.markerColor)b.classList.add('jura-gtadb-pin');b.onclick=()=>bridge.select(r);overlay.append(b)}
@@ -212,5 +222,5 @@ canvas.addEventListener('lostpointercapture',release);
 canvas.addEventListener('wheel',e=>{if(!active)return;e.preventDefault();zoom(e.deltaY>0?1.17:.85)},{passive:false});
 return{activate,deactivate,rebase,render,zoom,prepareElevation,setElevationBinary,hasApproximate,setApproximateSurface,clearApproximateSurface,setCoverageVisible,getCoverageVisible:()=>showCoverage,resetNorth(){bearing=0;pitch=.86;render()},isActive:()=>active,hasElevation,getError:()=>sourceError,hasMapTexture:()=>textured,hasVisibleFrame:()=>frameVerified,verifyFrame,getFrameReport:()=>frameReport,getView:()=>({bearing,pitch,distance,center:{...center}})};
 }
-root.JuraTerrain3D=Object.freeze({create,ELEVATIONS,solveGesture});
+root.JuraTerrain3D=Object.freeze({create,ELEVATIONS,solveGesture,cameraMatrix});
 })(typeof window!=='undefined'?window:globalThis);

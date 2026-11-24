@@ -13,3 +13,6 @@ Owner screenshots at 05962833 preview showed active approximate mode but blank o
 
 ### Pixel diagnostics and resilient first frame
 Real device review confirmed Menu works; owner prefers Menu over All Pages. Keep existing placement. Replaced color-threshold checks with an opaque-geometry alpha test against transparent clear; checks actual drawing buffer size, matrix, errors and sample RGBA. Force explicit initial layout, conservative retry, isolate optional marker overlays, resize-triggered repaint, and fail closed to 2D. Automated diagnostics are available without accessing personal progress or sending telemetry. Still requires visible-frame regression success.
+
+### Root cause — missing cross-product component
+The actual phone-sized Chromium framebuffer had 0 opaque terrain pixels with 9,126 mesh indices, a loaded texture, non-finite camera matrix and [NaN,NaN] center projection. The cross-product function returned only x and y; the missing z propagated to the lookAt basis and projection. Corrected all three components, added finite camera guard and 750 deterministic centered/finite projection cases. Gesture-only mock explicitly simulates a draw only after finite matrix upload; actual framebuffer and GTADB image acceptance remain separate browser gates. Cache-bust all three world pages' renderer URL.

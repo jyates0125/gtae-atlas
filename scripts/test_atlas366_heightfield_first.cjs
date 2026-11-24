@@ -7,6 +7,23 @@ const fs=require('node:fs');
 const path=require('node:path');
 require('../atlas-3d.js');
 const definition=globalThis.JuraTerrain3D.ELEVATIONS['6'];
+const cameraMatrix=globalThis.JuraTerrain3D.cameraMatrix;
+function cameraRegression(){
+ let n=0;
+ for(const bearing of [0,Math.PI/4,Math.PI,Math.PI*1.5,Math.PI*2,NaN])
+ for(const pitch of [.24,.83,1.05,1.43,NaN])
+ for(const distance of [360,3200,19500,40000,NaN])
+ for(const [w,h] of [[390,650],[1440,900],[844,390],[1,1],[0,0]]){
+  const m=cameraMatrix(bearing,pitch,distance,w,h);
+  assert.equal(m.length,16);assert(Array.from(m).every(Number.isFinite),'finite camera matrix');
+  assert(m[15]>0,'target is in front of camera');
+  assert(Math.abs(m[12]/m[15])<1e-5&&Math.abs(m[13]/m[15])<1e-5,'target projects to screen center');
+  const z=m[14]/m[15];assert(z>=-1&&z<=1,'target inside near/far clip range');
+  n++;
+ }
+ console.log('Atlas camera regression: '+n+' finite centered transformations PASS');
+}
+cameraRegression();
 const size=definition.width*definition.height*2;
 function samples(){
  const grid=new Uint16Array(definition.width*definition.height);
@@ -85,7 +102,7 @@ async function test(){
   assert.match(nav,/dimension='3d'/);
   assert.match(renderer,/function activate\(\)\{if\(!hasElevation\(\)&&!hasApproximate\(\)\)/);
   assert.match(map,/id="j362TerrainStatus"/);
-  assert.match(map,/atlas-3d\.js\?v=3691/);
+  assert.match(map,/atlas-3d\.js\?v=3692/);
   assert.match(map,/atlas-navigation\.js\?v=3691/);
   console.log('Atlas 36.6: absent, valid, flat, mismatched, stale, cached and import-race heightfield cases PASS');
  }finally{

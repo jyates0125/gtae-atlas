@@ -18,7 +18,14 @@ with sync_playwright() as pw:
   page.add_script_tag(path=str(ROOT/'atlas-3d.js'))
   activated=page.evaluate("""async () => {
     const canvas=document.getElementById('c');
+    // Gesture-only stub; real framebuffer coverage is tested separately.
+    let drew=false,finiteMatrix=false;
     const fake=new Proxy({}, {get:(target,key)=>{
+      if(key==='NO_ERROR')return 0;
+      if(key==='getError')return ()=>0;
+      if(key==='uniformMatrix4fv')return (location,transpose,m)=>{finiteMatrix=Array.from(m).every(Number.isFinite);};
+      if(key==='drawElements')return ()=>{drew=finiteMatrix;};
+      if(key==='readPixels')return (...args)=>{args[6].set(drew?[80,140,90,255]:[0,0,0,0]);};
       if(key==='isContextLost')return ()=>false;
       if(key==='getShaderParameter'||key==='getProgramParameter')return ()=>true;
       if(key==='getAttribLocation'||key==='getUniformLocation')return ()=>0;
