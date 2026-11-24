@@ -1,0 +1,23 @@
+/* Atlas 32.1 — premium compact seven-world continuation, non-destructive rescue. */
+.j98-maps .j321-classic-pulse{padding:clamp(13px,2.5vw,22px);background:linear-gradient(130deg,#30183f,#160d25);border:1px solid #a36eac;border-radius:15px;min-width:0}
+.j321-classic-pulse details{min-width:0}
+.j321-classic-pulse summary{cursor:pointer;display:grid;gap:5px;color:#ffe0ac;font:800 clamp(16px,2vw,21px)/1.35 system-ui;list-style-position:inside}
+.j321-classic-pulse summary small{color:#e7d6e8;font:500 12px/1.5 system-ui}
+.j321-classic-pulse details>p{color:#e7d4e7;max-width:980px}
+.j321-world-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:12px;margin:14px 0}
+.j321-world{background:linear-gradient(130deg,#271634,#1b1129);border:1px solid #7d598d;border-radius:12px;padding:12px;min-width:0}
+.j321-world-header{display:grid;gap:4px}
+.j321-world-header h3{color:#ffda99;margin:0;font:800 15px/1.35 system-ui}
+.j321-world-header span{color:#dfcfe2;font:650 11px/1.5 system-ui}
+.j321-world>p{font:12px/1.5 system-ui;color:#efc6cc}
+.j321-sets{margin:9px 0 0;padding:0;list-style:none;display:grid;gap:5px}
+.j321-sets a,.j321-world>a{display:flex;align-items:center;min-height:42px;padding:8px 10px;border:1px solid #79628f;border-radius:8px;color:#ffe0a3;background:#352243;font:650 12px/1.45 system-ui;text-decoration:none;overflow-wrap:anywhere}
+.j321-sets a:hover,.j321-world>a:hover{background:#58376c}
+#j321Refresh{min-height:44px;padding:10px 14px;border:1px solid #ffc98d;border-radius:9px;background:#48305a;color:#ffe0a4;font:800 12px/1.35 system-ui;cursor:pointer}
+.j321-classic-pulse :is(a,button,summary):focus-visible,.j321-checklist-warning button:focus-visible{outline:3px solid #ffe1aa;outline-offset:3px}
+.j321-checklist-warning{margin-top:12px;padding:12px;border:1px solid #de9c7e;background:#44243c;border-radius:12px;display:grid;gap:8px}
+.j321-checklist-warning[hidden]{display:none!important}
+.j321-checklist-warning strong{font:800 14px/1.4 system-ui;color:#ffe0a9}
+.j321-checklist-warning p{font:12px/1.6 system-ui;color:#ffe1e3;margin:0}
+.j321-checklist-warning button{min-height:44px;padding:10px;border:1px solid #ffc68e;background:#623850;color:#fff0db;border-radius:9px;font:750 12px/1.4 system-ui}
+@media(max-width:540px){.j321-world-grid{grid-template-columns:1fr}.j321-classic-pulse{margin-inline:0}}

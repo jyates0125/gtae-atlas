@@ -1,0 +1,46 @@
+name: Atlas 30.9 - San Andreas premium source hero
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'atlas-sa.html'
+      - 'atlas85-sa.css'
+      - 'atlas309-sa-hero.css'
+      - 'scripts/test_atlas309_sa_hero.py'
+      - 'scripts/test_atlas309_sa_hero_browser.py'
+      - '.github/workflows/atlas309-sa-hero.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sa-hero:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source, rights labeling and asset existence
+        run: python scripts/test_atlas309_sa_hero.py
+      - name: Build and audit Cloudflare output
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Verify hero image, CTA and real map across phone and desktop
+        run: python scripts/test_atlas309_sa_hero_browser.py
+      - name: Save design review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas309-sa-original-hero
+          path: qa-evidence/chromium/atlas309-sa-premium-*.png
+          if-no-files-found: warn
+          retention-days: 14

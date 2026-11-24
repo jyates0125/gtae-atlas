@@ -1,0 +1,36 @@
+name: Atlas 30.0 - verify latest-PR-delta test scopes
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'scripts/atlas300-ci-delta.py'
+      - 'scripts/test_atlas300_ci_delta.py'
+      - '.github/workflows/atlas300-ci-delta.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas300-scope-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  ci-scope-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify YAML parse, safe fail-open and scoped PR paths
+        run: |
+          python -m pip install 'pyyaml==6.0.2'
+          python -m py_compile scripts/atlas300-ci-delta.py scripts/test_atlas300_ci_delta.py
+          python scripts/test_atlas300_ci_delta.py
+      - name: Verify the newly scoped workflow commands on an unrelated change
+        env:
+          GITHUB_EVENT_NAME: pull_request
+          ATLAS_PR_ACTION: synchronize
+        run: |
+          # In a synthetic source checkout the gate may fail open if the parent
+          # is unavailable. The executable unit checks carry the exact logic.
+          python scripts/atlas300-ci-delta.py .github/workflows/atlas293-garage-forge.yml

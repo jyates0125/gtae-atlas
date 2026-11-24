@@ -1,0 +1,56 @@
+# Team Jura Atlas 31.8 — one-shot owner-authorized full release validation.
+# Deliberately triggers ONLY when this workflow file itself changes on the
+# draft staging branch. Ordinary feature commits do NOT rerun the huge gate.
+# Atlas 34.3 owner-authorized release validation: one exact-head re-dispatch
+# following 39/39 green scoped checks on dc619b0, before GTAE development release.
+# If the release suite or native-device / live-site gates remain unverified,
+# keep protected main untouched and record the release blocker.
+# Never publishes or merges production; the existing manual workflow does QA.
+# Atlas 35.8: run the existing release suite once for the integrated wardrobe and terrain candidate.
+# Atlas 38.4: owner requested tonight's release preparation; dispatch the complete non-publishing QA gate on the new GTAE branding, GPS and daily-data candidate.
+# Atlas 38.5: freeze and repeat the full release gate after repairing the owner-approved three-view tests, heist recovery regression and phone navigation row.
+# Atlas 38.6: run all static assertions with aggregate failure reporting; no gate is waived.
+# Atlas 38.7: reconcile all reported first-block failures; unify daily sidebar source and restore static-tail parsing.
+# Atlas 38.8: reconcile deferred account and three-view Leonida HQ copy with the verified map controls.
+# Atlas 38.9: correct the two alternate explorer phone headers after full browser sweep; repeat frozen release QA.
+# Atlas 39.0: replace DOM-only marker fixture with real guest selection and current save-key assertions.
+# Atlas 39.0.1: invoke fixture bootstrap on each isolated page and preserve original photo node.
+# Atlas 39.0.2: recover transient same-origin Garage catalog requests; verify Forge return with failure injection.
+# Atlas 39.0.3: scoped older/duplicated decorative header refresh; preserve all approved worlds and maps.
+# Atlas 39.0.3a: ensure dashboard header overrides the older high-specificity important background at both breakpoints.
+# Atlas 39.0.6a: freeze approved action cut and corrected cinematic headers for full nonpublishing release QA.
+# Atlas 39.0.7: owner requires uploaded artwork before release; retain approved dock opening and rerun exact-head QA.
+name: Atlas 31.8 - one-time staging full release launch
+on:
+  push:
+    branches:
+      - feature/atlas294-integrated-staging-20261122
+    paths:
+      - .github/workflows/atlas318-once-release-dispatch.yml
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch-full-staging-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify exact staging head and dispatch full release QA once
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          STAGING_REF: ${{ github.ref_name }}
+          EXPECTED_HEAD: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$STAGING_REF" = "feature/atlas294-integrated-staging-20261122"
+          head_now="$(gh api "repos/$GH_REPO/git/ref/heads/$STAGING_REF" --jq '.object.sha')"
+          if [ "$head_now" != "$EXPECTED_HEAD" ]; then
+            echo "::error::Staging head changed; refusing to validate a stale candidate."
+            exit 1
+          fi
+          echo "Owner-authorized full staging QA on $EXPECTED_HEAD"
+          gh workflow run team-jura-release.yml --ref "$STAGING_REF" --repo "$GH_REPO"
+          echo "Dispatched existing full Chromium + Edge + validated ZIP release workflow."
+          echo "The candidate is NOT owner-approved for public release by this dispatch."

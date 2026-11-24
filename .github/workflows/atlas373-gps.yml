@@ -1,0 +1,26 @@
+name: Atlas 37.3 GPS focused
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-road-core.js'
+      - 'atlas-navigation.js'
+      - 'atlas.html'
+      - 'atlas-online.html'
+      - 'atlas-vi.html'
+      - 'scripts/test_atlas373_gps.cjs'
+      - '.github/workflows/atlas373-gps.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas-road-core.js && node --check atlas-navigation.js
+      - run: node scripts/test_atlas373_gps.cjs

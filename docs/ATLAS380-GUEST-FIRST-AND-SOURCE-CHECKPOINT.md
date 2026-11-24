@@ -1,0 +1,3 @@
+# Atlas 38.0 — guest-first public wording and source checkpoint
+
+Sign-ins deferred at owner request; landing and navigation now prioritize guest backup tools. Disabled account entry retained only as a clearly deferred future feature; no cloud changes. Modern and classic dynamic page titles use GTAE. Existing artwork, bookmarks, collection keys, heist plans and source IDs unchanged. One Last Ride source not modified. Confirmed GTADB GitHub main d406fea099e1df2bce42fd6b87eed04bce646629 matches bundled VI source revision on November 23; no newer source commit. Daily data publication remains unpopulated. Exact head CI and visual approval pending.

@@ -1,0 +1,49 @@
+name: Atlas 31.7 - release static tail preflight
+on:
+  pull_request:
+    branches: [development, feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'scripts/test_atlas212_directory.py'
+      - '.github/workflows/atlas317-release-static-tail.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static-tail:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify all remaining full-release static commands, report every failure
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib, shlex, subprocess, sys
+          workflow=pathlib.Path('.github/workflows/team-jura-release.yml').read_text(encoding='utf-8').splitlines()
+          start=next(i for i,line in enumerate(workflow) if line.strip().removeprefix('check ')=='python scripts/test_atlas212_directory.py')
+          end=next(i for i in range(start+1,len(workflow)) if workflow[i].startswith('      - name:'))
+          commands=[line.strip().removeprefix('check ') for line in workflow[start:end] if line.strip().removeprefix('check ').startswith(('python ','node '))]
+          assert len(commands)>=55, f'Release command tail unexpectedly truncated: {len(commands)}'
+          errors=[]
+          for command in commands:
+              try:
+                  result=subprocess.run(shlex.split(command),capture_output=True,text=True,timeout=110)
+                  if result.returncode:
+                      errors.append(command)
+                      print('FAIL:', command, '\\n', (result.stdout+'\\n'+result.stderr)[-5000:],flush=True)
+                  else:
+                      print('PASS:',command,flush=True)
+              except Exception as exc:
+                  errors.append(command)
+                  print('ERROR:',command,repr(exc),flush=True)
+          print(f'Release static tail: {len(commands)-len(errors)}/{len(commands)} passed. Failures: {errors}',flush=True)
+          sys.exit(1 if errors else 0)
+          PY

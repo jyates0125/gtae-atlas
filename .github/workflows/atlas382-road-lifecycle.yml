@@ -1,0 +1,26 @@
+name: Atlas 38.2 navigation graph lifecycle
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-road-core.js'
+      - 'atlas-navigation.js'
+      - 'atlas-vi.html'
+      - 'atlas-online.html'
+      - 'atlas.html'
+      - 'scripts/test_atlas382_graph_lifecycle.cjs'
+      - '.github/workflows/atlas382-road-lifecycle.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  graph-lifecycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas-road-core.js && node --check atlas-navigation.js
+      - run: node scripts/test_atlas382_graph_lifecycle.cjs && node scripts/test_atlas373_gps.cjs && node scripts/test_atlas377_map_center.cjs && node scripts/test_atlas366_heightfield_first.cjs

@@ -58,6 +58,7 @@ try:
     bounds=card.bounding_box()
     assert bounds['y']>=box['y']-3 and bounds['y']+bounds['height']<=box['y']+box['height']+3,'Detail sheet extends beyond the map workspace'
     assert box['y']<270,'Duplicate world nav is pushing the map off the first phone screen'
+    assert page.locator('header.topbar > nav').evaluate("(el)=>getComputedStyle(el).flexWrap")=='nowrap','Phone map navigation must remain one scrollable row'
     assert page.locator('.atlas85-head a').first.is_hidden(),'Redundant world nav still visible'
     catalog=page.locator('#atlas90-catalog-shortcuts').bounding_box()
     assert catalog and catalog['height']<72,'Equipment shortcut links wrap into duplicate rows'

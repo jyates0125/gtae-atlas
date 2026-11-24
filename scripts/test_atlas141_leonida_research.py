@@ -9,10 +9,10 @@ research=(root/"atlas-research.html").read_text(encoding="utf-8")
 research_js=(root/"atlas-research.js").read_text(encoding="utf-8")
 worlds=(root/"atlas98-worlds.js").read_text(encoding="utf-8")
 manifest=json.loads((root/"data/gtadb-6-manifest.json").read_text(encoding="utf-8"))
-assert "'yanis,18','YANIS V18 · Current'" in engine
+assert "'6':[['day','In-game Map'],['scaly,view','Scaly · YANIS V18'],['dupzor,51','Loki · DUPZOR V51']]" in engine
 assert "'dupzor,51','Loki · DUPZOR V51'" in engine
 assert "'scaly,view','Scaly · YANIS V18'" in engine
-assert "'research,view','Research basemap · YANIS V18'" in engine
+assert "if(g==='6'&&style==='scaly,view')return{base:'yanis,18'" in engine
 assert "if(g==='6'&&style==='research,view')return{base:'yanis,18'" in engine
 assert "YANIS V17 illustration" not in engine
 assert 'href="./atlas-research.html"' in explorer

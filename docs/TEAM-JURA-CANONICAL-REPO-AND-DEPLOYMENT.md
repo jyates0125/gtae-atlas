@@ -6,12 +6,12 @@
 
 | Role | Location | Rule |
 | --- | --- | --- |
-| Canonical GitHub repository | `jyates0125/team-jura-atlas-preview` | Keep this repo name for now; the public name remains GTAE / Team Jura Atlas |
+| Canonical GitHub repository | `jyates0125/gtae-atlas` | GitHub repository ID 1456856327 now resolves to jyates0125/gtae-atlas |
 | Primary public GTAE URL | `https://gtae-online.pages.dev/` | Cloudflare Pages project `gtae-online`; real deployment must be observed independently |
 | Official Cloudflare production source | protected lowercase `main` | **Only** reviewed and owner-approved releases publish to `gtae-online.pages.dev`; verify actual live SHA |
 | Working and test branch | lowercase `development` | New features and source research are staged and checked here; Cloudflare preview only, never official GTAE production |
 | Temporary work | `feature/*`, `docs/*`, `fix/*` | Branch from current `development`, review/test via PR, then archive only after safety audit |
-| Old Cloudflare project | `https://team-jura-atlas-preview.pages.dev/` | Duplicate project can now be retired by owner; do NOT delete the single canonical GitHub repo or its branches |
+| Legacy guest-progress origin | `https://team-jura-atlas-preview.pages.dev/` | Preserve same-origin access to saved progress and exports pending owner review. Verify availability before any retirement. |
 
 **A single repository with two permanent branches is the intended topology.** It does not imply deleting open PR heads, safety refs, incomplete research or an older Cloudflare project without separate review. No second GitHub repository is authoritative merely because a second site URL exists.
 
@@ -23,7 +23,7 @@
 - **Current baseline synchronization:** [PR #157](https://github.com/jyates0125/team-jura-atlas-preview/pull/157) merged verified production `main` back to `development` as `393c4a38ad6a49e37cd3cde3b11b1fcb5b0737b0`. Both Git trees verified byte-identical: `d8b509390b3a89fc4aed57a045d169c4c5d05e59`. Later development commits are permitted to differ; never demand permanent file parity during feature work. Only main is public production.
 - **Unreleased integrated staging** PR #98 remains a draft feature candidate and must merge current production security baseline before any future release. Preserve owner native iPhone Safari/design approval, complete source rights and browser/ZIP checks for major releases.
 - **Deployment facts:** two separate Cloudflare Pages projects can create preview builds from one GitHub repo. Cloudflare Pages project settings/removal require account-side access; the connected GitHub app does not directly control or delete Pages projects. The temporary secure legacy typo forwarding entry point is `scripts/build-cloudfare.cjs` and canonical script `scripts/build-cloudflare.cjs`; only filtered `public/` may be deployed.
-- **GitHub repo name:** `jyates0125/team-jura-atlas-preview` stays unchanged until the owner separately renames it and verifies reconnecting Cloudflare and saved auto-build references.
+- **GitHub repo name:** The original name redirects to `jyates0125/gtae-atlas`. Verify connected builds against the new name and their served revision.
 
 Historical branch descriptions and Nov 22 release instructions below remain for audit background but **do not override this November 23 production/main policy**.
 
@@ -31,9 +31,9 @@ Historical branch descriptions and Nov 22 release instructions below remain for 
 
 - PR [#88](https://github.com/jyates0125/team-jura-atlas-preview/pull/88) merged into `development` at `f838b82d13c4b22954eedb93bdf3729be5defe84` (Atlas 28.8).
 - PR [#89](https://github.com/jyates0125/team-jura-atlas-preview/pull/89) passed full Chromium, Edge, focused checks and a validated ZIP, then merged the all-13-world directory improvement into `development` as `4f766df1d5e1ecd97eb1bb739314d2def9916e20`. Cloudflare production remains **UNVERIFIED** without observing its actual deployment SHA.
-- **Release sync hazard found November 22:** PR [#90](https://github.com/jyates0125/team-jura-atlas-preview/pull/90) was originally built using PR #88's tree (`69a02aca4163e43a5f263eedbc299cd92ebbce8e`), before PR #89 entered `development`. Its initial green checks cannot prove parity with current `development`. After documentation PR #91 is approved/merged, advance the existing protected-main sync candidate using the *then-current* `development` tree, retain both commit histories, rerun exact-head CI, compare tracked trees and verify live site separately. Do not merge the stale tree.
+- **Protected main synchronization VERIFIED November 22:** PR [#90](https://github.com/jyates0125/team-jura-atlas-preview/pull/90) merged as `8039ee9214fe7bfa3801bcea8f0c95b41f44b94d` after the original stale candidate was refreshed to the reviewed `development` tree, full release workflow passed and tracked-file comparison showed zero differences. Historical backups and both Git histories were preserved. This approves only the finished Atlas 28.9/charter snapshot; open Leonida PR #94 is staged separately and is NOT a published release.
 - On inspection, GitHub reports the default as lowercase `main`. A historical accidental uppercase `Main` ref still exists. **Do not rename or delete it in a routine build.** Recheck GitHub default, rulesets, active PR bases and the recovery refs before any owner-approved cleanup.
-- Branch histories diverge. A historical statement that `main` and `development` had identical trees at Atlas 22.0 does not establish parity after Atlas 28.8. Compare current **files**, not only commit counts, and never force-push to mask divergence.
+- Git commit histories intentionally differ, but the **tracked site trees were equal at the verified Atlas 28.9 PR #90 merge**. Compare live current heads and file diffs before any later sync; never force-push, and never infer deployed Cloudflare SHA from GitHub file parity.
 - [The completion board](ATLAS-2150-COMPLETION-BOARD.md) is an evidence register, not a declaration of completion.
 
 ## Must-preserve product decisions
@@ -59,6 +59,7 @@ Historical branch descriptions and Nov 22 release instructions below remain for 
 ## Cloudflare configuration and troubleshooting
 
 Expected official GTAE Cloudflare Pages config: production branch **`main`**, command `node scripts/build-cloudflare.cjs` (legacy typo `build-cloudfare.cjs` also supported), output directory **`public`**, root repository root/blank. The old project is not the canonical output. `_headers` should prevent sticky JS/CSS/HTML caches, but only inspecting real response headers and served asset bytes can prove whether visitors see a release.
+
 
 When source branch is correct but the site looks old, check in order: deployment **project and production branch**, recent build status/SHA, build output artifact, `atlas-build-identity.json`, actual requested JS/CSS URLs and cache headers, then device cache/service worker. Do **not** merge `main` reflexively as a cache fix. A browser snapshot cannot establish source-version identity.
 

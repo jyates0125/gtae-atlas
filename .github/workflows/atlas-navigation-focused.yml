@@ -1,0 +1,102 @@
+name: Atlas navigation — focused checks
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas132-nav.js'
+      - 'atlas292-shortcut-filter.js'
+      - 'atlas-dashboard.html'
+      - 'atlas291-shortcuts.css'
+      - 'tests/atlas291-shortcuts.test.cjs'
+      - 'scripts/test_atlas223_home_browser.py'
+      - 'atlas223-home.js'
+      - 'atlas223-home.css'
+      - '.github/workflows/atlas-navigation-focused.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  navigation-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas-navigation-focused.yml
+      - name: Check dashboard shortcut menu and all 13 destinations
+        if: steps.scope.outputs.run == 'true'
+        run: node tests/atlas291-shortcuts.test.cjs
+      - name: Check JavaScript syntax of navigation scripts
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          node --check atlas223-home.js
+          node --check atlas132-nav.js
+  dashboard-mobile-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas-navigation-focused.yml
+      - name: Build preview assets
+        if: steps.scope.outputs.run == 'true'
+        run: node scripts/build-cloudflare.cjs
+      - name: Install Chromium for dashboard-only mobile QA
+        if: steps.scope.outputs.run == 'true'
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install --with-deps chromium
+      - name: Verify dashboard at desktop and phone widths; report overflow elements
+        if: steps.scope.outputs.run == 'true'
+        run: python scripts/test_atlas223_home_browser.py
+  dashboard-edge-mobile:
+    runs-on: windows-2022
+    timeout-minutes: 12
+    env:
+      ATLAS_BROWSER: msedge
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python scripts/atlas300-ci-delta.py .github/workflows/atlas-navigation-focused.yml
+      - name: Build preview assets
+        if: steps.scope.outputs.run == 'true'
+        run: node scripts/build-cloudflare.cjs
+      - name: Install dashboard browser test harness
+        if: steps.scope.outputs.run == 'true'
+        run: python -m pip install playwright==1.58.0
+      - name: Test only dashboard in Microsoft Edge, including 375px overflow diagnostics
+        if: steps.scope.outputs.run == 'true'
+        run: python scripts/test_atlas223_home_browser.py

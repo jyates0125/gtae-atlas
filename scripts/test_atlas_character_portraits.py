@@ -392,7 +392,7 @@ with AtlasTestServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as
                 notes.nth(0).fill("Existing private approach")
                 restore={"schema":"teamjura-heist-plan-v1","heist":heist,"notes":{"approach":"Do not overwrite","entry":"Restored private entry"}}
                 page.locator(".j228-import input").set_input_files({"name":"mission.json","mimeType":"application/json","buffer":json.dumps(restore).encode()})
-                expect(page.locator(".j164-notes [role=status]")).to_contain_text("1 field(s) restored; 1 existing kept")
+                expect(page.locator(".j164-notes [role=status]")).to_contain_text("1 field(s) restored; 1 saved field(s) preserved.")
                 expect(notes.nth(0)).to_have_value("Existing private approach")
                 expect(notes.nth(1)).to_have_value("Restored private entry")
                 restore["heist"]="another-mission"

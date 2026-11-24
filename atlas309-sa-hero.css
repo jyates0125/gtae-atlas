@@ -1,0 +1,10 @@
+/* Atlas 30.9 · unique original SA-era cinematic hero. The original vector map remains the map. */
+body .hero{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(15px,2.5vw,32px);background:linear-gradient(110deg,#2b143cf2,#180f2f) ;border-color:#e7aa75}
+.j309-sa-hero-art{position:relative;isolation:isolate;align-self:stretch;display:flex;min-width:0;min-height:235px;margin:0;border:1px solid #e1ae82;border-radius:15px;overflow:hidden;box-shadow:0 14px 30px #090413ad;background:#281638}
+.j309-sa-hero-art:after{position:absolute;inset:45% 0 0;content:"";background:linear-gradient(0deg,#130a22ed,transparent);pointer-events:none}
+.j309-sa-hero-art img{display:block;width:100%;height:100%;min-height:235px;max-height:420px;object-fit:cover;object-position:center 43%;filter:saturate(1.07)}
+.j309-sa-hero-art figcaption{position:absolute;z-index:2;left:12px;right:12px;bottom:12px;display:grid;gap:3px;font:700 11px/1.4 system-ui;color:#ffebce;text-shadow:0 2px 9px #090513}
+.j309-sa-hero-art figcaption strong{font:850 12px/1.4 system-ui;color:#ffcd88;letter-spacing:.045em}
+.j309-sa-hero-art figcaption span{font-weight:550}
+@media(max-width:850px){body .hero{grid-template-columns:minmax(0,1fr)}.j309-sa-hero-art{min-height:195px}.j309-sa-hero-art img{height:245px;min-height:195px}}
+@media(max-width:440px){body .hero{padding:14px}.j309-sa-hero-art img{height:205px;min-height:190px}.j309-sa-hero-art figcaption{bottom:8px;left:9px;right:9px}.j309-sa-hero-art figcaption strong{font-size:10px}}

@@ -23,8 +23,10 @@ assert "20261121043647_harden_atlas_save_table_privileges.sql" in security
 assert "relforcerowsecurity" in verify
 assert "pg_policies" in verify
 assert "does NOT test two-user isolation" in verify
-assert "Sign in · Coming after secure setup" in account
-assert 'type="button" disabled' in account
+assert "Sign in · Deferred" in account
+assert re.search(r'<button\b[^>]*\bdisabled\b[^>]*>Sign in · Deferred</button>',account)
+assert not re.search(r'<input\b[^>]*type=["\x27](?:password|email)["\x27]',account,re.I)
+assert "Account sign-ins and cloud synchronization are deferred." in account
 assert "https://dwqrmgeldssozgdtidla.supabase.co" in security
 # Do not accidentally embed supplied public key or service-role credentials in the new docs.
 for filename in ("ATLAS138-SUPABASE-SCHEMA.sql","ATLAS138-SUPABASE-VERIFY.sql","ATLAS138-SUPABASE-SECURITY.md"):

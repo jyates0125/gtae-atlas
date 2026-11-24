@@ -1,0 +1,35 @@
+name: Atlas 35.9 - Leonida heightfield evidence
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas-terrain-evidence.js'
+      - 'atlas-navigation.js'
+      - 'atlas-vi.html'
+      - 'atlas-credits.html'
+      - 'scripts/test_atlas359_terrain_proof.cjs'
+      - 'scripts/convert_atlas359_leonida_heightfield.py'
+      - 'scripts/test_atlas359_convert.py'
+      - 'docs/ATLAS359-LEONIDA-TERRAIN-PROOF.md'
+      - '.github/workflows/atlas359-terrain-proof.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence-and-import:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node --check atlas-terrain-evidence.js
+      - run: node --check atlas-navigation.js
+      - run: node scripts/test_atlas359_terrain_proof.cjs
+      - run: node scripts/test_heightfield_import.cjs
+      - run: python -m unittest -v scripts/test_atlas359_convert.py
+      - run: python scripts/audit_3d_heightfields.py

@@ -1,9 +1,7 @@
 name: Team Jura Atlas - validate production website
 on:
-  push:
-    branches: [development, main]
-  pull_request:
-    branches: [development, main]
+  # Full cross-browser / Cayo / ZIP suite is a manual pre-merge release gate.
+  # Feature PRs use path-filtered focused workflows instead.
   workflow_dispatch:
 permissions:
   contents: read
@@ -25,134 +23,150 @@ jobs:
       - name: Audit the entire source tree
         run: python scripts/audit_release.py
       - name: Existing Atlas map and routing regressions
+        shell: bash
         run: |
-          python scripts/test_site_release_70.py
-          python scripts/test_atlas_static.py
-          python scripts/test_atlas125_media_cheats.py
-          python scripts/test_social_preview_129.py
-          python scripts/test_atlas209_discovery.py
-          node scripts/test_atlas209_legacy_redirect.cjs
-          node --check scripts/atlas209-legacy-redirect.cjs
-          python scripts/test_launch_130.py
-          python scripts/test_atlas134_events.py
-          python scripts/test_atlas135_feed.py
-          python scripts/test_atlas136_status.py
-          python scripts/test_atlas139_nav_focus.py
-          python scripts/test_social_icons_131.py
-          python scripts/test_atlas153_welcome_social.py
-          python scripts/test_account_131.py
-          python scripts/test_atlas208_https_auth.py
-          python scripts/test_atlas138_supabase.py
-          python scripts/test_atlas141_leonida_research.py
-          python scripts/test_atlas142_official_sources.py
-          python scripts/test_atlas143_official_view.py
-          node --check atlas143-official-map-view.js
-          node --check atlas131-account.js
-          node --check atlas131-social-icons.js
-          node --check atlas130-share.js
-          python scripts/test_catalog_design_127.py
-          python scripts/test_hubs_103.py
-          python scripts/test_game_art_121.py
-          python scripts/test_map_chrome_128.py
-          python scripts/test_classic_flat_106.py
-          python scripts/test_atlas150_classic_slots.py
-          python scripts/test_atlas157_classic_zoom.py
-          node --check atlas103-hub.js
-          node --check atlas98-portal.js
-          node --check atlas98-worlds.js
-          node --check atlas100-universe.js
-          python scripts/test_sync_gtadb_vi.py
-          python tools/test_atlas96.py
-          python tools/test_atlas97.py
-          node test-route-58.cjs
-          node test-layer-deck-621.cjs
-          python -m unittest discover -s tests -p 'test_atlas98b_sync.py'
-          python -m unittest discover -s tests -p 'test_atlas99_map_data.py'
+          failures=0
+          check() { echo "::group::$*"; if "$@"; then echo "PASS: $*"; else echo "::error::FAILED: $*"; failures=$((failures+1)); fi; echo "::endgroup::"; }
+          check python scripts/test_site_release_70.py
+          check python scripts/test_atlas_static.py
+          check python scripts/test_atlas125_media_cheats.py
+          check python scripts/test_social_preview_129.py
+          check python scripts/test_atlas209_discovery.py
+          check node scripts/test_atlas209_legacy_redirect.cjs
+          check node --check scripts/atlas209-legacy-redirect.cjs
+          check python scripts/test_launch_130.py
+          check python scripts/test_atlas134_events.py
+          check python scripts/test_atlas135_feed.py
+          check python scripts/test_atlas136_status.py
+          check python scripts/test_atlas139_nav_focus.py
+          check python scripts/test_social_icons_131.py
+          check python scripts/test_atlas153_welcome_social.py
+          check python scripts/test_account_131.py
+          check python scripts/test_atlas208_https_auth.py
+          check python scripts/test_atlas138_supabase.py
+          check python scripts/test_atlas141_leonida_research.py
+          check python scripts/test_atlas142_official_sources.py
+          check python scripts/test_atlas143_official_view.py
+          check node --check atlas143-official-map-view.js
+          check python scripts/test_atlas290_poster_source.py
+          check python scripts/test_atlas291_dual_leonida.py
+          check node --check atlas290-official-landmarks.js
+          check node --check atlas131-account.js
+          check node --check atlas131-social-icons.js
+          check node --check atlas130-share.js
+          check python scripts/test_catalog_design_127.py
+          check python scripts/test_hubs_103.py
+          check python scripts/test_game_art_121.py
+          check python scripts/test_map_chrome_128.py
+          check python scripts/test_classic_flat_106.py
+          check python scripts/test_atlas150_classic_slots.py
+          check python scripts/test_atlas157_classic_zoom.py
+          check node --check atlas103-hub.js
+          check node --check atlas98-portal.js
+          check node --check atlas98-worlds.js
+          check node --check atlas100-universe.js
+          check python scripts/test_sync_gtadb_vi.py
+          check python tools/test_atlas96.py
+          check python tools/test_atlas97.py
+          check node test-route-58.cjs
+          check node test-layer-deck-621.cjs
+          check python -m unittest discover -s tests -p 'test_atlas98b_sync.py'
+          check python -m unittest discover -s tests -p 'test_atlas99_map_data.py'
+          test "$failures" -eq 0
       - name: Safe Data Lab import and map pack tests
+        shell: bash
         run: |
-          node --test tests/data-lab.test.cjs
-          node --test tests/source-identity.test.cjs
-          node --test tests/atlas140-cloud-saves.test.cjs
-          node --test tests/atlas144-cloud-transfer.test.cjs
-          node --check atlas144-cloud-transfer.js
-          node --check atlas144-device-overview.js
-          python scripts/test_atlas144_account_review.py
-          python scripts/test_atlas145_map_ux.py
-          python scripts/test_atlas146_launch_truth.py
-          python scripts/test_atlas147_garage_mobile.py
-          python scripts/test_atlas148_local_covers.py
-          python scripts/test_atlas155_premium_art.py
-          python scripts/test_atlas157_cinematic_world_covers.py
-          python scripts/test_atlas155_art_review.py
-          python scripts/test_atlas157_directory.py
-          python scripts/test_atlas212_directory.py
-          python scripts/test_atlas158_browser_contract.py
-          python scripts/test_atlas159_duplicate_nav.py
-          python scripts/test_atlas149_leonida_toolbar.py
-          python scripts/test_atlas154_map_zoom.py
-          python scripts/test_atlas156_mobile_nav.py
-          python scripts/test_atlas151_heist_gallery.py
-          python scripts/test_atlas160_premium_headers.py
-          python scripts/test_atlas158_premium_experiences.py
-          python scripts/test_atlas161_quality_gate.py
-          python scripts/test_atlas162_subject_heroes.py
-          python scripts/test_atlas163_premium_asset_ledger.py
-          python scripts/test_atlas164_heist_workspace.py
-          python scripts/test_atlas165_evidence_brand.py
-          python scripts/test_atlas166_release_status.py
-          python scripts/test_atlas167_heist_focus.py
-          python scripts/test_atlas168_heist_guides.py
-          python scripts/test_atlas169_heist_views.py
-          python scripts/test_atlas170_cayo_unified.py
-          python scripts/test_atlas171_cayo_board.py
-          python scripts/test_atlas216_cayo_dock.py
-          python scripts/test_atlas180_cayo_flagship.py
-          python scripts/test_atlas181_cayo_hotspots.py
-          python scripts/test_atlas184_cayo_visible_symbols.py
-          python scripts/test_atlas185_cayo_polish.py
-          python scripts/test_atlas186_cayo_route.py
-          python scripts/test_atlas192_world_completion.py
-          python scripts/test_atlas207_policies.py
-          python scripts/test_atlas195_source_tags.py
-          node --check atlas195-source-tags.js
-          python scripts/test_atlas196_legacy_explorer.py
-          node --check atlas90-gallery.js
-          node --check atlas192-weapons6.js
-          node --check film/atlas192-storyboard.js
-          python scripts/test_atlas190_marker_parity.py
-          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py scripts/test_atlas210_iv_touch_browser.py scripts/test_atlas211_mobile_fit_browser.py scripts/test_atlas212_directory_browser.py scripts/test_atlas217_vi_world_browser.py scripts/test_atlas222_vi_browser.py scripts/test_atlas223_home_browser.py scripts/test_atlas218_yanis_v18_browser.py
-          node --check atlas217-vi-world.js
-          node --check atlas172-research-map.js
-          node --check atlas-research.js
-          node --check atlas81-hq.js
-          node --check atlas-iv.js
-          node --check atlas190-sa-route.js
-          node --check atlas186-cayo-route.js
-          node --check atlas185-cayo-polish.js
-          node --check atlas171-cayo-board.js
-          node --check atlas180-cayo-flagship.js
-          node --check atlas181-cayo-hotspots.js
-          python scripts/test_atlas171_research_map.py
-          python scripts/test_atlas217_vi_world.py
-          python scripts/test_atlas172_research_map.py
-          python scripts/test_atlas218_yanis_v18.py
-          python scripts/test_atlas219_hq_premium.py
-          python scripts/test_atlas220_vi_mobile.py
-          node --check atlas220-vi-mobile.js
-          node --check atlas220-cayo-recovery.js
-          node --check atlas164-heist-workspace.js
-          node --check heist-pages.js
-          python scripts/test_atlas152_art.py
-          python scripts/test_atlas222_vi_launch.py
-          python scripts/test_atlas223_home.py
-          node --check atlas223-home.js
-          node --check atlas132-nav.js
-          node --check atlas222-characters.js
-          node --check atlas222-vi-release.js
-          node --check atlas93-global.js
-          node --check leonida-hq.js
-          node --check atlas145-leonida-map-ux.js
-          node --check atlas145-mobile-map-entry.js
+          failures=0
+          check() { echo "::group::$*"; if "$@"; then echo "PASS: $*"; else echo "::error::FAILED: $*"; failures=$((failures+1)); fi; echo "::endgroup::"; }
+          check node --test tests/data-lab.test.cjs
+          check node --test tests/source-identity.test.cjs
+          check node --test tests/atlas140-cloud-saves.test.cjs
+          check node --test tests/atlas144-cloud-transfer.test.cjs
+          check node --check atlas144-cloud-transfer.js
+          check node --check atlas144-device-overview.js
+          check python scripts/test_atlas144_account_review.py
+          check python scripts/test_atlas145_map_ux.py
+          check python scripts/test_atlas146_launch_truth.py
+          check python scripts/test_atlas147_garage_mobile.py
+          check python scripts/test_atlas148_local_covers.py
+          check python scripts/test_atlas155_premium_art.py
+          check python scripts/test_atlas157_cinematic_world_covers.py
+          check python scripts/test_atlas155_art_review.py
+          check python scripts/test_atlas157_directory.py
+          check python scripts/test_atlas212_directory.py
+          check python scripts/test_atlas158_browser_contract.py
+          check python scripts/test_atlas159_duplicate_nav.py
+          check python scripts/test_atlas149_leonida_toolbar.py
+          check python scripts/test_atlas154_map_zoom.py
+          check python scripts/test_atlas156_mobile_nav.py
+          check python scripts/test_atlas151_heist_gallery.py
+          check python scripts/test_atlas160_premium_headers.py
+          check python scripts/test_atlas158_premium_experiences.py
+          check python scripts/test_atlas161_quality_gate.py
+          check python scripts/test_atlas162_subject_heroes.py
+          check python scripts/test_atlas3904_header_pack.py --require
+          check python scripts/test_atlas3906_action_cut.py
+          check python scripts/test_atlas163_premium_asset_ledger.py
+          check python scripts/test_atlas164_heist_workspace.py
+          check python scripts/test_atlas165_evidence_brand.py
+          check python scripts/test_atlas166_release_status.py
+          check python scripts/test_atlas167_heist_focus.py
+          check python scripts/test_atlas168_heist_guides.py
+          check python scripts/test_atlas169_heist_views.py
+          check python scripts/test_atlas170_cayo_unified.py
+          check python scripts/test_atlas171_cayo_board.py
+          check python scripts/test_atlas216_cayo_dock.py
+          check python scripts/test_atlas180_cayo_flagship.py
+          check python scripts/test_atlas181_cayo_hotspots.py
+          check python scripts/test_atlas184_cayo_visible_symbols.py
+          check python scripts/test_atlas185_cayo_polish.py
+          check python scripts/test_atlas186_cayo_route.py
+          check python scripts/test_atlas192_world_completion.py
+          check python scripts/test_atlas207_policies.py
+          check python scripts/test_atlas195_source_tags.py
+          check node --check atlas195-source-tags.js
+          check python scripts/test_atlas196_legacy_explorer.py
+          check node --check atlas90-gallery.js
+          check node --check atlas192-weapons6.js
+          check node --check film/atlas192-storyboard.js
+          check python scripts/test_atlas190_marker_parity.py
+          check python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py scripts/test_atlas210_iv_touch_browser.py scripts/test_atlas211_mobile_fit_browser.py scripts/test_atlas212_directory_browser.py scripts/test_atlas217_vi_world_browser.py scripts/test_atlas222_vi_browser.py scripts/test_atlas223_home_browser.py scripts/test_atlas218_yanis_v18_browser.py
+          check node --check atlas217-vi-world.js
+          check node --check atlas172-research-map.js
+          check node --check atlas-research.js
+          check node --check atlas81-hq.js
+          check node --check atlas-iv.js
+          check node --check atlas190-sa-route.js
+          check node --check atlas186-cayo-route.js
+          check node --check atlas185-cayo-polish.js
+          check node --check atlas171-cayo-board.js
+          check node --check atlas180-cayo-flagship.js
+          check node --check atlas181-cayo-hotspots.js
+          check python scripts/test_atlas171_research_map.py
+          check python scripts/test_atlas217_vi_world.py
+          check python scripts/test_atlas172_research_map.py
+          check python scripts/test_atlas218_yanis_v18.py
+          check python scripts/test_atlas290_vi_day.py
+          check python -m py_compile scripts/test_atlas290_vi_day_browser.py
+          check python scripts/test_atlas219_hq_premium.py
+          check python scripts/test_atlas220_vi_mobile.py
+          check node --check atlas220-vi-mobile.js
+          check node --check atlas220-cayo-recovery.js
+          check node --check atlas164-heist-workspace.js
+          check node --check heist-pages.js
+          check python scripts/test_atlas152_art.py
+          check python scripts/test_atlas222_vi_launch.py
+          check python scripts/test_atlas223_home.py
+          check node --check atlas223-home.js
+          check node --check atlas132-nav.js
+          check node --check atlas222-characters.js
+          check node --check atlas290-vi-source-ledger.js
+          check node --check atlas222-vi-release.js
+          check node --check atlas93-global.js
+          check node --check leonida-hq.js
+          check node --check atlas145-leonida-map-ux.js
+          check node --check atlas145-mobile-map-entry.js
+          test "$failures" -eq 0
       - name: Confirm four evidence workspaces use original page-specific artwork
         run: python scripts/test_research_identity_127.py
       - name: Build only public, approved static files (no live imports)
@@ -163,10 +177,21 @@ jobs:
         run: |
           python -m pip install 'playwright==1.58.0'
           timeout 120s python -m playwright install --with-deps chromium || python -m playwright install chromium
+      - name: Leonida in-game Day and official poster targeted browser preflight
+        # Fail early on VI regressions before the 190-page sweep and Cayo suite.
+        shell: bash
+        env:
+          ATLAS_BROWSER: chromium
+        run: |
+          python scripts/test_atlas290_vi_day_browser.py
+          python scripts/test_atlas290_poster_browser.py
       - name: Desktop and mobile browser QA on served production files
         env:
           ATLAS_BROWSER: chromium
-        run: python scripts/browser_smoke.py
+        run: |
+          python scripts/test_atlas3905_header_browser.py
+          python scripts/test_atlas3906_action_cut.py
+          python scripts/browser_smoke.py
       - name: Verify Cayo mission board and capture phone/desktop screenshots
         env:
           ATLAS_BROWSER: chromium
@@ -200,7 +225,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: team-jura-atlas-design-review-chromium
-          path: qa-evidence/chromium/
+          path: |
+            qa-evidence/chromium/
+            qa-evidence/atlas3905-cinematic-headers/
           if-no-files-found: warn
           retention-days: 14
   microsoft-edge:
@@ -222,10 +249,20 @@ jobs:
         run: |
           python -m pip install playwright==1.58.0
           python -m playwright install msedge
+      - name: Leonida in-game Day and official poster targeted browser preflight (Edge)
+        shell: bash
+        env:
+          ATLAS_BROWSER: msedge
+        run: |
+          python scripts/test_atlas290_vi_day_browser.py
+          python scripts/test_atlas290_poster_browser.py
       - name: Microsoft Edge desktop/mobile functional smoke tests
         env:
           ATLAS_BROWSER: msedge
-        run: python scripts/browser_smoke.py
+        run: |
+          python scripts/test_atlas3905_header_browser.py
+          python scripts/test_atlas3906_action_cut.py
+          python scripts/browser_smoke.py
       - name: Verify Cayo mission board and capture phone/desktop screenshots
         # Git Bash uses fail-fast (-e); PowerShell otherwise hides an earlier
         # native Python failure when a later command exits successfully.
@@ -262,7 +299,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: team-jura-atlas-design-review-edge
-          path: qa-evidence/msedge/
+          path: |
+            qa-evidence/msedge/
+            qa-evidence/atlas3905-cinematic-headers/
           if-no-files-found: warn
           retention-days: 14
   # Fast, isolated Atlas 22.0 gate. Finds phone popup regressions before the

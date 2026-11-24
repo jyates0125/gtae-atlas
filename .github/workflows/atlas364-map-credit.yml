@@ -1,0 +1,25 @@
+name: Atlas 36.4 — Unified map credits and navigation
+on:
+  pull_request:
+    paths:
+      - "atlas.html"
+      - "atlas-online.html"
+      - "atlas-vi.html"
+      - "atlas364-map-credit.js"
+      - "atlas364-map-credit.css"
+      - "scripts/test_atlas364_map_credits.cjs"
+      - "docs/ATLAS364-UNIFIED-MAP-ATTRIBUTION-AND-NAVIGATION.md"
+      - ".github/workflows/atlas364-map-credit.yml"
+  workflow_dispatch:
+jobs:
+  modern-map-credit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check all modern map credits, view sources and navigation
+        run: node scripts/test_atlas364_map_credits.cjs

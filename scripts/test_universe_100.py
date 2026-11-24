@@ -51,7 +51,7 @@ for page, expected_kind in PAGES.items():
     assert './atlas93-garage.html' in html
 
     assert any(re.fullmatch(r"\./atlas100-universe\.js\?v=\d+", ref) for ref in p.refs), (page, "shared JS")
-    assert "./atlas100-universe.css?v=130" in p.refs, (page, "shared CSS")
+    assert any(re.fullmatch(r"\./atlas100-universe\.css\?v=\d+", ref) for ref in p.refs), (page, "shared CSS")
     for ref in p.refs:
         if not ref.startswith("./"):
             continue
@@ -93,7 +93,7 @@ for page in ("atlas90-vehicles5.html", "atlas90-vehicles6.html", "atlas90-weapon
     h = (D / page).read_text(encoding="utf8")
     style=re.search(r'\./atlas100-showroom\.css\?v=(\w+)',h)
     assert style and style.group(1) in ("202","100a"), "Missing current subject-specific showroom stylesheet"
-    assert "./atlas100-showroom.js?v=100a" in h
+    assert "./atlas100-showroom.js?v=337" in h
     # These shared gallery pages intentionally version their script together.
     # Guard presence and a coherent cache version, not an obsolete literal.
     m=re.search(r'\./atlas90-gallery\.js\?v=(\d+)',h)

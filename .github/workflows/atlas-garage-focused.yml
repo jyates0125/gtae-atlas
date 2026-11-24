@@ -1,0 +1,38 @@
+name: Atlas Garage — focused sharing checks
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas93-garage.js'
+      - 'atlas93-garage.html'
+      - 'atlas254-garage-merge.js'
+      - 'atlas147-garage-mobile.css'
+      - 'tests/atlas293-garage-share.test.cjs'
+      - 'tests/atlas294-forge-backup.test.cjs'
+      - '.github/workflows/atlas-garage-focused.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  garage-sharing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Skip unrelated pull-request synchronizations
+        id: scope
+        env:
+          ATLAS_PR_ACTION: ${{ github.event.action }}
+        run: python3 scripts/atlas300-ci-delta.py .github/workflows/atlas-garage-focused.yml
+      - run: node --check atlas93-garage.js
+        if: steps.scope.outputs.run == 'true'
+      - run: node tests/atlas293-garage-share.test.cjs
+        if: steps.scope.outputs.run == 'true'
+      - run: node tests/atlas294-forge-backup.test.cjs
+        if: steps.scope.outputs.run == 'true'

@@ -26,11 +26,13 @@ const BOUNDS={
  'cyber,1':[[0,0,2,3],[1,1,4,6],[2,2,9,12],[5,5,19,24],[10,10,39,49],[21,21,79,99]],
  'dupzor,51':[[0,0,2,2],[0,1,4,5],[0,2,9,11],[0,4,19,23],[0,8,38,47],[0,17,77,94]],
  'yanis,15':[[0,0,2,2],[0,1,4,5],[0,2,9,11],[0,4,19,23],[0,8,38,47],[0,17,77,95]],
- 'yanis,18':[[0,0,3,3],[1,1,6,6],[2,2,12,12],[5,5,25,24],[10,10,51,49],[21,21,103,99]]
+ 'yanis,18':[[0,0,3,3],[1,1,6,6],[2,2,12,12],[5,5,25,24],[10,10,51,49],[21,21,103,99]],
+ // GTA VI launch in-game day tiles, sourced from GTADB maps/maps.js, CC BY 4.0 contribution; original game art © Rockstar.
+ day:[[0,0,2,3],[1,1,5,6],[2,2,10,12],[4,4,20,25],[8,8,41,51],[17,17,83,103],[34,34,167,206]]
 };
 const LAYERS={
  '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid']],
- '6':[['scaly,view','Scaly · YANIS V18'],['yanis,18','YANIS V18 · Current'],['dupzor,51','Loki · DUPZOR V51'],['research,view','Research basemap · YANIS V18'],['yanis,15','YANIS V15 · Archive']]
+ '6':[['day','In-game Map'],['scaly,view','Scaly · YANIS V18'],['dupzor,51','Loki · DUPZOR V51']]
 };
 /* Base views and published GTADB community add-on tiles.
  * The additional tile folders are *patches*, not complete independent worlds.
@@ -46,7 +48,7 @@ const PATCH_SET='aiwe,1,martipk,5,rickrick,3';
 function mapView(style,g=game){
  if(g==='6'&&style==='scaly,view')return{base:'yanis,18',overlay:false,filter:'saturate(1.15) contrast(1.06)'};
  if(g==='6'&&style==='loki,view')return{base:'dupzor,51',overlay:false,filter:'saturate(.88) contrast(1.13) brightness(.96)'};
- // Research is a dedicated labeled basemap option over licensed YANIS V18 tiles, not a separate tile source. GTA VI research records remain provisional.
+ // Retired duplicate view identifiers remain internally recognized for legacy links; the visible VI selector contains only three styles.
  if(g==='6'&&style==='research,view')return{base:'yanis,18',overlay:false,filter:'none'};
  // The previous CYBER selection is retired: no cyber tiles are requested.
  return{base:style,overlay:false};
@@ -387,7 +389,7 @@ function renderLegend(){
     if(active[filterScope()].has(cat))active[filterScope()].delete(cat);else active[filterScope()].add(cat);
     showPins=true;page=0;render();announce(`${title} ${active[filterScope()].has(cat)?'shown':'hidden'} on map`);
    });toggle.className='legend-choice';toggle.setAttribute('aria-pressed',String(on));toggle.title=`${on?'Hide':'Show'} ${title} pins`;
-   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
+   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;if(game==='6'&&cat==='landmark'){dot.classList.add('j371-landmark-legend');dot.textContent='◆';}else dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
    const only=btn('Only',()=>{dropEventFocus();active[filterScope()]=new Set([cat]);showPins=true;page=0;render();announce('Showing only '+title+' on map');},'legend-only');
    row.append(toggle,only);group.append(row);
   }root.append(group);
@@ -531,7 +533,7 @@ const TILE_HOSTS=[UPSTREAM+'maps/tiles/','https://raw.githubusercontent.com/rolu
 function sourceUrl(g,style,z,tx,ty,host=0){return `${TILE_HOSTS[host]}${g}/${style}/${z}/${z},${ty},${tx}.jpg`+(host?'?atlas_tiles=62':'');}
 function tileHealth(){const el=$('tileHealth');if(!el)return;const current=styles[game],all=[...tileStore.values()].filter(t=>t.game===game);const valid=new Set([mapView(current,game).base,...sourceTileStyles(current,0,1,1,game)]);const group=all.filter(t=>valid.has(t.path));const good=group.filter(t=>t.state==='ok').length,loading=group.filter(t=>t.state==='loading').length,bad=group.filter(t=>t.state==='error').length;
  el.textContent=good?`Illustration: ${good} tiles · ${loading} loading`+(bad?` · ${bad} unavailable`:''):loading?`Loading artwork… ${loading} tiles`:bad?'Map artwork unavailable · retry a different layer or connection':'Preparing artwork…';
- el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='Licensed GTADB community illustrations; Research uses YANIS V18 community artwork with Atlas category and source tools. No official Rockstar map claims.';}
+ el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='GTADB CC BY 4.0 sourced map tiles; GTA VI Day uses in-game map imagery © Rockstar, while Scaly/Loki are historic community reconstructions. Atlas markers still require independent verification.';}
 
 function within(style,z,x,y,g=game){const r=BOUNDS[mapView(style,g).base]?.[z];return !!r&&x>=r[0]&&x<=r[2]&&y>=r[1]&&y<=r[3]}
 function tileImage(style,z,x,y,g=game){
@@ -573,7 +575,7 @@ function schedulePaint(){if(paintPending)return;paintPending=true;requestAnimati
 function resize(){const rect=canvas.getBoundingClientRect();if(!rect.width||!rect.height)return;const oldW=width,oldH=height;width=rect.width;height=rect.height;dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);if(!oldW||!oldH)fitGame();schedulePaint()}
 function fallbackTile(z,x,y,dx,dy,size){for(let p=z-1;p>=0;p--){const factor=2**(z-p),xx=Math.floor(x/factor),yy=Math.floor(y/factor),parent=imageFor(styles[game],p,xx,yy);if(parent?.state!=='ok')continue;
   const src=256/factor,originX=(x-xx*factor)*src,originY=(y-yy*factor)*src;ctx.drawImage(parent.img,originX,originY,src,src,dx,dy,size+.5,size+.5);return true}return false}
-function drawTiles(){const z=Math.min(5,Math.ceil(camera.z)),s=scale(),tile=256*2**(camera.z-z),offsetX=width/2-(camera.x+16384)*s,offsetY=height/2-(16384-camera.y)*s,style=styles[game],view=mapView(style),range=BOUNDS[view.base][z];
+function drawTiles(){const style=styles[game],view=mapView(style),z=Math.min(view.base==='day'?6:5,Math.ceil(camera.z)),s=scale(),tile=256*2**(camera.z-z),offsetX=width/2-(camera.x+16384)*s,offsetY=height/2-(16384-camera.y)*s,range=BOUNDS[view.base][z];
  const minX=Math.max(range[0],Math.floor(-offsetX/tile)-1),maxX=Math.min(range[2],Math.ceil((width-offsetX)/tile)+1),minY=Math.max(range[1],Math.floor(-offsetY/tile)-1),maxY=Math.min(range[3],Math.ceil((height-offsetY)/tile)+1);
  ctx.save();if(view.filter)ctx.filter=view.filter;
  for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){let dx=offsetX+x*tile,dy=offsetY+y*tile,entry=imageFor(style,z,x,y);
@@ -584,18 +586,32 @@ function drawTiles(){const z=Math.min(5,Math.ceil(camera.z)),s=scale(),tile=256*
   }else if(!fallbackTile(z,x,y,dx,dy,tile)){ctx.fillStyle='#1f4050';ctx.fillRect(dx,dy,tile+.5,tile+.5);ctx.strokeStyle='#375769';ctx.strokeRect(dx,dy,tile,tile)}}
  ctx.restore();
 }
-function drawTerrainTexture(target,box){const c=target.getContext('2d'),W=target.width,H=target.height,spanX=box.x1-box.x0,spanY=box.y1-box.y0;let loaded=0;if(!c||!Number.isFinite(spanX)||!Number.isFinite(spanY)||spanX<=0||spanY<=0)return false;
- c.fillStyle='#1b4050';c.fillRect(0,0,W,H);
- const zm=clamp(Math.round(Math.log2(W/spanX*32)),0,5),worldTile=8192/2**zm,tx0=Math.floor((box.x0+16384)/worldTile),tx1=Math.floor((box.x1+16384)/worldTile),ty0=Math.floor((16384-box.y1)/worldTile),ty1=Math.floor((16384-box.y0)/worldTile);const style=styles[game],view=mapView(style,game);
+function drawTerrainTexture(target,box){
+ const c=target.getContext('2d'),W=target.width,H=target.height,spanX=box.x1-box.x0,spanY=box.y1-box.y0;
+ if(!c||!Number.isFinite(spanX)||!Number.isFinite(spanY)||spanX<=0||spanY<=0)return false;
+ // Transparent missing areas reveal shaded relief, never an invented basemap.
+ c.clearRect(0,0,W,H);
+ const zm=clamp(Math.round(Math.log2(W/spanX*32)),0,5),worldTile=8192/2**zm;
+ const tx0=Math.floor((box.x0+16384)/worldTile),tx1=Math.floor((box.x1+16384)/worldTile),ty0=Math.floor((16384-box.y1)/worldTile),ty1=Math.floor((16384-box.y0)/worldTile);
+ const style=styles[game],view=mapView(style,game);let loaded=0,missing=0;
+ const safe=t=>t?.state==='ok'&&t.corsSafe===true;
  c.save();if(view.filter)c.filter=view.filter;
  for(let ty=ty0;ty<=ty1;ty++)for(let tx=tx0;tx<=tx1;tx++){
-  const tile=tileImage(style,zm,tx,ty,game);if(tile?.state!=='ok'||!tile.corsSafe)continue;
+  if(!within(style,zm,tx,ty,game))continue;
   const wx0=tx*worldTile-16384,wy1=16384-ty*worldTile,dx=(wx0-box.x0)/spanX*W,dy=(box.y1-wy1)/spanY*H,dw=worldTile/spanX*W,dh=worldTile/spanY*H;
+  if(dx>=W||dy>=H||dx+dw<=0||dy+dh<=0)continue;
+  const tile=tileImage(style,zm,tx,ty,game);let painted=false;
   try{
-   if(view.overlay&&overlayOpacity<100&&tile.path!==view.base){const base=tileImage(view.base,zm,tx,ty,game);if(base?.state==='ok'){c.drawImage(base.img,dx,dy,dw+.25,dh+.25);c.globalAlpha=overlayOpacity/100;c.drawImage(tile.img,dx,dy,dw+.25,dh+.25);c.globalAlpha=1;}else c.drawImage(tile.img,dx,dy,dw+.25,dh+.25);}
-   else c.drawImage(tile.img,dx,dy,dw+.25,dh+.25);loaded++;
-  }catch{} }
- c.restore();return loaded>0;
+   if(safe(tile)){c.drawImage(tile.img,dx,dy,dw+.5,dh+.5);painted=true;}
+   else for(let p=zm-1;p>=0;p--){
+    const factor=2**(zm-p),px=Math.floor(tx/factor),py=Math.floor(ty/factor),parent=tileImage(style,p,px,py,game);
+    if(!safe(parent))continue;
+    const size=256/factor;c.drawImage(parent.img,(tx-px*factor)*size,(ty-py*factor)*size,size,size,dx,dy,dw+.5,dh+.5);painted=true;break;
+   }
+  }catch{}
+  if(painted)loaded++;else missing++;
+ }
+ c.restore();return {loaded,missing,complete:loaded>0&&missing===0};
 }
 function drawRoute(){
  if(navPlan&&navPlanScope===routeScope()){
@@ -666,6 +682,13 @@ function conditionForRecord(r,storeCache){
  return engine.evaluate(r.activityId,{mode:required,state:save,snapshot:feed,markerId:r.rotationMarkerId,hour:gameHour,now:Date.now()});
 }
 function conditionPinColor(r,storeCache){const c=conditionForRecord(r,storeCache);if(c&&/^ghost-/i.test(r.activityId||'')&&['closed','unknown','possible'].includes(c.status))return '#f8fafc';return c?window.JuraConditions.markerColor(c.status):r.markerColor||CATEGORIES[r.category]?.[1]||'#f7c97b';}
+function isViLandmark(r){return game==='6'&&r?.category==='landmark'&&!r.markerColor&&!r.activityId}
+function drawViLandmark(x,y,selected=false){
+ const r=selected?10:7.5;
+ ctx.save();ctx.shadowColor='#170c25a0';ctx.shadowBlur=3;ctx.shadowOffsetY=1;
+ ctx.beginPath();ctx.moveTo(x,y+2*r);ctx.bezierCurveTo(x-r*1.2,y+r*.55,x-r*1.15,y-r*.9,x,y-r*.9);ctx.bezierCurveTo(x+r*1.15,y-r*.9,x+r*1.2,y+r*.55,x,y+2*r);ctx.closePath();ctx.fillStyle='#49315e';ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#e9bd79';ctx.lineWidth=selected?2:1.4;ctx.stroke();
+ const d=selected?4:3;ctx.beginPath();ctx.moveTo(x,y-d);ctx.lineTo(x+d,y);ctx.lineTo(x,y+d);ctx.lineTo(x-d,y);ctx.closePath();ctx.fillStyle='#fff1cf';ctx.fill();ctx.restore();
+}
 function drawMarkers(){hitRegions=[];if(!pinsVisible()&&!selected)return;
  // One physical pin per visible record: GTADB-style ungrouped locations.
  // Cap only at extremely large source-object loads to prevent phone freezes.
@@ -674,12 +697,11 @@ function drawMarkers(){hitRegions=[];if(!pinsVisible()&&!selected)return;
   if(drawn>=20000)break;drawn++;
   // Keep original colored pins intact; tone down ONLY the default gold landmarks.
   // Explicit source marker colors and event/collectible colors take precedence.
-  const color=game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId?'#49315e':conditionPinColor(r,conditionCache);
-  const compactViLandmark=game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId;
-  pin(p.x,p.y,color,false,null,r.category,compactViLandmark||!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r),!!progress[doneKey(r)],r.category==='collectible'&&!r.activityId);
+  if(isViLandmark(r))drawViLandmark(p.x,p.y);
+  else pin(p.x,p.y,conditionPinColor(r,conditionCache),false,null,r.category,!!r.markerColor&&!r.activityId,atlas85CollectibleIcon(r),!!progress[doneKey(r)],r.category==='collectible'&&!r.activityId);
   hitRegions.push({x:p.x,y:p.y,r:12,record:r});
  }
- if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected),!!progress[doneKey(selected)],selected.category==='collectible'&&!selected.activityId);hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
+ if(selected?.game===game&&(!onlyUnfound||!progress[doneKey(selected)])){const p=toScreen(selected.x,selected.y);if(p.x>-30&&p.x<width+30&&p.y>-30&&p.y<height+30){if(isViLandmark(selected))drawViLandmark(p.x,p.y,true);else pin(p.x,p.y,'#ffe7a8',true,null,selected.category,false,atlas85CollectibleIcon(selected),!!progress[doneKey(selected)],selected.category==='collectible'&&!selected.activityId);hitRegions.push({x:p.x,y:p.y,r:23,record:selected})}}
 }
 function drawCoordinateTarget(){if(!coordinateTarget||coordinateTarget.game!==game)return;const p=toScreen(coordinateTarget.x,coordinateTarget.y);if(p.x<-40||p.x>width+40||p.y<-40||p.y>height+40)return;
  ctx.save();ctx.strokeStyle='#fff9d2';ctx.lineWidth=3;ctx.shadowBlur=7;ctx.shadowColor='#000';ctx.beginPath();ctx.arc(p.x,p.y,16,0,Math.PI*2);ctx.moveTo(p.x-26,p.y);ctx.lineTo(p.x+26,p.y);ctx.moveTo(p.x,p.y-26);ctx.lineTo(p.x,p.y+26);ctx.stroke();ctx.restore();}
@@ -869,10 +891,10 @@ function optimizeRoute(){const r=routeRecords();if(r.length<2)return toast('Add 
 function fitRoute(){const r=routeRecords();if(!r.length)return toast('Add locations to your route first.');if(r.length===1)return choosePlace(r[0]);
  const plotted=currentRouteStart()?[currentRouteStart(),...r]:r;const xs=plotted.map(p=>p.x),ys=plotted.map(p=>p.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys),dx=Math.max(180,xmax-xmin),dy=Math.max(180,ymax-ymin);camera.x=(xmin+xmax)/2;camera.y=(ymin+ymax)/2;camera.z=clamp(Math.log2(Math.min((width-120)/dx,(height-170)/dy)*32),0,5);schedulePaint();toast('Showing route on GTA '+game+' map.')}
 const juraBridge={
- game:()=>game,scope:()=>routeScope(),camera:()=>({...camera}),records:()=>records(),places:()=>matches().slice(0,12000),
+ game:()=>game,scope:()=>routeScope(),camera:()=>({...camera}),records:()=>records(),places:()=>pinsVisible()?matches().slice(0,12000):[],
  route:()=>navPlan&&navPlanScope===routeScope()?navPlan.points:[...(currentRouteStart()?[currentRouteStart()]:[]),...routeRecords()],
- color:(cat,record)=>record?.markerColor||CATEGORIES[cat]?.[1]||'#e8c998',symbol:cat=>CATEGORY_SYMBOLS[cat]||'✦',
- select:place=>{choosePlace(place);window.teamJuraNav?.terrain()?.rebase()},notice:msg=>announce(msg),textureDraw:(target,box)=>drawTerrainTexture(target,box),
+ color:(cat,record)=>isViLandmark(record)?'#49315e':record?.markerColor||CATEGORIES[cat]?.[1]||'#e8c998',symbol:cat=>CATEGORY_SYMBOLS[cat]||'✦',compactLandmark:isViLandmark,
+ select:place=>{choosePlace(place);window.teamJuraNav?.terrain()?.rebase()},notice:msg=>announce(msg),textureDraw:(target,box)=>drawTerrainTexture(target,box),textureRevision:()=>tilesLoaded,
  setRoutePlan:(plan,places)=>{navPlan=plan;navPlanScope=routeScope();render()},
  clearRoutePlan:()=>{navPlan=null;navPlanScope=null;render()},
  fitPoints:places=>{const xs=places.map(p=>p.x),ys=places.map(p=>p.y);if(!xs.length)return;const dx=Math.max(250,Math.max(...xs)-Math.min(...xs)),dy=Math.max(250,Math.max(...ys)-Math.min(...ys));camera.x=(Math.min(...xs)+Math.max(...xs))/2;camera.y=(Math.min(...ys)+Math.max(...ys))/2;camera.z=clamp(Math.log2(Math.min((Math.max(width,350)-120)/dx,(Math.max(height,400)-170)/dy)*32),0,5);schedulePaint();window.teamJuraNav?.terrain()?.rebase();}
@@ -985,7 +1007,7 @@ function init(){
  if(threeD)threeD.onclick=()=>window.teamJuraNav?.setDimension('3d');
  if($('overlayOpacity')){$('overlayOpacity').value=String(overlayOpacity);$('opacityValue').textContent=overlayOpacity+'%';$('overlayOpacity').oninput=()=>{overlayOpacity=Number($('overlayOpacity').value);$('opacityValue').textContent=overlayOpacity+'%';store('jura60-overlay-opacity',overlayOpacity);schedulePaint()};}
  if($('atlasListSort'))$('atlasListSort').onchange=e=>{listOrder=e.target.value;page=0;renderFind();schedulePaint()};if($('atlasExportVisible'))$('atlasExportVisible').onclick=exportVisibleCSV;
- $('layer').onchange=()=>{styles[game]=$('layer').value;document.dispatchEvent(new Event('jura:legend-updated'));tilesErrors=0;tilesLoaded=0;tileHealth();schedulePaint();window.teamJuraNav?.terrain()?.rebase();announce('Loading GTA '+game+' '+$('layer').selectedOptions[0].textContent+' map view…')};$('resetView').onclick=()=>{fitGame();announce('Showing the whole GTA '+game+' map.')};$('zoomIn').onclick=()=>zoomBy(.5);$('zoomOut').onclick=()=>zoomBy(-.5);
+ $('layer').onchange=()=>{styles[game]=$('layer').value;document.dispatchEvent(new Event('jura:legend-updated'));tilesErrors=0;tilesLoaded=0;tileHealth();schedulePaint();window.teamJuraNav?.terrain()?.refreshTexture();announce('Loading GTA '+game+' '+$('layer').selectedOptions[0].textContent+' map view…')};$('resetView').onclick=()=>{fitGame();const t=window.teamJuraNav?.terrain();if(t?.isActive())t.fit();announce('Showing the whole GTA '+game+' map.')};$('zoomIn').onclick=()=>{const t=window.teamJuraNav?.terrain();if(t?.isActive())t.zoom(.8);else zoomBy(.5)};$('zoomOut').onclick=()=>{const t=window.teamJuraNav?.terrain();if(t?.isActive())t.zoom(1.25);else zoomBy(-.5)};if($('j371-compass'))$('j371-compass').onclick=()=>window.teamJuraNav?.terrain()?.resetNorth();
  $('togglePins').onclick=()=>{const wasVisible=pinsVisible();dropEventFocus();showPins=!wasVisible;$('togglePins').textContent=showPins?'📍 Pins on':'📍 Pins off';$('togglePins').setAttribute('aria-pressed',String(showPins));schedulePaint()};$('mobileTools').onclick=()=>{$('sidebar').classList.toggle('mobile-collapsed');if(!$('sidebar').classList.contains('mobile-collapsed'))$('sidebar').scrollIntoView({behavior:'smooth',block:'start'})};$('original').onclick=()=>window.open('https://map.gtadb.org/','_blank','noopener,noreferrer');
  $('selectedStart').onclick=()=>{if(selected){setRouteStart(selected);window.teamJuraNav?.setStart(selected);showTab('Route')}};if($('selectedNavigate'))$('selectedNavigate').onclick=()=>{if(selected)window.teamJuraNav?.setRoutePoint(selected)};$('closeSelected').onclick=()=>{selected=null;updateSelected();schedulePaint()};$('selectedFound').onclick=()=>{if(selected)toggleFound(selected)};$('selectedRoute').onclick=()=>{if(selected)toggleRoute(selected)};$('shareSelected').onclick=async()=>{
  if(!selected)return;
@@ -1019,12 +1041,15 @@ function init(){
  if(cat&&CATEGORIES[cat]){active[filterScope()]=new Set([cat]);showTab('Services')}
  if(q||cat)render();readPacks();renderSources();loadDataset('5');loadDataset('6');loadSources();
  if(document.body.dataset.startWorld==='online'&&window.JuraConditions){
-  fetch('./data/online-rotation-current.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Rotation feed unavailable');return r.json()}).then(data=>{reviewedRotationSnapshot=window.JuraConditions.safeSnapshot(data);renderFind();updateSelected();schedulePaint()}).catch(()=>{});
-  const refresh=()=>{if(!document.hidden&&mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint()}};
-  setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
+  let rotationLastAttempt=0,rotationPending=false;
+  const pullRotation=async()=>{if(rotationPending||Date.now()-rotationLastAttempt<300000)return;rotationPending=true;rotationLastAttempt=Date.now();
+   try{reviewedRotationSnapshot=await window.JuraConditions.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedRotationSnapshot);if(mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint()}}catch{}finally{rotationPending=false}
+  };
+  const refresh=()=>{if(!document.hidden&&mode==='online'&&game==='5'){renderFind();updateSelected();schedulePaint();void pullRotation()}};
+  void pullRotation();setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
   window.addEventListener('storage',e=>{if(['jura68-rotation-feed','jura68-conditions-online','jura68-online-hour'].includes(e.key))refresh()});
  }
- if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=277',{scope:'./'}).catch(()=>{});
+ if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=290',{scope:'./'}).catch(()=>{});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

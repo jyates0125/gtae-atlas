@@ -1,0 +1,74 @@
+{
+  "schema": "team-jura-olr-animatic-1",
+  "title": "One Last Ride — 4:15 Condensed Storyboard Animatic",
+  "runtimeSeconds": 255,
+  "purpose": "Development-only rights-aware visual editorial cut; NOT final animated video, no gameplay footage or recorded dialogue.",
+  "source": "film/production/SCREENPLAY.md and SHOT-LIST.csv (extended 8:30 treatment)",
+  "music": "film/assets/original_teaser_score.wav — repeated temporary original teaser cue, final original soundtrack outstanding",
+  "screenplayStatus": "The longer 8:30 shot list and extended screenplay remain intact for a potential director's edition.",
+  "chapters": [
+    {
+      "title": "The last transmission",
+      "place": "Aquarius · night",
+      "card": 8,
+      "durationSeconds": 24,
+      "caption": "A violent impact splits the darkness. Loki calls for Scaly before the story rewinds."
+    },
+    {
+      "title": "Homecoming on 55th",
+      "place": "Fictionalized Los Santos · daytime",
+      "card": 2,
+      "durationSeconds": 28,
+      "caption": "Cmac returns. Lupe embraces him. Franklin, CJ and Lamar welcome an old friend."
+    },
+    {
+      "title": "The Paleto firefight",
+      "place": "Paleto Bay · Mount Chiliad",
+      "card": 3,
+      "durationSeconds": 35,
+      "caption": "Separated by an ambush, Loki and Scaly refuse to leave each other behind."
+    },
+    {
+      "title": "Every road to the water",
+      "place": "Los Santos · Great Ocean Highway",
+      "card": 5,
+      "durationSeconds": 31,
+      "caption": "The city's crews converge, shifting from road escape toward the harbor."
+    },
+    {
+      "title": "Cmac and the Yeti",
+      "place": "Wooded coastline · original fan fiction",
+      "card": 6,
+      "durationSeconds": 26,
+      "caption": "An unlikely peaceful moment becomes a chaotic, comic battle. Cmac vanishes."
+    },
+    {
+      "title": "The last boat out",
+      "place": "Los Santos harbor · Aquarius",
+      "card": 7,
+      "durationSeconds": 30,
+      "caption": "Cars stop at the waterfront. Boats carry the crew to safety as Scaly catches Loki."
+    },
+    {
+      "title": "Our last sunset",
+      "place": "Aquarius · off Los Santos",
+      "card": 1,
+      "durationSeconds": 31,
+      "caption": "One moment of peace. Many crews. One vision. Los Santos fades beyond the deck."
+    },
+    {
+      "title": "Into the unknown",
+      "place": "Open ocean · the wreck",
+      "card": 8,
+      "durationSeconds": 27,
+      "caption": "The hull breaks. Two friends disappear into waves; no survival is confirmed."
+    },
+    {
+      "title": "Leonida, somewhere",
+      "place": "Leonida Keys · fan-fiction epilogue",
+      "card": 9,
+      "durationSeconds": 23,
+      "caption": "Jason and Lucia find an unexplained artifact. The ocean keeps its secrets."
+    }
+  ]
+}

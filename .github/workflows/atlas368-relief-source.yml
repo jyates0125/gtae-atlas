@@ -1,0 +1,28 @@
+name: Atlas 36.8 - pinned GTADB relief source investigation
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122]
+    paths:
+      - 'scripts/inspect_atlas368_gtadb_relief.py'
+      - 'scripts/build_atlas368_approx_terrain.py'
+      - '.github/workflows/atlas368-relief-source.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect-published-relief:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
+      - name: Reconstruct approximate terrain from immutable published sources
+        run: python scripts/build_atlas368_approx_terrain.py --emit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gtadb-published-relief-approximation
+          path: qa-evidence/atlas368/
+          retention-days: 14

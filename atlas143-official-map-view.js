@@ -40,11 +40,13 @@ function mount(){
  button.textContent='▧ Rockstar · Official Map';button.setAttribute('aria-expanded','false');
  button.setAttribute('aria-controls','j143-official-layer');
  const mapSelector=controls.querySelector('#layer');
- if(mapSelector)mapSelector.insertAdjacentElement('afterend',button);
+ const toolbar=map.querySelector('.jura-nav-bar');
+ if(toolbar)toolbar.insertBefore(button,toolbar.querySelector('#juraNavDimension'));
+ else if(mapSelector)mapSelector.insertAdjacentElement('afterend',button);
  else controls.append(button);
  const panel=document.createElement('section');panel.id='j143-official-layer';panel.className='j143-official-layer';
  panel.hidden=true;panel.setAttribute('aria-label','Official Rockstar Leonida map viewer');
- panel.innerHTML=`<header class="j143-toolbar"><div><strong>Leonida · Rockstar official map</strong><small>OFFICIAL POSTER VIEW · NO UNVERIFIED PINS</small></div><div class="j143-actions"><button type="button" data-j143="minus" aria-label="Zoom out">−</button><button type="button" data-j143="plus" aria-label="Zoom in">+</button><button type="button" data-j143="reset">Fit</button><button type="button" data-j143="close" aria-label="Return to interactive Leonida map">✕ Interactive map</button></div></header>
+ panel.innerHTML=`<header class="j143-toolbar"><div><strong>Leonida · Rockstar official map</strong><small>OFFICIAL POSTER VIEW · NO UNVERIFIED PINS</small></div><div class="j143-actions"><button type="button" data-j143="minus" aria-label="Zoom out">−</button><button type="button" data-j143="plus" aria-label="Zoom in">+</button><button type="button" data-j143="reset">Fit</button><button type="button" data-j143="close" aria-label="Return to interactive Leonida map">← Research map</button></div></header>
  <div class="j143-stage" tabindex="0" aria-label="Official Leonida map. Drag or use arrow keys to pan. Pinch or use plus and minus to zoom."><img class="j143-poster" alt="Your personal locally installed copy of Rockstar Games official Leonida map" hidden><div class="j143-empty"><strong>Explore Rockstar's official Leonida map</strong><p>Open the official map here and zoom or pan just like our other map views. The official map loads here and can be saved in this browser for later visits.</p><button type="button" data-j143="fetch" hidden>Reload Rockstar map</button><details class="j143-advanced"><summary>Map not loading? Other options</summary><p>Some browsers block Rockstar's download. You can download the official map directly and open it here without uploading it to Team Jura.</p><a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Get map from Rockstar ↗</a><label class="j143-upload">Open downloaded map<input type="file" accept=".zip,application/zip,image/jpeg,image/png,image/webp" aria-label="Open downloaded official Rockstar map image"></label></details></div></div>
  <footer class="j143-foot"><span role="status" aria-live="polite" class="j143-status">Rockstar poster view · research pins are shown only on calibrated community map layers.</span><div><button type="button" data-j143="forget">Clear locally saved map</button><a href="${DIRECT_ZIP}" aria-label="Download GTA VI map, official printable ZIP">Download GTA VI map (ZIP)</a><a href="https://www.rockstargames.com/VI/media" target="_blank" rel="noopener noreferrer">Official source ↗</a></div></footer>`;
  map.append(panel);
@@ -53,14 +55,19 @@ function mount(){
  const fetchButton=panel.querySelector('[data-j143="fetch"]');
  const forgetButton=panel.querySelector('[data-j143="forget"]');
  const fileInput=panel.querySelector('input[type="file"]');
+ // Manual poster selection always overrides a slow or blocked official download.
+ let posterOperation=0,pendingPosterFetch=null;
  function setBusy(busy){
-  for(const control of [fetchButton,forgetButton,fileInput])control.disabled=busy;
+  for(const control of [fetchButton,forgetButton])control.disabled=busy;
+  fileInput.disabled=false;
  }
- async function runOperation(operation){
-  if(fetchButton.disabled)return;
+ async function runOperation(operation,{manual=false}={}){
+  if(fetchButton.disabled&&!manual)return;
+  if(manual&&pendingPosterFetch)pendingPosterFetch.abort();
+  const serial=++posterOperation;
   setBusy(true);
-  try{await operation()}
-  finally{setBusy(false)}
+  try{await operation(serial)}
+  finally{if(serial===posterOperation)setBusy(false)}
  }
  let zoom=1,dx=0,dy=0,objectUrl=null,loaded=false;
  const pointers=new Map();
@@ -80,20 +87,41 @@ function mount(){
   const rect=stage.getBoundingClientRect();
   zoomAt(zoom*factor,rect.left+rect.width/2,rect.top+rect.height/2);
  }
- async function showFile(file,notice){
+ async function showFile(file,notice,serial=posterOperation){
+  if(serial!==posterOperation)return;
+  const priorHash=panel.dataset.j290Hash||'';
+  // While switching image bytes, immediately hide previous-image pins.
+  panel.removeAttribute('data-j290-hash');
+  window.dispatchEvent(new Event('jura:poster:clear'));
   const nextUrl=URL.createObjectURL(file);
   try{
    img.src=nextUrl;
    await img.decode();
+   if(serial!==posterOperation){URL.revokeObjectURL(nextUrl);return;}
   }catch{
    URL.revokeObjectURL(nextUrl);
+   if(serial!==posterOperation)return;
    if(objectUrl)img.src=objectUrl;
    else img.removeAttribute('src');
+   if(priorHash){panel.dataset.j290Hash=priorHash;window.dispatchEvent(new CustomEvent('jura:poster:ready',{detail:{sha256:priorHash}}));}
    throw Error('This image could not be displayed. Try the official Rockstar download again.');
   }
   if(objectUrl)URL.revokeObjectURL(objectUrl);
   objectUrl=nextUrl;img.hidden=false;empty.hidden=true;loaded=true;fit();
   status.textContent=notice;
+  // The poster itself remains local. Hash its exact bytes so personal pins
+  // cannot silently appear on a different crop, edition, or unrelated image.
+  try{
+   const digest=await crypto.subtle.digest('SHA-256',await file.arrayBuffer());
+   const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+   if(serial!==posterOperation)return;
+   panel.dataset.j290Hash=hash;
+   window.dispatchEvent(new CustomEvent('jura:poster:ready',{detail:{sha256:hash}}));
+  }catch{
+   if(serial!==posterOperation)return;
+   panel.removeAttribute('data-j290-hash');
+   window.dispatchEvent(new Event('jura:poster:clear'));
+  }
  }
  async function imageFromZip(file){
   if(file.size>90*1024*1024)throw Error('ZIP exceeds 90 MB. Extract the official JPG manually.');
@@ -134,24 +162,31 @@ function mount(){
   const type=/\.png$/i.test(name)?'image/png':/\.webp$/i.test(name)?'image/webp':'image/jpeg';
   return new File([blob],name.split('/').pop(),{type});
  }
- async function onFile(file){
+ async function onFile(file,serial=posterOperation){
+  if(serial!==posterOperation)return;
   if(file.type==='application/zip'||/\.zip$/i.test(file.name)){
    status.textContent='Opening the Rockstar map archive locally…';
    file=await imageFromZip(file);
   }
+  if(serial!==posterOperation)return;
   if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Use the official map ZIP, JPEG, PNG or WebP file.');
   if(file.size>80*1024*1024)throw Error('This image is over 80 MB. Use a smaller JPEG or WebP copy.');
-  await showFile(file,'Official map opened in this browser. Community pins are hidden on the poster view.');
-  try{await stored('put',file);status.textContent='Official map saved in this browser for future visits. No upload performed.'}
-  catch{status.textContent='Map open for this visit only; this browser could not save the image offline.'}
+  await showFile(file,'Official map opened in this browser. Community pins are hidden on the poster view.',serial);
+  if(serial!==posterOperation)return;
+  try{
+   await stored('put',file);
+   if(serial===posterOperation)status.textContent='Official map saved in this browser for future visits. No upload performed.';
+  }catch{
+   if(serial===posterOperation)status.textContent='Map open for this visit only; this browser could not save the image offline.';
+  }
  }
  fileInput.addEventListener('change',()=>{
   const file=fileInput.files?.[0];
   fileInput.value='';
-  if(file)runOperation(async()=>{
-   try{await onFile(file)}
-   catch(err){status.textContent=err.message}
-  });
+  if(file)runOperation(async serial=>{
+   try{await onFile(file,serial)}
+   catch(err){if(serial===posterOperation)status.textContent=err.message}
+  },{manual:true});
  });
  function updateViewUrl(open){
   const url=new URL(location.href);
@@ -160,51 +195,72 @@ function mount(){
   else return;
   if(url.href!==location.href)history.replaceState(history.state,'',url);
  }
- async function loadRockstarMap(){
+ async function loadRockstarMap(serial=posterOperation){
+   if(serial!==posterOperation)return;
    fetchButton.hidden=true;
    let file;
+   const controller=new AbortController();
+   pendingPosterFetch=controller;
    try{
-    status.textContent='Loading Rockstar’s official map…';
-    const response=await fetch(DIRECT_ZIP,{mode:'cors',credentials:'omit',signal:AbortSignal.timeout(90000)});
+    status.textContent='Loading Rockstar’s official map… You can open a downloaded image instead.';
+    const signal=typeof AbortSignal.any==='function'
+     ?AbortSignal.any([controller.signal,AbortSignal.timeout(90000)])
+     :controller.signal;
+    const response=await fetch(DIRECT_ZIP,{mode:'cors',credentials:'omit',signal});
     if(!response.ok)throw Error('Rockstar download was not available');
     const announced=Number(response.headers.get('content-length')||0);
     if(announced>90*1024*1024)throw Error('File size exceeds allowed limit');
     file=await response.blob();
     if(file.size>90*1024*1024)throw Error('File size exceeds allowed limit');
    }catch{
+    if(controller.signal.aborted||serial!==posterOperation)return;
     fetchButton.hidden=false;
     status.textContent='Rockstar did not allow automatic loading in this browser. Expand “Map not loading? Other options” to open the official download here.';
     panel.querySelector('.j143-advanced').open=true;
     return;
+   }finally{
+    if(pendingPosterFetch===controller)pendingPosterFetch=null;
    }
-   try{await onFile(new File([file],'Leonida_Map_Poster_Printable.zip',{type:'application/zip'}))}
+   if(controller.signal.aborted||serial!==posterOperation)return;
+   try{await onFile(new File([file],'Leonida_Map_Poster_Printable.zip',{type:'application/zip'}),serial)}
    catch(err){
+    if(serial!==posterOperation)return;
     fetchButton.hidden=false;
     status.textContent=err.message;
     panel.querySelector('.j143-advanced').open=true;
    }
    }
  function openView({focus=true}={}){
+  // Rockstar's official poster has a different coordinate frame. Cancel
+  // any pending/active research terrain before opening it; retain the map
+  // selection and private notes, but never drape research relief onto it.
+  window.teamJuraNav?.setDimension('2d');
   updateViewUrl(true);
   panel.hidden=false;button.setAttribute('aria-expanded','true');
   button.setAttribute('aria-pressed','true');
   if(focus)panel.querySelector('[data-j143="close"]').focus();
-  if(!loaded)runOperation(async()=>{
+  if(!loaded)runOperation(async serial=>{
    try{
     const file=await stored('get');
+    if(serial!==posterOperation)return;
     if(file instanceof Blob){
-     await showFile(file,'Official map restored from this browser; no upload performed.');
+     await showFile(file,'Official map restored from this browser; no upload performed.',serial);
      return;
     }
    }catch{
     // An unavailable or unreadable cache should fall back to Rockstar.
    }
-   if(!panel.hidden)await loadRockstarMap();
+   if(serial===posterOperation&&!panel.hidden)await loadRockstarMap(serial);
   });
  }
  function closeView(){
   updateViewUrl(false);
+  if(pendingPosterFetch)pendingPosterFetch.abort();
+  ++posterOperation;
+  setBusy(false);
   panel.hidden=true;button.setAttribute('aria-expanded','false');button.setAttribute('aria-pressed','false');
+  // Tell optional personal-poster tools to disarm pending placement on exit.
+  window.dispatchEvent(new CustomEvent('jura:poster:visibility',{detail:{open:false}}));
   if(!button.hidden)button.focus();
  }
  button.addEventListener('click',()=>panel.hidden?openView():closeView());
@@ -224,6 +280,7 @@ function mount(){
    }
    if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null}
    img.removeAttribute('src');img.hidden=true;empty.hidden=false;fetchButton.hidden=false;loaded=false;fit();
+   panel.removeAttribute('data-j290-hash');window.dispatchEvent(new Event('jura:poster:clear'));
    status.textContent='Local image forgotten. No player map progress was changed.';
   });
  });

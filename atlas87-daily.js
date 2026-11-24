@@ -8,8 +8,10 @@ const selected=C.rulesForMode('online').filter(r=>r.kind==='rotation');
 const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch{return d}};
 let reviewed={schema:1,rotations:{}};
 const getFeed=()=>{let personal;try{personal=C.safeSnapshot(read('jura68-rotation-feed',{schema:1,rotations:{}}))}catch{}return C.selectRotationSnapshot(personal,reviewed)};
+let lastAttempt=0,pending=false;
 async function autoFeed(){
- try{const res=await fetch('./data/online-rotation-current.json',{cache:'no-cache'});if(res.ok)reviewed=C.safeSnapshot(await res.json())}catch(_){}
+ if(pending||Date.now()-lastAttempt<300000)return;pending=true;lastAttempt=Date.now();
+ try{reviewed=await C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewed)}catch(_){}finally{pending=false}
  dashboard();
  if($('#j87-daily-panel')){$('#j87-daily-panel').remove();panel()}
 }
@@ -24,8 +26,8 @@ function status(r){
 }
 function card(r){const a=document.createElement('article');a.className='j87-daily-card';a.id=r.id;a.dataset.status=status(r).type;a.style.scrollMarginTop='90px';let h=document.createElement('div');h.className='j87-daily-title';const title=document.createElement('strong');title.textContent=r.name;const reset=document.createElement('span');reset.textContent=`Daily reset ${String(r.reset??6).padStart(2,'0')}:00 UTC`;h.append(title,reset);a.append(h);
 let p=document.createElement('p');p.textContent=status(r).msg;a.append(p);let note=document.createElement('small');note.textContent=status(r).detail;a.append(note);
-const links=document.createElement('div');links.className='j87-daily-links';for(const [label,url] of [['Game activities','./atlas-activities.html?mode=online'],['Find possible locations', './atlas-online.html?event='+encodeURIComponent(r.id)],['Source ↗',r.source||'./atlas-credits.html']]){let x=document.createElement('a');x.href=url;x.textContent=label;if(/^https?:/.test(url)){x.target='_blank';x.rel='noopener noreferrer'}links.append(x)}a.append(links);return a;}
-function dashboard(){const root=$('j87-daily-list');if(!root)return;root.replaceChildren();for(const r of selected)root.append(card(r));let total=$('j87-daily-summary');if(total)total.textContent=`${selected.length} daily categories monitored · bundled reviewed data loads automatically · personal imports optional · no Rockstar account link`;}
+const links=document.createElement('div');links.className='j87-daily-links';for(const [label,url] of [['Game activities','./atlas-activities.html?mode=online'],['Find possible locations', r.id==='cayo-chests'?'./heist-cayo-perico.html':'./atlas-online.html?event='+encodeURIComponent(r.id)],['GTADB source ↗',r.source||'./atlas-credits.html'],['Compare daily tracker ↗','https://gtamap.io/gta-online/daily/']]){let x=document.createElement('a');x.href=url;x.textContent=label;if(/^https?:/.test(url)){x.target='_blank';x.rel='noopener noreferrer'}links.append(x)}a.append(links);return a;}
+function dashboard(){const root=$('j87-daily-list');if(!root)return;root.replaceChildren();for(const r of selected)root.append(card(r));let total=$('j87-daily-summary');if(total)total.textContent=`${selected.length} daily categories monitored · independent data channel + bundled fallback · personal imports optional · no Rockstar account link`;}
 function panel(){if(path!=='atlas-online.html')return;const side=$('sidebar');if(!side||$('#j87-daily-panel'))return;const section=document.createElement('section');section.id='j87-daily-panel';section.innerHTML='<div class="j87-daily-top"><span>◷ DAILY INTELLIGENCE</span><a href="./atlas87-daily.html">Open full dashboard ↗</a></div><p>Today’s map positions require a dated source. Potential locations are never shown as confirmed.</p><div id="j87-daily-panel-grid"></div>';
 const anchor=$('jura83-panel');if(anchor)anchor.insertAdjacentElement('afterend',section);else side.prepend(section);
 const grid=$('j87-daily-panel-grid');for(const r of selected.slice(0,7)){let row=document.createElement('a');row.href='./atlas87-daily.html#'+r.id;const st=status(r);row.className='j87-daily-mini';row.append(document.createTextNode(r.name));const badge=document.createElement('span');badge.textContent=st.type==='dated'?'DATED':'UNCONFIRMED';row.append(badge);grid.append(row)} }
@@ -34,9 +36,9 @@ function init(){
  if(path==='atlas87-daily.html')dashboard();panel();autoFeed();
  if(path==='atlas87-daily.html'){const id=location.hash.slice(1);if(selected.some(r=>r.id===id))requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:'start'}))}
  window.addEventListener('storage',e=>{if(e.key==='jura68-rotation-feed')refreshStatus()});
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshStatus()});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){refreshStatus();void autoFeed()}});
  // Refresh evidence at most once a minute even if a player leaves the tab open through reset.
- setInterval(()=>{if(!document.hidden)refreshStatus()},60000);
+ setInterval(()=>{if(!document.hidden){refreshStatus();void autoFeed()}},60000);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

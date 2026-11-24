@@ -5,7 +5,7 @@
  const str=(x,n)=>typeof x==='string'?x.trim().slice(0,n):'';
  const safeId=x=>typeof x==='string'&&/^[a-z0-9_]{1,65}$/.test(x)&&!['__proto__','constructor','prototype'].includes(x);
  const paintNames=['Midnight','Pearl White','Metallic Orange','Sunburst Yellow','Racing Red','Electric Blue','Emerald','Neon Purple','Hot Pink','Graphite'];
- const design=x=>{if(!plain(x))return{};return{finish:['metallic','satin','stealth'].includes(x.finish)?x.finish:'metallic',accent:typeof x.accent==='string'&&/^#[a-f0-9]{6}$/i.test(x.accent)?x.accent.toLowerCase():'#eab56a',stance:['street','low','raised'].includes(x.stance)?x.stance:'street',kit:['clean','sport','track'].includes(x.kit)?x.kit:'sport',lights:typeof x.lights==='boolean'?x.lights:true}};
+ const design=x=>{if(!plain(x))return{};return{finish:['metallic','satin','stealth'].includes(x.finish)?x.finish:'metallic',accent:typeof x.accent==='string'&&/^#[a-f0-9]{6}$/i.test(x.accent)?x.accent.toLowerCase():'#eab56a',stance:['street','low','raised'].includes(x.stance)?x.stance:'street',kit:['clean','sport','track'].includes(x.kit)?x.kit:'sport',lights:typeof x.lights==='boolean'?x.lights:true,environment:['auto','signature','marina','hangar','workshop'].includes(x.environment)?x.environment:'auto'}};
  const color=x=>typeof x==='string'&&(/^#[0-9a-f]{6}$/i.test(x)||paintNames.includes(x))?x:'Graphite';
  function merge(payload,meta,gallery,allowed){
   if(!plain(payload)||payload.schema!==1||payload.app!=='team-jura-atlas93-garage'||!plain(payload.garage)||!Array.isArray(payload.garage.garages)||!plain(payload.garage.vehicles)||!(allowed instanceof Set))throw Error('Invalid Garage backup');

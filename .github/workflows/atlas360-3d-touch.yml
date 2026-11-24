@@ -1,0 +1,31 @@
+name: Atlas 36.0 - Leonida mobile 3D camera
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'atlas-3d.js'
+      - 'scripts/test_atlas360_touch_camera.cjs'
+      - 'scripts/test_atlas360_touch_browser.py'
+      - '.github/workflows/atlas360-3d-touch.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  touch-3d-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas-3d.js
+      - run: node scripts/test_atlas360_touch_camera.cjs
+      - run: node scripts/test_heightfield_import.cjs
+      - run: python scripts/audit_3d_heightfields.py
+      - name: Install isolated Chromium interaction smoke dependencies
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install chromium
+      - name: Test canvas pointer capture, pinch and two-finger pan at 390px / 1440px
+        run: python scripts/test_atlas360_touch_browser.py

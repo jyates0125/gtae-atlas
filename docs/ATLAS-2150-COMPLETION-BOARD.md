@@ -1,8 +1,26 @@
 # Team Jura Atlas — 2150 completion and release board
 **Created:** 2026-11-21 · **Status:** staging working board, not release certification
-**Canonical repository:** `jyates0125/team-jura-atlas-preview` · **Current verified source:** `development` merge #89 `4f766df1d5e1ecd97eb1bb739314d2def9916e20`; docs and release PRs #91/#90 pending exact-head checks.
+**Canonical repository:** `jyates0125/gtae-atlas` · **Current reviewed baseline:** `development` PR #91 merge `1d86d5c28d63aa6cfd14f48a5da3ed61bba58fcd`; protected `main` PR #90 synchronized as `8039ee9214fe7bfa3801bcea8f0c95b41f44b94d` with 0 tracked-file differences. **Open staged upgrade:** PR #94 Leonida dual-map/source notebook (not live, exact-head CI, Safari/owner gates outstanding).
 **Studio authority:** `docs/ELARIO-STUDIOS-OPERATING-CHARTER-V2-PROPOSAL.md` (contents adopted)
 **Project authority:** `docs/TEAM-JURA-STANDING-CHARTER.md`, `docs/ATLAS-SITE-COMPLETION-CONTRACT.md`, approved Designed Brand Master and Original Design Reference Pack.
+
+**CURRENT NOVEMBER 23 RELEASE SNAPSHOT (supersedes older historical status lines below):** Canonical GitHub repo `jyates0125/gtae-atlas`, published GTAE Cloudflare production from protected `main` SHA `94a74150a5d7eb3d6b6efa77097a7ce7c13be8b4` (separate live HTTP verification still required); protected nonproduction `development` SHA `be7971d88349239c1b594705c4dbb8db36e2239a`. Latest feature changes are integrated in **draft PR #98** on `feature/atlas294-integrated-staging-20261122`, not in either protected public branch. GTADB published repo-owned data/photos/map tiles reuse under CC BY 4.0 is **already approved** with small map-bottom credit + full Sources/Changes page. Do not reopen this settled source decision. The dense GTA VI relief binary is not yet installed; use truthful fallback until a separately reviewed exact-evidence asset is available. Owner native iPhone Safari/visual release acceptance and full current-head Chromium+Edge+ZIP gate remain open. Never infer a live deployment from staging tests.
+
+## November 23 dashboard, wardrobe and terrain acceptance
+
+The owner confirmed on physical iPhone Safari that all five featured dashboard portraits looked right and that Back and Forward moved between the dashboard and the selected profile. [Owner checkpoint](https://github.com/jyates0125/gtae-atlas/pull/98#issuecomment-7114307007)
+
+The Style Lab now preserves private bookmarks across tabs, shows the saved collection, and supports Back, Forward and direct artwork links. The focused Chromium and Windows Edge suites passed at 390 and 1440 pixels. [Browser results](https://github.com/jyates0125/gtae-atlas/actions/runs/45269363218)
+
+The terrain reader rejects blank grids and retains prior terrain if a replacement fails validation. The format and upstream distribution gap are documented in ATLAS341-LEONIDA-3D-SOURCE-FEASIBILITY.md. A distributable Leonida elevation copy and independent control points remain outstanding. [Geometry results](https://github.com/jyates0125/gtae-atlas/actions/runs/45269633451)
+
+The integrated product checkpoint is `e8314b3282e9ea1d161eaee1da3124888f8ef1e5`. Check the full release workflow on the subsequent validation commit for Chromium, Windows Edge and the validated ZIP. Media rights review, remaining physical-device acceptance and production approval remain separate.
+
+## November 23 integration checkpoint
+
+1. Draft integrated build includes development be7971d8 and staging 1f05c94f. The four Atlas 35.1–35.4 build, redirect, branch and guest-access suites passed locally on the combined site. GTAE served main 94a74150. The legacy identity endpoint returned HTTP 503 from the build environment. Legacy origin access and saved-progress export still need live verification.
+2. Newsroom now rechecks the reviewed snapshot while visible and on reconnect, preserving search and game filters. The intake rejects tomorrow's articles. Browser and intake tests are in the focused Newsroom workflow. Automated discovery from protected main still requires workflow promotion.
+3. Leonida geometry and source-specific rights, final character and vehicle media coverage, all-world device acceptance, final release package and owner signoff remain open. See the pinned toolkit investigation in ATLAS341-LEONIDA-3D-SOURCE-FEASIBILITY.md.
 
 ## Meaning of the evidence labels
 - **SOURCE:** code or asset exists; not proof of working rendered behavior.
@@ -120,3 +138,301 @@ Staging code checkpoint `8f259346c707e01834b16a014520220b92457aaa` adds a search
 
 ## Atlas 27.1 — source-specific classic progress milestone
 Owner direction: finish a coherent functional area against the standing charter before starting the next, rather than dispersing changes across unrelated pages. Track implementation, direct tests, exact-head browser validation and owner approval separately; do not call blocked source acquisition complete. This batch implements source-specific found/visited marks, hide-completed filters, route filtering, map detail buttons, preview/export and merge-only source/revision-isolated progress for GTA III, VC classic, VC Definitive Edition, LCS PSP and VCS PSP. GTA III 160 locations represent 140 objectives (both rampage alternatives share a mark); classic VC 51, VC DE 171, LCS 52 and VCS 51 referenced destinations. PSP entries are visits to reference destinations, not verified collectible spawns. Existing sequential guide slots, personal markers, maps, routes and saves remain separate. Six pure identity/merge checks plus eight simulated DOM/storage interaction checks passed, including reload, hide-found, alternate spawns, stale click intent, and scope isolation. All five data packs were inspected for actual source counts. Committed browser regression includes mark/hide/reload, shared rampage objectives and preserved route. Exact-head Chromium/Edge validation remains required. Research located third-party VC/LCS maps and source leads but did not establish new licensed calibrated classic positions; do not copy from unvalidated sources or claim parity. Code checkpoint `d05d2f5e30d6a9311f694be162c9c667c2e79e16`.
+
+## Atlas 29.1 — staging release blockers and focused-test operating gate (2026-11-22)
+**Candidate:** PR #96, `feature/atlas-mobile-shortcuts-20261122` → `development`. This is **not** a completed website or an approved release. Last documented navigation baseline: `d739628be1e9385f03c5089d5f5c62b90f43003d` (new head may differ; always inspect GitHub).
+
+**Delivered in staging:** Collapsible, keyboard-accessible dashboard tool shortcuts; separate official Leonida poster and interactive community map links; visible source/provenance note; narrow-phone link wrapping; targeted dashboard diagnostics. `atlas143-official-map-view.js` already handles `?view=rockstar` on GTA VI pages; the poster is separate from uncalibrated community markers. No external asset permissions are implied by this feature.
+
+**Known blocker:** At commit `e0d34a9b3b5a4b824d772df41e536193668c3b67`, full Edge validation failed `scripts/test_atlas223_home_browser.py` at 375px: document horizontal overflow **361px**. Chromium/static, focused Chromium/Edge and other Edge checks passed, but that does **not** waive the failed Edge dashboard gate. Added overflow-element logging and a dashboard-only Chromium workflow to reproduce without rerunning unrelated Cayo tests. The first focused browser job failed before running tests because Playwright 1.58 cannot install on runner Ubuntu 26.04; the runner was pinned to `ubuntu-24.04` at `d739628`. Wait for the actual supported-runner output; fix the measured offending DOM/CSS and confirm at 375px, 390px and desktop. Verify Edge again before release.
+
+**CI rule:** Source and dashboard browser checks for navigation changes; product integration tests only when relevant characters/Garage files change; heist/Cayo checks only when related features change. Full static audit, all-world Chromium and Edge phone/desktop, heist/Cayo, production ZIP, owner-approved artwork and Safari remain a **manual exact-head pre-merge release gate**. A green focused workflow is not release certification. Preserve guest saves, game isolation, existing working maps and the protected main branch.
+
+**Still open:** Remaining world-by-world and heist-by-heist QA, source/asset licensing and character portrait audit, Garage↔studio functional acceptance, final premium design parity, live iPhone Safari, Cloudflare production verification and owner approval. Do not mark these complete from static tests alone.
+
+
+### Atlas 29.1 verified navigation acceptance update — 2026-11-22
+The historical 375px Edge overflow failure above is **not currently reproducing** in the isolated dashboard browser suite: workflow run [45048148138](https://github.com/jyates0125/team-jura-atlas-preview/actions/runs/45048148138) passed Edge, Chromium and navigation-source checks at `c25d83dc7368faad8650191ea1b8a87776835be7`. Run [45048536412](https://github.com/jyates0125/team-jura-atlas-preview/actions/runs/45048536412) passed all three jobs at `8b60f864589007d9987f8e265e1ed26f8af476d0`, including 375px/390px phone widths, desktop, the native disclosure keyboard focus traversal, and smoke testing 13 tool destinations, seven featured worlds and the separate VI official poster route. These are focused browser tests, **not** an Edge full-site release retest or actual iPhone Safari acceptance. Preserve the prior failure record for regression history rather than erasing it.
+
+**Further source integrity:** `863ec4c` adds duplicate/missing route checks for all 20 dashboard destinations; `a07ede2` checks served HTML from the built Cloudflare payload. The navigation workflow now watches dashboard JS, CSS and browser test changes as well as HTML/shortcuts. Any later commit requires its own exact-head CI status. Do not trigger full Cayo regression for dashboard-only work.
+
+**Release hold remains:** complete remaining board items, run manual exact-head production release workflow, review visual/device and attribution evidence, obtain owner approval, then merge. Protected `main` synchronization is a separate reviewed operation.
+
+## Atlas 29.3 — Garage ↔ Forge staging implementation (2026-11-22)
+
+- **SOURCE:** Garage selected-model link carries `source=garage`; Forge opens the exact Garage paint, notes, name and normalized design as an unsaved working copy, even when a previous Studio preset exists. Named variants and saved Studio presets remain intact until the visitor chooses to save.
+- **SOURCE:** Forge now exposes an explicit **Save working concept to Garage** action for GTA V catalogued vehicles. It rereads the latest Garage local-storage snapshot, updates only the selected model's paint, body, name, notes and normalized design, and preserves ownership, bay/location, plate, favorites, other vehicles and Studio presets. GTA VI hides and rejects the action.
+- **SOURCE:** Real Chromium journey checks the round trip and data isolation at 390px, with independent local-storage state before and after. Focused source contracts, syntax, build and asset audits run in the scoped workflow.
+- **CI:** On previous commit `0ab51ea917b6a949e83999da91d9986c12d7bce3`, focused Garage/character Chromium and cross-product workflows passed. New reverse-save changes require **fresh exact-head CI** before calling them verified.
+- **BLOCKED:** Real Safari/iPhone review, owner visual acceptance and release approval. Subject-specific Lamar Story and Online portraits still missing; Agent 14, CJ and Claude need owner visual likeness review even though bundled assets decode in Chromium.
+- **Release:** Draft PR #97 targets `development`; nothing in this entry authorizes merge or live deployment. No Cayo-specific tests were added for unrelated changes.
+
+
+## Atlas 29.3 — Garage ↔ Forge selected-model milestone (2026-11-22)
+- **SOURCE completed in draft PR #97:** GTA V/Online Garage model detail opens the matching Forge concept with a deliberate `source=garage` working copy; the independent Studio preset remains separately loadable. The visitor may explicitly save a Forge design back to the same Garage vehicle without setting owned/wishlist or rewriting the ownership registry. GTA VI concepts cannot write into the GTA V Garage.
+- **SOURCE completed:** exact custom RGB, personal name, notes and class-specific original procedural design carry between workspaces. A named Studio build is never silently overwritten. Boat/aircraft class concepts are labeled as original studies rather than exact game meshes.
+- **SOURCE completed:** Garage vehicle saves now read the latest saved Garage snapshot, merge only the selected model, preserve other vehicles edited from another tab and do not rewrite the ownership collection key. Malformed storage fails closed rather than overwriting it.
+- **CI evidence:** focused Chromium and cross-product workflows passed on `1574fbc1b0c4ae75f3db981eee325bdd7cff4e37`; the full-suite Squalo expectation was updated at `5d4801437a016d3c3c8b09c46f947f5dde945632`. New concurrent-tab regression checkpoint `e90cab149aa63218b47948e711664a51913ba94e` requires exact-head CI confirmation.
+- **Still required for release:** exact-head full Chromium/Edge and Safari owner device acceptance; check the final public deployment after approved merge. This milestone is not the same as finishing the complete 2150 Garage showroom/Forge visual and feature ambitions.
+
+
+## Atlas 29.5 — stale Garage tab / guest progress safety (staged)
+
+- **SOURCE:** Independent key-specific ownership and Garage location saves replace the older two-key `persist()` operation. Both reread the latest localStorage snapshot; deleting a now-occupied garage is prevented; corrupted existing records fail closed.
+- **SOURCE:** Garage export uses the latest stored builds and owned marks, not stale page state. Import refuses to overwrite corrupted local data.
+- **TEST:** `scripts/test_atlas295_garage_multitab_browser.py` and `scripts/test_atlas295_garage_safety.py`, with focused workflow `atlas295-garage-preservation.yml`. This tests exactly Garage ownership, multi-tab Forge data, naming and backups on a 390px Chromium viewport and does not run an unrelated Cayo/full-site matrix.
+- **GATE:** CI at exact head, cross-browser release pass, device behavior and owner approval remain unverified. Separate stacked staging candidate based on integrated PR #98, **not a public or protected-main merge**. See `docs/ATLAS295-GARAGE-STORAGE-ACCEPTANCE.md`.
+
+
+## Atlas 29.6 — Forge hub for saved, not-yet-owned Garage designs
+
+- **SOURCE:** The private Forge Collections page now includes saved Garage concepts without requiring an owned mark. Owned-only, saved-only, and both cases are truthfully distinguished; a model with both flags has one Garage entry, not two. Unsaved/unowned models do not appear as finished builds. GTA VI Forge profiles remain separate.
+- **SOURCE:** Links contain only the public model identity, never saved notes, ownership or personalized design contents. Viewing/searching is read-only; no signup, upload or production database writes.
+- **TEST:** `tests/atlas296-forge-collections.test.cjs` and `scripts/test_atlas296_forge_collections_browser.py`; scope-limited workflow `atlas296-forge-collections.yml`. Screenshots planned at 390px and 1440px on actual built Cloudflare files.
+- **GATES:** Exact-head focused test pass, real iPhone Safari and owner visual approval still pending; this is one Garage/Forge charter step, not the entire Elario 2150 showroom. See `docs/ATLAS296-FORGE-COLLECTIONS-CHECKPOINT.md`.
+
+
+## Atlas 29.8 — mission-specific map stages and portable briefing (staging)
+- **SOURCE:** Fourteen non-Cayo heist maps receive purpose-built Recon & Setup / Finale & Escape / All Points layer controls, live visible-POI/route counts and mobile accessible tap targets. Existing source-informed, schematic POI positions and approved Elario visuals are preserved; no invented geographic coordinates or proprietary map copies.
+- **SOURCE:** Per-heist route/scoped/award export and non-destructive restore (same-mission validation, historical-point preservation, latest-record reread, explicit reload). Existing mission notes, crew, checklist, other game data and Cayo remain independent.
+- **SOURCE:** Kortz Center release context links the official Rockstar Art Studio/heist announcement instead of implying the mission is unreleased; precise interior geometry remains labeled illustrative.
+- **TEST:** `tests/atlas298-heist-map-kit.test.cjs`, `scripts/test_atlas298_heist_map_kit_browser.py`, and path-scoped `atlas298-heist-map-kit.yml`. Tests inspect all fourteen maps at 390px/1440px, import/export and privacy. Exact-head results must still be checked; do not infer a pass from source existence.
+- **GATE:** Real iPhone Safari, full final browser + ZIP validation, sourced exact in-game map geometry, complete charter content and owner approval remain open. More detail: `docs/ATLAS298-HEIST-MAP-KIT-ACCEPTANCE.md`.
+
+
+## Atlas 30.0 — relevant-only feature acceptance (staging)
+- **SOURCE:** Twelve path-scoped GitHub workflows (14 jobs) now inspect each new PR synchronization's *actual head commit* before installing browsers or rebuilding unrelated features. Initial PR, manual, unavailable history and final release validation remain fail-open and fully available.
+- **SOURCE:** Shared dependencies are explicitly included for Garage/Forge, character, navigation, heist and integrated Leonida tests; deleted/renamed critical files count. The standalone final production Chromium/Edge/ZIP signoff gate remains manual and unchanged.
+- **TEST:** `scripts/atlas300-ci-delta.py`, `scripts/test_atlas300_ci_delta.py` and lightweight workflow `atlas300-ci-delta.yml`. Exact-head YAML/source CI and observed workflow-skip evidence must pass before this is treated as verified.
+- **HOLD:** This saves development test minutes, not user-facing charter completion. Owner visual, source/rights and real iPhone checks remain mandatory. See `docs/ATLAS300-CI-DELTA-ACCEPTANCE.md`.
+
+
+## Atlas 30.1 — fifteen heist checklist guest-save safety (staging)
+- **SOURCE:** Heist pages now read their saved checklists without rewriting localStorage on page open. Checkbox changes reread the latest record and update only one named step, preserving retired tasks, extra metadata, other missions and independently saved notes/routes. Reset requires confirmation and only resets the displayed mission steps.
+- **SOURCE:** Malformed or unreadable checklist storage is never replaced with empty progress; accessible error status and a raw JSON recovery export protect guest data. No new account or server storage.
+- **TEST:** `scripts/test_atlas301_heist_checklist.py`, `scripts/test_atlas301_heist_checklist_browser.py` and `atlas301-heist-checklists.yml` cover all 15 mission pages at 390px/1440px, cross-tab updates, historical data, reset and corrupt export. Check exact-head results before claiming automated proof.
+- **HOLD:** Production release, exact-head full suite, user iPhone Safari, design review, source rights and owner approval remain mandatory. See `docs/ATLAS301-HEIST-CHECKLIST-PRESERVATION.md`.
+
+
+## Atlas 30.2 — accessible Cayo corrupted guest-checklist rescue and single map mount
+- **SOURCE:** The fully tested Atlas 30.1 checklist code in draft PR #98 remains authoritative. If a historical Cayo checklist is malformed, a small branded recovery panel now appears outside the Cayo flagship's intentionally hidden legacy layout. It offers an exact-raw-byte download, then separate confirmation to reset **only that old checklist**; modern island map, mission notes, daily chest data and every other saved key remain intact.
+- **SOURCE:** One duplicate shared Atlas 29.8 mission-phase script/CSS injection was removed; all 14 non-Cayo heists mount their phase map once. Cayo and the 29.9 complete backup stay independent.
+- **TEST:** Scoped `scripts/test_atlas302_cayo_rescue.py` and `scripts/test_atlas302_cayo_rescue_browser.py` run through `atlas302-cayo-rescue.yml`, with 390px/1440px Cayo recovery and Fleeca phase screenshots, malformed and concurrently changed JSON, upload-free safe reset, and payload audit.
+- **GATES:** Exact-head CI result, final release browser/ZIP and actual iPhone/Safari/owner visual approval are separate. See `docs/ATLAS302-CAYO-RECOVERY-ACCEPTANCE.md`. Duplicate earlier PR #104 remains closed, not merged.
+
+## Atlas 30.2 — seven classic map guest notebook preservation (staging)
+- **SOURCE:** GTA III, Vice City, Vice City Stories, Liberty City Stories, Chinatown Wars, TLAD and TBOGT share a fail-closed notebook reader. Corrupt/wrong-world stored records are not silently rewritten, and stale tabs cannot replace newer local guest markers in the ordinary sequential-save case.
+- **SOURCE:** Clear recovery panel lets the visitor export untouched raw bytes before choosing an explicit confirmed fresh notebook; a second byte check refuses to erase a newer tab's save. Original keys and image-relative coordinate/source distinctions remain intact.
+- **SOURCE:** Marker CRUD, category progress, JSON import and personal map image actions avoid claiming success after failed notebook saves. Cache revisions `v=302` prevent browsers using outdated Classic notebook logic.
+- **TEST:** `scripts/test_atlas302_classic_safe.py`, `scripts/test_atlas302_classic_browser.py` and `atlas302-classic-notebook.yml`. Real Chromium built-site checks for seven classic worlds at 390px/1440px, no load overwrite, corrupt export, intentional recovery and stale-tab preservation. Exact-head CI not claimed until confirmed.
+- **HOLD:** Source/location alignment gaps, complete classic-world data/media, manual full browser/ZIP release validation, real Safari and owner approval remain. See `docs/ATLAS302-CLASSIC-NOTEBOOK-RECOVERY.md`.
+
+
+## Atlas 30.3 — all thirteen GTA destinations and phone/desktop navigation
+- **SOURCE/UX:** The four featured worlds and nine additional game/episode destinations have unique, same-origin game-correct links. The world finder now exposes a single-tap Show all 13 reset whenever search or filters are active; the allowlisted recent-world shortcut refreshes after browser Back restores a cached directory page.
+- **TESTED:** Exact-head focused source and Chromium acceptance `bf3c83e24909b0b8ee472746dc311320fea569a8` passed for 13 routes, world identities, phone 390px and desktop 1440px, return links, search/reset, Back/recent-world continuity and no horizontal overflow. PR #108 merged into draft staging only.
+- **RETAINED:** Existing Cayo and GTA V/Online/VI engine separation, original game covers, classic episode image-relative map notebooks and provisional source notices. The new workflow `atlas303-thirteen-worlds.yml` is strictly world/directory focused.
+- **REMAINING:** This certifies navigation, not exhaustive 13-world verified collectibles/road networks, source permissions, 3D, real Safari/iPhone, full final Chromium/Edge/ZIP or owner release approval. See `docs/ATLAS303-THIRTEEN-WORLD-ACCEPTANCE.md`.
+
+
+## Atlas 30.2 — Mobile marker exit and safe map return (staging)
+- **SOURCE:** GTA V Story / GTA Online / GTA VI map detail cards now have a sticky, 44px **Back to map** button, 44px existing × and focus return to the map canvas after closing. Scrolling tall media/text no longer strands the exit below an overflowing overlay. Short iPhone landscape receives a bounded fixed panel.
+- **SOURCE:** Closing keeps world, map camera/zoom, marker sources, user routes, progress and browser history unchanged. Original Elario violet/gold styling and approved imagery remain intact.
+- **TEST:** `scripts/test_atlas302_map_marker_exit.py`, `scripts/test_atlas302_map_marker_exit_browser.py` and focused `atlas302-map-marker-exit.yml` cover all three map pages at 375×667, 390×844, 844×390 and 1440×900; confirm exact-head CI before accepting.
+- **HOLD:** Actual iPhone Safari signoff, complete 13-world navigation/device QA, final Chromium/Edge/ZIP and owner-approved release remain outstanding. See `docs/ATLAS302-MAP-DETAIL-EXIT-ACCEPTANCE.md`.
+
+## Atlas 30.4 — honest character portrait coverage and accessible roster browsing (staging)
+- **SOURCE:** Archive now distinguishes all **40 appearances**, **13 listed original local character concepts** and **27 reference/pending appearances** with filtering, independent Story/Online/VI/classic scopes, classic title selection, search and shareable `art` query state. A shared profile clears an incompatible art filter rather than disappearing.
+- **SOURCE:** In-profile previous/next stays within the current result set and uses a single replaceable modal history entry; short phone landscape keeps the close and content reachable. No extra image licenses, remote downloads, altered character facts or guest storage writes.
+- **TEST:** `scripts/test_atlas304_character_archive.py`, `scripts/test_atlas304_character_archive_browser.py` and path-scoped `atlas304-character-archive.yml`; exact-head CI pending until reported green.
+- **HOLD:** Original Lamar Story/Online portrait art, owner likeness review of CJ/Claude/Agent 14, remaining subject-specific concept portrait work, real iPhone Safari, complete rights audit, final Chromium/Edge/ZIP and release approval. See `docs/ATLAS304-CHARACTER-ARCHIVE-ACCEPTANCE.md`.
+
+## Atlas 30.5 — named Forge designs available from Garage (staging)
+- **SOURCE:** My Garage can list up to eight validated Forge named variants for the selected GTA V/Online model. Loading a version reads the current Forge key, updates only the unsaved paint/body/concept preview and leaves ownership, garage assignments, plate, notes, other vehicle builds and original Forge versions untouched until explicit Garage Save.
+- **SOURCE:** Invalid/corrupt or stale Forge data causes a visible refusal without destructive defaults; GTA VI variants stay in their separate store, and private variant labels do not enter share URLs. The class-correct original 3D study/verified-source disclaimers remain unchanged.
+- **TEST:** `tests/atlas305-garage-variants.test.cjs`, built-site `scripts/test_atlas305_garage_variants_browser.py`, path-scoped `atlas305-garage-variants.yml`. No unrelated Cayo checks are introduced by this batch. Exact-head CI pending.
+- **HOLD:** real iPhone Safari, owner visual/style review, licensed model-specific geometry, complete final release verification and release authorization. See `docs/ATLAS305-GARAGE-VARIANTS-ACCEPTANCE.md`.
+
+## Atlas 30.6 — GTA IV / TLAD / TBOGT map return (staging)
+- **SOURCE:** Visible, sticky and 44px touch-target Back to map action inside the shared GTA IV source detail. Uses the original Close, Escape support, canvas focus and mobile scroll return; preserves camera/zoom/layer, episode scope, routes and completed bird markers.
+- **TEST:** `scripts/test_atlas306_iv_return.py`, `scripts/test_atlas306_iv_return_browser.py` and path-scoped `atlas306-iv-return.yml` cover 12 episode/viewport journeys in built Chromium. Exact-head CI required before staging integration.
+- **HOLD:** This does not certify the entire 13-world map inventory, accurate road routes, native iPhone Safari, full final release Chromium/Edge/ZIP or owner visual approval. See `docs/ATLAS306-IV-MAP-RETURN-ACCEPTANCE.md`.
+
+
+## Atlas 30.7 — Seven classic world editor exit (staging)
+- **SOURCE:** 44px Back to map and Escape for III, VC, VCS, LCS, CTW, TLAD, TBOGT notebook markers. Unsaved edits confirm discard; unchanged source, camera, per-world progress and personal storage are retained. No data/editor persistence rewrite.
+- **TEST:** scripts/test_atlas307_classic_return.py and built Chromium scripts/test_atlas307_classic_return_browser.py, seven worlds × four viewports, scoped workflow atlas307-classic-return.yml. Await exact-head CI before merge.
+- **HOLD:** native Safari, complete sources/portraits, full Chromium+Edge+ZIP and owner release approval remain open.
+
+## Atlas 30.8 — San Andreas collector to map return (staging)
+- **SOURCE:** 44px Back to map and Escape from collectible cards, with last-visible-pin or map canvas focus. Keeps active tag/snapshot/horseshoe/oyster/jump category, zoom/pan, per-world progress and attributed map data unchanged.
+- **TEST:** scoped scripts/test_atlas308_sa_return.py and built Chromium scripts/test_atlas308_sa_return_browser.py at phone, landscape and desktop, via atlas308-sa-return.yml. Exact-head green required before staging integration.
+- **HOLD:** All-source completeness, original artwork, native Safari, final Chromium+Edge+ZIP and owner release approval. See docs/ATLAS308-SA-RETURN-ACCEPTANCE.md.
+
+## Atlas 30.9 — San Andreas original cinematic hero replaces unrelated crew art (staging)
+- **SOURCE:** The page-specific Elario jura157-sa cinematic concept replaces the generic crew background and placeholder-like three-city sketch. The three cities remain identified in an honest illustrative caption; no map engine, collection coordinates, private saves or credits were replaced.
+- **TEST:** scripts/test_atlas309_sa_hero.py and built Chromium scripts/test_atlas309_sa_hero_browser.py check actual art decoding at 375/390/844/1440 viewports and preserved map/collection UX. Path-scoped atlas309-sa-hero.yml; exact-head CI mandatory.
+- **HOLD:** Owner design approval, other subject-specific artwork, full release browser/ZIP and real iPhone Safari remain pending. See docs/ATLAS309-SA-HERO-ACCEPTANCE.md.
+
+## Atlas 31.0 — 13-world auditable source evidence matrix (staging)
+- **SOURCE:** 54 source-category rows from 16 retained local source files, distinguishing numeric coordinate references from objective counts and checklist-only slots. Includes Story/Online/VI, Cayo, IV and episodes, SA, III/VC/DE, Stories and CTW gaps. Source location is not automatically a visible or game-verified pin.
+- **UX:** Searchable/filtered, shareable and exportable evidence directly on Marker Coverage. Accessible 44px controls, horizontally scrollable phone table, no private save writes or external background requests, fail closed on broken data.
+- **TEST:** Python independently recalculates each packed row; 4-viewport built Chromium browser journey checks game separation, CSV, filters, source links and missing data. Scoped atlas310-source-coverage.yml. Exact-head CI pending.
+- **HOLD:** Accurate complete map content, artistic finish, real iPhone Safari, final Chromium+Edge+ZIP and owner-reviewed live promotion. See docs/ATLAS310-SOURCE-COVERAGE-ACCEPTANCE.md.
+
+## Atlas 31.1 — safe rename/remove for Forge named vehicle builds (staging)
+- **SOURCE:** Managing the eight-per-model named Forge variants now supports renaming and confirmed deletion in both V/Online and VI separate local namespaces. Re-reads the exact latest key, checks a saved design has not changed in another tab, and refuses malformed storage or duplicate rename. Primary idea, other vehicle versions, Garage location and ownership remain separate; no new licensed meshes or official specs claimed.
+- **TEST:** Focused source and built-browser phone/desktop tests, including a stale-tab race, cancel/confirm, invalid storage and V/VI isolation; exact-head CI required before staging merge.
+- **HOLD:** physical iPhone Safari, owner 3D visual approval, licensed exact meshes and full Chromium+Edge+ZIP release approval.
+
+## Atlas 31.2 — non-destructive Forge raw recovery (staging)
+- **SOURCE:** Visible damaged-save panel only when a GTA V/Online or Leonida Forge record is invalid. Exact raw bytes downloadable before reset; separate confirm and double current-byte check required to fresh-create only this world's Forge key. No auto-write on opening and no writes to the other world, Garage or ownership.
+- **TEST:** Focused source and real built Chromium for both worlds, broken JSON/schema, raw export, concurrent newer-tab refusal and safe reset. Exact-head CI pending.
+- **HOLD:** Actual Safari device/owner review, licensed meshes/art and full release browser/ZIP.
+
+## Atlas 31.3 — private device handoff for named Forge designs (staging)
+- **SOURCE:** Forge Collections named-design links now expose only public model ID and world, never personal saved design names. A one-time same-tab session-only handoff selects the requested private named design. Legacy title-bearing links remain readable but have their name scrubbed from URL history after load. My Garage and Forge storage are unchanged; no server or third-party requests.
+- **TEST:** Related source/node and actual same-origin Chromium collection→Forge handoff across V/Online and VI with name privacy, stale record fallbacks and storage isolation; exact-head CI mandatory.
+- **HOLD:** Device Safari, owner visual acceptance, full Chromium+Edge+ZIP and new art/real-world 3D source rights.
+
+## Atlas 31.3b — integrated acceptance contract refresh for private Forge handoff (staging)
+- **TEST FIX:** The old Atlas 2150 product integration assertion required a personally named Forge title in a shareable URL hash, contrary to the binding privacy requirement. It now requires one-use privateVariant identity, world/model public link and the absence of the private name in URLs; actual V/VI browser handoff was already verified in Atlas 31.3.
+- **GATE:** Related integrated staging, cross-product and Garage-to-Forge checks must pass on exact head before considering the combined stage fully green. This changes no live runtime behavior or saved data.
+
+
+## Atlas 31.4 — mission-map save-capacity and unreadable-backup rescue (draft staging)
+- **SOURCE:** Non-Cayo mission-map portable backup import now caps each stored route/scoped/award list at the same 150 IDs accepted on load. It reports skipped overflow instead of writing an unreadable oversized record. An isolated damaged-save recovery panel permits exact raw byte export before a confirmed reset of only the affected mission-map key. The mission-map focus writer refuses to overwrite corrupt content; Cayo and other save namespaces remain untouched.
+- **TEST:** Focused import-capacity/overflow/browser corrupted-save recovery CI passed; integrated to draft staging through PR #121. **HOLD:** Native Safari, owner review, full final release/ZIP.
+
+## Atlas 31.5 — current per-page portal stylesheet version contract (draft staging)
+- **SOURCE:** Manual release run on prior staging SHA exposed a test that required the welcome page to reuse the map-directory stylesheet cache version. Current pages intentionally have independently versioned JS/CSS. Test now validates each page's actual one versioned local reference and asset existence; no runtime artwork, maps, or progress changes.
+- **TEST:** Isolated source contract GitHub CI passed; PR #122 merged to draft staging. Old failed release run remains historical evidence.
+
+## Atlas 31.6 — Leonida/Fleeca browser smoke contract repair (draft staging)
+- **SOURCE:** Historical browser smoke miscounted a separate Leonida Day-map option as a duplicate map-jump link due to a shared style class and required an absent first-time Fleeca checklist key. Tests now distinguish the actual map-jump anchor, allow the separate Day button before search, seed an explicit legacy Fleeca checklist, and demand byte-exact preservation after heist interactions. Runtime content, map marker locations and guest data code are unchanged.
+- **TEST:** Real built-page Chromium and Edge focused smoke passed at phone and desktop sizes on repair head, then again on combined staging; PR #123 merged. **HOLD:** Complete manual full run must pass at newer exact staging SHA.
+
+## Atlas 31.7 — remaining static release-test debt and full tail inventory (draft staging)
+- **SOURCE:** Second owner-triggered manual full gate, run #45099090665, passed its initial source/Data Lab checks and stopped on a stale literal map-directory JS cache version (v289 versus real v303). The separate dashboard source contract also relied on an old nav opening tag; latest dashboard has an accessible shortcut filter, nav ID and ARIA metadata. Assertions now check unique versioned local dependencies and structurally validate exactly thirteen unique same-origin shortcut links.
+- **TEST:** The isolated full static tail preflight deliberately executed all **71** relevant commands from the directory contract through the end of that release static step, with **71/71 passing** after fixes (run #45099351696). PR #124 merged into draft staging at `7a282ecf8bd70ee7831bac8e118cd325a96b5878`. Prior full run on earlier SHA remains failed; its Edge smoke may surface independent blockers.
+- **HOLD:** No full Chromium+Edge+validated ZIP has passed on this new staging SHA. Original fan art/rights, live preview identity, device Safari and owner final acceptance still required.
+
+## Atlas 31.8 — one-shot, owner-authorized staging-only release dispatch (pre-merge)
+- **SOURCE:** PR #125 contains a new GitHub Actions workflow whose push event is narrowly scoped to the first addition of its own YAML file onto the draft staging branch. It confirms the exact remote staging HEAD, then asks the existing, unchanged manual `team-jura-release.yml` to run the full Chromium/Edge/ZIP gate. Uses an ephemeral repo GitHub Actions token, no personal token, no public deploy/merge and no periodic background launch; does not fire for routine feature code.
+- **STATUS:** Keep launcher unmerged until all failures from the prior Edge smoke and source tail are resolved; the dispatch itself is not evidence of a green release and may be blocked by repository Actions permissions. Explicit owner authority to run the necessary QA does **not** waive exact-head review, source/visual/rights and native Safari/owner production approval.
+
+
+## Atlas 31.9 — phone map locator and private Squalo release-browser contracts (draft staging)
+- **SOURCE:** Owner's second full release #45099090665 passed both focused Atlas 22 browser jobs, the full Edge desktop/phone functional smoke, Cayo, IV, offline and road/map test sections up to `scripts/test_atlas211_mobile_fit_browser.py`; the latter still used a non-unique `.j145-open-map` selector, matching both Leonida's real map link and the optional Day layer button. Selector now explicitly targets the single `a.j145-open-map[href="#atlasCanvas"]`, while preserving 375/390px overflow, nav, and click checks on Story, Online and VI.
+- **SOURCE:** The independent Squalo/Jetmax source-regression script still required `#variant=QA%20Marina%20Edition` in a shareable URL, contrary to the binding Atlas 31.3 private named-design handoff. Its assertion now expects `?model=jetmax&source=collection`, checks no private title appears in history, confirms the one-use session handoff is consumed, reloads safely and explicitly re-selects the local saved named design. **No runtime Forge data, privacy contract, guest key or published source is changed.**
+- **TEST:** Atlas 31.9 Chromium validates Story/Online/VI actual 375/390px return and Squalo/Jetmax private Forge journey. Edge release-tail diagnostics separately found 8/10 initial downstream scripts passed, then after repairing the Windows diagnostics reporter found first-visit passed and the outdated Squalo URL assertion. Final focused source head `9a13f0c330f26b903fb3ae5a03f08f53c4a46086` passed **both Chromium and Edge** in [run #45101007580](https://github.com/jyates0125/team-jura-atlas-preview/actions/runs/45101007580). [PR #126](https://github.com/jyates0125/team-jura-atlas-preview/pull/126) merged into draft staging at `044656c44eeab89cd52febc5f94ec29d68e45c88`.
+- **HOLD:** These were scoped checks; the exact merged release candidate still requires successful full Chromium+Edge, 15 heists and validated ZIP, then actual Safari/owner brand review and media rights verification. No authorization to merge the public `development` or `main`.
+
+## Atlas 32.4 — One Last Ride condensed animatic checkpoint (2026-11-22, staging only)
+
+- **SOURCE:** Keep the full nine-chapter original fan screenplay and its extended **8:30** shot list unchanged. New `film/production/CONDENSED-CUT-255S.json` sets an explicit **4:15 / 255-second** owner-requested 3–5-minute editorial cut, using the existing approved nine original film concept frames.
+- **CI:** Exact film PR #130 source head `f1d4a3082def009a741f0447e32e2f5a683ebb76` passed focused [GitHub run 45113313819](https://github.com/jyates0125/team-jura-atlas-preview/actions/runs/45113313819). The film-only test validated the local asset rights boundary, GTAE canonical/social URLs, static Cloudflare build, 18-second smoke and **actual 255.0-second H.264/AAC 1280×720 MP4**. Output SHA-256 `a864adfdd18c595b298dbd96fe351d82268ef990f91d11fed3dffcf018ffe676`, source [review artifact 14790458095](https://github.com/jyates0125/team-jura-atlas-preview/actions/runs/45113313819/artifacts/14790458095). PR #130 merged **only** into combined draft staging as `4e5e70d9f4da036b17e005f6dde33fc10962262c`.
+- **NOT COMPLETE:** This is a **timed still-image animatic**, with a repeated existing Elario temporary teaser soundtrack. It is **not** a character-animated short, final edited film, recorded performance or cleared public film asset. Final subject artwork/voice rights, new score, full animation, owner vision approval, iPhone Safari visual review and final film/public release validation remain blocked. Do not distribute the review asset as the finished movie or silently replace the honest 36-second public preview.
+- **Character artwork:** Two standalone Lamar fan-concept portrait candidates were separately created for GTA V Story and Online, but the resulting binaries are **not committed to GitHub** or accepted as final character likenesses; the canonical roster still marks both Lamar appearances as portrait-pending until separately installed and reviewed. Do not increase verified portrait count yet.
+
+## Atlas 32.5 — GTAE launch sharing and 13-world discovery metadata (2026-11-22, staging only)
+
+- **SOURCE:** Sixteen public flagship/database/collector pages now have unique canonical URLs at `gtae-online.pages.dev`, source-matched titles/descriptions, Open Graph/Twitter images selected from **existing Elario artwork**, and no saved-user query-string data. The official site and non-official map claims remain separate, particularly for the provisional Leonida research layers. The canonical `sitemap.xml` adds Atlas Passport, Leonida HQ and Collection HQ. Classic `map-hub.html` remains without a wrong single canonical URL that would collapse seven distinct title/episode modes.
+- **CI:** Exact PR #131 head `f87bc8796a43b169aa3db525a418cc68a1b7b4df` passed **10/10** triggered page-scoped workflows, including [Atlas 32.5 social/Cloudflare source audit](https://github.com/jyates0125/team-jura-atlas-preview/actions/runs/45114060682). A legacy San Andreas hero test was corrected to count the real `<img>` only, rather than treating valid OG/Twitter share-image references as accidental duplicate artwork. Merged into draft staging as `20e1b2c4bfee080b4639f599198cb24f42f1e14f`.
+- **LIMITS:** Social metadata is not proof of social reach, image preview cache propagation, discoverability or owner design acceptance. Live Cloudflare `development`, protected `main` and external platform previews still require the final release/owner review gates. No unapproved visitor sign-in or third-party asset import.
+
+## Atlas 33.1 — Lamar Davis character artwork
+
+- Added separate Story and Online concept portraits to the two existing appearances in [staging PR #137](https://github.com/jyates0125/team-jura-atlas-preview/pull/137). The archive has 15 local illustrations across 40 appearances. The other 25 remain in the reference queue.
+- Both files match the original artwork review package hashes. The character workflow exercises the archive filters and both distinct portraits in cards and profiles. Owner likeness review and physical iPhone Safari acceptance remain open.
+
+## Atlas 33.2 — Liberty City bird checklist
+
+The GTA IV map now shows the collected count for the selected edition. It reads current device progress before modifying a bird and uses Web Locks where available to serialize changes from different tabs. Unreadable saves block edits and can be downloaded intact. Failed writes are reported on the map. The focused browser checks cover concurrent edition updates, rejected writes, raw download, and detail-panel return with the actual progress and route keys. Physical iPhone acceptance remains open.
+
+## Atlas 33.3 — One Last Ride staging player
+
+The film page uses the owner's 39-second music-only edit with original score and effects. The 720p H.264/AAC edition matches the voice handoff checksum. The player and its direct MP4 fallback use a versioned URL. The full animatic and voice session remain separate. Public release and physical iPhone playback acceptance are still open.
+
+## Atlas 33.4 — classic map and cast navigation
+
+All nine classic titles represented in the archive have a direct cast link on their map. Switching between GTA IV and either episode on the Liberty City map updates the destination. The focused browser check follows each map into its edition, compares the visible character IDs with the roster, and verifies the profile's world-map link at phone and desktop widths.
+
+## Atlas 33.5 — Story, Online and Leonida map catalogs
+
+Each modern explorer links to its own character archive and armory. Switching worlds in the map updates the three shortcuts together. Story and Online identify their shared GTA V vehicle archive, while Leonida links to its separate research catalog. The focused browser check covers direct entry, in-page switching, exact cast membership, and profile return links.
+
+The shared vehicle gallery carries its incoming Story or Online world into cast and database links. Leonida vehicle research opens the VI configurator.
+
+## Atlas 33.6 — November 23 Leonida source review
+
+Rockstar's screenshot index names the Dinka Enduro, Crest Kayak and Ganado Retro Build. The VI vehicle gallery links those additions and its four existing edition vehicles to individual source pages. The armory attributes the chapter-specific Girardi ES9 and Klose K17 variant unlocks to GamesRadar+'s launch gameplay report. Shore Court garage is searchable under VI properties using Rockstar's Ocean Beach description. It has no measured coordinate. GTADB's remote HEAD matched the already-pinned d406fea099e1df2bce42fd6b87eed04bce646629 revision; the existing 3,754-record community snapshot is retained. These are additions to Atlas, with no claim of a new game patch.
+
+
+## Atlas 33.7 — GTA V Story/Online vehicle progress and shared-save safety (2026-11-23, staging only)
+
+- **SOURCE:** The pictured GTA V vehicle catalog now has separate Story and Online choices and private collected/wishlist IDs. Newly tracked Story cars use `vehicles5-story:<model>`; every existing `vehicles5:<model>` entry stays Online under the **unchanged** `team-jura-atlas90-collection-v1` key. No silent migration, blank reset or Garage ownership claim. Both worlds still use the same source image archive; images do not verify per-edition availability.
+- **SAFETY:** Gallery toggles merge from the latest local v1 record instead of overwriting unrelated/other-tab rows. Valid unknown top-level fields survive; malformed, incompatible or blocked records refuse writes and can be exported byte-exact as a raw recovery text file. Universe Database ownership actions now refuse to rewrite those same unreadable records. The Online Garage retains its existing Online-owned `vehicles5:` semantics.
+- **UX:** Visible Story / Online / Leonida vehicle switches, current-world heading, honest archive/garage caveat, active-world catalog/armory links and refreshed local JS cache versions. Approved Elario imagery, original 39-second music-only teaser, heist state and all map coordinates remain untouched.
+- **TEST:** New path-scoped source+actual 390px/1440px built Chromium coverage, other-tab toggles, preexisting v1 data, corrupt raw download and current world navigation. At source head `689166c07f744ab1007d4c98e5f33edc257fcdd0`, [Atlas 33.7 focused](https://github.com/jyates0125/team-jura-atlas-preview/actions/runs/45160515021), [character/catalog integration](https://github.com/jyates0125/team-jura-atlas-preview/actions/runs/45160514860) and [publication metadata](https://github.com/jyates0125/team-jura-atlas-preview/actions/runs/45160515054) all passed. Follow-up documentation commits do not by themselves re-run these exact code checks.
+- **HOLD:** Physical iPhone Safari design/behavior inspection, source-complete maps and item art, full manually requested final Chromium+Edge+ZIP, Cloudflare release identity and specific owner release approval remain pending. Do not merge this draft to public `development` or protected `main`.
+
+
+## Atlas 33.9 — official Newsroom refresh and safe intake (2026-11-23; draft staging only)
+
+- **SOURCE:** First-party November 19 GTA VI launch, November 20 album release and November 6 GTA+ news added to the reviewed Rockstar feed with accurate edition/date/link, separately from the community research queue. Newsroom policy and last-curated timestamp updated.
+- **AUTOMATION:** First-party Newswire discovery script produces a 14-day review-only artifact after strict URL/date validation, deduplication and honest nullable game suggestion. No automated publishing, coordinates, guest writes, sign-ins or branch changes. Community source queue remains separate.
+- **TEST:** Standalone offline intake/URL/date/source checks plus native workflow. Exact-head CI status must be verified after final data commit.
+- **GATE:** Default-branch-only GitHub cron is not active on staging/development; live GraphQL may fail. Full release Chromium/Edge/ZIP, image/rights QA, actual iPhone Safari, Cloudflare revision checks and owner approval remain unresolved.
+
+
+## Atlas 36.4–36.5 — three modern-map attribution, navigation and actual browser QA (2026-11-23; draft integrated staging)
+
+- **DELIVERED:** GTA V Story, GTA Online and GTA VI now have one consistent, compact GTADB source credit inside the bottom map edge, with direct GTADB, CC BY 4.0 and full `atlas-credits.html#licensed` (source authors, license, original IP and changes) links. Desktop provenance labels identify relevant YANIS/Scaly, DUPZOR/Loki, in-game Day and GTA V tile variants. The game switching event refreshes dynamic view credit after code-driven world changes. Rockstar game imagery rights remain separate from the GTADB contributors' data license.
+- **ACCESS:** The former bottom-right All Maps floating badge is in normal site navigation instead of blocking map controls or credits. A legacy mobile Leonida stylesheet that hid the newly relocated navigation link has been narrowed to the removed direct-child floating badge. The initial Story/Online/Leonida headings are correct. Small screens retain the core links without a distracting fourth map panel; button/credit geometry is separated.
+- **TEST:** PR [#173](https://github.com/jyates0125/gtae-atlas/pull/173) at `6adc46c6cabfb0c89fc804d2cfc4d0d022a615e1`: **7/7** affected workflow checks passed, then merged to draft staging as `6c2fbcdac352e297a8d0cb525220f1639c232ed0`. PR [#174](https://github.com/jyates0125/gtae-atlas/pull/174) at `05a47a832776a765f722533798fd8c08f9de10ff`: **2/2** path-scoped workflows passed, including Cloudflare output audit and offline-safe real Chromium checks at 390px/1440px across all three modern maps. Merged to draft staging as `e5e551edd160cbe81501fe6e61d866d9c0a5b2ef`. The 36.5 browser workflow checks actual layout, click-handler state transitions and visible links, but does not certify hidden-sidebar buttons as physical mobile taps or test external tile availability.
+- **KNOWN REGRESSION TRIAGE:** The initial full-staging map-marker exit browser check failed once on an injected long detail card. The exact job passed on a single targeted rerun at the 36.4 staging SHA. A fresh full integrated staging suite at the latest docs/merge head remains subject to verification; do not summarize a transient failure as a shipped bug or pretend every regression check is done.
+- **HOLD:** No licensed, aligned 1536×1748 Leonida uint16 elevation raster is bundled; do not mislabel the perspective view as real terrain. Remaining charter-wide gaps include source-complete maps/items and art, iPhone Safari owner acceptance, final full Chromium+Edge+ZIP, release-domain Cloudflare identity and rights review, and specific owner approval. This record and both integrations remain within PR #98's draft staging. Protected `development` and production `main` are intentionally unchanged.
+
+
+## Atlas 36.6 — Leonida 3D heightfield-first loader handoff (November 23, 2026; draft staging)
+
+- **FUNCTIONAL FIX:** The 3D button previously checked `terrain.hasElevation()` before its asynchronous local `loadElevation()` could ever finish. Atlas now reads only the Atlas site’s own optional `./elevation-6.bin` on an explicit 3D tap, validates exact 1536×1748 Uint16 dimensions and non-flat relief, then attempts WebGL. Valid locally imported data takes priority over pending downloads; switching to 2D/world change prevents a late promise from replacing state. Validated elevation remains in memory when returning to 2D.
+- **HONEST FALLBACK:** The illustrated map stays visible while elevation is checked and whenever the file is missing/invalid or WebGL is unavailable. No empty/flat surface is presented as true 3D relief, and messages distinguish a missing grid from unavailable WebGL. GTA V Story and Online remain separate and unchanged.
+- **SOURCE DECISION PRESERVED:** The user already approved GTADB.ORG reuse for published data/photos/tiles under CC BY 4.0 with a slim map credit and full Sources & Rights register. Do not reopen the general GTADB licensing discussion. This loader fetches no live GTADB media, never bulk-scrapes the elevation API, and adds no new third-party assets.
+- **TEST AND MERGE:** [PR #175](https://github.com/jyates0125/gtae-atlas/pull/175), exact source head `f858bd8a8120ff72ae05a2ddea78a70c63f774c0`, **10/10 affected GitHub workflows passed**. These include actual built-site Chromium checks with a synthetic in-memory 1536×1748 heightfield, mobile camera gestures, missing-grid perspective, the GTADB single-point API contract, map credits, 3D geometry, map entry and close controls. The synthetic test raster is not bundled or deployed. Merged into draft staging as `44a251aa7d74638922dd305ebd38c722366c3f78`. Technical handoff: `docs/ATLAS366-THREE-D-HEIGHTFIELD-LOADING.md`.
+- **STILL OPEN:** The actual full Leonida elevation binary is **not** present in this Atlas repository. This fixes an incorrect loader readiness order; it does not fabricate a real licensed elevation grid or certify independent geography. Verify the eventual GTADB-source asset, encoding/orientation and control points, then run real-device iPhone Safari, final full Chromium+Edge+ZIP, Cloudflare staging/release identity and owner approval before any public branch promotion. Both public development and protected main are intentionally untouched.
+
+
+## Atlas 36.7 — durable Leonida heightfield import and public release source guard (November 23, 2026)
+- **SOURCE + BROWSER VERIFIED:** A local elevation file imported while the same-origin auto-loader is pending cannot be undone by the older response; `terrainViewToken` invalidates stale UI outcomes and real accepted terrain is checked again before enabling WebGL. A failed replacement upload preserves the previously accepted grid and optional SHA/control-point comparison, rather than erasing proof.
+- **PUBLIC BINARY RELEASE HOLD:** A future `elevation-5.bin` or `elevation-6.bin` cannot be shipped to `public/` without a matching human-reviewed evidence JSON in `docs/`, source/permission declaration, byte-exact SHA-256, non-collinear geographic controls and matching build bytes. The executable audit reuses the existing verifier. No new external media, map data, false elevation or source license is introduced.
+- **CI:** [PR #177](https://github.com/jyates0125/gtae-atlas/pull/177) source head `8fc83298d54d2ee68a9a3e5ab440ef9b322190a0`, **9 of 9 affected GitHub workflows PASSED**, including actual built-site 390px and 1440px Chromium races, optional local 3D fallback, GTADB source and map credits, all-13-world entry smoke and map detail return. Merged **only into draft staging** as `8f90662058f2c7560275fc2cbf1648400bc01e7a`.
+- **HANDOFF:** `docs/ATLAS367-TERRAIN-IMPORT-AND-RELEASE-GATE.md`, `scripts/audit_atlas367_heightfield_release.cjs`, and `scripts/test_atlas367_terrain_import_race_browser.py`. Keep the GTADB.org CC BY 4.0 compact map attribution and full source register already approved; no third-party bulk API requests.
+- **STILL OPEN:** Genuine dense Leonida DEM installation and independent coordinates, some classic calibrated map sources, final all-13/all-15 page visual review, complete current-head Chromium+Edge+ZIP release artifact, actual native iPhone Safari, verified Cloudflare deployed identity, per-asset rights/owner design review, explicit owner authorization for production. Protected `development` and live `main` deliberately unchanged. Do not declare charter finished.
+
+
+## Atlas 36.8 — canonical Leonida Community Research 2D and approximate 3D (November 23, 2026)
+
+- **OWNER DECISION:** GTADB.org and contributors are the settled primary community research map source. Preserve Scaly/YANIS V18 as the default, optional credited Loki/DUPZOR V51 and other comparison layers. This is the canonical GTA VI Community Research workspace, to be upgraded rather than replaced. The independent Rockstar official map is the GTA VI Story workspace. Complete this research-map milestone before new Story data research. Subsequent Story improvements should target independent source-graded pins, legends, collectibles and progress comparable to GTA V Story, never silently promote speculative research coordinates.
+- **ACTUAL SOURCE-DERIVED RELIEF:** 286 selected triangulated numerical ground-related observations from rolux/gtamaplib, 194 spatial bins (74 ground-related bins), and approximate connected ocean mask from 16 pinned CC BY 4.0 GTADB YANIS V18 tiles. 96x110 grid, 10,560 cells, approximately 44KB. 7,376 ocean, 973 sparse land, 1,415 intermediate, 796 near-source cells. Same-source spatial-bin holdout median 0.74m, P90 15.69m, worst 262.79m; not independent game accuracy. Do not claim the original dense GTA VI elevation binary, bathymetry, verified gameplay height or precise road geometry. The pinned GTADB GTA6Relief.png image is a published elevation profile reference, not a plan-view DEM. No live GTADB bulk requests.
+- **COMPLETED FUNCTIONAL MILESTONE:** 2D remains the calibrated research workspace. 3D checks optional dense local data first; the clearly labeled Approximate 3D option loads the bundled source-derived JSON and activates WebGL. Coverage distance legend lives in the primary toolbar at mobile and desktop widths. Persistent approximation label, real terrain geometry, existing markers and route previews, no horizontal overflow, same-session data reuse, local import priority, 2D return, and separate official Rockstar poster entry/exit without mixing coordinate frames. The official poster returns the research viewer to 2D and preserves the selected layer and private notes.
+- **VERIFIED / INTEGRATED:** [PR #178](https://github.com/jyates0125/gtae-atlas/pull/178), tested source head `158958b6a47762c479868668265d897c597dd79c` — **15/15 affected workflows passed**. Actual source grid SHA, boundaries, coverage, local dense override, Chromium rendered 390px/1440px, research-to-official round trip and credit/regression checks. Merged into draft integrated staging `3c2d40b6ec5ff57391616be312e96baefb9fdb64`. Browser visual evidence: [workflow 45297606291](https://github.com/jyates0125/gtae-atlas/actions/runs/45297606291). Reproducible source and details: `docs/ATLAS368-GTADB-PUBLISHED-RELIEF.md`; bundled `data/atlas368-approx-terrain.json`, `atlas368-approx-terrain.js`. Credit register `atlas-credits.html#gtadb-approx-relief`.
+- **NEXT:** Lock this verified Community Research view as the baseline. Begin GTA VI Story official workspace expansion from the existing source ledger/private poster notebook, with independent map calibration and explicit evidence grades. Preserve approximate/official separation. No actual dense DEM requirement for the approved approximate mode, but original dense fidelity remains a future enhancement. Final native iPhone Safari, actual connected imagery appearance, complete current-head Chromium/Edge/ZIP and live Cloudflare identity/owner release approval remain open. No public development or protected main promotion.
+
+
+### Atlas 37.2.1 — owner map acceptance and road-navigation follow-up
+PR #179 exact head `73ef22a7d5f15339bf30e24a59fe61d70bb7e3df` passed 13/13 affected workflows and Cloudflare preview https://2a76a6e5.gtae-online.pages.dev/atlas-vi.html. Integrated draft staging only via merge `e2a89f4442b0aebb5ec66b36d64f7910c811d3c2`. Owner laptop screenshots confirm visible textured approximate 3D and hills, all three styles, Fit recovery and hold/drag interaction. Three styles retained: In-game Map, Scaly/YANIS V18 (default), Loki/DUPZOR V51; separate Official Story view. Corrected invalid camera cross product, tested actual framebuffer and pinned GTADB tiles, added compact violet/cream/gold landmark pins, shared Menu in full-map tools, adaptive mesh extent, heading-relative pan, compass and whole-world Fit. Approximate heights are not measured game elevations; final native phone/device, alignment, full release and visual gates remain. Owner reports routes are still straight-line, including classic maps. Existing atlas-road-core.js supports imported graphs but no default road network is installed. GTADB public Routes API https://api.gtadb.org/ still lists Coming soon, while https://leonida.gtadb.org/ exposes Directions. Do not conflate the viewer with a documented reusable API. Source candidates: kibradev/interactive-map MIT repository at 08cfb6bf82e72903c7bce0105256e2a1c3bd4b8a, road-graph.json blob c1bc2bfc0774a25194616c6d9044a5fecb6bf87c (1,953,290 bytes; schema/provenance/underlying data rights and alignment still need validation); DurtyFree/gta-v-data-dumps nodes.zip and Leuansin/GTA-SA-Nodes-Json are separate source leads, not installed. Next implement default road graph only when source is usable; retain explicit direct-line fallback and distinguish partial paths, no false driving claims. Protected public branches untouched.
+
+
+## Atlas 37.6–38.0 — current GTAE brand, guest-first and modern navigation (November 23, 2026)
+- Owner explicitly approves source-level whole-site branding cleanup and defers sign-ins. 81 non-film root pages inspected; One Last Ride remains historical. Current hero uses existing clean cinematic art; wardrobe concept panels presented without full historical logo boards; originals preserved. Page titles/index synchronized. No sign-in activation or save migration.
+- Atlas 37.7 exact head `9fe8d868b19e8e3bbea38efc0ca17ee8c198596d` passed focused GPS/map-center and release contracts, actual Leonida source texture/owner map controls, heightfield-first, daily channel, and static-tail checks. Other release failures traced to stale branding/cache contracts; follow-up source changes still require exact-head checks and visual review.
+- GTADB repository main checked again: `d406fea099e1df2bce42fd6b87eed04bce646629`, same as existing VI snapshot; `map/data/6/landmarks.json` blob `46790ac3766e067beb88e6e40ce04308d8ee5d48`. No newer GitHub map data observed. Preserve 3,754 records, 3,663 mapped, 91 search-only, source labels and terrain evidence. No fabricated data.
+- Independent daily read-only JSON channel accessible but empty; upstream source and marker mapping remain open. Cayo unchanged. Full browser/native iPhone/rights/ZIP and protected-main owner release gates remain. No live promotion.
+
+
+## Atlas 38.1–38.4 — release recovery and first independent Cayo daily publication
+- 38.2 safe graph lifecycle, 3D map-center waypoints and CSV tests passed; 38.2a security boundary, static tail and focused Cayo workflows passed (64/65 observed complete, zero failures at review). Guest auth remains deferred. No save key changes.
+- 38.3 shared daily channel integrated into Cayo chest overlay, exact 1-land/1-water ID guard and reset expiry. Focused new tests passed. Public data-only branch 9790cfc8f258700c32017d6ff912bb4c24eafb26 publishes the first cross-checked calculated chest pair for Nov 23 UTC cycle; raw endpoint verified. This is NOT verified in-game, and other daily categories still need licensed marker mapping. Staging consumer not yet live.
+- 38.4 correct earlier non-Cayo HQ regression assertion: intentionally damaged saved mission stays visible with recovery action and raw content intact. Add controlled Cayo remote-feed browser evidence. Request one full staging-only Chromium/Edge/ZIP release validation using existing one-shot dispatcher. Exact-head results, source rights and native iPhone/owner visual review remain required; no public promotion.

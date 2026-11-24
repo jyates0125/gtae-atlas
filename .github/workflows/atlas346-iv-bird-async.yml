@@ -1,0 +1,46 @@
+name: Atlas 34.6 - GTA IV async bird save Chromium Edge
+on:
+  pull_request:
+    branches: [feature/atlas294-integrated-staging-20261122, development]
+    paths:
+      - 'scripts/test_atlas190_map_browser.py'
+      - 'scripts/test_atlas346_iv_bird_async_browser.py'
+      - 'atlas-iv.js'
+      - '.github/workflows/atlas346-iv-bird-async.yml'
+permissions:
+  contents: read
+jobs:
+  iv-async-bird-save:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build exact production payload and verify source contracts
+        run: |
+          node --check atlas-iv.js
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+          python -m py_compile scripts/test_atlas190_map_browser.py scripts/test_atlas346_iv_bird_async_browser.py
+      - name: Install browser
+        shell: bash
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install ${{ matrix.browser }}
+      - name: Verify asynchronous bird progress, safe recovery and actual map controls
+        env:
+          ATLAS_BROWSER: ${{ matrix.browser }}
+        run: python scripts/test_atlas346_iv_bird_async_browser.py

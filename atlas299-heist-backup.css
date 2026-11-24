@@ -1,0 +1,18 @@
+/* Atlas 29.9: original Elario guest-only heist backup. */
+body.j120-heist-page .j299-heist-backup{
+ min-width:0;margin:18px 0 0;padding:14px;border:1px solid #bc82ad;border-radius:13px;
+ background:linear-gradient(125deg,#342144,#1c1329);color:#f9f0f8;
+}
+body.j120-heist-page .j299-heist-backup h3{margin:0 0 8px;color:#ffe0a4;font:800 18px/1.25 system-ui}
+body.j120-heist-page .j299-heist-backup p{margin:8px 0;font:13px/1.5 system-ui;color:#e5d3e5}
+.j299-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:11px;margin:14px 0}
+body.j120-heist-page .j299-actions :is(button,.j299-restore){
+ box-sizing:border-box;width:100%;min-width:0;min-height:47px;padding:11px 13px;
+ border:1px solid #e4b98c;border-radius:10px;background:#493459;
+ color:#fff7e5;font:750 13px/1.35 system-ui;cursor:pointer;overflow-wrap:anywhere;
+}
+body.j120-heist-page .j299-actions .j299-export{background:linear-gradient(130deg,#e8ae6c,#ffdb9f);color:#28152f}
+body.j120-heist-page .j299-restore{display:grid;gap:8px}
+body.j120-heist-page .j299-restore input{min-width:0;max-width:100%;color:#fff;font:13px system-ui;cursor:pointer}
+body.j120-heist-page .j299-actions :is(button,input):focus-visible{outline:3px solid #ffe4a6;outline-offset:3px}
+body.j120-heist-page .j299-status{min-height:25px;margin-bottom:0;font-size:12px}

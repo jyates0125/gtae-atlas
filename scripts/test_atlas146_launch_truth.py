@@ -8,13 +8,15 @@ mapjs=(root/'atlas.js').read_text()
 controls=(root/'atlas86-ui.js').read_text()
 assert 'YANIS V17' not in hq and 'YANIS V17' not in mapjs
 assert "yanis,17" not in controls
-assert "YANIS V18 · Current" in controls
-assert "research,view" in controls and "dupzor,51" in controls
-assert 'DUPZOR V51 · Source' in controls
-assert 'Loki · Styled V51' in (root/'atlas94-ui.js').read_text()
-assert "style==='loki,view'" in mapjs and "base:'dupzor,51'" in mapjs
-assert 'Current · YANIS V18' in hq
-assert 'Research · YANIS V18' in hq
+assert "['day','scaly,view','dupzor,51']" in controls
+assert 'btn.dataset.view=opt.value' in controls
+assert "'6':[['day','In-game Map'],['scaly,view','Scaly · YANIS V18'],['dupzor,51','Loki · DUPZOR V51']]" in mapjs
+assert "base:'yanis,18'" in mapjs and "base:'dupzor,51'" in mapjs
+assert '<h3>In-game Map</h3>' in hq
+assert '<h3>Scaly · YANIS V18</h3>' in hq
+assert '<h3>Loki · DUPZOR V51</h3>' in hq
+assert 'Three map views of Leonida.' in hq
+assert 'Five research views of Leonida.' not in hq
 assert 'Rockstar' in hq and 'Official worldwide launch' in hq
 assert 'Out now · Rockstar confirmed GTA VI launched November 19, 2026' in countdown
 assert 'Official Rockstar Map' in (root/'atlas143-official-map-view.js').read_text() or 'Rockstar · Official Map' in (root/'atlas143-official-map-view.js').read_text()

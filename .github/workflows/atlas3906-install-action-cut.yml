@@ -1,0 +1,52 @@
+name: Atlas 39.0.6 - install verified action cut in staging
+on:
+  push:
+    branches: [feature/atlas294-integrated-staging-20261122]
+    paths: ['.github/workflows/atlas3906-install-action-cut.yml']
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: atlas3906-action-cut-install
+  cancel-in-progress: false
+jobs:
+  install:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Fetch only the verified action-review artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "feature/atlas294-integrated-staging-20261122"
+          test "$(gh api "repos/$GH_REPO/actions/runs/45325381259" --jq '.conclusion')" = success
+          test "$(gh api "repos/$GH_REPO/actions/runs/45325381259" --jq '.head_sha')" = 546bb5d1f2d8f7609be2a8c2ad22239aa0a45165
+          gh api "repos/$GH_REPO/actions/artifacts/14888913572/zip" > "$RUNNER_TEMP/action-review.zip"
+          echo "a9f8a0b440548eabc99923f3241591b9c0ed6ce38659eab86d2c98e93a6cca2f  $RUNNER_TEMP/action-review.zip" | sha256sum -c -
+          python3 scripts/install_atlas3906_action_cut.py "$RUNNER_TEMP/action-review.zip"
+          node scripts/build-cloudflare.cjs
+          python3 scripts/audit_published.py
+          python3 scripts/test_atlas192_world_completion.py
+          python3 scripts/test_atlas3906_action_cut.py
+      - name: Save only the reviewed media and its explicit page wiring
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "feature/atlas294-integrated-staging-20261122"
+          test "$(gh api "repos/$GH_REPO/git/ref/heads/$GITHUB_REF_NAME" --jq '.object.sha')" = "$GITHUB_SHA"
+          git config user.name "Team Jura staging media review"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add film/assets/one-last-ride-action-cut-3906.mp4 film/assets/one-last-ride-action-opening-3906.jpg docs/ATLAS3906-ACTION-CUT-MANIFEST.json one-last-ride.html scripts/browser_smoke.py
+          git diff --cached --stat
+          git commit -m "Atlas 39.0.6: install verified 39-second action cut for staging review"
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+          echo "Staging only. No development/main promotion; exact-head full QA and device/visual review remain."

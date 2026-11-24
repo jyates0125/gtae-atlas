@@ -1,0 +1,7 @@
+/* Atlas 29.2: in-menu tool finder, scoped to the existing collapsed shortcuts. */
+.jura-shortcut-filter{padding:12px 14px 4px;display:grid;gap:6px}
+.jura-shortcut-filter label{font-weight:700;color:#f5d38a}
+.jura-shortcut-filter input{box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px;border:1px solid #a986c7;border-radius:9px;background:#190f2a;color:#fff;font:inherit}
+.jura-shortcut-filter input:focus-visible{outline:3px solid #f6bc50;outline-offset:2px}
+.jura-shortcut-filter p{margin:0;color:#e0d4ed;font-size:.85rem}
+#juraShortcutLinks a[hidden]{display:none!important}

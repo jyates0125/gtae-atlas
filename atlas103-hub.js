@@ -115,6 +115,16 @@ function render(){
  if(!news&&platform!=='pc')uri.searchParams.set('platform',platform);else uri.searchParams.delete('platform');
  history.replaceState(null,'',uri);
 }
+function reviewedArticle(item){
+ if(!item||!['vi','online'].includes(item.game)||!['title','summary','url'].every(k=>typeof item[k]==='string'&&item[k].trim()))return false;
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(item.date)||!Number.isFinite(Date.parse(item.date)))return false;
+ const url=safeURL(item.url);
+ if(!url)return false;
+ const parsed=new URL(url);
+ if(parsed.username||parsed.password)return false;
+ return (parsed.origin==='https://www.rockstargames.com' && /^\/newswire\/article\/[a-z0-9]+\/[^/]+\/?$/i.test(parsed.pathname)) ||
+  (parsed.origin==='https://support.rockstargames.com' && /^\/articles\/[a-z0-9]+\/[^/]+\/?$/i.test(parsed.pathname));
+}
 async function init(){
  const game=$('hubGame'),query=$('hubSearch'),platform=$('hubPlatform');const p=new URLSearchParams(location.search);
  if([...game.options].some(x=>x.value===p.get('game')))game.value=p.get('game');
@@ -124,9 +134,35 @@ async function init(){
  syncPlatform();game.addEventListener('change',()=>{syncPlatform();render()});query.addEventListener('input',render);
  if(platform)platform.addEventListener('change',render);
  $('resetHub').addEventListener('click',()=>{query.value='';render()});
- try{const r=await fetch('./data/atlas-news-cheats.json',{cache:'no-cache'});if(!r.ok)throw Error('HTTP '+r.status);
- const source=await r.json();if(source.schema!==1||!Array.isArray(source.news)||!Array.isArray(source.cheats))throw Error('unexpected schema');
- db=source;render()}catch(e){status('Data unavailable · '+e.message);$('hubCards').append(node('p','h-empty','Unable to load curated references. Use the site source registry.'))}
+ let loading=false;
+ async function refresh(){
+  if(loading)return;
+  loading=true;
+  try{
+   const response=await fetch('./data/atlas-news-cheats.json',{cache:'no-cache',signal:AbortSignal.timeout(15000)});
+   if(!response.ok)throw Error('HTTP '+response.status);
+   const source=await response.json();
+   if(source.schema!==1||!Array.isArray(source.news)||!Array.isArray(source.cheats))throw Error('unexpected schema');
+   if(MODE==='news'){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(source.checkedAt)||!source.news.length||!source.news.every(reviewedArticle))throw Error('invalid reviewed feed');
+    if(db && (source.checkedAt<db.checkedAt || (db.checkedAt===source.checkedAt && JSON.stringify(db.news)===JSON.stringify(source.news))))return;
+    const time=document.querySelector('.h-notice time');
+    time.dateTime=source.checkedAt;
+    time.textContent=new Date(source.checkedAt+'T12:00:00Z').toLocaleDateString('en-US',{dateStyle:'long',timeZone:'UTC'});
+   }
+   db=source;
+   render();
+  }catch(e){
+   if(!db)status('Curated references unavailable. '+e.message);
+  }finally{loading=false}
+ }
+ if(MODE==='news'){
+  const refreshVisible=()=>{if(!document.hidden)refresh()};
+  document.addEventListener('visibilitychange',refreshVisible);
+  window.addEventListener('online',refreshVisible);
+  window.setInterval(refreshVisible,300000);
+ }
+ await refresh();
 }
 if(MODE==='news'||MODE==='cheats'){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init()}
 })();

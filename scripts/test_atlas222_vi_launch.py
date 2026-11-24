@@ -81,7 +81,7 @@ assert 'map-hub.html?game=iii' in ch_js and 'atlas-online.html' in ch_js and 'at
 assert 'CHARACTERS · SEARCH ALL WORLDS' in nav and 'x.aliases' not in nav
 assert 'j222-vi-categories' in vi and 'atlas222-vi-release.js?v=222' in vi
 assert 'atlas217-vi-world.js?v=217' in vi, 'The existing map engine must stay in place'
-assert 'atlas.js?v='+re.search(r'\./atlas-sw\.js\?v=(\d+)',(R/'atlas.js').read_text(encoding='utf-8'))[1] in vi
+assert vi.count('atlas.js?v=375')==1, 'Map engine must use the current cache version; service worker has its own lifecycle'
 
 # Premium visual and vehicle-class integrity guards: these check source wiring,
 # not actual browser rendering, which remains a separate release requirement.
@@ -95,14 +95,14 @@ subprocess.run(['node','-e',"""const a=require('node:assert/strict'), f=require(
 assert 'Aircraft / Plane concept' in config and 'Boat / Watercraft concept' in config
 assert '◈ Open this vehicle in the 3D concept studio' in garage
 assert 'body[data-atlas-kind="all"] .u-hero-art' in dbcss
-assert "url('./art/atlas98-approved-hero.webp')" in dbcss
-assert (R/'art/atlas98-approved-hero.webp').is_file()
+assert "url('./art/jura155-map.webp')" in dbcss
+assert (R/'art/jura155-map.webp').is_file()
 
 # Preserve the original category-colored Yanis/Scaly map markers.
 mapjs=(R/'atlas.js').read_text(encoding='utf-8')
-assert "game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId?'#49315e':conditionPinColor(r,conditionCache)" in mapjs
-assert "const compactViLandmark=game==='6'&&r.category==='landmark'&&!r.markerColor&&!r.activityId" in mapjs
-assert "compactViLandmark||!!r.markerColor&&!r.activityId" in mapjs
+assert "function isViLandmark(r){return game==='6'&&r?.category==='landmark'&&!r.markerColor&&!r.activityId}" in mapjs
+assert "if(isViLandmark(r))drawViLandmark(p.x,p.y)" in mapjs
+assert "!!r.markerColor&&!r.activityId" in mapjs and "compactLandmark:isViLandmark" in mapjs
 assert "if(game==='6'&&!atlas85Icon&&typeof Path2D==='function')" not in mapjs
 assert "r.category==='collectible'&&!r.activityId" in mapjs
 

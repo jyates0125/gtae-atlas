@@ -1,0 +1,23 @@
+/* Atlas 36.3 · Credits in source register, one compact map attribution.
+ * Elevation reference checks live only inside voluntarily opened 3D details. */
+body[data-start-world="6"] .j363-height-probe{
+ padding:10px;margin:13px 0 5px;
+ border:1px solid #ad86b5;border-radius:11px;
+ background:linear-gradient(130deg,#2d1c40,#192d3c);
+ color:#f7e9f7;font:12px/1.5 system-ui,-apple-system,sans-serif;
+}
+body[data-start-world="6"] .j363-height-probe strong{display:block;color:#ffe4ae;font-size:12px}
+body[data-start-world="6"] .j363-height-probe p{margin:7px 0 9px;color:#ebdbed}
+body[data-start-world="6"] .j363-height-probe button{
+ display:block;width:100%;min-height:44px;padding:9px 10px;
+ border:1px solid #e6bb86;border-radius:9px;
+ background:linear-gradient(110deg,#f9cf96,#f3ac70);
+ color:#301a3e;font:800 12px/1.2 system-ui,-apple-system,sans-serif;
+}
+body[data-start-world="6"] .j363-height-probe button:disabled{opacity:.65;cursor:wait}
+body[data-start-world="6"] #j363HeightResult{overflow-wrap:anywhere;color:#f0e5e3}
+body[data-start-world="6"] .j363-height-probe a{color:#ffe2a3;display:inline-block}
+body[data-start-world="6"] .credits-line{
+ font-size:clamp(9px,1vw,11px)!important;line-height:1.4!important;
+ min-height:27px!important;padding:4px 7px!important;
+}

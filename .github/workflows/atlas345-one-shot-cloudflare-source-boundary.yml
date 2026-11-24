@@ -1,0 +1,36 @@
+# Read-only single-shot verification of current public Cloudflare file boundaries.
+# This branch is NOT a deployment. It intentionally reports a failure if either
+# origin serves repository source or does not have a generated build identity.
+name: Atlas 34.5 - one-shot public Cloudflare source boundary
+on:
+  push:
+    branches: [ops/atlas345-public-pages-source-boundary-20261123]
+    paths:
+      - '.github/workflows/atlas345-one-shot-cloudflare-source-boundary.yml'
+permissions:
+  contents: read
+jobs:
+  public-source-boundary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect public origins without logging downloaded source
+        shell: bash
+        run: |
+          mkdir -p qa-evidence
+          set +e
+          python scripts/audit_atlas345_cloudflare_source_boundary.py | tee qa-evidence/atlas345-public-source-boundary.json
+          code=${PIPESTATUS[0]}
+          exit "$code"
+      - name: Preserve only redacted, public-only audit summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas345-cloudflare-public-source-boundary
+          path: qa-evidence/atlas345-public-source-boundary.json
+          if-no-files-found: warn
+          retention-days: 7

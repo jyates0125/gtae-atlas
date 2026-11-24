@@ -16,8 +16,8 @@ read=lambda name:(ROOT/name).read_text(encoding="utf-8")
 
 account=read("atlas-account.html")
 assert "SECURE CLOUD ACCOUNT · NOT ENABLED YET" in account
-assert "Sign in · Coming after secure setup" in account
-assert re.search(r'<button[^>]+disabled[^>]*>Sign in · Coming after secure setup</button>',account), "Sign-in button must remain disabled"
+assert "Sign in · Deferred" in account
+assert re.search(r'<button[^>]+disabled[^>]*>Sign in · Deferred</button>',account), "Sign-in button must remain disabled"
 assert "Continue as a guest" in account and "Back up my Atlas progress" in account
 assert "This page does not collect a password or email" in account
 assert "not automatic cloud syncing" in account.lower()
@@ -66,7 +66,7 @@ for path in PUBLIC.rglob("*"):
         contents=path.read_text(encoding="utf-8",errors="replace")
         assert not privileged.search(contents), "Known privileged token signature found in deployed asset: "+str(path.relative_to(PUBLIC))
 public_account=(PUBLIC/"atlas-account.html").read_text(encoding="utf-8")
-assert "Sign in · Coming after secure setup" in public_account
+assert "Sign in · Deferred" in public_account
 assert "<button type=\"button\" disabled" in public_account
 assert "mailto:rights@" not in public_account and "mailto:hello@" not in public_account
 print("PASS Atlas 35.4: filtered output, guest-first disabled auth, security headers, no detected privileged token patterns")

@@ -12,9 +12,134 @@ if(scene && /^[a-z0-9-]+$/.test(heistId)){
  scene.fetchPriority='high'; // Prioritize the approved local cinematic cover over deferred accessories.
  scene.decoding='async';
 }
-const key='teamjura-heist-'+(document.body.dataset.heist||'unknown');const checks=[...document.querySelectorAll('[data-step]')];let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}const update=()=>{const done=checks.filter(x=>x.checked).length;const p=document.getElementById('progress');if(p)p.textContent=done+' / '+checks.length+' tracked';const b=document.getElementById('progressBar');if(b)b.style.width=(checks.length?done/checks.length*100:0)+'%';try{localStorage.setItem(key,JSON.stringify(Object.fromEntries(checks.map(x=>[x.dataset.step,x.checked]))))}catch(e){}};checks.forEach(x=>{x.checked=!!saved[x.dataset.step];x.addEventListener('change',update)});update();document.getElementById('resetProgress')?.addEventListener('click',()=>{if(!confirm('Clear this heist checklist?'))return;checks.forEach(x=>x.checked=false);update()});document.getElementById('exportProgress')?.addEventListener('click',()=>{const payload=JSON.stringify({heist:document.body.dataset.heist,steps:Object.fromEntries(checks.map(x=>[x.dataset.step,x.checked]))},null,2);const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([payload],{type:'application/json'}));a.download='team-jura-'+document.body.dataset.heist+'-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});const search=document.getElementById('stepSearch');search?.addEventListener('input',()=>{const q=search.value.toLowerCase();checks.forEach(x=>x.closest('.step').classList.toggle('hide',!x.dataset.step.toLowerCase().includes(q)))});// The approved cinematic scenes remain in this page. Add the real map and notes
+// Atlas 30.1: current heist checkboxes are a view of private saved data.
+// Opening a page must never rewrite historical steps or a corrupt stored record.
+const key='teamjura-heist-'+heistId;
+const checks=[...document.querySelectorAll('[data-step]')];
+const notice=document.createElement('p');
+notice.id='j301-checklist-notice';
+notice.className='j301-checklist-notice';
+notice.setAttribute('role','status');
+notice.setAttribute('aria-live','polite');
+notice.hidden=true;
+document.getElementById('progress')?.insertAdjacentElement('afterend',notice);
+const showNotice=(message,error=false)=>{
+ notice.textContent=message;notice.hidden=!message;notice.dataset.error=String(error);
+};
+const object=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
+let lastGood={};
+function readChecklist(){
+ let raw=null;
+ try{
+  raw=localStorage.getItem(key);
+  if(raw===null)return {ok:true,raw,value:{}};
+  const value=JSON.parse(raw);
+  if(!object(value))throw Error('Unsupported checklist save format');
+  return {ok:true,raw,value};
+ }catch(error){return {ok:false,raw,value:null,error};}
+}
+function paintProgress(){
+ const done=checks.filter(c=>c.checked).length;
+ const progress=document.getElementById('progress');
+ if(progress)progress.textContent=done+' / '+checks.length+' tracked';
+ const bar=document.getElementById('progressBar');
+ if(bar)bar.style.width=(checks.length?done/checks.length*100:0)+'%';
+}
+function applyChecklist(value){
+ for(const check of checks)check.checked=value[check.dataset.step]===true;
+ paintProgress();
+}
+function refreshChecklist(){
+ const current=readChecklist();
+ if(current.ok){
+  lastGood=current.value;
+  applyChecklist(current.value);
+  showNotice('');
+ }else{
+  // Preserve the last visible good state; prevent a damaged record being
+  // silently transformed into an empty, valid record on next click.
+  applyChecklist(lastGood);
+  showNotice('Saved checklist cannot be read. Export a safety copy before retrying; existing data has NOT been changed.',true);
+ }
+}
+function saveOneStep(step,wanted){
+ const latest=readChecklist();
+ if(!latest.ok){
+  applyChecklist(lastGood);
+  showNotice('Checklist not saved: stored data is unreadable. Export a safety copy before recovery.',true);
+  return false;
+ }
+ const next={...latest.value,[step]:wanted};
+ try{
+  localStorage.setItem(key,JSON.stringify(next));
+ }catch(error){
+  applyChecklist(latest.value);
+  showNotice('Checklist could not be saved in this browser. Export your progress before leaving.',true);
+  return false;
+ }
+ lastGood=next;
+ applyChecklist(next);
+ showNotice('Checklist saved on this device.');
+ return true;
+}
+for(const check of checks){
+ check.addEventListener('change',()=>saveOneStep(check.dataset.step,check.checked));
+}
+refreshChecklist(); // read only; never write during initial page load
+window.addEventListener('storage',event=>{
+ if(event.key===key||event.key===null)refreshChecklist();
+});
+document.getElementById('resetProgress')?.addEventListener('click',()=>{
+ if(!window.confirm('Clear this heist checklist? Personal notes and planning routes are kept.'))return;
+ const latest=readChecklist();
+ if(!latest.ok){
+  applyChecklist(lastGood);
+  showNotice('Reset blocked: checklist data needs recovery. No saved progress was erased.',true);
+  return;
+ }
+ const next={...latest.value};
+ let changed=false;
+ // Only current displayed steps are reset. Historical/unknown saved keys
+ // remain untouched for old backups and future mission editions.
+ for(const check of checks){
+  if(next[check.dataset.step]!==false)changed=true;
+  next[check.dataset.step]=false;
+ }
+ if(changed){
+  try{localStorage.setItem(key,JSON.stringify(next));}
+  catch(error){applyChecklist(latest.value);showNotice('Reset failed: saved data was preserved.',true);return;}
+ }
+ lastGood=next;applyChecklist(next);showNotice('Current checklist reset; other heist data is preserved.');
+});
+document.getElementById('exportProgress')?.addEventListener('click',()=>{
+ const latest=readChecklist();
+ const payload=latest.ok
+  ? {heist:heistId,steps:latest.value}
+  : {heist:heistId,steps:null,unreadableRaw:latest.raw,warning:'Raw record for recovery only; original bytes were not modified'};
+ const a=document.createElement('a');
+ let url;
+ try{
+  url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
+  a.href=url;a.download='team-jura-'+heistId+'-progress.json';
+  document.body.append(a);a.click();a.remove();
+  showNotice(latest.ok?'Checklist backup exported.':'Unreadable checklist copied to a recovery JSON file. Existing storage remains untouched.',!latest.ok);
+ }catch(error){
+  showNotice('Unable to export checklist in this browser.',true);
+ }finally{
+  if(url)setTimeout(()=>URL.revokeObjectURL(url),1000);
+ }
+});
+const stepSearch=document.getElementById('stepSearch');
+stepSearch?.addEventListener('input',()=>{
+ const text=stepSearch.value.toLowerCase();
+ for(const check of checks)check.closest('.step')?.classList.toggle('hide',!check.dataset.step.toLowerCase().includes(text));
+});
+// The approved cinematic scenes remain in this page. Add the real map and notes
 // as a separate opt-in enhancement so checklist keys and art never change.
 if(document.body.classList.contains('j120-heist-page')){
+ // One file for guest checklist, notes and personal route; older saves stay in place.
+ const backupStyle=document.createElement('link');backupStyle.rel='stylesheet';backupStyle.href='./atlas299-heist-backup.css?v=299';document.head.append(backupStyle);
+ const backup=document.createElement('script');backup.async=false;backup.src='./atlas299-heist-backup.js?v=299';document.body.append(backup);
  const style=document.createElement('link');style.rel='stylesheet';style.href='./atlas164-heist-workspace.css?v=164';document.head.append(style);
  const planner=document.createElement('script');planner.async=false;planner.src='./atlas164-heist-workspace.js?v=164';document.body.append(planner);
  // Mission-specific mapped POIs and challenges appear ABOVE the optional regional map.
@@ -24,12 +149,18 @@ if(document.body.classList.contains('j120-heist-page')){
  const guide=document.createElement('script');guide.async=false;guide.src='./atlas168-heist-guides.js?v=168';document.body.append(guide);
  const viewsStyle=document.createElement('link');viewsStyle.rel='stylesheet';viewsStyle.href='./atlas169-heist-views.css?v=169';document.head.append(viewsStyle);
  const views=document.createElement('script');views.async=false;views.src='./atlas169-heist-views.js?v=169';document.body.append(views);
+ // Atlas 29.8 phases coexist with the independent Atlas 29.9 complete backup.
+ // The Cayo flagship keeps its own island-view workflow and is intentionally excluded.
+ if(heistId!=='cayo-perico'){
+  const phasesStyle=document.createElement('link');phasesStyle.rel='stylesheet';phasesStyle.href='./atlas298-heist-map-kit.css?v=298';document.head.append(phasesStyle);
+  const phases=document.createElement('script');phases.async=false;phases.src='./atlas298-heist-map-kit.js?v=298';document.body.append(phases);
+ }
  if(heistId==='cayo-perico'){
   const cayoStyle=document.createElement('link');cayoStyle.rel='stylesheet';cayoStyle.href='./atlas171-cayo-board.css?v=171';document.head.append(cayoStyle);
   const cayo=document.createElement('script');cayo.async=false;cayo.src='./atlas171-cayo-board.js?v=171';document.body.append(cayo);
   // Nov 20 owner-approved Cayo flagship: map-first purple/gold layout with dated chests.
   const flagshipStyle=document.createElement('link');flagshipStyle.rel='stylesheet';flagshipStyle.href='./atlas180-cayo-flagship.css?v=180';document.head.append(flagshipStyle);
-  const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=180';document.body.append(flagship);
+  const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=383';document.body.append(flagship);
   const iconsStyle=document.createElement('link');iconsStyle.rel='stylesheet';iconsStyle.href='./atlas181-cayo-hotspots.css?v=202';document.head.append(iconsStyle);
   const icons=document.createElement('script');icons.async=false;icons.src='./atlas181-cayo-hotspots.js?v=191';document.body.append(icons);
   // The Cayo page loads its map geometry before deferred scripts initialize.

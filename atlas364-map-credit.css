@@ -1,0 +1,51 @@
+/* Atlas 36.4 — single small non-obscuring credit across the three modern maps.
+ * Full author, per-source, modification, Rockstar and licensing notices live
+ * on atlas-credits.html; attribution links stay visible at every viewport. */
+body.j117-map-world .credits-line {
+  position:absolute!important;
+  inset:auto 0 0!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-height:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+  padding:5px 8px!important;
+  margin:0!important;
+  flex-wrap:nowrap!important;
+  background:#160d27ed!important;
+  color:#f4e9d7!important;
+  text-align:center!important;
+  font:10px/1.35 system-ui,-apple-system,sans-serif!important;
+  z-index:11!important;
+}
+body.j117-map-world .credits-line a {
+  color:#ffe0a5!important;
+  text-decoration:underline!important;
+  text-underline-offset:2px;
+}
+body.j117-map-world .credits-line a:focus-visible{
+  outline:2px solid white;outline-offset:2px;border-radius:2px;
+}
+body.j117-map-world .j364-map-source-view{
+  min-width:0;color:#dfcedf;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+body.j117-map-world .topbar nav[aria-label="Atlas pages"] [data-j87-maps-link]{
+  font-weight:850;color:#fbd69d;
+}
+/* All Maps now belongs to the normal site navigation, not an always-on
+ * bottom-right badge blocking map credits or the return/3D controls. */
+@media(max-width:700px){
+ body.j117-map-world .j364-map-source-view{display:none!important}
+ body.j117-map-world .credits-line{
+   gap:4px!important;font-size:10px!important;min-height:28px!important;
+   padding:5px 6px!important;white-space:nowrap!important;
+ }
+ body.j117-map-world .map-actions{bottom:46px!important}
+}
+@media(max-width:359px){
+ body.j117-map-world .credits-line{font-size:9px!important;gap:3px!important;padding:4px!important}
+ body.j117-map-world .j364-credit-prefix{display:none!important}
+}

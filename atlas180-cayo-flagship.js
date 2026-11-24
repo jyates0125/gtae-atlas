@@ -92,7 +92,7 @@ const dailyButtons=el('div','j180-daily-buttons');
 const allBtn=btn('All 19 possible','j180-action',()=>{todayOnly=false;allBtn.setAttribute('aria-pressed','true');todayBtn.setAttribute('aria-pressed','false');repaintLegend();renderDaily();});
 const todayBtn=btn('Today’s two','j180-action',()=>{if(!activeIds.length){todayOnly=false;renderDaily();return;}todayOnly=true;allBtn.setAttribute('aria-pressed','false');todayBtn.setAttribute('aria-pressed','true');repaintLegend();renderDaily();});
 allBtn.setAttribute('aria-pressed','true');todayBtn.setAttribute('aria-pressed','false');
-const checkLink=el('a','j180-action','Check current daily ↗');checkLink.href='https://gtalens.com/map/cayo-treasure-chests';checkLink.target='_blank';checkLink.rel='noopener noreferrer';
+const checkLink=el('a','j180-action','Check current daily ↗');checkLink.href='https://gtamap.io/gta-online/daily/treasure-chests/';checkLink.target='_blank';checkLink.rel='noopener noreferrer';
 dailyButtons.append(allBtn,todayBtn,checkLink);dailyHead.append(dailyButtons);daily.append(dailyHead);
 const dailyStatus=el('p','j180-daily-status','Loading chest reference data…');dailyStatus.setAttribute('role','status');dailyStatus.setAttribute('aria-live','polite');daily.append(dailyStatus);
 const dailyList=el('div','j180-chest-list');daily.append(dailyList);
@@ -171,7 +171,7 @@ for(const [category,name,x,y,symbol] of equipmentRef){
  const p=btn(symbol,'j180-refpin',()=>showInfo(name,'Screenshot-referenced possible equipment/loot area. This is NOT a verified active spawn or exact coordinate. Use the game’s current Gather Intel results.'));
  p.dataset.cat=category;p.style.left=x+'%';p.style.top=y+'%';p.title=name+' · illustrative reference';p.setAttribute('aria-label',name+' (approximate)');refLayer.append(p);
 }
-let chestData=null,dailyData=null,activeIds=[],todayOnly=false,personal=null,activeLabel='';
+let chestData=null,dailyData=null,bundledDaily=null,reviewedDaily={schema:1,rotations:{}},dailyPending=false,lastDailyAttempt=0,activeIds=[],todayOnly=false,personal=null,activeLabel='';
 try{const p=JSON.parse(localStorage.getItem('teamjura-cayo-daily-choice-v1')||'null');if(p&&typeof p==='object')personal=p;}catch(_){}
 function dayKey(d){return new Date(d.getTime()-6*3600*1000).toISOString().slice(0,10)}
 function showInfo(title,description,number){
@@ -200,11 +200,13 @@ function paintChests(){
  repaintLegend();
 }
 function updateActive(){
- const now=new Date(),key=dayKey(now),inWindow=dailyData&&Date.parse(dailyData.windowStartUTC)<=now.getTime()&&now.getTime()<Date.parse(dailyData.windowEndUTC);
- activeIds=[];activeLabel='';if(inWindow&&dailyData.confidence==='calculated_unconfirmed_in_game'){
+ const now=new Date(),key=dayKey(now);dailyData=window.JuraConditions?.cayoChestSelection(reviewedDaily,now.getTime())||bundledDaily;
+ const inWindow=dailyData&&Date.parse(dailyData.windowStartUTC)<=now.getTime()&&now.getTime()<Date.parse(dailyData.windowEndUTC);
+ activeIds=[];activeLabel='';if(inWindow&&dailyData.confidence==='calculated_unconfirmed_in_game'&&Number.isInteger(dailyData.land)&&dailyData.land>=1&&dailyData.land<=10&&Number.isInteger(dailyData.underwater)&&dailyData.underwater>=11&&dailyData.underwater<=19){
   activeIds=[dailyData.land,dailyData.underwater];activeLabel='calculated / unverified';}
  if(personal?.day===key&&Number.isInteger(personal.land)&&Number.isInteger(personal.underwater)&&personal.land>=1&&personal.land<=10&&personal.underwater>=11&&personal.underwater<=19){
   activeIds=[personal.land,personal.underwater];activeLabel='player-selected / not verified';}
+ if(!activeIds.length&&todayOnly){todayOnly=false;allBtn.setAttribute('aria-pressed','true');todayBtn.setAttribute('aria-pressed','false')}
  paintChests();renderDaily();
 }
 function renderDaily(){
@@ -212,7 +214,7 @@ function renderDaily(){
  if(!chestData){dailyStatus.textContent='Reference locations unavailable. Check the source map for today’s two chests.';return;}
  const current=activeIds.length===2;
  dailyStatus.textContent=current?('Current 06:00 UTC cycle · land #'+activeIds[0]+' + underwater #'+activeIds[1]+' highlighted in cyan · '+activeLabel+'. Check gameplay if a location differs.'):
-  'No verified current daily selection bundled. All 19 possible locations are shown in yellow; none is falsely marked active. Check the live source or enter your own two.';
+  'No current dated chest selection available. All 19 possible locations are shown in yellow; none is falsely marked active. Check the live source or enter your own two.';
  todayBtn.disabled=!current;todayBtn.title=current?'Show only the two current selections':'Current daily selection unavailable; all 19 remain visible';
  const list=chestData.spawns.filter(s=>!todayOnly||!current||activeIds.includes(s.id));
  for(const s of list){
@@ -235,10 +237,15 @@ Promise.all([
  fetch('./data/cayo-treasure-today.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)
 ]).then(([spots,d])=>{
  if(!Array.isArray(spots?.spawns)||spots.spawns.length!==19||spots.spawns.filter(p=>p.kind==='land').length!==10||spots.spawns.filter(p=>p.kind==='underwater').length!==9)throw Error('invalid Cayo treasure catalog');
- chestData=spots;dailyData=d;updateActive();
+ chestData=spots;bundledDaily=d;updateActive();void refreshDaily();
 }).catch(()=>renderDaily());
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateActive()});
-setInterval(()=>{if(chestData)updateActive()},60000);
+async function refreshDaily(){
+ const C=window.JuraConditions;if(!C||dailyPending||Date.now()-lastDailyAttempt<300000)return;
+ dailyPending=true;lastDailyAttempt=Date.now();
+ try{reviewedDaily=await C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedDaily);updateActive()}catch{}finally{dailyPending=false}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){updateActive();void refreshDaily()}});
+setInterval(()=>{if(chestData){updateActive();if(!document.hidden)void refreshDaily()}},60000);
 const smallMeta=el('p','j180-credit','Research: GTA Wiki, GTALens, GTAMap.io and Rockstar. Original Elario UI and pin styling; underlying in-game artwork © Rockstar Games / Take-Two. Daily predictions are not official confirmation. ');
 const sourceLink=el('a','','Sources & licenses ↗');sourceLink.href='./atlas-credits.html';smallMeta.append(sourceLink);mapStage.append(smallMeta);
 activate('original');
