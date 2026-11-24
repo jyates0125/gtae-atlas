@@ -183,6 +183,7 @@ function activate(){if(!hasElevation()&&!hasApproximate()){notice('No elevation 
 }
 function deactivate(){active=false;frameVerified=false;clearApproximateSurface();pointers.clear();gesture=null;if(canvas.style)canvas.style.touchAction='';loadToken++;document.body.classList.remove('jura-3d-texture-pending');canvas.hidden=true;if(overlay){overlay.hidden=true;overlay.replaceChildren()}notice('2D map view');}
 function rebase(){if(!active)return;if(!hasElevation()&&!hasApproximate()){sourceHeights=null;deactivate();notice('3D terrain is not available for this world');return}textured=false;document.body.classList.add('jura-3d-texture-pending');sync();render()}
+function refreshTexture(){if(!active)return;textureFingerprint='';textured=false;render()}
 function zoom(factor){distance=Math.max(360,Math.min(40000,distance*factor));render()}
 function beginGesture(){
  const points=[...pointers.values()].map(p=>({...p}));
@@ -220,7 +221,7 @@ canvas.addEventListener('pointerup',release);
 canvas.addEventListener('pointercancel',release);
 canvas.addEventListener('lostpointercapture',release);
 canvas.addEventListener('wheel',e=>{if(!active)return;e.preventDefault();zoom(e.deltaY>0?1.17:.85)},{passive:false});
-return{activate,deactivate,rebase,render,zoom,prepareElevation,setElevationBinary,hasApproximate,setApproximateSurface,clearApproximateSurface,setCoverageVisible,getCoverageVisible:()=>showCoverage,resetNorth(){bearing=0;pitch=.86;render()},isActive:()=>active,hasElevation,getError:()=>sourceError,hasMapTexture:()=>textured,hasVisibleFrame:()=>frameVerified,verifyFrame,getFrameReport:()=>frameReport,getView:()=>({bearing,pitch,distance,center:{...center}})};
+return{activate,deactivate,rebase,refreshTexture,render,zoom,prepareElevation,setElevationBinary,hasApproximate,setApproximateSurface,clearApproximateSurface,setCoverageVisible,getCoverageVisible:()=>showCoverage,resetNorth(){bearing=0;pitch=.86;render()},isActive:()=>active,hasElevation,getError:()=>sourceError,hasMapTexture:()=>textured,hasVisibleFrame:()=>frameVerified,verifyFrame,getFrameReport:()=>frameReport,getView:()=>({bearing,pitch,distance,center:{...center}})};
 }
 root.JuraTerrain3D=Object.freeze({create,ELEVATIONS,solveGesture,cameraMatrix});
 })(typeof window!=='undefined'?window:globalThis);

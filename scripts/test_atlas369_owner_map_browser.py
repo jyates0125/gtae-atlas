@@ -71,19 +71,20 @@ try:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),(file,width,'horizontal overflow')
    # Full-map tools must still access the same global directory.
    page.locator('#j171-expand-map').click()
-   page.locator('#j217-vi-hub summary').click()
+   page.locator('#j217-vi-hub > summary').click()
    page.locator('#j369-full-map-menu').click()
    expect(page.locator('.j369-menu-portal #j132-nav-drawer')).to_be_visible()
    expect(page.locator('#j132-nav-drawer')).to_have_count(1)
    page.keyboard.press('Escape')
    expect(page.locator('#j132-nav-drawer')).to_be_hidden()
    expect(page.locator('#j171-expand-map')).to_have_attribute('aria-pressed','true')
-   page.locator('#j217-vi-hub summary').click()
+   page.locator('#j217-vi-hub > summary').click()
    page.locator('#j171-expand-map').click()
    # Canonical VI page: no second confirmation step, no import required.
    page.wait_for_function('typeof window.teamJuraNav?.getDimension==="function"')
    expect(page.locator('.jura-nav-bar #j143-official-button')).to_be_visible()
-   page.locator('#layer').select_option('research,view')
+   assert page.locator('#layer option').evaluate_all('(nodes)=>nodes.map(n=>n.textContent)')==['In-game Map','Scaly · YANIS V18','Loki · DUPZOR V51']
+   page.locator('#layer').select_option('scaly,view')
    page.locator('#jura3d').click()
    page.wait_for_function('teamJuraNav.terrain().isActive()||teamJuraNav.terrain().getFrameReport()!==null',timeout=30000)
    assert page.evaluate('teamJuraNav.terrain().isActive()'),page.evaluate('teamJuraNav.terrain().getFrameReport()')
@@ -95,6 +96,29 @@ try:
    expect(page.locator('#j362TerrainNotice')).to_be_hidden()
    expect(page.locator('#jura3dCanvas')).to_be_visible()
    page.screenshot(path=str(out/f'actual-gtadb-textured-{width}.png'),animations='disabled')
+   # The orbit gesture must change the camera, not pan the hidden 2D canvas.
+   page.locator('#togglePins').click()
+   canvas=page.locator('#jura3dCanvas')
+   canvas.scroll_into_view_if_needed()
+   box=canvas.bounding_box()
+   before=page.evaluate('teamJuraNav.terrain().getView()')
+   x=box['x']+box['width']*.48
+   y=box['y']+box['height']*.48
+   page.mouse.move(x,y)
+   page.mouse.down()
+   page.mouse.move(x+55,y-20,steps=8)
+   page.mouse.up()
+   page.wait_for_function("(b)=>Math.abs(teamJuraNav.terrain().getView().bearing-b)>.2",arg=before['bearing'])
+   assert page.evaluate('teamJuraNav.terrain().verifyFrame()'), 'Rotating produced a blank frame'
+   after=page.evaluate('teamJuraNav.terrain().getView()')
+   page.locator('#layer').select_option('day')
+   assert page.evaluate('teamJuraNav.terrain().isActive()')
+   assert page.evaluate('teamJuraNav.terrain().getView()')==after,'Style change reset 3D camera'
+   page.locator('#layer').select_option('dupzor,51')
+   assert page.evaluate('teamJuraNav.terrain().getView()')==after
+   page.locator('#layer').select_option('scaly,view')
+   page.wait_for_function('teamJuraNav.terrain().hasMapTexture()',timeout=35000)
+   page.locator('#togglePins').click()
    page.locator('#j368CoverageToggle').click()
    expect(page.locator('#j368CoverageToggle')).to_have_attribute('aria-pressed','true')
    expect(page.locator('#j368CoverageLegend')).to_be_visible()
@@ -114,7 +138,7 @@ try:
    expect(page.locator('#j143-official-layer')).to_be_visible()
    page.locator('[data-j143="close"]').click()
    expect(page.locator('#j143-official-layer')).to_be_hidden()
-   expect(page.locator('#layer')).to_have_value('research,view')
+   expect(page.locator('#layer')).to_have_value('scaly,view')
    print(f'Atlas 36.9 {width}x{height}: 3 map headers, one attribution strip, direct 3D, actual pinned tile texture, return to 2D and official exit PASS')
    ctx.close()
   browser.close()

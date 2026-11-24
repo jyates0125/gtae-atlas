@@ -11,13 +11,13 @@
 <script defer src="./atlas-sources.js?v=70"></script>
 <script defer src="./atlas-route-core.js?v=70"></script>
 <script defer src="./atlas-road-core.js?v=70"></script>
-<script defer src="./atlas-3d.js?v=3692"></script>
+<script defer src="./atlas-3d.js?v=370"></script>
 <script defer src="./atlas368-approx-terrain.js?v=368"></script>
 <script defer src="./atlas-terrain-evidence.js?v=359"></script>
 <script defer src="./atlas363-elevation-probe.js?v=363"></script>
 <script defer src="./atlas-navigation.js?v=3691"></script>
 <script defer src="./atlas-conditions.js?v=70"></script>
-<script defer src="./atlas.js?v=369"></script>
+<script defer src="./atlas.js?v=370"></script>
 <script defer src="./atlas290-vi-source-ledger.js?v=290"></script>
 
 <link rel="stylesheet" href="./atlas290-vi-source-ledger.css?v=290">
@@ -174,7 +174,7 @@
       <summary>VI tools</summary>
       <section class="j217-vi-panel" aria-label="GTA VI Leonida world guide">
         <span class="j217-kicker">ELARIO STUDIOS · LEONIDA</span><h2>One world. Every VI tool.</h2>
-        <p>Use Map view to switch between the in-game Day tiles and the historic Scaly/Loki community maps. Rockstar's separate official printable poster view remains available. The Day image shows game geography; community marker placement and gameplay claims still need independent verification. VI databases and progress remain independent of GTA V Story and Online.</p>
+        <p>Choose In-game Map, Scaly or Loki. Each research style supports 2D and approximate 3D. In-game Day tiles supply the in-game artwork. Rockstar's separate official printable poster view remains available. The Day image shows game geography; community marker placement and gameplay claims still need independent verification. VI databases and progress remain independent of GTA V Story and Online.</p>
         <figure><img src="./art/jura155-vi.webp" loading="lazy" decoding="async" alt="Original Elario Studios cinematic Leonida artwork, not a Rockstar screenshot"><figcaption>Original Elario Leonida scene · community coordinates remain provisional</figcaption></figure>
         <nav class="j217-vi-grid" aria-label="GTA VI world destinations">
           <button type="button" id="j369-full-map-menu" aria-controls="j132-nav-drawer" aria-expanded="false">☰ Menu · all Atlas tools</button>
@@ -206,7 +206,7 @@
     </details>
     
     <!-- Team Jura Atlas 6.2 — original explorer workflow, independent Elario Studios implementation -->
-    <canvas id="jura3dCanvas" class="jura-3d-canvas" hidden aria-label="Interactive 3D GTA terrain. Drag to orbit, Shift drag to pan, scroll to zoom."></canvas>
+    <canvas id="jura3dCanvas" class="jura-3d-canvas" hidden tabindex="0" title="Drag to rotate and tilt; Shift-drag to pan; scroll or pinch to zoom" aria-label="Interactive 3D GTA terrain. Drag to orbit, Shift drag to pan, scroll to zoom."></canvas>
     <div id="jura3dMarkerOverlay" class="jura-3d-overlay" hidden></div>
     <section class="j362-terrain-notice" id="j362TerrainNotice" aria-label="Three-dimensional map availability" role="status" hidden>
       <strong>Research terrain</strong>

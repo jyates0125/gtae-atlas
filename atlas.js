@@ -32,7 +32,7 @@ const BOUNDS={
 };
 const LAYERS={
  '5':[['radar','In-game radar'],['satellite','Satellite'],['terrain','Terrain'],['roadmap','Roadmap'],['hybrid','Hybrid']],
- '6':[['day','In-game Day · GTADB map'],['scaly,view','Scaly · YANIS V18'],['yanis,18','YANIS V18 · Current'],['dupzor,51','Loki · DUPZOR V51'],['research,view','Research basemap · YANIS V18'],['yanis,15','YANIS V15 · Archive']]
+ '6':[['day','In-game Map'],['scaly,view','Scaly · YANIS V18'],['dupzor,51','Loki · DUPZOR V51']]
 };
 /* Base views and published GTADB community add-on tiles.
  * The additional tile folders are *patches*, not complete independent worlds.
@@ -48,7 +48,7 @@ const PATCH_SET='aiwe,1,martipk,5,rickrick,3';
 function mapView(style,g=game){
  if(g==='6'&&style==='scaly,view')return{base:'yanis,18',overlay:false,filter:'saturate(1.15) contrast(1.06)'};
  if(g==='6'&&style==='loki,view')return{base:'dupzor,51',overlay:false,filter:'saturate(.88) contrast(1.13) brightness(.96)'};
- // Research is a dedicated labeled basemap option over licensed YANIS V18 tiles, not a separate tile source. GTA VI research records remain provisional.
+ // Retired duplicate view identifiers remain internally recognized for legacy links; the visible VI selector contains only three styles.
  if(g==='6'&&style==='research,view')return{base:'yanis,18',overlay:false,filter:'none'};
  // The previous CYBER selection is retired: no cyber tiles are requested.
  return{base:style,overlay:false};
@@ -1001,7 +1001,7 @@ function init(){
  if(threeD)threeD.onclick=()=>window.teamJuraNav?.setDimension('3d');
  if($('overlayOpacity')){$('overlayOpacity').value=String(overlayOpacity);$('opacityValue').textContent=overlayOpacity+'%';$('overlayOpacity').oninput=()=>{overlayOpacity=Number($('overlayOpacity').value);$('opacityValue').textContent=overlayOpacity+'%';store('jura60-overlay-opacity',overlayOpacity);schedulePaint()};}
  if($('atlasListSort'))$('atlasListSort').onchange=e=>{listOrder=e.target.value;page=0;renderFind();schedulePaint()};if($('atlasExportVisible'))$('atlasExportVisible').onclick=exportVisibleCSV;
- $('layer').onchange=()=>{styles[game]=$('layer').value;document.dispatchEvent(new Event('jura:legend-updated'));tilesErrors=0;tilesLoaded=0;tileHealth();schedulePaint();window.teamJuraNav?.terrain()?.rebase();announce('Loading GTA '+game+' '+$('layer').selectedOptions[0].textContent+' map view…')};$('resetView').onclick=()=>{fitGame();window.teamJuraNav?.terrain()?.rebase();announce('Showing the whole GTA '+game+' map.')};$('zoomIn').onclick=()=>zoomBy(.5);$('zoomOut').onclick=()=>zoomBy(-.5);
+ $('layer').onchange=()=>{styles[game]=$('layer').value;document.dispatchEvent(new Event('jura:legend-updated'));tilesErrors=0;tilesLoaded=0;tileHealth();schedulePaint();window.teamJuraNav?.terrain()?.refreshTexture();announce('Loading GTA '+game+' '+$('layer').selectedOptions[0].textContent+' map view…')};$('resetView').onclick=()=>{fitGame();window.teamJuraNav?.terrain()?.rebase();announce('Showing the whole GTA '+game+' map.')};$('zoomIn').onclick=()=>{const t=window.teamJuraNav?.terrain();if(t?.isActive())t.zoom(.8);else zoomBy(.5)};$('zoomOut').onclick=()=>{const t=window.teamJuraNav?.terrain();if(t?.isActive())t.zoom(1.25);else zoomBy(-.5)};
  $('togglePins').onclick=()=>{const wasVisible=pinsVisible();dropEventFocus();showPins=!wasVisible;$('togglePins').textContent=showPins?'📍 Pins on':'📍 Pins off';$('togglePins').setAttribute('aria-pressed',String(showPins));schedulePaint()};$('mobileTools').onclick=()=>{$('sidebar').classList.toggle('mobile-collapsed');if(!$('sidebar').classList.contains('mobile-collapsed'))$('sidebar').scrollIntoView({behavior:'smooth',block:'start'})};$('original').onclick=()=>window.open('https://map.gtadb.org/','_blank','noopener,noreferrer');
  $('selectedStart').onclick=()=>{if(selected){setRouteStart(selected);window.teamJuraNav?.setStart(selected);showTab('Route')}};if($('selectedNavigate'))$('selectedNavigate').onclick=()=>{if(selected)window.teamJuraNav?.setRoutePoint(selected)};$('closeSelected').onclick=()=>{selected=null;updateSelected();schedulePaint()};$('selectedFound').onclick=()=>{if(selected)toggleFound(selected)};$('selectedRoute').onclick=()=>{if(selected)toggleRoute(selected)};$('shareSelected').onclick=async()=>{
  if(!selected)return;
