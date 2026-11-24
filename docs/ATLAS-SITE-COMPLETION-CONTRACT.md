@@ -131,3 +131,6 @@ See the [consolidated Standing Project Charter](TEAM-JURA-STANDING-CHARTER.md#no
 | Engineering and release | Focused affected-feature tests for development; full production validation, real device and specific owner approval before protected main. Guest-first; accounts deferred. |
 
 The latest canonical repo is `jyates0125/gtae-atlas`; `development` is nonproduction and `main` is protected live-production source. Older deployment/cover descriptions above are history, not authorization to regress art, restore old deployment topology or enable public sign-ins.
+
+### Native-map acceptance (November 24 follow-up)
+Use GTA Online and Cayo as behavioral reference workspaces. Default world entry must open a usable original interactive map where matching source data exists; old notebooks and schematic URLs redirect, with explicit non-destructive recovery. Preserve honest map, vehicle-image and other fallbacks until validated replacements exist. GTA VI Story is released; continue source review and release-aware tests, but leave its current map unchanged under the owner's hold. Maintain full regression inventory; run scoped tests for changes, Cayo when relevant, and the complete release suite before approved main promotion.
