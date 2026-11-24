@@ -312,7 +312,7 @@ function renderNamedLayers(){const root=$('namedLayers');if(!root)return;root.re
  const q=($('namedLayerSearch')?.value||'').trim().toLowerCase();let rendered=0;
  const cache=activityCache();
  for(const {id,title,count,predicate}of layers){if(q&&!title.toLowerCase().includes(q))continue;rendered++;
-  const members=rows.filter(predicate),off=members.filter(r=>conditionForRecord(r,cache)?.hide).length,closed=members.filter(r=>conditionForRecord(r,cache)?.availability==='inactive').length;
+  const states=rows.filter(predicate).map(r=>conditionForRecord(r,cache)),off=states.filter(v=>v?.hide).length,closed=states.filter(v=>v?.availability==='inactive').length;
   const b=btn(`${title} · ${count.toLocaleString()}`,()=>{updateNamedLayerVisibility([id],hidden.has(id));},'named-layer-choice');
   b.setAttribute('aria-pressed',String(!hidden.has(id)));b.setAttribute('aria-label',(hidden.has(id)?'Show ':'Hide ')+title+' pins');
   if(off){b.dataset.availability=closed===count?'inactive':off===count?'unconfirmed':'partial';const status=document.createElement('small');status.className='j393-layer-status';status.textContent=closed===count?'Not active · 0 available':off===count?'No current confirmed pins':`${count-off} eligible candidates · ${off} unavailable/unconfirmed`;b.append(status);b.title=status.textContent;}
@@ -686,6 +686,7 @@ function conditionForRecord(r,storeCache){
   const name=[r.name,r.collectionType,...(r.tags||[])].join(' ');
   const daily=engine.rulesForMode('online').filter(rule=>rule.kind==='rotation');
   activityId=daily.find(rule=>matchesEventResearch(rule,r))?.id;
+  if(!activityId){const ghost=/(?:^|\b)ghost\s*#?\s*(10|[1-9])\b/i.exec(name);if(ghost)activityId='ghost-'+ghost[1];}
   if(!activityId&&/\b(?:pumpkins?|jack.o.lanterns?)\b/i.test(name))activityId='pumpkins';
   else if(!activityId&&/\bghosts? exposed\b/i.test(name))activityId='ghosts-exposed';
   else if(!activityId&&/\b(?:halloween|free.roam)\b.{0,30}\bslashers?\b|\bslashers?\b.{0,30}\b(?:halloween|free.roam)\b/i.test(name))activityId='slashers';
