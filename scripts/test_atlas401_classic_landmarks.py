@@ -75,6 +75,49 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
                 mode.select_option('landmarks')
                 expect(root.locator('#j240-status')).to_contain_text(str(len(packs[game]['records']))+' total')
                 expect(root.locator('li[data-id="'+first['id']+'"] .j271-mark')).to_have_attribute('aria-pressed','true')
+                # Repeated legend toggles must never create extra overlays or duplicate source IDs.
+                legend=root.locator('#j402-category-legend')
+                pins=page.locator('#j241-source-pins .j241-source-pin')
+                def check_ids(expected):
+                    expect(pins).to_have_count(len(expected))
+                    actual=pins.evaluate_all('(els)=>els.map(e=>e.dataset.sourceId)')
+                    assert len(actual)==len(set(actual)) and set(actual)==set(expected)
+                    expect(page.locator('#j241-source-pins')).to_have_count(1)
+                expected=[r['id'] for r in packs[game]['records']]
+                legend.get_by_role('button',name='Show all categories').click()
+                check_ids(expected)
+                firstcat=first['category']
+                checkbox=legend.locator('input[data-category="'+firstcat+'"]')
+                for _ in range(3):
+                    checkbox.uncheck()
+                    check_ids([r['id'] for r in packs[game]['records'] if r['category']!=firstcat])
+                    checkbox.check()
+                    check_ids(expected)
+                    root.get_by_role('button',name='Hide sourced pins',exact=True).click()
+                    check_ids([])
+                    root.get_by_role('button',name='Show sourced pins',exact=True).click()
+                    check_ids(expected)
+                legend.get_by_role('button',name='Hide all categories').click()
+                check_ids([])
+                expect(root.locator('li[data-id]')).to_have_count(0)
+                root.locator('#j240-category').select_option(firstcat)
+                check_ids([r['id'] for r in packs[game]['records'] if r['category']==firstcat])
+                # All-category routes must still count alternate rampage spawns as one objective.
+                mode.select_option('collectibles')
+                expect(root.locator('#j240-status')).to_contain_text(str(oldn)+' total')
+                legend.get_by_role('button',name='Show all categories').click()
+                expect(pins).to_have_count(oldn)
+                ids=pins.evaluate_all('(els)=>els.map(e=>e.dataset.sourceId)')
+                assert len(ids)==len(set(ids))
+                origin=root.locator('#j240-start option').nth(1).get_attribute('value')
+                root.locator('#j240-start').select_option(origin)
+                root.get_by_role('button',name='Build geometric preview').click()
+                with page.expect_download() as info:
+                    root.get_by_role('button',name='Export source preview').click()
+                route=json.loads(Path(info.value.path()).read_text())['route']
+                assert len(route)==(140 if game=='iii' else 51) and route[0]['id']==origin
+                assert len({r['id'] for r in route})==len(route)
+                assert page.evaluate('k=>localStorage.getItem(k)',oldkey)==old
                 assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
                 print('PASS',width,game,'map pins, visited progress, route export, layer separation')
             context.close()
