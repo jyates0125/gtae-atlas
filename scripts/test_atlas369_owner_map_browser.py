@@ -74,7 +74,8 @@ try:
    expect(page.locator('.jura-nav-bar #j143-official-button')).to_be_visible()
    page.locator('#layer').select_option('research,view')
    page.locator('#jura3d').click()
-   page.wait_for_function('teamJuraNav.terrain().isActive()&&teamJuraNav.terrain().hasApproximate()',timeout=30000)
+   page.wait_for_function('teamJuraNav.terrain().isActive()||teamJuraNav.terrain().getFrameReport()!==null',timeout=30000)
+   assert page.evaluate('teamJuraNav.terrain().isActive()'),page.evaluate('teamJuraNav.terrain().getFrameReport()')
    page.wait_for_function('teamJuraNav.terrain().hasMapTexture()',timeout=35000)
    assert page.evaluate('teamJuraNav.terrain().hasVisibleFrame()'), '3D activated without a drawn frame'
    assert page.evaluate('teamJuraNav.terrain().verifyFrame()'), '3D framebuffer contains only clear color'

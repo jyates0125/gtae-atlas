@@ -39,7 +39,7 @@ function solveGesture(start,current,view,extent,viewportWidth){
  }
  return out;
 }
-function create(opts){const canvas=opts.canvas,overlay=opts.overlay,status=opts.status,bridge=opts.bridge;let gl=null,p=null,position=null,uv=null,index=null,tex=null,ready=false,active=false,projectMatrix=null,center={x:0,y:0,z:2},bearing=0,pitch=.86,distance=3200,extent=8000,textureFingerprint='',textured=false,geoKey='',meshPoints=[],sourceHeights=null,heightGame=null,approximateSurface=null,showCoverage=false,supportBuffer=null,lightBuffer=null,sourceError='',loadToken=0,assetUpdate=0,textureRevision=-1,lastRender=0,pointers=new Map(),gesture=null,renderQueued=false,frameVerified=false;
+function create(opts){const canvas=opts.canvas,overlay=opts.overlay,status=opts.status,bridge=opts.bridge;let gl=null,p=null,position=null,uv=null,index=null,tex=null,ready=false,active=false,projectMatrix=null,center={x:0,y:0,z:2},bearing=0,pitch=.86,distance=3200,extent=8000,textureFingerprint='',textured=false,geoKey='',meshPoints=[],sourceHeights=null,heightGame=null,approximateSurface=null,showCoverage=false,supportBuffer=null,lightBuffer=null,sourceError='',loadToken=0,assetUpdate=0,textureRevision=-1,lastRender=0,pointers=new Map(),gesture=null,renderQueued=false,frameVerified=false,frameReport=null,layoutObserver=null;
 function notice(message){if(status)status.textContent=hasApproximate()&&!message.startsWith('Approximate terrain')?'Approximate terrain · '+message:message}
 function elevation(x,y){if(!sourceHeights||heightGame!==String(bridge.game()))return hasApproximate()?approximateSurface.sample(x,y).height:0;const d=ELEVATIONS[bridge.game()];if(!d)return 0;const px=d.zero[0]+x*d.scaleXY,py=d.zero[1]-y*d.scaleXY;if(px<0||py<0||px>=d.width-1||py>=d.height-1)return 0;const x0=Math.floor(px),y0=Math.floor(py),fx=px-x0,fy=py-y0,off=y0*d.width+x0;const a=sourceHeights[off]*(1-fx)+sourceHeights[off+1]*fx,b=sourceHeights[off+d.width]*(1-fx)+sourceHeights[off+d.width+1]*fx;return Math.max(-400,Math.min(1800,((a*(1-fy)+b*fy)/d.scaleZ+d.offset)));}
 function decodeHeightfield(buffer,definition){
@@ -95,7 +95,7 @@ async function setElevationBinary(buffer,g){
  const heights=decodeHeightfield(buffer,d);
  ++loadToken;clearApproximateSurface();sourceHeights=heights;heightGame=String(g);sourceError='';geoKey='';notice('User-supplied heightfield active for GTA '+g+' · reconstructed 3D terrain');render();return true;
 }
-function ensureGL(){if(ready&&!gl?.isContextLost?.())return true;ready=false;try{gl=canvas.getContext('webgl',{alpha:false,antialias:true,preserveDrawingBuffer:true});if(!gl)throw Error('WebGL not supported');p=program(gl);position=gl.createBuffer();uv=gl.createBuffer();supportBuffer=gl.createBuffer();lightBuffer=gl.createBuffer();index=gl.createBuffer();tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([40,82,98,255]));ready=true;return true;}catch(e){notice('3D renderer unavailable: '+e.message);return false}}
+function ensureGL(){if(ready&&!gl?.isContextLost?.())return true;ready=false;try{gl=canvas.getContext('webgl',{alpha:true,antialias:true,preserveDrawingBuffer:true});if(!gl)throw Error('WebGL not supported');p=program(gl);position=gl.createBuffer();uv=gl.createBuffer();supportBuffer=gl.createBuffer();lightBuffer=gl.createBuffer();index=gl.createBuffer();tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([40,82,98,255]));ready=true;return true;}catch(e){notice('3D renderer unavailable: '+e.message);return false}}
 function updateMesh(){const num=Math.max(35,Math.min(70,Math.round(canvas.clientWidth/10))),vertices=[],uvs=[],supports=[],lights=[],indices=[];const radius=extent/2,step=extent/num;for(let r=0;r<=num;r++)for(let c=0;c<=num;c++){const dx=-radius+c*step,dz=-radius+r*step,wx=center.x+dx,wy=center.y-dz;vertices.push(dx,elevation(wx,wy)*2.1,dz);uvs.push(c/num,r/num);supports.push(hasApproximate()?approximateSurface.sample(wx,wy).coverage:3);const gx=(elevation(wx+step,wy)-elevation(wx-step,wy))*2.1/(2*step),gz=(elevation(wx,wy-step)-elevation(wx,wy+step))*2.1/(2*step),n=normalize([-gx,1,-gz]);lights.push(.65+.52*Math.max(0,dot(n,normalize([-.6,1,.45]))))}
  for(let r=0;r<num;r++)for(let c=0;c<num;c++){const i=r*(num+1)+c;indices.push(i,i+num+1,i+1,i+1,i+num+1,i+num+2)}
  gl.bindBuffer(gl.ARRAY_BUFFER,position);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,uv);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(uvs),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,supportBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(supports),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,lightBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(lights),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices),gl.STATIC_DRAW);meshPoints=indices;}
@@ -121,40 +121,54 @@ function drawOverlays(){if(!overlay)return;overlay.replaceChildren();const place
  for(const r of places){const q=project(r.x,r.y);if(!q)continue;const b=document.createElement('button');b.type='button';b.className='jura-3d-pin';b.textContent=r.markerColor?'':bridge.symbol(r.category);b.title=r.name;b.setAttribute('aria-label','Find '+r.name);b.style.left=q.x+'px';b.style.top=q.y+'px';b.style.background=bridge.color(r.category,r);if(r.markerColor)b.classList.add('jura-gtadb-pin');b.onclick=()=>bridge.select(r);overlay.append(b)}
  if(route.length>1){for(const r of route){const q=project(r.x,r.y);if(q)points.push([q.x,q.y]);}if(points.length>=2){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox',`0 0 ${canvas.clientWidth} ${canvas.clientHeight}`);svg.setAttribute('class','jura-3d-route');const line=document.createElementNS('http://www.w3.org/2000/svg','polyline');line.setAttribute('points',points.map(p=>p.join(',')).join(' '));line.setAttribute('fill','none');line.setAttribute('stroke','#ffd27d');line.setAttribute('stroke-width','4');line.setAttribute('stroke-dasharray','8 5');svg.append(line);overlay.prepend(svg)}}
  }
-function render(){if(!active||!ensureGL()||canvas.clientWidth<2||canvas.clientHeight<2)return false;const dpr=Math.min(2,devicePixelRatio||1),w=Math.max(1,Math.round(canvas.clientWidth*dpr)),h=Math.max(1,Math.round(canvas.clientHeight*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;geoKey=''}
- gl.viewport(0,0,w,h);gl.clearColor(.095,.19,.23,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
+function render(){if(!active||!ensureGL()||canvas.clientWidth<2||canvas.clientHeight<2){frameReport={reason:'canvas not laid out',clientWidth:canvas.clientWidth,clientHeight:canvas.clientHeight};return false;}const dpr=Math.min(2,devicePixelRatio||1),w=Math.max(1,Math.round(canvas.clientWidth*dpr)),h=Math.max(1,Math.round(canvas.clientHeight*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;geoKey=''}
+ gl.viewport(0,0,w,h);gl.colorMask(true,true,true,true);gl.depthMask(true);gl.disable(gl.CULL_FACE);gl.disable(gl.SCISSOR_TEST);gl.disable(gl.BLEND);gl.clearColor(.095,.19,.23,0);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
  const key=[center.x.toFixed(1),center.y.toFixed(1),extent.toFixed(1),!!sourceHeights,hasApproximate()].join(':');if(key!==geoKey){updateMesh();geoKey=key;textureFingerprint=''}
  const now=Date.now();const revision=bridge.textureRevision?.()??0;if(!textureFingerprint||revision!==textureRevision||now-assetUpdate>2200){updateTexture();textureFingerprint=key;assetUpdate=now;textureRevision=revision}
  projectMatrix=matrix();gl.useProgram(p);gl.uniformMatrix4fv(gl.getUniformLocation(p,'uMVP'),false,projectMatrix);gl.uniform1f(gl.getUniformLocation(p,'uMapped'),textured?1:0);gl.uniform1f(gl.getUniformLocation(p,'uShade'),1);gl.uniform1f(gl.getUniformLocation(p,'uCoverage'),showCoverage&&hasApproximate()?1:0);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(gl.getUniformLocation(p,'uMap'),0);
- gl.bindBuffer(gl.ARRAY_BUFFER,position);const aPos=gl.getAttribLocation(p,'aPos');gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uv);const aUV=gl.getAttribLocation(p,'aUV');gl.enableVertexAttribArray(aUV);gl.vertexAttribPointer(aUV,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,supportBuffer);const aSupport=gl.getAttribLocation(p,'aSupport');gl.enableVertexAttribArray(aSupport);gl.vertexAttribPointer(aSupport,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,lightBuffer);const aLight=gl.getAttribLocation(p,'aLight');gl.enableVertexAttribArray(aLight);gl.vertexAttribPointer(aLight,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.drawElements(gl.TRIANGLES,meshPoints.length,gl.UNSIGNED_SHORT,0);drawOverlays();return true;}
+ gl.bindBuffer(gl.ARRAY_BUFFER,position);const aPos=gl.getAttribLocation(p,'aPos');gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uv);const aUV=gl.getAttribLocation(p,'aUV');gl.enableVertexAttribArray(aUV);gl.vertexAttribPointer(aUV,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,supportBuffer);const aSupport=gl.getAttribLocation(p,'aSupport');gl.enableVertexAttribArray(aSupport);gl.vertexAttribPointer(aSupport,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,lightBuffer);const aLight=gl.getAttribLocation(p,'aLight');gl.enableVertexAttribArray(aLight);gl.vertexAttribPointer(aLight,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.drawElements(gl.TRIANGLES,meshPoints.length,gl.UNSIGNED_SHORT,0);try{drawOverlays()}catch(e){console.warn('Atlas terrain overlay:',e.message)}return true;}
 // A successful GL context or texture upload alone does not prove a frame.
 function verifyFrame(){
  if(!gl||gl.isContextLost?.()||canvas.width<2||canvas.height<2)return false;
- const pixel=new Uint8Array(4);let hits=0;
- for(const y of [.3,.5,.7])for(const x of [.25,.5,.75]){
-  gl.readPixels(Math.floor(canvas.width*x),Math.floor(canvas.height*y),1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);
-  if(Math.abs(pixel[0]-24)+Math.abs(pixel[1]-48)+Math.abs(pixel[2]-59)>18)hits++;
+ const pixel=new Uint8Array(4);let hits=0;const samples=[];
+ for(const y of [.15,.3,.5,.7,.85])for(const x of [.15,.3,.5,.7,.85]){
+  gl.readPixels(Math.min(canvas.width-1,Math.floor(canvas.width*x)),Math.min(canvas.height-1,Math.floor(canvas.height*y)),1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);
+  samples.push([...pixel]);if(pixel[3]>127)hits++;
  }
- return hits>=2&&gl.getError()===gl.NO_ERROR;
+ const errors=[];for(let i=0;i<8;i++){const code=gl.getError();if(code===gl.NO_ERROR)break;errors.push(code)}
+ frameReport={reason:hits?'drawn':'no opaque terrain pixels',hits,samples,errors,width:canvas.width,height:canvas.height,clientWidth:canvas.clientWidth,clientHeight:canvas.clientHeight,drawingWidth:gl.drawingBufferWidth,drawingHeight:gl.drawingBufferHeight,extent,distance,center:{...center},meshIndices:meshPoints.length,finiteMatrix:!!projectMatrix&&Array.from(projectMatrix).every(Number.isFinite),centerClip:projectMatrix?clipPoint(projectMatrix,[0,0,0]):null,textured};
+ return hits>0&&errors.length===0;
 }
 function activate(){if(!hasElevation()&&!hasApproximate()){notice('No elevation data available for true 3D');return false}
  if(!ensureGL())return false;
- // The fallback rule uses display:none!important on this canvas. Remove it
- // BEFORE reading clientWidth/clientHeight and drawing. Keep the 2D backing
- // visible through texture-pending until a real frame has been verified.
  document.body.classList.add('jura-3d-texture-pending');
  document.body.classList.remove('jura-perspective-fallback');
  canvas.hidden=false;if(overlay)overlay.hidden=false;
- sync();active=true;textured=false;frameVerified=false;
+ sync();active=true;textured=false;frameVerified=false;frameReport=null;
  if(canvas.style)canvas.style.touchAction='none';
- try{frameVerified=render()&&verifyFrame()}catch(e){sourceError=String(e?.message||e)}
+ try{
+  // Explicit initial layout and draw. No cached tile callback is required.
+  canvas.getBoundingClientRect();
+  frameVerified=!!render()&&verifyFrame();
+  if(!frameVerified&&canvas.clientWidth>1&&canvas.clientHeight>1){
+   // Retry the same geometry with a conservative centered camera and fresh
+   // buffers. This is a camera correction, never invented elevation data.
+   pitch=1.05;distance=extent*.75;geoKey='';textureFingerprint='';
+   frameVerified=!!render()&&verifyFrame();
+  }
+ }catch(e){sourceError=String(e?.message||e);frameReport={reason:sourceError,stack:String(e?.stack||'')}}
  if(!frameVerified){
-  active=false;canvas.hidden=true;if(overlay)overlay.hidden=true;
+  console.warn('Atlas 3D visible-frame check failed',JSON.stringify(frameReport));
+  sourceError='3D frame could not be displayed';active=false;canvas.hidden=true;if(overlay)overlay.hidden=true;
   document.body.classList.remove('jura-3d-texture-pending');
   document.body.classList.add('jura-perspective-fallback');
   notice('3D frame could not be displayed; illustrated map retained');return false;
  }
- // Redraw once after the layout transition even if all imagery was cached.
+ document.body.classList.remove('jura-3d-texture-pending');
+ if(typeof ResizeObserver==='function'&&!layoutObserver){
+  layoutObserver=new ResizeObserver(()=>{if(active&&canvas.clientWidth>1&&canvas.clientHeight>1)queueRender()});
+  layoutObserver.observe(canvas);
+ }
  queueRender();return true;
 }
 function deactivate(){active=false;frameVerified=false;clearApproximateSurface();pointers.clear();gesture=null;if(canvas.style)canvas.style.touchAction='';loadToken++;document.body.classList.remove('jura-3d-texture-pending');canvas.hidden=true;if(overlay){overlay.hidden=true;overlay.replaceChildren()}notice('2D map view');}
@@ -196,7 +210,7 @@ canvas.addEventListener('pointerup',release);
 canvas.addEventListener('pointercancel',release);
 canvas.addEventListener('lostpointercapture',release);
 canvas.addEventListener('wheel',e=>{if(!active)return;e.preventDefault();zoom(e.deltaY>0?1.17:.85)},{passive:false});
-return{activate,deactivate,rebase,render,zoom,prepareElevation,setElevationBinary,hasApproximate,setApproximateSurface,clearApproximateSurface,setCoverageVisible,getCoverageVisible:()=>showCoverage,resetNorth(){bearing=0;pitch=.86;render()},isActive:()=>active,hasElevation,getError:()=>sourceError,hasMapTexture:()=>textured,hasVisibleFrame:()=>frameVerified,verifyFrame,getView:()=>({bearing,pitch,distance,center:{...center}})};
+return{activate,deactivate,rebase,render,zoom,prepareElevation,setElevationBinary,hasApproximate,setApproximateSurface,clearApproximateSurface,setCoverageVisible,getCoverageVisible:()=>showCoverage,resetNorth(){bearing=0;pitch=.86;render()},isActive:()=>active,hasElevation,getError:()=>sourceError,hasMapTexture:()=>textured,hasVisibleFrame:()=>frameVerified,verifyFrame,getFrameReport:()=>frameReport,getView:()=>({bearing,pitch,distance,center:{...center}})};
 }
 root.JuraTerrain3D=Object.freeze({create,ELEVATIONS,solveGesture});
 })(typeof window!=='undefined'?window:globalThis);

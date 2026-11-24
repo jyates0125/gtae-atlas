@@ -47,7 +47,7 @@ with sync_playwright() as pw:
     await terrain.setElevationBinary(samples.buffer,'6');
     return terrain.activate() && canvas.style.touchAction==='none';
   }""")
-  assert activated, f'3D activation or mobile touch-action failed at {width}'
+  assert activated, (width,page.evaluate('window.terrain.getFrameReport()'))
   camera_before=page.evaluate('window.terrain.getView()')
   page.evaluate("""() => {
     pointer('pointerdown',1,100,100);

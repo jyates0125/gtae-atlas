@@ -10,3 +10,6 @@ Toolbar positioning now uses measured title/toolbar/coverage height rather than 
 
 ## Owner blank-canvas follow-up
 Owner screenshots at 05962833 preview showed active approximate mode but blank on actual phone and laptop after tiles had loaded. The hidden fallback canvas was measured and rendered before removing display:none. Activation now measures a visible canvas, verifies multiple framebuffer pixels differ from the clear color, and rejects blank frames; first frame is retained and redraw queued. Graphics loss returns to working 2D. The real tile test now asserts pixels and cached reentry, not only WebGL/texture flags. All Pages focuses without scrolling. Coverage opens without competing zoom controls. New preview is not owner-approved until physically checked.
+
+### Pixel diagnostics and resilient first frame
+Real device review confirmed Menu works; owner prefers Menu over All Pages. Keep existing placement. Replaced color-threshold checks with an opaque-geometry alpha test against transparent clear; checks actual drawing buffer size, matrix, errors and sample RGBA. Force explicit initial layout, conservative retry, isolate optional marker overlays, resize-triggered repaint, and fail closed to 2D. Automated diagnostics are available without accessing personal progress or sending telemetry. Still requires visible-frame regression success.
