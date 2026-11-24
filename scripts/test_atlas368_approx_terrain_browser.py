@@ -41,8 +41,6 @@ try:
    page.wait_for_function("""() => typeof window.teamJuraNav?.getDimension==='function'""")
    assert not any('atlas368-approx-terrain.json' in x for x in requests),'data loaded without opt-in'
    page.locator('#jura3d').click()
-   expect(page.locator('#j362TerrainNotice')).to_contain_text('No elevation data installed',timeout=15000)
-   page.locator('#j368UseApproximate').click()
    page.wait_for_function("""() => teamJuraNav.terrain().hasApproximate()&&teamJuraNav.terrain().isActive()""",timeout=30000)
    assert not page.evaluate('teamJuraNav.terrain().hasElevation()')
    expect(page.locator('#jura3dCanvas')).to_be_visible()
@@ -65,8 +63,6 @@ try:
    expect(page.locator('#juraNavDimension')).to_have_text('2D')
    assert not page.evaluate('teamJuraNav.terrain().hasApproximate()')
    page.locator('#jura3d').click()
-   expect(page.locator('#j362TerrainNotice')).to_contain_text('No elevation data installed',timeout=15000)
-   page.locator('#j368UseApproximate').click()
    page.wait_for_function("""() => teamJuraNav.terrain().hasApproximate()&&teamJuraNav.terrain().isActive()""",timeout=30000)
    assert sum('atlas368-approx-terrain.json' in x for x in requests)==1,'approximation not cached in session'
    # Opening the actual Rockstar viewer must return to 2D, without mixing
@@ -85,8 +81,6 @@ try:
    expect(page.locator('#j143-official-layer')).to_be_hidden()
    expect(layer).to_have_value(original_layer)
    page.locator('#jura3d').click()
-   expect(page.locator('#j362TerrainNotice')).to_contain_text('No elevation data installed',timeout=15000)
-   page.locator('#j368UseApproximate').click()
    page.wait_for_function("""() => teamJuraNav.terrain().hasApproximate()&&teamJuraNav.terrain().isActive()""",timeout=30000)
    assert sum('atlas368-approx-terrain.json' in x for x in requests)==1
    # Real file input can replace the approximation without losing map mode.

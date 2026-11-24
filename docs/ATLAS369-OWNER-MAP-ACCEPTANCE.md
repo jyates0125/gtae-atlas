@@ -1,0 +1,3 @@
+# Atlas 36.9 — owner device map corrections
+
+Owner screenshots showed overlapping HQ/All Pages, clipped official button, stacked map panels and a tilted 2D fallback instead of actual relief. Preserve the Atlas 36.8 GTADB approximate data and existing guest progress. Direct 3D now attempts dense terrain first then automatically opens approximate research terrain. Canonical 2D/3D/Official toolbar, inline HQ/All Pages, one compact credit strip and distinct research versus Story coordinate frames. Old alternate explorer GTA VI button opens the full map. Do not promote protected branches; real device and deployment validation remains required.

@@ -31,6 +31,7 @@ try:
     reduced_motion='reduce',
    )
    page=ctx.new_page()
+   page.route('**/data/atlas368-approx-terrain.json*',lambda route:route.abort())
    page.goto(url,wait_until='domcontentloaded',timeout=60000)
    expect(page.locator('#atlasCanvas')).to_be_visible(timeout=35000)
    expect(page.locator('.j133-universal-footer')).to_be_attached(timeout=20000)
@@ -60,7 +61,7 @@ try:
    expect(page.locator('#j362TerrainNotice')).to_be_visible(timeout=15000)
    assert page.evaluate("""() => document.body.classList.contains('jura-perspective-fallback')"""), (
     '3D without an installed grid must NOT activate the untextured WebGL canvas')
-   expect(page.locator('#j362TerrainNotice')).to_contain_text('No elevation data installed',timeout=15000)
+   expect(page.locator('#j362TerrainNotice')).to_contain_text('Approximate terrain is unavailable',timeout=20000)
    assert page.evaluate("""() => {
      const canvas=document.getElementById('atlasCanvas');
      const st=getComputedStyle(canvas);
