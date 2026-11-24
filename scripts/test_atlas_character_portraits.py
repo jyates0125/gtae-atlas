@@ -201,7 +201,7 @@ with AtlasTestServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as
             # Seven classic-world checklists use merge-only, game-scoped restores.
             worlds=("iii","vc","vcs","lcs","ctw","tlad","tbogt")
             for world in worlds if width==390 else ("iii","tlad"):
-                page.goto(base+"map-hub.html?game="+world,wait_until="domcontentloaded")
+                page.goto(base+"map-hub.html?game="+world+"&notebook=1",wait_until="domcontentloaded")
                 slots=page.locator("#j98bGrid .j150-slot button[data-done]")
                 expect(slots.first).to_be_visible(timeout=15000)
                 category=page.locator("#j98bSet").input_value()
