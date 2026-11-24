@@ -82,3 +82,9 @@ body .j132-nav.j369-menu-portal #j132-nav-drawer{position:fixed!important;inset:
 body[data-start-world="6"] .jura-3d-pin.j371-landmark-pin{width:16px;height:20px;padding:0;box-sizing:border-box;border:1.5px solid #e9bd79;border-radius:58% 58% 58% 4%;background:#49315e!important;color:#fff1cf;font:700 9px/1 system-ui;transform:translate(-50%,-100%) rotate(-45deg);box-shadow:0 1px 3px #170c2580;display:grid;place-items:center}
 body[data-start-world="6"] .jura-3d-pin.j371-landmark-pin:focus-visible{outline:2px solid #fff1cf;outline-offset:2px}
 body[data-start-world="6"] .legend-symbol.j371-landmark-legend{background:#49315e;border-color:#e9bd79!important;color:#fff1cf;font:700 12px/1 system-ui;display:grid;place-items:center}
+
+/* Atlas 37.2 — live compass stays in the existing zoom dock. */
+#j371-compass{display:none!important}
+body.jura-in-3d:not(.jura-perspective-fallback) #j371-compass{display:grid!important;place-items:center;gap:0;min-height:44px;line-height:1;background:#49315e;color:#fff1cf;border-color:#e9bd79}
+#j371-compass span{display:block;color:#e9bd79;font-size:17px;line-height:1;transform-origin:center}
+#j371-compass small{font-size:9px;color:#fff1cf}

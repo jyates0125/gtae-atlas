@@ -5,7 +5,7 @@
 (function(root){'use strict';
 const ELEVATIONS={5:{width:930,height:1300,scaleXY:.1,scaleZ:52.11294342920029,zero:[410,839],offset:-462.2172786903457},6:{width:1536,height:1748,scaleXY:.083188297074,scaleZ:92.466616,zero:[1108.532445611,938.090772693],offset:-303.1033271360121}};
 const vs=`attribute vec3 aPos;attribute vec2 aUV;attribute float aSupport;attribute float aLight;uniform mat4 uMVP;varying vec2 vUV;varying float vH;varying float vSupport;varying float vLight;void main(){vUV=aUV;vH=aPos.y;vSupport=aSupport;vLight=aLight;gl_Position=uMVP*vec4(aPos,1.);}`;
-const fs=`precision mediump float;varying vec2 vUV;varying float vH;varying float vSupport;varying float vLight;uniform sampler2D uMap;uniform float uMapped;uniform float uShade;uniform float uCoverage;void main(){vec3 c;if(vH<0.)c=mix(vec3(.08,.24,.33),vec3(.16,.46,.57),clamp((vH+130.)/180.,0.,1.));else if(vH<120.)c=mix(vec3(.24,.41,.26),vec3(.45,.49,.29),clamp(vH/120.,0.,1.));else c=mix(vec3(.48,.47,.36),vec3(.70,.66,.56),clamp((vH-120.)/300.,0.,1.));if(uMapped>.5){vec4 tex=texture2D(uMap,vUV);c=mix(c,tex.rgb,.89*tex.a);}if(uCoverage>.5){vec3 supportColor=vSupport<.5?vec3(.19,.43,.65):vSupport<1.5?vec3(.39,.42,.48):vSupport<2.5?vec3(.88,.59,.23):vec3(.27,.68,.48);c=mix(c,supportColor,.87);}float light=mix(1.,clamp(vLight,.50,1.20),clamp(uShade,0.,1.));gl_FragColor=vec4(c*light,1.);}`;
+const fs=`precision mediump float;varying vec2 vUV;varying float vH;varying float vSupport;varying float vLight;uniform sampler2D uMap;uniform float uMapped;uniform float uShade;uniform float uCoverage;void main(){vec3 c;if(vSupport>3.5)c=vec3(.095,.19,.23);else if(vSupport<.5)c=vec3(.16,.46,.57);else if(vH<0.)c=mix(vec3(.08,.24,.33),vec3(.16,.46,.57),clamp((vH+130.)/180.,0.,1.));else if(vH<120.)c=mix(vec3(.24,.41,.26),vec3(.45,.49,.29),clamp(vH/120.,0.,1.));else c=mix(vec3(.48,.47,.36),vec3(.70,.66,.56),clamp((vH-120.)/300.,0.,1.));if(uMapped>.5){vec4 tex=texture2D(uMap,vUV);c=mix(c,tex.rgb,.89*tex.a);}if(uCoverage>.5){vec3 supportColor=vSupport<.5?vec3(.19,.43,.65):vSupport<1.5?vec3(.39,.42,.48):vSupport<2.5?vec3(.88,.59,.23):vec3(.27,.68,.48);c=mix(c,supportColor,.87);}float light=mix(1.,clamp(vLight,.50,1.20),clamp(uShade,0.,1.));gl_FragColor=vec4(c*light,1.);}`;
 const compile=(gl,type,source)=>{const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s)||'GL shader');return s};
 function program(gl){const p=gl.createProgram();gl.attachShader(p,compile(gl,gl.VERTEX_SHADER,vs));gl.attachShader(p,compile(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(p)||'GL link');return p}
 function perspective(fov,ratio,near,far){const f=1/Math.tan(fov/2),m=new Float32Array(16);m[0]=f/ratio;m[5]=f;m[10]=(far+near)/(near-far);m[11]=-1;m[14]=2*far*near/(near-far);return m}
@@ -30,7 +30,7 @@ function clipPoint(m,p){const x=p[0],y=p[1],z=p[2];const w=m[3]*x+m[7]*y+m[11]*z
 function solveGesture(start,current,view,extent,viewportWidth){
  const out={bearing:view.bearing,pitch:view.pitch,distance:view.distance,centerX:view.centerX,centerY:view.centerY};
  if(!start?.length||start.length!==current?.length)return out;
- const scale=extent/Math.max(200,viewportWidth||1);
+ const scale=Math.max(360,view.distance)*1.2/Math.max(200,viewportWidth||1);
  if(start.length===1){
   const dx=current[0].x-start[0].x,dy=current[0].y-start[0].y;
   if(start[0].shift){
@@ -48,6 +48,11 @@ function solveGesture(start,current,view,extent,viewportWidth){
   out.distance=Math.max(360,Math.min(40000,view.distance*(startWidth/nowWidth)));
  }
  return out;
+}
+// Quantized spatial levels keep the mesh stable during small zoom gestures.
+function terrainExtent(distance,aspect){
+ const span=Math.max(1200,Math.min(65536,distance*2.2*Math.max(1,Math.min(3,aspect||1))));
+ return Math.min(65536,1200*2**Math.max(0,Math.ceil(Math.log2(span/1200))));
 }
 function create(opts){const canvas=opts.canvas,overlay=opts.overlay,status=opts.status,bridge=opts.bridge;let gl=null,p=null,position=null,uv=null,index=null,tex=null,ready=false,active=false,projectMatrix=null,center={x:0,y:0,z:2},bearing=0,pitch=.86,distance=3200,extent=8000,textureFingerprint='',textured=false,geoKey='',meshPoints=[],sourceHeights=null,heightGame=null,approximateSurface=null,showCoverage=false,supportBuffer=null,lightBuffer=null,sourceError='',loadToken=0,assetUpdate=0,textureRevision=-1,lastRender=0,pointers=new Map(),gesture=null,renderQueued=false,frameVerified=false,frameReport=null,layoutObserver=null;
 function notice(message){if(status)status.textContent=hasApproximate()&&!message.startsWith('Approximate terrain')?'Approximate terrain · '+message:message}
@@ -106,7 +111,7 @@ async function setElevationBinary(buffer,g){
  ++loadToken;clearApproximateSurface();sourceHeights=heights;heightGame=String(g);sourceError='';geoKey='';notice('User-supplied heightfield active for GTA '+g+' · reconstructed 3D terrain');render();return true;
 }
 function ensureGL(){if(ready&&!gl?.isContextLost?.())return true;ready=false;try{gl=canvas.getContext('webgl',{alpha:true,antialias:true,preserveDrawingBuffer:true});if(!gl)throw Error('WebGL not supported');p=program(gl);position=gl.createBuffer();uv=gl.createBuffer();supportBuffer=gl.createBuffer();lightBuffer=gl.createBuffer();index=gl.createBuffer();tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([40,82,98,255]));ready=true;return true;}catch(e){notice('3D renderer unavailable: '+e.message);return false}}
-function updateMesh(){const num=Math.max(35,Math.min(70,Math.round(canvas.clientWidth/10))),vertices=[],uvs=[],supports=[],lights=[],indices=[];const radius=extent/2,step=extent/num;for(let r=0;r<=num;r++)for(let c=0;c<=num;c++){const dx=-radius+c*step,dz=-radius+r*step,wx=center.x+dx,wy=center.y-dz;vertices.push(dx,elevation(wx,wy)*2.1,dz);uvs.push(c/num,r/num);supports.push(hasApproximate()?approximateSurface.sample(wx,wy).coverage:3);const gx=(elevation(wx+step,wy)-elevation(wx-step,wy))*2.1/(2*step),gz=(elevation(wx,wy-step)-elevation(wx,wy+step))*2.1/(2*step),n=normalize([-gx,1,-gz]);lights.push(.65+.52*Math.max(0,dot(n,normalize([-.6,1,.45]))))}
+function updateMesh(){const num=Math.max(35,Math.min(70,Math.round(canvas.clientWidth/10))),vertices=[],uvs=[],supports=[],lights=[],indices=[];const radius=extent/2,step=extent/num;for(let r=0;r<=num;r++)for(let c=0;c<=num;c++){const dx=-radius+c*step,dz=-radius+r*step,wx=center.x+dx,wy=center.y-dz;vertices.push(dx,elevation(wx,wy)*2.1,dz);uvs.push(c/num,r/num);const bounds=approximateSurface?.bounds;supports.push(hasApproximate()?(bounds&&(wx<bounds[0]||wy<bounds[1]||wx>bounds[2]||wy>bounds[3])?4:approximateSurface.sample(wx,wy).coverage):3);const gx=(elevation(wx+step,wy)-elevation(wx-step,wy))*2.1/(2*step),gz=(elevation(wx,wy-step)-elevation(wx,wy+step))*2.1/(2*step),n=normalize([-gx,1,-gz]);lights.push(.65+.52*Math.max(0,dot(n,normalize([-.6,1,.45]))))}
  for(let r=0;r<num;r++)for(let c=0;c<num;c++){const i=r*(num+1)+c;indices.push(i,i+num+1,i+1,i+1,i+num+1,i+num+2)}
  gl.bindBuffer(gl.ARRAY_BUFFER,position);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(vertices),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,uv);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(uvs),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,supportBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(supports),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,lightBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(lights),gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices),gl.STATIC_DRAW);meshPoints=indices;}
 function updateTexture(){
@@ -124,7 +129,29 @@ function updateTexture(){
   notice((hasApproximate()?'Approximate terrain':'3D terrain')+(complete?' · map imagery active':' · partial map imagery'));
  }catch(e){textured=false;document.body.classList.remove('jura-3d-texture-pending');notice('3D terrain · map imagery unavailable; relief colors shown')}
 }
-function sync(){const c=bridge.camera();center={x:c.x,y:c.y,z:c.z};extent=Math.max(1200,Math.min(26000,Math.pow(2,3.2-c.z)*5700));distance=extent*.92;pitch=.83;bearing=0;geoKey='';textureFingerprint='';}
+function sync(){const c=bridge.camera();center={x:c.x,y:c.y,z:c.z};distance=Math.max(360,Math.min(40000,Math.pow(2,3.2-c.z)*5700*.92));pitch=.83;bearing=0;geoKey='';textureFingerprint='';}
+function fit(){
+ if(!active)return;
+ const bounds=approximateSurface?.bounds||(String(bridge.game())==='6'?[-13325.582,-9723.834,5126.534,11276.716]:[-4550,-4750,4800,8150]);
+ const [west,south,east,north]=bounds;
+ center={x:(west+east)/2,y:(south+north)/2,z:0};bearing=0;pitch=1.29;
+ const aspect=Math.max(.2,canvas.clientWidth/Math.max(1,canvas.clientHeight));
+ const spanX=east-west,spanY=north-south;
+ distance=Math.min(40000,Math.max(spanX/aspect,spanY)*1.05+spanY*.16);
+ geoKey='';textureFingerprint='';render();
+}
+function updateCompass(){
+ const button=document.getElementById('j371-compass'),needle=document.getElementById('j371-needle');
+ if(!button||!needle)return;
+ const deg=((bearing*180/Math.PI)%360+360)%360;
+ needle.style.transform='rotate('+(-deg)+'deg)';
+ button.title='Heading '+Math.round(deg)+'° · reset north';
+}
+function constrainCenter(){
+ if(!hasApproximate())return;
+ const [w,s,e,n]=approximateSurface.bounds;
+ center.x=Math.max(w,Math.min(e,center.x));center.y=Math.max(s,Math.min(n,center.y));
+}
 function matrix(){return cameraMatrix(bearing,pitch,distance,canvas.width,canvas.height)}
 function project(x,y){if(!projectMatrix)return null;const pos=[x-center.x,elevation(x,y)*2.1+22,center.y-y],coords=clipPoint(projectMatrix,pos);if(!coords||Math.abs(coords[0])>1.4||Math.abs(coords[1])>1.4)return null;return{x:(coords[0]+1)*canvas.clientWidth/2,y:(1-coords[1])*canvas.clientHeight/2}}
 function drawOverlays(){if(!overlay)return;overlay.replaceChildren();const places=bridge.places().filter(r=>Math.abs(r.x-center.x)<extent*.4&&Math.abs(r.y-center.y)<extent*.4).slice(0,1200),route=bridge.route(),points=[];
@@ -133,8 +160,9 @@ function drawOverlays(){if(!overlay)return;overlay.replaceChildren();const place
  }
 function render(){if(!active||!ensureGL()||canvas.clientWidth<2||canvas.clientHeight<2){frameReport={reason:'canvas not laid out',clientWidth:canvas.clientWidth,clientHeight:canvas.clientHeight};return false;}const dpr=Math.min(2,devicePixelRatio||1),w=Math.max(1,Math.round(canvas.clientWidth*dpr)),h=Math.max(1,Math.round(canvas.clientHeight*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;geoKey=''}
  gl.viewport(0,0,w,h);gl.colorMask(true,true,true,true);gl.depthMask(true);gl.disable(gl.CULL_FACE);gl.disable(gl.SCISSOR_TEST);gl.disable(gl.BLEND);gl.clearColor(.095,.19,.23,0);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
+ extent=terrainExtent(distance,canvas.clientWidth/Math.max(1,canvas.clientHeight));updateCompass();
  const key=[center.x.toFixed(1),center.y.toFixed(1),extent.toFixed(1),!!sourceHeights,hasApproximate()].join(':');if(key!==geoKey){updateMesh();geoKey=key;textureFingerprint=''}
- const now=Date.now();const revision=bridge.textureRevision?.()??0;if(!textureFingerprint||revision!==textureRevision||now-assetUpdate>2200){updateTexture();textureFingerprint=key;assetUpdate=now;textureRevision=revision}
+ const now=Date.now();const revision=bridge.textureRevision?.()??0;if(!textureFingerprint||revision!==textureRevision){updateTexture();textureFingerprint=key;assetUpdate=now;textureRevision=revision}
  projectMatrix=matrix();gl.useProgram(p);gl.uniformMatrix4fv(gl.getUniformLocation(p,'uMVP'),false,projectMatrix);gl.uniform1f(gl.getUniformLocation(p,'uMapped'),textured?1:0);gl.uniform1f(gl.getUniformLocation(p,'uShade'),1);gl.uniform1f(gl.getUniformLocation(p,'uCoverage'),showCoverage&&hasApproximate()?1:0);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(gl.getUniformLocation(p,'uMap'),0);
  gl.bindBuffer(gl.ARRAY_BUFFER,position);const aPos=gl.getAttribLocation(p,'aPos');gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,uv);const aUV=gl.getAttribLocation(p,'aUV');gl.enableVertexAttribArray(aUV);gl.vertexAttribPointer(aUV,2,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,supportBuffer);const aSupport=gl.getAttribLocation(p,'aSupport');gl.enableVertexAttribArray(aSupport);gl.vertexAttribPointer(aSupport,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,lightBuffer);const aLight=gl.getAttribLocation(p,'aLight');gl.enableVertexAttribArray(aLight);gl.vertexAttribPointer(aLight,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,index);gl.drawElements(gl.TRIANGLES,meshPoints.length,gl.UNSIGNED_SHORT,0);try{drawOverlays()}catch(e){console.warn('Atlas terrain overlay:',e.message)}return true;}
 // A successful GL context or texture upload alone does not prove a frame.
@@ -184,7 +212,7 @@ function activate(){if(!hasElevation()&&!hasApproximate()){notice('No elevation 
 function deactivate(){active=false;frameVerified=false;clearApproximateSurface();pointers.clear();gesture=null;if(canvas.style)canvas.style.touchAction='';loadToken++;document.body.classList.remove('jura-3d-texture-pending');canvas.hidden=true;if(overlay){overlay.hidden=true;overlay.replaceChildren()}notice('2D map view');}
 function rebase(){if(!active)return;if(!hasElevation()&&!hasApproximate()){sourceHeights=null;deactivate();notice('3D terrain is not available for this world');return}textured=false;document.body.classList.add('jura-3d-texture-pending');sync();render()}
 function refreshTexture(){if(!active)return;textureFingerprint='';textured=false;render()}
-function zoom(factor){distance=Math.max(360,Math.min(40000,distance*factor));render()}
+function zoom(factor){distance=Math.max(360,Math.min(40000,distance*factor));queueRender()}
 function beginGesture(){
  const points=[...pointers.values()].map(p=>({...p}));
  gesture=points.length?{points,view:{bearing,pitch,distance,centerX:center.x,centerY:center.y}}:null;
@@ -213,7 +241,7 @@ canvas.addEventListener('pointermove',e=>{
  const next=solveGesture(gesture.points,[...pointers.values()],gesture.view,extent,canvas.clientWidth);
  if(next.centerX!==center.x||next.centerY!==center.y){geoKey='';textureFingerprint=''}
  bearing=next.bearing;pitch=next.pitch;distance=next.distance;
- center.x=next.centerX;center.y=next.centerY;
+ center.x=next.centerX;center.y=next.centerY;constrainCenter();
  queueRender();
 });
 const release=e=>{if(pointers.delete(e.pointerId))beginGesture()};
@@ -221,7 +249,7 @@ canvas.addEventListener('pointerup',release);
 canvas.addEventListener('pointercancel',release);
 canvas.addEventListener('lostpointercapture',release);
 canvas.addEventListener('wheel',e=>{if(!active)return;e.preventDefault();zoom(e.deltaY>0?1.17:.85)},{passive:false});
-return{activate,deactivate,rebase,refreshTexture,render,zoom,prepareElevation,setElevationBinary,hasApproximate,setApproximateSurface,clearApproximateSurface,setCoverageVisible,getCoverageVisible:()=>showCoverage,resetNorth(){bearing=0;pitch=.86;render()},isActive:()=>active,hasElevation,getError:()=>sourceError,hasMapTexture:()=>textured,hasVisibleFrame:()=>frameVerified,verifyFrame,getFrameReport:()=>frameReport,getView:()=>({bearing,pitch,distance,center:{...center}})};
+return{activate,deactivate,rebase,refreshTexture,render,zoom,fit,prepareElevation,setElevationBinary,hasApproximate,setApproximateSurface,clearApproximateSurface,setCoverageVisible,getCoverageVisible:()=>showCoverage,resetNorth(){bearing=0;pitch=.86;queueRender()},isActive:()=>active,hasElevation,getError:()=>sourceError,hasMapTexture:()=>textured,hasVisibleFrame:()=>frameVerified,verifyFrame,getFrameReport:()=>frameReport,getView:()=>({bearing,pitch,distance,extent,center:{...center}})};
 }
 root.JuraTerrain3D=Object.freeze({create,ELEVATIONS,solveGesture,cameraMatrix});
 })(typeof window!=='undefined'?window:globalThis);

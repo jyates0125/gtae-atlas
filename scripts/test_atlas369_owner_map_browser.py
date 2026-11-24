@@ -117,7 +117,19 @@ try:
    page.mouse.up()
    page.wait_for_function("(b)=>Math.abs(teamJuraNav.terrain().getView().bearing-b)>.2",arg=before['bearing'])
    assert page.evaluate('teamJuraNav.terrain().verifyFrame()'), 'Rotating produced a blank frame'
-   after=page.evaluate('teamJuraNav.terrain().getView()')
+   expect(page.locator('#j371-compass')).to_be_visible()
+   page.locator('#j371-compass').click()
+   page.wait_for_function('teamJuraNav.terrain().getView().bearing===0')
+   page.evaluate('teamJuraNav.terrain().zoom(.1)')
+   page.wait_for_timeout(300)
+   near=page.evaluate('teamJuraNav.terrain().getView()')
+   page.evaluate('teamJuraNav.terrain().zoom(10)')
+   page.wait_for_function('(near)=>teamJuraNav.terrain().getView().extent>near',arg=near['extent'])
+   page.locator('#resetView').click()
+   fitted=page.evaluate('teamJuraNav.terrain().getView()')
+   assert fitted['bearing']==0 and fitted['distance']>15000 and abs(fitted['center']['x']+4099.5243)<1, fitted
+   assert page.evaluate('teamJuraNav.terrain().verifyFrame()'), 'Whole-world Fit produced a blank frame'
+   after=fitted
    page.locator('#layer').select_option('day')
    assert page.evaluate('teamJuraNav.terrain().isActive()')
    assert page.evaluate('teamJuraNav.terrain().getView()')==after,'Style change reset 3D camera'
