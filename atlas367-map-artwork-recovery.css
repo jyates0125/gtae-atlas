@@ -1,0 +1,20 @@
+/* Atlas 36.7: accessible in-place tile recovery only when failed map
+ * artwork actually exists. Keeps GTADB credits and navigation unobscured.
+ */
+.atlas-tile-health.atlas-retry-available{
+ pointer-events:auto;
+ max-width:min(290px,calc(100% - 24px));
+}
+.atlas-tile-health #retryMapArtwork[hidden]{display:none!important}
+.atlas-tile-health #retryMapArtwork{
+ display:inline-flex;align-items:center;justify-content:center;
+ margin:5px 0 0 0;min-height:44px;padding:6px 12px;
+ color:#fff3d5;background:#58335e;border:1px solid #e7bc74;
+ border-radius:8px;font:600 12px/1.2 system-ui,sans-serif;
+ white-space:normal;cursor:pointer;
+}
+.atlas-tile-health #retryMapArtwork:hover{background:#774370}
+.atlas-tile-health #retryMapArtwork:focus-visible{outline:3px solid #ffe29a;outline-offset:2px}
+@media (max-width:700px){
+ .atlas-tile-health.atlas-retry-available{max-width:min(240px,calc(100% - 20px))}
+}

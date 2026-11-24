@@ -7,6 +7,7 @@
 <meta name="description" content="Explore the interactive GTA VI Leonida map with Scaly and Loki community layers, a separate Rockstar official poster view, and connected VI characters, vehicles, weapons and research. Community pins remain provisional.">
 <title>GTA VI Leonida Interactive World Map · Team Jura Atlas | Elario Studios</title><link rel="canonical" href="https://gtae-online.pages.dev/atlas-vi.html"><meta property="og:type" content="website"><meta property="og:site_name" content="Elario Studios · Team Jura Atlas"><meta property="og:url" content="https://gtae-online.pages.dev/atlas-vi.html"><meta property="og:title" content="GTA VI Leonida Interactive World Map · Team Jura Atlas | Elario Studios"><meta property="og:description" content="Explore the interactive GTA VI Leonida map with Scaly and Loki community layers, a separate Rockstar official poster view, and connected VI characters, vehicles, weapons and research. Community pins remain provisional."><meta property="og:image" content="https://gtae-online.pages.dev/art/jura155-vi.webp"><meta property="og:image:alt" content="Original Elario Leonida research world illustration"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="GTA VI Leonida Interactive World Map · Team Jura Atlas | Elario Studios"><meta name="twitter:description" content="Explore the interactive GTA VI Leonida map with Scaly and Loki community layers, a separate Rockstar official poster view, and connected VI characters, vehicles, weapons and research. Community pins remain provisional."><meta name="twitter:image" content="https://gtae-online.pages.dev/art/jura155-vi.webp">
 <link rel="stylesheet" href="./atlas.css?v=70">
+<link rel="stylesheet" href="./atlas367-map-artwork-recovery.css?v=367">
 <script defer src="./atlas-intelligence.js?v=70"></script>
 <script defer src="./atlas-sources.js?v=70"></script>
 <script defer src="./atlas-route-core.js?v=70"></script>
@@ -16,7 +17,8 @@
 <script defer src="./atlas363-elevation-probe.js?v=363"></script>
 <script defer src="./atlas-navigation.js?v=366"></script>
 <script defer src="./atlas-conditions.js?v=70"></script>
-<script defer src="./atlas.js?v=290"></script>
+<script defer src="./atlas367-tile-recovery.js?v=367"></script>
+<script defer src="./atlas.js?v=367"></script>
 <script defer src="./atlas290-vi-source-ledger.js?v=290"></script>
 
 <link rel="stylesheet" href="./atlas290-vi-source-ledger.css?v=290">
@@ -245,7 +247,7 @@
     <div class="jura-quick-nav" role="group" aria-label="Map and navigation shortcuts"><button type="button" id="quickDirections">↗ Directions</button><button type="button" id="quickPhotos">▣ Source photos</button><button type="button" id="quickMap">▧ 2D overview</button><button type="button" id="threeDReference" title="Interactive WebGL terrain view (elevation availability depends on source)">▨ 3D terrain</button></div>
     <div class="map-actions"><button id="togglePins" type="button" aria-pressed="false">📍 Pins off</button><button id="mobileTools" type="button">☰ Find places</button><button id="original" type="button">Source ↗</button></div>
     <div class="selected-card hidden" id="selectedCard" role="region" aria-label="Selected map location"><button class="close" id="closeSelected" type="button" aria-label="Close marker detail">×</button><b id="selectedName"></b><small id="selectedInfo"></small><p id="selectedAddress" class="atlas-selected-address"></p><figure id="selectedPhotoFigure" class="selected-photo" hidden><img id="selectedPhoto" loading="eager" decoding="async" alt=""><figcaption>GTADB.org contributors · in-game source photo · CC BY 4.0</figcaption></figure><div class="selected-actions"><button type="button" id="selectedFound">Mark found</button><button type="button" id="selectedRoute">+ Route</button><button type="button" id="selectedStart">◎ Start here</button><button type="button" id="selectedNavigate">↗ Navigate</button><a id="selectedSource" class="hidden" target="_blank" rel="noopener noreferrer" href="#">Source ↗</a><button type="button" id="shareSelected" title="Copy link to this GTADB landmark">Share</button></div></div>
-    <div class="atlas-tile-health" id="tileHealth" role="status">Preparing artwork…</div>
+    <div class="atlas-tile-health" id="tileHealth" role="status"><span id="tileHealthText">Preparing artwork…</span><button id="retryMapArtwork" type="button" hidden aria-label="Retry failed map artwork">↻ Retry artwork</button></div>
     <div class="map-status" id="mapStatus" role="status">Preparing licensed map…</div>
     <div class="credits-line" aria-label="Map source attribution"><span class="j364-credit-prefix">Map:</span> <a href="https://map.gtadb.org/" target="_blank" rel="noopener noreferrer">GTADB.org</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> · <a href="./atlas-credits.html#licensed">Sources &amp; changes</a><span id="j364MapViewCredit" class="j364-map-source-view"></span></div>
   </main>

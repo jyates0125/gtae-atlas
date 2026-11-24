@@ -17,10 +17,14 @@ assert "Rockstar's separate official printable poster view" in vi
 assert 'GTADB GTA VI in-game Day tile family' in credits
 assert 'Rockstar/Take-Two intellectual property' in credits
 assert "LICENSE-DATA" in credits and 'creativecommons.org/licenses/by/4.0/' in credits
+map_versions=set()
 for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
     html=(R/page).read_text(encoding='utf-8')
-    assert 'atlas.js?v=290' in html, (page,'stale map engine')
-    assert html.count('atlas.js?v=290')==1,page
+    matches=re.findall(r'<script defer src="\./atlas\.js\?v=(\d+)"></script>',html)
+    assert len(matches)==1,(page,'map engine must be loaded exactly once',matches)
+    assert int(matches[0])>=290,(page,'stale map engine',matches[0])
+    map_versions.add(matches[0])
+assert len(map_versions)==1,('All three maps must use the same engine cache version',map_versions)
 assert 'atlas-sw.js?v=290' in engine
 assert "const LAYERS=" in engine and "'5':[['radar','In-game radar']" in engine
 assert "SHELL='team-jura-atlas-v290-shell'" in (R/'atlas-sw.js').read_text(encoding='utf-8')
