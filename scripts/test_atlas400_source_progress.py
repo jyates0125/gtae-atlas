@@ -74,6 +74,44 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
                 assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
                 peer.close()
                 print('PASS',width,scope)
+            if width==390:
+                # A quota-failed local edit must not discard another tab's later saved mark.
+                game,scope,rev,root,first,second=cases[0]
+                key='team-jura-source-progress-v1:'+scope+':'+rev
+                page.evaluate('v=>localStorage.setItem(v.key,v.raw)',{'key':key,'raw':payload(scope,rev,[])})
+                host=prepare(page,game,root)
+                panel=host.locator('.j271-source-progress')
+                page.evaluate("""k=>{
+                    const original=Storage.prototype.setItem;
+                    window.restoreSourceSetItem=()=>Storage.prototype.setItem=original;
+                    Storage.prototype.setItem=function(key,value){
+                      if(key===k)throw new DOMException('Simulated quota','QuotaExceededError');
+                      return original.call(this,key,value);
+                    };
+                }""",key)
+                host.locator('li[data-id="'+first+'"] .j271-mark').click()
+                expect(panel.get_by_role('status')).to_contain_text('Storage unavailable')
+                assert page.evaluate('k=>JSON.parse(localStorage.getItem(k)).done',key)==[]
+                peer=context.new_page()
+                peer.goto(base+'maps.html',wait_until='domcontentloaded')
+                peer.evaluate('v=>localStorage.setItem(v.key,v.raw)',{'key':key,'raw':payload(scope,rev,[second])})
+                expect(host.locator('li[data-id="'+second+'"] .j271-mark')).to_have_attribute('aria-pressed','true')
+                with page.expect_download() as info:
+                    panel.get_by_role('button',name='Export source progress',exact=True).click()
+                assert set(json.loads(Path(info.value.path()).read_text())['done'])=={first,second}
+                page.evaluate('window.restoreSourceSetItem()')
+                third='iii-package-3'
+                host.locator('li[data-id="'+third+'"] .j271-mark').click()
+                assert set(page.evaluate('k=>JSON.parse(localStorage.getItem(k)).done',key))=={first,second,third}
+                before=page.evaluate('k=>localStorage.getItem(k)',key)
+                panel.locator('input[type=file]').set_input_files({'name':'wrong-world.json','mimeType':'application/json','buffer':payload('vc-classic',rev,[first]).encode()})
+                expect(panel.get_by_role('status')).to_contain_text('Restore refused')
+                assert page.evaluate('k=>localStorage.getItem(k)',key)==before
+                panel.locator('input[type=file]').set_input_files({'name':'valid.json','mimeType':'application/json','buffer':payload(scope,rev,['iii-package-4']).encode()})
+                expect(panel.get_by_role('status')).to_contain_text('1 source objective(s) added')
+                assert set(page.evaluate('k=>JSON.parse(localStorage.getItem(k)).done',key))=={first,second,third,'iii-package-4'}
+                peer.close()
+                print('PASS quota-failed pending delta, peer edit, independent export and merge-only import')
             context.close()
         browser.close()
     server.shutdown()
