@@ -1,5 +1,5 @@
 /* Atlas 29.9 · one-device heist bundle, safe append-only import.
- * Keep original three progress key families. No network requests or sign-in.
+ * Keep original four progress key families, including the optional v1 intel extension. No network requests or sign-in.
  */
 (()=>{'use strict';
 const id=String(document.body?.dataset?.heist||'');
@@ -9,14 +9,15 @@ const LABEL='teamjura-heist-bundle-v1';
 const keys={
  checklist:'teamjura-heist-'+id,
  notes:'teamjura-heist-plan-v1:'+id,
- focus:'teamjura-heist-focus-v1:'+id
+ focus:'teamjura-heist-focus-v1:'+id,
+ intel:'team-jura-atlas93-heist-intel-heist-'+id+'.html'
 };
 const stepIds=new Set([...document.querySelectorAll('[data-step]')].map(x=>x.dataset.step).filter(x=>typeof x==='string'&&x.length>0&&x.length<=120));
 const NOTE_FIELDS=['approach','entry','exit','poi','crew'];
 const make=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e};
 const section=make('section','j299-heist-backup');section.id='j299-heist-backup';
 const title=make('h3','','Your heist backup');
-const intro=make('p','','Save this mission’s checklist, planning notes and route together. The file stays on your device until you choose where to save it.');
+const intro=make('p','','Save this mission’s checklist, planning notes, intel and route together. The file stays on your device until you choose where to save it.');
 const actions=make('div','j299-actions');
 const exportButton=make('button','j299-export','Download complete mission backup');exportButton.type='button';
 const restore=make('label','j299-restore');
@@ -24,7 +25,7 @@ const restoreText=make('span','','Restore missing mission progress');
 const file=make('input');file.type='file';file.accept='.json,application/json';file.setAttribute('aria-label','Choose one Team Jura heist backup to restore');
 restore.append(restoreText,file);
 actions.append(exportButton,restore);
-const note=make('p','j299-status','Existing notes, completed steps and selected route remain yours. Imports only add missing progress.');
+const note=make('p','j299-status','Existing notes, intel, completed steps and selected route remain yours. Imports only add missing progress.');
 note.setAttribute('role','status');note.setAttribute('aria-live','polite');
 section.append(title,intro,actions,note);panel.append(section);
 const object=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
@@ -36,8 +37,28 @@ function read(key){
  if(!object(value))throw Error('Existing guest progress has an unsupported shape; nothing was overwritten.');
  return {raw,value};
 }
-function state(){
- return {checklist:read(keys.checklist),notes:read(keys.notes),focus:read(keys.focus)};
+function validIntel(notes){
+ return Array.isArray(notes)&&notes.length<=40&&notes.every(n=>object(n)&&typeof n.label==='string'&&n.label.trim()&&n.label.length<=90);
+}
+function readIntel(){
+ const raw=localStorage.getItem(keys.intel);
+ if(raw===null)return {raw,value:[]};
+ let value;
+ try{value=JSON.parse(raw)}catch{throw Error('Existing intel is unreadable; download its recovery file in the intel ledger first.')}
+ if(!validIntel(value))throw Error('Existing intel has an unsupported shape; recover it in the intel ledger first.');
+ return {raw,value};
+}
+function state(withIntel=false){
+ const saved={checklist:read(keys.checklist),notes:read(keys.notes),focus:read(keys.focus)};
+ if(withIntel)saved.intel=readIntel();
+ return saved;
+}
+// Canonicalize object key order for exact-record deduplication; existing records and
+// distinct entries with different dates or metadata are retained, not rewritten.
+function canonical(value){
+ if(Array.isArray(value))return '['+value.map(canonical).join(',')+']';
+ if(object(value))return '{'+Object.keys(value).sort().map(k=>JSON.stringify(k)+':'+canonical(value[k])).join(',')+'}';
+ return JSON.stringify(value);
 }
 const unique=(list,pattern,limit=100)=>{
  if(!Array.isArray(list))return [];
@@ -53,16 +74,18 @@ const marker=/^m\d{1,3}$/;
 const award=/^[\w: -]{1,120}$/;
 function exportBundle(){
  try{
-  const saved=state();
+  const saved=state(true);
   const steps=Object.fromEntries([...stepIds].filter(k=>saved.checklist.value[k]===true).map(k=>[k,true]));
   const notes=Object.fromEntries(NOTE_FIELDS.filter(k=>typeof saved.notes.value[k]==='string'&&saved.notes.value[k].trim()).map(k=>[k,saved.notes.value[k].slice(0,700)]));
   const f=saved.focus.value;
   const payload={
    schema:LABEL,heist:id,createdAt:new Date().toISOString(),
-   checklist:steps,notes,
+   checklist:steps,notes,intel:saved.intel.value,
    focus:{scoped:unique(f.scoped,marker),route:unique(f.route,marker),awards:unique(f.awards,award)}
   };
-  const uri=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  if(blob.size>150000)throw Error('Mission backup exceeds the 150 KB restore limit. Use the individual progress recovery tools.');
+  const uri=URL.createObjectURL(blob);
   const a=make('a');a.href=uri;a.download='team-jura-'+id+'-complete-backup.json';document.body.append(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(uri),1000);
   note.textContent='Mission backup exported. It contains only this heist’s device progress.';
@@ -77,7 +100,9 @@ async function importBundle(selected){
  if(!object(incoming)||incoming.schema!==LABEL||incoming.heist!==id||
    !object(incoming.checklist)||!object(incoming.notes)||!object(incoming.focus))
   throw Error('This is not a compatible backup for this exact heist.');
- const originals=state();
+ const hasIntel=Object.prototype.hasOwnProperty.call(incoming,'intel');
+ if(hasIntel&&!validIntel(incoming.intel))throw Error('Invalid intel records; no progress was changed.');
+ const originals=state(hasIntel);
  const steps={...originals.checklist.value};
  const notes={...originals.notes.value};
  const focus={...originals.focus.value};
@@ -101,6 +126,17 @@ async function importBundle(selected){
  const mergedRoute=oldRoute.length?oldRoute:incomingRoute;
  added+=Math.max(0,mergedScoped.length-oldScoped.length)+Math.max(0,mergedAwards.length-oldAwards.length);
  if(!oldRoute.length&&mergedRoute.length)added+=mergedRoute.length;
+ let mergedIntel;
+ if(hasIntel){
+  mergedIntel=originals.intel.value.slice();
+  const seen=new Set(mergedIntel.map(canonical));
+  for(const item of incoming.intel){
+   const identity=canonical(item);
+   if(seen.has(identity))continue;
+   if(mergedIntel.length>=40)throw Error('Intel capacity would exceed 40 notes. Nothing was changed.');
+   seen.add(identity);mergedIntel.push(item);added++;
+  }
+ }
  if(!added){note.textContent='No missing progress found. Your existing mission save was preserved.';return}
  const changed={};
  if([...stepIds].some(k=>steps[k]!==originals.checklist.value[k]))changed.checklist=JSON.stringify(steps);
@@ -109,8 +145,9 @@ async function importBundle(selected){
  if(mergedScoped.length!==oldScoped.length||mergedAwards.length!==oldAwards.length||
     (!oldRoute.length&&mergedRoute.length))
   changed.focus=JSON.stringify({...focus,schema:1,scoped:mergedScoped,route:mergedRoute,awards:mergedAwards,updatedAt:new Date().toISOString()});
+ if(hasIntel&&mergedIntel.length!==originals.intel.value.length)changed.intel=JSON.stringify(mergedIntel);
  // Another tab may write while the uploaded file is read. Never overwrite those edits.
- for(const field of Object.keys(keys))if(localStorage.getItem(keys[field])!==originals[field].raw)
+ for(const field of Object.keys(originals))if(localStorage.getItem(keys[field])!==originals[field].raw)
   throw Error('Mission progress changed while importing. Nothing was overwritten; try again.');
  const applied=[];
  try{
@@ -120,7 +157,8 @@ async function importBundle(selected){
  }catch{
   // Local storage is not transactional. Best-effort rollback of only keys we touched.
   for(const field of applied.reverse()){
-   try{const previous=originals[field].raw;
+   try{if(localStorage.getItem(keys[field])!==changed[field])continue;
+    const previous=originals[field].raw;
     if(previous===null)localStorage.removeItem(keys[field]);
     else localStorage.setItem(keys[field],previous);
    }catch{}
