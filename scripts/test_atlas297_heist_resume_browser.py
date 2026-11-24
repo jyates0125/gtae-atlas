@@ -93,8 +93,13 @@ try:
      check.check()
      assert page.evaluate("(id)=>Object.values(JSON.parse(localStorage.getItem('teamjura-heist-'+id))).some(x=>x===true)",heist)
      text=page.locator('.j164-field textarea').first
-     text.fill('Personal test route')
-     assert page.evaluate("(id)=>JSON.parse(localStorage.getItem('teamjura-heist-plan-v1:'+id)).approach",heist)=='Personal test route'
+     if heist=='diamond-casino':
+      # The seeded corrupt notes must stay read-only; unrelated route/checklist edits remain usable.
+      expect(text).to_be_disabled()
+      assert page.evaluate("localStorage.getItem('teamjura-heist-plan-v1:diamond-casino')")=='{not json'
+     else:
+      text.fill('Personal test route')
+      assert page.evaluate("(id)=>JSON.parse(localStorage.getItem('teamjura-heist-plan-v1:'+id)).approach",heist)=='Personal test route'
      page.locator('#j169-views [data-view="objective"]').click()
      expect(page.locator('#j169-objective')).to_be_visible()
      expect(page.locator('.j169-objective-card').first).to_be_visible()
@@ -108,7 +113,11 @@ try:
      expect(load).to_have_attribute('aria-expanded','false')
      assert page.locator('#j164-map-frame').is_hidden()
      page.reload(wait_until='domcontentloaded')
-     expect(page.locator('.j164-field textarea').first).to_have_value('Personal test route',timeout=15000)
+     if heist=='diamond-casino':
+      expect(page.locator('.j164-field textarea').first).to_be_disabled(timeout=15000)
+      assert page.evaluate("localStorage.getItem('teamjura-heist-plan-v1:diamond-casino')")=='{not json'
+     else:
+      expect(page.locator('.j164-field textarea').first).to_have_value('Personal test route',timeout=15000)
      expect(page.locator('input[data-step]').first).to_be_checked()
      saved=page.evaluate("(id)=>JSON.parse(localStorage.getItem('teamjura-heist-focus-v1:'+id))",heist)
      assert len(saved['route'])==(2 if heist=='kortz-center' else 1),(heist,saved)
