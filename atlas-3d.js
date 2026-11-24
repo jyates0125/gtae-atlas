@@ -137,8 +137,7 @@ function verifyFrame(){
  }
  return hits>=2&&gl.getError()===gl.NO_ERROR;
 }
-function activate(){
- if(!hasElevation()&&!hasApproximate()){notice('No elevation data available for true 3D');return false}
+function activate(){if(!hasElevation()&&!hasApproximate()){notice('No elevation data available for true 3D');return false}
  if(!ensureGL())return false;
  // The fallback rule uses display:none!important on this canvas. Remove it
  // BEFORE reading clientWidth/clientHeight and drawing. Keep the 2D backing
