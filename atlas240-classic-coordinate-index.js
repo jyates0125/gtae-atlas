@@ -25,8 +25,7 @@ const all=E('button','Show all categories'),none=E('button','Hide all categories
 const legendRows=E('div');legendRows.className='j402-legend-rows';legend.append(legendActions,legendRows);
 const activeCats=new Set(),legendInputs=new Map();
 const list=E('ol');list.id='j240-rows';
-const source=E('a','Original source and author ↗');source.href=config.source;source.target='_blank';source.rel='noopener noreferrer';
-root.append(heading,note,status,controls,legend,list,source);target.after(root);
+root.append(heading,note,status,controls,legend,list);target.after(root);
 let rows=[],planned=[],selectedId='',progress=null,selectedRecord=null;
 const viewport=document.getElementById('classicViewport'),surface=document.getElementById('classicMapSurface');
 const projected=E('div');projected.id='j241-source-pins';projected.className='j241-source-pins';
@@ -38,7 +37,7 @@ let enabled=true;
 function compatible(){return viewport.dataset.mapImage==='game-original'&&viewport.dataset.sourceImage===config.image&&viewport.dataset.sourceWidth==='1024'&&viewport.dataset.sourceHeight==='1024'}
 function selectRecord(r){
  selectedId=r.id;selectedRecord=r;detail.hidden=false;detail.replaceChildren(E('strong',r.name),E('p','World X '+r.x.toFixed(3)+' · Y '+r.y.toFixed(3)+' · Z '+formatZ(r.z)+(config.kind==='landmarks'?' · source teleport approach, not a verified entrance.':' · source reference, not individually gameplay verified.')));
- const link=E('a','Coordinate source ↗');link.href=r.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';const close=E('button','Close detail');close.type='button';close.onclick=()=>{selectedId='';selectedRecord=null;detail.hidden=true;drawMap()};detail.append(link);if(progress)detail.append(progress.button(r));detail.append(close);drawMap();
+ const close=E('button','Close detail');close.type='button';close.onclick=()=>{selectedId='';selectedRecord=null;detail.hidden=true;drawMap()};if(progress)detail.append(progress.button(r));detail.append(close);drawMap();
 }
 function drawMap(){
  projected.replaceChildren();
@@ -87,10 +86,10 @@ order.onclick=()=>{
  status.textContent=planned.length+' reference stops · '+(alternateSpawns?'one candidate spawn per objective; confirm the active spawn. ':'')+(improved?.improved?'shorter geometric order; ':'nearest-next order retained; ')+'not road directions.';
  drawMap();
 };
-exportButton.onclick=()=>{if(!planned.length)return;const blob=new Blob([JSON.stringify({schema:1,world:config.world,kind:config.kind==='landmarks'?'landmark-approach-preview':'sourced-coordinate-preview',sourceUrl:source.href,route:planned.map(({id,x,y,z})=>({id,x,y,z}))},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+config.world+(config.kind==='landmarks'?'-landmarks':'')+'-reference-route.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)};
+exportButton.onclick=()=>{if(!planned.length)return;const blob=new Blob([JSON.stringify({schema:1,world:config.world,kind:config.kind==='landmarks'?'landmark-approach-preview':'sourced-coordinate-preview',sourceUrl:config.source,route:planned.map(({id,x,y,z})=>({id,x,y,z}))},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+config.world+(config.kind==='landmarks'?'-landmarks':'')+'-reference-route.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)};
 function loadConfig(next){
  if(progress?.hasUnsaved()){mode.value=config.kind==='landmarks'?'landmarks':'collectibles';status.textContent='Unsaved working progress. Export before leaving this layer.';return}
- const load=++generation;progress?.dispose();progress=null;config=next;rows=[];planned=[];selectedId='';selectedRecord=null;detail.hidden=true;cat.replaceChildren();activeCats.clear();legendInputs.clear();legendRows.replaceChildren();all.disabled=none.disabled=true;start.replaceChildren();list.replaceChildren();q.value='';cat.disabled=q.disabled=start.disabled=true;order.disabled=exportButton.disabled=true;heading.textContent=config.name+(config.kind==='landmarks'?' · landmarks and services':' · sourced map locations');note.textContent=config.kind==='landmarks'?'MIT-licensed named teleport approach references on the matched original radar. These are not collectible spawns, exact entrances or verified gameplay positions. Visited progress is separate.':'Game-script reference positions projected using the original radar publisher’s documented coordinates. Only the matching original image displays source markers. Source numbering differs from guide checklists. Geometric routes are not street navigation or gameplay verification.';source.href=config.source;source.textContent=config.kind==='landmarks'?'Vortrex / MIT source and author ↗':'Original source and author ↗';status.textContent='Loading locally bundled source…';drawMap();
+ const load=++generation;progress?.dispose();progress=null;config=next;rows=[];planned=[];selectedId='';selectedRecord=null;detail.hidden=true;cat.replaceChildren();activeCats.clear();legendInputs.clear();legendRows.replaceChildren();all.disabled=none.disabled=true;start.replaceChildren();list.replaceChildren();q.value='';cat.disabled=q.disabled=start.disabled=true;order.disabled=exportButton.disabled=true;heading.textContent=config.name+(config.kind==='landmarks'?' · landmarks and services':' · sourced map locations');note.textContent=config.kind==='landmarks'?'MIT-licensed named teleport approach references on the matched original radar. These are not collectible spawns, exact entrances or verified gameplay positions. Visited progress is separate.':'Game-script reference positions projected using the original radar publisher’s documented coordinates. Only the matching original image displays source markers. Source numbering differs from guide checklists. Geometric routes are not street navigation or gameplay verification.';status.textContent='Loading locally bundled source…';drawMap();
  fetch(config.file).then(r=>{if(!r.ok)throw Error('source unavailable');return r.json()}).then(d=>{
  if(load!==generation)return;
  const seen=new Set();

@@ -16,8 +16,8 @@ const download=E('button','Export DE route');download.type='button';download.dis
 controls.append(cat,q,start,plan,download);
 const status=E('p','Loading attributed references…');status.id='j244-status';status.setAttribute('role','status');
 const list=E('ol');list.id='j244-results';
-const link=E('a','Source and contributor ↗');link.href='https://github.com/mateusz-korbut/GTA-DE-Cheat-Menu/tree/577530924ad52473d48a57047e1d064840dc41af/cheat-menu/modules/vc/data/teleports/';link.target='_blank';link.rel='noopener noreferrer';
-details.append(controls,status,list,link);root.append(details);host.after(root);
+const sourceUrl='https://github.com/mateusz-korbut/GTA-DE-Cheat-Menu/tree/577530924ad52473d48a57047e1d064840dc41af/cheat-menu/modules/vc/data/teleports/';
+details.append(controls,status,list);root.append(details);host.after(root);
 let records=[],route=[],progress=null;
 const option=(v,l)=>{const o=E('option',l);o.value=v;return o};
 function matched(){const s=q.value.trim().toLowerCase();return records.filter(r=>(!progress||progress.visible(r))&&r.category===cat.value&&(!s||(r.name+' '+r.id).toLowerCase().includes(s)))}
@@ -27,7 +27,7 @@ cat.onchange=q.oninput=reset;start.onchange=()=>{route=[];download.disabled=true
 plan.onclick=()=>{const items=matched(),origin=items.find(r=>r.id===start.value);if(!origin)return;
  const pending=items.filter(r=>r.id!==origin.id);route=[origin];while(pending.length){const from=route.at(-1);pending.sort((a,b)=>Math.hypot(a.x-from.x,a.y-from.y)-Math.hypot(b.x-from.x,b.y-from.y)||a.slot-b.slot);route.push(pending.shift())}
  show(route);download.disabled=false;status.textContent=route.length+' reference stops · geometric XY order, not road directions.'};
-download.onclick=()=>{if(!route.length)return;const a=E('a'),blob=new Blob([JSON.stringify({schema:1,world:'vc',edition:'definitive',kind:'coordinate-preview',sourceUrl:link.href,route:route.map(({id,x,y,z,heading})=>({id,x,y,z,...(Number.isFinite(heading)?{heading}:{})}))},null,2)],{type:'application/json'});a.href=URL.createObjectURL(blob);a.download='team-jura-vc-definitive-route.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+download.onclick=()=>{if(!route.length)return;const a=E('a'),blob=new Blob([JSON.stringify({schema:1,world:'vc',edition:'definitive',kind:'coordinate-preview',sourceUrl,route:route.map(({id,x,y,z,heading})=>({id,x,y,z,...(Number.isFinite(heading)?{heading}:{})}))},null,2)],{type:'application/json'});a.href=URL.createObjectURL(blob);a.download='team-jura-vc-definitive-route.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
 fetch('./data/atlas-vc-de-171-source-points.json').then(r=>{if(!r.ok)throw Error('Source unavailable');return r.json()}).then(d=>{
  if(d.schema!==1||d.world!=='vc'||d.edition!=='definitive'||d.sourceRevision!=='577530924ad52473d48a57047e1d064840dc41af'||d.mapAlignment!=='edition-unverified'||d.records?.length!==171)throw Error('Source identity mismatch');
  const seen=new Set();for(const r of d.records){if(!/^vc-de-(hidden-packages|rampages|stunt-jumps)-\d+$/.test(r.id)||seen.has(r.id)||typeof r.name!=='string'||![r.x,r.y,r.z].every(Number.isFinite)||Math.abs(r.x)>2000||Math.abs(r.y)>2000)throw Error('Invalid coordinate');seen.add(r.id)}
