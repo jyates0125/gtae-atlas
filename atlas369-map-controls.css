@@ -88,3 +88,8 @@ body[data-start-world="6"] .legend-symbol.j371-landmark-legend{background:#49315
 body.jura-in-3d:not(.jura-perspective-fallback) #j371-compass{display:grid!important;place-items:center;gap:0;min-height:44px;line-height:1;background:#49315e;color:#fff1cf;border-color:#e9bd79}
 #j371-compass span{display:block;color:#e9bd79;font-size:17px;line-height:1;transform-origin:center}
 #j371-compass small{font-size:9px;color:#fff1cf}
+
+/* Override the older zoom dock's higher-specificity viewport clamp. */
+body[data-start-world="6"]:has(#atlasCanvas) .map-wrap .zoom{top:var(--j369-next-top,205px)!important}
+body[data-start-world="6"]:has(#atlasCanvas) .map-wrap .zoom #j371-compass{display:none!important}
+body[data-start-world="6"].jura-in-3d:not(.jura-perspective-fallback):has(#atlasCanvas) .map-wrap .zoom #j371-compass{display:grid!important;color:#fff1cf!important;background:#49315e!important;border-color:#e9bd79!important}
