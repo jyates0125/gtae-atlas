@@ -69,3 +69,11 @@ body[data-start-world="6"] .jura-nav-bar #j368CoverageLegend{z-index:2}
 body[data-start-world="6"].jura-in-3d:not(.jura-perspective-fallback) .map-status{visibility:hidden!important}
 body[data-start-world="6"] .jura-nav-bar #j368CoverageLegend{position:absolute!important;top:100%!important;right:0!important;left:auto!important}
 body[data-start-world="6"]:has(#j368CoverageLegend:not([hidden])) .zoom{visibility:hidden!important}
+
+/* Single shared directory accessible from the left VI tools in expanded maps. */
+#j369-full-map-menu{min-height:44px;padding:9px 12px;border:1px solid #f1c78e;border-radius:9px;background:#48265b;color:#ffe6b8;font:800 12px system-ui;cursor:pointer;text-align:left}
+#j369-full-map-menu:focus-visible{outline:3px solid #ffe49c;outline-offset:2px}
+body .j132-nav.j369-menu-portal{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;margin:0!important;z-index:2147483000!important;pointer-events:none}
+body .j132-nav.j369-menu-portal #j132-nav-toggle{display:none!important}
+body .j132-nav.j369-menu-portal #j132-nav-drawer{position:fixed!important;inset:16px 16px auto auto!important;width:min(460px,calc(100vw - 32px))!important;max-height:calc(100dvh - 32px)!important;box-sizing:border-box;pointer-events:auto}
+@media(max-width:700px){body .j132-nav.j369-menu-portal #j132-nav-drawer{inset:auto 12px max(12px,env(safe-area-inset-bottom)) 12px!important;width:auto!important;max-height:min(79dvh,670px)!important}}

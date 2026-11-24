@@ -69,6 +69,17 @@ try:
     assert a and b and a['x']+a['width']<=b['x']+1,(file,width,a,b)
     assert b['x']+b['width']<=width+2,(file,width,b)
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),(file,width,'horizontal overflow')
+   # Full-map tools must still access the same global directory.
+   page.locator('#j171-expand-map').click()
+   page.locator('#j217-vi-hub summary').click()
+   page.locator('#j369-full-map-menu').click()
+   expect(page.locator('.j369-menu-portal #j132-nav-drawer')).to_be_visible()
+   expect(page.locator('#j132-nav-drawer')).to_have_count(1)
+   page.keyboard.press('Escape')
+   expect(page.locator('#j132-nav-drawer')).to_be_hidden()
+   expect(page.locator('#j171-expand-map')).to_have_attribute('aria-pressed','true')
+   page.locator('#j217-vi-hub summary').click()
+   page.locator('#j171-expand-map').click()
    # Canonical VI page: no second confirmation step, no import required.
    page.wait_for_function('typeof window.teamJuraNav?.getDimension==="function"')
    expect(page.locator('.jura-nav-bar #j143-official-button')).to_be_visible()

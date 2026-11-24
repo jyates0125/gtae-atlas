@@ -16,3 +16,5 @@ Real device review confirmed Menu works; owner prefers Menu over All Pages. Keep
 
 ### Root cause — missing cross-product component
 The actual phone-sized Chromium framebuffer had 0 opaque terrain pixels with 9,126 mesh indices, a loaded texture, non-finite camera matrix and [NaN,NaN] center projection. The cross-product function returned only x and y; the missing z propagated to the lookAt basis and projection. Corrected all three components, added finite camera guard and 750 deterministic centered/finite projection cases. Gesture-only mock explicitly simulates a draw only after finite matrix upload; actual framebuffer and GTADB image acceptance remain separate browser gates. Cache-bust all three world pages' renderer URL.
+
+Owner requested navigation inside left VI tools while expanded. Added Menu entry opening the existing searchable directory above the map; no duplicate drawer. Closing restores focus and leaves expanded map intact. Focused browser test exercises entry and Escape.

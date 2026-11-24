@@ -56,13 +56,19 @@ function build(){
   }
   if(!shown){const msg=document.createElement('p');msg.textContent='No pages matched. Try a game or feature name.';list.append(msg)}
  }
- const open=()=>{
+ const fullMenu=document.getElementById('j369-full-map-menu');
+ let returnFocus=button;
+ const open=(origin=button)=>{
+   returnFocus=origin;
+   if(origin===fullMenu){document.body.append(wrap);wrap.classList.add('j369-menu-portal');fullMenu.setAttribute('aria-expanded','true');}
    drawer.hidden=false;button.setAttribute('aria-expanded','true');wrap.classList.add('is-open');render(input.value);if(mapHost)drawer.querySelector('.j132-close').focus({preventScroll:true});else input.focus({preventScroll:true});
  };
  const close=(restoreFocus=true)=>{
-   drawer.hidden=true;button.setAttribute('aria-expanded','false');wrap.classList.remove('is-open');if(restoreFocus)button.focus({preventScroll:true});
+   drawer.hidden=true;button.setAttribute('aria-expanded','false');wrap.classList.remove('is-open');if(fullMenu)fullMenu.setAttribute('aria-expanded','false');if(wrap.classList.contains('j369-menu-portal')){wrap.classList.remove('j369-menu-portal');mapHost?.append(wrap)}if(restoreFocus)returnFocus.focus({preventScroll:true});
  };
- button.addEventListener('click',()=>drawer.hidden?open():close());drawer.querySelector('.j132-close').addEventListener('click',close);
+ button.addEventListener('click',()=>drawer.hidden?open():close());drawer.querySelector('.j132-close').addEventListener('click',()=>close());
+ fullMenu?.addEventListener('click',()=>open(fullMenu));
+ document.addEventListener('keydown',e=>{if(!drawer.hidden&&wrap.classList.contains('j369-menu-portal')&&e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();close()}},true);
  input.addEventListener('input',()=>render(input.value));
  document.addEventListener('keydown',e=>{
    if(drawer.hidden)return;
@@ -74,7 +80,7 @@ function build(){
    if(e.shiftKey&&(document.activeElement===first||!drawer.contains(document.activeElement))){e.preventDefault();last.focus();}
    else if(!e.shiftKey&&(document.activeElement===last||!drawer.contains(document.activeElement))){e.preventDefault();first.focus();}
  });
- document.addEventListener('pointerdown',e=>{if(!drawer.hidden&&!wrap.contains(e.target))close(false)});
+ document.addEventListener('pointerdown',e=>{if(!drawer.hidden&&!wrap.contains(e.target)&&!fullMenu?.contains(e.target))close(false)});
  // The Cayo heist keeps the searchable directory in its normal header flow.
  // Other pages retain their already-tested global navigation placement.
  const cayoHost=document.getElementById('j216-inline-mount');
