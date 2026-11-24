@@ -33,5 +33,5 @@ for link in p.links:
   assert unquote(parts.fragment) in dest.ids,link
 assert 'Policies &amp; Disclaimers</a>' in c
 assert 'atlas-policies.html' in a and 'atlas-policies.html' in home
-assert 'Sign in · Coming after secure setup' in a and 'type="button" disabled' in a
+assert 'Sign in · Deferred' in a and 'type="button" disabled' in a
 print('PASS Atlas 20.7: visitor policy hub, deletion truth, guest-data warning and existing credits')

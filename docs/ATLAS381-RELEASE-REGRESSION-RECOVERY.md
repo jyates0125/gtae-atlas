@@ -1,0 +1,3 @@
+# Atlas 38.1 — release regression recovery
+
+Exact staging head ae50d32ce0519defbbcf39bb823ea9c8ae898818: 60/64 Actions passed. Four failures traced to obsolete assertions of prior disabled-sign-in wording and gallery cache version, not demonstrated auth activation, rights-link or vehicle-save failures. Updated guards for owner-deferred sign-in, actual disabled control, absence of credential inputs, and current gallery script. Preserve RLS/privilege assertions, policy fragment validation, exact save keys, world isolation, 13 world/15 heist art and release approval checks. New exact-head run required. Both charters reviewed: guest-first, no regressions, no live promotion without release gates.
