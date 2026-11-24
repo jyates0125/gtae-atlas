@@ -3,14 +3,14 @@
 (()=>{'use strict';
  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
  const skip=new Set(['index.html','maps.html','atlas98-style-lab.html']);if(skip.has(file))return;
- const TITLES={'atlas.html':'GTA V Story','atlas-online.html':'GTA Online','atlas-vi.html':'GTA VI Leonida','atlas-research.html':'VI Research','atlas-cayo.html':'Cayo Perico','atlas-iv.html':'GTA IV','atlas-sa.html':'San Andreas','atlas81-hq.html':'Collection HQ','heists.html':'Heist HQ','one-last-ride.html':'One Last Ride'};
+ const TITLES={'atlas.html':'GTA V Story','atlas-online.html':'GTA Online','atlas-vi.html':'GTA VI Leonida','atlas-research.html':'VI Research','heist-cayo-perico.html':'Cayo Perico','atlas-iv.html':'GTA IV','atlas-sa.html':'San Andreas','atlas81-hq.html':'Collection HQ','heists.html':'Heist HQ','one-last-ride.html':'One Last Ride'};
  const get=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt)n.textContent=txt;return n};
  function init(){if(document.getElementById('j98-flow'))return;const dock=get('nav','j98-flow');dock.id='j98-flow';dock.setAttribute('aria-label','Team Jura quick navigation');
   const start=get('a','','✦ Start Here');start.href='./atlas97-journey.html';const all=get('a','','◈ 13 Maps');all.href='./maps.html';dock.append(start,all);
   const details=get('details','j98-flow-worlds');const summary=get('summary','','Choose 13 worlds');details.append(summary);
   const sub=get('div','j98-flow-sub');for(const [label,href] of [
   ['GTA V Story','atlas.html'],['GTA Online','atlas-online.html'],
-  ['GTA VI','atlas-vi.html'],['Cayo Perico','atlas-cayo.html'],
+  ['GTA VI','atlas-vi.html'],['Cayo Perico','heist-cayo-perico.html'],
   ['GTA IV','atlas-iv.html'],['San Andreas','atlas-sa.html'],
   ['Vice City','map-hub.html?game=vc'],['GTA III','map-hub.html?game=iii'],
   ['Vice City Stories','map-hub.html?game=vcs'],
@@ -30,7 +30,7 @@
   'atlas90-vehicles5.html':['My Garage','atlas93-garage.html'],
   'atlas90-weapons.html':['Online Map','atlas-online.html'],
   'atlas87-daily.html':['Online Map','atlas-online.html'],
-  'heists.html':['Cayo Map','atlas-cayo.html']
+  'heists.html':['Cayo Map','heist-cayo-perico.html']
  };
  const next=NEXT[file];if(next){const jump=get('a','j98-flow-next','↗ '+next[0]);jump.href='./'+next[1];jump.title='Open related Atlas workspace';dock.append(jump)}
  const label=TITLES[file];if(label){const current=get('span','j98-flow-current',label);current.title='Current Atlas workspace';dock.append(current)}
