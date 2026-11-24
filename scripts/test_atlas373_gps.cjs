@@ -14,5 +14,5 @@ assert.equal(Core.shortest(graph,p('c',100,100),A),null);
 const mixed=Core.route([A,B,p('Far',9000,9000)],graph);assert.equal(mixed.method,'mixed');assert.match(Core.instructions(mixed,[A,B,p('Far',9000,9000)]).at(-1).label,/Direct line/);
 assert.match(Core.instructions(Core.route([A,B]),[A,B])[0].label,/Direct line northeast/);
 assert.equal(Core.turn(p('',0,0),p('',0,100),p('',-100,100)),'Turn left');
-for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const s=fs.readFileSync(f,'utf8');assert.match(s,/atlas-road-core\.js\?v=373/);assert.match(s,/atlas-navigation\.js\?v=373/);assert.match(s,/Nearest next · keep A\/B/)}
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const s=fs.readFileSync(f,'utf8');assert.match(s,/atlas-road-core\.js\?v=373/);assert.match(s,/atlas-navigation\.js\?v=377/);assert.match(s,/Nearest next · keep A\/B/)}
 console.log('Atlas 37.3 GPS core checks passed');
