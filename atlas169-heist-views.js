@@ -44,15 +44,15 @@ objective.append(feature);
 viewport.insertAdjacentElement('afterend',objective);
 const original=el('section','j169-original j169-surface');original.id='j169-original';original.hidden=true;
 original.append(el('h3','j169-title','Cayo original game-island explorer'));
-original.append(el('p','j169-small','Opens our existing Cayo explorer with its original game-island image and separate schematic planning layer. The original image is sourced externally and its pixels have NOT been calibrated to the Team Jura conceptual pin coordinates; overlays must not be treated as exact in-game positions.'));
+original.append(el('p','j169-small','Use the primary interactive Cayo island workspace above, with source-labeled approximate positions and daily chest filters.'));
 const controls=el('div','j169-controls');
 const load=makeButton('Load island explorer','j169-load',()=>{const expanded=!originalFrame.hidden;if(!expanded){
- originalFrame.hidden=false;originalFrame.src='./atlas-cayo.html';load.textContent='Close island explorer';load.setAttribute('aria-expanded','true');
+ document.getElementById('j180-shell')?.scrollIntoView({block:'start',behavior:'smooth'});return;
 }else{
  originalFrame.removeAttribute('src');originalFrame.hidden=true;load.textContent='Load island explorer';load.setAttribute('aria-expanded','false');
 }});
 load.setAttribute('aria-expanded','false');load.setAttribute('aria-controls','j169-cayo-frame');
-const open=el('a','j169-open','Open original island explorer full screen ↗');open.href='./atlas-cayo.html';
+const open=el('a','j169-open','Open original island explorer full screen ↗');open.href='#j180-shell';
 controls.append(load,open);original.append(controls);
 const originalFrame=el('iframe','j169-frame');originalFrame.id='j169-cayo-frame';originalFrame.title='Cayo Perico original map and separate schematic scoping explorer';originalFrame.loading='lazy';originalFrame.referrerPolicy='same-origin';originalFrame.hidden=true;
 original.append(originalFrame);
