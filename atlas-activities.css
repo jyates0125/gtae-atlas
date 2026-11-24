@@ -8,3 +8,10 @@ h1{font-size:clamp(1.6rem,3vw,2.4rem);margin:0 0 6px}.intro{max-width:900px;colo
 @media(max-width:900px){.layout{grid-template-columns:1fr}.rule-list{max-height:none}}
 .rule[data-availability="closed"] h3{text-decoration:line-through;color:#c6b9ce}
 .rule[data-availability="locked"] h3{color:#dbcae6}
+
+/* Atlas 39.6: readable open guidance in the current Elario palette. */
+.j396-guidance,#j396-session{border:1px solid #80658b;background:#2b203a;color:#f2e7f5;min-width:0;overflow-wrap:anywhere}
+.j396-guidance summary,#j396-session summary{color:#ffda98;min-height:28px}
+.j396-guidance ul{padding-left:20px;line-height:1.5}
+#j396-session .check-label{min-height:36px}
+.rule .status{white-space:normal;overflow-wrap:anywhere}

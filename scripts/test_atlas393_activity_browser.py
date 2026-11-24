@@ -59,6 +59,29 @@ try:
             switch.click()
             assert zones()==0
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2")
+            # The standalone directory shares the same open guide, without mixing game progress.
+            directory=url.replace("atlas-online.html","atlas-activities.html")
+            page.goto(directory+"?mode=story",wait_until="domcontentloaded")
+            nuclear=page.locator(".rule").filter(has=page.get_by_role("heading",name="Nuclear Waste",exact=True))
+            expect(nuclear).to_have_count(1)
+            nuclear.locator(".j396-guidance summary").click()
+            expect(nuclear.locator(".j396-guidance")).to_contain_text("Unlocked suitable submersible")
+            expect(nuclear.get_by_text("Open Story map",exact=True)).to_be_visible()
+            assert page.locator(".rule").filter(has_text="Halloween free-roam Slashers").count()==0
+            page.goto(directory+"?mode=online",wait_until="domcontentloaded")
+            slash=page.locator(".rule").filter(has=page.get_by_role("heading",name="Halloween free-roam Slashers",exact=True))
+            expect(slash).to_have_count(1)
+            slash.locator(".j396-guidance summary").click()
+            expect(slash.locator(".j396-guidance")).to_contain_text("At least 16 minutes in session")
+            expect(slash.locator(".j396-guidance")).to_contain_text("15-minute encounter cooldown clear")
+            assert page.locator(".rule").filter(has_text="Nuclear Waste").count()==0
+            page.goto(directory+"?mode=vi",wait_until="domcontentloaded")
+            launch=page.locator(".rule").filter(has=page.get_by_role("heading",name="GTA VI Story · launch and gameplay evidence",exact=True))
+            expect(launch).to_have_count(1)
+            launch.locator(".j396-guidance summary").click()
+            expect(launch.locator(".j396-guidance")).to_contain_text("Research information only")
+            assert page.locator(".rule").filter(has_text="Halloween free-roam Slashers").count()==0
+            assert page.locator(".rule").filter(has_text="Nuclear Waste").count()==0
             context.close()
             print(f"PASS {width}px: left sidebar, session and hour gates, switch, expired season, no horizontal overflow")
         browser.close()
