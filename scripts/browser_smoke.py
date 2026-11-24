@@ -1354,7 +1354,7 @@ async def smoke():
                                     failures.append('One Last Ride current film identity missing')
                                 if await pg.locator('header .portal-logo img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Film project Elario crest missing')
-                                if await pg.locator('video source[src*="one-last-ride-motion-preview.mp4"]').count()==0:failures.append('Film preview source missing')
+                                if await pg.locator('video source[src*="one-last-ride-action-cut-3906.mp4"]').count()==0:failures.append('Film preview source missing')
                                 if await pg.locator('.olr-scene-btn').count()!=9:failures.append('One Last Ride nine film chapters missing')
                                 if await pg.locator('.j130-olr-share').count():failures.append('Discontinued film share kit still interrupts content')
                                 if await pg.locator('[data-j131-social-host] [data-j131-platform]').count()<4:

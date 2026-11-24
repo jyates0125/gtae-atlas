@@ -1,0 +1,26 @@
+{
+  "reviewOnly": true,
+  "runtimeSeconds": 39,
+  "sourceSha256": "ddd2d44c6d58b114cceb523fea47dfce9fbe3259a449a3ce8e61d8b5b002798f",
+  "outputSha256": "290a1f34f3bee6f1af99efd5205dbeb1edcbf8aa8c4cb152866b950681cbd3f4",
+  "scoreSha256": "38cacf360943fb5c862fa91a04afea0b0783b5749031460d6285dde85ae9548d",
+  "score": {
+    "bpm": 132,
+    "durationSeconds": 39,
+    "peak": 0.9,
+    "rms": 0.12625693513355515
+  },
+  "pictureVerification": {
+    "firstFrameExpectedMAE": 0.162,
+    "firstFrameOldMAE": 41.88,
+    "retainedFrameMAE": {
+      "5": 0.167,
+      "10": 0.166,
+      "18": 0.138,
+      "27": 0.156,
+      "35": 0.07
+    }
+  },
+  "opening": "Existing 22\u201326s dock action replaces original 0\u20134s; original 4\u201339s retained. First shot and score require owner visual/listening approval. No dialogue, no third-party samples.",
+  "disclosure": "Original concept motion teaser, not finished feature animation. Original score replaces the prior combined score/FX track; final separate foley/voices remain open."
+}
