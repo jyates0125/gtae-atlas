@@ -16,6 +16,7 @@
 # Atlas 39.0: replace DOM-only marker fixture with real guest selection and current save-key assertions.
 # Atlas 39.0.1: invoke fixture bootstrap on each isolated page and preserve original photo node.
 # Atlas 39.0.2: recover transient same-origin Garage catalog requests; verify Forge return with failure injection.
+# Atlas 39.0.3: scoped older/duplicated decorative header refresh; preserve all approved worlds and maps.
 name: Atlas 31.8 - one-time staging full release launch
 on:
   push:

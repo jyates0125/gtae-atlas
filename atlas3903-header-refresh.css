@@ -1,0 +1,33 @@
+/* Atlas 39.0.3 — targeted decorative header refresh only.
+ * Keep approved cinematic covers, map surfaces, mission art and the film intact.
+ * The selected older utility/operations headers use intentionally art-free,
+ * distinct premium UI backgrounds; no fabricated screenshots or reused posters. */
+[data-gtae-header] { background-repeat:no-repeat!important; background-size:cover!important; background-position:center!important }
+[data-gtae-header="dashboard"] {
+ background-image:radial-gradient(ellipse at 75% 12%,#955bb552,transparent 52%),linear-gradient(115deg,#1b102b 0%,#331a49 62%,#211d38 100%)!important;
+}
+[data-gtae-header="news"] {
+ background-image:linear-gradient(104deg,#29133f 0%,#33224f 61%,#493653 100%),repeating-linear-gradient(0deg,#efc18115 0 1px,transparent 1px 24px)!important;
+ background-blend-mode:normal;
+ min-height:0;
+}
+[data-gtae-header="cheats"] {
+ background-image:repeating-linear-gradient(90deg,#a78cc315 0 1px,transparent 1px 30px),linear-gradient(125deg,#201735,#3a2648 62%,#483048)!important;
+ min-height:0;
+}
+[data-gtae-header="activities"] {
+ background-image:radial-gradient(ellipse at 88% 25%,#b77a4140,transparent 48%),linear-gradient(110deg,#251133,#3a224e 63%,#302338)!important;
+}
+[data-gtae-header="account"] {
+ background-image:radial-gradient(ellipse at 90% 10%,#80569b4d,transparent 48%),linear-gradient(125deg,#2d1941,#171127)!important;
+ min-height:0;
+}
+[data-gtae-header="toolkit"] {
+ background-image:repeating-linear-gradient(45deg,#caa0ff0b 0 1px,transparent 1px 20px),linear-gradient(110deg,#23162f,#38334d)!important;
+}
+[data-gtae-header="checklist"] {
+ background-image:repeating-linear-gradient(0deg,#f6cc9510 0 1px,transparent 1px 25px),linear-gradient(105deg,#301b3c,#3d2a3e)!important;
+}
+@media(max-width:720px){
+ [data-gtae-header="news"],[data-gtae-header="cheats"],[data-gtae-header="account"]{min-height:0!important}
+}

@@ -1368,6 +1368,18 @@ async def smoke():
                                     if bounds and selector.endswith(('game5','game6')) and bounds['height']<43:
                                         failures.append('Legacy game switch is not touch sized: '+selector)
                             
+                            header_cases={"atlas-dashboard.html":"dashboard","atlas-news.html":"news","atlas-cheats.html":"cheats","atlas-activities.html":"activities","atlas-account.html":"account","atlas-toolkit.html":"toolkit","atlas-checklist.html":"checklist"}
+                            if path in header_cases:
+                                hero=pg.locator('[data-gtae-header="'+header_cases[path]+'"]')
+                                if await hero.count()!=1 or not await hero.is_visible():
+                                    failures.append('Scoped refreshed header missing: '+path)
+                                else:
+                                    background=await hero.evaluate('(el)=>getComputedStyle(el).backgroundImage')
+                                    if 'url(' in background or 'gradient(' not in background:
+                                        failures.append('Repeated poster or missing premium header treatment: '+path)
+                                    bounds=await hero.bounding_box()
+                                    if not bounds or bounds['x']< -1 or bounds['x']+bounds['width']>width+2:
+                                        failures.append('Refreshed header overflows viewport: '+path)
                             # Generic, non-destructive UX checks after individual page tests.
                             # Do not click destructive/financial/account/import actions automatically.
                             if not failures:
