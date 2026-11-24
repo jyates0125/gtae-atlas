@@ -27,7 +27,8 @@ def main():
  if not navdata.is_file():errors.append('Public universal navigation directory missing')
  else:
   data=json.loads(navdata.read_text())
-  page_names={f.name for f in ROOT.glob('*.html')}
+  page_names={f.name for f in ROOT.glob('*.html')}-{ 'atlas-cayo.html' } # recovery-only alias, audited for assets below
+  if not (ROOT/'atlas-cayo.html').is_file():errors.append('Cayo compatibility/recovery entry missing')
   index_names={p.get('path') for p in data.get('pages',[])}
   if page_names!=index_names:errors.append('Public universal navigation directory does not cover every HTML page')
  if not (ROOT/'atlas132-nav.js').is_file() or not (ROOT/'atlas132-nav.css').is_file():errors.append('Universal menu assets missing')
