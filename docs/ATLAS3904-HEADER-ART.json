@@ -8,64 +8,73 @@
       "path": "art/jura3904-dashboard.webp",
       "sha256": "c00c6f9307747a56b700c98606361fe518f9bc50610d1624c832e86a8e098318",
       "fallback": "art/jura155-vi.webp",
-      "fallbackGitBlob": "b4479129b6701defea7c1b918046e5a5e10c9db9"
+      "fallbackGitBlob": "b4479129b6701defea7c1b918046e5a5e10c9db9",
+      "selected": "existing"
     },
     "guides": {
       "page": "guides.html",
       "path": "art/jura3904-guides.webp",
       "sha256": "d10585e31a5c9fc6a724872ca19829d7b4279737beca2b84e07f58099bfabc66",
       "fallback": "art/jura165-parity.webp",
-      "fallbackGitBlob": "6d0fb12d473d67ef3db68eed12c2bf9c7f0a384a"
+      "fallbackGitBlob": "6d0fb12d473d67ef3db68eed12c2bf9c7f0a384a",
+      "selected": "existing"
     },
     "news": {
       "page": "atlas-news.html",
       "path": "art/jura3904-news.webp",
       "sha256": "ebcb229e123b3b39b7e27aae1a549d88c51f04e29b3ebdcf69b3a239abb6769c",
       "fallback": "art/atlas93-dispatch-hero.webp",
-      "fallbackGitBlob": "305617169c76e92e9a6740d702a8f9d333f58813"
+      "fallbackGitBlob": "305617169c76e92e9a6740d702a8f9d333f58813",
+      "selected": "existing"
     },
     "cheats": {
       "page": "atlas-cheats.html",
       "path": "art/jura3904-cheats.webp",
       "sha256": "2918ea64711933a0e51e565d7e59886023459d6369a6a6c63eca9dcbc7d60908",
       "fallback": "art/jura161-weapons.webp",
-      "fallbackGitBlob": "213fd84456481c080dd12ad700f4b67ee53f586d"
+      "fallbackGitBlob": "213fd84456481c080dd12ad700f4b67ee53f586d",
+      "selected": "existing"
     },
     "activities": {
       "page": "atlas-activities.html",
       "path": "art/jura3904-activities.webp",
       "sha256": "05bd843af65e463bafdc00a2a35434c87258554068c0213fea274d7ba68e0e2e",
       "fallback": "art/jura159-heist-hq.webp",
-      "fallbackGitBlob": "8e425570ba2c760d291223fc8beac96776c7b91e"
+      "fallbackGitBlob": "8e425570ba2c760d291223fc8beac96776c7b91e",
+      "selected": "existing"
     },
     "account": {
       "page": "atlas-account.html",
       "path": "art/jura3904-account.webp",
       "sha256": "32c1f42cbe5bc44a67cf3e5c426aab218635bcb89237b3d92b7db2b0a0c9a83a",
       "fallback": "art/jura165-coverage.webp",
-      "fallbackGitBlob": "38aa61c71468053d4e80394179e16075f5210cd3"
+      "fallbackGitBlob": "38aa61c71468053d4e80394179e16075f5210cd3",
+      "selected": "existing"
     },
     "toolkit": {
       "page": "atlas-toolkit.html",
       "path": "art/jura3904-toolkit.webp",
       "sha256": "46e6b7c210a704df04b75d0104b2d84f29c695e019dc90494666e324a660c31c",
       "fallback": "art/atlas93-garage-hero.webp",
-      "fallbackGitBlob": "3ed198cf80b14ab19e4b38ff3dfbb07be9a12abb"
+      "fallbackGitBlob": "3ed198cf80b14ab19e4b38ff3dfbb07be9a12abb",
+      "selected": "existing"
     },
     "checklist": {
       "page": "atlas-checklist.html",
       "path": "art/jura3904-checklist.webp",
       "sha256": "4a411dfa2fc42c6cc3078b0ff5ab76773435f25c7a375c7d8dfa092feea8b62d",
       "fallback": "art/jura161-collectibles.webp",
-      "fallbackGitBlob": "9206329de018c0aa1a613ad2f4840c4601b746bb"
+      "fallbackGitBlob": "9206329de018c0aa1a613ad2f4840c4601b746bb",
+      "selected": "existing"
     },
     "studio-preview": {
       "page": "atlas8-preview.html",
       "path": "art/jura3904-studio-preview.webp",
       "sha256": "3095bc865f8e9fedd052b0620f6fdbc94e086b4c796f82a2fceba75c20b4c8d2",
       "fallback": "art/jura155-map.webp",
-      "fallbackGitBlob": "ca994276d9b104dd88033e3bfcf42dd9cf565d03"
+      "fallbackGitBlob": "ca994276d9b104dd88033e3bfcf42dd9cf565d03",
+      "selected": "existing"
     }
   },
-  "selectionPolicy": "Owner permits a mix of existing cinematic art and new art. Existing pinned artwork is a release candidate, not visual approval; optional new pack must retain exact SHA-256 validation. No native 4K claim."
+  "selectionPolicy": "Owner permits mixed existing and new cinematic artwork. Select each image explicitly; installed draft assets never activate automatically. Existing files are pinned by Git blob identity and new files by SHA-256. Visual, rights and exact-head release approvals remain separate. No native 4K claim."
 }

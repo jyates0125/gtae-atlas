@@ -32,16 +32,29 @@ function walk(dir, prefix='') {
 if(fs.existsSync(out)) fs.rmSync(out,{recursive:true,force:true});
 fs.mkdirSync(out,{recursive:true});
 const files=walk(root);
-// New header assets are installed as one verified pack. Never request missing
-// or partial image files on a preview; production cannot use interim fallbacks.
+// Explicit per-page artwork selection; missing or changed selected art fails
+// in every build. The optional smaller concept pack never auto-activates.
 const headerPack=JSON.parse(fs.readFileSync(path.join(root,'docs/ATLAS3904-HEADER-ART.json'),'utf8')).images;
-const headerArtReady=Object.values(headerPack).every(entry=>{
- const file=path.join(root,entry.path);
- return fs.existsSync(file)&&crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')===entry.sha256;
+const selectedPaths=new Set(), selectedHashes=new Set();
+const headerRules=Object.entries(headerPack).map(([key,entry])=>{
+ if(!/^[a-z0-9-]+$/.test(key)||!['existing','new'].includes(entry.selected))throw new Error('Invalid header selection: '+key);
+ const existing=entry.selected==='existing';
+ const rel=existing?entry.fallback:entry.path;
+ if(!/^art\/[a-zA-Z0-9-]+\.webp$/.test(rel)||!files.includes(rel))throw new Error('Missing selected cinematic header: '+key);
+ const bytes=fs.readFileSync(path.join(root,rel));
+ if(bytes.length<12||bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP')throw new Error('Invalid WebP header: '+key);
+ const sha256=crypto.createHash('sha256').update(bytes).digest('hex');
+ const gitBlob=crypto.createHash('sha1').update('blob '+bytes.length+'\0').update(bytes).digest('hex');
+ if(existing?gitBlob!==entry.fallbackGitBlob:sha256!==entry.sha256)throw new Error('Selected header identity mismatch: '+key);
+ if(selectedPaths.has(rel)||selectedHashes.has(sha256))throw new Error('Repeated selected cinematic header: '+key);
+ selectedPaths.add(rel);selectedHashes.add(sha256);
+ const page=fs.readFileSync(path.join(root,entry.page),'utf8');
+ if(!page.includes('data-gtae-header="'+key+'"')||!page.includes('atlas3903-header-refresh.css'))throw new Error('Header wiring missing: '+key);
+ return '[data-gtae-header="'+key+'"]{--j3904-art:url("./'+rel+'")}';
 });
-if(!headerArtReady&&primaryGuards.isPrimaryProduction(process.env))throw new Error('Atlas 39.0.4 cinematic header pack missing or invalid; production promotion blocked.');
-const headerOverride=headerArtReady?'\n/* Original validated cinematic header pack */\n'+Object.entries(headerPack).map(([key,entry])=>'[data-gtae-header="'+key+'"]{--j3904-art:url("./'+entry.path+'")}').join('\n')+'\n':'';
-if(!headerArtReady)console.log('Interim cinematic header assets retained; new header pack not yet installed.');
+if(headerRules.length!==9)throw new Error('Expected nine selected cinematic headers');
+const headerOverride='\n/* Validated selected cinematic headers */\n'+headerRules.join('\n')+'\n';
+console.log('Cinematic headers: '+headerRules.length+'/9 selected images verified; visual release review remains separate.');
 const pages = files.filter(rel => rel.endsWith('.html') && !rel.includes('/')).sort().map(rel => {
   const source=fs.readFileSync(path.join(root,rel),'utf8');
   const lower=source.toLowerCase();

@@ -1,8 +1,7 @@
-/* Atlas 39.0.4: restore full cinematic artwork to all selected headers.
- * Never replace map surfaces, approved world covers, mission artwork or film.
- * The nine new original images activate together after local SHA-256 validation
- * by build-cloudflare.cjs. Until the art pack is installed, retain real existing
- * cinematic assets (interim only; NOT final unique-header acceptance). */
+/* Atlas 39.0.5: explicit mixed cinematic art selection.
+ * Existing real imagery is the direct-source default; build validates each
+ * selected image and adds the corresponding CSS variable. Optional draft art
+ * never activates on installation alone. Preserve maps and film. */
 [data-gtae-header] {background-repeat:no-repeat!important;background-size:cover!important}
 body.j223-home[data-j130-surface="dashboard"] .hero.j223-hero[data-gtae-header="dashboard"] {
  background-image:linear-gradient(90deg,#170b25e8 0%,#251333b8 43%,#150c2726 88%),var(--j3904-art,url('./art/jura155-vi.webp'))!important;
