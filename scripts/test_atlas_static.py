@@ -12,7 +12,7 @@ class RefParser(HTMLParser):
             url=a.get(key,'')
             if url.startswith('./') and not ('?' in url and not url.split('?',1)[0]): self.refs.append(url.split('?',1)[0].split('#')[0].removeprefix('./'))
 js=(D/'atlas.js').read_text()
-expected=['day','scaly,view','yanis,18','dupzor,51','research,view','yanis,15']
+expected=['day','scaly,view','dupzor,51']  # owner-approved single Day / Scaly / Loki selector
 m=re.search(r" '6':\[(.*)\]\n\};",js)
 assert m,'GTA VI layer selector missing'
 actual=re.findall(r"\['([^']+)','",m.group(1))
@@ -47,10 +47,15 @@ assert worker_version, 'Service worker refresh missing'
 assert "./atlas-sw.js?v="+worker_version[1] in (D/'atlas277-offline-classic.js').read_text(), 'Classic and core workers must agree'
 assert "team-jura-atlas-v"+worker_version[1]+"-shell" in (D/'atlas-sw.js').read_text(), 'Versioned shell mismatch'
 assert "team-jura-atlas-v191" in (D/'atlas-sw.js').read_text()
+# The core script and worker have separate release cycles; enforce page parity.
+core_versions=[]
 for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
-    assert "./atlas.js?v="+worker_version[1] in (D/page).read_text(), page
+    match=re.search(r"\./atlas\.js\?v=(\d+)",(D/page).read_text())
+    assert match, page
+    core_versions.append(match[1])
+assert len(set(core_versions))==1, core_versions
 assert "./atlas-research.js?v=218-yanis18" in (D/'atlas-research.html').read_text()
-print('Atlas static regression PASS: GTADB VI Day plus historic community maps, navigation, keys and links')
+print('Atlas static regression PASS: GTADB VI Day plus distinct Scaly and Loki community maps, navigation, keys and links')
 
 # Universe database, showroom and gallery integration regression.
 import runpy

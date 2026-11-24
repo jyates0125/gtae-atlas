@@ -683,13 +683,14 @@ async def smoke():
                                         inner=await docked.bounding_box()
                                         if not outer or not inner or inner['x']<outer['x']-3 or inner['x']+inner['width']>outer['x']+outer['width']+3:
                                             failures.append('Leonida map view control panel is clipped outside the sidebar')
-                                        if await docked.locator('button[data-view]').count()<5:
-                                            failures.append('Moving Leonida map controls lost native view switches')
+                                        view_keys=await docked.locator('button[data-view]').evaluate_all("(buttons)=>buttons.map(b=>b.dataset.view)")
+                                        if view_keys!=['day','scaly,view','dupzor,51']:
+                                            failures.append('Leonida must retain exactly the approved Day, Scaly and Loki native view switches')
                                         names=await docked.locator('button[data-view]').all_inner_texts()
                                         if len(names)!=len(set(names)):
                                             failures.append('Leonida map view buttons contain indistinguishable duplicate labels')
-                                        if not any('Loki' in n for n in names) or not any('DUPZOR' in n and 'Source' in n for n in names):
-                                            failures.append('Styled Loki and original DUPZOR views must be distinguishable')
+                                        if len(names)!=3 or not all(any(term in n for n in names) for term in ('In-game Map','Scaly','YANIS V18','Loki','DUPZOR V51')):
+                                            failures.append('Leonida view names must retain their distinct source labels')
                                     if await pg.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').count()!=1:
                                         failures.append('Accessible jump to interactive Leonida map is missing')
                                     # Initial mobile scroll is asserted above, before map controls are interacted with.
@@ -944,7 +945,7 @@ async def smoke():
                                     failures.append('Map header must show exactly one Atlas HQ link')
                                 if not await pg.locator('body.j117-map-world').count():
                                     failures.append('Current Elario flagship map brand missing')
-                                if await pg.locator('header.topbar img[src="./art/elario-crest.svg"]').count()!=1:
+                                if await pg.locator('header.topbar .brand img[src="./art/elario-crest.svg"]').count()!=1:
                                     failures.append('Original Elario crest missing from active map')
                                 if 'ATLAS 9.3' in await pg.title():
                                     failures.append('Retired map title presented as current Atlas')

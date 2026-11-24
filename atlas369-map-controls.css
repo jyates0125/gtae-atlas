@@ -27,7 +27,8 @@ body[data-start-world="6"] .j143-toolbar,body[data-start-world="6"] .j143-foot{f
 body[data-start-world="6"] .j143-stage{min-height:120px}
 @media(max-width:700px){
  body.j117-map-world #j369-site-tools{margin:3px 0 3px auto;gap:5px}
- body.j117-map-world .topbar>nav{width:100%;gap:5px 10px!important}
+ body.j117-map-world .topbar>nav{width:100%;gap:5px 10px!important;flex-wrap:nowrap!important;justify-content:flex-start!important;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:thin}
+ body.j117-map-world .topbar>nav>a{flex:0 0 auto;min-height:36px}
  body.j117-map-world #j369-site-tools #j132-nav-drawer{inset:auto 12px max(12px,env(safe-area-inset-bottom)) 12px!important;width:auto!important;max-height:min(79dvh,670px)!important}
  body[data-start-world="6"] .maptop{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;align-items:start!important}
  body[data-start-world="6"] .maptitle,body[data-start-world="6"] .mapcontrols{max-width:none!important;width:100%!important;min-width:0!important;box-sizing:border-box!important}
