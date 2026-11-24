@@ -28,8 +28,13 @@ records, failures = [], []
 # scrollable list can produce a candidate and needs human triage.
 probe = """() => {
   const result=[];
+  function* ancestors(el){for(let p=el.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')yield p}
   const nodes=[...document.querySelectorAll('button:not([disabled]),a[href],summary,input:not([disabled]),select:not([disabled])')];
   for(const el of nodes){
+    // Closed native disclosures can return geometry for non-rendered descendants.
+    // Exclude those, but retain each disclosure's own visible summary.
+    if([...ancestors(el)].some(d=>!d.open&&!d.querySelector(':scope > summary')?.contains(el)))continue;
+    if(el.checkVisibility&&!el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true,contentVisibilityAuto:true}))continue;
     const r=el.getBoundingClientRect(),s=getComputedStyle(el);
     if(r.width<12||r.height<12||r.left<0||r.top<0||r.right>innerWidth||r.bottom>innerHeight||s.visibility!=='visible'||s.display==='none'||el.closest('[hidden],[aria-hidden=true]'))continue;
     const hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
@@ -70,6 +75,14 @@ try:
                 expect(menu).to_have_attribute("aria-expanded","false")
                 expect(menu).to_be_focused()
                 record["menu"]="passed"
+                dock=page.locator("body > #j98-flow")
+                if dock.count() and dock.is_visible():
+                    assert dock.evaluate("(node)=>getComputedStyle(node).position")!="fixed", "Legacy world dock still floats"
+                if route=="atlas-sa.html":
+                    maps=page.locator(".j391-inline > a[data-j87-maps-link]")
+                    expect(maps).to_be_visible()
+                    maps.scroll_into_view_if_needed()
+                    maps.click(trial=True)
                 if route=="atlas-vi.html":
                     guide=page.locator("#j217-vi-hub")
                     guide.locator(":scope > summary").click()
