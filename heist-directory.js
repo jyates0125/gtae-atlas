@@ -20,7 +20,7 @@
  resume.setAttribute('aria-labelledby','j297-resume-title');
  const heading=document.createElement('div');heading.className='j297-resume-heading';
  const title=document.createElement('h2');title.id='j297-resume-title';title.textContent='Continue your missions';
- const help=document.createElement('p');help.textContent='Your saved checklists, notes and planning routes stay on this device. No account required.';
+ const help=document.createElement('p');help.textContent='Your saved checklists, notes, intel and planning routes stay on this device. No account required.';
  heading.append(title,help);
  const savedLinks=document.createElement('div');savedLinks.className='j297-resume-list';
  resume.append(heading,savedLinks);controls.before(resume);
@@ -35,24 +35,37 @@
    return{value,damaged:false};
   }catch{return{value:{},damaged:true}}
  };
+ // Intel ledger uses a separate legacy array key. Read it without modifying the record.
+ const readIntel=id=>{
+  try{
+   const raw=localStorage.getItem('team-jura-atlas93-heist-intel-heist-'+id+'.html');
+   if(raw===null)return {count:0,updated:0,damaged:false};
+   const notes=JSON.parse(raw);
+   if(!Array.isArray(notes)||notes.length>40||notes.some(n=>!n||typeof n!=='object'||Array.isArray(n)||typeof n.label!=='string'||!n.label.trim()||n.label.length>90))
+    return {count:0,updated:0,damaged:true};
+   return {count:notes.length,updated:Math.max(0,...notes.map(n=>Date.parse(n.updated||'')||0)),damaged:false};
+  }catch{return {count:0,updated:0,damaged:true}}
+ };
  const fields=['approach','entry','exit','poi','crew'];
  function progress(item){
   const check=safeJson(item.key);
   const notes=safeJson('teamjura-heist-plan-v1:'+item.id);
   const focus=safeJson('teamjura-heist-focus-v1:'+item.id);
+  const intel=readIntel(item.id);
   const checked=Object.values(check.value).filter(v=>v===true).length;
   const noteCount=fields.filter(k=>typeof notes.value[k]==='string'&&notes.value[k].trim()).length;
   const scoped=Array.isArray(focus.value.scoped)?focus.value.scoped.filter(v=>typeof v==='string').length:0;
   const route=Array.isArray(focus.value.route)?focus.value.route.filter(v=>typeof v==='string').length:0;
   const awards=Array.isArray(focus.value.awards)?focus.value.awards.filter(v=>typeof v==='string').length:0;
-  const updated=Math.max(Date.parse(notes.value.updatedAt||'')||0,Date.parse(focus.value.updatedAt||'')||0);
-  const damaged=check.damaged||notes.damaged||focus.damaged;
-  return {checked,noteCount,scoped,route,awards,damaged,updated,hasProgress:!!(damaged||checked||noteCount||scoped||route||awards)};
+  const updated=Math.max(Date.parse(notes.value.updatedAt||'')||0,Date.parse(focus.value.updatedAt||'')||0,intel.updated);
+  const damaged=check.damaged||notes.damaged||focus.damaged||intel.damaged;
+  return {checked,noteCount,intelCount:intel.count,scoped,route,awards,damaged,updated,hasProgress:!!(damaged||checked||noteCount||intel.count||scoped||route||awards)};
  }
  const summaryText=p=>[
   p.damaged?'Saved data needs recovery':null,
   p.checked?p.checked+' checklist step'+(p.checked===1?'':'s'):null,
   p.noteCount?p.noteCount+' note'+(p.noteCount===1?'':'s'):null,
+  p.intelCount?p.intelCount+' intel note'+(p.intelCount===1?'':'s'):null,
   p.scoped?p.scoped+' scoped POI'+(p.scoped===1?'':'s'):null,
   p.route?p.route+' route stop'+(p.route===1?'':'s'):null,
   p.awards?p.awards+' challenge'+(p.awards===1?'':'s'):null
@@ -96,7 +109,8 @@
  window.addEventListener('storage',e=>{
   if(!e.key||e.key.startsWith('teamjura-heist-')||
      e.key.startsWith('teamjura-heist-plan-v1:')||
-     e.key.startsWith('teamjura-heist-focus-v1:'))render();
+     e.key.startsWith('teamjura-heist-focus-v1:')||
+     e.key.startsWith('team-jura-atlas93-heist-intel-heist-'))render();
  });
  controls.hidden=false;render();
 })();
