@@ -80,9 +80,9 @@ function makeVIButtons(){
  const root=created('div','j86-mapviews');root.setAttribute('role','group');root.setAttribute('aria-label','Leonida illustration styles');
  const label=created('div','j86-view-title','MAP ARTWORK · CHOOSE VIEW');root.append(label);
  const bar=created('div','j86-view-row');root.append(bar);
- const viewNames={'scaly,view':'Scaly · YANIS V18','yanis,18':'YANIS V18 · Current','dupzor,51':'DUPZOR V51 · Source','research,view':'Community Research · V18','yanis,15':'YANIS V15 · Archive'};
+ // Derive every shortcut label from the canonical selector, never a second naming table.
  let observed='';
- function sync(){if(!select.options.length)return;const signature=[...select.options].map(o=>o.value).join('|');if(signature!==observed){observed=signature;bar.replaceChildren();for(const opt of select.options){const btn=created('button','j86-view-btn',viewNames[opt.value]||opt.textContent);btn.type='button';btn.dataset.view=opt.value;btn.onclick=()=>{select.value=opt.value;select.dispatchEvent(new Event('change',{bubbles:true}));sync()};bar.append(btn)}}
+ function sync(){if(!select.options.length)return;const signature=[...select.options].map(o=>o.value).join('|');if(signature!==observed){observed=signature;bar.replaceChildren();for(const opt of select.options){const btn=created('button','j86-view-btn',opt.textContent);btn.type='button';btn.dataset.view=opt.value;btn.onclick=()=>{select.value=opt.value;select.dispatchEvent(new Event('change',{bubbles:true}));sync()};bar.append(btn)}}
  for(const btn of bar.children){const active=btn.dataset.view===select.value;btn.setAttribute('aria-pressed',String(active))}
  }
  const control=select.closest('.mapcontrols');if(control){control.classList.add('j86-hide-original-view');control.insertAdjacentElement('afterend',root)}
@@ -110,7 +110,7 @@ function moveLegends(){
    legend.open=true;legend.querySelector('summary')?.replaceChildren(document.createTextNode(heading));stack.append(legend);
  }
  const crew=$('.j86-crew');if(crew)crew.insertAdjacentElement('afterend',stack);else aside.append(stack);
- function visible(){const state=window.JuraDualLegendAPI?.state?.();const supported=state?.game==='6'&&['scaly,view','loki,view','research,view'].includes(state.style);stack.hidden=!supported;}
+ function visible(){const state=window.JuraDualLegendAPI?.state?.();const supported=state?.game==='6'&&['day','scaly,view','dupzor,51'].includes(state.style);stack.hidden=!supported;}
  document.addEventListener('jura:legend-updated',()=>{visible();decorateNamedLayers()});
  $('layer')?.addEventListener('change',visible);visible();
 }

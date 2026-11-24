@@ -14,7 +14,7 @@ pack=json.loads((R/'data/gtadb-6.json').read_text(encoding='utf-8'))
 assert len(pack['records'])==pack['count']==3754
 assert pack['mappedCount']==3663 and pack['searchOnlyCount']==91
 assert "styles={'5':'radar','6':'scaly,view'}" in mapjs, 'Do not replace known Scaly default without pin calibration'
-assert "['day','In-game Day · GTADB map']" in mapjs
+assert "['day','In-game Map']" in mapjs
 for name in ('atlas290-vi-source-ledger.js','atlas290-vi-source-ledger.css', 'atlas290-official-landmarks.js','atlas290-official-landmarks.css'):
  assert name in vi and '"./'+name+'"' in worker, ('missing VI link/offline support',name)
  assert name not in (R/'atlas.html').read_text(encoding='utf-8'), ('accidentally leaked into GTA V',name)

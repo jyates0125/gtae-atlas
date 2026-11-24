@@ -1,0 +1,95 @@
+/* Atlas 36.9 — owner phone/laptop map acceptance. */
+body.j117-map-world:has(#j369-site-tools #j132-nav-toggle) #j89-shell{display:none!important}
+body.j117-map-world #j369-site-tools{display:flex;flex:0 0 auto;align-items:center;gap:7px;margin-left:auto;position:relative}
+body.j117-map-world #j369-site-tools>a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:6px 12px;border:1px solid #ffd38e;border-radius:10px;background:#f4bd78;color:#2a1738;font-weight:850;text-decoration:none;white-space:nowrap}
+body.j117-map-world #j369-site-tools .j132-nav{position:relative!important;inset:auto!important;margin:0!important;width:auto!important;max-width:none!important}
+body.j117-map-world #j369-site-tools #j132-nav-toggle{min-height:40px!important;padding:8px 12px!important}
+body.j117-map-world #j369-site-tools #j132-nav-drawer{position:fixed!important;inset:70px 12px auto auto!important;width:min(460px,calc(100vw - 24px))!important;max-height:calc(100dvh - 90px)!important;box-sizing:border-box}
+body.j117-map-world .topbar>nav{gap:5px 10px!important;flex-wrap:wrap!important}
+body.j117-map-world .topbar{height:auto!important}
+body.j117-map-world .selected-photo figcaption{display:none}
+body.j117-map-world .map-actions #original{display:none!important}
+body.j117-map-world .jura-nav-bar button[aria-pressed="true"]{background:#76517d!important;border-color:#ffe0a1!important}
+body.j117-map-world #selectedCard:not(.hidden){z-index:140!important;right:72px!important;max-height:calc(100% - 170px);overflow:auto;overscroll-behavior:contain;background:linear-gradient(145deg,#331b47fa,#151526fc)!important}
+body.j117-map-world:has(#selectedCard:not(.hidden)) .zoom{visibility:hidden}
+body.j117-map-world .jura-nav-panel{z-index:150!important}
+body[data-start-world="6"] #j143-official-button{min-width:0!important;width:auto!important;max-width:none!important;white-space:nowrap!important;font-size:11px!important;padding:7px 9px!important;flex:0 0 auto!important;color:#291633!important}
+body[data-start-world="6"] .jura-nav-bar{top:90px!important;right:8px!important;max-width:calc(100% - 16px)!important;flex-wrap:wrap!important;box-sizing:border-box}
+body[data-start-world="6"] #jura3dTools{display:none!important}
+body[data-start-world="6"] .zoom{top:175px!important}
+body[data-start-world="6"] .j217-vi-hub{top:146px!important}
+body[data-start-world="6"] .j217-vi-hub>summary{padding:8px 11px!important;min-height:40px!important}
+body[data-start-world="6"] .j362-terrain-notice{z-index:80!important;bottom:155px!important}
+body[data-start-world="6"]:has(#j217-vi-hub[open]) :is(.zoom,.j362-terrain-notice,#j171-map-tools,.map-status){visibility:hidden}
+body[data-start-world="6"].jura-nav-open :is(.zoom,#j171-map-tools){visibility:hidden}
+body[data-start-world="6"].jura-in-3d:not(.jura-perspective-fallback) .jura-quick-nav{display:none!important}
+body[data-start-world="6"] .j143-toolbar,body[data-start-world="6"] .j143-foot{flex:0 0 auto}
+body[data-start-world="6"] .j143-stage{min-height:120px}
+@media(max-width:700px){
+ body.j117-map-world #j369-site-tools{margin:3px 0 3px auto;gap:5px}
+ body.j117-map-world .topbar>nav{width:100%;gap:5px 10px!important}
+ body.j117-map-world #j369-site-tools #j132-nav-drawer{inset:auto 12px max(12px,env(safe-area-inset-bottom)) 12px!important;width:auto!important;max-height:min(79dvh,670px)!important}
+ body[data-start-world="6"] .maptop{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;align-items:start!important}
+ body[data-start-world="6"] .maptitle,body[data-start-world="6"] .mapcontrols{max-width:none!important;width:100%!important;min-width:0!important;box-sizing:border-box!important}
+ body[data-start-world="6"] .mapcontrols #layer{width:100%!important;min-width:0!important;max-width:100%!important}
+ body[data-start-world="6"] .mapcontrols :is(label,.jura-pin-mode){display:none!important}
+ body[data-start-world="6"] .maptitle small{font-size:9px!important;line-height:1.2!important}
+ body[data-start-world="6"] .jura-nav-bar{top:91px!important;right:8px!important;left:8px!important;justify-content:flex-end;gap:3px!important}
+ body[data-start-world="6"] .jura-nav-bar button{min-height:42px!important;padding:6px 8px!important;white-space:nowrap}
+ body[data-start-world="6"] .jura-nav-bar #juraNavDimension{display:inline-block!important;font-size:9px!important;padding:3px!important}
+ body[data-start-world="6"] .j217-vi-hub{top:158px!important;z-index:130}
+ body[data-start-world="6"] .zoom{top:205px!important}
+ body.j117-map-world #selectedCard:not(.hidden){left:8px!important;right:8px!important;width:auto!important;max-width:none!important;max-height:44dvh!important;bottom:82px!important}
+ body[data-start-world="6"] .jura-nav-panel{top:150px!important;left:8px!important;right:8px!important;width:auto!important;bottom:40px!important;max-height:none!important}
+ body[data-start-world="6"] .jura-nav-head{position:sticky;top:-14px;z-index:4;background:#281833;padding:6px}
+ body[data-start-world="6"] .map-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ body[data-start-world="6"] .j220-map-back{position:relative!important;inset:auto!important;margin:8px 12px!important}
+ body[data-start-world="6"] .j143-toolbar{padding:7px;gap:4px}
+ body[data-start-world="6"] .j143-toolbar small{display:none}
+ body[data-start-world="6"] .j143-actions button{min-height:40px}
+ body[data-start-world="6"] .j143-foot{padding:5px;font-size:10px}
+}
+
+body[data-start-world="6"].j368-approximate .jura-nav-bar #juraNavDimension{display:inline-block!important}
+body[data-start-world="6"] .j362-terrain-notice{max-height:calc(100% - 220px);overflow:auto;overscroll-behavior:contain}
+body.j117-map-world .map-actions{gap:6px!important}
+body[data-start-world="6"] .jura-nav-bar #j143-official-button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+@media(max-width:700px){body[data-start-world="6"] .jura-nav-bar #juraNavDimension{flex:0 0 auto}body[data-start-world="6"] .jura-nav-bar #j368CoverageToggle{min-height:38px!important}}
+
+/* Rendered owner test: measured toolbar/legend height reserves the right column. */
+body[data-start-world="6"] .jura-nav-bar{
+ top:var(--j369-toolbar-top,90px)!important;z-index:125!important
+}
+body[data-start-world="6"] .zoom{top:var(--j369-next-top,205px)!important}
+body[data-start-world="6"] .j217-vi-hub{top:var(--j369-next-top,158px)!important}
+body[data-start-world="6"] .jura-nav-panel{top:var(--j369-next-top,150px)!important}
+body[data-start-world="6"] .jura-nav-bar #j368CoverageLegend{z-index:2}
+
+/* Avoid a centered announcement overlay covering the primary right toolbar. */
+body[data-start-world="6"].jura-in-3d:not(.jura-perspective-fallback) .map-status{visibility:hidden!important}
+body[data-start-world="6"] .jura-nav-bar #j368CoverageLegend{position:absolute!important;top:100%!important;right:0!important;left:auto!important}
+body[data-start-world="6"]:has(#j368CoverageLegend:not([hidden])) .zoom{visibility:hidden!important}
+
+/* Single shared directory accessible from the left VI tools in expanded maps. */
+#j369-full-map-menu{min-height:44px;padding:9px 12px;border:1px solid #f1c78e;border-radius:9px;background:#48265b;color:#ffe6b8;font:800 12px system-ui;cursor:pointer;text-align:left}
+#j369-full-map-menu:focus-visible{outline:3px solid #ffe49c;outline-offset:2px}
+body .j132-nav.j369-menu-portal{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;margin:0!important;z-index:2147483000!important;pointer-events:none}
+body .j132-nav.j369-menu-portal #j132-nav-toggle{display:none!important}
+body .j132-nav.j369-menu-portal #j132-nav-drawer{position:fixed!important;inset:16px 16px auto auto!important;width:min(460px,calc(100vw - 32px))!important;max-height:calc(100dvh - 32px)!important;box-sizing:border-box;pointer-events:auto}
+@media(max-width:700px){body .j132-nav.j369-menu-portal #j132-nav-drawer{inset:auto 12px max(12px,env(safe-area-inset-bottom)) 12px!important;width:auto!important;max-height:min(79dvh,670px)!important}}
+
+/* Atlas 37.1 — smaller, violet-enamel landmark crest, thin gold rim. */
+body[data-start-world="6"] .jura-3d-pin.j371-landmark-pin{width:16px;height:20px;padding:0;box-sizing:border-box;border:1.5px solid #e9bd79;border-radius:58% 58% 58% 4%;background:#49315e!important;color:#fff1cf;font:700 9px/1 system-ui;transform:translate(-50%,-100%) rotate(-45deg);box-shadow:0 1px 3px #170c2580;display:grid;place-items:center}
+body[data-start-world="6"] .jura-3d-pin.j371-landmark-pin:focus-visible{outline:2px solid #fff1cf;outline-offset:2px}
+body[data-start-world="6"] .legend-symbol.j371-landmark-legend{background:#49315e;border-color:#e9bd79!important;color:#fff1cf;font:700 12px/1 system-ui;display:grid;place-items:center}
+
+/* Atlas 37.2 — live compass stays in the existing zoom dock. */
+#j371-compass{display:none!important}
+body.jura-in-3d:not(.jura-perspective-fallback) #j371-compass{display:grid!important;place-items:center;gap:0;min-height:44px;line-height:1;background:#49315e;color:#fff1cf;border-color:#e9bd79}
+#j371-compass span{display:block;color:#e9bd79;font-size:17px;line-height:1;transform-origin:center}
+#j371-compass small{font-size:9px;color:#fff1cf}
+
+/* Override the older zoom dock's higher-specificity viewport clamp. */
+body[data-start-world="6"]:has(#atlasCanvas) .map-wrap .zoom{top:var(--j369-next-top,205px)!important}
+body[data-start-world="6"]:has(#atlasCanvas) .map-wrap .zoom #j371-compass{display:none!important}
+body[data-start-world="6"].jura-in-3d:not(.jura-perspective-fallback):has(#atlasCanvas) .map-wrap .zoom #j371-compass{display:grid!important;color:#fff1cf!important;background:#49315e!important;border-color:#e9bd79!important}

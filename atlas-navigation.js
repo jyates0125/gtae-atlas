@@ -51,10 +51,14 @@ function syncTerrainNotice(){
 }
 function setDimension(next){
  if(next==='3d'&&!supports3d()){bridge.notice('The original 2D map is the active view for this world. GTA VI research is the current 3D focus.');return}
+ if(next==='3d'&&supports3d()&&!root.JuraApproxTerrain){location.assign('./atlas-vi.html?dimension=3d');return}
  if(next===dimension)return;
  const epoch=++terrainViewToken;
  if(next==='3d'){
   const target=bridge.game();
+  close();
+  document.getElementById('closeSelected')?.click();
+  const hub=document.getElementById('j217-vi-hub');if(hub)hub.open=false;
   dimension='3d';densePending=true;approxPending=false;
   // Keep the illustrated map visible during this asynchronous same-origin
   // heightfield check. Never reveal a flat WebGL canvas as genuine relief.
@@ -83,6 +87,7 @@ function setDimension(next){
    }
    bridge.notice(ok?'Reconstructed 3D terrain active. One finger orbits; two fingers pan and pinch to zoom.':'Illustrated 2D perspective preview · '+(available?'WebGL is unavailable.':'No elevation data installed.'));
    syncTerrainNotice();render(false);
+   if(!available&&root.JuraApproxTerrain)void openApproximateTerrain();
   }).catch(()=>{
    if(epoch!==terrainViewToken||dimension!=='3d'||bridge.game()!==target)return;
    densePending=false;
@@ -91,6 +96,7 @@ function setDimension(next){
    $('jura3dStatus').textContent='Perspective preview · terrain unavailable';
    bridge.notice('Terrain could not be loaded; illustrated map retained.');
    syncTerrainNotice();render(false);
+   if(root.JuraApproxTerrain)void openApproximateTerrain();
   });
  }else{
   terrain?.deactivate();dimension='2d';fallback3d=false;densePending=false;approxPending=false;
@@ -131,6 +137,7 @@ async function openApproximateTerrain(){
 }
 function clear(){waypoints=[null,null];plan=null;bridge.clearRoutePlan();render();status('Navigation cleared. Saved collectible progress is unchanged.')}
 function refresh(){if(terrain?.isActive())terrain.render()}
+
 function gameChanged(){graph=null;waypoints=[null,null];plan=null;syncDimensionControls();render();if(dimension==='3d')terrain?.rebase();}
 function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('jura3dMarkerOverlay'),status:$('jura3dStatus'),bridge})||null;
  if($('j362ClosePreview'))$('j362ClosePreview').onclick=()=>setDimension('2d');
@@ -211,7 +218,8 @@ function init(){terrain=root.JuraTerrain3D?.create({canvas:mapCanvas,overlay:$('
   status('SHA-256 and '+result.pointsChecked+' claimed control points match ('+result.maxResidualMeters.toFixed(2)+' m maximum error). Source rights and independent coordinates still need human review.');
  }catch(err){status('Evidence rejected: '+err.message+' · Existing personal terrain remains unverified.')}finally{e.target.value=''}};
  $('juraNavRoadFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>16000000)throw Error('Graph exceeds 16 MB limit');const raw=JSON.parse(await file.text());if(String(raw.game)!==bridge.game())throw Error('Road graph must belong to the active GTA game');graph=Core.validateGraph(raw);status('Imported road graph: '+graph.nodes.size+' nodes. UNVERIFIED: map connectivity is not proof of game-road accuracy.');}catch(err){graph=null;status('Road graph rejected: '+err.message)}finally{e.target.value=''}};
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&active&&document.activeElement?.tagName!=='INPUT')close()});syncDimensionControls();render();}
+ document.addEventListener('jura:terrain-frame-lost',()=>{if(dimension==='3d'){setDimension('2d');bridge.notice('3D graphics were interrupted. The working 2D map has been restored.')}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.activeElement?.tagName!=='INPUT'){if(active)close();else if(dimension==='3d')setDimension('2d')}});syncDimensionControls();render();}
 init();return{open,close,setRoutePoint,setStart,refresh,gameChanged,render,setDimension,getDimension:()=>dimension,getPlan:()=>plan,terrain:()=>terrain};}
 root.JuraNavigation=Object.freeze({create});
 })(typeof window!=='undefined'?window:globalThis);

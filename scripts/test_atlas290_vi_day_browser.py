@@ -60,7 +60,8 @@ try:
             expect(layer.locator('option[value="day"]')).to_have_count(1, timeout=25000)
             assert layer.input_value() == "scaly,view", "Existing Scaly view must remain the first-visit default"
             expect(layer.locator('option[value="scaly,view"]')).to_have_count(1)
-            expect(layer.locator('option[value="yanis,18"]')).to_have_count(1)
+            expect(layer.locator('option')).to_have_count(3)
+            expect(layer.locator('option[value="yanis,18"]')).to_have_count(0)
             expect(layer.locator('option[value="dupzor,51"]')).to_have_count(1)
             with page.expect_request(lambda req: "/tiles/6/day/" in req.url, timeout=25000):
                 layer.select_option("day")

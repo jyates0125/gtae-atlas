@@ -50,7 +50,7 @@ function init(){
   const sync=()=>{
    const active=layer.value==='day';
    day.disabled=!layer.querySelector('option[value="day"]');
-   day.textContent=active?'◇ Return to Scaly view':'◇ Try in-game Day map';
+   day.textContent=active?'◇ Return to Scaly view':'◇ Open In-game Map';
    day.setAttribute('aria-pressed',String(active));
   };
   layer.addEventListener('change',sync);
