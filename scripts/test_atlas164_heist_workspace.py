@@ -17,7 +17,7 @@ assert 'atlas164-heist-workspace.css?v=164' in loader
 assert 'atlas104-heist-schematic.svg' not in old
 assert "style.maxHeight='185px'" not in old
 assert 'atlas104-heist-schematic.svg' not in oldcss
-assert "id==='cayo-perico'?'./atlas-cayo.html':'./atlas-online.html'" in js
+assert "const map='./atlas-online.html'" in js
 assert 'teamjura-heist-plan-v1:' in js and 'localStorage.setItem' in js
 assert 'frame.src=map' in js and 'frame.hidden=!visible' in js
 assert 'j164-frame[hidden]' in css
@@ -49,5 +49,5 @@ for id in ids:
     assert './heist-pages.js' in html
     assert 'src="./art/jura159-heist-'+id+'.webp"' in html
     assert 'id="progressBar"' in html and 'id="stepSearch"' in html
-    assert ('./atlas-cayo.html' if id=='cayo-perico' else './atlas-online.html') in html
+    assert ('#j180-shell' if id=='cayo-perico' else './atlas-online.html') in html
 print('Atlas 16.4: 15 cinematic heists with real map embed and isolated personal notes PASS')

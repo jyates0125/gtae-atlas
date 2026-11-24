@@ -35,7 +35,7 @@ try:
              'markers':[{'id':'atlas307-marker','name':'Preserved personal pin',
              'category':category,'note':'Saved note','x':45,'y':55,
              'source':'personal-image-percent'}],'completed':[],'background':None}
-    page.goto(base+'map-hub.html?game='+game,wait_until='domcontentloaded')
+    page.goto(base+'map-hub.html?game='+game+'&notebook=1',wait_until='domcontentloaded')
     page.evaluate("([k,v])=>localStorage.setItem(k,v)",[key,json.dumps(fixture)])
     page.reload(wait_until='domcontentloaded')
     expect(page.locator('#classicTitle')).not_to_be_empty(timeout=15000)

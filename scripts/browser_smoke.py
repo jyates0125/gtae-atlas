@@ -25,7 +25,8 @@ CLASSIC_WORLDS={
     'tlad':('The Lost and Damned','Gang wars'),
     'tbogt':('The Ballad of Gay Tony','Base jumps'),
 }
-PAGES.extend('map-hub.html?game='+world for world in CLASSIC_WORLDS if world!='vc')
+PAGES.extend('map-hub.html?game='+world for world in CLASSIC_WORLDS if world not in ('vc','tlad','tbogt'))
+PAGES.extend(['atlas-iv.html?scope=tlad','atlas-iv.html?scope=tbogt'])
 HEIST_PAGES={p.name for p in ROOT.glob('heist-*.html')}
 if len(HEIST_PAGES)<15:
     raise SystemExit('The release must contain all 15 heist planning pages')
@@ -464,7 +465,7 @@ async def smoke():
                                     if not scoped or len(scoped)<1:
                                         failures.append('Mission-specific scoped POI did not persist')
                                     if mission=='cayo-perico':
-                                        if await pg.locator('#j167-heist-map a[href="./atlas-cayo.html"]').count()!=1:
+                                        if await pg.locator('#j167-heist-map a[href="#j180-shell"]').count()!=1:
                                             failures.append('Cayo island original-map and scoping source is not linked')
                                     actual_art=await pg.locator('.mapbox > img').get_attribute('src')
                                     mission=path.removeprefix('heist-').removesuffix('.html')
@@ -478,7 +479,7 @@ async def smoke():
                                     frame=pg.locator('#j164-map-frame')
                                     if not await frame.is_visible():
                                         failures.append('Embedded world map did not open')
-                                    expect='./atlas-cayo.html' if mission=='cayo-perico' else './atlas-online.html'
+                                    expect='./atlas-online.html'
                                     if await frame.get_attribute('src')!=expect:
                                         failures.append('Wrong game map loaded in mission workspace')
                                     await pg.locator('.j164-main').click()
@@ -937,8 +938,8 @@ async def smoke():
                                     if label in ('Graffiti Tags','Unique Stunt Jumps') and not await pg.locator('#item-1 a[href^="https://"]').count():
                                         failures.append(f'SA {label} source link missing')
                             if not failures and path=='atlas-cayo.html':
-                                if await pg.locator('#j121Original').count()!=1 or await pg.locator('#j121Planner').count()!=1:
-                                    failures.append('Original Cayo game map and separate heist planning tabs missing')
+                                if await pg.locator('#j180-shell').count()!=1:
+                                    failures.append('Old Cayo URL did not redirect to native island workspace')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 header_hq=pg.locator('header.topbar nav a[href="./atlas81-hq.html"]')
                                 if await header_hq.count()!=1 or not await header_hq.first.is_visible():
@@ -1061,7 +1062,7 @@ async def smoke():
                                             if await pg.locator('.j104-optional-world summary').count()!=1:
                                                 failures.append('General map not demoted to optional reference')
                                         if path=='heist-cayo-perico.html':
-                                            if await pg.locator('.j104-heist-actions a[href="./atlas-cayo.html"]').count()!=1:
+                                            if await pg.locator('.j104-heist-actions a[href="#j180-shell"]').count()!=1:
                                                 failures.append('Cayo island planner not directly linked')
                                 except Exception as exc:
                                     failures.append('Heist-specific planning UI unavailable: '+str(exc)[:330])

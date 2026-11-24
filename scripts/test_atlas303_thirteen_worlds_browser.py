@@ -89,6 +89,11 @@ try:
     elif game=='sa':
      expect(page.locator('#main')).to_be_visible(timeout=20000)
      assert 'San Andreas' in page.title()
+    elif game in ('tlad','tbogt'):
+     expect(page.locator('#j190-iv-scope')).to_have_value(game)
+     expect(page.locator('#visibleCount')).to_have_text('50')
+     expect(page.locator('#classicMapShell')).to_be_visible()
+     assert page.locator('#classicViewport').count()==0
     elif game in CLASSIC:
      assert page.locator('body').get_attribute('data-page')=='classic'
      assert parse_qs(urlsplit(page.url).query).get('game')==[game]

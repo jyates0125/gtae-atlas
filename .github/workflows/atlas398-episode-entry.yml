@@ -1,0 +1,49 @@
+name: Atlas 39.8 - native Liberty City episode entry
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas98-worlds.js'
+      - 'atlas98-classic.js'
+      - 'atlas-iv.*'
+      - 'atlas-cayo.html'
+      - 'atlas399-cayo-entry.js'
+      - 'heist-cayo-perico.html'
+      - 'atlas164-heist-workspace.js'
+      - 'atlas169-heist-views.js'
+      - 'atlas132-nav.js'
+      - 'atlas98-flow.js'
+      - 'atlas-dashboard.html'
+      - 'atlas222-characters.js'
+      - 'scripts/test_atlas398_episode_entry.py'
+      - '.github/workflows/atlas398-episode-entry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  episode-entry:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node --check atlas98-worlds.js
+          node --check atlas98-classic.js
+          node --check atlas-iv.js
+          node --check atlas399-cayo-entry.js
+          node --check atlas164-heist-workspace.js
+          node --check atlas169-heist-views.js
+          node scripts/build-cloudflare.cjs
+          python scripts/test_atlas158_premium_experiences.py
+          python -m pip install playwright==1.58.0
+          python -m playwright install chromium
+      - run: python scripts/test_atlas398_episode_entry.py
+      - run: python scripts/test_atlas334_classic_cast.py

@@ -62,7 +62,8 @@ for(const [key,entry] of Object.entries(portraitPack)){
 }
 const headerOverride='\n/* Validated selected cinematic headers */\n'+headerRules.join('\n')+'\n';
 console.log('Cinematic headers: '+headerRules.length+'/9 selected images verified; visual release review remains separate.');
-const pages = files.filter(rel => rel.endsWith('.html') && !rel.includes('/')).sort().map(rel => {
+// Recovery-only aliases are still built and served, but not advertised by Menu.
+const pages = files.filter(rel => rel.endsWith('.html') && !rel.includes('/') && rel!=='atlas-cayo.html').sort().map(rel => {
   const source=fs.readFileSync(path.join(root,rel),'utf8');
   const lower=source.toLowerCase();
   const tag=lower.indexOf('<title');

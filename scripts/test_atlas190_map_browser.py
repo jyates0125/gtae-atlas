@@ -434,7 +434,7 @@ try:
    page.locator('#j273-camera .j240-controls').get_by_role('button',name='Reset collection alignment').click()
    expect(page.locator('#j273-camera-pins button')).to_have_count(1)
    for scope in ('tlad','tbogt'):
-    page.goto(base+'map-hub.html?game='+scope,wait_until='domcontentloaded',timeout=45000)
+    page.goto(base+'map-hub.html?game='+scope+'&notebook=1',wait_until='domcontentloaded',timeout=45000)
     link=page.locator('#j190-episode-collectibles')
     link.wait_for(state='visible',timeout=15000)
     assert link.get_attribute('href')=='./atlas-iv.html?scope='+scope
@@ -452,9 +452,17 @@ try:
    page.locator('#j190-iv-scope').select_option('iv')
    assert actual()==ids
    print('PASS Atlas 19.0 '+engine+' '+kind+': IV 200/50/50 scope, search, found, clusters, SA map route, classic episode links')
-   page.goto(base+'maps.html?q=tbogt&filter=gateway',wait_until='domcontentloaded')
+   page.goto(base+'maps.html?q=tbogt&filter=limited',wait_until='domcontentloaded')
    expect(page.locator('#worldCount')).to_have_text('1 of 13 destinations')
-   expect(page.locator('.directory-card')).to_have_attribute('href','./map-hub.html?game=tbogt')
+   expect(page.locator('.directory-card')).to_have_attribute('href','./atlas-iv.html?scope=tbogt')
+   page.locator('.directory-card').click()
+   expect(page.locator('#j190-iv-scope')).to_have_value('tbogt')
+   expect(page.locator('#visibleCount')).to_have_text('50')
+   expect(page.locator('#j398-episode-notebook')).to_be_hidden()
+   assert page.locator('#j398-episode-notebook').get_attribute('href') is None
+   page.goto(base+'map-hub.html?game=tbogt',wait_until='domcontentloaded')
+   expect(page.locator('#j190-iv-scope')).to_have_value('tbogt')
+   page.goto(base+'maps.html?q=tbogt&filter=limited',wait_until='domcontentloaded')
    page.locator('#worldSearch').fill('no such destination')
    page.locator('#resetWorldSearch').click()
    expect(page.locator('.directory-card')).to_have_count(13)

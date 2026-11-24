@@ -14,11 +14,15 @@ assert "original.scrollIntoView" not in b
 assert "teamjura-heist-focus-v1:" not in b
 assert 'j167-pin' in (r/'atlas169-heist-views.css').read_text()
 # The featured Cayo destination must open the modern interactive heist map,
-# while the older illustrative schematic remains explicitly discoverable.
+# while the older illustrative schematic is recovery-only.
 worlds=(r/'atlas98-worlds.js').read_text()
 old_schematic=(r/'atlas-cayo.html').read_text()
 assert "href:'heist-cayo-perico.html'" in worlds
 assert 'href="./heist-cayo-perico.html"' in old_schematic
 assert 'The MAIN CAYO MAP WORKSPACE' not in old_schematic or 'j192-flagship-jump' in old_schematic
 assert 'optional illustrative schematic' in old_schematic
+entry=(r/'atlas399-cayo-entry.js').read_text()
+assert "get('recovery')!=='1'" in entry and "location.replace('./heist-cayo-perico.html')" in entry
+assert 'atlas399-cayo-entry.js' in old_schematic
+assert "originalFrame.src='./atlas-cayo.html'" not in b
 print('Atlas 17.0 Cayo map: same native basemap, approximate pins and routes PASS')

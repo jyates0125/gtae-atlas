@@ -13,7 +13,7 @@ const legacy={
  'hunt-hq.html':['Hunt HQ','atlas81-hq.html'],
  'leonida-hq.html':['Leonida HQ','atlas-vi.html']
 };
-const resume={'atlas.html':1,'atlas-online.html':1,'atlas-vi.html':1,'atlas-research.html':1,'atlas-cayo.html':1,'atlas93-garage.html':1,'atlas81-hq.html':1,'heists.html':1,'atlas90-vehicles5.html':1,'atlas90-vehicles6.html':1,'atlas87-daily.html':1,'atlas93-dispatch.html':1};
+const resume={'atlas.html':1,'atlas-online.html':1,'atlas-vi.html':1,'atlas-research.html':1,'atlas-cayo.html':1,'heist-cayo-perico.html':1,'atlas93-garage.html':1,'atlas81-hq.html':1,'heists.html':1,'atlas90-vehicles5.html':1,'atlas90-vehicles6.html':1,'atlas87-daily.html':1,'atlas93-dispatch.html':1};
 function addMenu(){const menu=document.getElementById('j89-menu');if(!menu||menu.querySelector('[data-j97-start]'))return;
  const a=n('a','j97-menu-start','✦ Start here · Choose your adventure');a.href='./atlas97-journey.html';a.dataset.j97Start='true';
  const top=menu.querySelector('.j89-panel-head');if(top)top.insertAdjacentElement('afterend',a);else menu.prepend(a);

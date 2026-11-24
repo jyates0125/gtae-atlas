@@ -20,7 +20,8 @@ for part in (
  "if(!persist()){state.markers=previousMarkers;return}",
  "if(!persist()){state.completed=previous;check.checked=previous.includes(name);return}"
 ): assert part in js,part
-assert 'src="./atlas98-classic.js?v=334"' in html
+assert re.search(r'src="\./atlas98-classic\.js\?v=(\d+)"',html)
+assert int(re.search(r'src="\./atlas98-classic\.js\?v=(\d+)"',html).group(1))>=334
 assert 'href="./atlas98-classic.css?v=302"' in html
 assert '.j302-recovery[hidden]' in css
 assert '#j302-recovery-action' in js and '#j302-recovery-export' in js
