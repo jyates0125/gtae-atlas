@@ -2,7 +2,9 @@
 (()=>{'use strict';
 const p=new URLSearchParams(location.search),raw=(p.get('game')||p.get('world')||'iii').toLowerCase();
 const iii=['iii','gta-iii'].includes(raw);if(!iii&&!['vc','vice-city'].includes(raw))return;
-const config=iii?{world:'iii',name:'GTA III',image:'./art/atlas128-gta3-radar.png',file:'./data/atlas-iii-160-source-points.json',revision:'aa120220618c4c1314d319bc6210071437d14662',blob:'e9ddb8461f9300b4097ccfeeeb88393c7ea5fbb7',count:160,cats:{'Hidden packages':100,'Rampages':40,'Unique stunt jumps':20},source:'https://github.com/Lighnat0r-pers/GTA-III-SCM-Converted/tree/aa120220618c4c1314d319bc6210071437d14662'}:{world:'vc',name:'Vice City',image:'./art/atlas128-vice-city-radar.png',file:'./data/atlas-vc-51-source-points.json',revision:'b06265e1bf37e2b1ed389c58c80679addfbc8f20',blob:'7ae40595da5d5480c50f6a82c2b20557f1f7f6ae',count:51,cats:{'Stunt jumps':36,'Store robberies':15},source:'https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp'};
+const collectibleConfig=iii?{world:'iii',name:'GTA III',image:'./art/atlas128-gta3-radar.png',file:'./data/atlas-iii-160-source-points.json',revision:'aa120220618c4c1314d319bc6210071437d14662',blob:'e9ddb8461f9300b4097ccfeeeb88393c7ea5fbb7',count:160,cats:{'Hidden packages':100,'Rampages':40,'Unique stunt jumps':20},source:'https://github.com/Lighnat0r-pers/GTA-III-SCM-Converted/tree/aa120220618c4c1314d319bc6210071437d14662'}:{world:'vc',name:'Vice City',image:'./art/atlas128-vice-city-radar.png',file:'./data/atlas-vc-51-source-points.json',revision:'b06265e1bf37e2b1ed389c58c80679addfbc8f20',blob:'7ae40595da5d5480c50f6a82c2b20557f1f7f6ae',count:51,cats:{'Stunt jumps':36,'Store robberies':15},source:'https://github.com/kong78/collectibles-on-radar-gta-vc/blob/b06265e1bf37e2b1ed389c58c80679addfbc8f20/src/Util.cpp'};
+const landmarkConfig={...collectibleConfig,kind:'landmarks',file:iii?'./data/atlas401-iii-landmarks.json':'./data/atlas401-vc-landmarks.json',revision:'f69c37a0ac5e68e81e770f79a0a8387f1054f03c',count:iii?42:22,cats:iii?{"Police stations":3,"Hospitals":3,"Fire stations":3,"Pay 'n' Spray":3,"Ammu-Nation":2,"Train stations":6,"Safehouses":1,"Landmarks":21}:{"Police stations":3,"Hospitals":2,"Landmarks":8,"Food & bars":3,"Clubs":2,"Tool shops":2,"Ammu-Nation":1,"Pay 'n' Spray":1},source:'https://github.com/VortrexFTW/v-essentials/blob/f69c37a0ac5e68e81e770f79a0a8387f1054f03c/v-sandbox/shared/util.js'};
+let config=collectibleConfig,generation=0;
 const formatZ=z=>Number.isFinite(z)?z.toFixed(3):'not specified (2D trigger)';
 const target=document.getElementById('classicFlatReference');if(!target)return;
 const E=(t,s)=>{const n=document.createElement(t);if(s!==undefined)n.textContent=s;return n};
@@ -16,7 +18,7 @@ const q=E('input');q.type='search';q.placeholder='Search source ID or name';q.se
 const start=E('select');start.id='j240-start';start.setAttribute('aria-label','Route starting reference');
 const order=E('button','Build geometric preview');order.type='button';order.disabled=true;
 const exportButton=E('button','Export source preview');exportButton.type='button';exportButton.disabled=true;
-controls.append(cat,q,start,order,exportButton);
+const mode=E('select');mode.id='j401-source-mode';mode.setAttribute('aria-label','Choose classic map source layer');for(const [value,label] of [['collectibles','Collectibles and activities'],['landmarks','Landmarks and services']]){const o=E('option',label);o.value=value;mode.append(o)}controls.append(mode,cat,q,start,order,exportButton);
 const list=E('ol');list.id='j240-rows';
 const source=E('a','Original source and author ↗');source.href=config.source;source.target='_blank';source.rel='noopener noreferrer';
 root.append(heading,note,status,controls,list,source);target.after(root);
@@ -30,7 +32,7 @@ viewport.after(detail,alignment);surface.append(projected);controls.prepend(togg
 let enabled=true;
 function compatible(){return viewport.dataset.mapImage==='game-original'&&viewport.dataset.sourceImage===config.image&&viewport.dataset.sourceWidth==='1024'&&viewport.dataset.sourceHeight==='1024'}
 function selectRecord(r){
- selectedId=r.id;selectedRecord=r;detail.hidden=false;detail.replaceChildren(E('strong',r.name),E('p','World X '+r.x.toFixed(3)+' · Y '+r.y.toFixed(3)+' · Z '+formatZ(r.z)+' · source reference, not individually gameplay verified.'));
+ selectedId=r.id;selectedRecord=r;detail.hidden=false;detail.replaceChildren(E('strong',r.name),E('p','World X '+r.x.toFixed(3)+' · Y '+r.y.toFixed(3)+' · Z '+formatZ(r.z)+(config.kind==='landmarks'?' · source teleport approach, not a verified entrance.':' · source reference, not individually gameplay verified.')));
  const link=E('a','Coordinate source ↗');link.href=r.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';const close=E('button','Close detail');close.type='button';close.onclick=()=>{selectedId='';selectedRecord=null;detail.hidden=true;drawMap()};detail.append(link);if(progress)detail.append(progress.button(r));detail.append(close);drawMap();
 }
 function drawMap(){
@@ -69,15 +71,23 @@ order.onclick=()=>{
  status.textContent=planned.length+' reference stops · '+(alternateSpawns?'one candidate spawn per objective; confirm the active spawn. ':'')+(improved?.improved?'shorter geometric order; ':'nearest-next order retained; ')+'not road directions.';
  drawMap();
 };
-exportButton.onclick=()=>{if(!planned.length)return;const blob=new Blob([JSON.stringify({schema:1,world:config.world,kind:'sourced-coordinate-preview',sourceUrl:source.href,route:planned.map(({id,x,y,z})=>({id,x,y,z}))},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+config.world+'-reference-route.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)};
-fetch(config.file).then(r=>{if(!r.ok)throw Error('source unavailable');return r.json()}).then(d=>{
+exportButton.onclick=()=>{if(!planned.length)return;const blob=new Blob([JSON.stringify({schema:1,world:config.world,kind:config.kind==='landmarks'?'landmark-approach-preview':'sourced-coordinate-preview',sourceUrl:source.href,route:planned.map(({id,x,y,z})=>({id,x,y,z}))},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=E('a');a.href=url;a.download='team-jura-'+config.world+(config.kind==='landmarks'?'-landmarks':'')+'-reference-route.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)};
+function loadConfig(next){
+ if(progress?.hasUnsaved()){mode.value=config.kind==='landmarks'?'landmarks':'collectibles';status.textContent='Unsaved working progress. Export before leaving this layer.';return}
+ const load=++generation;progress?.dispose();progress=null;config=next;rows=[];planned=[];selectedId='';selectedRecord=null;detail.hidden=true;cat.replaceChildren();start.replaceChildren();list.replaceChildren();q.value='';cat.disabled=q.disabled=start.disabled=true;order.disabled=exportButton.disabled=true;heading.textContent=config.name+(config.kind==='landmarks'?' · landmarks and services':' · sourced map locations');note.textContent=config.kind==='landmarks'?'MIT-licensed named teleport approach references on the matched original radar. These are not collectible spawns, exact entrances or verified gameplay positions. Visited progress is separate.':'Game-script reference positions projected using the original radar publisher’s documented coordinates. Only the matching original image displays source markers. Source numbering differs from guide checklists. Geometric routes are not street navigation or gameplay verification.';source.href=config.source;source.textContent=config.kind==='landmarks'?'Vortrex / MIT source and author ↗':'Original source and author ↗';status.textContent='Loading locally bundled source…';drawMap();
+ fetch(config.file).then(r=>{if(!r.ok)throw Error('source unavailable');return r.json()}).then(d=>{
+ if(load!==generation)return;
  const seen=new Set();
+ if(config.kind==='landmarks'&&(d.kind!=='landmark-approach-reference'||d.edition!=='classic-reference'||d.license!=='MIT'||d.gameplayVerified!==false))throw Error('landmark source identity mismatch');
  if(d.schema!==1||d.world!==config.world||d.sourceRevision!==config.revision||d.mapAlignment!=='source-transform-matched'||d.projection?.gitBlobSha!==config.blob||d.records?.length!==config.count)throw Error('source identity mismatch');
  for(const r of d.records){
   if(typeof r.id!=='string'||!r.id.startsWith(config.world+'-')||seen.has(r.id)||!Object.hasOwn(config.cats,r.category)||![r.x,r.y].every(Number.isFinite)||!(Number.isFinite(r.z)||(iii&&r.category==='Unique stunt jumps'&&r.z===null))||typeof r.name!=='string'||typeof r.sourceUrl!=='string'||!r.sourceUrl.startsWith('https://github.com/')||Math.abs(r.x)>2000||Math.abs(r.y)>2000||!Number.isFinite(r.imageX)||!Number.isFinite(r.imageY)||Math.abs(r.imageX-(r.x+2000)/40)>.000001||Math.abs(r.imageY-(2000-r.y)/40)>.000001)throw Error('invalid source row');
   seen.add(r.id);
  }
  for(const [category,count] of Object.entries(config.cats)){if(d.records.filter(r=>r.category===category).length!==count)throw Error('category count mismatch');cat.append(option(category,category+' · '+count))}
- rows=d.records;progress=window.JuraSourceProgress.create(window,{scope:config.world+'-classic',revision:config.revision,rows,identity:r=>iii&&r.category==='Rampages'?'rampage:'+r.slot:r.id,host:root,onChange:()=>{const current=detail.hidden?null:selectedRecord;reset();if(current&&visible().some(r=>r.id===current.id)&&enabled&&compatible())selectRecord(current)}});reset()
-}).catch(e=>{status.textContent='Reference index unavailable: '+e.message;cat.disabled=q.disabled=start.disabled=true});
+ rows=d.records;progress=window.JuraSourceProgress.create(window,{scope:config.world+(config.kind==='landmarks'?'-classic-landmarks':'-classic'),revision:config.revision,rows,identity:r=>iii&&r.category==='Rampages'?'rampage:'+r.slot:r.id,kind:config.kind==='landmarks'?'visited':'found',host:root,onChange:()=>{const current=detail.hidden?null:selectedRecord;reset();if(current&&visible().some(r=>r.id===current.id)&&enabled&&compatible())selectRecord(current)}});cat.disabled=q.disabled=start.disabled=false;reset()
+ }).catch(e=>{if(load!==generation)return;status.textContent='Reference index unavailable: '+e.message;cat.disabled=q.disabled=start.disabled=true});
+}
+mode.onchange=()=>loadConfig(mode.value==='landmarks'?landmarkConfig:collectibleConfig);
+loadConfig(collectibleConfig);
 })();
