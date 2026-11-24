@@ -4,6 +4,23 @@
   "copyright": "Vehicle naming/game intellectual property belongs to Rockstar / Take-Two. Statistical facts are attributed to GTADB and tested community data. No GTADB images, models, descriptions, or complete database dumps redistributed.",
   "limitations": "20 hand-selected source-checked GTA Online records only. For all other models specs are unknown until independently verified, never inferred from real-world cars.",
   "vehicles": {
+    "ellie": {
+      "model": "ellie",
+      "displayName": "Vapid Ellie",
+      "manufacturer": "Vapid",
+      "category": "Muscle",
+      "seats": 2,
+      "drive": "RWD",
+      "priceUSD": 565000,
+      "topSpeedMph": 105.5,
+      "description": "Classic fastback muscle coupe",
+      "sourceUrl": "https://gtadb.net/gta-online/vehicles/ellie/",
+      "source": "GTADB GTA Online profile; GTABase corroborates real-world inspiration",
+      "checkedAt": "2026-11-24",
+      "game": "GTA Online",
+      "confidence": "Community source-checked; price and availability may change; tested speed is for an upgraded vehicle",
+      "visualInspiration": "1967 Ford Mustang / Shelby GT500; film-car influence reported by community references"
+    },
     "adder": {
       "model": "adder",
       "manufacturer": "Truffade",
