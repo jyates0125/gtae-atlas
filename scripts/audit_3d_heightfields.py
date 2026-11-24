@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""3D terrain release gate: never claim genuine elevation without heightfield bytes."""
+"""3D terrain release gate: distinguish original dense elevation from approximate relief."""
 from pathlib import Path
 from array import array
 import json
@@ -26,10 +26,10 @@ for game, (width, height) in worlds.items():
     report.append({"game": game, "heightfield": asset.name,
                    "expected_bytes": expected, "present": present,
                    "valid": bool(valid and relief), "relief_detected": relief,
-                   "mode": "terrain" if valid and relief else "perspective-only"})
+                   "mode": "dense-terrain" if valid and relief else ("approximate-relief-available" if game == 6 and (root / "data/atlas368-approx-terrain.json").is_file() else "2d-only")})
     if present and not valid:
         errors.append(f"{asset.name} has incorrect size; must not deploy corrupt 3D data")
-for snippet in ("No elevation data available for true 3D", "flat mesh until licensed heightfield",
+for snippet in ("No elevation data available for true 3D", "if(!hasElevation()&&!hasApproximate())", "setApproximateSurface",
                 "setElevationBinary", "prepareElevation", "sourceHeights=null"):
     if snippet not in engine:
         errors.append(f"3D fallback or local-import safety contract missing: {snippet}")
