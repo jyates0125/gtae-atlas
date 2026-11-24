@@ -72,13 +72,21 @@ try:
                 record["menu"]="passed"
                 if route=="atlas-vi.html":
                     guide=page.locator("#j217-vi-hub")
-                    guide.locator("summary").click()
+                    guide.locator(":scope > summary").click()
                     back=page.locator("#j391-guide-back")
                     expect(back).to_be_visible()
                     back.click()
-                    expect(guide).not_to_have_attribute("open","")
-                    expect(guide.locator("summary")).to_be_focused()
-                    record["viGuide"]="passed"
+                    assert guide.evaluate("(node)=>!node.open")
+                    expect(guide.locator(":scope > summary")).to_be_focused()
+                    expand=page.locator("#j171-expand-map")
+                    expand.click()
+                    expect(expand).to_have_attribute("aria-pressed","true")
+                    guide.locator(":scope > summary").click()
+                    back.click()
+                    assert guide.evaluate("(node)=>!node.open")
+                    expand.click()
+                    expect(expand).to_have_attribute("aria-pressed","false")
+                    record["viGuide"]="passed (normal and expanded)"
                 if route in ("atlas-dashboard.html","atlas-vi.html"):
                     page.screenshot(path=str(out/f"{width}-{route}.png"),animations="disabled")
             except Exception as exc:
