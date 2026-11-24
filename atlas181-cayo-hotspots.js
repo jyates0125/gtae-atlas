@@ -222,13 +222,17 @@ const chestLayer=focus.querySelector('.j180-chest-layer');
 if(chestLayer){
  // JS 18 replaces these nodes for each reset; observe to preserve the exact
  // daily highlighting state without recreating visible, generic chest dots.
- const chestMonitor=new MutationObserver(()=>{
-  focus.classList.toggle('j181-no-daily-selection',!chestLayer.querySelector('.j180-chest-active'));
- });
+ const syncChestLegend=()=>{
+  const current=chestLayer.querySelectorAll('.j180-chest-active').length===2;
+  focus.classList.toggle('j181-no-daily-selection',!current);
+  const row=legend.querySelector('[data-j181-cat="chest"] .j180-legend-copy small');
+  if(row)row.textContent=current?'2 active (cyan) · 17 unavailable today':'19 possible · current pair unconfirmed';
+ };
+ const chestMonitor=new MutationObserver(syncChestLegend);syncChestLegend();
  chestMonitor.observe(chestLayer,{childList:true});
 }
 const notice=document.querySelector('.j180-legend-foot');
-if(notice)notice.textContent='Colorful icons share the exact same categories as the legend. Tap a symbol for its details; tap its legend row to show or hide that category. Positions approximate; yellow chests are possible spawns, cyan are dated/player-selected.';
+if(notice)notice.textContent='Colorful icons share the exact same categories as the legend. Tap a symbol for its details; tap its legend row to show or hide that category. Positions approximate. Cyan chests are today’s dated/player-selected pair; yellow locations are reference-only when the current pair is unavailable or All 19 is selected.';
 const status=document.querySelector('.j180-map-status');
 const updateSourceCaption=()=>{
  const source=focus.dataset.mapSource;

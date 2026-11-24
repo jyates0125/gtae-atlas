@@ -35,6 +35,7 @@ const RULES=[
  {id:'vehicle-delivery',name:'Personal vehicle delivery points',kind:'prerequisite',group:'Player / session conditions',requires:['owned-vehicle'],source:'https://gtadb.net/gta-online-map/interactive/',detail:'Availability depends on owned service vehicles and the current game/session.'},
  {id:'gun-van-stock',name:'Gun Van inventory',kind:'weekly',group:'Weekly & seasonal',source:'https://gtadb.net/gta-online-map/gun-van/',detail:'Stock/discounts change weekly independently from the daily Gun Van position.'},
  {id:'peyote',name:'Peyote Plants',kind:'seasonal',group:'Weekly & seasonal',event:'peyote',source:'https://gtadb.net/gta-online-map/interactive/',detail:'Only eligible during enabled events; map markers should not claim plants are currently active without an event source.'},
+ {id:'slashers',name:'Halloween free-roam Slashers',kind:'seasonal',group:'Weekly & seasonal',event:'halloween',source:'https://www.rockstargames.com/newswire/article/39a22k25434a53/experience-halloween-thrills-all-throughout-october-in-gta-online',detail:'Seasonal freemode encounters, not a guarantee of a spawn or a claim about permanent Adversary Mode jobs.'},
  {id:'pumpkins',name:'Jack O’Lanterns',kind:'seasonal',group:'Weekly & seasonal',event:'halloween',pool:200,source:'https://gtadb.net/gta-online-map/interactive/',detail:'Show every known pumpkin position. Track the current collection run independently from lifetime discoveries.'},
  {id:'ufo',name:'UFO sightings',kind:'seasonal',group:'Weekly & seasonal',event:'halloween',source:'https://gtadb.net/gta-online-map/interactive/',detail:'Needs a dated schedule plus hour/visibility rules; do not infer active sightings from season alone.'},
  {id:'snowmen',name:'Snowmen',kind:'seasonal',group:'Weekly & seasonal',event:'holiday',source:'https://gtadb.net/gta-online-map/interactive/',detail:'Seasonal only; track progress separately from current game availability.'},
@@ -102,6 +103,13 @@ function evaluate(id,ctx={}){
  if(r.event&&events[r.event]!==true){return events[r.event]===false?{status:'closed',reason:'Event set to off on this device'}:{status:'unknown',reason:'Event availability not confirmed'};}
  const needs=r.requires||[];for(const f of needs){if(f==='ghosts-nine'){if(!GH.slice(0,9).every(row=>completed[row[0]]))return{status:'locked',reason:'Photograph ghosts #1–9 first'};continue;}
   if(!flags[f])return{status:'locked',reason:'Requires: '+(PREREQS.find(a=>a[0]===f)?.[1]||f)};}
+ if(r.id==='slashers'){
+  const session=ctx.slasherSession||{};
+  if(!Number.isInteger(ctx.hour)||ctx.hour<0||ctx.hour>23)return{status:'unknown',reason:'Enter your current in-game hour (not local time).'};
+  if(ctx.hour<1||ctx.hour>=6)return{status:'closed',reason:'Outside the reported 01:00–06:00 in-game window.'};
+  if(!session.freeroam||!session.elapsed||!session.vehicle||!session.cooldown)return{status:'locked',reason:'Confirm freemode outdoors, 16+ minutes in session, eligible travel and encounter cooldown.'};
+  return{status:'active',reason:'Reported prerequisites met; random encounter only, not guaranteed. Approximate red search areas.'};
+ }
  if(r.kind==='rotation'){
   const feed=rotationFeed(ctx.snapshot,id,now);if(!feed)return{status:'unknown',reason:'No current dated position snapshot. Possible locations only; no yellow active pins.'};
   const marker=ctx.markerId!=null?String(ctx.markerId):null;
@@ -117,6 +125,30 @@ function evaluate(id,ctx={}){
  if(r.kind==='session')return seen[id]?{status:'active',reason:'You marked this as present in your current session'}:{status:'possible',reason:'Player/session dependent; map shows possible positions only'};
  if(r.kind==='weekly')return{status:'unknown',reason:'Needs a dated weekly inventory feed, independent of location'};
  return{status:'possible',reason:'Prerequisites satisfied; does not guarantee a spawn'};
+}
+// Availability is separate from player progress and layer visibility. Only an
+// explicitly closed event, a full dated pair/pool selection, or a known hour
+// mismatch establishes that a location is unavailable now.
+// Original approximate search-area guides, centered on licensed GTADB landmarks.
+ // Radii are Elario planning estimates, NOT extracted game triggers.
+ const SLASHER_ZONES=Object.freeze([
+ {name:'Clown · central Los Santos',anchor:'Legion Square',x:200.249,y:-932.407,radius:1100},
+ {name:'Driver · Redwood Lights Track',anchor:'Redwood Lights Track',x:1054.028,y:2305.528,radius:350},
+ {name:'Psycho · Vinewood Hills',anchor:'Galileo Observatory',x:-437.147,y:1069.517,radius:650},
+ {name:'Psycho · Tongva Hills',anchor:'Marlowe Vineyard',x:-1887.22,y:2055.021,radius:550},
+ {name:'Psycho · Great Chaparral',anchor:'Route 68 Church',x:-316.726,y:2799.203,radius:500},
+ {name:'Sack Slasher · northern Blaine County',anchor:'Paleto Bay Church',x:-317.764,y:6143.679,radius:1000}
+ ].map(Object.freeze));
+ function markerAvailability(id,ctx={}){
+ const rule=BY_ID[id];if(!rule)return {status:'unknown',hide:false};
+ const result=evaluate(id,ctx),feed=rule.kind==='rotation'?rotationFeed(ctx.snapshot,id,ctx.now??Date.now()):null;
+ const off=result.status==='closed'||(rule.kind==='clock'&&result.status==='possible')||Boolean(feed&&feed.active.size===rule.today&&ctx.markerId!=null&&!feed.active.has(String(ctx.markerId)));
+ // On the mainland, time-limited pins need current evidence before display.
+ // Unknown is NOT an assertion that the event has ended.
+ const timed=['rotation','clock','clock-parent','seasonal'].includes(rule.kind);
+ const eligible=result.status==='active'||(rule.kind==='seasonal'&&rule.id!=='slashers'&&rule.id!=='ufo'&&result.status==='possible'&&ctx.state?.events?.[rule.event]===true);
+ const awaiting=timed&&!eligible&&!off;
+ return {...result,hide:off||awaiting,availability:off?'inactive':awaiting?'unconfirmed':'available'};
 }
 function markerColor(status){return {active:'#facc15',possible:'#f8fafc',closed:'#f8fafc',locked:'#94a3b8',complete:'#64748b',unknown:'#38bdf8',research:'#38bdf8',excluded:'#64748b','available-feed':'#38bdf8'}[status]||'#38bdf8';}
 function statusText(status){return {active:'Eligible / selected (not verified live)',possible:'Possible · not currently selected',locked:'Locked · prerequisite',closed:'Not active',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
@@ -163,5 +195,5 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
  if(responses.every(r=>r.status==='rejected'))throw Error('Both daily feeds unavailable');
  return mergePublishedRotations([...responses.filter(r=>r.status==='fulfilled').map(r=>r.value),previous],now);
 }
-return{cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });

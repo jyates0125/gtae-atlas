@@ -144,3 +144,9 @@ body.j180-cayo #j153-advisory.j180-advisory-bottom{margin:18px auto 4px;max-widt
 /* Approved desktop/iPhone page has one global all-pages menu, not the old
    overlapping Start Here dock. Other world pages preserve their controls. */
 body.j180-cayo:has(#j132-nav-toggle) #j89-shell{display:none!important}
+
+/* Atlas 39.3: keep unavailable daily entries in the list, not on the live map. */
+body.j180-cayo .j180-chest-row.j393-inactive>span:nth-child(2){text-decoration:line-through;color:#c3b2c9}
+body.j180-cayo .j180-chest-row.j393-inactive small{color:#dbc3df}
+body.j180-cayo .j180-chest-row:disabled{cursor:not-allowed;opacity:.75}
+body.j180-cayo .j180-chest-row:not(.j393-inactive):has(.is-active){border-color:#42e5e7!important}

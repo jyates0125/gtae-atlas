@@ -72,10 +72,14 @@ try:
         page.wait_for_function("document.querySelector('#j167-heist-map')?.dataset.mapSource==='original'",timeout=30000)
         assert page.locator('.j180-chest').count()==19,'All 19 possible chest references render'
         assert page.locator('.j180-chest-active:visible').count()==2,'Current pair is visible on the Cayo island map'
+        assert page.locator('.j180-chest:visible').count()==2,'Current daily pair is the default map view'
+        assert page.locator('.j180-chest-row.j393-inactive:disabled').count()==17,'Inactive chest rows remain listed but inaccessible in daily view'
+        assert page.locator('.j180-chest-row').count()==19,'All chest references stay in the daily legend list'
         page.get_by_role('button',name='Today’s two',exact=True).click()
         assert page.locator('.j180-chest:visible').count()==2,'Today filter shows only the current pair on Cayo'
         page.get_by_role('button',name='All 19 possible',exact=True).click()
         assert page.locator('.j180-chest:visible').count()==19,'All possible chest references remain accessible'
+        assert page.locator('.j180-chest-row.j393-inactive').count()==17,'Reference mode retains inactive markings'
 
         assert page.locator('.j180-legend-row').count()==14,'All 14 interactive marker legend rows render'
         page.locator('#j181-hotspots').wait_for(state='attached',timeout=10000)
