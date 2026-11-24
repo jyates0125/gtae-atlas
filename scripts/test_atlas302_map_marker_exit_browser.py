@@ -27,6 +27,22 @@ try:
   for width,height in sizes:
    context=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
    context.route('https://**/*',lambda route:route.abort())
+   # Preload isolated guest fixtures through the real current save namespace.
+   # The genuine selection engine must own marker state, including during
+   # asynchronous daily-data refreshes that re-render the detail card.
+   context.add_init_script("""() => {
+     const key='team-jura-atlas-v41-pins';
+     if(localStorage.getItem(key)!==null)return;
+     localStorage.setItem(key,JSON.stringify([
+       ['5','story'],['5','online'],['6','vi']
+     ].map(([game,scope])=>({
+       id:'user-marker-exit-'+scope,game,scope,category:'user',x:0,y:0,
+       name:'Long verified landmark briefing',tags:[],
+       detail:'Detailed mission research · '.repeat(70),
+       address:'Additional local source information. '.repeat(30),
+       source:'My saved location',uncertain:false
+     }))));
+   }""")
    page=context.new_page()
    for name in pages:
     page.goto(base+name,wait_until='domcontentloaded',timeout=45000)
@@ -40,25 +56,27 @@ try:
     page.wait_for_function("() => typeof document.getElementById('closeSelected')?.onclick === 'function'",timeout=20000)
     page.wait_for_load_state('networkidle',timeout=20000)
     assert not back.is_visible(),(name,width,height,'Hidden card return leaked into map')
+    scope={'atlas.html':'story','atlas-online.html':'online','atlas-vi.html':'vi'}[name]
+    marker_id='user-marker-exit-'+scope
+    def select_fixture():
+     page.evaluate("(id) => window.JuraDualLegendAPI.selectPlace(id)",marker_id)
+     expect(page.locator('#selectedName')).to_have_text('Long verified landmark briefing')
+     expect(back).to_be_visible(timeout=12000)
     before=page.evaluate("""() => ({
       progress:localStorage.getItem('jura3-progress'),
       routes:localStorage.getItem('jura-atlas-routes'),
-      pins:localStorage.getItem('jura-atlas-pins'),
+      pins:localStorage.getItem('team-jura-atlas-v41-pins'),
       hash:location.hash,
       history:history.length
     })""")
-    # Test long marker notes and tall photos without relying on a remote source.
+    # Select the real fixture; only media geometry is simulated. Daily feed
+    # refreshes no longer hide a DOM-only card with no engine selection.
+    select_fixture()
     page.evaluate("""() => {
-      const card=document.getElementById('selectedCard');
-      card.classList.remove('hidden');
-      document.getElementById('selectedName').textContent='Long verified landmark briefing';
-      document.getElementById('selectedInfo').textContent=('Detailed mission research · ').repeat(70);
-      document.getElementById('selectedAddress').textContent=('Additional local source information. ').repeat(30);
       const figure=document.getElementById('selectedPhotoFigure');
       figure.hidden=false;
       figure.innerHTML='<div style="height:380px">Source media placeholder sizing only</div>';
     }""")
-    expect(back).to_be_visible(timeout=12000)
     rect=back.bounding_box()
     card_rect=card.bounding_box()
     assert rect is not None and card_rect is not None
@@ -94,16 +112,13 @@ try:
     expect(card).to_be_hidden(timeout=15000)
     expect(page.locator('#atlasCanvas')).to_be_focused(timeout=15000)
     # Escape must be equivalent while focus is within the detail region.
-    page.evaluate("""() => {
-      const c=document.querySelector('#selectedCard');
-      c.classList.remove('hidden');
-    }""")
+    select_fixture()
     back.focus()
     page.keyboard.press('Escape')
     expect(card).to_be_hidden(timeout=10000)
     expect(page.locator('#atlasCanvas')).to_be_focused(timeout=10000)
     # The existing × remains operational with an accessible 44px hitbox.
-    page.evaluate("document.getElementById('selectedCard').classList.remove('hidden')")
+    select_fixture()
     x_button=page.locator('#closeSelected')
     x_rect=x_button.bounding_box()
     assert x_rect and x_rect['width']>=44 and x_rect['height']>=44,(
@@ -114,7 +129,7 @@ try:
     after=page.evaluate("""() => ({
       progress:localStorage.getItem('jura3-progress'),
       routes:localStorage.getItem('jura-atlas-routes'),
-      pins:localStorage.getItem('jura-atlas-pins'),
+      pins:localStorage.getItem('team-jura-atlas-v41-pins'),
       hash:location.hash,
       history:history.length
     })""")
