@@ -11,7 +11,7 @@ for token in ('j185-polish','j185-cayo-polished','j185-pan','j185-legend-toggle'
               'aria-pressed','aria-expanded','matchMedia','jura','syncPan','syncLegend'):
     if token=='jura':continue
     assert token in (js+css),token
-assert "atlas185-cayo-polish.js?v=185" in loader
+assert "atlas185-cayo-polish.js?v=392" in loader
 assert "atlas185-cayo-polish.css?v=185" in loader
 assert "if(heistId==='cayo-perico')" in loader
 assert "moveNative.click();syncPan();" in js
@@ -37,3 +37,8 @@ assert css.count('{')==css.count('}')
 assert 'teamjura-heist-focus-v1:' not in js
 assert "localStorage.setItem" not in js
 print('PASS Cayo 18.5: panning, map shape, phone filter, visible card, fallback QA; other heists untouched')
+
+assert 'items.slice(0,12)' not in js
+assert 'event.detail===0' in js
+assert 'All nearby markers must be selectable' in browser
+assert 'Keyboard activation selects the exact pin' in browser

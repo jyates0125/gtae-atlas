@@ -32,7 +32,16 @@ assert "data-step" in s and 'check.dataset.step' in s
 assert 'j301-checklist-notice[hidden]' in styling
 assert 'atlas298-heist-map-kit.js' in s and 'atlas299-heist-backup.js' in s
 assert "heistId!=='cayo-perico'" in s
-assert 'src="./heist-pages.js?v=301"' in (root/'heist-cayo-perico.html').read_text(encoding='utf-8'), 'Cayo must fetch new checklist script'
+# Daily-source cache parameters can coexist with the checklist version.
+# Assert the actual script path and a non-regressed numeric version.
+from html import unescape
+from urllib.parse import urlsplit, parse_qs
+cayo=(root/'heist-cayo-perico.html').read_text(encoding='utf-8')
+scripts=[urlsplit(unescape(src)) for src in re.findall(r'<script\b[^>]*\bsrc="([^"]+)"',cayo)]
+checklist=[u for u in scripts if u.path=='./heist-pages.js']
+assert len(checklist)==1, 'Cayo must load one shared checklist script'
+versions=parse_qs(checklist[0].query).get('v',[])
+assert len(versions)==1 and versions[0].isdigit() and int(versions[0])>=301, 'Cayo must fetch current checklist script'
 result=subprocess.run(['node','--check',str(root/'heist-pages.js')],capture_output=True,text=True)
 assert result.returncode==0,result.stderr
 print('Atlas 30.1 source guard: all fifteen heists, no load write, scoped saves, history and backups passed')

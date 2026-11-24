@@ -14,7 +14,7 @@ const ORDER=[
  ['atlas171-cayo-board.js','171','j171-cayo-board'],
  ['atlas180-cayo-flagship.js','383','j180-shell'],
  ['atlas181-cayo-hotspots.js','191','j181-hotspots'],
- ['atlas185-cayo-polish.js','185','j185-polish'],
+ ['atlas185-cayo-polish.js','392','j185-polish'],
  ['atlas186-cayo-route.js','191','j186-route'],
  ['atlas188-cayo-flow.js','1883','j188-quickbar']
 ];

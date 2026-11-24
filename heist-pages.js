@@ -171,7 +171,7 @@ if(document.body.classList.contains('j120-heist-page')){
    polishCSS.rel='stylesheet';polishCSS.href='./atlas185-cayo-polish.css?v=185';
    document.head.append(polishCSS);
   }
-  const polish=document.createElement('script');polish.async=false;polish.src='./atlas185-cayo-polish.js?v=185';document.body.append(polish);
+  const polish=document.createElement('script');polish.async=false;polish.src='./atlas185-cayo-polish.js?v=392';document.body.append(polish);
   const routeStyle=document.createElement('link');routeStyle.rel='stylesheet';routeStyle.href='./atlas186-cayo-route.css?v=187';document.head.append(routeStyle);
   const routePlanner=document.createElement('script');routePlanner.async=false;routePlanner.src='./atlas186-cayo-route.js?v=191';document.body.append(routePlanner);
   // Atlas 18.8: one user-facing filter selection shared by Cayo icons + personal route.
