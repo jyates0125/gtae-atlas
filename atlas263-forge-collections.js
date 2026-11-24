@@ -27,12 +27,13 @@ function summarize(world,model,kind,entry,name){
   accent:typeof d.accent==='string'&&/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent.toLowerCase():'Not saved',
   stance:savedText(d.stance,['street','low','raised']),
   kit:savedText(d.kit,['clean','sport','track']),
+  wheels:savedText(d.wheels,['classic','mesh','deepdish']),rim:savedText(d.rim,['silver','gold','black']),stripe:savedText(d.stripe,['none','single','dual']),
   lights:typeof d.lights==='boolean'?(d.lights?'On':'Off'):'Not saved'
  });
 }
 function compareFields(a,b){
  if(!a||!b||a.key===b.key||a.world!==b.world||a.model!==b.model)return null;
- const fields=[['Body', 'body'],['Showroom environment','environment'],['Surface finish','finish'],['Accent','accent'],['Ride height','stance'],['Aero / deck styling','kit'],['Concept lighting','lights']];
+ const fields=[['Body', 'body'],['Showroom environment','environment'],['Surface finish','finish'],['Accent','accent'],['Ride height','stance'],['Aero / deck styling','kit'],['Wheel design','wheels'],['Wheel finish','rim'],['Racing stripe','stripe'],['Concept lighting','lights']];
  return [['Paint','paint',a.paint,b.paint],...fields.map(([label,key])=>[label,key,a[key],b[key]])]
   .filter(([label,key,left,right])=>label==='Paint'||left!=='Not saved'||right!=='Not saved');
 }
@@ -90,6 +91,9 @@ function start(w){const d=w.document;async function init(){
  const root=d.getElementById('forgeCollectionRows');if(!root)return;
  const make=(tag,txt,cls)=>{const n=d.createElement(tag);if(txt!==undefined)n.textContent=txt;if(cls)n.className=cls;return n};
  const search=d.getElementById('forgeCollectionSearch'),world=d.getElementById('forgeCollectionWorld'),kind=d.getElementById('forgeCollectionKind'),count=d.getElementById('forgeCollectionCount');
+ const params=new URL(w.location.href).searchParams;
+ if([...world.options].some(o=>o.value===params.get('world')))world.value=params.get('world');
+ if([...kind.options].some(o=>o.value===params.get('kind')))kind.value=params.get('kind');
  let names={},rows=[],unavailable=false,selected=[],comparisonHint='';
  const comparePanel=d.getElementById('forgeComparePanel'),compareStatus=d.getElementById('forgeCompareStatus'),compareBody=d.getElementById('forgeCompareBody'),compareClear=d.getElementById('forgeCompareClear');
  const read=key=>{try{return JSON.parse(w.localStorage.getItem(key)||'null')}catch{unavailable=true;return null}};
