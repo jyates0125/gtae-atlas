@@ -29,6 +29,11 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
      assert img.evaluate('(e)=>e.complete && e.naturalWidth>0') or img.evaluate('(e)=>e.decode().then(()=>true)')
     assert panel.evaluate('(e)=>e.scrollWidth<=e.clientWidth+2')
     panel.screenshot(path=str(OUT/f'{path}-{width}.png'),animations='disabled')
+    if path=='index.html':
+     cards=page.locator('#featuredGrid>.world-card')
+     expect(cards).to_have_count(4,timeout=15000)
+     for world in cards.all():
+      assert world.evaluate('(e)=>{const r=e.getBoundingClientRect();return r.left>=-2&&r.right<=innerWidth+2&&r.width>0}'),('featured world exceeds viewport',width,world.get_attribute('href'))
     overflow=page.evaluate('document.documentElement.scrollWidth-innerWidth')
     assert overflow<=2, ('page overflow',path,width,overflow,page.evaluate('''()=>[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth+2&&getComputedStyle(e).position!=='fixed').slice(0,15).map(e=>[e.tagName,e.className,Math.round(e.getBoundingClientRect().right)])'''))
    page.goto(base+'atlas-forge-collections.html')

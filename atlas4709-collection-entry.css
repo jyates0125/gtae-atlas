@@ -17,3 +17,12 @@ body.j4709-workshop[data-j4709-world="vi"] .c-hero{background:linear-gradient(95
 
 /* Prevent intrinsic image widths and flex button labels from widening narrow screens. */
 .j4709-entry{min-width:0;max-width:100%;box-sizing:border-box}.j4709-entry>article{grid-template-columns:minmax(0,1fr);max-width:100%;box-sizing:border-box}.j4709-cover{max-width:100%;height:auto;box-sizing:border-box}.j4709-actions{min-width:0;max-width:100%}.j4709-actions a{box-sizing:border-box;min-width:0;max-width:100%;overflow-wrap:anywhere;text-align:center;white-space:normal}
+
+/* Keep the featured card's intrinsic image ratio from widening its grid track in Edge. */
+body.j130-home .site-shell,body.j130-home .j130-worlds,body.j130-home #featuredGrid{min-width:0;max-width:100%;box-sizing:border-box}
+body.j130-home #featuredGrid{width:100%;grid-template-columns:repeat(4,minmax(0,1fr))}
+body.j130-home #featuredGrid>.world-card{width:100%;max-width:100%;min-width:0;box-sizing:border-box;overflow:hidden}
+body.j130-home #featuredGrid .world-art-frame{width:100%;max-width:100%;min-width:0;min-height:0;flex:none;aspect-ratio:16/11;contain:inline-size}
+body.j130-home #featuredGrid .world-art-frame img{max-width:100%}
+body.j130-home #featuredGrid .world-copy{min-width:0;max-width:100%;overflow-wrap:anywhere;grid-template-columns:minmax(0,1fr)}
+@media(max-width:700px){body.j130-home #featuredGrid{grid-template-columns:repeat(2,minmax(0,1fr))}body.j130-home .j130-feature{min-width:0;max-width:100%;overflow:hidden}}
