@@ -105,6 +105,19 @@ try:
         expect(page.locator('#concept3d [data-workshop-category="suspension"]')).to_have_count(0)
         expect(page.locator('#concept3d a[href="./atlas-credits.html#forge-vehicle-workshop-expansion-4"]')).to_have_count(1)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
+        page.goto(base + '/atlas-vehicle-configurator.html?world=vi&division=acquisition-water-temporary&model=vi_squalo',wait_until='domcontentloaded')
+        expect(page.locator('#forgeDivision')).to_have_value('acquisition-water-temporary')
+        expect(page.locator('#modelSelect option')).to_have_count(11,timeout=30000)
+        expect(page.locator('#concept3d [data-vi-acquisition="water-temporary"]')).to_contain_text('no normal registration reported')
+        expect(page.locator('#concept3d')).to_contain_text('Ultimate Edition')
+        page.locator('#forgeDivision').select_option('acquisition-air-temporary')
+        expect(page.locator('#modelSelect option')).to_have_count(13)
+        page.locator('#modelSelect').select_option('vi_maverick')
+        expect(page.locator('#concept3d [data-vi-acquisition="air-temporary"]')).to_contain_text('temporary aircraft use')
+        page.locator('#forgeDivision').select_option('acquisition-road-review')
+        page.locator('#modelSelect').select_option('vi_bati_801')
+        expect(page.locator('#concept3d [data-vi-acquisition="road-review"]')).to_contain_text('Chapter 2')
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
         # New acquisition views preserve ownership and legacy builds.
         page.goto(base + '/atlas-vehicle-configurator.html?world=vi&division=returning&model=vi_cheetah95',wait_until='domcontentloaded')
         expect(page.locator('#forgeDivision')).to_have_value('returning')
