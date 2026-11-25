@@ -119,17 +119,19 @@ for(const id of [...forge.warehouseModels('v-online'),'oppressor','oppressor2'])
 assert.equal(Object.keys(forge.viCatalog).length,seed.vi.length);
 assert.equal(forge.viEvidenceModels('vi','official-named').length,5);
 assert.equal(forge.viEvidenceModels('vi','official-media').length,3);
-assert.equal(forge.viEvidenceModels('vi','community').length,177);
+assert.equal(forge.viEvidenceModels('vi','community').length,183);
 assert.equal(forge.viEvidence('vi','vi_squalo'),'official-named');
 const acquisitionKinds=Object.keys(forge.viAcquisitionLabels);
 const acquired=acquisitionKinds.flatMap(kind=>forge.viAcquisitionModels('vi',kind));
-assert.equal(acquired.length,185);assert.equal(new Set(acquired).size,185);
+assert.equal(acquired.length,191);assert.equal(new Set(acquired).size,191);
 assert.equal(forge.viAcquisitionModels('vi','air-temporary').length,13);
 assert.equal(forge.viAcquisitionModels('vi','water-temporary').length,11);
 assert.equal(forge.viAcquisition('vi','vi_squalo').kind,'water-temporary');
 assert.ok(forge.viBenefit('vi','vi_squalo'));
 assert.equal(forge.viAcquisition('vi','vi_ganado70').kind,'road-review');
 assert.equal(forge.viAcquisition('vi','vi_bati_801').kind,'road-review');
+for(const id of ["vi_allander","vi_bison_3800","vi_bison_900_95","vi_transgressor_67","vi_sungrazer_61","vi_spritz"]){assert.equal(forge.viEvidence('vi',id),'community');assert.equal(forge.viAcquisition('vi',id).kind,'road-review');assert.equal(forge.viCatalog[id].referenceOnly,true);assert.equal(forge.workshopCatalog(id).length,0);assert.equal(forge.ownershipKey('v-online',id),null);}
+assert.notEqual(forge.ownershipKey('vi','vi_bison'),forge.ownershipKey('vi','vi_bison_3800'));assert.notEqual(forge.ownershipKey('vi','vi_bison_3800'),forge.ownershipKey('vi','vi_bison_900_95'));
 assert.equal(forge.viAcquisition('vi','vi_ganado_retro').kind,'special-review');
 assert.equal(forge.viAcquisition('vi','vi_police_maverick').kind,'air-temporary');
 assert.equal(forge.viAcquisition('vi','vi_bmx').kind,'special-review');

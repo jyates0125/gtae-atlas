@@ -14,3 +14,5 @@ For later entries: date, capability, baseline and candidate revisions, measured 
 Pending 46.6: external detailed-model reference discovery, with Online and VI links separated and no embedded or copied mesh. Existing local reference workshop retained. Validate exact head before recording completion.
 
 46.6 candidate correction: retain source route but replace unavailable VI model link with reachable VI research catalogs. Source availability and rights require separate verification.
+
+Pending 46.7: six distinct released-game VI community references (185 → 191 proposed), preserving all earlier IDs and source separation. No detailed model reuse permission or workshop eligibility inferred.

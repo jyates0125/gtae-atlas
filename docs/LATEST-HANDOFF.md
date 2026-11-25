@@ -9,3 +9,5 @@ Next: improve model-specific vehicle evidence and runtime readiness; integrate o
 Update: PR #224 passed 2/2 and merged development 20d5bd24a211d721f69825d76cc6ecafbd958a91. Owner requests existing rights-cleared models first and reconstruction only where needed. Pending 46.6 branch feature/atlas466-external-model-references adds world-scoped central source links, not assets; inspect exact CI before integration. Actual model acquisition and release gates remain outstanding.
 
 46.6 correction: direct model-catalog access failed (410), so replace public link with reachable VI vehicle research references. Inspect corrected head before merge. GTA V comparison is not VI geometry proof.
+
+Update: 46.6 passed 18/18 and merged ea9233bc42aaea526ae21044a7964b824611f2aa. Pending 46.7 branch feature/atlas467-vi-roster-crosscheck adds six cross-listed distinct VI reference records; verify exact CI. No mesh acquisition; individual model access and rights remain blocked. Source classification conflicts need further review; no production change.
