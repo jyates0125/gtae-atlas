@@ -247,7 +247,7 @@ function mountReference(target,opts={}){
  note.className='j256-rights';
  target.append(title,note);
  // Explicit external reference, not an embedded or locally hosted mesh. Never send private build details.
- const references=Object.freeze({ellie:'ellie',technical:'technical',bullet:'bullet',futo:'futo',vacca:'vacca',deluxo:'deluxo',stafford:'stafford',terminus:'terminus',visione:'visione',raiden:'raiden',club:'club',airtug:'airtug',stinger:'stinger',stallion:'stallion',manana:'manana',cognoscenti:'cognoscenti',havok:'havok',vetir:'vetir',rcv:'rcv',xls:'xls',flatbed:'flatbed',exemplar:'exemplar',f620:'f620',savestra:'savestra',rt3000:'rt3000'});
+ const references=Object.freeze({akula:'akula',akuma:'akuma',adder:'adder',alpha:'alpha',ellie:'ellie',technical:'technical',bullet:'bullet',futo:'futo',vacca:'vacca',deluxo:'deluxo',stafford:'stafford',terminus:'terminus',visione:'visione',raiden:'raiden',club:'club',airtug:'airtug',stinger:'stinger',stallion:'stallion',manana:'manana',cognoscenti:'cognoscenti',havok:'havok',vetir:'vetir',rcv:'rcv',xls:'xls',flatbed:'flatbed',exemplar:'exemplar',f620:'f620',savestra:'savestra',rt3000:'rt3000'});
  const ref=E('a',vi?'Official Leonida reference gallery ↗':Object.hasOwn(references,model)?'Open this vehicle in GTADB 3D viewer ↗':'Browse GTADB vehicle viewer ↗');
  ref.href=vi?'https://www.rockstargames.com/VI/media/screenshots':'https://gtadb.net/gta-online/vehicle-configurator/'+(Object.hasOwn(references,model)?'?vehicle='+references[model]:'');
  ref.target='_blank';ref.rel='noopener noreferrer';ref.referrerPolicy='no-referrer';ref.className='j99-studio-link';target.append(ref);
@@ -282,7 +282,7 @@ function mountReference(target,opts={}){
    addSelect(groupParent,group.label,group.options,design.workshopOptions?.[group.key],v=>change({workshopOptions:{...design.workshopOptions,[group.key]:v}}),'data-workshop-category',group.key);
   }
   if(rows.length&&!liveryAdded)addSelect(liveryParent,'Liveries',rows,design.workshopLivery,v=>change({workshopLivery:v||'none'}),'data-forge-control','workshopLivery');
-  const source=E('a','Workshop sources & credits');source.href='./atlas-credits.html#'+(vi?'forge-ganado-workshop':model==='banshee'?'forge-banshee-workshop':'forge-workshop-liveries');panel.append(grid,total,source);target.append(panel);update();
+  const source=E('a','Workshop sources & credits');source.href='./atlas-credits.html#'+(forge?.workshopSource?.(model)||'forge-workshop-liveries');panel.append(grid,total,source);target.append(panel);update();
  }else{
   target.append(E('p',craft?.mode==='collection'?'Collection only. Ownership, favorites and private notes remain available.':vi?'GTA VI workshop: model-specific options not yet verified.':'Model-specific workshop options not yet verified.'));
   const link=E('a','Vehicle and workshop sources');link.href='./atlas-credits.html#forge-craft-customization';target.append(link);
