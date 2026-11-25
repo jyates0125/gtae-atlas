@@ -38,14 +38,22 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             assert int(stage.get_attribute('data-forge-triangles'))!=initial
             stage.locator('[data-forge-control="rim"]').select_option('gold')
             stage.locator('[data-forge-control="stripe"]').select_option('dual')
-            livery=stage.locator('[data-forge-control="livery"]')
-            livery.select_option('none')
+            workshop=stage.locator('[data-forge-control="workshopLivery"]')
+            expect(workshop.locator('option')).to_have_count(12)
+            workshop.select_option('ellie-black-twin')
+            stage.get_by_role('button',name='Preview original stripe interpretation').click()
+            expect(stage.locator('[data-forge-control="accent"]')).to_have_value('#111111')
             baseline=stage.locator('canvas').screenshot()
-            for pattern in ('heritage','velocity','circuit','jura','fade'):
-                livery.select_option(pattern)
-                assert stage.locator('canvas').screenshot()!=baseline,pattern+' must change actual rendered pixels'
-            livery.select_option('jura')
-            stage.locator('[data-forge-control="liveryColor"]').evaluate("el=>{el.value='#ad7132';el.dispatchEvent(new Event('input',{bubbles:true}))}")
+            workshop.select_option('ellie-white-twin')
+            stage.get_by_role('button',name='Preview original stripe interpretation').click()
+            expect(stage.locator('[data-forge-control="accent"]')).to_have_value('#f4f4f4')
+            assert stage.locator('canvas').screenshot()!=baseline
+            workshop.select_option('ellie-8')
+            expect(stage.get_by_role('button',name='Preview original stripe interpretation')).to_be_disabled()
+            workshop.select_option('ellie-black-twin')
+            stage.get_by_role('button',name='Preview original stripe interpretation').click()
+            stage.locator('[data-workshop-category="engine"]').select_option('engine-3')
+            expect(stage.locator('[data-forge-control="livery"]')).to_have_count(0)
             p.locator('#paintColor').evaluate("(el)=>{el.value='#30323a';el.dispatchEvent(new Event('input',{bubbles:true}))}")
             p.locator('#buildName').fill('Jura Fastback')
             p.locator('#saveBuild').click()
@@ -54,8 +62,9 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             assert saved[0]['vehicles']['ellie']['studioDesign']['wheels']=='mesh'
             assert saved[0]['vehicles']['ellie']['studioDesign']['stripe']=='dual'
             assert saved[1]['builds']['ellie']['design']['rim']=='gold'
-            assert saved[0]['vehicles']['ellie']['studioDesign']['livery']=='jura'
-            assert saved[0]['vehicles']['ellie']['studioDesign']['liveryColor']=='#ad7132'
+            assert saved[0]['vehicles']['ellie']['studioDesign']['livery']=='none'
+            assert saved[0]['vehicles']['ellie']['studioDesign']['workshopLivery']=='ellie-black-twin'
+            assert saved[0]['vehicles']['ellie']['studioDesign']['workshopOptions']['engine']=='engine-3'
             assert saved[2] is None, 'Concept must not mark GTA ownership'
             p.reload(wait_until='domcontentloaded')
             expect(stage.locator('[data-forge-control="stripe"]')).to_have_value('dual',timeout=15000)
@@ -76,7 +85,8 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             expect(garage).to_have_attribute('data-forge-reflection','active')
             expect(garage.locator('[data-forge-control="wheels"]')).to_have_value('mesh')
             expect(garage.locator('[data-forge-control="stripe"]')).to_have_value('dual')
-            expect(garage.locator('[data-forge-control="livery"]')).to_have_value('jura')
+            expect(garage.locator('[data-forge-control="workshopLivery"]')).to_have_value('ellie-black-twin')
+            expect(garage.locator('[data-workshop-category="engine"]')).to_have_value('engine-3')
             garage.locator('canvas').screenshot(path=str(E/f'atlas409-my-garage-{width}.png'))
             before=p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])
             p.goto(origin+'atlas90-vehicles6.html?q=cheetah+95',wait_until='domcontentloaded')
@@ -88,12 +98,14 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             expect(stage).to_have_attribute('data-forge-fidelity','model-study')
             stage.locator('[data-forge-control="wheels"]').select_option('deepdish')
             stage.locator('[data-forge-control="stripe"]').select_option('single')
-            stage.locator('[data-forge-control="livery"]').select_option('velocity')
+            expect(stage.locator('[data-forge-control="workshopLivery"]')).to_have_count(0)
+            expect(stage.get_by_text('GTA VI workshop: release-era shop research',exact=False)).to_be_visible()
             p.locator('#buildName').fill('Leonida Wedge')
             p.locator('#saveBuild').click()
             vi=p.evaluate('k=>JSON.parse(localStorage.getItem(k))',VI)
             assert vi['builds']['vi_cheetah95']['design']['wheels']=='deepdish'
-            assert vi['builds']['vi_cheetah95']['design']['livery']=='velocity'
+            assert vi['builds']['vi_cheetah95']['design']['workshopLivery']=='none'
+            assert vi['builds']['vi_cheetah95']['design']['workshopOptions']=={}
             assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])==before
             p.locator('#concept3d canvas').screenshot(path=str(E/f'atlas409-leonida-{width}.png'))
             p.locator('#j409ViGarage').click()
@@ -107,7 +119,7 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             expect(live).to_have_attribute('data-forge-status','ready',timeout=15000)
             expect(live).to_have_attribute('data-forge-reflection','active')
             expect(live.locator('[data-forge-control="wheels"]')).to_have_value('deepdish')
-            expect(live.locator('[data-forge-control="livery"]')).to_have_value('velocity')
+            expect(live.locator('[data-forge-control="workshopLivery"]')).to_have_count(0)
             live.locator('[data-forge-control="stripe"]').select_option('dual')
             assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,VI,O])==stored
             p.get_by_role('button',name='Close 3D preview').click()
@@ -122,12 +134,14 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
         demo.goto((E/'elario-forge-preview.html').as_uri(),wait_until='domcontentloaded')
         expect(demo.locator('#stage')).to_have_attribute('data-forge-status','ready',timeout=15000)
         expect(demo.locator('#stage')).to_have_attribute('data-forge-reflection','active')
-        expect(demo.locator('[data-forge-control="livery"]')).to_have_value('jura')
+        expect(demo.locator('[data-forge-control="workshopLivery"]')).to_have_value('none')
+        demo.locator('[data-forge-control="workshopLivery"]').select_option('ellie-white-twin')
+        demo.get_by_role('button',name='Preview original stripe interpretation').click()
         demo.locator('#stage canvas').screenshot(path=str(E/'atlas409-portable-ellie.png'))
         demo.locator('#model').select_option('vi_cheetah95')
         expect(demo.locator('#stage')).to_have_attribute('data-forge-fidelity','model-study')
         expect(demo.locator('#stage')).to_have_attribute('data-forge-status','ready')
-        demo.locator('[data-forge-control="livery"]').select_option('circuit')
+        expect(demo.locator('[data-forge-control="workshopLivery"]')).to_have_count(0)
         demo.locator('#stage canvas').screenshot(path=str(E/'atlas409-portable-vi.png'))
         print('PASS portable real-source interactive Forge preview with no network',flush=True)
         browser.close()
