@@ -119,6 +119,27 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,direct
             assert stage.get_attribute('data-body-state')==source_body
             expect(page.locator('#interior')).to_be_disabled()
             expect(page.locator('#rim')).to_be_disabled()
+            for model_id, expected in [('supercar',159952),('supercar-balanced',44632),('formula',46816)]:
+                page.locator('#model').select_option(model_id)
+                expect(stage).to_have_attribute('data-state','ready',timeout=90000)
+                expect(stage).to_have_attribute('data-asset',model_id)
+                expect(stage).to_have_attribute('data-review','candidate')
+                count=int(stage.get_attribute('data-triangles'))
+                assert abs(count-expected)<=max(20,expected*.02), (model_id,count)
+                for control in ('paint','finish','rim','interior','paint-reset','rim-reset','interior-reset'):
+                    expect(page.locator('#'+control)).to_be_disabled()
+                for channel in ('paint','rim','interior'):
+                    assert json.loads(stage.get_attribute('data-'+channel+'-material-names'))==[]
+                page.locator('#view').select_option('front')
+                front=canvas.screenshot(path=str(root/f'{model_id}-front-{width}.png'))
+                page.locator('#view').select_option('side')
+                assert canvas.screenshot(path=str(root/f'{model_id}-side-{width}.png'))!=front
+                print('Candidate loaded:',model_id,count,flush=True)
+            page.locator('#model').select_option('fastback')
+            expect(stage).to_have_attribute('data-state','ready',timeout=60000)
+            expect(stage).to_have_attribute('data-asset','fastback')
+            assert json.loads(stage.get_attribute('data-rim-material-names'))==sorted(actual_rims)
+            assert json.loads(stage.get_attribute('data-interior-material-names'))==sorted(actual_interior)
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
             assert page.evaluate('localStorage.length')==0
             context.close()
