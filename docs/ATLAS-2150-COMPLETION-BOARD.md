@@ -683,3 +683,5 @@ Add Online-only Pegasus eligibility and documented purchase channel for five air
 
 ### Atlas 46.5 — reviewed vehicle asset publication boundary
 46.4 exact head passed 4/4 and merged b085a02. The single reviewed model registry now gates actual Cloudflare file selection before copying. Unknown model files, research-only markers, missing or hash-changed GLBs and incomplete review records fail closed. Existing dual-command build test checks rejection of a temporary unapproved fixture and both normal production payloads. Registry remains empty, no public visual or save changes; exact-head CI pending. Production unchanged. The build guard supplements rather than replaces actual geometry, rights and visual review.
+
+46.5 exact head 276c6db passed 5/5; PR #223 merged development 316bea3. No approved detailed vehicle model registered. Owner directs evidence-led capability history, retained alternatives and end-of-session handoffs. Public continuity at docs/LATEST-HANDOFF.md and docs/CAPABILITY-REGISTER.md. Documentation only; no production change.
