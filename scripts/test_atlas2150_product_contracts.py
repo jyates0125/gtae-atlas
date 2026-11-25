@@ -149,8 +149,9 @@ const rows=require('./data/atlas-iii-160-source-points.json').records;
 const index=p.makeIndex(rows,r=>r.category==='Rampages'?'rampage:'+r.slot:r.id),known=new Set(index.values());
 a.equal(known.size,140); const variants=rows.filter(r=>r.category==='Rampages'&&r.slot===1);
 a.equal(variants.length,2);a.equal(index.get(variants[0].id),index.get(variants[1].id));
-const raw={schema:p.schema,scope:'iii-classic',revision:'test',done:['rampage:1','rampage:1','invalid']};
+const raw={schema:p.schema,scope:'iii-classic',revision:'test',done:['rampage:1','rampage:1']};
 a.deepEqual(p.clean(raw,'iii-classic','test',known),['rampage:1']);
+a.throws(()=>p.clean({...raw,done:[...raw.done,'invalid']},'iii-classic','test',known),/Unknown or invalid objective/);
 a.equal(p.merge([rows[0].id],raw,'iii-classic','test',known).length,2);
 a.throws(()=>p.clean(raw,'vc-classic','test',known));a.throws(()=>p.clean(raw,'iii-classic','other',known));
 for(const [file,size] of [['atlas-vc-51-source-points.json',51],['atlas-vc-de-171-source-points.json',171],['atlas-lcs-psp-reference.json',52],['atlas-vcs-psp-reference.json',51]]){const r=require('./data/'+file).records;a.equal(new Set(p.makeIndex(r,x=>x.id).values()).size,size)}
