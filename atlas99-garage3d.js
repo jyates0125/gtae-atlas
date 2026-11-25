@@ -246,6 +246,18 @@ function mountReference(target,opts={}){
  const note=E('p','No accepted model-specific interactive asset is available yet. The vehicle reference is not replaced with a generic 3D body. Recorded workshop choices are planning only until the exact parts can be rendered.');
  note.className='j256-rights';
  target.append(title,note);
+ // Explicit external reference, not an embedded or locally hosted mesh. Never send private build details.
+ const references=Object.freeze({ellie:'ellie',technical:'technical',bullet:'bullet',futo:'futo',vacca:'vacca',deluxo:'deluxo',stafford:'stafford',terminus:'terminus',visione:'visione',raiden:'raiden',club:'club',airtug:'airtug',stinger:'stinger',stallion:'stallion',manana:'manana',cognoscenti:'cognoscenti',havok:'havok',vetir:'vetir',rcv:'rcv',xls:'xls',flatbed:'flatbed',exemplar:'exemplar',f620:'f620',savestra:'savestra',rt3000:'rt3000'});
+ const ref=E('a',vi?'Official Leonida reference gallery ↗':Object.hasOwn(references,model)?'Open this vehicle in GTADB 3D viewer ↗':'Browse GTADB vehicle viewer ↗');
+ ref.href=vi?'https://www.rockstargames.com/VI/media/screenshots':'https://gtadb.net/gta-online/vehicle-configurator/'+(Object.hasOwn(references,model)?'?vehicle='+references[model]:'');
+ ref.target='_blank';ref.rel='noopener noreferrer';ref.referrerPolicy='no-referrer';ref.className='j99-studio-link';target.append(ref);
+ const externalNotice=E('small',vi?'Official visual evidence; not an interactive Forge model.':'External GTADB viewer. Its preview features may differ from actual game options; edits there do not sync into your private Forge builds.');target.append(externalNotice);
+ if(opts.readOnly===true){
+  const image=E('img');image.loading='lazy';image.decoding='async';image.style.cssText='display:block;width:100%;max-height:300px;object-fit:contain';
+  const fallback=()=>{image.onerror=null;image.src='./art/jura161-vehicles.webp';image.alt='Original Elario showroom illustration, not this vehicle';};
+  if(vi||!/^[a-z0-9_]{2,75}$/.test(model))fallback();else{image.onerror=fallback;image.alt='GTA V archive reference for '+String(opts.name||model);image.src='https://cdn.jsdelivr.net/gh/Stuyk/gtav-image-archive@main/vehicles/'+encodeURIComponent(model)+'.webp'}
+  target.append(image);
+ }
  const craft=forge?.craftCustomization?.(vi?'vi':'v-online',model);
  if(craft&&craft.mode!=='unknown')target.append(E('p',craft.label));
  const rows=forge?.workshopLiveries?.(model)||[],groups=forge?.workshopCatalog?.(model)||[];
