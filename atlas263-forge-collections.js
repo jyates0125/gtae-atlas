@@ -5,7 +5,7 @@ const viNames={vi_banshee:"Bravado Banshee",vi_dominator:"Vapid Dominator",vi_su
 const worldNames={v:'GTA V / Online',vi:'GTA VI · Leonida',story:'GTA V Story',online:'GTA Online'};
 const object=x=>x&&typeof x==='object'&&!Array.isArray(x);
 const safeId=id=>typeof id==='string'&&/^[a-z0-9_-]{2,75}$/.test(id)&&!['__proto__','prototype','constructor'].includes(id);
-const nice=id=>id.replace(/_mk(\d+)/g,' Mk $1').replace(/[_-]/g,' ').replace(/([a-z])([0-9])/g,'$1 $2').replace(/\b[a-z]/g,c=>c.toUpperCase());
+const nice=id=>forge?.specialtyName?.(id)||id.replace(/_mk(\d+)/g,' Mk $1').replace(/[_-]/g,' ').replace(/([a-z])([0-9])/g,'$1 $2').replace(/\b[a-z]/g,c=>c.toUpperCase());
 const label=(value,fallback)=>typeof value==='string'&&value.trim()?value.trim().slice(0,72):fallback;
 const color=value=>typeof value==='string'&&/^#[a-f0-9]{6}$/i.test(value)?value:'#b99ad5';
 const HANDOFF='team-jura-forge-private-handoff-v1';
