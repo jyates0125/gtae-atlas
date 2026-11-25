@@ -47,3 +47,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .viweapon-ownership{display:inline-block;border:1px solid #c6a4ce;border-radius:7px;padding:4px 8px;color:#fff1d4;background:#241637;font-size:11px;font-weight:850}.viweapon-ownership[data-collected=true],.viweapon-actions .viweapon-collect[aria-pressed=true]{background:#16573c;color:#fff;border-color:#90d7b0}.viweapon-actions .viweapon-collect{flex:1 0 100%;min-height:44px}.viweapon-actions .viweapon-collect:disabled{opacity:.6;cursor:not-allowed}
 
 .viweapon-media{margin:10px 0 14px;overflow:hidden;border:1px solid #79598a;border-radius:10px;background:#1b1129}.viweapon-media img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain}.viweapon-media figcaption,.viweapon-image-unavailable{font-size:12px;color:#ecd4ae;padding:9px;line-height:1.45}.viweapon-image-unavailable{border:1px dashed #79598a;border-radius:8px;margin:10px 0}.viweapon-media a{color:#ffe0aa}
+
+/* Visual references never replace the identity, collection controls or source grade. */
+.viweapon-media{position:relative;min-width:0;background:radial-gradient(ellipse at 50% 30%,#554067,#1b1129 75%);border-color:#9d7ca8}
+.viweapon-media .viweapon-linked-image{position:absolute;top:0;left:0;width:100%;aspect-ratio:16/9;object-fit:contain;opacity:0;pointer-events:none}
+.viweapon-media .viweapon-linked-image.is-loaded{position:relative;opacity:1;pointer-events:auto}
+.viweapon-plate{aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px;text-align:center;color:#f9deb0;background:linear-gradient(135deg,#422b5a,#1c122b)}
+.viweapon-plate[hidden]{display:none!important}.viweapon-plate svg{width:58%;max-height:55%;fill:#d3ad78;filter:drop-shadow(0 5px 8px #0008)}
+.viweapon-plate-kicker{font-size:10px;letter-spacing:.18em;font-weight:800}.viweapon-plate strong{font-size:15px}.viweapon-plate small{font-size:10px;color:#d3bedb}
+.viweapon-media figcaption{border-top:1px solid #76578b;min-height:55px;overflow-wrap:anywhere}
+.viweapon-hero-art{background-image:linear-gradient(90deg,#25112e35,#12071820),url('./art/jura161-weapons.webp')}
