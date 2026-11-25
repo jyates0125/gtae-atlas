@@ -42,3 +42,6 @@ Owner clarified correct in-game maker, model and variant names, not Elario renam
 
 
 47.0.1 PR #229 exact 6a3fe354 passed 19/19; merged development 2569a68d72727a8640c900cf7921e81f766f3cca. Corrected gallery and Garage browser tests green. Full release run 45566876912 passed first map/routing block but failed two historical static expectations in second block: directory still expected six gateway worlds, now only VCS/LCS/CTW remain gateways; IV marker test pinned retired v334 despite current v399. 47.0.2 updates assertions to check exact remaining gateways, six source-backed worlds, episode links, honest calibration limits and singular local versioned IV assets with minimum compatible versions. No product behavior/asset changes, no production change; full QA still required.
+
+
+Owner directed targeted retries: do not repeat unrelated passing Cayo or other tests. Atlas 47.0.2 full run 45567252325 was already launched; collect remaining results, then repair and execute only failed, affected and not-yet-run checks. Preserve evidence and check input equivalence before reuse. Do not treat skipped checks as passing. No automatic main promotion.
