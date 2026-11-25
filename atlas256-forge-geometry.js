@@ -49,7 +49,7 @@
  });
  function modelProfile(type,model){const id=String(model||'').toLowerCase();const p=Object.hasOwn(profiles,id)?profiles[id]:null;return p&&p.kind===classify(type,id)?p:null}
  function build(type,model,paint,settings,environment){
-  const kind=classify(type,model),d=normalize(settings),base=hex(paint),accent=hex(d.accent),glass=[.12,.24,.34],dark=[.07,.085,.13],rubber=[.045,.05,.065],chrome=[.56,.64,.73],data=[];
+  const kind=classify(type,model),d=normalize(settings),base=hex(paint),accent=hex(d.accent),glass=[.12,.24,.34],dark=[.07,.085,.13],rubber=[.045,.05,.065],chrome=[.56,.64,.73],data=[],normals=[];let vehicleSurface=false,paintMaterial=null;
   const theme=themes[resolveTheme(kind,environment||d.environment)],profile=modelProfile(type,model);
   const tint=(c,k)=>c.map(v=>clamp(v*k,0,1));
   const blend=(a,b,f)=>a.map((v,i)=>v*(1-f)+b[i]*f);
@@ -60,7 +60,10 @@
    const ny=Math.abs(n[1]/l),light=Math.abs((n[0]*.37+n[1]*.86+n[2]*.35)/l);
    const factor=emissive?1: .53+.46*light+.15*ny;
    const c2=tint(col,factor);
-   for(const p of [a,b,c])data.push(...p,...c2);
+   // Keep the legacy position/color buffer; parallel surface data adds
+   // triangle normals and material response without changing saved models.
+   const material=emissive?0:!vehicleSurface?.12:col===paintMaterial?1:col===rubber?.06:col===glass?.80:col===chrome?.9:.36;
+   for(const p of [a,b,c]){data.push(...p,...c2);normals.push(n[0]/l,n[1]/l,n[2]/l,material)}
   }
   const quad=(a,b,c,e,col,em=false)=>{tri(a,b,c,col,em);tri(a,c,e,col,em)};
   function box(x,y,z,w,h,l,col,em=false){const a=x-w/2,b=x+w/2,c=y-h/2,e=y+h/2,f=z-l/2,g=z+l/2;
@@ -78,7 +81,7 @@
   const circle=(n)=>Array.from({length:n},(_,i)=>[Math.cos(i*2*Math.PI/n),Math.sin(i*2*Math.PI/n)]);
   function disc(y,r,col){const c=circle(64);for(let i=0;i<c.length;i++){const a=c[i],b=c[(i+1)%c.length];tri([0,y,0],[a[0]*r,y,a[1]*r],[b[0]*r,y,b[1]*r],col,true)}}
   function ring(y,r,w,col){const c=circle(64);for(let i=0;i<c.length;i++){const a=c[i],b=c[(i+1)%c.length];quad([a[0]*r,y,a[1]*r],[b[0]*r,y,b[1]*r],[b[0]*(r-w),y,b[1]*(r-w)],[a[0]*(r-w),y,a[1]*(r-w)],col,true)}}
-  disc(-.06,3.42,theme.floor);disc(-.035,3.28,theme.deck);ring(-.025,3.27,.025,accent);ring(-.02,2.93,.024,theme.trim);ring(-.015,2.31,.012,tint(theme.trim,.65));
+  disc(-.06,3.42,theme.floor);const stencilCount=data.length/6;disc(-.035,3.28,theme.deck);const floorCount=data.length/6;ring(-.025,3.27,.025,accent);ring(-.02,2.93,.024,theme.trim);ring(-.015,2.31,.012,tint(theme.trim,.65));
   // Original low-profile set dressing: visible from orbit and top cameras without occluding the vehicle.
   const env=resolveTheme(kind,environment||d.environment);
   if(env==='marina'){
@@ -93,7 +96,9 @@
    for(let i=0;i<8;i++){const a=i*Math.PI/4;box(Math.cos(a)*3.1,.018,Math.sin(a)*3.1,.16,.05,.16,theme.trim,true)}
   }
   for(let n=-3;n<=3;n++){const len=Math.sqrt(Math.max(0,3.15**2-(n*.75)**2));box(n*.75,-.012,0,.009,.004,2*len,[.22,.13,.31]);box(0,-.011,n*.75,2*len,.004,.009,[.22,.13,.31])}
+  const vehicleStart=data.length/6;vehicleSurface=true;
   const shell=d.finish==='stealth'?blend(base,[.11,.12,.17],.48):d.finish==='satin'?tint(base,.80):blend(base,[.58,.64,.78],.11);
+  paintMaterial=shell;
   const lamp=d.lights?[.73,.94,1]:[.20,.23,.27],tail=d.lights?[1,.12,.24]:[.32,.09,.12];
   if(kind==='marine'){
    if(profile)transform=p=>[p[0]*profile.w,p[1],p[2]*profile.len+(p[1]>.88?profile.cab*Math.min(1,(p[1]-.88)*4):0)];
@@ -173,7 +178,7 @@
    if(d.kit==='track'){box(0,y+.62,-len+.52,1.81*w,.075,.44,accent);for(const x of [-.59,.59])box(x,y+.40,-len+.52,.08,.47,.09,dark)}
    if(d.lights){for(const side of [-1,1])box(side*.73,.09,0,.08,.015,2.7,accent,true)}
   }
-  return{kind,vertices:new Float32Array(data),settings:d,profile:profile?.label||null};
+  return{kind,vertices:new Float32Array(data),surface:new Float32Array(normals),stencilCount,floorCount,vehicleStart,settings:d,profile:profile?.label||null};
  }
  return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile});
 });
