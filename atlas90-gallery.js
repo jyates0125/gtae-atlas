@@ -26,7 +26,7 @@ function readCollection(){
 function adopt(saved){for(const key of Object.keys(STATE))STATE[key]=saved[key]}
 let saveBlocked=false;
 try{adopt(readCollection())}catch{saveBlocked=true}
-let data=[],needle='',klass='all',ownership='all',evidence='all',page=0,view='grid',compare=[],sourcesReady=false;
+let data=[],needle='',klass='all',ownership='all',evidence='all',acquisition='all',page=0,view='grid',compare=[],sourcesReady=false;
 const PAGE=60;
 let vehicleFacts={};
 let resetFilters;
@@ -38,24 +38,27 @@ function applyLocation(){
  ownership=['owned','wanted'].includes(requested)?requested:'all';
  const requestedEvidence=params.get('evidence');
  evidence=game==='vehicles6'&&Object.hasOwn(window.JuraForge?.viEvidenceLabels||{},requestedEvidence)?requestedEvidence:'all';
+ const requestedAcquisition=params.get('acquisition');
+ acquisition=game==='vehicles6'&&Object.hasOwn(window.JuraForge?.viAcquisitionLabels||{},requestedAcquisition)?requestedAcquisition:'all';
  const requestedPage=Number(params.get('page')||1);
  page=Number.isSafeInteger(requestedPage)&&requestedPage>0?requestedPage-1:0;
  $('j90Search').value=needle;
  $('j90Ownership').value=ownership;
  if($('j90Evidence'))$('j90Evidence').value=evidence;
+ if($('j90Acquisition'))$('j90Acquisition').value=acquisition;
 }
 function syncLocation(){
  const url=new URL(location.href);
  for(const [key,value] of [['q',needle],['class',klass==='all'?'':klass],['collection',ownership==='all'?'':ownership],['page',page?String(page+1):'']]){
   if(value)url.searchParams.set(key,value);else url.searchParams.delete(key);
  }
- if(game==='vehicles6'){if(evidence==='all')url.searchParams.delete('evidence');else url.searchParams.set('evidence',evidence)}
+ if(game==='vehicles6'){for(const [key,value] of [['evidence',evidence],['acquisition',acquisition]]){if(value==='all')url.searchParams.delete(key);else url.searchParams.set(key,value)}}
  if(url.href!==location.href)history.replaceState(history.state,'',url);
- if(resetFilters)resetFilters.hidden=!needle&&klass==='all'&&ownership==='all'&&evidence==='all'&&!page;
+ if(resetFilters)resetFilters.hidden=!needle&&klass==='all'&&ownership==='all'&&evidence==='all'&&acquisition==='all'&&!page;
 }
 function clearFilters(){
- needle='';klass='all';ownership='all';evidence='all';page=0;
- $('j90Search').value='';$('j90Class').value='all';$('j90Ownership').value='all';if($('j90Evidence'))$('j90Evidence').value='all';
+ needle='';klass='all';ownership='all';evidence='all';acquisition='all';page=0;
+ $('j90Search').value='';$('j90Class').value='all';$('j90Ownership').value='all';if($('j90Evidence'))$('j90Evidence').value='all';if($('j90Acquisition'))$('j90Acquisition').value='all';
  render();$('j90Search').focus();
 }
 function safe(s){return String(s||'').slice(0,120)}
@@ -101,7 +104,7 @@ function setFlag(id,field,value){updateFlag(id,field,value)}
 function el(t,c,v){const n=document.createElement(t);if(c)n.className=c;if(v!==undefined)n.textContent=v;return n}
 function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo');const img=document.createElement('img');const flags=el('div','j90-flags');let caption,photoStatus='Checking archive image…';
  root.dataset.recordId=r.id;
- if(r.kind==='vehicles6')root.dataset.evidence=r.evidence;
+ if(r.kind==='vehicles6'){root.dataset.evidence=r.evidence;if(r.acquisition)root.dataset.acquisition=r.acquisition.kind;}
  flags.append(el('span','',r.kind==='vehicles6'?(window.JuraForge?.viEvidenceLabels?.[r.evidence]||'Community reference'):r.kind==='weapons'?'WEAPON':'VEHICLE'));
  img.loading='lazy';
  const captionText=()=>r.kind==='vehicles6'?r.confidence+(r.benefit?' · '+r.benefit.label:''):r.kind==='weapons'?(weaponWorld==='story'?'GTA V archive reference; availability in Story Mode needs per-item checking. ':'GTA Online archive ID; availability may vary by update and edition. ')+'Model ID '+r.archive:'Archive model ID '+r.archive+' · availability is not confirmed by an image.';
@@ -125,7 +128,7 @@ function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo')
   img.alt='Archive reference for '+r.name;setPhotoState('pending','Checking archive image…');img.onload=()=>setPhotoState('archive','Archive reference image');img.onerror=showConcept;img.src=r.image;
  }else {showConcept();if(r.kind==='vehicles6')setPhotoState('concept','Original Leonida concept · not a game screenshot');}
  photo.append(img);if(STATE.owned[r.id])flags.append(el('span','j90-flag-done','✓ COLLECTED'));photo.append(flags);root.append(photo);
- const body=el('div','j90-card-body');body.append(el('div','j90-micro',r.brand?(r.brand+' · '+r.group):r.group),el('h3','',r.name));caption=el('p','j90-caption',captionText()+' · '+photoStatus);body.append(caption);const actions=el('div','j90-actions');const own=el('button','',STATE.owned[r.id]?'✓ Collected':'+ Collect');own.type='button';own.setAttribute('aria-pressed',String(!!STATE.owned[r.id]));own.onclick=()=>setFlag(r.id,'owned',!STATE.owned[r.id]);const wish=el('button','',STATE.wishlist[r.id]?'★ Wanted':'☆ Wishlist');wish.type='button';wish.setAttribute('aria-pressed',String(!!STATE.wishlist[r.id]));wish.onclick=()=>setFlag(r.id,'wishlist',!STATE.wishlist[r.id]);const cmp=el('button','',compare.includes(r.id)?'✓ Compare':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.includes(r.id)));cmp.disabled=compare.length>=3&&!compare.includes(r.id);cmp.onclick=()=>{compare=compare.includes(r.id)?compare.filter(i=>i!==r.id):compare.length<3?[...compare,r.id]:compare;render()};actions.append(own,wish,cmp);if(r.kind==='vehicles5'&&/^[a-z0-9_]{1,65}$/.test(r.archive||'')){
+ const body=el('div','j90-card-body');body.append(el('div','j90-micro',r.brand?(r.brand+' · '+r.group):r.group),el('h3','',r.name));caption=el('p','j90-caption',captionText()+' · '+photoStatus);body.append(caption);if(r.acquisition)body.append(el('p','j90-acquisition',r.acquisition.label));const actions=el('div','j90-actions');const own=el('button','',STATE.owned[r.id]?'✓ Collected':'+ Collect');own.type='button';own.setAttribute('aria-pressed',String(!!STATE.owned[r.id]));own.onclick=()=>setFlag(r.id,'owned',!STATE.owned[r.id]);const wish=el('button','',STATE.wishlist[r.id]?'★ Wanted':'☆ Wishlist');wish.type='button';wish.setAttribute('aria-pressed',String(!!STATE.wishlist[r.id]));wish.onclick=()=>setFlag(r.id,'wishlist',!STATE.wishlist[r.id]);const cmp=el('button','',compare.includes(r.id)?'✓ Compare':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.includes(r.id)));cmp.disabled=compare.length>=3&&!compare.includes(r.id);cmp.onclick=()=>{compare=compare.includes(r.id)?compare.filter(i=>i!==r.id):compare.length<3?[...compare,r.id]:compare;render()};actions.append(own,wish,cmp);if(r.kind==='vehicles5'&&/^[a-z0-9_]{1,65}$/.test(r.archive||'')){
  const park=el('a','j96-park-link',vehicleWorld==='story'?'▣ Explore Online Garage concept':'▣ Park in My Garage');
  park.href='./atlas93-garage.html?addModel='+encodeURIComponent(r.archive);
  actions.append(park);
@@ -157,7 +160,7 @@ function renderComparison(){
    if(facts.drive)field('Drive',facts.drive);
    if(Number.isFinite(facts.priceUSD))field('Recorded price','GTA$'+facts.priceUSD.toLocaleString('en-US'));
   }else if(game==='vehicles5'){field('GTA Online specs','No reviewed profile')}
-  else if(game==='vehicles6'){field('Evidence',r.confidence);if(r.brand)field('Brand',r.brand);if(r.benefit)field('Edition / membership',r.benefit.label)}
+  else if(game==='vehicles6'){field('Evidence',r.confidence);if(r.brand)field('Brand',r.brand);if(r.benefit)field('Edition / membership',r.benefit.label);if(r.acquisition)field('Registration',r.acquisition.label)}
   else{field('World',weaponWorld==='story'?'GTA V Story references':'GTA Online references');field('Model ID',r.archive)}
   card.append(details);
   if(facts?.sourceUrl?.startsWith('https://gtadb.net/')){
@@ -175,7 +178,7 @@ function filtered(){
  return data.filter(r=>{
   const facts=game==='vehicles5'&&vehicleWorld==='online'?vehicleFacts[r.archive]:null;
   const haystack=[r.name,r.group,r.brand,r.archive,facts?.manufacturer,facts?.displayName,facts?.category,r.benefit?.label,r.confidence].join(' ').toLowerCase();
-  return (evidence==='all'||r.evidence===evidence)&&(klass==='all'||r.group===klass)&&(ownership==='all'||(ownership==='owned'?STATE.owned[r.id]:STATE.wishlist[r.id]))&&terms.every(term=>haystack.includes(term));
+  return (acquisition==='all'||r.acquisition?.kind===acquisition)&&(evidence==='all'||r.evidence===evidence)&&(klass==='all'||r.group===klass)&&(ownership==='all'||(ownership==='owned'?STATE.owned[r.id]:STATE.wishlist[r.id]))&&terms.every(term=>haystack.includes(term));
  });
 }
 function render(){const categories=[...new Set(data.map(r=>r.group))].sort();const select=$('j90Class');if(select.dataset.signature!==categories.join('|')){select.replaceChildren(new Option('All classes','all'));categories.forEach(c=>select.add(new Option(c,c)));select.dataset.signature=categories.join('|')}klass=categories.includes(klass)?klass:'all';select.value=klass;const rows=filtered();page=Math.min(page,Math.max(0,Math.ceil(rows.length/PAGE)-1));
@@ -186,6 +189,7 @@ function initialize(seed){if(game==='weapons')data=seed.weapons.map(k=>make(k,'w
   const vehicle=make(id,'vehicles6',x.displayName||x.name,x.type,x.archive,x.confidence,x.brand);
   if(typeof x.sourceUrl==='string'&&(/^(https:\/\/www\.rockstargames\.com\/VI\/|https:\/\/gtadb\.net\/gta-6\/vehicles\/|https:\/\/gta6motors\.com\/(?:guides\/car-customization\/|vehicles\/)|https:\/\/www\.gtabase\.com\/gta-6\/vehicles\/|https:\/\/gta6wiki\.eu\/vehicles\/|https:\/\/www\.gta6map\.net\/wiki\/gta-6\/vehicles\/)/).test(x.sourceUrl))vehicle.source=x.sourceUrl;
   vehicle.benefit=window.JuraForge?.viBenefit?.('vi',x.forgeId)||null;
+  vehicle.acquisition=window.JuraForge?.viAcquisition?.('vi',x.forgeId)||null;
   vehicle.evidence=window.JuraForge?.viEvidence?.('vi',x.forgeId)||'community';
   return vehicle;
  });data=unique(data);render();if(saveBlocked){message(storageWarning());return}message(game==='vehicles6'?'Research catalog with original Leonida concept art. The known GTA VI roster is incomplete.':game==='weapons'?'GTA '+(weaponWorld==='story'?'V Story':'Online')+' image reference catalog loaded. Weapons are scoped by world for your saved progress; per-item availability still needs verification.':'GTA '+(vehicleWorld==='story'?'V Story':'Online')+' reference gallery loaded. Personal vehicle flags are separate by world; existing shared flags remain in Online.');}
@@ -196,6 +200,7 @@ function init(){
  resetFilters=el('button','','Clear filters');resetFilters.type='button';resetFilters.id='j408ClearFilters';resetFilters.hidden=true;resetFilters.onclick=clearFilters;
  $('j90Export').before(resetFilters);
  if($('j90Evidence'))$('j90Evidence').addEventListener('change',event=>{evidence=Object.hasOwn(window.JuraForge?.viEvidenceLabels||{},event.target.value)?event.target.value:'all';page=0;if(data.length)render()});
+ if($('j90Acquisition'))$('j90Acquisition').addEventListener('change',event=>{acquisition=Object.hasOwn(window.JuraForge?.viAcquisitionLabels||{},event.target.value)?event.target.value:'all';page=0;if(data.length)render()});
  window.addEventListener('popstate',()=>{applyLocation();if(data.length)render()});
  if(game==='vehicles5')fetch('./data/atlas-vehicle-intel.json').then(response=>{
   if(!response.ok)throw Error('Vehicle facts unavailable');

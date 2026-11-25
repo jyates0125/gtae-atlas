@@ -269,6 +269,8 @@ function mountReference(target,opts={}){
  }
  const benefit=forge?.viBenefit?.(vi?'vi':'v-online',model);
  if(benefit){const section=E('section');section.className='j412-workshop';section.append(E('h3',benefit.label),E('p',benefit.detail));const link=E('a','Official Rockstar reference ↗');link.href=benefit.source;link.target='_blank';link.rel='noopener noreferrer';const credits=E('a',' · Source notes');credits.href='./atlas-credits.html#vi-edition-availability';section.append(link,credits);const claim=forge.viClaimGuide?.('vi',model);if(claim){section.append(E('h4',claim.label),E('p',claim.steps));const instructions=E('a','Official claiming / eligibility instructions ↗');instructions.href=claim.source;instructions.target='_blank';instructions.rel='noopener noreferrer';section.append(instructions)}target.append(section)}
+ const acquisition=forge?.viAcquisition?.(vi?'vi':'v-online',model);
+ if(acquisition){const section=E('section');section.className='j412-workshop';section.dataset.viAcquisition=acquisition.kind;section.append(E('h3',acquisition.label),E('p',acquisition.detail));const source=E('a','Registration sources & limits');source.href='./atlas-credits.html#vi-registration-rules';section.append(source);target.append(section)}
  const purchase=forge?.vehicleDealers?.(vi?'vi':'v-online',model)||[];
  if(purchase.length){const line=E('p','Recorded purchase source: '+purchase.map(x=>x.label).join(' / ')+' · current availability may vary.');target.append(line)}
  const warehouse=forge?.warehouseVehicle?.(vi?'vi':'v-online',model);
