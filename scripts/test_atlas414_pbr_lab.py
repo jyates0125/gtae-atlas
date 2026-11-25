@@ -22,6 +22,9 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,direct
             assert wedge_names and all(not re.search(r'rim|wheel|caliper|brake|stripe|glass|trim|interior',n,re.I) for n in wedge_names)
             expect(page.locator('#rim')).to_be_disabled()
             expect(page.locator('#rim-reset')).to_be_disabled()
+            expect(page.locator('#interior')).to_be_disabled()
+            expect(page.locator('#finish')).to_have_value('factory')
+            source_body=stage.get_attribute('data-body-state')
             canvas=stage.locator('canvas')
             initial=canvas.screenshot(path=str(root/f'metallic-{width}.png'))
             page.locator('#paint').evaluate("e=>{e.value='#bd252d';e.dispatchEvent(new Event('input'))}")
@@ -29,6 +32,10 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,direct
             assert painted!=initial
             page.locator('#finish').select_option('matte')
             assert canvas.screenshot()!=painted
+            page.locator('#paint-reset').click()
+            assert stage.get_attribute('data-body-state')==source_body
+            expect(page.locator('#finish')).to_have_value('factory')
+            page.locator('#finish').select_option('metallic')
             page.locator('#mirror').uncheck()
             matte=canvas.screenshot(path=str(root/f'matte-no-mirror-{width}.png'))
             page.locator('#mirror').check()
@@ -82,6 +89,25 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,direct
             else:
                 expect(page.locator('#rim')).to_be_disabled()
                 expect(page.locator('#rim-reset')).to_be_disabled()
+            expected_interior={m['name'] for m in audit['materials'] if m['name'].lower() in ('interior','leather') and m['baseColorTexture'] is None}
+            actual_interior=set(json.loads(stage.get_attribute('data-interior-material-names')))
+            assert actual_interior==expected_interior, (actual_interior,expected_interior)
+            if actual_interior:
+                expect(page.locator('#interior')).to_be_enabled()
+                baseline=stage.get_attribute('data-interior-state')
+                body_before=stage.get_attribute('data-body-state')
+                rim_before=stage.get_attribute('data-rim-state')
+                page.locator('#interior').evaluate("e=>{e.value='#aa5522';e.dispatchEvent(new Event('input'))}")
+                assert all(m['color']=='aa5522' for m in json.loads(stage.get_attribute('data-interior-state')))
+                assert stage.get_attribute('data-body-state')==body_before
+                assert stage.get_attribute('data-rim-state')==rim_before
+                page.locator('#view').select_option('top')
+                canvas.screenshot(path=str(root/f'fastback-interior-{width}.png'))
+                page.locator('#interior-reset').click()
+                assert stage.get_attribute('data-interior-state')==baseline
+            else:
+                expect(page.locator('#interior')).to_be_disabled()
+            print('Independent interior channels:',sorted(actual_interior),flush=True)
             print('Fastback material channels:',stage.get_attribute('data-material-names'),flush=True)
             print('Independent rim channels:',sorted(actual_rims),flush=True)
             page.locator('#model').select_option('wedge')
@@ -89,6 +115,9 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,direct
             expect(stage).to_have_attribute('data-asset','wedge')
             assert json.loads(stage.get_attribute('data-paint-material-names'))==wedge_names
             assert json.loads(stage.get_attribute('data-rim-material-names'))==[]
+            assert json.loads(stage.get_attribute('data-interior-material-names'))==[]
+            assert stage.get_attribute('data-body-state')==source_body
+            expect(page.locator('#interior')).to_be_disabled()
             expect(page.locator('#rim')).to_be_disabled()
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
             assert page.evaluate('localStorage.length')==0
