@@ -28,6 +28,6 @@ fetch('./data/atlas192-vi-weapons.json',{cache:'no-cache'}).then(r=>{if(!r.ok)th
   }
   root.replaceChildren(fragment);
  }
- filter.addEventListener('input',render);render();
+ filter.value=(new URLSearchParams(location.search).get('armory')||'').slice(0,120);filter.addEventListener('input',render);render();
 }).catch(()=>{status.textContent='Item source index unavailable. The source links above remain available.'});
 })();
