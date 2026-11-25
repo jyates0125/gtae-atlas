@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright,expect
 ROOT=Path(__file__).resolve().parents[1]
 records=json.loads((ROOT/'data/atlas192-vi-weapons.json').read_text(encoding='utf-8'))['records']
 ids={r['id'] for r in records}; variants={r['id'] for r in records if r.get('variantOf')}
-assert len(records)==185 and len(ids)==185 and len(variants)==114
+assert len(records)==187 and len(ids)==187 and len(variants)==115
 assert all(r['variantOf'] in ids and r['variantOf'] not in variants for r in records if r.get('variantOf'))
 class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args): pass
