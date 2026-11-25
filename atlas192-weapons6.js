@@ -34,13 +34,8 @@ function mediaChoices(r){
  return result;
 }
 // Missing images get a cinematic exhibition, never a mislabeled exact model.
-const CATEGORY_EXAMPLES=Object.freeze({
- 'switchblade':'edc-knife','akm-assault-rifle':'kozlov-kz-59','bolt-action-sniper':'fortune-son-laird350',
- 'double-barrel-shotgun':'shrewsbury-drifter','heavy-pistol':'girardi-es9','duke-1922':'girardi-es9',
- 'deever-tech-glr40':'hillinger-boomer','hunting-knife':'bushcraft-knife','sticky-bomb':'frag-grenade'
-});
 function categoryExample(r){
- const candidate=rows.find(x=>x.id===CATEGORY_EXAMPLES[r.id]);
+ const candidate=rows.find(x=>x.id===r.illustrativeExampleOf);
  if(!candidate)return null;
  const m=mediaChoices(candidate).find(x=>x.kind!=='official');
  return m?{...m,kind:'example',label:'Illustrative class reference · '+candidate.name+' · not this exact item'}:null;
