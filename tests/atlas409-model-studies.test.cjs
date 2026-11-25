@@ -37,3 +37,13 @@ assert.equal(f.normalize({workshopLivery:'ellie-black-twin',workshopOptions:{eng
 assert.equal(f.normalize({workshopLivery:'ellie-black-twin'},'banshee').workshopLivery,'none');
 assert.deepEqual(f.normalize({workshopLivery:'ellie-black-twin',workshopOptions:{engine:'engine-3'}},'vi_cheetah95').workshopOptions,{});
 console.log('PASS model-specific game workshop catalog, invalid option rejection and VI isolation');
+
+const ganado=f.workshopCatalog('vi_ganado70');
+assert.equal(ganado.length,30);
+assert.deepEqual([...new Set(ganado.map(g=>g.tab))],['Pro Builds','Cosmetics','Bodywork','Performance','Wheels','Interior']);
+assert.equal(f.workshopLiveries('vi_ganado70').length,2);
+assert.ok(f.build('Pickup / Truck','vi_ganado70','#be9b4a',{}).profile);
+assert.equal(f.normalize({workshopOptions:{engine:'engine-1'}},'vi_ganado70').workshopOptions.engine,'engine-1');
+assert.deepEqual(f.normalize({workshopOptions:{engine:'engine-1'}},'vi_ganado_retro').workshopOptions,{});
+assert.equal(f.normalize({workshopLivery:'ganado-vintage'},'vi_cheetah95').workshopLivery,'none');
+console.log('PASS Ganado released-game workshop isolation');
