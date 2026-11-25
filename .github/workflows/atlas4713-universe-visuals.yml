@@ -4,6 +4,11 @@ on:
     branches: [development, feature/atlas4710-vi-roster-expansion]
     paths:
       - 'atlas100-universe.*'
+      - 'atlas101-configurator.js'
+      - 'atlas-vehicle-configurator.html'
+      - 'atlas90-gallery.js'
+      - 'atlas90-vehicles6.html'
+      - 'atlas4714-*.js'
       - 'atlas-database.html'
       - 'atlas-credits.html'
       - 'atlas4713-universe-credits.js'
@@ -40,6 +45,10 @@ jobs:
           node --check atlas100-universe.js
           node --check atlas192-weapons6.js
           node --check atlas4713-universe-credits.js
+          node --check atlas4714-vi-vehicle-visuals.js
+          node --check atlas101-configurator.js
+          node --check atlas90-gallery.js
+          python scripts/test_atlas293_garage_forge_handoff.py
           python scripts/test_universe_100.py
           python scripts/test_atlas192_world_completion.py
           node scripts/build-cloudflare.cjs
