@@ -205,5 +205,19 @@
   }
   return{kind,vertices:new Float32Array(data),surface:new Float32Array(normals),stencilCount,floorCount,vehicleStart,settings:d,profile:profile?.label||null};
  }
- return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog});
+ // Workshop eligibility is separate from collection ownership and visual capability.
+ const craftRules=Object.freeze({
+  jetmax:Object.freeze({mode:'collection',label:'Collection only · no in-game modifications',location:'Pegasus'}),
+  squalo:Object.freeze({mode:'collection',label:'Collection only · no in-game modifications',location:'Pegasus'}),
+  avisa:Object.freeze({mode:'collection',label:'Collection only · no in-game modifications',location:'Kosatka Moon Pool'}),
+  avenger:Object.freeze({mode:'dedicated',label:'Dedicated customization · eligible Facility / Hangar workshop',location:'Facility / Hangar'}),
+  sparrow:Object.freeze({mode:'dedicated',label:'Dedicated customization · Kosatka workshop',location:'Kosatka Moon Pool'}),
+  kosatka:Object.freeze({mode:'renovation',label:'Purchase and renovation options · not a standard vehicle workshop',location:'Warstock Cache & Carry'})
+ });
+ function craftCustomization(world,model){
+  const id=String(model||'').toLowerCase();
+  if(world!=='v-online'||!Object.hasOwn(craftRules,id))return Object.freeze({mode:'unknown',label:'Model-specific customization not yet verified',location:null});
+  return craftRules[id];
+ }
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog,craftCustomization});
 });
