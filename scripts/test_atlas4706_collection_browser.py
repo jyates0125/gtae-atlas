@@ -1,0 +1,50 @@
+import os,threading
+from pathlib import Path
+from functools import partial
+from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
+from playwright.sync_api import sync_playwright,expect
+ROOT=Path(__file__).resolve().parents[1]
+class Quiet(SimpleHTTPRequestHandler):
+ def log_message(self,*args): pass
+with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'public'))) as server:
+ threading.Thread(target=server.serve_forever,daemon=True).start()
+ base=f'http://127.0.0.1:{server.server_port}/'
+ with sync_playwright() as pw:
+  browser=pw.chromium.launch(**({'channel':'msedge'} if os.getenv('ATLAS_BROWSER')=='msedge' else {}))
+  for width in (390,1440):
+   context=browser.new_context(viewport={'width':width,'height':844})
+   context.route('https://**/*',lambda r:r.abort())
+   page=context.new_page()
+   page.goto(base+'atlas90-weapons6.html')
+   card=page.locator('[data-weapon-id="girardi-es9"]')
+   expect(card).to_have_attribute('data-collected','false',timeout=15000)
+   card.locator('.viweapon-note').click()
+   expect(card).to_have_attribute('data-collected','false')
+   card.locator('.viweapon-collect').click()
+   expect(card).to_have_attribute('data-collected','true')
+   expect(page.locator('#viWeaponCollected')).to_have_text('1 collected')
+   page.reload()
+   expect(card).to_have_attribute('data-collected','true',timeout=15000)
+   expect(card.locator('.viweapon-note')).to_have_attribute('aria-pressed','true')
+   page.locator('#viWeaponOnlyCollected').check()
+   expect(page.locator('.viweapon-card')).to_have_count(1)
+   card.locator('.viweapon-collect').click()
+   expect(page.locator('.viweapon-card')).to_have_count(0)
+   page.locator('#viWeaponClear').click()
+   expect(page.locator('[data-weapon-id="cold-war-556"]')).to_have_count(1)
+   assert page.evaluate("localStorage.getItem('team-jura-atlas90-collection-v1')") is None
+   page.goto(base+'atlas90-vehicles6.html?q=squalo')
+   v=page.locator('#j90Cards .j90-card')
+   expect(v).to_have_count(1,timeout=15000)
+   expect(v).to_have_attribute('data-collected','false')
+   v.locator('.j90-collect-toggle').click()
+   expect(v).to_have_attribute('data-collected','true')
+   page.reload()
+   expect(v).to_have_attribute('data-collected','true',timeout=15000)
+   page.goto(base+'atlas90-vehicles5.html?world=online&q=squalo')
+   expect(v).to_have_count(1,timeout=15000)
+   expect(v).to_have_attribute('data-collected','false')
+   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
+   context.close()
+  browser.close()
+print('PASS collection states, independent review, reload, world isolation')

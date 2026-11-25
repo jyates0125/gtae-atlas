@@ -8,3 +8,5 @@
 .jura-compare-model dl{display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem}
 .jura-compare-model dt{color:#dbc4db}.jura-compare-model dd{margin:0}
 .jura-compare-model a{font-size:.82rem}.jura-compare-model button{margin-top:auto}
+
+.j90-flags .j90-flag-pending{background:#22172e;color:#fff1d4;border-color:#c1a0c5}.j90-actions .j90-collect-toggle{min-height:44px;flex:1 0 100%;font-size:13px;line-height:1.25;color:#fff1d4;background:#43285b;white-space:normal}.j90-actions .j90-collect-toggle[aria-pressed=true]{color:#fff;background:#16573c;border-color:#90d7b0}
