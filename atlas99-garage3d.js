@@ -60,7 +60,7 @@ function mount(target,opts={}){
   panel.append(E('p','Community-recorded model-specific menu. Prices and unlocks can vary. Visual approximations are explicitly labeled.'));
   const menu=E('select');menu.dataset.forgeControl='workshopLivery';menu.setAttribute('aria-label','GTA Online workshop livery reference');
   const blank=E('option','Not selected');blank.value='none';menu.append(blank);
-  for(const row of workshopRows){const option=E('option',row.name+(Number.isFinite(row.priceUSD)?' · GTA$'+row.priceUSD.toLocaleString('en-US'):' · price not recorded'));option.value=row.id;menu.append(option)}
+  for(const row of workshopRows){const option=E('option',row.name+(Number.isFinite(row.priceUSD)?' · GTA$'+row.priceUSD.toLocaleString('en-US'):' · price not recorded')+(row.condition?' · '+row.condition:''));option.value=row.id;menu.append(option)}
   menu.value=design.workshopLivery;
   const status=E('p');status.setAttribute('role','status');
   const total=E('p');total.setAttribute('role','status');
