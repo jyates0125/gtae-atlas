@@ -46,3 +46,5 @@ assert.equal(validAssetAudit(documented,{...good.assetAudit,usedMaterialNames:['
 assert.equal(validAssetAudit(documented,good.assetAudit,{}),false);
 assert.equal(validAssetAudit(documented,good.assetAudit,{'assets/forge/ellie_custom.glb':{...good.variantAudits['assets/forge/ellie_custom.glb'],sha256:'c'.repeat(64)}}),false);
 console.log('PASS exact asset digest, active node/material identity, and whole-model variant audit gating');
+
+assert.equal(validAssetAudit(documented,good.assetAudit,null),false,'Malformed variant evidence fails closed');

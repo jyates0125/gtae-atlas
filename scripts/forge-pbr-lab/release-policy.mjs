@@ -44,7 +44,7 @@ export function validAssetAudit(record,audit,variantAudits={}){
   if(mapping.nodeNames&&!auditedNames(audit.activeNodeNames,mapping.nodeNames))return false;
   if(mapping.materialNames&&!auditedNames(audit.usedMaterialNames,mapping.materialNames))return false;
   if(mapping.method==='whole-model'){
-   const variant=Object.prototype.hasOwnProperty.call(variantAudits,mapping.variantPath)?variantAudits[mapping.variantPath]:null;
+   const variant=variantAudits&&typeof variantAudits==='object'&&Object.prototype.hasOwnProperty.call(variantAudits,mapping.variantPath)?variantAudits[mapping.variantPath]:null;
    if(!variant||variant.sha256!==mapping.variantSha256||variant.selfContained!==true||
       !Number.isInteger(variant.activeMeshCount)||variant.activeMeshCount<1)return false;
   }
