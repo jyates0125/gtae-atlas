@@ -1,0 +1,10 @@
+Elario Forge isolated automotive renderer benchmark. Not a game-asset pack.
+Collect Cars 80s Wedge: drcollect, CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).
+Pinned source: https://github.com/drcollect/collect-cars/tree/9b8eb87431d86cc9c9b4a8c89c1d402d978e337c
+GLB Git blob c966f913a65e84cc22526d3617792bb5681fee8b. Geometry unchanged; materials and stage adapted. Viewer lighting approach informed by drcollect MIT viewer (SOURCE-LICENSE.txt).
+Tevy Muscle Car v1: https://tevy.dev/models/muscle-car
+CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
+Pinned download https://tevy.dev/models/muscle-car/v1/lod0.glb
+SHA256 ecf099c15c25ef42f42d5778932b2907307d03468c9abd86776c83db1f69c12d
+Source catalog https://tevy.dev/models.json. This is a generic original late-60s fastback, not a Rockstar mesh or verified exact Ellie body. Material mapping and visual likeness require review.
+Three.js 0.186.0 MIT (included license in node_modules/three). No runtime network dependencies.
