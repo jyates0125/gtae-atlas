@@ -699,3 +699,7 @@ Owner prioritizes existing accurate, rights-cleared vehicle models before recons
 
 ### Atlas 46.8 — cross-listed VI road vehicle references
 Add 12 road vehicle references (191 → 203, 195 community); GTA6 Motors and Leonida Waypoint catalog cross-check. Preserve all old IDs, separate Tailgater S and Baller ST-D, keep individual eligibility, mesh and workshop evidence pending. No source images or geometry imported. Focused source/browser tests extended; candidate CI pending. GTA.ZONE direct model catalog continues to return HTTP 410; no public link or acquisition claim. Existing classification/brand conflicts remain under review. Rollback via isolated PR revert.
+
+
+### Atlas 46.9 — broader source-cross-listed road/service/craft roster
+64 more distinct community references, 203 → 267 (259 community, 5 official-named, 3 official-media). Compared all eight GTADB roster pages and cross-listed GTA Scoop and Leonida Waypoint references. Avoided leak-only entries and potential alias duplicates; class disagreements and actual individual registration remain pending. No new mesh, visual, workshop, price, or exact game identity claims. Tests cover every new ID, scope isolation, acquisition categories, variant uniqueness and browser deep links. Based on exact 46.8 candidate 057ddb9; 46.8 CI not yet fully complete at branch creation. Do not merge before parent and combined exact-head gates. Production unchanged. Rollback via isolated PR revert.

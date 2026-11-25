@@ -119,18 +119,20 @@ for(const id of [...forge.warehouseModels('v-online'),'oppressor','oppressor2'])
 assert.equal(Object.keys(forge.viCatalog).length,seed.vi.length);
 assert.equal(forge.viEvidenceModels('vi','official-named').length,5);
 assert.equal(forge.viEvidenceModels('vi','official-media').length,3);
-assert.equal(forge.viEvidenceModels('vi','community').length,195);
+assert.equal(forge.viEvidenceModels('vi','community').length,259);
 assert.equal(forge.viEvidence('vi','vi_squalo'),'official-named');
 const acquisitionKinds=Object.keys(forge.viAcquisitionLabels);
 const acquired=acquisitionKinds.flatMap(kind=>forge.viAcquisitionModels('vi',kind));
-assert.equal(acquired.length,203);assert.equal(new Set(acquired).size,203);
-assert.equal(forge.viAcquisitionModels('vi','air-temporary').length,13);
-assert.equal(forge.viAcquisitionModels('vi','water-temporary').length,11);
+assert.equal(acquired.length,267);assert.equal(new Set(acquired).size,267);
+assert.equal(forge.viAcquisitionModels('vi','air-temporary').length,17);
+assert.equal(forge.viAcquisitionModels('vi','water-temporary').length,12);
 assert.equal(forge.viAcquisition('vi','vi_squalo').kind,'water-temporary');
 assert.ok(forge.viBenefit('vi','vi_squalo'));
 assert.equal(forge.viAcquisition('vi','vi_ganado70').kind,'road-review');
 assert.equal(forge.viAcquisition('vi','vi_bati_801').kind,'road-review');
 for(const id of ["vi_allander","vi_bison_3800","vi_bison_900_95","vi_transgressor_67","vi_sungrazer_61","vi_spritz","vi_asterope_gz","vi_greta","vi_bogan","vi_tailgater_s","vi_xls","vi_baller_st_d","vi_gresley_xt","vi_fr36","vi_akane","vi_8f_drafter","vi_neon","vi_thrax"]){assert.equal(forge.viEvidence('vi',id),'community');assert.equal(forge.viAcquisition('vi',id).kind,'road-review');assert.equal(forge.viCatalog[id].referenceOnly,true);assert.equal(forge.workshopCatalog(id).length,0);assert.equal(forge.ownershipKey('v-online',id),null);}
+for(const [kind,ids] of [["road-review",["vi_apoc","vi_arcturus_93","vi_lasso_90","vi_windsor_drop","vi_animus","vi_chavos_xs","vi_feroci_98","vi_grouse_92","vi_lowline","vi_parkland_71","vi_schafter_s","vi_transient","vi_bobcat_500_55","vi_devanity_59","vi_dominator_gt","vi_hustler_32","vi_yosemite_67","vi_comet_88","vi_elegy_90","vi_raiden","vi_v_str","vi_mamba_gt_64","vi_cavalcade_xl","vi_montagne","vi_riata_70","vi_bison_1800","vi_montagne_pickup","vi_sandking_xt","vi_crawler_82","vi_moocher_83","vi_shuttle","vi_sojourn","vi_trotter_95","vi_youga_xl_79","vi_cliffhanger_72","vi_esskey","vi_fcr_1000","vi_boomazoom"]],["air-temporary",["vi_mallard","vi_300_h","vi_volatus","vi_valkyrie"]],["water-temporary",["vi_como"]],["special-review",["vi_bandito_77","vi_blast","vi_bison_900_95_monster","vi_swamp_blaster","vi_biff","vi_d7700","vi_hauler","vi_ambulance_90s","vi_bison_1800_police","vi_granger_police","vi_montagne_pickup_lifeguard_","vi_montagne_police","vi_pumper","vi_sovereign_107_police","vi_allander_taxi","vi_granger_taxi","vi_airtug","vi_golfer_32","vi_lifta","vi_bulldozer","vi_dump"]]])for(const id of ids){assert.equal(forge.viEvidence('vi',id),'community');assert.equal(forge.viAcquisition('vi',id).kind,kind);assert.equal(forge.viCatalog[id].referenceOnly,true);assert.equal(forge.workshopCatalog(id).length,0);assert.equal(forge.ownershipKey('v-story',id),null);assert.equal(forge.ownershipKey('v-online',id),null);}
+assert.notEqual(forge.ownershipKey('vi','vi_bison_1800'),forge.ownershipKey('vi','vi_bison_1800_police'));
 assert.notEqual(forge.ownershipKey('vi','vi_tailgater'),forge.ownershipKey('vi','vi_tailgater_s'));assert.notEqual(forge.ownershipKey('vi','vi_baller'),forge.ownershipKey('vi','vi_baller_st_d'));
 assert.notEqual(forge.ownershipKey('vi','vi_bison'),forge.ownershipKey('vi','vi_bison_3800'));assert.notEqual(forge.ownershipKey('vi','vi_bison_3800'),forge.ownershipKey('vi','vi_bison_900_95'));
 assert.equal(forge.viAcquisition('vi','vi_ganado_retro').kind,'special-review');

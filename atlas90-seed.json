@@ -2368,6 +2368,646 @@
       "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
       "sourceUrl": "https://gta6motors.com/vehicles/",
       "forgeId": "vi_thrax"
+    },
+    {
+      "name": "Apoc",
+      "brand": "Übermacht",
+      "type": "Coupes",
+      "archive": "",
+      "displayName": "Übermacht Apoc",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_apoc"
+    },
+    {
+      "name": "Arcturus '93",
+      "brand": "Dundreary",
+      "type": "Coupes",
+      "archive": "",
+      "displayName": "Dundreary Arcturus '93",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_arcturus_93"
+    },
+    {
+      "name": "Lasso '90",
+      "brand": "Willard",
+      "type": "Coupes",
+      "archive": "",
+      "displayName": "Willard Lasso '90",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_lasso_90"
+    },
+    {
+      "name": "Windsor Drop",
+      "brand": "Buckingham",
+      "type": "Coupes",
+      "archive": "",
+      "displayName": "Buckingham Windsor Drop",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_windsor_drop"
+    },
+    {
+      "name": "Animus",
+      "brand": "Obey",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Obey Animus",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_animus"
+    },
+    {
+      "name": "Chavos XS",
+      "brand": "Dinka",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Dinka Chavos XS",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_chavos_xs"
+    },
+    {
+      "name": "Feroci '98",
+      "brand": "Karin",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Karin Feroci '98",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_feroci_98"
+    },
+    {
+      "name": "Grouse '92",
+      "brand": "Willard",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Willard Grouse '92",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_grouse_92"
+    },
+    {
+      "name": "Lowline",
+      "brand": "Vapid",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Vapid Lowline",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_lowline"
+    },
+    {
+      "name": "Parkland '71",
+      "brand": "Declasse",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Declasse Parkland '71",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_parkland_71"
+    },
+    {
+      "name": "Schafter S",
+      "brand": "Benefactor",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Benefactor Schafter S",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_schafter_s"
+    },
+    {
+      "name": "Transient",
+      "brand": "Willard",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Willard Transient",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_transient"
+    },
+    {
+      "name": "Bobcat 500 '55",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Declasse Bobcat 500 '55",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_bobcat_500_55"
+    },
+    {
+      "name": "DeVanity '59",
+      "brand": "Albany",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Albany DeVanity '59",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_devanity_59"
+    },
+    {
+      "name": "Dominator GT",
+      "brand": "Vapid",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Vapid Dominator GT",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_dominator_gt"
+    },
+    {
+      "name": "Hustler '32",
+      "brand": "Vapid",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Vapid Hustler '32",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_hustler_32"
+    },
+    {
+      "name": "Yosemite '67",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Declasse Yosemite '67",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_yosemite_67"
+    },
+    {
+      "name": "Comet '88",
+      "brand": "Pfister",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Pfister Comet '88",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_comet_88"
+    },
+    {
+      "name": "Elegy '90",
+      "brand": "Annis",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Annis Elegy '90",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_elegy_90"
+    },
+    {
+      "name": "Raiden",
+      "brand": "Coil",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Coil Raiden",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_raiden"
+    },
+    {
+      "name": "V-STR",
+      "brand": "Albany",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Albany V-STR",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_v_str"
+    },
+    {
+      "name": "Mamba GT '64",
+      "brand": "Declasse",
+      "type": "Sports Classics",
+      "archive": "",
+      "displayName": "Declasse Mamba GT '64",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_mamba_gt_64"
+    },
+    {
+      "name": "Cavalcade XL",
+      "brand": "Albany",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Albany Cavalcade XL",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_cavalcade_xl"
+    },
+    {
+      "name": "Montagne",
+      "brand": "Vapid",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Vapid Montagne",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_montagne"
+    },
+    {
+      "name": "Riata '70",
+      "brand": "Vapid",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Vapid Riata '70",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_riata_70"
+    },
+    {
+      "name": "Bandito '77",
+      "brand": "BF",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "BF Bandito '77",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_bandito_77"
+    },
+    {
+      "name": "Blast",
+      "brand": "Mer-Can",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Mer-Can Blast",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_blast"
+    },
+    {
+      "name": "Bison 900 '95 Monster",
+      "brand": "Bravado",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Bravado Bison 900 '95 Monster",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_bison_900_95_monster"
+    },
+    {
+      "name": "Swamp Blaster",
+      "brand": "",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Swamp Blaster",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_swamp_blaster"
+    },
+    {
+      "name": "Bison 1800",
+      "brand": "Bravado",
+      "type": "Pickups",
+      "archive": "",
+      "displayName": "Bravado Bison 1800",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_bison_1800"
+    },
+    {
+      "name": "Montagne Pickup",
+      "brand": "Vapid",
+      "type": "Pickups",
+      "archive": "",
+      "displayName": "Vapid Montagne Pickup",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_montagne_pickup"
+    },
+    {
+      "name": "Sandking XT",
+      "brand": "Vapid",
+      "type": "Pickups",
+      "archive": "",
+      "displayName": "Vapid Sandking XT",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_sandking_xt"
+    },
+    {
+      "name": "Crawler '82",
+      "brand": "Canis",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Canis Crawler '82",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_crawler_82"
+    },
+    {
+      "name": "Moocher '83",
+      "brand": "Willard",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Willard Moocher '83",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_moocher_83"
+    },
+    {
+      "name": "Shuttle",
+      "brand": "Vapid",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Vapid Shuttle",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_shuttle"
+    },
+    {
+      "name": "Sojourn",
+      "brand": "Bravado",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Bravado Sojourn",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_sojourn"
+    },
+    {
+      "name": "Trotter '95",
+      "brand": "Willard",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Willard Trotter '95",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_trotter_95"
+    },
+    {
+      "name": "Youga XL '79",
+      "brand": "Bravado",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Bravado Youga XL '79",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_youga_xl_79"
+    },
+    {
+      "name": "Cliffhanger '72",
+      "brand": "Western",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Western Cliffhanger '72",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_cliffhanger_72"
+    },
+    {
+      "name": "Esskey",
+      "brand": "Principe",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Principe Esskey",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_esskey"
+    },
+    {
+      "name": "FCR 1000",
+      "brand": "Übermacht",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Übermacht FCR 1000",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_fcr_1000"
+    },
+    {
+      "name": "Boomazoom",
+      "brand": "Maibatsu",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Maibatsu Boomazoom",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_boomazoom"
+    },
+    {
+      "name": "Biff",
+      "brand": "Cartwright",
+      "type": "Commercial",
+      "archive": "",
+      "displayName": "Cartwright Biff",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_biff"
+    },
+    {
+      "name": "D7700",
+      "brand": "Declasse",
+      "type": "Commercial",
+      "archive": "",
+      "displayName": "Declasse D7700",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_d7700"
+    },
+    {
+      "name": "Hauler",
+      "brand": "Cartwright",
+      "type": "Commercial",
+      "archive": "",
+      "displayName": "Cartwright Hauler",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_hauler"
+    },
+    {
+      "name": "Ambulance '90s",
+      "brand": "Declasse",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Declasse Ambulance '90s",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_ambulance_90s"
+    },
+    {
+      "name": "Bison 1800 Police",
+      "brand": "Bravado",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Bravado Bison 1800 Police",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_bison_1800_police"
+    },
+    {
+      "name": "Granger Police",
+      "brand": "Declasse",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Declasse Granger Police",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_granger_police"
+    },
+    {
+      "name": "Montagne Pickup (Lifeguard)",
+      "brand": "Vapid",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Vapid Montagne Pickup (Lifeguard)",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_montagne_pickup_lifeguard_"
+    },
+    {
+      "name": "Montagne Police",
+      "brand": "Vapid",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Vapid Montagne Police",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_montagne_police"
+    },
+    {
+      "name": "Pumper",
+      "brand": "MTL",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "MTL Pumper",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_pumper"
+    },
+    {
+      "name": "Sovereign 107 Police",
+      "brand": "Western",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Western Sovereign 107 Police",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_sovereign_107_police"
+    },
+    {
+      "name": "Allander Taxi",
+      "brand": "Karin",
+      "type": "Service",
+      "archive": "",
+      "displayName": "Karin Allander Taxi",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_allander_taxi"
+    },
+    {
+      "name": "Granger Taxi",
+      "brand": "Declasse",
+      "type": "Service",
+      "archive": "",
+      "displayName": "Declasse Granger Taxi",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_granger_taxi"
+    },
+    {
+      "name": "Airtug",
+      "brand": "HVY",
+      "type": "Utility",
+      "archive": "",
+      "displayName": "HVY Airtug",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_airtug"
+    },
+    {
+      "name": "Golfer '32",
+      "brand": "Vapid",
+      "type": "Utility",
+      "archive": "",
+      "displayName": "Vapid Golfer '32",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_golfer_32"
+    },
+    {
+      "name": "Lifta",
+      "brand": "HVY",
+      "type": "Utility",
+      "archive": "",
+      "displayName": "HVY Lifta",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_lifta"
+    },
+    {
+      "name": "Bulldozer",
+      "brand": "HVY",
+      "type": "Industrial",
+      "archive": "",
+      "displayName": "HVY Bulldozer",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_bulldozer"
+    },
+    {
+      "name": "Dump",
+      "brand": "MTL",
+      "type": "Industrial",
+      "archive": "",
+      "displayName": "MTL Dump",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_dump"
+    },
+    {
+      "name": "Como",
+      "brand": "Dingus",
+      "type": "Boats",
+      "archive": "",
+      "displayName": "Dingus Como",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_como"
+    },
+    {
+      "name": "Mallard",
+      "brand": "Lapwing",
+      "type": "Planes",
+      "archive": "",
+      "displayName": "Lapwing Mallard",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_mallard"
+    },
+    {
+      "name": "300-H",
+      "brand": "Lapwing",
+      "type": "Planes",
+      "archive": "",
+      "displayName": "Lapwing 300-H",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_300_h"
+    },
+    {
+      "name": "Volatus",
+      "brand": "Buckingham",
+      "type": "Helicopters",
+      "archive": "",
+      "displayName": "Buckingham Volatus",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_volatus"
+    },
+    {
+      "name": "Valkyrie",
+      "brand": "Buckingham",
+      "type": "Helicopters",
+      "archive": "",
+      "displayName": "Buckingham Valkyrie",
+      "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
+      "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
+      "forgeId": "vi_valkyrie"
     }
   ],
   "onlineWorkshopVehicles": [
