@@ -1,0 +1,114 @@
+name: Atlas 47.0.7 - final release candidate evidence
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - '.github/workflows/atlas4707-final-candidate.yml'
+      - 'docs/LATEST-HANDOFF.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas4707-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  source-and-package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit integrated candidate and changed shared modules
+        run: |
+          python scripts/audit_release.py
+          python scripts/test_atlas192_world_completion.py
+          node --check atlas90-gallery.js
+          node --check atlas192-weapons6.js
+          node --check atlas256-forge-geometry.js
+          python scripts/test_atlas293_garage_forge_handoff.py
+          python scripts/test_atlas151_visual_release.py
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Verify exact generated identity and package integrity
+        shell: bash
+        run: |
+          git rev-parse HEAD > /tmp/atlas-candidate-sha
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          root = pathlib.Path('public')
+          expected = pathlib.Path('/tmp/atlas-candidate-sha').read_text().strip()
+          assert json.loads((root/'atlas-build-identity.json').read_text())['revision'] == expected
+          files = sorted(p for p in root.rglob('*') if p.is_file())
+          assert files
+          with zipfile.ZipFile('atlas4707-candidate.zip', 'w', zipfile.ZIP_DEFLATED, compresslevel=3) as z:
+              for p in files:
+                  z.write(p, p.relative_to(root).as_posix())
+          with zipfile.ZipFile('atlas4707-candidate.zip') as z:
+              assert z.testzip() is None
+              assert set(z.namelist()) == {p.relative_to(root).as_posix() for p in files}
+              assert json.loads(z.read('atlas-build-identity.json'))['revision'] == expected
+          with open('atlas4707-candidate.zip','rb') as f:
+              digest = hashlib.file_digest(f,'sha256').hexdigest()
+          pathlib.Path('atlas4707-candidate.sha256').write_text(digest+'  atlas4707-candidate.zip\n')
+          print('Packaged exact candidate', expected, len(files), 'files', digest)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: atlas4707-candidate-package-not-production
+          path: |
+            atlas4707-candidate.zip
+            atlas4707-candidate.sha256
+          if-no-files-found: error
+          retention-days: 21
+  changed-journeys-and-visual:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    env:
+      ATLAS_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install ${{ matrix.browser }}
+      - name: Recheck affected Squalo and Forge handoff after 47.0.6
+        run: |
+          python scripts/test_atlas201_squalo_browser.py
+          python scripts/test_atlas293_garage_forge_browser.py
+      - name: Gallery continuity (Chromium-specific test)
+        if: matrix.browser == 'chromium'
+        run: python scripts/test_atlas408_gallery_continuity.py
+      - name: Capture outstanding owner design review at phone and desktop sizes
+        run: python scripts/capture_design_review.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas4707-design-review-${{ matrix.browser }}
+          path: qa-evidence/
+          if-no-files-found: warn
+          retention-days: 21
