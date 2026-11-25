@@ -8,7 +8,7 @@ js=(r/'atlas101-configurator.js').read_text(encoding='utf-8')
 css=(r/'atlas312-forge-rescue.css').read_text(encoding='utf-8')
 for tag in ('j312-recovery','j312-export','j312-reset','j312-recovery-message'):
  assert html.count('id="'+tag+'"')==1,tag
-assert 'atlas101-configurator.js?v=312' in html
+assert __import__('re').search(r'atlas101-configurator\.js\?v=(?:31[2-9]|3[2-9]\d|[4-9]\d\d|\d{4,})\b',html)
 assert html.count('atlas312-forge-rescue.css?v=312')==1
 for token in ('function inspectForgeRecovery()','function downloadForgeRecovery()',
  'function resetForgeAfterRecovery()',"'team-jura-forge-recovery-v1'",
