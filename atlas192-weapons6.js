@@ -6,7 +6,7 @@
 const $=id=>document.getElementById(id);
 const KEY='teamjura-vi-weapon-notes-v1';
 const make=(tag,cls,value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=value;return n};
-const state={seen:Object.create(null),notes:Object.create(null)};const COLLECTION='team-jura-vi-weapon-collected-v1';let collected=Object.create(null),collectionBlocked=false;let rows=[],query='',group='all',onlySeen=false,onlyCollected=false;
+const state={seen:Object.create(null),notes:Object.create(null)};const COLLECTION='team-jura-vi-weapon-collected-v1';let collected=Object.create(null),collectionBlocked=false;let rows=[],query='',group='all',onlySeen=false,onlyCollected=false,variantFilter='all';
 function readCollected(){const raw=localStorage.getItem(COLLECTION);if(raw===null)return Object.create(null);const v=JSON.parse(raw);if(!v||v.schema!==1||!v.collected||typeof v.collected!=='object'||Array.isArray(v.collected)||Object.values(v.collected).some(x=>x!==true))throw Error('Invalid collection save');return Object.assign(Object.create(null),v.collected)}
 function refreshCollected(){try{collected=readCollected();collectionBlocked=false}catch{collectionBlocked=true}}
 function writeCollected(next){localStorage.setItem(COLLECTION,JSON.stringify({schema:1,collected:next}));collected=next;collectionBlocked=false}
@@ -26,7 +26,7 @@ function officialMedia(r){
  img.addEventListener('error',()=>{img.remove();f.prepend(make('p','viweapon-image-unavailable','Official image unavailable — open the publisher’s media library below.'));},{once:true});img.src=u.href;f.append(img,cap);return f;
 }
 function render(){
- const found=rows.filter(r=>(group==='all'||r.group===group)&&(!onlySeen||state.seen[r.id])&&(!onlyCollected||collected[r.id])&&(!query||[r.name,r.group,r.evidence,r.description].join(' ').toLowerCase().includes(query)));
+ const found=rows.filter(r=>(group==='all'||r.group===group)&&(variantFilter==='all'||(variantFilter==='variants'?!!r.variantOf:!r.variantOf))&&(!onlySeen||state.seen[r.id])&&(!onlyCollected||collected[r.id])&&(!query||[r.name,r.group,r.evidence,r.description].join(' ').toLowerCase().includes(query)));
  $('viWeaponCount').textContent=found.length+' of '+rows.length+' referenced items';
  $('viWeaponNoted').textContent=rows.filter(r=>state.seen[r.id]).length+' noted on this device';$('viWeaponCollected').textContent=collectionBlocked?'Collection unavailable':rows.filter(r=>collected[r.id]).length+' collected';
  const root=$('viWeaponCards');root.replaceChildren();
@@ -37,7 +37,7 @@ function render(){
   const mark=make('span','viweapon-type',r.group);
   const evidence=make('span','viweapon-grade '+(r.grade.includes('Named')?'viweapon-official':'viweapon-observed'),r.grade);
   card.dataset.collected=String(!!collected[r.id]);const ownership=make('span','viweapon-ownership',collectionBlocked?'Collection unavailable':collected[r.id]?'✓ Collected':'Not collected');ownership.dataset.collected=String(!!collected[r.id]);top.append(mark,evidence,ownership);card.append(top);
-  const h=make('h3','',r.name);card.append(h);const media=officialMedia(r);if(media)card.append(media);else card.append(make('p','viweapon-image-unavailable','Item-specific GTA VI image not yet verified.'));card.append(make('p','viweapon-copy',r.description));
+  const h=make('h3','',r.name);card.append(h);if(r.variantOf){const base=rows.find(x=>x.id===r.variantOf);if(base)card.append(make('p','viweapon-evidence','Named variant · '+base.name));}const media=officialMedia(r);if(media)card.append(media);else card.append(make('p','viweapon-image-unavailable','Item-specific GTA VI image not yet verified.'));card.append(make('p','viweapon-copy',r.description));
   const disclosure=make('p','viweapon-evidence',r.evidence);card.append(disclosure);
   const actions=make('div','viweapon-actions');
   const noted=make('button','viweapon-note',state.seen[r.id]?'✓ Added to my notes':'+ Mark reviewed');
@@ -109,14 +109,15 @@ async function start(){
   rows=raw.records.filter(r=>r&&/^[a-z0-9-]+$/.test(r.id)&&r.name&&r.group&&r.sourceUrl?.startsWith('https://')&&!seen.has(r.id)&&seen.add(r.id));
   const select=$('viWeaponClass');const categories=[...new Set(rows.map(r=>r.group))].sort();
   for(const cls of categories)select.add(new Option(cls,cls));
-  $('viWeaponReviewed').textContent='Research snapshot reviewed '+String(raw.reviewedAt||'date not recorded');
+  $('viWeaponReviewed').textContent='Research snapshot reviewed '+String(raw.reviewedAt||'date not recorded');const benchmark=raw.completenessBenchmark;if(benchmark?.reportedTotal===196){$('viWeaponBenchmark').textContent=rows.length+' catalog references · '+rows.filter(r=>r.variantOf).length+' named variant references. Reported game Progress Database benchmark: 196 items (66 standard, 130 variants). Counts are not yet reconciled one-to-one.';}
   $('viWeaponDisclaimer').textContent=String(raw.disclaimer||'GTA VI sources must be checked per item.');
   render();announce('GTA VI source-qualified research loaded. This is not a complete game arsenal.');
  }catch(err){announce('Research catalog unavailable: '+String(err.message).slice(0,120));$('viWeaponCards').replaceChildren(make('p','viweapon-empty','GTA VI records could not load. GTA V records will not be substituted.'))}
  $('viWeaponSearch').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase().slice(0,120);render()});
  $('viWeaponClass').addEventListener('change',e=>{group=e.target.value;render()});
+ $('viWeaponVariant').addEventListener('change',e=>{variantFilter=e.target.value;render()});
  $('viWeaponMine').addEventListener('change',e=>{onlySeen=e.target.checked;render()});$('viWeaponOnlyCollected').addEventListener('change',e=>{onlyCollected=e.target.checked;render()});window.addEventListener('storage',e=>{if(e.key===COLLECTION||e.key===null){refreshCollected();render()}});
- $('viWeaponClear').addEventListener('click',()=>{$('viWeaponSearch').value='';$('viWeaponClass').value='all';$('viWeaponMine').checked=false;$('viWeaponOnlyCollected').checked=false;query='';group='all';onlySeen=false;onlyCollected=false;render();});
+ $('viWeaponClear').addEventListener('click',()=>{$('viWeaponSearch').value='';$('viWeaponClass').value='all';$('viWeaponMine').checked=false;$('viWeaponOnlyCollected').checked=false;$('viWeaponVariant').value='all';query='';group='all';onlySeen=false;onlyCollected=false;variantFilter='all';render();});
  $('viWeaponExport').addEventListener('click',exportNotes);
  $('viWeaponImport').addEventListener('change',importNotes);
 }
