@@ -72,6 +72,23 @@ try:
         expect(page.locator('#concept3d')).to_contain_text('distinct vehicle and ownership record')
         expect(page.locator('#concept3d [data-workshop-category="hsw-conversion"]')).to_have_count(0)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Specialist browsing modified saved data'
+        # Official named and media references remain separate in both gallery and Forge.
+        page.goto(base + '/atlas90-vehicles6.html?evidence=official-named',wait_until='domcontentloaded')
+        expect(page.locator('#j90Evidence')).to_have_value('official-named')
+        expect(page.locator('#j90Cards [data-evidence="official-named"]')).to_have_count(5,timeout=30000)
+        page.locator('#j90Evidence').select_option('official-media')
+        expect(page.locator('#j90Cards [data-evidence="official-media"]')).to_have_count(3)
+        assert page.evaluate("new URL(location.href).searchParams.get('evidence')")== 'official-media'
+        page.locator('#j408ClearFilters').click()
+        expect(page.locator('#j90Evidence')).to_have_value('all')
+        assert page.evaluate("!new URL(location.href).searchParams.has('evidence')")
+        page.goto(base + '/atlas-vehicle-configurator.html?world=vi&division=evidence-official-media',wait_until='domcontentloaded')
+        expect(page.locator('#forgeDivision')).to_have_value('evidence-official-media')
+        expect(page.locator('#modelSelect option')).to_have_count(3,timeout=30000)
+        expect(page.locator('#modelSelect option[value="vi_enduro"]')).to_have_text('Dinka Enduro')
+        page.locator('#forgeDivision').select_option('evidence-official-named')
+        expect(page.locator('#modelSelect option')).to_have_count(5)
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
         # New acquisition views preserve ownership and legacy builds.
         page.goto(base + '/atlas-vehicle-configurator.html?world=vi&division=returning&model=vi_cheetah95',wait_until='domcontentloaded')
         expect(page.locator('#forgeDivision')).to_have_value('returning')

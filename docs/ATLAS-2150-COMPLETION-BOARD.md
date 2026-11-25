@@ -663,3 +663,6 @@ Add Online-only Pegasus eligibility and documented purchase channel for five air
 
 ### Atlas 45.8 — official Leonida claim guidance
 45.7 passed 21/21 and merged into development 8c8e8b6. Rockstar's November 24 support articles establish the Ultimate Edition and GTA+ in-game claiming flow. Add shared VI-only guide records to the eight existing edition/membership vehicles, with historical Vintage offer cutoff and no inferred individual unlocks or current stock. Links in existing Forge benefit panel and centralized credits; no added vehicle IDs, copied media, storage changes, or duplicated workflows. Extend existing contract/browser checks. Exact-head CI pending; production unchanged.
+
+### Atlas 45.9 — Leonida identity evidence filters
+45.8 passed 20/20 and merged into development a36943e. Shared VI evidence classification now separates five Rockstar named edition/membership references, three Rockstar screenshot references, and 177 community references. Adds shareable gallery filter, Forge divisions, and edition-aware search/comparison. Corrects duplicated Dinka manufacturer in Forge without changing any IDs. No new roster, assets, specs, save keys or inference of gameplay eligibility. Existing contract/browser checks expanded. Exact-head validation pending; production unchanged.

@@ -26,7 +26,7 @@ function readCollection(){
 function adopt(saved){for(const key of Object.keys(STATE))STATE[key]=saved[key]}
 let saveBlocked=false;
 try{adopt(readCollection())}catch{saveBlocked=true}
-let data=[],needle='',klass='all',ownership='all',page=0,view='grid',compare=[],sourcesReady=false;
+let data=[],needle='',klass='all',ownership='all',evidence='all',page=0,view='grid',compare=[],sourcesReady=false;
 const PAGE=60;
 let vehicleFacts={};
 let resetFilters;
@@ -36,22 +36,26 @@ function applyLocation(){
  klass=(params.get('class')||'all').slice(0,100);
  const requested=params.get('collection');
  ownership=['owned','wanted'].includes(requested)?requested:'all';
+ const requestedEvidence=params.get('evidence');
+ evidence=game==='vehicles6'&&Object.hasOwn(window.JuraForge?.viEvidenceLabels||{},requestedEvidence)?requestedEvidence:'all';
  const requestedPage=Number(params.get('page')||1);
  page=Number.isSafeInteger(requestedPage)&&requestedPage>0?requestedPage-1:0;
  $('j90Search').value=needle;
  $('j90Ownership').value=ownership;
+ if($('j90Evidence'))$('j90Evidence').value=evidence;
 }
 function syncLocation(){
  const url=new URL(location.href);
  for(const [key,value] of [['q',needle],['class',klass==='all'?'':klass],['collection',ownership==='all'?'':ownership],['page',page?String(page+1):'']]){
   if(value)url.searchParams.set(key,value);else url.searchParams.delete(key);
  }
+ if(game==='vehicles6'){if(evidence==='all')url.searchParams.delete('evidence');else url.searchParams.set('evidence',evidence)}
  if(url.href!==location.href)history.replaceState(history.state,'',url);
- if(resetFilters)resetFilters.hidden=!needle&&klass==='all'&&ownership==='all'&&!page;
+ if(resetFilters)resetFilters.hidden=!needle&&klass==='all'&&ownership==='all'&&evidence==='all'&&!page;
 }
 function clearFilters(){
- needle='';klass='all';ownership='all';page=0;
- $('j90Search').value='';$('j90Class').value='all';$('j90Ownership').value='all';
+ needle='';klass='all';ownership='all';evidence='all';page=0;
+ $('j90Search').value='';$('j90Class').value='all';$('j90Ownership').value='all';if($('j90Evidence'))$('j90Evidence').value='all';
  render();$('j90Search').focus();
 }
 function safe(s){return String(s||'').slice(0,120)}
@@ -96,7 +100,9 @@ function formatState(id){return STATE.owned[id]?'Collected':STATE.wishlist[id]?'
 function setFlag(id,field,value){updateFlag(id,field,value)}
 function el(t,c,v){const n=document.createElement(t);if(c)n.className=c;if(v!==undefined)n.textContent=v;return n}
 function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo');const img=document.createElement('img');const flags=el('div','j90-flags');let caption,photoStatus='Checking archive image…';
- flags.append(el('span','',r.kind==='vehicles6'?'VI RESEARCH':r.kind==='weapons'?'WEAPON':'VEHICLE'));
+ root.dataset.recordId=r.id;
+ if(r.kind==='vehicles6')root.dataset.evidence=r.evidence;
+ flags.append(el('span','',r.kind==='vehicles6'?(window.JuraForge?.viEvidenceLabels?.[r.evidence]||'Community reference'):r.kind==='weapons'?'WEAPON':'VEHICLE'));
  img.loading='lazy';
  const captionText=()=>r.kind==='vehicles6'?r.confidence+(r.benefit?' · '+r.benefit.label:''):r.kind==='weapons'?(weaponWorld==='story'?'GTA V archive reference; availability in Story Mode needs per-item checking. ':'GTA Online archive ID; availability may vary by update and edition. ')+'Model ID '+r.archive:'Archive model ID '+r.archive+' · availability is not confirmed by an image.';
  function setPhotoState(state,text){
@@ -151,7 +157,7 @@ function renderComparison(){
    if(facts.drive)field('Drive',facts.drive);
    if(Number.isFinite(facts.priceUSD))field('Recorded price','GTA$'+facts.priceUSD.toLocaleString('en-US'));
   }else if(game==='vehicles5'){field('GTA Online specs','No reviewed profile')}
-  else if(game==='vehicles6'){field('Evidence',r.confidence);if(r.brand)field('Brand',r.brand)}
+  else if(game==='vehicles6'){field('Evidence',r.confidence);if(r.brand)field('Brand',r.brand);if(r.benefit)field('Edition / membership',r.benefit.label)}
   else{field('World',weaponWorld==='story'?'GTA V Story references':'GTA Online references');field('Model ID',r.archive)}
   card.append(details);
   if(facts?.sourceUrl?.startsWith('https://gtadb.net/')){
@@ -168,8 +174,8 @@ function filtered(){
  const terms=needle.split(/\s+/).filter(Boolean);
  return data.filter(r=>{
   const facts=game==='vehicles5'&&vehicleWorld==='online'?vehicleFacts[r.archive]:null;
-  const haystack=[r.name,r.group,r.brand,r.archive,facts?.manufacturer,facts?.displayName,facts?.category].join(' ').toLowerCase();
-  return (klass==='all'||r.group===klass)&&(ownership==='all'||(ownership==='owned'?STATE.owned[r.id]:STATE.wishlist[r.id]))&&terms.every(term=>haystack.includes(term));
+  const haystack=[r.name,r.group,r.brand,r.archive,facts?.manufacturer,facts?.displayName,facts?.category,r.benefit?.label,r.confidence].join(' ').toLowerCase();
+  return (evidence==='all'||r.evidence===evidence)&&(klass==='all'||r.group===klass)&&(ownership==='all'||(ownership==='owned'?STATE.owned[r.id]:STATE.wishlist[r.id]))&&terms.every(term=>haystack.includes(term));
  });
 }
 function render(){const categories=[...new Set(data.map(r=>r.group))].sort();const select=$('j90Class');if(select.dataset.signature!==categories.join('|')){select.replaceChildren(new Option('All classes','all'));categories.forEach(c=>select.add(new Option(c,c)));select.dataset.signature=categories.join('|')}klass=categories.includes(klass)?klass:'all';select.value=klass;const rows=filtered();page=Math.min(page,Math.max(0,Math.ceil(rows.length/PAGE)-1));
@@ -180,6 +186,7 @@ function initialize(seed){if(game==='weapons')data=seed.weapons.map(k=>make(k,'w
   const vehicle=make(id,'vehicles6',x.displayName||x.name,x.type,x.archive,x.confidence,x.brand);
   if(typeof x.sourceUrl==='string'&&(/^(https:\/\/www\.rockstargames\.com\/VI\/|https:\/\/gtadb\.net\/gta-6\/vehicles\/|https:\/\/gta6motors\.com\/(?:guides\/car-customization\/|vehicles\/)|https:\/\/www\.gtabase\.com\/gta-6\/vehicles\/|https:\/\/gta6wiki\.eu\/vehicles\/|https:\/\/www\.gta6map\.net\/wiki\/gta-6\/vehicles\/)/).test(x.sourceUrl))vehicle.source=x.sourceUrl;
   vehicle.benefit=window.JuraForge?.viBenefit?.('vi',x.forgeId)||null;
+  vehicle.evidence=window.JuraForge?.viEvidence?.('vi',x.forgeId)||'community';
   return vehicle;
  });data=unique(data);render();if(saveBlocked){message(storageWarning());return}message(game==='vehicles6'?'Research catalog with original Leonida concept art. The known GTA VI roster is incomplete.':game==='weapons'?'GTA '+(weaponWorld==='story'?'V Story':'Online')+' image reference catalog loaded. Weapons are scoped by world for your saved progress; per-item availability still needs verification.':'GTA '+(vehicleWorld==='story'?'V Story':'Online')+' reference gallery loaded. Personal vehicle flags are separate by world; existing shared flags remain in Online.');}
 async function discover(){if(game==='vehicles6'){message('GTA VI records require individual evidence; the GTA V image archive cannot prove GTA VI inclusion.');return}const btn=$('j90Discover');btn.disabled=true;message('Checking source archive for additional images and model IDs…');try{const c=new AbortController(),timer=setTimeout(()=>c.abort(),14000);let r=await fetch(ARCHIVE,{signal:c.signal});clearTimeout(timer);if(!r.ok)throw Error('Archive request HTTP '+r.status);let j=await r.json();if(!Array.isArray(j.tree))throw Error('Archive format changed');const folder=game==='weapons'?'weapons/':'vehicles/',re=game==='weapons'?/^weapons\/weapon_([a-z0-9_]+)\.webp$/:/^vehicles\/([a-z0-9_]+)\.webp$/;const imported=[];for(const f of j.tree){const m=f.path?.match(re);if(m)imported.push(make(m[1],game,game==='weapons'?(weaponNames[m[1]]||''):''))}data=unique([...data,...imported]);sourcesReady=true;page=0;render();message('Source archive indexed: '+imported.length+' picture files. These are image IDs, not a verified complete official vehicle/weapon roster.');}catch(err){message('Archive discovery unavailable ('+err.message+'). Curated starting catalog remains usable.')}finally{btn.disabled=false}}
@@ -188,6 +195,7 @@ function init(){
  $('j90Search').maxLength=120;
  resetFilters=el('button','','Clear filters');resetFilters.type='button';resetFilters.id='j408ClearFilters';resetFilters.hidden=true;resetFilters.onclick=clearFilters;
  $('j90Export').before(resetFilters);
+ if($('j90Evidence'))$('j90Evidence').addEventListener('change',event=>{evidence=Object.hasOwn(window.JuraForge?.viEvidenceLabels||{},event.target.value)?event.target.value:'all';page=0;if(data.length)render()});
  window.addEventListener('popstate',()=>{applyLocation();if(data.length)render()});
  if(game==='vehicles5')fetch('./data/atlas-vehicle-intel.json').then(response=>{
   if(!response.ok)throw Error('Vehicle facts unavailable');
