@@ -17,6 +17,14 @@ try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&saved.sc
 }}catch(_){}
 function announce(msg){if($('viWeaponStatus'))$('viWeaponStatus').textContent=msg}
 function save(){try{localStorage.setItem(KEY,JSON.stringify({schema:1,seen:state.seen,notes:state.notes,updated:new Date().toISOString()}));return true}catch(_){announce('Saving is unavailable on this device. Export your research notes.');return false}}
+function officialMedia(r){
+ const m=r.officialMedia;if(!m||typeof m.url!=='string'||typeof m.caption!=='string'||m.source!=='https://www.rockstargames.com/VI/media/screenshots')return null;
+ let u;try{u=new URL(m.url)}catch{return null}
+ if(u.origin!=='https://www.rockstargames.com'||!/^\/VI\/_next\/static\/media\/ULTIMATE_EDITION_(?:WEAPON_VARIANTS_01|HAWK_AND_LITTLE_MORGAN_REVOLVERS_01)\.[a-zA-Z0-9_~.-]+\.jpg$/.test(u.pathname))return null;
+ const f=make('figure','viweapon-media');const img=make('img','');img.alt=m.caption;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
+ const cap=make('figcaption','',m.caption+' © Rockstar Games. ');const link=make('a','','Official media library ↗');link.href=m.source;link.target='_blank';link.rel='noopener noreferrer';cap.append(link);
+ img.addEventListener('error',()=>{img.remove();f.prepend(make('p','viweapon-image-unavailable','Official image unavailable — open the publisher’s media library below.'));},{once:true});img.src=u.href;f.append(img,cap);return f;
+}
 function render(){
  const found=rows.filter(r=>(group==='all'||r.group===group)&&(!onlySeen||state.seen[r.id])&&(!onlyCollected||collected[r.id])&&(!query||[r.name,r.group,r.evidence,r.description].join(' ').toLowerCase().includes(query)));
  $('viWeaponCount').textContent=found.length+' of '+rows.length+' referenced items';
@@ -29,7 +37,7 @@ function render(){
   const mark=make('span','viweapon-type',r.group);
   const evidence=make('span','viweapon-grade '+(r.grade.includes('Named')?'viweapon-official':'viweapon-observed'),r.grade);
   card.dataset.collected=String(!!collected[r.id]);const ownership=make('span','viweapon-ownership',collectionBlocked?'Collection unavailable':collected[r.id]?'✓ Collected':'Not collected');ownership.dataset.collected=String(!!collected[r.id]);top.append(mark,evidence,ownership);card.append(top);
-  const h=make('h3','',r.name);card.append(h,make('p','viweapon-copy',r.description));
+  const h=make('h3','',r.name);card.append(h);const media=officialMedia(r);if(media)card.append(media);else card.append(make('p','viweapon-image-unavailable','Item-specific GTA VI image not yet verified.'));card.append(make('p','viweapon-copy',r.description));
   const disclosure=make('p','viweapon-evidence',r.evidence);card.append(disclosure);
   const actions=make('div','viweapon-actions');
   const noted=make('button','viweapon-note',state.seen[r.id]?'✓ Added to my notes':'+ Mark reviewed');
