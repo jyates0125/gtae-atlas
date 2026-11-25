@@ -7,12 +7,12 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {Reflector} from 'three/addons/objects/Reflector.js';
 const $=id=>document.getElementById(id);
-const stage=$('stage'),status=$('status'),paint=$('paint'),finish=$('finish'),mirror=$('mirror'),model=$('model'),view=$('view');
+const stage=$('stage'),status=$('status'),paint=$('paint'),finish=$('finish'),mirror=$('mirror'),model=$('model'),view=$('view'),rim=$('rim'),rimReset=$('rim-reset'),rimStatus=$('rim-status');
 const assets=Object.freeze({
  wedge:{file:'wedge.glb',name:'80s Wedge · drcollect',source:'https://github.com/drcollect/collect-cars',license:'CC BY 4.0',triangles:71240},
  fastback:{file:'fastback.glb',name:'Late-60s fastback · tevy',source:'https://tevy.dev/models/muscle-car',license:'CC0 1.0',triangles:54908}
 });
-let renderer,scene,camera,controls,floor,matte,observer,disposed=false,car,bounds,envTarget,ktx,sequence=0,materials=[],wheelMaterials=[],activeTextures=new Set(),keyLight,frame=0;
+let renderer,scene,camera,controls,floor,matte,observer,disposed=false,car,bounds,envTarget,ktx,sequence=0,materials=[],wheelMaterials=new Map(),keyLight,frame=0;
 const label=(text)=>{status.textContent=text};
 function render(){if(!disposed&&renderer)renderer.render(scene,camera)}
 function requestRender(){if(!frame&&!disposed)frame=requestAnimationFrame(()=>{frame=0;render()})}
@@ -65,14 +65,23 @@ function paintChannel(asset,m){
  if(asset==='fastback')return !m.map && (name==='paint'||name==='paint_body') ? 'body' : null;
  return /paint|liquidgraphite/i.test(name)&& !/rim|wheel|caliper|brake|stripe|glass|trim|interior/i.test(name) ? 'body' : null;
 }
+function publishMaterialState(){
+ const values=entries=>[...entries].map(m=>({name:m.name,color:m.color.getHexString(),metalness:m.metalness,roughness:m.roughness})).sort((a,b)=>a.name.localeCompare(b.name));
+ stage.dataset.bodyState=JSON.stringify(values(materials));stage.dataset.rimState=JSON.stringify(values(wheelMaterials.keys()));
+}
+function updateRims(reset=false){
+ for(const [m,original] of wheelMaterials){if(reset)m.color.copy(original);else m.color.set(rim.value)}
+ if(reset&&wheelMaterials.size)rim.value='#'+wheelMaterials.values().next().value.getHexString();
+ publishMaterialState();requestRender();
+}
 function update(){
  for(const m of materials){m.color.set(paint.value);const settings={metallic:[.65,.24,1,.06],gloss:[.12,.18,1,.04],satin:[.5,.48,.25,.3],matte:[.05,.85,0,.6]}[finish.value];[m.metalness,m.roughness,m.clearcoat,m.clearcoatRoughness]=settings;m.needsUpdate=true}
- requestRender()
+ publishMaterialState();requestRender()
 }
 function dispose(){if(disposed)return;disposed=true;sequence++;if(frame)cancelAnimationFrame(frame);observer?.disconnect();controls?.dispose();ktx?.dispose();disposeTree(scene);floor?.getRenderTarget()?.dispose();envTarget?.dispose();renderer?.dispose()}
 async function load(){
  const ticket=++sequence,asset=assets[model.value];if(!asset)return;
- if(car){scene.remove(car);disposeTree(car);car=null;}bounds=null;materials=[];stage.dataset.paintMaterialNames='[]';stage.dataset.state='loading';paint.disabled=finish.disabled=true;label('Loading local '+asset.name+'…');render();
+ if(car){scene.remove(car);disposeTree(car);car=null;}bounds=null;materials=[];wheelMaterials.clear();stage.dataset.paintMaterialNames='[]';stage.dataset.rimMaterialNames='[]';publishMaterialState();stage.dataset.state='loading';paint.disabled=finish.disabled=rim.disabled=rimReset.disabled=true;rimStatus.textContent='Checking independent rim materials…';label('Loading local '+asset.name+'…');render();
  try{
   const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).setKTX2Loader(ktx);
   const gltf=await loader.loadAsync('./'+asset.file);
@@ -82,6 +91,9 @@ async function load(){
    const convert=m=>{names.add(m.name||'(unnamed)');
     // Only known separate paint channels are editable. Preserve baked textures
     // and all unmapped materials rather than falsely repainting the entire car.
+    if(model.value==='fastback'&&!m.map&&m.color&&/^(rim_paint|rim_paint_body)$/i.test(m.name)){
+     if(!wheelMaterials.has(m))wheelMaterials.set(m,m.color.clone());return m;
+    }
     if(paintChannel(model.value,m)!=='body')return m;
     if(!map.has(m)){const replacement=new THREE.MeshPhysicalMaterial({name:m.name,color:m.color,metalness:.65,roughness:.24,clearcoat:1,clearcoatRoughness:.06,map:m.map,normalMap:m.normalMap,side:m.side});map.set(m,replacement);materials.push(replacement);originals.add(m)}
     return map.get(m)
@@ -94,8 +106,12 @@ async function load(){
   stage.dataset.triangles=String(Math.round(triangles));stage.dataset.paintMaterials=String(materials.length);stage.dataset.asset=model.value;stage.dataset.materialNames=JSON.stringify([...names].sort());stage.dataset.paintMaterialNames=JSON.stringify(materials.map(m=>m.name).sort());
   $('credit').href=asset.source;$('credit').textContent=asset.name+' · '+asset.license;
   paint.disabled=finish.disabled=!materials.length;if(materials.length)update();
+  stage.dataset.rimMaterialNames=JSON.stringify([...wheelMaterials.keys()].map(m=>m.name).sort());
+  rim.disabled=rimReset.disabled=!wheelMaterials.size;
+  rimStatus.textContent=wheelMaterials.size?'Independent rim paint — machined surfaces, tires, brakes and baked textures remain unchanged.':'Factory rims only — no independent untextured rim paint mapping verified for this model.';
+  updateRims(true);
   frameVehicle(view.value);stage.dataset.state='ready';label(Math.round(triangles).toLocaleString('en-US')+' triangles · '+(materials.length?materials.length+' editable paint channels':'factory finish only — paint mapping needs review')+' · real-time reflection');
- }catch(e){if(ticket!==sequence||disposed)return;if(car){scene.remove(car);disposeTree(car);car=null;}stage.dataset.state='error';label('Model unavailable: '+e.message);render();console.error(e)}
+ }catch(e){if(ticket!==sequence||disposed)return;if(car){scene.remove(car);disposeTree(car);car=null;}stage.dataset.state='error';paint.disabled=finish.disabled=rim.disabled=rimReset.disabled=true;rimStatus.textContent='Rim controls unavailable.';label('Model unavailable: '+e.message);render();console.error(e)}
 }
 try{
  renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.toneMapping=THREE.NeutralToneMapping;renderer.toneMappingExposure=1.25;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;stage.append(renderer.domElement);
@@ -110,6 +126,7 @@ try{
  const shadow=new THREE.Mesh(new THREE.PlaneGeometry(15,15),new THREE.ShadowMaterial({opacity:.25}));shadow.rotation.x=-Math.PI/2;shadow.position.y=-.009;shadow.receiveShadow=true;scene.add(shadow);
  ktx=new KTX2Loader().setTranscoderPath('./node_modules/three/examples/jsm/libs/basis/').detectSupport(renderer);
  observer=new ResizeObserver(resize);observer.observe(stage);resize();
+ rim.addEventListener('input',()=>updateRims());rimReset.addEventListener('click',()=>updateRims(true));
  paint.addEventListener('input',update);finish.addEventListener('change',update);mirror.addEventListener('change',()=>{floor.visible=mirror.checked;matte.visible=!mirror.checked;requestRender()});
  view.addEventListener('change',()=>frameVehicle(view.value));model.addEventListener('change',load);
  window.addEventListener('pagehide',dispose,{once:true});await load();
