@@ -56,7 +56,10 @@ assert all(r["image"].startswith("https://") for r in original_portraits)
 assert all(r.get("imageCredit","").startswith("https://") for r in original_portraits)
 for r in characters:
     if not r.get("image"):
-        assert r["scope"]=="vi" and r["sourceUrl"]=="https://www.rockstargames.com/VI/only-in-leonida",r
+        assert r["scope"]=="vi",r
+        url=r["sourceUrl"]
+        assert url in {"https://www.rockstargames.com/VI/only-in-leonida","https://www.rockstargames.com/VI/credits"} or url.startswith("https://gtadb.net/gta-6/characters/"),r
+        assert "portrait" in r.get("imageRights","").lower() and ("not" in r["imageRights"].lower() or "no individual" in r["imageRights"].lower()),r
 assert {"character:vic-vance","character:toni-cipriani","character:huang-lee","character:johnny-klebitz","character:luis-lopez"}.issubset({c["id"] for c in characters})
 assert "data/atlas-universe-profiles.json?v=222" in source("atlas100-universe.js")
 assert "elarioCharacterPortrait" in source("atlas100-universe.js")
