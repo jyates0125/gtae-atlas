@@ -23,6 +23,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Enforce final Forge quality policy
+        run: node scripts/forge-pbr-lab/test-release-policy.mjs
       - name: Prepare isolated local asset benchmark
         run: |
           mkdir -p qa-evidence/forge-pbr
