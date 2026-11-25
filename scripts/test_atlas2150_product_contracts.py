@@ -36,7 +36,7 @@ require("atlas101-configurator.js", "Aircraft / Plane concept",
         "Boat / Watercraft concept", "Helicopter concept", "sceneType()",
         "prepareImport", "Object.hasOwn(merged,id)", "classLocked")
 require("atlas99-garage3d.js", "forge.build(opts.type,opts.model,paint,design,environment)", "forgeStatus")
-require("atlas-vehicle-configurator.html", "atlas256-forge-geometry.js", 'id="forgeVariant"', 'id="saveVariant"', 'id="loadVariant"')
+require("atlas-vehicle-configurator.html", "atlas256-forge-geometry.js", 'id="forgeOwned"', 'id="forgeVariant"', 'id="saveVariant"', 'id="loadVariant"')
 require("atlas101-configurator.js", "mergeVariants", "VARIANT_LIMIT=8", "saveVariant", "loadVariant")
 # Exercise the replacement geometry engine, not retired renderer variable names.
 subprocess.run(["node", "-e", """
@@ -49,6 +49,24 @@ for(const world of ['vi','v-story'])for(const id of ['jetmax','squalo','avisa','
 assert.equal(forge.craftCustomization('v-online','__proto__').mode,'unknown');
 assert.equal(forge.craftCustomization('v-online','unknown-aircraft').mode,'unknown');
 console.log('PASS craft workshop eligibility and independent world scope');
+const dataKey=forge.collectionKey;
+const mem=new Map([[dataKey,JSON.stringify({schema:1,owned:{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true},wishlist:{'vehicles6:squalo':true},note:{'vehicles5:jetmax':'keep'},futureField:'preserve'})]]);
+const store={getItem:k=>mem.has(k)?mem.get(k):null,setItem:(k,v)=>mem.set(k,v)};
+assert.equal(forge.ownershipKey('vi','vi_squalo'),'vehicles6:squalo');
+assert.equal(forge.viModelFromOwnership('vehicles6:squalo'),'vi_squalo');
+assert.equal(forge.ownershipKey('v-story','jetmax'),'vehicles5-story:jetmax');
+assert.equal(forge.ownershipKey('v-online','vi_squalo'),null);
+assert.equal(forge.ownershipKey('vi','__proto__'),null);
+forge.setVehicleOwned(store,'vi','vi_squalo',true);
+let snapshot=JSON.parse(mem.get(dataKey));
+assert.deepEqual(snapshot.owned,{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true,'vehicles6:squalo':true});
+assert.equal(snapshot.wishlist['vehicles6:squalo'],undefined);
+assert.equal(snapshot.note['vehicles5:jetmax'],'keep');
+assert.equal(snapshot.futureField,'preserve');
+forge.setVehicleOwned(store,'vi','vi_squalo',false);
+assert.deepEqual(JSON.parse(mem.get(dataKey)).owned,{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true});
+mem.set(dataKey,'{broken');assert.throws(()=>forge.setVehicleOwned(store,'vi','vi_squalo',true));assert.equal(mem.get(dataKey),'{broken');
+console.log('PASS authoritative cross-world collection keys, merge preservation and malformed-save protection');
 const cases = [["Aircraft / Plane concept","lazer","air"],["Boat / Watercraft concept","jetmax","marine"],["Helicopter concept","akula","rotor"],["Sports concept","adder","sport"],["Truck / Utility concept","bison","utility"],["Touring concept","regina","touring"]];
 for (const [type,id,kind] of cases) {
   const model=forge.build(type,id,'#4473c2',{});
@@ -104,6 +122,12 @@ assert.ok(!rows.some(x=>x.model==='bison'));
 assert.ok(!rows.some(x=>x.model==='unknown'));
 assert.ok(!rows.some(x=>x.title==='wrong'));
 console.log('PASS eight Forge collection projection assertions');
+const ownedOnly=hub.collect({owned:{schema:1,owned:{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true,'vehicles6:squalo':true,'vehicles6:other-craft':true}}});
+assert.equal(ownedOnly.length,4);
+assert.ok(ownedOnly.some(x=>x.world==='vi'&&x.model==='vi_squalo'&&x.href.includes('world=vi&model=vi_squalo')));
+assert.ok(ownedOnly.some(x=>x.world==='story'&&x.href.includes('world=story')));
+assert.ok(ownedOnly.some(x=>x.world==='vi'&&x.model==='other-craft'&&x.href.includes('atlas90-vehicles6.html')));
+console.log('PASS owned-only collection visibility across three game scopes');
 """], cwd=ROOT, check=True)
 
 # World and heist navigation: these pages must remain in the release.
