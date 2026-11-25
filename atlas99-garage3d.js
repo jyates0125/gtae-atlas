@@ -90,7 +90,7 @@ function mount(target,opts={}){
    select.onchange=()=>{change({workshopOptions:{...design.workshopOptions,[group.key]:select.value}});update()};
    label.append(select);planner.append(label);
   }
-  const source=E('a','Workshop sources & credits');source.href='./atlas-credits.html#forge-workshop-liveries';
+  const source=E('a','Workshop sources & credits');source.href='./atlas-credits.html#'+(modelId==='banshee'?'forge-banshee-workshop':'forge-workshop-liveries');
   panel.append(planner,total,E('p','Other categories, including horns, neon, respray, wheels and tire smoke, are not fully catalogued here. Performance choices are recorded, not simulated.'),source);styling.append(panel);update();
  }else{
   const vi=modelId.startsWith('vi_');
