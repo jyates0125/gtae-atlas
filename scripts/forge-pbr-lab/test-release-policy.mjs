@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {divisions,validReleaseAsset,selectFinalVisual} from './release-policy.mjs';
+const good={world:'v-online',division:'road',model:'ellie',kind:'model-specific-glb',identity:'verified',assetPath:'assets/forge/ellie.glb',sha256:'a'.repeat(64),sourceRevision:'fixture',license:'fixture',attribution:'fixture',rightsReviewed:true,visualAccepted:true,mobilePassed:true,desktopPassed:true,controlsPassed:true,materialAuditPassed:true};
+assert.equal(validReleaseAsset(good),true);
+for(const key of ['rightsReviewed','visualAccepted','mobilePassed','desktopPassed','controlsPassed','materialAuditPassed','sourceRevision','license','attribution','sha256','assetPath','model'])assert.equal(validReleaseAsset({...good,[key]:null}),false,key);
+for(const kind of ['procedural','generic-glb','concept-study'])assert.equal(validReleaseAsset({...good,kind}),false);
+assert.equal(validReleaseAsset({...good,identity:'approximate'}),false);
+assert.equal(validReleaseAsset({...good,assetPath:'https://example.com/ellie.glb'}),false);
+for(const world of ['v-story','v-online','vi'])for(const division of divisions)assert.deepEqual(selectFinalVisual(world,'unknown-model',division),{mode:'reference',asset:null,planning:true,reason:'Matching accepted detailed asset is not available.'});
+for(const model of ['wedge','fastback','supercar','supercar-balanced','formula','__proto__'])assert.equal(selectFinalVisual('v-online',model,'road').mode,'reference');
+assert.equal(selectFinalVisual('v-online','ellie','road').mode,'reference','fixture cannot populate accepted registry');
+console.log('PASS final Forge visual quality policy across seven divisions and three game scopes');
