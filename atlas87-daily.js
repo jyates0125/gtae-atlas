@@ -27,7 +27,30 @@ function status(r){
 function card(r){const a=document.createElement('article');a.className='j87-daily-card';a.id=r.id;a.dataset.status=status(r).type;a.style.scrollMarginTop='90px';let h=document.createElement('div');h.className='j87-daily-title';const title=document.createElement('strong');title.textContent=r.name;const reset=document.createElement('span');reset.textContent=`Daily reset ${String(r.reset??6).padStart(2,'0')}:00 UTC`;h.append(title,reset);a.append(h);
 let p=document.createElement('p');p.textContent=status(r).msg;a.append(p);let note=document.createElement('small');note.textContent=status(r).detail;a.append(note);
 const links=document.createElement('div');links.className='j87-daily-links';for(const [label,url] of [['Game activities','./atlas-activities.html?mode=online'],['Find possible locations', r.id==='cayo-chests'?'./heist-cayo-perico.html':'./atlas-online.html?event='+encodeURIComponent(r.id)],['GTADB source ↗',r.source||'./atlas-credits.html'],['Compare daily tracker ↗','https://gtamap.io/gta-online/daily/']]){let x=document.createElement('a');x.href=url;x.textContent=label;if(/^https?:/.test(url)){x.target='_blank';x.rel='noopener noreferrer'}links.append(x)}a.append(links);return a;}
-function dashboard(){const root=$('j87-daily-list');if(!root)return;root.replaceChildren();for(const r of selected)root.append(card(r));let total=$('j87-daily-summary');if(total)total.textContent=`${selected.length} daily categories monitored · independent data channel + bundled fallback · personal imports optional · no Rockstar account link`;}
+// Source dates are calendar dates, not invented exact server reset times.
+// Current-day boundaries are explicitly labelled; never extend a free claim indefinitely.
+const memberOffers=Object.freeze([
+ Object.freeze({name:'Grotti Itali RSX',kind:'free-claim',start:'2026-11-06',end:'2026-12-09',general:null,source:'https://www.rockstargames.com/newswire/article/178a115o743442/gta-members-can-now-claim-a-free-grotti-itali-rsx'}),
+ Object.freeze({name:'Pegassi Horus',kind:'early-access',start:'2026-09-10',end:'2026-09-16',general:'2026-09-17',source:'https://support.rockstargames.com/articles/4vRqEDvjUs9h7nqRUgc8YO/gtav-title-update-1-73-notes-ps5-ps4-xbox-series-x-or-s-xbox-one-pc-enhanced-legacy'}),
+ Object.freeze({name:'Bravado Buffalo STX Pursuit',kind:'early-access',start:'2026-04-02',end:'2026-04-08',general:'2026-04-09',source:'https://www.rockstargames.com/newswire/article/1784ak282972ka/gta-members-can-claim-a-free-bravado-buffalo-stx-pursuit-law-enforceme'})
+]);
+function memberOfferStatus(offer,now){
+ if(!offer||!Number.isFinite(now)||!['free-claim','early-access','discount'].includes(offer.kind))return 'unverified';
+ const date=x=>typeof x==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&Number.isFinite(Date.parse(x))&&new Date(x).toISOString().slice(0,10)===x;
+ if(!date(offer.start)||!date(offer.end)||offer.end<offer.start||(offer.general!==null&&(!date(offer.general)||offer.general<=offer.start)))return 'unverified';
+ const d=new Date(now).toISOString().slice(0,10);
+ if(d<offer.start)return 'announced';
+ if(offer.general&&d>=offer.general)return d===offer.general?'general-release-date':'early-access-ended';
+ if(d>offer.end)return 'expired';
+ if(d===offer.start||d===offer.end)return 'boundary-check-in-game';
+ return offer.kind;
+}
+function renderMemberOffers(){
+ const root=$('j87-member-offers');if(!root)return;root.replaceChildren();
+ for(const offer of memberOffers){const a=document.createElement('article');a.className='j87-daily-card';const title=document.createElement('strong');title.textContent=offer.name;const p=document.createElement('p');const status=memberOfferStatus(offer,Date.now());p.textContent=({'free-claim':'GTA+ free claim · announced offer window','early-access':'GTA+ early access','discount':'GTA+ discount','announced':'Announced · not yet started','boundary-check-in-game':'Offer boundary day · confirm in game','expired':'Expired member offer','general-release-date':'Announced general release date · confirm in game','early-access-ended':'Historical early access · ended','unverified':'Unverified dates'})[status];const note=document.createElement('small');note.textContent='Member window '+offer.start+' through '+offer.end+(offer.general?' · General release '+offer.general:' · No separate general-release date recorded');const link=document.createElement('a');link.href='./atlas-credits.html#forge-gta-plus';link.textContent=' Sources';a.dataset.offerStatus=status;a.append(title,p,note,link);root.append(a)}
+}
+
+function dashboard(){renderMemberOffers();const root=$('j87-daily-list');if(!root)return;root.replaceChildren();for(const r of selected)root.append(card(r));let total=$('j87-daily-summary');if(total)total.textContent=`${selected.length} daily categories monitored · independent data channel + bundled fallback · personal imports optional · no Rockstar account link`;}
 function panel(){if(path!=='atlas-online.html')return;const side=$('sidebar');if(!side||$('#j87-daily-panel'))return;const section=document.createElement('section');section.id='j87-daily-panel';section.innerHTML='<div class="j87-daily-top"><span>◷ DAILY INTELLIGENCE</span><a href="./atlas87-daily.html">Open full dashboard ↗</a></div><p>Today’s map positions require a dated source. Potential locations are never shown as confirmed.</p><div id="j87-daily-panel-grid"></div>';
 const anchor=$('jura83-panel');if(anchor)anchor.insertAdjacentElement('afterend',section);else side.prepend(section);
 const grid=$('j87-daily-panel-grid');const simeonLink=document.createElement('a');simeonLink.className='j87-daily-mini';simeonLink.href='./atlas87-daily.html#j87-simeon';simeonLink.textContent='Simeon requested vehicles · personal SMS lists ↗';grid.append(simeonLink);const offers=document.createElement('a');offers.className='j87-daily-mini';offers.href='./atlas87-daily.html#vehicle-offers';offers.textContent='Vehicle offers / GTA+ ↗';grid.append(offers);for(const r of selected.slice(0,7)){let row=document.createElement('a');row.href='./atlas87-daily.html#'+r.id;const st=status(r);row.className='j87-daily-mini';row.append(document.createTextNode(r.name));const badge=document.createElement('span');badge.textContent=st.type==='dated'?'DATED':'UNCONFIRMED';row.append(badge);grid.append(row)} }

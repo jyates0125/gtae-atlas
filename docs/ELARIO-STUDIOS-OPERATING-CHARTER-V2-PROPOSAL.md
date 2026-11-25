@@ -99,3 +99,6 @@ My Garage must expose GTA Online's actual phone purchase channels (Legendary Mot
 
 ### Owner direction — Simeon map access and vehicle acquisition (November 24, 2026)
 Expose Simeon's personal SMS vehicle lists from the GTA Online map legend/sidebar and Daily Intelligence; never imply all possible cars spawn at fixed points or are active for every player. Keep showroom purchases, GTA+ Vinewood phone offers, Prize Ride, Casino rewards and Exotic Exports independent with source-dated validity. Oppressor and Oppressor Mk II belong in My Garage with distinct Warstock identities and documented workshop requirements, not map collectible pins. No automatic ownership mutation or Story/VI inheritance.
+
+### Owner clarification — GTA+ early-access windows (November 24, 2026)
+Track GTA+ member-only launch dates separately from general purchase, free-claim expiration, discount and eligibility. Early-access duration must come from evidence, never assume seven days. Use official Rockstar announced calendar dates without inventing reset hours; mark boundary days for in-game confirmation. Expired offers and historical early access remain explicitly historical, not current stock. No account login or automatic ownership mutation. Keep sources centralized, GTA Online-only, and ultimately use reviewed independent offer data alongside rotation publishing.
