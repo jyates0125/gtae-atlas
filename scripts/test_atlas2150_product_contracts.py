@@ -91,6 +91,20 @@ for(const [model,count,category,option,price] of [['zentorno',41,'exhaust','exha
  assert.equal(forge.workshopSource(model),'forge-vehicle-workshop-expansion-3');
 }
 assert.equal(forge.workshopCatalog('kuruma2').length,0);
+for(const [model,count,category,option,price] of [["elegy2",68,"rear-bumper","rear-bumper-3",11700],["sultan",54,"turbo","turbo-1",30000],["bati",27,"engine","engine-3",6700],["gauntlet",36,"armor","armor-5",30000],["feltzer",47,"fender","fender-1",900],["infernus",41,"spoiler","spoiler-2",10000]]){
+ const groups=forge.workshopCatalog(model);
+ assert.equal(groups.reduce((n,g)=>n+g.options.length,0),count);
+ assert.equal(groups.find(g=>g.key===category).options.find(o=>o.id===option).price,price);
+ assert.equal(forge.normalize({workshopOptions:{[category]:option}},model).workshopOptions[category],option);
+ assert.deepEqual(forge.normalize({workshopOptions:{[category]:option}},'vi_'+model).workshopOptions,{});
+ assert.equal(forge.workshopSource(model),'forge-vehicle-workshop-expansion-4');
+ assert.ok(forge.detailedWorkshopModels('v-online').includes(model));
+}
+assert.ok(forge.detailedWorkshopModels('vi').includes('vi_ganado70'));
+assert.ok(forge.detailedWorkshopModels('vi').every(id=>id.startsWith('vi_')));
+assert.ok(forge.detailedWorkshopModels('v-online').every(id=>!id.startsWith('vi_')));
+assert.deepEqual(forge.detailedWorkshopModels('v-story'),[]);
+assert.equal(forge.workshopCatalog('bati').some(g=>g.key==='suspension'),false);
 assert.equal(forge.workshopEffect('zentorno','engine','engine-3'),'performance');
 assert.equal(forge.workshopEffect('kuruma','spoiler','spoiler-5'),'appearance-or-assembly');
 assert.equal(forge.hswRecords.length,31);

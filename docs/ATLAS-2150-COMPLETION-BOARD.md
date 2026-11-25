@@ -669,3 +669,6 @@ Add Online-only Pegasus eligibility and documented purchase channel for five air
 
 ### Atlas 46.0 — Zentorno and standard Kuruma workshop choices
 45.9 passed 15/15 and merged at 561ac2f. Add 41 Zentorno and 50 standard Kuruma source-listed Online options (91 total) with recorded costs and distinct categories. Source GTA Base individual pages and official Rockstar general workshop guide. No copied meshes or inferred Story/VI menu; armored variant not conflated. Extend existing cross-product/browser tests and update source credits/cache; exact-head CI pending. No production change.
+
+### Atlas 46.1 — six-model workshop expansion and coverage filter
+46.0 passed 20/20 and merged at 3fce929. Add 273 selected source-listed GTA Online choices across elegy2 (68), sultan (54), bati (27), gauntlet (36), feltzer (47), infernus (41); each uses its individual Online price column. Verified individual GTA Base vehicle pages. Added documented-workshop division in Forge, separate VI/Online scope; no change to IDs, saves, artwork, exact geometry, or unsupported workshop coverage. Updated existing browser and source contracts and centralized credits; exact-head CI pending. Production unchanged.
