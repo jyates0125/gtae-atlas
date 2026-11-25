@@ -5,6 +5,9 @@ on:
     paths:
       - 'scripts/build-cloudfare.cjs'
       - 'scripts/build-cloudflare.cjs'
+      - 'scripts/forge-pbr-lab/release-policy.mjs'
+      - 'scripts/forge-pbr-lab/verify-published-models.mjs'
+      - 'assets/forge/**'
       - 'scripts/test_atlas351_cloudflare_build_command.py'
       - 'docs/ATLAS351-MAIN-PRODUCTION-ACTIVATION-20261123.md'
       - '.github/workflows/atlas351-cloudflare-command-contract.yml'
@@ -26,6 +29,7 @@ jobs:
         run: |
           node --check scripts/build-cloudfare.cjs
           node --check scripts/build-cloudflare.cjs
+          node --check scripts/forge-pbr-lab/verify-published-models.mjs
       - name: Execute both real Cloudflare build commands and audit each public tree
         run: |
           python scripts/test_atlas351_cloudflare_build_command.py

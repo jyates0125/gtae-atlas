@@ -23,6 +23,21 @@ REQUIRED = (
     "index.html", "maps.html", "atlas.html", "atlas-online.html",
     "atlas-vi.html", "atlas93-garage.html", "_headers",
 )
+# Check the actual builder, not merely a helper or a simulated deployment.
+probe = ROOT / "assets" / "forge" / "atlas-release-probe.glb"
+assert not probe.exists()
+created_dirs = [p for p in (probe.parent, probe.parent.parent) if not p.exists()]
+probe.parent.mkdir(parents=True, exist_ok=True)
+try:
+    probe.write_bytes(b"synthetic unauthorized fixture")
+    rejected = subprocess.run(["node", "scripts/build-cloudflare.cjs"], cwd=ROOT,
+                              capture_output=True, text=True, timeout=120)
+    assert rejected.returncode != 0 and "unapproved asset assets/forge/atlas-release-probe.glb" in rejected.stderr
+    assert not (ROOT / "public/assets/forge/atlas-release-probe.glb").exists()
+finally:
+    probe.unlink(missing_ok=True)
+    for directory in created_dirs:
+        directory.rmdir()
 baseline = None
 for entry in ("build-cloudflare.cjs", "build-cloudfare.cjs"):
     env = os.environ.copy()
@@ -32,6 +47,7 @@ for entry in ("build-cloudflare.cjs", "build-cloudfare.cjs"):
                          text=True, timeout=120, check=False)
     assert run.returncode == 0, (
         f"{entry} failed: {run.stdout[-3000:]}\n{run.stderr[-3000:]}")
+    assert "Forge model boundary:" in run.stdout, f"{entry} bypassed model boundary"
     assert "-> public/" in run.stdout, f"{entry} did not run the secure builder"
     public = ROOT / "public"
     identity = json.loads((public / "atlas-build-identity.json").read_text(encoding="utf-8"))
