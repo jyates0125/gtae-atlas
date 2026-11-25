@@ -285,7 +285,7 @@ async def smoke():
                                     await pg.locator('#viWeaponSearch').fill('Girardi ES9')
                                     if await pg.locator('[data-weapon-id="girardi-es9"] .viweapon-note').get_attribute('aria-pressed')!='true':
                                         failures.append('GTA VI weapon review lost on refresh')
-                                    if await pg.locator('#viWeaponCards img').evaluate_all("els=>els.some(e=>!e.src.startsWith('https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_')&&!e.src.startsWith('https://vi.gtax.dev/images/weapons/'))"):
+                                    if await pg.locator('#viWeaponCards img.viweapon-linked-image').evaluate_all("els=>els.some(e=>!e.src.startsWith('https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_')&&!e.src.startsWith('https://vi.gtax.dev/images/weapons/'))"):
                                         failures.append('GTA VI weapons display a non-approved media origin')
                                     if await pg.locator('[data-weapon-id=\"girardi-es9\"] .viweapon-media figcaption').count()!=1:
                                         failures.append('GTA VI official image provenance missing')
