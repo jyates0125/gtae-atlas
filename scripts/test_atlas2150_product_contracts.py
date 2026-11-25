@@ -50,6 +50,18 @@ for(const world of ['vi','v-story'])for(const id of ['jetmax','squalo','avisa','
 assert.equal(forge.craftCustomization('v-online','__proto__').mode,'unknown');
 assert.equal(forge.craftCustomization('v-online','unknown-aircraft').mode,'unknown');
 console.log('PASS craft workshop eligibility and independent world scope');
+const expectedExpansion={akula:[14,'handling','handling-3',35000],akuma:[19,'exhaust','exhaust-2',1800],bullet:[21,'suspension','suspension-4',4400]};
+for(const [model,[count,category,id,price]] of Object.entries(expectedExpansion)){
+ const groups=forge.workshopCatalog(model);
+ assert.equal(groups.reduce((n,g)=>n+g.options.length,0),count);
+ assert.equal(groups.find(g=>g.key===category).options.find(o=>o.id===id).price,price);
+ assert.equal(forge.normalize({workshopOptions:{[category]:id}},model).workshopOptions[category],id);
+ assert.deepEqual(forge.normalize({workshopOptions:{[category]:id}},'vi_'+model).workshopOptions,{});
+ assert.equal(forge.workshopSource(model),'forge-expanded-workshops');
+}
+assert.equal(forge.workshopCatalog('jetmax').length,0);
+console.log('PASS 54 source-listed Online choices across three distinct vehicle classes');
+
 const dataKey=forge.collectionKey;
 const mem=new Map([[dataKey,JSON.stringify({schema:1,owned:{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true},wishlist:{'vehicles6:squalo':true},note:{'vehicles5:jetmax':'keep'},futureField:'preserve'})]]);
 const store={getItem:k=>mem.has(k)?mem.get(k):null,setItem:(k,v)=>mem.set(k,v)};
