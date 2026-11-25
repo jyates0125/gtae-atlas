@@ -24,3 +24,18 @@ Add 12 road vehicle references (191 → 203, 195 community); GTA6 Motors and Leo
 
 
 46.9 correction: three workflows failed on stale expected boat count 11 after adding Como (12 actual); update both browser suites to exact 12 watercraft and 17 aircraft, with explicit Como/Mallard assertions and all existing isolation checks retained. Add direct GTA Base vehicle directory to existing central external reference card. External catalog is a reference fallback only, not a grant to import its images or meshes. Revalidate exact corrected head before merge. No production change.
+
+
+46.9 corrected PR #228 exact head c6db3c4 passed 16/16; merged development a620d14f64cef66caa65f119efa779fca6999fcd. 
+
+### Atlas 47.0 — in-game naming fidelity and additional references
+Owner clarified correct in-game maker, model and variant names, not Elario renaming. Refine 15 displayed names in gallery and Forge while preserving every existing `name`-derived collection key, Forge ID and stored progress; add 11 distinct source-cross-listed candidates, 267 → 278 (270 community). Link external GTA Base catalog from VI gallery for missing pictures and reference coverage, retain labeled original concepts. No new rights or exact model claims. Remaining discrepancies and Standout roster require separate review. Exact-head CI pending. No production change.
+
+
+47.0 correction: shared gallery cache version must agree across GTA V vehicle, GTA V weapon and VI vehicle pages; align all to v470 without changing their world scope. First head failed world-completion source assertion; rerun corrected exact-head CI. Owner reiterates GTA VI is released: Rockstar's November 19, 2026 announcement https://www.rockstargames.com/VI/out-now establishes released status, not individual model identity. Prefer post-launch in-game evidence and preserve unresolved per-item labels. No production change.
+
+
+47.0 second correction: exact f6c17b7 passed focused Garage-to-Forge, product contracts and integrated Chromium; world-catalog browser test failed waiting for one search result. Add explicit asynchronous catalog-ready assertion at both widths, search-term diagnostics and 15-second bounded result assertion; retain all four existing official identity/source checks, add corrected Furia label, unchanged legacy record key and exact source-link assertion. Cause not yet proven; corrected exact-head run required. Owner requests freeze/release preparation; full release gate remains required, no production change.
+
+
+47.0.1 release-blocker repair: exact c01a5fe failed three gallery-dependent browser jobs. Root cause reproduced with isolated source allowlist expression: Boolean short circuit followed by `.test` on the Boolean. Correct grouping, verify four allowed/four rejected source URLs and update all three shared gallery cache versions. Keep 278 records and existing saved IDs. Full release first static block failed four historical assertions: SA credit moved to central source page, heist credits moved to named central anchor, VI portrait-less roster now includes official credits and GTADB character pages (require explicit no-portrait disclosure), and missing explicit dated-selection warning restored on Events. Preserve all substantive pin, image, rights, world and release checks. Prior release snapshot is invalid; run new exact-head focused/full gates, no automatic main release.

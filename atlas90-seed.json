@@ -573,9 +573,11 @@
       "name": "Bobcat XL",
       "archive": "bobcatxl",
       "type": "Vans",
-      "brand": "Vapid",
-      "confidence": "Community-identified",
-      "forgeId": "vi_bobcat_xl"
+      "brand": "Declasse",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "forgeId": "vi_bobcat_xl",
+      "displayName": "'84 Declasse Bobcat XL",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/"
     },
     {
       "name": "Boxville",
@@ -621,9 +623,11 @@
       "name": "Zorrusso",
       "archive": "zorrusso",
       "type": "Super",
-      "brand": "Pegassi",
-      "confidence": "Community-identified",
-      "forgeId": "vi_zorrusso"
+      "brand": "Granforma",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "forgeId": "vi_zorrusso",
+      "displayName": "Granforma Zorrusso",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/"
     },
     {
       "name": "Coquette D10",
@@ -729,9 +733,11 @@
       "name": "Sultan",
       "archive": "sultan",
       "type": "Sports",
-      "brand": "Karin",
-      "confidence": "Community-identified",
-      "forgeId": "vi_sultan"
+      "brand": "Emperor",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "forgeId": "vi_sultan",
+      "displayName": "Emperor Sultan",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/"
     },
     {
       "name": "Tampa",
@@ -1011,12 +1017,12 @@
     },
     {
       "name": "Jubilee",
-      "displayName": "Enus Jubilee",
-      "brand": "Enus",
+      "displayName": "Buckingham Jubilee",
+      "brand": "Buckingham",
       "type": "SUVs",
       "archive": "",
-      "confidence": "Released-game community catalog identification · acquisition and parts pending",
-      "sourceUrl": "https://gtadb.net/gta-6/vehicles/jubilee/",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_jubilee"
     },
     {
@@ -1314,9 +1320,9 @@
       "brand": "Declasse",
       "type": "Vans",
       "archive": "",
-      "displayName": "Declasse Burrito",
-      "confidence": "Community roster identification · individual gameplay verification pending",
-      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "displayName": "'98 Declasse Burrito",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_burrito"
     },
     {
@@ -1391,12 +1397,12 @@
     },
     {
       "name": "Contender",
-      "brand": "Vapid",
+      "brand": "Karin",
       "type": "SUVs",
       "archive": "",
-      "displayName": "Vapid Contender",
-      "confidence": "Community roster identification · individual gameplay verification pending",
-      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "displayName": "Karin Contender",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_contender"
     },
     {
@@ -1501,12 +1507,12 @@
     },
     {
       "name": "Furia",
-      "brand": "Grotti",
+      "brand": "Piccia",
       "type": "Super",
       "archive": "",
-      "displayName": "Grotti Furia",
-      "confidence": "Community roster identification · individual gameplay verification pending",
-      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "displayName": "Piccia Furia",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_furia"
     },
     {
@@ -1621,12 +1627,12 @@
     },
     {
       "name": "Journey",
-      "brand": "Zirconium",
+      "brand": "Osprey",
       "type": "Vans",
       "archive": "",
-      "displayName": "Zirconium Journey",
-      "confidence": "Community roster identification · individual gameplay verification pending",
-      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "displayName": "'78 Osprey Journey",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_journey"
     },
     {
@@ -1661,12 +1667,12 @@
     },
     {
       "name": "Mammatus",
-      "brand": "JoBuilt",
+      "brand": "Lapwing",
       "type": "Planes",
       "archive": "",
-      "displayName": "JoBuilt Mammatus",
-      "confidence": "Community roster identification · individual gameplay verification pending",
-      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "displayName": "Lapwing Mammatus",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_mammatus"
     },
     {
@@ -1731,12 +1737,12 @@
     },
     {
       "name": "Outlaw",
-      "brand": "Nagasaki",
+      "brand": "Mer-Can",
       "type": "Off-Road",
       "archive": "",
-      "displayName": "Nagasaki Outlaw",
-      "confidence": "Community roster identification · individual gameplay verification pending",
-      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "displayName": "Mer-Can Outlaw",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_outlaw"
     },
     {
@@ -1911,12 +1917,12 @@
     },
     {
       "name": "Rumpo",
-      "brand": "Bravado",
+      "brand": "Vapid",
       "type": "Vans",
       "archive": "",
-      "displayName": "Bravado Rumpo",
-      "confidence": "Community roster identification · individual gameplay verification pending",
-      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "displayName": "Vapid Rumpo",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_rumpo"
     },
     {
@@ -1994,9 +2000,9 @@
       "brand": "Vapid",
       "type": "Muscle",
       "archive": "",
-      "displayName": "Vapid Slamvan",
-      "confidence": "Community roster identification · individual gameplay verification pending",
-      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "displayName": "'56 Vapid Slamvan",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_slamvan"
     },
     {
@@ -2214,9 +2220,9 @@
       "brand": "Bravado",
       "type": "Pickups",
       "archive": "",
-      "displayName": "Bravado Bison 900 '95",
-      "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
-      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=bison-900-95",
+      "displayName": "'95 Bravado Bison 900",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_bison_900_95"
     },
     {
@@ -2224,9 +2230,9 @@
       "brand": "Sirius",
       "type": "Muscle",
       "archive": "",
-      "displayName": "Sirius Transgressor '67",
-      "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
-      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=transgressor-67",
+      "displayName": "'67 Sirius Transgressor",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_transgressor_67"
     },
     {
@@ -2234,9 +2240,9 @@
       "brand": "Sirius",
       "type": "Sedans",
       "archive": "",
-      "displayName": "Sirius Sungrazer '61",
-      "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
-      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=sungrazer-61",
+      "displayName": "'61 Sirius Sungrazer",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
       "forgeId": "vi_sungrazer_61"
     },
     {
@@ -3008,6 +3014,116 @@
       "confidence": "Community roster cross-reference · individual gameplay, mesh and workshop verification pending",
       "sourceUrl": "https://gtascoop.com/wiki/vehicles/",
       "forgeId": "vi_valkyrie"
+    },
+    {
+      "name": "Dominator '65",
+      "brand": "Vapid",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "'65 Vapid Dominator",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_dominator_65"
+    },
+    {
+      "name": "Picador '72",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "'72 Declasse Picador",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_picador_72"
+    },
+    {
+      "name": "Stallion '68",
+      "brand": "Classique",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "'68 Classique Stallion",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_stallion_68"
+    },
+    {
+      "name": "Reclaimer",
+      "brand": "Vapid",
+      "type": "Pickups",
+      "archive": "",
+      "displayName": "Vapid Reclaimer",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_reclaimer"
+    },
+    {
+      "name": "Reclaimer '70",
+      "brand": "Vapid",
+      "type": "Pickups",
+      "archive": "",
+      "displayName": "'70 Vapid Reclaimer",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_reclaimer_70"
+    },
+    {
+      "name": "Riata",
+      "brand": "Vapid",
+      "type": "Pickups",
+      "archive": "",
+      "displayName": "Vapid Riata",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_riata"
+    },
+    {
+      "name": "Penumbra FF '97",
+      "brand": "Maibatsu",
+      "type": "Coupes",
+      "archive": "",
+      "displayName": "'97 Maibatsu Penumbra FF",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_penumbra_ff_97"
+    },
+    {
+      "name": "Injection '73",
+      "brand": "BF",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "'73 BF Injection",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_injection_73"
+    },
+    {
+      "name": "Wastelander",
+      "brand": "HVY",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "HVY Wastelander",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_wastelander"
+    },
+    {
+      "name": "Shifter",
+      "brand": "Vapid",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Vapid Shifter",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_shifter"
+    },
+    {
+      "name": "Aphid",
+      "brand": "Bravado",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Bravado Aphid",
+      "confidence": "Community Progress roster name cross-check · individual gameplay and mesh verification pending",
+      "sourceUrl": "https://fullsweepmap.com/wiki/gta6-vehicle-list/",
+      "forgeId": "vi_aphid"
     }
   ],
   "onlineWorkshopVehicles": [

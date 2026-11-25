@@ -34,5 +34,8 @@ assert 'atlas105-sa-pins.css?v=105' in html
 import re
 assert re.search(r'atlas85-sa\.js\?v=\d+',html)
 assert 'id="pinLayer"' in html
-assert 'Flentric/SA.MapCollectibles' in html
+assert 'Flentric (MIT)' in html
+credits=(D/'atlas-credits.html').read_text(encoding='utf8')
+assert 'https://github.com/Flentric/SA.MapCollectibles' in credits
+assert './atlas-credits.html' in html
 print('PASS Atlas 10.5: 150 source-backed approximate SA pins, projection and full MIT license; existing progress save key preserved')

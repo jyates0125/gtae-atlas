@@ -177,7 +177,7 @@ function filtered(){
  const terms=needle.split(/\s+/).filter(Boolean);
  return data.filter(r=>{
   const facts=game==='vehicles5'&&vehicleWorld==='online'?vehicleFacts[r.archive]:null;
-  const haystack=[r.name,r.group,r.brand,r.archive,facts?.manufacturer,facts?.displayName,facts?.category,r.benefit?.label,r.confidence].join(' ').toLowerCase();
+  const haystack=[r.name,r.group,r.brand,r.archive,r.id,facts?.manufacturer,facts?.displayName,facts?.category,r.benefit?.label,r.confidence].join(' ').toLowerCase();
   return (acquisition==='all'||r.acquisition?.kind===acquisition)&&(evidence==='all'||r.evidence===evidence)&&(klass==='all'||r.group===klass)&&(ownership==='all'||(ownership==='owned'?STATE.owned[r.id]:STATE.wishlist[r.id]))&&terms.every(term=>haystack.includes(term));
  });
 }
@@ -187,7 +187,7 @@ function render(){const categories=[...new Set(data.map(r=>r.group))].sort();con
 function initialize(seed){if(game==='weapons')data=seed.weapons.map(k=>make(k,'weapons',weaponNames[k]||''));else if(game==='vehicles5')data=seed.vehicles.filter(k=>vehicleWorld!=='story'||!(seed.onlineWorkshopVehicles||[]).includes(k)).map(k=>make(k,'vehicles5',vehicleWorld==='story'?'':window.JuraForge?.specialtyName?.(k)||''));else data=seed.vi.map(x=>{
   const id=x.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
   const vehicle=make(id,'vehicles6',x.displayName||x.name,x.type,x.archive,x.confidence,x.brand);
-  if(typeof x.sourceUrl==='string'&&(/^(https:\/\/www\.rockstargames\.com\/VI\/|https:\/\/gtadb\.net\/gta-6\/vehicles\/|https:\/\/gta6motors\.com\/(?:guides\/car-customization\/|vehicles\/)|https:\/\/www\.gtabase\.com\/gta-6\/vehicles\/|https:\/\/gta6wiki\.eu\/vehicles\/|https:\/\/www\.gta6map\.net\/wiki\/gta-6\/vehicles\/)/).test(x.sourceUrl))vehicle.source=x.sourceUrl;
+  if(typeof x.sourceUrl==='string'&&(x.sourceUrl==='https://fullsweepmap.com/wiki/gta6-vehicle-list/'||x.sourceUrl==='https://gtascoop.com/wiki/vehicles/'||(/^(https:\/\/www\.rockstargames\.com\/VI\/|https:\/\/gtadb\.net\/gta-6\/vehicles\/|https:\/\/gta6motors\.com\/(?:guides\/car-customization\/|vehicles\/)|https:\/\/www\.gtabase\.com\/gta-6\/vehicles\/|https:\/\/gta6wiki\.eu\/vehicles\/|https:\/\/www\.gta6map\.net\/wiki\/gta-6\/vehicles\/)/).test(x.sourceUrl)))vehicle.source=x.sourceUrl;
   vehicle.benefit=window.JuraForge?.viBenefit?.('vi',x.forgeId)||null;
   vehicle.acquisition=window.JuraForge?.viAcquisition?.('vi',x.forgeId)||null;
   vehicle.evidence=window.JuraForge?.viEvidence?.('vi',x.forgeId)||'community';
