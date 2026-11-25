@@ -12,3 +12,5 @@ body.j4709-garage .c-hero{background:linear-gradient(95deg,#28113fe8,#3d1e5c66),
 body.j4709-workshop .c-hero{background:linear-gradient(95deg,#28113fe8,#3d1e5c66),url('./art/jura161-vehicles.webp') center/cover!important}
 body.j4709-workshop[data-j4709-world="vi"] .c-hero{background:linear-gradient(95deg,#28113fe8,#3d1e5c66),url('./art/jura161-vehicles6.webp') center/cover!important}
 @media(max-width:650px){.j4709-entry{grid-template-columns:1fr}.j4709-actions a{flex:1 1 130px}}
+
+.j4709-cover{display:block;width:100%;aspect-ratio:16/7;object-fit:cover;border-radius:10px;border:1px solid #9d77a7;min-width:0}.j4709-entry>article{background:#241631;align-content:start}
