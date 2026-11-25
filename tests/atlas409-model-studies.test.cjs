@@ -13,6 +13,10 @@ for(const [type,id] of studies){
  const base=f.build(type,id,'#30323a',{});
  assert.ok(base.profile,id+' missing model study');
  assert.ok(base.vertices.length>10000&&base.vertices.length%18===0&&base.vertices.every(Number.isFinite),id);
+ assert.equal(base.surface.length,base.vertices.length/6*4);
+ assert.ok(base.surface.every(Number.isFinite));
+ assert.ok(base.stencilCount>0&&base.floorCount>base.stencilCount&&base.vehicleStart>base.floorCount&&base.vehicleStart<base.vertices.length/6);
+ for(let i=0;i<base.surface.length;i+=4){assert.ok(Math.abs(Math.hypot(...base.surface.slice(i,i+3))-1)<1e-5);assert.ok(base.surface[i+3]>=0&&base.surface[i+3]<=1)}
  const raw=hash(base);hashes.add(raw);
  for(const change of [{stripe:'dual'},{stripe:'single'},{wheels:'mesh'},{wheels:'deepdish'},{rim:'gold'},{rim:'black'}]){
   const styled=f.build(type,id,'#30323a',change);
