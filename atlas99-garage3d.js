@@ -42,7 +42,7 @@ function mount(target,opts={}){
   select('Wheel design',[['classic','Classic six-spoke'],['mesh','Fine twelve-spoke'],['deepdish','Deep-dish five-spoke']],'wheels');
   select('Wheel finish',[['silver','Polished silver'],['gold','Warm gold'],['black','Satin black']],'rim');
   // Preserve old original designs without offering invented game livery options.
-  if(design.livery!=='none'){
+  if(design.livery!=='none'&&!(opts.model==='vi_ganado70'&&design.workshopLivery==='ganado-vintage'&&design.livery==='heritage')){
    const legacy=E('div');legacy.className='j412-legacy-livery';
    legacy.append(E('p','Legacy studio pattern, not an in-game livery.'));
    legacy.append(button('Clear legacy studio pattern',()=>{change({livery:'none'});legacy.remove()}));
@@ -56,9 +56,11 @@ function mount(target,opts={}){
  const categories=forge?.workshopCatalog?.(modelId)||[];
  if(road&&workshopRows.length){
   const panel=E('details');panel.className='j412-workshop';panel.open=true;
-  panel.append(E('summary','GTA Online workshop · actual listed options'));
+  const isVI=modelId.startsWith('vi_');
+  panel.append(E('summary',isVI?'GTA VI · Coastal Auto Care':'GTA Online workshop · actual listed options'));
+  if(isVI)panel.append(E('p','Jason’s ’70 Ganado only. Prices are recorded observations from launch-week menus, not universal costs. Other models and shops can differ.'));
   panel.append(E('p','Community-recorded model-specific menu. Prices and unlocks can vary. Visual approximations are explicitly labeled.'));
-  const menu=E('select');menu.dataset.forgeControl='workshopLivery';menu.setAttribute('aria-label','GTA Online workshop livery reference');
+  const menu=E('select');menu.dataset.forgeControl='workshopLivery';menu.setAttribute('aria-label',(isVI?'GTA VI':'GTA Online')+' workshop livery reference');
   const blank=E('option','Not selected');blank.value='none';menu.append(blank);
   for(const row of workshopRows){const option=E('option',row.name+(Number.isFinite(row.priceUSD)?' · GTA$'+row.priceUSD.toLocaleString('en-US'):' · price not recorded')+(row.condition?' · '+row.condition:''));option.value=row.id;menu.append(option)}
   menu.value=design.workshopLivery;
@@ -66,7 +68,7 @@ function mount(target,opts={}){
   const total=E('p');total.setAttribute('role','status');
   const apply=button('Preview original stripe interpretation',()=>{
    const row=workshopRows.find(r=>r.id===design.workshopLivery);if(!row?.stripeColor&&!row?.clear)return;
-   change(row.clear?{stripe:'none',livery:'none'}:{stripe:'dual',accent:row.stripeColor,livery:'none'});
+   change(row.clear?{stripe:'none',livery:'none'}:row.sideBand?{stripe:'none',livery:'heritage',liveryColor:row.stripeColor}:{stripe:'dual',accent:row.stripeColor,livery:'none'});
    fields.querySelector('[data-forge-control="stripe"]').value=design.stripe;
    fields.querySelector('[data-forge-control="accent"]').value=design.accent;
    fields.querySelector('.j412-legacy-livery')?.remove();update();
@@ -77,21 +79,27 @@ function mount(target,opts={}){
    apply.disabled=!(row?.stripeColor||row?.clear);
    let sum=row?.priceUSD||0,n=row?1:0,unknown=row&&!Number.isFinite(row.priceUSD)?1:0;
    for(const group of categories){const option=group.options.find(o=>o.id===design.workshopOptions?.[group.key]);if(option){n++;if(Number.isFinite(option.price))sum+=option.price;else unknown++}}
+   if(isVI){total.textContent=n+' recorded choices. No total: full kits may overlap individual parts, and prices vary.';return}
    total.textContent=n+' choices · GTA$'+sum.toLocaleString('en-US')+' sum of listed prices'+(unknown?' · '+unknown+' without recorded price':'')+' (not incremental upgrade cost).';
   }
-  menu.onchange=()=>{change({workshopLivery:menu.value});update()};
-  panel.append(menu,status,apply);
+  menu.onchange=()=>{change({workshopLivery:menu.value,...(isVI?{livery:'none'}:{})});update()};
+  const liveryPanel=E('div');liveryPanel.className='j413-livery';liveryPanel.append(E('strong',isVI?'Customizable Liveries':'Liveries'),menu,status,apply);
+  if(isVI)liveryPanel.append(E('p','Vintage Stripes was shown with 17 colors and four styles. The preview approximates the observed Phantom side stripes; other color/style artwork is not yet mapped.'));
+  else panel.append(liveryPanel);
   const planner=E('div');planner.className='j256-fields';
+  let targetGroup=planner,lastTab='';
   for(const group of categories){
+   if(isVI&&group.tab!==lastTab){lastTab=group.tab;const tab=E('fieldset');tab.className='j413-tab';tab.append(E('legend',group.tab));targetGroup=E('div');targetGroup.className='j256-fields';tab.append(targetGroup);planner.append(tab);if(group.tab==='Cosmetics')targetGroup.append(liveryPanel)}
    const label=E('label',group.label),select=E('select');select.dataset.workshopCategory=group.key;
    const blank=E('option','Not selected');blank.value='';select.append(blank);
-   for(const row of group.options){const option=E('option',row.name+' · GTA$'+row.price.toLocaleString('en-US')+(row.condition?' · '+row.condition:''));option.value=row.id;select.append(option)}
+   for(const row of group.options){const option=E('option',row.name+(Number.isFinite(row.price)?' · GTA$'+row.price.toLocaleString('en-US'):' · price not recorded')+(row.condition?' · '+row.condition:''));option.value=row.id;select.append(option)}
    select.value=design.workshopOptions?.[group.key]||'';
    select.onchange=()=>{change({workshopOptions:{...design.workshopOptions,[group.key]:select.value}});update()};
-   label.append(select);planner.append(label);
+   if(!group.options.length){select.disabled=true;blank.textContent='Options not yet documented'}
+   label.append(select);targetGroup.append(label);
   }
-  const source=E('a','Workshop sources & credits');source.href='./atlas-credits.html#'+(modelId==='banshee'?'forge-banshee-workshop':'forge-workshop-liveries');
-  panel.append(planner,total,E('p','Other categories, including horns, neon, respray, wheels and tire smoke, are not fully catalogued here. Performance choices are recorded, not simulated.'),source);styling.append(panel);update();
+  const source=E('a','Workshop sources & credits');source.href='./atlas-credits.html#'+(isVI?'forge-ganado-workshop':modelId==='banshee'?'forge-banshee-workshop':'forge-workshop-liveries');
+  panel.append(planner,total,E('p',isVI?'Incomplete menu evidence: unavailable choices are disabled, not invented. Recorded parts and interior options are not yet exact 3D assets; performance is not simulated.':'Other categories, including horns, neon, respray, wheels and tire smoke, are not fully catalogued here. Performance choices are recorded, not simulated.'),source);styling.append(panel);update();
  }else{
   const vi=modelId.startsWith('vi_');
   const info=E('p',vi?'GTA VI workshop: release-era shop research is available; exact model-specific options still need source verification. No GTA Online parts are assumed.':'This model’s exact workshop options are not yet catalogued locally.');
