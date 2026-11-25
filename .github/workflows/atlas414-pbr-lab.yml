@@ -34,10 +34,12 @@ jobs:
           curl --fail --location --retry 3 --max-time 90 https://tevy.dev/models/muscle-car/v1/lod0.glb -o qa-evidence/forge-pbr/fastback.glb
           echo 'ecf099c15c25ef42f42d5778932b2907307d03468c9abd86776c83db1f69c12d  qa-evidence/forge-pbr/fastback.glb' | sha256sum -c -
           python scripts/forge-pbr-lab/audit_glb.py qa-evidence/forge-pbr/fastback.glb > qa-evidence/forge-pbr/fastback-materials.json
-          # First observation of versioned candidate bytes. Record digests for subsequent pinning; never auto-promote.
+          # Check published supercar digests; record first formula observation for pinning before promotion.
           curl --fail --location --retry 3 --max-time 90 --max-filesize 12000000 https://tevy.dev/models/supercar/v2/lod0.glb -o qa-evidence/forge-pbr/supercar.glb
           curl --fail --location --retry 3 --max-time 90 --max-filesize 5000000 https://tevy.dev/models/supercar/v2/lod1.glb -o qa-evidence/forge-pbr/supercar-balanced.glb
           curl --fail --location --retry 3 --max-time 90 --max-filesize 4000000 https://tevy.dev/models/formula-car/v1/lod0.glb -o qa-evidence/forge-pbr/formula.glb
+          echo '60b2270427220e045af1fa8368b9107021c473178045eb8fa2395698b4e183ab  qa-evidence/forge-pbr/supercar.glb' | sha256sum -c -
+          echo '7c43eb11cbd921c9c23b6767c0b0d94f7084dff76680479bec94c7cb0bde5dd9  qa-evidence/forge-pbr/supercar-balanced.glb' | sha256sum -c -
           for candidate in supercar supercar-balanced formula; do
             python scripts/forge-pbr-lab/audit_glb.py "qa-evidence/forge-pbr/$candidate.glb" > "qa-evidence/forge-pbr/$candidate-materials.json"
           done
