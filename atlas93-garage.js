@@ -81,8 +81,8 @@ function nice(s){return String(s).replace(/([a-z])([0-9])/g,'$1 $2').replace(/_/
 function kind(id){
  const known=intel[id]?.category;if(known)return known;
  if(/^(bati|hakuchou|sanchez|vader|hexer|faggio|akuma|vortex|oppressor|daemon|ruffian|sovereign|bagger|avarus)/.test(id))return 'Motorcycles';
- if(/^(buzzard|akula|hunter|annihilator|frogger|valkyrie|maverick|cargobob|seasparrow|sparrow)/.test(id))return 'Helicopters';
- if(/^(alkonost|lazer|hydra|avenger|luxor|velum|jet$|besra|cargoplane|blimp|dodo|cuban|nimbus|mammatus|titan)/.test(id))return 'Planes & Aircraft';
+ if(/^(buzzard|akula|hunter|annihilator|frogger|valkyrie|maverick|swift|cargobob|seasparrow|sparrow)/.test(id))return 'Helicopters';
+ if(/^(alkonost|lazer|hydra|avenger|luxor|shamal|velum|jet$|besra|cargoplane|blimp|dodo|cuban|nimbus|mammatus|titan)/.test(id))return 'Planes & Aircraft';
  if(/^(dinghy|squalo|marquis|tropic|tug|speeder|seashark|avisa|kosatka|submersible|kraken|jetmax|suntrap)/.test(id))return 'Boats & Watercraft';
  if(/^(bison|guardian|sadler|sandking|rebel|bobcatxl|burrito|mule|rumpo|speedo|slamvan|yosemite|technical|flatbed|benson)/.test(id))return 'Trucks & Utility';
  if(/^(dubsta|mesa|patriot|riata|habanero|rocoto|baller|granger|landstalker|serrano|fq2|radius|gresley|huntley|cavalcade|aleutian|astron)/.test(id))return 'SUVs & Off-Road';
