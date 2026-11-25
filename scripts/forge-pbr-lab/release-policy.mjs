@@ -24,8 +24,9 @@ export function validOptionMapping(mapping,asset){
 }
 export function validCustomizationCoverage(record){
  if(!record||!['collection-only','fixed-model','documented-options'].includes(record.customizationMode)||!Array.isArray(record.optionMappings))return false;
+ if(!record.optionMappings.every(m=>validOptionMapping(m,record)))return false;
  const ids=record.optionMappings.map(m=>JSON.stringify([m.category,m.optionId]));
- if(new Set(ids).size!==ids.length||!record.optionMappings.every(m=>validOptionMapping(m,record)))return false;
+ if(new Set(ids).size!==ids.length)return false;
  if(record.customizationMode==='collection-only')return ids.length===0;
  if(record.customizationMode==='fixed-model')return record.optionMappings.every(m=>['fixed','nonvisual','material'].includes(m.method));
  return true;
