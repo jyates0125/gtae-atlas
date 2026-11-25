@@ -27,6 +27,9 @@ jobs:
         run: |
           node scripts/forge-pbr-lab/test-release-policy.mjs
           python scripts/forge-pbr-lab/test_audit_glb.py
+          node scripts/forge-pbr-lab/reconstruction/test-fit.mjs
+          node scripts/forge-pbr-lab/reconstruction/run.mjs
+          python -m py_compile scripts/forge-pbr-lab/reconstruction/blender_export.py
       - name: Prepare isolated local asset benchmark
         run: |
           mkdir -p qa-evidence/forge-pbr
@@ -60,6 +63,7 @@ jobs:
         with:
           name: atlas414-pbr-lab-evidence
           path: |
+            qa-evidence/forge-reconstruction/synthetic-candidate.json
             qa-evidence/forge-pbr/*.png
             qa-evidence/forge-pbr/index.html
             qa-evidence/forge-pbr/lab.js

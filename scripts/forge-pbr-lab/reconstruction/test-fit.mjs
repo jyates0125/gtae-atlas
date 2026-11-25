@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {refine,buildMesh,measureMesh,validateStudy} from './fit.mjs';
+import {selectFinalVisual} from '../release-policy.mjs';
+const study=JSON.parse(readFileSync(new URL('./study.json',import.meta.url),'utf8'));
+const a=refine(study),b=refine(study);
+assert.deepEqual(a,b);
+assert.equal(a.converged,true);
+assert.ok(a.history.at(-1).rmse<a.history[0].rmse/100);
+assert.ok(a.history.every((row,i)=>!i||row.rmse<a.history[i-1].rmse));
+assert.equal(a.releaseEligible,false);
+assert.equal(a.model,null);
+assert.equal(refine(study,{maxIterations:0}).iterations,0);
+assert.equal(refine(study,{maxIterations:1}).iterations,1);
+assert.throws(()=>refine(study,{maxIterations:33}));
+assert.throws(()=>refine(study,{segments:17}));
+assert.throws(()=>validateStudy({...study,world:'vi',model:'vi_banshee'}));
+assert.throws(()=>validateStudy({...study,stations:study.stations.map((s,i)=>i===2?[s[0],-1,s[2],s[3]]:s)}));
+const mesh=a.mesh;
+assert.equal(mesh.vertices.length,study.stations.length*32);
+assert.ok(mesh.vertices.flat().every(Number.isFinite));
+const edges=new Map();
+for(const face of mesh.faces)for(let i=0;i<face.length;i++){
+ const x=face[i],y=face[(i+1)%face.length];
+ assert.ok(x>=0&&y>=0&&x<mesh.vertices.length&&y<mesh.vertices.length&&x!==y);
+ const key=[Math.min(x,y),Math.max(x,y)].join(':');
+ const state=edges.get(key)||[0,0];state[0]++;state[1]+=x<y?1:-1;edges.set(key,state);
+}
+assert.ok([...edges.values()].every(([count,orientation])=>count===2&&orientation===0),'Closed consistent manifold');
+const [p,q,s]=mesh.faces[0].map(i=>mesh.vertices[i]);
+const u=q.map((x,i)=>x-p[i]),v=s.map((x,i)=>x-p[i]);
+assert.ok(u[1]*v[2]-u[2]*v[1]>0,'Outward side normal');
+assert.equal(selectFinalVisual('v-online','road-envelope-001','road').mode,'reference');
+assert.equal(selectFinalVisual('vi','vi_banshee','road').mode,'reference');
+console.log('PASS bounded deterministic fit, mesh topology, fail-closed identity and publication');
