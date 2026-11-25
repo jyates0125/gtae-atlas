@@ -39,3 +39,10 @@ jobs:
           python -m pip install playwright==1.58.0
           python -m playwright install ${{ matrix.browser }}
           python scripts/test_atlas4709_home_collections.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas4709-png-preview-${{ matrix.browser }}
+          path: qa-evidence/atlas4709/
+          if-no-files-found: warn
+          retention-days: 21
