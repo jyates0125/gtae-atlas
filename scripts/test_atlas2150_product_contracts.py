@@ -130,12 +130,13 @@ assert.deepEqual(Object.keys(result).sort(),Array.from(ctx.window.TeamJuraWorlds
 assert.ok(result.story.summary.startsWith('275'));
 assert.ok(result.sa.summary.startsWith('320'));
 assert.ok(result.iii.summary.startsWith('160')&&result.iii.secondary.startsWith('140'));
-assert.ok(result.vc.summary.startsWith('51')&&result.vc.secondary.startsWith('171'));
+assert.ok(result.vc.summary.startsWith('51'));
+assert.equal(result.vc.secondary, data.vcland.records.length+' separate named landmark approaches · 171 separate Definitive Edition references; no classic overlay');
 assert.ok(result.tlad.summary.startsWith('50')&&result.tbogt.summary.startsWith('50'));
 assert.ok(result.lcs.summary.startsWith('52')&&result.vcs.summary.startsWith('51'));
 assert.ok(api.inventory({}).sa.summary.includes('unavailable'));
 assert.ok(result.vi.summary.startsWith(data.vi.mappedCount.toLocaleString('en-US')));
-assert.ok(api.inventory({...data,vcde:{...data.vcde,edition:'classic'}}).vc.secondary.startsWith('Source unavailable'));
+assert.equal(api.inventory({...data,vcde:{...data.vcde,edition:'classic'}}).vc.secondary, data.vcland.records.length+' separate named landmark approaches · Source unavailable');
 assert.deepEqual(Object.keys(result).filter(k=>result[k].nativeGap).sort(),['ctw','lcs','vcs']);
 console.log('PASS thirteen-world inventory and edition isolation');
 """],cwd=ROOT,check=True)
