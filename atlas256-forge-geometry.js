@@ -22,7 +22,7 @@
   return {hsw:hswRecords.find(x=>x.id===model)||null,conversions:bennysRecords.filter(x=>x.base===model),converted:bennysRecords.find(x=>x.variant===model)||null};
  }
  function specialtyModels(kind){return [...new Set(kind==='hsw'?hswRecords.map(x=>x.id):kind==='bennys'?bennysRecords.flatMap(x=>[x.base,x.variant]):[])];}
- function specialtyName(model){const warehouse=warehouseVehicle('v-online',model);if(warehouse)return warehouse.name;const x=specialtyWorkshop(model);return x.hsw?.name||x.converted?.name||x.conversions[0]?.baseName||null}
+ function specialtyName(model){if(model==='oppressor')return 'Pegassi Oppressor';if(model==='oppressor2')return 'Pegassi Oppressor Mk II';const warehouse=warehouseVehicle('v-online',model);if(warehouse)return warehouse.name;const x=specialtyWorkshop(model);return x.hsw?.name||x.converted?.name||x.conversions[0]?.baseName||null}
  function modelWorkshopCatalog(model){
   const groups=workshopCatalog(model),x=specialtyWorkshop(model);
   if(x.hsw)groups.push({key:'hsw-conversion',label:"Hao's Special Works conversion",tab:'',options:[{id:'hsw-conversion',name:'HSW performance conversion',price:x.hsw.price,condition:'PS5 / Xbox Series X|S / PC Enhanced'}]});
@@ -262,13 +262,15 @@
  // Verified acquisition channel, separate from ownership and workshop capability.
  const warehouseRecords=Object.freeze(Object.fromEntries([["dune5","BF Ramp Buggy"],["boxville5","Brute Armored Boxville"],["voltic2","Coil Rocket Voltic"],["ruiner2","Imponte Ruiner 2000"],["phantom2","JoBuilt Phantom Wedge"],["technical2","Karin Technical Aqua"],["wastelander","MTL Wastelander"],["blazer5","Nagasaki Blazer Aqua"]].map(([id,name])=>[id,Object.freeze({id,name,storage:'Vehicle Warehouse underground garage',request:'Interaction Menu > Vehicles > Request Special Vehicle',purchase:'Warstock Cache & Carry'})])));
  const dealershipLabels=Object.freeze(Object.fromEntries([["legendary","Legendary Motorsport"],["ssasa","Southern San Andreas Super Autos"],["warstock","Warstock Cache & Carry"],["elitas","Elitás Travel"],["docktease","DockTease"],["bennys-shop","Benny's Original Motor Works"]]));
- const dealerRecords=Object.freeze(Object.fromEntries(Object.entries({"adder":["legendary"],"zentorno":["legendary"],"bati":["ssasa"],"akuma":["ssasa"],"jetmax":["docktease"],"squalo":["docktease"],"marquis":["docktease"],"annihilator":["elitas"],"lazer":["warstock"],"rhino":["warstock"],"insurgent":["warstock"],"technical":["warstock"],"apc":["warstock"],"halftrack":["warstock"],"dune5":["warstock"],"boxville5":["warstock"],"voltic2":["warstock"],"ruiner2":["warstock"],"phantom2":["warstock"],"technical2":["warstock"],"wastelander":["warstock"],"blazer5":["warstock"]}).map(([id,shops])=>[id,Object.freeze(shops)])));
+ const dealerRecords=Object.freeze(Object.fromEntries(Object.entries({"oppressor":["warstock"],"oppressor2":["warstock"],"adder":["legendary"],"zentorno":["legendary"],"bati":["ssasa"],"akuma":["ssasa"],"jetmax":["docktease"],"squalo":["docktease"],"marquis":["docktease"],"annihilator":["elitas"],"lazer":["warstock"],"rhino":["warstock"],"insurgent":["warstock"],"technical":["warstock"],"apc":["warstock"],"halftrack":["warstock"],"dune5":["warstock"],"boxville5":["warstock"],"voltic2":["warstock"],"ruiner2":["warstock"],"phantom2":["warstock"],"technical2":["warstock"],"wastelander":["warstock"],"blazer5":["warstock"]}).map(([id,shops])=>[id,Object.freeze(shops)])));
  function warehouseVehicle(world,model){return world==='v-online'&&Object.hasOwn(warehouseRecords,model)?warehouseRecords[model]:null}
  function warehouseModels(world){return world==='v-online'?Object.keys(warehouseRecords):[]}
  function vehicleDealers(world,model){return world==='v-online'&&Object.hasOwn(dealerRecords,model)?dealerRecords[model].map(id=>({id,label:dealershipLabels[id]})):[]}
  function dealershipModels(world,dealer){return world==='v-online'&&Object.hasOwn(dealershipLabels,dealer)?Object.keys(dealerRecords).filter(id=>dealerRecords[id].includes(dealer)):[]}
  // Workshop eligibility is separate from collection ownership and visual capability.
  const craftRules=Object.freeze({
+  oppressor:Object.freeze({mode:'dedicated',label:'Personal motorcycle · MOC / Avenger vehicle workshop; check Arena workshop eligibility',location:'MOC / Avenger'}),
+  oppressor2:Object.freeze({mode:'dedicated',label:'Personal motorcycle · Terrorbyte Specialized Workshop',location:'Terrorbyte'}),
   jetmax:Object.freeze({mode:'collection',label:'Collection only · no in-game modifications',location:'Pegasus'}),
   squalo:Object.freeze({mode:'collection',label:'Collection only · no in-game modifications',location:'Pegasus'}),
   avisa:Object.freeze({mode:'collection',label:'Collection only · no in-game modifications',location:'Kosatka Moon Pool'}),
