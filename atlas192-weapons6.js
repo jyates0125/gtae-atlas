@@ -146,6 +146,7 @@ async function start(){
   for(const cls of categories)select.add(new Option(cls,cls));
   $('viWeaponReviewed').textContent='Research snapshot reviewed '+String(raw.reviewedAt||'date not recorded');const benchmark=raw.completenessBenchmark;if(benchmark?.reportedTotal===196){$('viWeaponBenchmark').textContent=rows.length+' catalog references · '+rows.filter(r=>r.variantOf).length+' named variant references. Reported game Progress Database benchmark: 196 items (66 standard, 130 variants). Counts are not yet reconciled one-to-one.';}
   $('viWeaponDisclaimer').textContent=String(raw.disclaimer||'GTA VI sources must be checked per item.');
+  const requested=new URLSearchParams(location.search).get('q');if(requested){$('viWeaponSearch').value=requested.slice(0,120);query=$('viWeaponSearch').value.trim().toLowerCase();}
   render();announce('GTA VI source-qualified research loaded. This is not a complete game arsenal.');
  }catch(err){announce('Research catalog unavailable: '+String(err.message).slice(0,120));$('viWeaponCards').replaceChildren(make('p','viweapon-empty','GTA VI records could not load. GTA V records will not be substituted.'))}
  $('viWeaponSearch').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase().slice(0,120);render()});
