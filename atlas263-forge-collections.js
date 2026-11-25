@@ -47,7 +47,7 @@ function collect(stores,weaponNames={}){
    for(const [id,raw] of Object.entries(source)){
     if(!modelOK(world,id))continue;
     const entries=kind==='named'?(Array.isArray(raw)?raw.slice(0,8):[]):[raw],seen=new Set();
-    for(const entry of entries){if(!object(entry)||entry.model!==id||!/^#[a-f0-9]{6}$/i.test(entry.paint||''))continue;const name=label(entry.name,kind==='primary'?'Primary design':'');if(!name||seen.has(name.toLowerCase()))continue;seen.add(name.toLowerCase());rows.push({world,kind:'vehicle',model:id,title:name,subtitle:world==='vi'?viNames[id]:nice(id),detail:kind==='primary'?'Primary design':'Named build',paint:color(entry.paint),href:vehicleLink(world,id,kind==='named'?name:''),privateVariant:kind==='named'?{world,model:id,name}:null,compare:summarize(world,id,kind,entry,name)})}
+    for(const entry of entries){if(!object(entry)||entry.model!==id||!/^#[a-f0-9]{6}$/i.test(entry.paint||''))continue;const name=label(entry.name,kind==='primary'?'Primary design':'');if(!name||seen.has(name.toLowerCase()))continue;seen.add(name.toLowerCase());rows.push({world,kind:'vehicle',model:id,title:name,subtitle:world==='vi'?viNames[id]:nice(id),detail:kind==='primary'?'Primary design':'Named build',paint:color(entry.paint),href:vehicleLink(world,id,kind==='named'?name:''),privateVariant:kind==='named'?{world,model:id,name}:null,preview:{body:entry.body,design:object(entry.design)?entry.design:{}},compare:summarize(world,id,kind,entry,name)})}
    }
   }
  }
@@ -95,6 +95,26 @@ function start(w){const d=w.document;async function init(){
  if([...world.options].some(o=>o.value===params.get('world')))world.value=params.get('world');
  if([...kind.options].some(o=>o.value===params.get('kind')))kind.value=params.get('kind');
  let names={},rows=[],unavailable=false,selected=[],comparisonHint='';
+ const preview=make('section',undefined,'fc-live-preview');preview.hidden=true;
+ const previewTitle=make('h3','Saved 3D design'),previewNote=make('p','Preview uses your stored design. Changes here are temporary; open Forge Studio to save changes.'),previewClose=make('button','Close 3D preview'),previewHost=make('div');
+ previewClose.type='button';preview.append(previewTitle,previewNote,previewClose,previewHost);root.before(preview);
+ let previewTrigger=null;
+ function closePreview(restoreFocus=false){w.TeamJuraGarage3D?.dispose();previewHost.replaceChildren();preview.hidden=true;if(restoreFocus&&previewTrigger?.isConnected)previewTrigger.focus();previewTrigger=null}
+ previewClose.onclick=()=>closePreview(true);
+ function previewType(row){
+  if(!row.preview||!w.JuraForge?.modelProfile)return null;
+  const types=['Sports concept','Touring concept','Pickup / Truck','Boat / Watercraft concept'];
+  const original=types.find(type=>w.JuraForge.modelProfile(type,row.model));
+  if(!original)return null;
+  if(original.includes('Watercraft'))return original;
+  const chosen={sports:'Sports concept',standard:'Touring concept',truck:'Pickup / Truck'}[row.preview.body];
+  return chosen||original;
+ }
+ function openPreview(row,button,type){
+  closePreview();previewTrigger=button;previewTitle.textContent=row.title+' · '+row.subtitle;preview.hidden=false;
+  w.TeamJuraGarage3D.mount(previewHost,{name:row.subtitle,model:row.model,type,paint:row.paint,design:row.preview.design});
+  previewClose.focus();preview.scrollIntoView({block:'nearest',behavior:'auto'});
+ }
  const comparePanel=d.getElementById('forgeComparePanel'),compareStatus=d.getElementById('forgeCompareStatus'),compareBody=d.getElementById('forgeCompareBody'),compareClear=d.getElementById('forgeCompareClear');
  const read=key=>{try{return JSON.parse(w.localStorage.getItem(key)||'null')}catch{unavailable=true;return null}};
  try{const res=await w.fetch('./data/atlas192-vi-weapons.json');if(res.ok){const data=await res.json();if(data.scope==='vi'&&data.kind==='weapon'&&Array.isArray(data.records))for(const item of data.records)if(safeId(item.id)&&typeof item.name==='string')names[item.id]=item.name}}catch{}
@@ -136,7 +156,7 @@ function start(w){const d=w.document;async function init(){
   const term=search.value.trim().toLowerCase();
   const matches=rows.filter(x=>(world.value==='all'||x.world===world.value)&&(kind.value==='all'||x.kind===kind.value)&&(!term||[x.title,x.subtitle,x.detail,x.model].join(' ').toLowerCase().includes(term)));
   count.textContent=matches.length+' of '+rows.length+' saved entries'+(unavailable?' · Some local data unavailable':'');
-  root.replaceChildren();
+  closePreview();root.replaceChildren();
   for(const row of matches){
    const card=make('article',undefined,'fc-entry'),swatch=make('span',undefined,'fc-swatch');
    swatch.style.setProperty('--fc-paint',row.paint);swatch.setAttribute('aria-hidden','true');
@@ -152,6 +172,8 @@ function start(w){const d=w.document;async function init(){
     });
    }
    card.append(a);
+   const type=previewType(row);
+   if(type&&w.TeamJuraGarage3D?.mount){const live=make('button','View saved 3D model','fc-live-model');live.type='button';live.onclick=()=>openPreview(row,live,type);card.append(live)}
    if(row.compare){
     const chosen=selected.includes(row.compare.key);
     const button=make('button',chosen?'Remove from comparison':'Compare saved design','fc-compare-toggle');
