@@ -77,7 +77,10 @@ assert.equal(forge.bennysRecords.length,31);
 assert.equal(forge.specialtyModels('bennys').length,61);
 const seed=require('./atlas90-seed.json');
 for(const id of [...forge.specialtyModels('hsw'),...forge.specialtyModels('bennys')])assert.ok(seed.vehicles.includes(id),id);
-assert.equal(seed.onlineWorkshopVehicles.length,69);
+assert.equal(seed.onlineWorkshopVehicles.length,79);
+for(const id of [...forge.warehouseModels('v-online'),'oppressor','oppressor2'])assert.ok(seed.onlineWorkshopVehicles.includes(id),id);
+assert.equal(Object.keys(forge.viCatalog).length,seed.vi.length);
+for(const r of seed.vi){const key='vehicles6:'+r.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');assert.equal(forge.ownershipKey('vi',r.forgeId),key);assert.equal(forge.viModelFromOwnership(key),r.forgeId);assert.ok(forge.viCatalog[r.forgeId]);assert.equal(forge.ownershipKey('v-online',r.forgeId),null);}
 assert.equal(forge.specialtyWorkshop('sentinel').hsw.name,'Übermacht Sentinel XS');
 assert.equal(forge.specialtyWorkshop('sentinel2').hsw,null);
 assert.equal(forge.specialtyWorkshop('banshee').hsw.price,1840000);

@@ -6,21 +6,7 @@ const WORLD=VI?'vi':'v';
 const KEY=VI?'team-jura-forge-vi-concept-presets-v1':'team-jura-atlas101-concept-presets-v1';
 const VI_SOURCE='https://www.rockstargames.com/VI/media/screenshots';
 // Official screenshot titles establish names and subject, not exact meshes or in-game specifications.
-const VI_RECORDS=Object.freeze({
- vi_banshee:{"name":"Bravado Banshee","category":"Sports","sourceUrl":"https://gtadb.net/gta-6/vehicles/banshee/","inspiration":"Dodge Viper","referenceOnly":false},
- vi_dominator:{"name":"Vapid Dominator","category":"Muscle","sourceUrl":"https://gtadb.net/gta-6/vehicles/dominator/","inspiration":"Ford Mustang","referenceOnly":false},
- vi_sugoi:{"name":"Dinka Sugoi","category":"Sports","sourceUrl":"https://gtadb.net/gta-6/vehicles/sugoi/","inspiration":"Honda Civic Type R FK8","referenceOnly":true},
- vi_stanier_modern:{"name":"Vapid Stanier","category":"Sedans","sourceUrl":"https://gtadb.net/gta-6/vehicles/stanier/","inspiration":"Ford Crown Victoria","referenceOnly":true},
- vi_sentinel_xs:{"name":"Übermacht Sentinel XS","category":"Coupes","sourceUrl":"https://gtadb.net/gta-6/vehicles/sentinel-xs/","inspiration":"","referenceOnly":true},
- vi_cheetah95:{name:'’95 Grotti Cheetah',category:'Sports Classics'},
- vi_stanier55:{name:'’55 Vapid Stanier',category:'Sedans'},
- vi_dominator67_buggy:{name:'’67 Vapid Dominator Buggy',category:'Off-Road'},
- vi_squalo:{name:'Shitzu Squalo',category:'Boats & Watercraft'},
- vi_enduro:{name:'Dinka Enduro Motorcycle',category:'Motorcycles'},
- vi_crest_kayak:{name:'Crest Kayak',category:'Boats & Watercraft'},
- vi_ganado70:{name:'Vapid ’70 Ganado',category:'Trucks & Utility',sourceUrl:'https://gta6motors.com/guides/car-customization/'},
- vi_ganado_retro:{name:'Ganado Retro Build',category:'Reference only'}
-});
+const VI_RECORDS=window.JuraForge?.viCatalog||Object.freeze({});
 const CDN='https://cdn.jsdelivr.net/gh/Stuyk/gtav-image-archive@main/vehicles/';
 const DEFAULT='#4473c2';
 const COLORS=[['Night Blue','#4473c2'],['Arctic White','#d9e4f0'],['Sunset','#ef8b36'],['Racing Red','#d84443'],['Royal Violet','#8b54dd'],['Electric Lime','#92cf3b'],['Cyan','#29bad1'],['Graphite','#5c606a'],['Rose','#d8669e'],['Gold','#dbb14d']];

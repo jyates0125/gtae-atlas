@@ -393,7 +393,8 @@
       "brand": "Vapid",
       "confidence": "Rockstar edition listing · Vintage Vice City Pack",
       "sourceUrl": "https://www.rockstargames.com/VI/add-ons/vintage-vice-city",
-      "displayName": "’55 Vapid Stanier"
+      "displayName": "’55 Vapid Stanier",
+      "forgeId": "vi_stanier55"
     },
     {
       "name": "Cheetah 95",
@@ -402,7 +403,8 @@
       "brand": "Grotti",
       "confidence": "Rockstar edition listing · Ultimate Edition",
       "sourceUrl": "https://www.rockstargames.com/VI/editions/ultimate-edition",
-      "displayName": "’95 Grotti Cheetah"
+      "displayName": "’95 Grotti Cheetah",
+      "forgeId": "vi_cheetah95"
     },
     {
       "name": "Buggy",
@@ -411,7 +413,8 @@
       "brand": "Vapid",
       "confidence": "Rockstar edition listing · Ultimate Edition",
       "sourceUrl": "https://www.rockstargames.com/VI/editions/ultimate-edition",
-      "displayName": "’67 Vapid Dominator Buggy"
+      "displayName": "’67 Vapid Dominator Buggy",
+      "forgeId": "vi_dominator67_buggy"
     },
     {
       "name": "Squalo",
@@ -420,42 +423,48 @@
       "brand": "Shitzu",
       "confidence": "Rockstar edition listing · Ultimate Edition",
       "sourceUrl": "https://www.rockstargames.com/VI/editions/ultimate-edition",
-      "displayName": "Shitzu Squalo"
+      "displayName": "Shitzu Squalo",
+      "forgeId": "vi_squalo"
     },
     {
       "name": "Buccaneer",
       "archive": "buccaneer",
       "type": "Muscle",
       "brand": "Albany",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_buccaneer"
     },
     {
       "name": "Coquette",
       "archive": "coquette",
       "type": "Sports",
       "brand": "Invetero",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_coquette"
     },
     {
       "name": "Emerus",
       "archive": "emerus",
       "type": "Super",
       "brand": "Progen",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_emerus"
     },
     {
       "name": "Manana",
       "archive": "manana",
       "type": "Sports Classics",
       "brand": "Albany",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_manana"
     },
     {
       "name": "Tempesta",
       "archive": "tempesta",
       "type": "Super",
       "brand": "Pegassi",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_tempesta"
     },
     {
       "name": "Banshee",
@@ -473,133 +482,152 @@
       "archive": "aleutian",
       "type": "SUVs",
       "brand": "Vapid",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_aleutian"
     },
     {
       "name": "Alpha",
       "archive": "alpha",
       "type": "Sports",
       "brand": "Albany",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_alpha"
     },
     {
       "name": "Alvino V1",
       "archive": "",
       "type": "Sports",
       "brand": "Principe",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_alvino_v1"
     },
     {
       "name": "Astron",
       "archive": "astron",
       "type": "SUVs",
       "brand": "Pfister",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_astron"
     },
     {
       "name": "Avarus",
       "archive": "avarus",
       "type": "Motorcycles",
       "brand": "LCC",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_avarus"
     },
     {
       "name": "Baller II",
       "archive": "baller2",
       "type": "SUVs",
       "brand": "Gallivanter",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_baller_ii"
     },
     {
       "name": "Bison",
       "archive": "bison",
       "type": "Vans",
       "brand": "Bravado",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_bison"
     },
     {
       "name": "Blazer",
       "archive": "blazer",
       "type": "Off-Road",
       "brand": "Nagasaki",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_blazer"
     },
     {
       "name": "Blista Compact",
       "archive": "blista",
       "type": "Sports",
       "brand": "Dinka",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_blista_compact"
     },
     {
       "name": "Bobcat XL",
       "archive": "bobcatxl",
       "type": "Vans",
       "brand": "Vapid",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_bobcat_xl"
     },
     {
       "name": "Boxville",
       "archive": "boxville",
       "type": "Vans",
       "brand": "Brute",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_boxville"
     },
     {
       "name": "Buffalo",
       "archive": "buffalo",
       "type": "Sports",
       "brand": "Bravado",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_buffalo"
     },
     {
       "name": "Buffalo STX",
       "archive": "buffalo4",
       "type": "Muscle",
       "brand": "Bravado",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_buffalo_stx"
     },
     {
       "name": "Cheetah Classic",
       "archive": "cheetah2",
       "type": "Sports Classics",
       "brand": "Grotti",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_cheetah_classic"
     },
     {
       "name": "Deviant",
       "archive": "deviant",
       "type": "Muscle",
       "brand": "Schyster",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_deviant"
     },
     {
       "name": "Zorrusso",
       "archive": "zorrusso",
       "type": "Super",
       "brand": "Pegassi",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_zorrusso"
     },
     {
       "name": "Coquette D10",
       "archive": "coquette4",
       "type": "Sports",
       "brand": "Invetero",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_coquette_d10"
     },
     {
       "name": "Baller",
       "archive": "baller",
       "type": "SUVs",
       "brand": "Gallivanter",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_baller"
     },
     {
       "name": "Blaze",
       "archive": "blazer",
       "type": "Off-Road",
       "brand": "Nagasaki",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_blaze"
     },
     {
       "name": "Dominator",
@@ -617,77 +645,88 @@
       "archive": "faggio",
       "type": "Motorcycles",
       "brand": "Pegassi",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_faggio"
     },
     {
       "name": "Feltzer",
       "archive": "feltzer",
       "type": "Sports",
       "brand": "Benefactor",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_feltzer"
     },
     {
       "name": "Gauntlet",
       "archive": "gauntlet",
       "type": "Muscle",
       "brand": "Bravado",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_gauntlet"
     },
     {
       "name": "Infernus",
       "archive": "infernus",
       "type": "Super",
       "brand": "Pegassi",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_infernus"
     },
     {
       "name": "Kuruma",
       "archive": "kuruma",
       "type": "Sports",
       "brand": "Karin",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_kuruma"
     },
     {
       "name": "Phoenix",
       "archive": "phoenix",
       "type": "Muscle",
       "brand": "Imponte",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_phoenix"
     },
     {
       "name": "Ruiner",
       "archive": "ruiner",
       "type": "Muscle",
       "brand": "Imponte",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_ruiner"
     },
     {
       "name": "Sentinel",
       "archive": "sentinel",
       "type": "Coupes",
       "brand": "Übermacht",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_sentinel"
     },
     {
       "name": "Sultan",
       "archive": "sultan",
       "type": "Sports",
       "brand": "Karin",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_sultan"
     },
     {
       "name": "Tampa",
       "archive": "tampa",
       "type": "Muscle",
       "brand": "Declasse",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_tampa"
     },
     {
       "name": "Washington",
       "archive": "washington",
       "type": "Sedans",
       "brand": "Albany",
-      "confidence": "Community-identified"
+      "confidence": "Community-identified",
+      "forgeId": "vi_washington"
     },
     {
       "name": "Dinka Enduro",
@@ -695,7 +734,8 @@
       "brand": "Dinka",
       "archive": "",
       "confidence": "Rockstar screenshot gallery · Ultimate Edition",
-      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots",
+      "forgeId": "vi_enduro"
     },
     {
       "name": "Crest Kayak",
@@ -703,7 +743,8 @@
       "brand": "",
       "archive": "",
       "confidence": "Rockstar screenshot gallery · Ultimate Edition",
-      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots",
+      "forgeId": "vi_crest_kayak"
     },
     {
       "name": "Ganado Retro Build",
@@ -711,7 +752,8 @@
       "brand": "",
       "archive": "",
       "confidence": "Rockstar screenshot gallery · Ultimate Edition",
-      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots",
+      "forgeId": "vi_ganado_retro"
     },
     {
       "name": "70 Ganado",
@@ -720,7 +762,8 @@
       "brand": "Vapid",
       "archive": "",
       "confidence": "Released-game community menu evidence · Coastal Auto Care",
-      "sourceUrl": "https://gta6motors.com/guides/car-customization/"
+      "sourceUrl": "https://gta6motors.com/guides/car-customization/",
+      "forgeId": "vi_ganado70"
     },
     {
       "name": "sugoi",
@@ -754,6 +797,256 @@
       "sourceUrl": "https://gtadb.net/gta-6/vehicles/sentinel-xs/",
       "forgeId": "vi_sentinel_xs",
       "inspiration": ""
+    },
+    {
+      "name": "Dodo",
+      "displayName": "Mammoth Dodo",
+      "brand": "Mammoth",
+      "type": "Planes",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_dodo"
+    },
+    {
+      "name": "Luxor",
+      "displayName": "Buckingham Luxor",
+      "brand": "Buckingham",
+      "type": "Planes",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_luxor"
+    },
+    {
+      "name": "Maverick",
+      "displayName": "Buckingham Maverick",
+      "brand": "Buckingham",
+      "type": "Helicopters",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_maverick"
+    },
+    {
+      "name": "Shamal",
+      "displayName": "Buckingham Shamal",
+      "brand": "Buckingham",
+      "type": "Planes",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_shamal"
+    },
+    {
+      "name": "Swift",
+      "displayName": "Buckingham Swift",
+      "brand": "Buckingham",
+      "type": "Helicopters",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_swift"
+    },
+    {
+      "name": "Dinghy",
+      "displayName": "Nagasaki Dinghy",
+      "brand": "Nagasaki",
+      "type": "Boats",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_dinghy"
+    },
+    {
+      "name": "Seashark",
+      "displayName": "Speedophile Seashark",
+      "brand": "Speedophile",
+      "type": "Boats",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_seashark"
+    },
+    {
+      "name": "Tropic",
+      "displayName": "Shitzu Tropic",
+      "brand": "Shitzu",
+      "type": "Boats",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_tropic"
+    },
+    {
+      "name": "Speeder",
+      "displayName": "Pegassi Speeder",
+      "brand": "Pegassi",
+      "type": "Boats",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_speeder"
+    },
+    {
+      "name": "Double-T",
+      "displayName": "Dinka Double-T",
+      "brand": "Dinka",
+      "type": "Motorcycles",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_double_t"
+    },
+    {
+      "name": "Lectro",
+      "displayName": "Principe Lectro",
+      "brand": "Principe",
+      "type": "Motorcycles",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_lectro"
+    },
+    {
+      "name": "Sanchez",
+      "displayName": "Maibatsu Sanchez",
+      "brand": "Maibatsu",
+      "type": "Motorcycles",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_sanchez"
+    },
+    {
+      "name": "Manchez",
+      "displayName": "Maibatsu Manchez",
+      "brand": "Maibatsu",
+      "type": "Motorcycles",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_manchez"
+    },
+    {
+      "name": "Nightblade",
+      "displayName": "Western Nightblade",
+      "brand": "Western",
+      "type": "Motorcycles",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_nightblade"
+    },
+    {
+      "name": "Bati 801",
+      "displayName": "Pegassi Bati 801",
+      "brand": "Pegassi",
+      "type": "Motorcycles",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_bati_801"
+    },
+    {
+      "name": "Vitello",
+      "displayName": "Pegassi Vitello",
+      "brand": "Pegassi",
+      "type": "Super",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_vitello"
+    },
+    {
+      "name": "Vamos",
+      "displayName": "Declasse Vamos",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_vamos"
+    },
+    {
+      "name": "Cypher",
+      "displayName": "Übermacht Cypher",
+      "brand": "Übermacht",
+      "type": "Sports",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_cypher"
+    },
+    {
+      "name": "Dorado",
+      "displayName": "Bravado Dorado",
+      "brand": "Bravado",
+      "type": "SUVs",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_dorado"
+    },
+    {
+      "name": "Jubilee",
+      "displayName": "Buckingham Jubilee",
+      "brand": "Buckingham",
+      "type": "SUVs",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_jubilee"
+    },
+    {
+      "name": "Kamacho",
+      "displayName": "Canis Kamacho",
+      "brand": "Canis",
+      "type": "Off-Road",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_kamacho"
+    },
+    {
+      "name": "Terminus",
+      "displayName": "Canis Terminus",
+      "brand": "Canis",
+      "type": "Off-Road",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_terminus"
+    },
+    {
+      "name": "Carbonizzare",
+      "displayName": "Grotti Carbonizzare",
+      "brand": "Grotti",
+      "type": "Sports",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_carbonizzare"
+    },
+    {
+      "name": "Itali GTO",
+      "displayName": "Grotti Itali GTO",
+      "brand": "Grotti",
+      "type": "Sports",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_itali_gto"
+    },
+    {
+      "name": "Itali RSX",
+      "displayName": "Grotti Itali RSX",
+      "brand": "Grotti",
+      "type": "Sports",
+      "archive": "",
+      "confidence": "Released-game community catalog identification · acquisition and parts pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_itali_rsx"
     }
   ],
   "onlineWorkshopVehicles": [

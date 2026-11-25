@@ -93,7 +93,7 @@ assert 'forge.build(opts.type,opts.model,paint,design,environment)' in garage3d
 import subprocess
 subprocess.run(['node','-e',"""const a=require('node:assert/strict'), f=require('./atlas256-forge-geometry.js');for(const [type,id,kind] of [['Aircraft','lazer','air'],['Boat','jetmax','marine'],['Helicopter','buzzard','rotor']]){const m=f.build(type,id,'#4473c2',{});a.equal(m.kind,kind);a.ok(m.vertices.length>0&&m.vertices.every(Number.isFinite));}"""],cwd=R,check=True)
 assert 'Aircraft / Plane concept' in config and 'Boat / Watercraft concept' in config
-assert '◈ Open this vehicle in the 3D concept studio' in garage
+assert '◈ Open this vehicle in Forge Workshop' in garage
 assert 'body[data-atlas-kind="all"] .u-hero-art' in dbcss
 assert "url('./art/jura155-map.webp')" in dbcss
 assert (R/'art/jura155-map.webp').is_file()
