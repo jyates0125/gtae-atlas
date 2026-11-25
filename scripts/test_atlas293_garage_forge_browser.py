@@ -98,6 +98,13 @@ try:
         expect(page.locator('#modelSelect option[value="vi_tailgater"]')).to_have_count(1)
         expect(page.locator('#modelSelect option[value="vi_baller_st_d"]')).to_have_count(1)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'VI roster research modified GTA V saves'
+        page.goto(base + '/atlas-vehicle-configurator.html?world=vi&model=vi_bison_1800',wait_until='domcontentloaded')
+        expect(page.locator('#modelSelect')).to_have_value('vi_bison_1800',timeout=30000)
+        expect(page.locator('#referenceTitle')).to_have_text('Bravado Bison 1800')
+        expect(page.locator('#referenceNote a')).to_have_attribute('href','https://gtascoop.com/wiki/vehicles/')
+        expect(page.locator('#modelSelect option[value="vi_bison_1800_police"]')).to_have_count(1)
+        expect(page.locator('#modelSelect option[value="vi_bison_3800"]')).to_have_count(1)
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'VI expanded roster modified GTA V saves'
         # Official named and media references remain separate in both gallery and Forge.
         page.goto(base + '/atlas90-vehicles6.html?evidence=official-named',wait_until='domcontentloaded')
         expect(page.locator('#j90Evidence')).to_have_value('official-named')
@@ -133,11 +140,13 @@ try:
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
         page.goto(base + '/atlas-vehicle-configurator.html?world=vi&division=acquisition-water-temporary&model=vi_squalo',wait_until='domcontentloaded')
         expect(page.locator('#forgeDivision')).to_have_value('acquisition-water-temporary')
-        expect(page.locator('#modelSelect option')).to_have_count(11,timeout=30000)
+        expect(page.locator('#modelSelect option')).to_have_count(12,timeout=30000)
+        expect(page.locator('#modelSelect option[value="vi_como"]')).to_have_count(1)
         expect(page.locator('#concept3d [data-vi-acquisition="water-temporary"]')).to_contain_text('no normal registration reported')
         expect(page.locator('#concept3d')).to_contain_text('Ultimate Edition')
         page.locator('#forgeDivision').select_option('acquisition-air-temporary')
-        expect(page.locator('#modelSelect option')).to_have_count(13)
+        expect(page.locator('#modelSelect option')).to_have_count(17)
+        expect(page.locator('#modelSelect option[value="vi_mallard"]')).to_have_count(1)
         page.locator('#modelSelect').select_option('vi_maverick')
         expect(page.locator('#concept3d [data-vi-acquisition="air-temporary"]')).to_contain_text('temporary aircraft use')
         page.locator('#forgeDivision').select_option('acquisition-road-review')
