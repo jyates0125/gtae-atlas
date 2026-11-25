@@ -11,3 +11,9 @@ Update: PR #224 passed 2/2 and merged development 20d5bd24a211d721f69825d76cc6ec
 46.6 correction: direct model-catalog access failed (410), so replace public link with reachable VI vehicle research references. Inspect corrected head before merge. GTA V comparison is not VI geometry proof.
 
 Update: 46.6 passed 18/18 and merged ea9233bc42aaea526ae21044a7964b824611f2aa. Pending 46.7 branch feature/atlas467-vi-roster-crosscheck adds six cross-listed distinct VI reference records; verify exact CI. No mesh acquisition; individual model access and rights remain blocked. Source classification conflicts need further review; no production change.
+
+
+46.7 PR #226 exact head 4c41ed0 passed 16/16 returned workflow conclusions; merged development 9588540. Relevant browser step execution still needs log review. Production unchanged by this branch.
+
+### Atlas 46.8 — cross-listed VI road vehicle references
+Add 12 road vehicle references (191 → 203, 195 community); GTA6 Motors and Leonida Waypoint catalog cross-check. Preserve all old IDs, separate Tailgater S and Baller ST-D, keep individual eligibility, mesh and workshop evidence pending. No source images or geometry imported. Focused source/browser tests extended; candidate CI pending. GTA.ZONE direct model catalog continues to return HTTP 410; no public link or acquisition claim. Existing classification/brand conflicts remain under review. Rollback via isolated PR revert.

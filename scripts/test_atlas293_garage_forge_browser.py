@@ -91,6 +91,13 @@ try:
         expect(page.locator('#modelSelect option[value="vi_bison"]')).to_have_count(1)
         expect(page.locator('#modelSelect option[value="vi_bison_900_95"]')).to_have_count(1)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'VI variant research modified GTA V saves'
+        page.goto(base + '/atlas-vehicle-configurator.html?world=vi&model=vi_tailgater_s',wait_until='domcontentloaded')
+        expect(page.locator('#modelSelect')).to_have_value('vi_tailgater_s',timeout=30000)
+        expect(page.locator('#referenceTitle')).to_have_text('Obey Tailgater S')
+        expect(page.locator('#referenceNote a')).to_have_attribute('href','https://gta6motors.com/vehicles/')
+        expect(page.locator('#modelSelect option[value="vi_tailgater"]')).to_have_count(1)
+        expect(page.locator('#modelSelect option[value="vi_baller_st_d"]')).to_have_count(1)
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'VI roster research modified GTA V saves'
         # Official named and media references remain separate in both gallery and Forge.
         page.goto(base + '/atlas90-vehicles6.html?evidence=official-named',wait_until='domcontentloaded')
         expect(page.locator('#j90Evidence')).to_have_value('official-named')
