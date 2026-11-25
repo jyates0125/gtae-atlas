@@ -18,7 +18,7 @@ assert expected.issubset(set(parser.ids)), expected-set(parser.ids)
 for filename in ['atlas101-configurator.css','atlas101-configurator.js','atlas99-garage3d.css','atlas99-garage3d.js']:
  assert filename in page and (ROOT/filename).is_file(),filename
 assert 'team-jura-atlas101-concept-presets-v1' in script,'Never overwrite existing garage keys'
-assert 'team-jura-atlas90-collection-v1' not in script,'Concept presets must be separate from owned records'
+assert 'team-jura-atlas90-collection-v1' not in script,'Use the shared collection API, never a duplicate ownership store'
 assert 'atlas90-seed.json' in script
 assert 'atlas93-garage.html?addModel=' in script
 assert 'TeamJuraGarage3D.mount' in script
@@ -26,7 +26,9 @@ assert 'No licensed game meshes' in script
 assert 'const known=new Set(models)' in script and 'prepareImport(payload,storage.builds,known)' in script
 assert "payload.world!==WORLD" in script and "world:WORLD,exported:" in script
 assert 'Object.hasOwn(merged,id)' in script and 'entry.model!==id' in script
-assert 'style.disabled=unsupported||classLocked' in script
+assert 'style.disabled=true' in script and 'TeamJuraGarage3D.mountReference' in script
+assert 'id="forgeOwned"' in page and 'ownershipKey' in script
+assert 'Legacy body setting' in page and '<label hidden' in page
 assert 'presets and Garage ownership stay untouched' not in page or 'importBuilds' in page
 assert 'NOT a GTA vehicle model' in viewer, 'Viewer disclaimer must remain'
 for nav in ('index.html','atlas97-journey.html','atlas93-garage.html','atlas-database.html','atlas100-showroom.js'):
