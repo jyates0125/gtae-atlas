@@ -26,3 +26,6 @@ Add 12 road vehicle references (191 → 203, 195 community); GTA6 Motors and Leo
 
 ### Atlas 46.9 — broader source-cross-listed road/service/craft roster
 64 more distinct community references, 203 → 267 (259 community, 5 official-named, 3 official-media). Compared all eight GTADB roster pages and cross-listed GTA Scoop and Leonida Waypoint references. Avoided leak-only entries and potential alias duplicates; class disagreements and actual individual registration remain pending. No new mesh, visual, workshop, price, or exact game identity claims. Tests cover every new ID, scope isolation, acquisition categories, variant uniqueness and browser deep links. Based on exact 46.8 candidate 057ddb9; 46.8 CI not yet fully complete at branch creation. Do not merge before parent and combined exact-head gates. Production unchanged. Rollback via isolated PR revert.
+
+
+46.9 correction: three workflows failed on stale expected boat count 11 after adding Como (12 actual); update both browser suites to exact 12 watercraft and 17 aircraft, with explicit Como/Mallard assertions and all existing isolation checks retained. Add direct GTA Base vehicle directory to existing central external reference card. External catalog is a reference fallback only, not a grant to import its images or meshes. Revalidate exact corrected head before merge. No production change.
