@@ -142,13 +142,14 @@ async def smoke():
                                     if not await drawer.is_visible():
                                         failures.append('All Pages button did not open navigation')
                                     else:
-                                        if path.startswith('map-hub.html?game=') or path=='atlas93-garage.html':
+                                        if path.startswith('map-hub.html?game=') or path in ('atlas93-garage.html','atlas-forge-collections.html'):
                                             active=drawer.locator('a[aria-current="page"]')
                                             if await active.count()!=1 or await active.get_attribute('href')!='./'+path:
                                                 failures.append('Directory current destination does not match '+path)
                                         await pg.locator('#j132-search').fill('My Garage')
-                                        if await drawer.locator('a[href="./atlas93-garage.html"]').count()!=1:
-                                            failures.append('All Pages search omitted My Garage')
+                                        garage_link=drawer.get_by_role('link',name='My Garage',exact=True)
+                                        if await garage_link.count()!=1 or await garage_link.get_attribute('href')!='./atlas-forge-collections.html':
+                                            failures.append('All Pages search omitted canonical My Garage collection hub')
                                         await pg.keyboard.press('Escape')
                                         if await drawer.is_visible():
                                             failures.append('All Pages Escape did not dismiss navigation')
@@ -857,7 +858,7 @@ async def smoke():
                                     await global_nav.click()
                                     if not await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot open')
                                     await pg.locator('#j132-search').fill('garage')
-                                    if await pg.locator('#j132-groups a[href="./atlas93-garage.html"]').count()==0:failures.append('Universal page search did not find garage')
+                                    if await pg.locator('#j132-groups a[href="./atlas-forge-collections.html"]').count()!=1:failures.append('Universal page search did not find My Garage collection hub')
                                     await pg.locator('.j132-close').click()
                                     if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot close')
                             if not failures and path in ('index.html','maps.html'):
