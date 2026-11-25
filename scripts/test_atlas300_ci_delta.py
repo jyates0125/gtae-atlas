@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Atlas 30.0 no-dependency tests for PR delta gating."""
 import importlib.util
+import json
+import os
+import subprocess
 from pathlib import Path
 import tempfile
 from unittest.mock import patch
@@ -60,6 +63,49 @@ try:
  mod.parse_patterns("on:\n  pull_request:\n    branches: [development]\n")
  raise AssertionError("Missing configured path list should be explicit")
 except ValueError:pass
+
+# Real Git history: a relevant earlier commit must not disappear behind a
+# documentation-only final commit in the same synchronize event.
+with tempfile.TemporaryDirectory() as tmp:
+    checkout=Path(tmp)
+    def git(*args):
+        return subprocess.check_output(["git",*args],cwd=checkout,text=True,stderr=subprocess.DEVNULL).strip()
+    git("init","-q")
+    git("config","user.name","CI test")
+    git("config","user.email","ci@example.invalid")
+    (checkout/"atlas93-garage.js").write_text("old")
+    git("add",".")
+    git("commit","-qm","base")
+    before=git("rev-parse","HEAD")
+    (checkout/"atlas93-garage.js").write_text("new")
+    git("add",".")
+    git("commit","-qm","garage change")
+    middle=git("rev-parse","HEAD")
+    (checkout/"note.md").write_text("notes")
+    git("add",".")
+    git("commit","-qm","documentation")
+    after=git("rev-parse","HEAD")
+    event=checkout/"event.json"
+    def delta(payload):
+        event.write_text(json.dumps(payload))
+        with patch.object(mod,"ROOT",checkout),patch.dict(os.environ,{"GITHUB_EVENT_PATH":str(event)}):
+            return mod.current_changes()
+    payload={"action":"synchronize","before":before,"after":after}
+    assert set(delta(payload))=={"atlas93-garage.js","note.md"}
+    pats=mod.parse_patterns((workflow/"atlas293-garage-forge.yml").read_text())
+    assert mod.should_run("pull_request","synchronize",delta(payload),pats)
+    assert delta(dict(payload,before=middle))==["note.md"]
+    assert delta(dict(payload,before="f"*40)) is None
+    assert delta(dict(payload,before="0"*40)) is None
+    assert delta(dict(payload,after=middle)) is None
+    assert delta(dict(payload,action="opened")) is None
+    assert delta({}) is None
+    with patch.object(mod,"ROOT",checkout),patch.dict(os.environ,{"GITHUB_EVENT_PATH":str(checkout/"missing.json")}):
+        assert mod.current_changes() is None
+    # Deleted paths remain relevant; event range must match actual checkout.
+    git("rm","atlas93-garage.js")
+    git("commit","-qm","delete dependency")
+    assert delta(dict(payload,before=after,after=git("rev-parse","HEAD")))==["atlas93-garage.js"]
 
 # Verify GitHub's full YAML parser accepts the real workflow files and that
 # every expensive feature step is properly gated. This catches whitespace and
