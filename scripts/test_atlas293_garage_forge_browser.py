@@ -72,6 +72,37 @@ try:
         expect(page.locator('#concept3d')).to_contain_text('distinct vehicle and ownership record')
         expect(page.locator('#concept3d [data-workshop-category="hsw-conversion"]')).to_have_count(0)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Specialist browsing modified saved data'
+        # New acquisition views preserve ownership and legacy builds.
+        page.goto(base + '/atlas-vehicle-configurator.html?division=pegasus',wait_until='domcontentloaded')
+        expect(page.locator('#forgeDivision')).to_have_value('pegasus')
+        expect(page.locator('#modelSelect option')).to_have_count(8,timeout=30000)
+        page.locator('#modelSelect').select_option('jetmax')
+        expect(page.locator('#concept3d')).to_contain_text('Pegasus')
+        expect(page.locator('#concept3d select')).to_have_count(0)
+        page.locator('#forgeDivision').select_option('warehouse')
+        expect(page.locator('#modelSelect option')).to_have_count(8)
+        page.locator('#modelSelect').select_option('dune5')
+        expect(page.locator('#concept3d')).to_contain_text('Vehicle Warehouse')
+        expect(page.locator('#concept3d')).to_contain_text('Not a Pegasus delivery')
+        page.locator('#forgeDivision').select_option('dealer-warstock')
+        expect(page.locator('#modelSelect option[value="oppressor2"]')).to_have_count(1)
+        page.locator('#modelSelect').select_option('oppressor2')
+        expect(page.locator('#concept3d')).to_contain_text('Terrorbyte')
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
+        page.goto(base + '/atlas87-daily.html#j87-simeon',wait_until='domcontentloaded')
+        page.locator('#j87-simeon .j87-simeon > summary').click()
+        for name in ['Banshee','Coquette','Sentinel','Dubsta','Infernus']:
+            page.locator('#j87-simeon input[value="'+name+'"]').check()
+        expect(page.locator('#j87-simeon [role="status"]')).to_have_text('2 matching list(s)')
+        expect(page.locator('#j87-simeon .j87-simeon details')).to_have_count(2)
+        page.get_by_role('button',name='Clear selection').click()
+        expect(page.locator('#j87-simeon .j87-simeon details')).to_have_count(8)
+        expect(page.locator('#j87-member-offers article')).to_have_count(3)
+        for width in (390,1440):
+            page.set_viewport_size({'width':width,'height':844})
+            assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2"), f'Daily page overflow at {width}px'
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
+        page.set_viewport_size({'width':390,'height':844})
         page.goto(base + '/atlas-vehicle-configurator.html?division=motorcycles&model=jetmax',wait_until='domcontentloaded')
         expect(page.locator('#modelSelect')).to_have_value('jetmax',timeout=30000)
         expect(page.locator('#forgeDivision')).to_have_value('all')
