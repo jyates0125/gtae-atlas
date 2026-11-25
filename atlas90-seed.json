@@ -2188,6 +2188,66 @@
       "confidence": "Community roster identification · individual gameplay verification pending",
       "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=8",
       "forgeId": "vi_zombie_chopper"
+    },
+    {
+      "name": "Allander",
+      "brand": "Karin",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Karin Allander",
+      "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=allander",
+      "forgeId": "vi_allander"
+    },
+    {
+      "name": "Bison 3800",
+      "brand": "Bravado",
+      "type": "Pickups",
+      "archive": "",
+      "displayName": "Bravado Bison 3800",
+      "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=bison-3800",
+      "forgeId": "vi_bison_3800"
+    },
+    {
+      "name": "Bison 900 '95",
+      "brand": "Bravado",
+      "type": "Pickups",
+      "archive": "",
+      "displayName": "Bravado Bison 900 '95",
+      "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=bison-900-95",
+      "forgeId": "vi_bison_900_95"
+    },
+    {
+      "name": "Transgressor '67",
+      "brand": "Sirius",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Sirius Transgressor '67",
+      "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=transgressor-67",
+      "forgeId": "vi_transgressor_67"
+    },
+    {
+      "name": "Sungrazer '61",
+      "brand": "Sirius",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Sirius Sungrazer '61",
+      "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=sungrazer-61",
+      "forgeId": "vi_sungrazer_61"
+    },
+    {
+      "name": "Spritz",
+      "brand": "Benefactor",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Benefactor Spritz",
+      "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=spritz",
+      "forgeId": "vi_spritz"
     }
   ],
   "onlineWorkshopVehicles": [

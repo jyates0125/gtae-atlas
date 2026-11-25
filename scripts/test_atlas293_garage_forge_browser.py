@@ -83,6 +83,14 @@ try:
         expect(page.locator('#forge-model-references-vi a[href="https://gtascoop.com/wiki/vehicles/"]')).to_have_attribute('rel','noopener noreferrer')
         expect(page.locator('#forge-model-references iframe')).to_have_count(0)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'External source browsing modified saved data'
+        # Released VI-specific candidates are not substituted with GTA V records.
+        page.goto(base + '/atlas-vehicle-configurator.html?world=vi&model=vi_bison_3800',wait_until='domcontentloaded')
+        expect(page.locator('#modelSelect')).to_have_value('vi_bison_3800',timeout=30000)
+        expect(page.locator('#referenceTitle')).to_have_text('Bravado Bison 3800')
+        expect(page.locator('#referenceNote a')).to_have_attribute('href','https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=bison-3800')
+        expect(page.locator('#modelSelect option[value="vi_bison"]')).to_have_count(1)
+        expect(page.locator('#modelSelect option[value="vi_bison_900_95"]')).to_have_count(1)
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'VI variant research modified GTA V saves'
         # Official named and media references remain separate in both gallery and Forge.
         page.goto(base + '/atlas90-vehicles6.html?evidence=official-named',wait_until='domcontentloaded')
         expect(page.locator('#j90Evidence')).to_have_value('official-named')
