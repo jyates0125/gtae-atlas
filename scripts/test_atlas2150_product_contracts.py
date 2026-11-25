@@ -34,8 +34,9 @@ require("atlas93-garage.js", "atlas-vehicle-configurator.html?model=",
         "TeamJuraGarage3D")
 require("atlas101-configurator.js", "Aircraft / Plane concept",
         "Boat / Watercraft concept", "Helicopter concept", "sceneType()",
-        "prepareImport", "Object.hasOwn(merged,id)", "classLocked")
+        "prepareImport", "Object.hasOwn(merged,id)", "style.disabled=true", "mountReference")
 require("atlas99-garage3d.js", "forge.build(opts.type,opts.model,paint,design,environment)", "forgeStatus")
+require("atlas99-garage3d.js", "mountReference", "reference-only", "no-referrer", "opts.readOnly===true")
 require("atlas-vehicle-configurator.html", "atlas256-forge-geometry.js", 'id="forgeOwned"', 'id="forgeVariant"', 'id="saveVariant"', 'id="loadVariant"')
 require("atlas101-configurator.js", "mergeVariants", "VARIANT_LIMIT=8", "saveVariant", "loadVariant")
 # Exercise the replacement geometry engine, not retired renderer variable names.
