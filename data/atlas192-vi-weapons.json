@@ -2,7 +2,7 @@
   "schema": 1,
   "scope": "vi",
   "kind": "weapon",
-  "reviewedAt": "2026-11-23",
+  "reviewedAt": "2026-11-24",
   "status": "Curated research sample, not the full release roster",
   "disclaimer": "GTA VI weapon references are sourced by item. A name shown in official promotional material does not verify weapon performance, pricing, spawn locations or every edition. No GTA V archive art is repurposed as GTA VI in-game photography.",
   "sources": [
@@ -25,6 +25,10 @@
     {
       "name": "GamesRadar+ · Ultimate Edition in-game unlocks",
       "url": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-ultimate-edition-pre-order-bonuses/"
+    },
+    {
+      "name": "GTAside · launch-week weapon names",
+      "url": "https://gtaside.com/games/gta6/weapons/"
     }
   ],
   "records": [
@@ -97,6 +101,106 @@
       "description": "A revolver identified from official imagery coverage. Attributes and spawn locations are not inferred.",
       "sourceName": "PC Gamer — GTA VI weapons",
       "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+    },
+    {
+      "id": "girardi-es18",
+      "name": "Girardi ES18",
+      "group": "Handgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
+      "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
+      "sourceName": "GTAside · launch-week named weapon reference",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "klose-k17-mcd",
+      "name": "Klose K17 MCD",
+      "group": "Handgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
+      "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
+      "sourceName": "GTAside · launch-week named weapon reference",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "gorse-425",
+      "name": "Fortune & Son Gorse 425",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
+      "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
+      "sourceName": "GTAside · launch-week named weapon reference",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "mason-keen-longshot",
+      "name": "Mason & Keen Longshot",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
+      "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
+      "sourceName": "GTAside · launch-week named weapon reference",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "kozlov-kz-59",
+      "name": "Kozlov KZ-59",
+      "group": "Assault rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
+      "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
+      "sourceName": "GTAside · launch-week named weapon reference",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "wortham-w14",
+      "name": "Wortham W-14",
+      "group": "Rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
+      "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
+      "sourceName": "GTAside · launch-week named weapon reference",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "schlamm-dw9",
+      "name": "Schlamm DW-9",
+      "group": "SMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
+      "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
+      "sourceName": "GTAside · launch-week named weapon reference",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "bushcraft-knife",
+      "name": "Bushcraft Knife",
+      "group": "Melee",
+      "grade": "Community gameplay reference",
+      "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
+      "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
+      "sourceName": "GTAside · launch-week named weapon reference",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "diving-knife",
+      "name": "Diving Knife",
+      "group": "Melee",
+      "grade": "Community gameplay reference",
+      "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
+      "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
+      "sourceName": "GTAside · launch-week named weapon reference",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "switchblade",
+      "name": "Switchblade",
+      "group": "Melee",
+      "grade": "Observed in official media",
+      "evidence": "Pictured alongside the Morgan revolvers in publisher media; independent item availability not verified",
+      "description": "Visual reference only. Do not assume a standalone unlock, purchase or unique variant.",
+      "sourceName": "Rockstar official screenshots; GTAside caption review",
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
     }
   ]
 }

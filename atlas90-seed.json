@@ -1228,6 +1228,16 @@
       "confidence": "Community-reported identity · acquisition, registration and parts unverified",
       "sourceUrl": "https://gta6wiki.eu/vehicles/all/",
       "forgeId": "vi_carbon_rs"
+    },
+    {
+      "name": "90 Annis Venturas BLVD Elegy",
+      "displayName": "’90 Annis Venturas BLVD Elegy",
+      "brand": "Annis",
+      "type": "Sports",
+      "archive": "",
+      "confidence": "Rockstar official GTA+ benefit · Chapter 3 · active console membership",
+      "sourceUrl": "https://www.rockstargames.com/VI/gta-plus",
+      "forgeId": "vi_venturas_blvd_elegy90"
     }
   ],
   "onlineWorkshopVehicles": [
