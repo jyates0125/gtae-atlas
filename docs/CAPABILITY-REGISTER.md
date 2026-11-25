@@ -10,3 +10,5 @@ Record meaningful, evidence-backed changes; retain useful safe alternatives and 
 | Session continuity | Charter amendments and durable public handoff | Record material gains, tradeoffs, evidence, prior safe alternatives and recovery; documentation does not change runtime behavior |
 
 For later entries: date, capability, baseline and candidate revisions, measured change, evidence and test scope, costs/limitations, retained alternative or reason for retirement, rollback/reuse path, acceptance status and next step. Record failures and rejected approaches too. Keep proprietary evidence in the separate private engineering workspace.
+
+Pending 46.6: external detailed-model reference discovery, with Online and VI links separated and no embedded or copied mesh. Existing local reference workshop retained. Validate exact head before recording completion.
