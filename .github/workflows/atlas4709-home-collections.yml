@@ -1,0 +1,48 @@
+name: Atlas 47.0.9 - homepage collection entry
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas4709-collection-entry.*'
+      - 'scripts/test_atlas4709_home_collections.py'
+      - 'index.html'
+      - 'atlas-dashboard.html'
+      - 'atlas-forge-collections.html'
+      - 'atlas-vehicle-configurator.html'
+permissions:
+  contents: read
+jobs:
+  collection-entry:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    env:
+      ATLAS_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install ${{ matrix.browser }}
+          python scripts/test_atlas4709_home_collections.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas4709-png-preview-${{ matrix.browser }}
+          path: qa-evidence/atlas4709/
+          if-no-files-found: warn
+          retention-days: 21
