@@ -2690,6 +2690,27 @@
           "url": "https://www.wikigtavi.com/weapons/unique-variants"
         }
       ]
+    },
+    {
+      "id": "baseball-bat",
+      "name": "Baseball Bat",
+      "group": "Melee",
+      "evidence": "Released-game community index",
+      "grade": "Community reference",
+      "description": "Named melee reference in the GTA VI community index. Individual collection identity and image pending.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons"
+    },
+    {
+      "id": "brontasaurus-bat",
+      "name": "Brontasaurus Bat",
+      "group": "Melee",
+      "evidence": "Named variant · community reference",
+      "grade": "Community variant reference",
+      "description": "Named bat variant listed in released-game community research. Individual collection identity and image pending.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "baseball-bat"
     }
   ],
   "completenessBenchmark": {
