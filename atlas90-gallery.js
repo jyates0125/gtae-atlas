@@ -124,7 +124,9 @@ function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo')
   img.src=imageFallback(r);
   photo.classList.add('j90-fallback');flags.append(el('span','','Original Elario concept · illustrative'));
  }
- if(r.image&&r.kind!=='vehicles6'){
+ if(r.kind==='vehicles6'&&r.viVisual){
+  img.alt=r.viVisual.label+' for '+r.name;img.referrerPolicy='no-referrer';setPhotoState('pending','Checking model-specific picture…');img.onload=()=>setPhotoState('vi-reference',r.viVisual.label);img.onerror=showConcept;img.src=r.viVisual.url;
+ }else if(r.image&&r.kind!=='vehicles6'){
   img.alt='Archive reference for '+r.name;setPhotoState('pending','Checking archive image…');img.onload=()=>setPhotoState('archive','Archive reference image');img.onerror=showConcept;img.src=r.image;
  }else {showConcept();if(r.kind==='vehicles6')setPhotoState('concept','Original Leonida concept · not a game screenshot');}
  photo.append(img);root.dataset.collected=String(!!STATE.owned[r.id]);flags.append(el('span',STATE.owned[r.id]?'j90-flag-done':'j90-flag-pending',STATE.owned[r.id]?'✓ COLLECTED':'NOT COLLECTED'));photo.append(flags);root.append(photo);
@@ -188,6 +190,7 @@ function initialize(seed){if(game==='weapons')data=seed.weapons.map(k=>make(k,'w
   const id=x.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
   const vehicle=make(id,'vehicles6',x.displayName||x.name,x.type,x.archive,x.confidence,x.brand);
   if(typeof x.sourceUrl==='string'&&(x.sourceUrl==='https://fullsweepmap.com/wiki/gta6-vehicle-list/'||x.sourceUrl==='https://gtascoop.com/wiki/vehicles/'||(/^(https:\/\/www\.rockstargames\.com\/VI\/|https:\/\/gtadb\.net\/gta-6\/vehicles\/|https:\/\/gta6motors\.com\/(?:guides\/car-customization\/|vehicles\/)|https:\/\/www\.gtabase\.com\/gta-6\/vehicles\/|https:\/\/gta6wiki\.eu\/vehicles\/|https:\/\/www\.gta6map\.net\/wiki\/gta-6\/vehicles\/)/).test(x.sourceUrl)))vehicle.source=x.sourceUrl;
+  vehicle.viVisual=window.JuraViVehicleVisuals?.get(x.forgeId)||null;
   vehicle.benefit=window.JuraForge?.viBenefit?.('vi',x.forgeId)||null;
   vehicle.acquisition=window.JuraForge?.viAcquisition?.('vi',x.forgeId)||null;
   vehicle.evidence=window.JuraForge?.viEvidence?.('vi',x.forgeId)||'community';
