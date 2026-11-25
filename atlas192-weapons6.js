@@ -33,35 +33,37 @@ function mediaChoices(r){
  }
  return result;
 }
-const GLYPHS=Object.freeze({
- 'handgun':'M16 19H81L88 24V34H46L43 43L40 60H27L29 35H16Z',
- 'revolver':'M15 23H73L86 27V36H48L43 44L40 59H27L29 38H15Z',
- 'smg':'M8 27H22V21H69L88 26V35H61L58 56H48L47 37H35L30 49H20L23 36H8Z',
- 'shotgun':'M7 38L27 27H92V32H46L35 37L25 48L7 53Z',
- 'rifle':'M7 27H26L36 22H91V29H72V35H52L48 51H39L40 35H29L7 46Z',
- 'sniper rifle':'M5 32H28L38 27H48V21H68V27H94V32H67L56 37H37L24 48H5Z',
- 'lmg':'M6 27H25L36 21H91V29H77V37H56V50H40V37H29L6 45Z',
- 'launcher':'M8 24H91V39H55L48 51H37L37 39H8Z',
- 'melee':'M13 43L38 32L42 26L85 12L94 14L84 27L47 40L42 38L17 52Z',
- 'throwable':'M43 13H57V21L66 31V52L58 60H42L34 52V31L43 21Z'
+// Missing images get a cinematic exhibition, never a mislabeled exact model.
+const CATEGORY_EXAMPLES=Object.freeze({
+ 'switchblade':'edc-knife','akm-assault-rifle':'kozlov-kz-59','bolt-action-sniper':'fortune-son-laird350',
+ 'double-barrel-shotgun':'shrewsbury-drifter','heavy-pistol':'girardi-es9','duke-1922':'girardi-es9',
+ 'deever-tech-glr40':'hillinger-boomer','hunting-knife':'bushcraft-knife','sticky-bomb':'frag-grenade'
 });
+function categoryExample(r){
+ const candidate=rows.find(x=>x.id===CATEGORY_EXAMPLES[r.id]);
+ if(!candidate)return null;
+ const m=mediaChoices(candidate).find(x=>x.kind!=='official');
+ return m?{...m,kind:'example',label:'Illustrative class reference · '+candidate.name+' · not this exact item'}:null;
+}
 function classPlate(r){
- const plate=make('div','viweapon-plate');plate.dataset.group=r.group.toLowerCase();plate.setAttribute('aria-label','Illustrated category card, not an exact GTA VI model');
- const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 100 72');svg.setAttribute('aria-hidden','true');
- const path=document.createElementNS(ns,'path');const group=r.group.toLowerCase(),key=group.includes('rifle')&&group!=='sniper rifle'?'rifle':group;path.setAttribute('d',GLYPHS[key]||'M50 10L80 24V45L50 62L20 45V24Z');svg.append(path);
- plate.append(make('span','viweapon-plate-kicker','ELARIO / LEONIDA'),svg,make('strong','',r.group),make('small','','Category illustration · not game artwork'));
- return plate;
+ const plate=make('div','viweapon-plate');
+ plate.dataset.group=r.group.toLowerCase();plate.setAttribute('aria-label','Original Elario Armory exhibition artwork; not an exact GTA VI model');
+ const art=make('img','viweapon-concept-art');art.src='./art/jura161-weapons.webp';art.alt='Original Elario Armory exhibition';art.loading='lazy';art.decoding='async';
+ const overlay=make('div','viweapon-plate-overlay');overlay.append(make('span','viweapon-plate-kicker','ELARIO / LEONIDA'),make('strong','',r.group),make('small','','Original exhibit artwork · model pending'));
+ plate.append(art,overlay);return plate;
 }
 function visualCard(r){
- const options=mediaChoices(r),f=make('figure','viweapon-media'),plate=classPlate(r),cap=make('figcaption','','');
- const link=make('a','','Sources & image credits ↗');link.href='./atlas-credits.html#vi-armory-visuals';const label=make('span','viweapon-media-label','');
- cap.append(label,document.createTextNode(' '),link);f.append(plate,cap);f.dataset.visual='class';f.dataset.hasReference=String(options.length>0);
+ const options=mediaChoices(r),example=categoryExample(r);
+ const f=make('figure','viweapon-media'),stage=make('div','viweapon-stage'),plate=classPlate(r),cap=make('figcaption','',''),label=make('span','viweapon-media-label','');
+ cap.append(label);stage.append(plate);f.append(stage,cap);
+ f.dataset.visual='class';f.dataset.hasReference=String(options.length>0);
+ const candidates=example?[...options,example]:options;
  let idx=0;function next(){
-  const m=options[idx++];if(!m){label.textContent=options.length?'Linked image unavailable · original category card':'Item-specific image pending · original category card';return}
-  label.textContent=m.label;const img=make('img','');img.alt=m.label;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.className='viweapon-linked-image';
-  img.addEventListener('load',()=>{plate.hidden=true;img.classList.add('is-loaded');f.dataset.visual=m.kind;label.textContent=m.label+' · © Rockstar Games';},{once:true});
+  const m=candidates[idx++];if(!m){label.textContent=options.length?'Linked image unavailable · original exhibition artwork':'Item-specific image pending · original exhibition artwork';return}
+  label.textContent=m.label;const img=make('img','viweapon-linked-image');img.alt=m.label;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
+  img.addEventListener('load',()=>{plate.hidden=true;img.classList.add('is-loaded');f.dataset.visual=m.kind;label.textContent=m.label;},{once:true});
   img.addEventListener('error',()=>{img.remove();plate.hidden=false;f.dataset.visual='class';next()},{once:true});
-  f.insertBefore(img,cap);img.src=m.url;
+  stage.append(img);img.src=m.url;
  }
  next();return f;
 }
@@ -83,11 +85,9 @@ function render(){
   const noted=make('button','viweapon-note',state.seen[r.id]?'✓ Added to my notes':'+ Mark reviewed');
   noted.type='button';noted.setAttribute('aria-pressed',String(!!state.seen[r.id]));
   noted.addEventListener('click',()=>{state.seen[r.id]=!state.seen[r.id];if(!state.seen[r.id])delete state.seen[r.id];const ok=save();render();if(ok)announce('Personal review updated.');});
-  const source=make('a','viweapon-source','Check evidence');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';source.title=r.sourceName;
-  const collect=make('button','viweapon-collect',collected[r.id]?'✓ Collected':'+ Collect');collect.type='button';collect.setAttribute('aria-pressed',String(!!collected[r.id]));collect.disabled=collectionBlocked;collect.onclick=()=>toggleCollected(r.id);actions.append(collect,noted,source);
+  const collect=make('button','viweapon-collect',collected[r.id]?'✓ Collected':'+ Collect');collect.type='button';collect.setAttribute('aria-pressed',String(!!collected[r.id]));collect.disabled=collectionBlocked;collect.onclick=()=>toggleCollected(r.id);actions.append(collect,noted);
   if(r.officialEdition?.source==='https://www.rockstargames.com/VI/editions/ultimate-edition'&&typeof r.officialEdition.label==='string'){
    card.append(make('p','viweapon-evidence',r.officialEdition.label));
-   const official=make('a','viweapon-source','Official edition listing ↗');official.href=r.officialEdition.source;official.target='_blank';official.rel='noopener noreferrer';actions.append(official);
   }
   card.append(actions);
   const d=make('details','viweapon-notes');d.append(make('summary','','My research notes'));
