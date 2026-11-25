@@ -129,7 +129,7 @@ function card(r){const root=el('article','j90-card'),photo=el('div','j90-photo')
   forge.href='./atlas-vehicle-configurator.html?model='+encodeURIComponent(r.archive);actions.append(forge);
  }
  if(r.kind==='vehicles6'){
-  const models={'vehicles6:stanier-55':'vi_stanier55','vehicles6:cheetah-95':'vi_cheetah95','vehicles6:buggy':'vi_dominator67_buggy','vehicles6:squalo':'vi_squalo','vehicles6:dinka-enduro':'vi_enduro','vehicles6:crest-kayak':'vi_crest_kayak','vehicles6:ganado-retro-build':'vi_ganado_retro'};
+  const models={'vehicles6:stanier-55':'vi_stanier55','vehicles6:cheetah-95':'vi_cheetah95','vehicles6:buggy':'vi_dominator67_buggy','vehicles6:squalo':'vi_squalo','vehicles6:dinka-enduro':'vi_enduro','vehicles6:crest-kayak':'vi_crest_kayak','vehicles6:ganado-retro-build':'vi_ganado_retro','vehicles6:70-ganado':'vi_ganado70'};
   if(Object.hasOwn(models,r.id)){const forge=el('a','j96-park-link','◈ Open Leonida Forge');forge.href='./atlas-vehicle-configurator.html?world=vi&model='+encodeURIComponent(models[r.id]);actions.append(forge)}
  }
  body.append(actions);const links=el('div','j90-card-links');const source=el('a','','Research source ↗');source.href=r.source;source.target='_blank';source.rel='noopener noreferrer';links.append(source);if(r.image&&r.kind!=='vehicles6'){const archive=el('a','','Artwork source ↗');archive.href='https://github.com/Stuyk/gtav-image-archive';archive.target='_blank';archive.rel='noopener noreferrer';links.append(archive)}body.append(links);root.append(body);return root}
