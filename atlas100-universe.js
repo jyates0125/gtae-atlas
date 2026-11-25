@@ -115,7 +115,6 @@ function artwork(r){
  else area.append(make('span','u-symbol',badge(r)));
  if(!area.querySelector('.u-image-note') && isUnverified(r))area.append(make('span','u-image-note','UNVERIFIED RESEARCH'));
  else if(r.image&&!area.querySelector('.u-image-note'))area.append(make('span','u-image-note',r.scope==='vi'?'OFFICIAL RECORD · REFERENCE IMAGE':'REFERENCE ART'));
- else if(area.dataset.artStatus==='world-scene')area.append(make('span','u-image-note','ELARIO CINEMATIC SCENE · NOT A PORTRAIT'));
  if(area.dataset.artStatus==='world-scene')area.querySelector('.u-image-note')?.replaceChildren('ELARIO CINEMATIC SCENE · NOT A PORTRAIT');
  return area;
 }
