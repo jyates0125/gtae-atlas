@@ -32,6 +32,10 @@ function walk(dir, prefix='') {
 if(fs.existsSync(out)) fs.rmSync(out,{recursive:true,force:true});
 fs.mkdirSync(out,{recursive:true});
 const files=walk(root);
+// Fail closed before copying model assets to the deployment tree.
+require('node:child_process').execFileSync(process.execPath,[path.join(root,'scripts/forge-pbr-lab/verify-published-models.mjs')],{
+  cwd:root,input:JSON.stringify(files.filter(p=>/\.(?:glb|gltf)$/i.test(p)||p.toLowerCase().startsWith('assets/forge/'))),stdio:['pipe','inherit','inherit']
+});
 // Explicit per-page artwork selection; missing or changed selected art fails
 // in every build. The optional smaller concept pack never auto-activates.
 const headerPack=JSON.parse(fs.readFileSync(path.join(root,'docs/ATLAS3904-HEADER-ART.json'),'utf8')).images;

@@ -1,7 +1,9 @@
 // Final Forge public asset contract. No generic or procedural substitute can pass.
 // This registry contains only reviewed game identities, never laboratory stand-ins.
 export const divisions=Object.freeze(['road','motorcycle','marine','aviation','utility','specialty','armory']);
-const accepted=Object.freeze(Object.create(null));
+// Single reviewed registry. Empty until an actual model meets all acceptance gates.
+export const approvedReleaseRecords=Object.freeze([]);
+const accepted=Object.freeze(Object.assign(Object.create(null),Object.fromEntries(approvedReleaseRecords.map(r=>[JSON.stringify([r.world,r.model,r.division]),r]))));
 const scopes=Object.freeze(['v-story','v-online','vi']);
 const digest=/^[a-f0-9]{64}$/;
 // Accepted assets may be a single complete mesh. Do not require detachable parts.
