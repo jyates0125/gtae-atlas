@@ -68,7 +68,11 @@
   vi_dominator67_buggy:{kind:'utility',shape:'buggy',label:'Off-road buggy visual study',w:1.06,len:2.21,roof:1.45,cab:.10,wheel:1.55,rad:.48,nose:.91},
   vi_squalo:{kind:'marine',shape:'powerboat',label:'Leonida powerboat visual study',w:1.02,len:1.01,cab:.10}
  });
- function modelProfile(type,model){const id=String(model||'').toLowerCase();const p=Object.hasOwn(profiles,id)?profiles[id]:null;return p&&p.kind===classify(type,id)?p:null}
+ // Explicit cross-world visual-only relationships. Never normalize model IDs
+ // before looking up workshop menus, unlocks, prices or private saves.
+ const sharedVisuals=Object.freeze({vi_banshee:'banshee',vi_dominator:'dominator'});
+ function visualPlatform(model){const id=String(model||'').toLowerCase();return Object.hasOwn(sharedVisuals,id)?sharedVisuals[id]:id}
+ function modelProfile(type,model){const id=String(model||'').toLowerCase(),visual=visualPlatform(id);const p=Object.hasOwn(profiles,visual)?profiles[visual]:null;return p&&p.kind===classify(type,id)?p:null}
  function build(type,model,paint,settings,environment){
   const kind=classify(type,model),d=normalize(settings,model),base=hex(paint),accent=hex(d.accent),glass=[.12,.24,.34],dark=[.07,.085,.13],rubber=[.045,.05,.065],chrome=[.56,.64,.73],data=[],normals=[];let vehicleSurface=false,paintMaterial=null;
   const theme=themes[resolveTheme(kind,environment||d.environment)],profile=modelProfile(type,model);
@@ -201,5 +205,5 @@
   }
   return{kind,vertices:new Float32Array(data),surface:new Float32Array(normals),stencilCount,floorCount,vehicleStart,settings:d,profile:profile?.label||null};
  }
- return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,workshopLiveries,workshopCatalog});
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog});
 });
