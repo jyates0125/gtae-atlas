@@ -13,11 +13,27 @@
  const ganadoTabs=Object.freeze(['Pro Builds','Cosmetics','Bodywork','Performance','Wheels','Interior']);
  const workshopTab=(model,key)=>{if(model!=='vi_ganado70')return '';const i=workshopGroups.vi_ganado70.findIndex(g=>g[0]===key);return i<0?'':ganadoTabs[i<2?0:i<5?1:i<18?2:i<22?3:i<25?4:5]};
  const workshopSource=model=>Object.hasOwn({avenger:1,bison:1,adder:1,buffalo:1,dominator:1},model)?'forge-vehicle-workshop-expansion-2':Object.hasOwn({akula:1,akuma:1,bullet:1},model)?'forge-expanded-workshops':model==='vi_ganado70'?'forge-ganado-workshop':model==='banshee'?'forge-banshee-workshop':'forge-workshop-liveries';
+ // Exact model IDs, game-specific conversion eligibility. HSW does not create a new model ID.
+ const hswRecords=Object.freeze([["banshee3","Bravado Banshee GTS",1900000],["stingertt","Grotti Itali GTO Stinger TT",1418000],["tampa4","Declasse Tampa GT",1400000],["velenogt","Grotti Veleno GT",1995000],["niobe","Übermacht Niobe",1800000],["vigero2","Declasse Vigero ZX",550000],["vigero3","Declasse Vigero ZX Convertible",550000],["hakuchou2","Shitzu Hakuchou Drag",1450000],["s95","Karin S95",525000],["feltzer3","Benefactor Stirling GT",900000],["fmj2","Vapid FMJ MK V",1950000],["banshee","Bravado Banshee",1840000],["turismo2","Grotti Turismo Classic",897000],["entity3","Överflöd Entity MT",850000],["deveste","Principe Deveste Eight",1110000],["astrale","Pfister Astrale",950000],["ignus2","Pegassi Weaponized Ignus",475000],["buffalo5","Bravado Buffalo EVX",1415000],["coureur","Penaud La Coureuse",818000],["arbitergt","Imponte Arbiter GT",375000],["cyclone2","Coil Cyclone II",475000],["firebolt","Vapid Firebolt ASP",1500000],["issi8","Weeny Issi Rally",650000],["sentinel","Übermacht Sentinel XS",1305300],["woodlander","Karin Woodlander",900000],["astron2","Pfister Astron Custom",395000],["monstrociti","Maibatsu MonstroCiti",1109000],["brioso","Grotti Brioso R/A",1097500],["eurosx32","Annis Euros X32",1200000],["vivanite","Karin Vivanite",800000],["horus","Pegassi Horus",1750000]].map(([id,name,price])=>Object.freeze({id,name,price})));
+ const bennysRecords=Object.freeze([["tenf","tenf2","Obey 10F","Obey 10F Widebody",575000],["banshee","banshee2","Bravado Banshee","Bravado Banshee 900R",565000],["brioso2","brioso3","Grotti Brioso 300","Grotti Brioso 300 Widebody",585000],["buccaneer","buccaneer2","Albany Buccaneer","Albany Buccaneer Custom",390000],["chino","chino2","Vapid Chino","Vapid Chino Custom",180000],["comet2","comet3","Pfister Comet","Pfister Comet Retro Custom",645000],["diablous","diablous2","Principe Diabolus","Principe Diabolus Custom",245000],["elegy2","elegy","Annis Elegy RH8","Annis Elegy Retro Custom",904000],["faction","faction2","Willard Faction","Willard Faction Custom",335000],["faction","faction3","Willard Faction","Willard Faction Custom Donk",695000],["fcr","fcr2","Pegassi FCR 1000","Pegassi FCR 1000 Custom",196000],["gauntlet3","gauntlet5","Bravado Gauntlet Classic","Bravado Gauntlet Classic Custom",815000],["glendale","glendale2","Benefactor Glendale","Benefactor Glendale Custom",520000],["italigtb","italigtb2","Progen Itali GTB","Progen Itali GTB Custom",495000],["manana","manana2","Albany Manana","Albany Manana Custom",925000],["minivan","minivan2","Vapid Minivan","Vapid Minivan Custom",330000],["moonbeam","moonbeam2","Declasse Moonbeam","Declasse Moonbeam Custom",370000],["nero","nero2","Truffade Nero","Truffade Nero Custom",605000],["peyote","peyote3","Vapid Peyote","Vapid Peyote Custom",620000],["primo","primo2","Albany Primo","Albany Primo Custom",400000],["sabregt","sabregt2","Declasse Sabre Turbo","Declasse Sabre Turbo Custom",490000],["sentinel3","sentinel4","Übermacht Sentinel Classic","Übermacht Sentinel Classic Widebody",700000],["slamvan","slamvan3","Vapid Slamvan","Vapid Slamvan Custom",415000],["specter","specter2","Dewbauchee Specter","Dewbauchee Specter Custom",252000],["sultan","sultanrs","Karin Sultan","Karin Sultan RS",795000],["tornado","tornado5","Declasse Tornado","Declasse Tornado Custom",375000],["virgo3","virgo2","Dundreary Virgo Classic","Dundreary Virgo Classic Custom",240000],["voodoo2","voodoo","Declasse Voodoo","Declasse Voodoo Custom",420000],["weevil","weevil2","BF Weevil","BF Weevil Custom",980000],["yosemite","yosemite3","Declasse Yosemite","Declasse Yosemite Rancher",700000],["youga2","youga3","Bravado Youga Classic","Bravado Youga Classic 4x4",1288000]].map(([base,variant,baseName,name,price])=>Object.freeze({base,variant,baseName,name,price})));
+ function specialtyWorkshop(model,world='v-online'){
+  const empty={hsw:null,conversions:[],converted:null};
+  if(world!=='v-online'||typeof model!=='string')return empty;
+  return {hsw:hswRecords.find(x=>x.id===model)||null,conversions:bennysRecords.filter(x=>x.base===model),converted:bennysRecords.find(x=>x.variant===model)||null};
+ }
+ function specialtyModels(kind){return [...new Set(kind==='hsw'?hswRecords.map(x=>x.id):kind==='bennys'?bennysRecords.flatMap(x=>[x.base,x.variant]):[])];}
+ function specialtyName(model){const x=specialtyWorkshop(model);return x.hsw?.name||x.converted?.name||x.conversions[0]?.baseName||null}
+ function modelWorkshopCatalog(model){
+  const groups=workshopCatalog(model),x=specialtyWorkshop(model);
+  if(x.hsw)groups.push({key:'hsw-conversion',label:"Hao's Special Works conversion",tab:'',options:[{id:'hsw-conversion',name:'HSW performance conversion',price:x.hsw.price,condition:'PS5 / Xbox Series X|S / PC Enhanced'}]});
+  if(x.conversions.length)groups.push({key:'bennys-conversion',label:"Benny's conversion plan",tab:'',options:x.conversions.map(v=>({id:'bennys-'+v.variant,name:v.name,price:v.price,condition:'Distinct custom vehicle; ownership is not transferred automatically'}))});
+  return groups;
+ }
  const workshopCatalog=model=>Object.hasOwn(workshopGroups,model)?workshopGroups[model].map(([key,label,options])=>({key,label,tab:workshopTab(model,key),options:options.map(([name,price,condition],index)=>({id:key+'-'+index,name,price,condition:condition||''}))})):[];
  function normalizeWorkshop(raw,model){
   const out={};
   if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
-  for(const group of workshopCatalog(model)){
+  for(const group of modelWorkshopCatalog(model)){
    if(group.options.some(option=>option.id===raw[group.key]))out[group.key]=raw[group.key];
   }
   return out;
@@ -251,5 +267,5 @@
   store.setItem(collectionKey,JSON.stringify({...data,updated:new Date().toISOString()}));
   return value;
  }
- return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog,workshopSource,craftCustomization,ownershipKey,viModelFromOwnership,collectionKey,readVehicleCollection,setVehicleOwned});
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog,modelWorkshopCatalog,specialtyWorkshop,specialtyModels,specialtyName,hswRecords,bennysRecords,workshopSource,craftCustomization,ownershipKey,viModelFromOwnership,collectionKey,readVehicleCollection,setVehicleOwned});
 });
