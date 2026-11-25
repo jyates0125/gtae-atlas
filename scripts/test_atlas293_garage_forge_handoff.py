@@ -14,8 +14,8 @@ assert 'if(named&&!garageHandoff)' in forge, 'Old named preset must not overwrit
 assert 'else if(!garageHandoff&&!selectedPreset()&&!garagePreset())' in forge
 assert "new URLSearchParams(location.search).get('world')==='vi'" in forge
 assert "const garageHandoff=!VI" in forge, 'VI concepts must not import GTA V Garage data'
-assert "window.JuraForge?.normalize(existing?.design)" in forge
-assert "studioDesign:window.JuraForge?.normalize(studioDesign)" in garage
+assert "window.JuraForge?.normalize(existing?.design,current)" in forge
+assert "studioDesign:window.JuraForge?.normalize(studioDesign,r.id)" in garage
 assert "localStorage.setItem(KEY" in forge, 'Existing explicit Forge save remains intact'
 assert "localStorage.setItem(META" in garage, 'Existing Garage save remains intact'
 html=(root/'atlas-vehicle-configurator.html').read_text(encoding='utf-8')

@@ -28,3 +28,12 @@ assert.equal(hashes.size,studies.length,'Vehicle studies must differ geometrical
 const safe=f.normalize({wheels:'not-a-wheel',rim:'bad',stripe:'bad'});
 assert.equal(safe.wheels,'classic');assert.equal(safe.rim,'silver');assert.equal(safe.stripe,'none');
 console.log('PASS Atlas 40.9: seven distinct model studies, actual wheel/stripe/color changes, valid finite meshes and normalized settings');
+
+assert.equal(f.workshopLiveries('ellie').length,11);
+assert.equal(f.workshopLiveries('banshee').length,18);
+assert.equal(f.workshopLiveries('vi_cheetah95').length,0);
+assert.equal(f.workshopCatalog('ellie').length,15);
+assert.equal(f.normalize({workshopLivery:'ellie-black-twin',workshopOptions:{engine:'engine-3',unknown:'x'}},'ellie').workshopOptions.engine,'engine-3');
+assert.equal(f.normalize({workshopLivery:'ellie-black-twin'},'banshee').workshopLivery,'none');
+assert.deepEqual(f.normalize({workshopLivery:'ellie-black-twin',workshopOptions:{engine:'engine-3'}},'vi_cheetah95').workshopOptions,{});
+console.log('PASS model-specific game workshop catalog, invalid option rejection and VI isolation');

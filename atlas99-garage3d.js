@@ -19,20 +19,20 @@ function mount(target,opts={}){
  const hud=E('div');hud.className='j256-hud';hud.setAttribute('aria-hidden','true');hud.textContent='FORGE / LIVE CONCEPT';wrap.append(hud);
  const controls=E('div');controls.className='j99-3d-controls';
  const button=(label,fn)=>{const b=E('button',label);b.type='button';b.onclick=fn;return b};
- const styling=E('details');styling.className='j256-style';styling.open=true;styling.append(E('summary','Design lab · concept styling'));
+ const styling=E('details');styling.className='j256-style';styling.open=true;styling.append(E('summary','Visual concept controls · approximate, not in-game parts'));
  const fields=E('div');fields.className='j256-fields';styling.append(fields);
- let design=forge?.normalize(opts.design)||{},paint=opts.paint||'#586478',gl=null,program=null,buffer=null,surfaceBuffer=null,count=0,vehicleStart=0,floorCount=0,stencilCount=0,reflection=true,hasStencil=false,dead=false,raf=0,observer=null,drag=null;
+ let design=forge?.normalize(opts.design,String(opts.model||''))||{},paint=opts.paint||'#586478',gl=null,program=null,buffer=null,surfaceBuffer=null,count=0,vehicleStart=0,floorCount=0,stencilCount=0,reflection=true,hasStencil=false,dead=false,raf=0,observer=null,drag=null;
  let yaw=.7,pitch=.30,distance=7.9,profile=forge?.classify(opts.type,opts.model)||'touring';
  let environment=forge?.resolveTheme?.(profile,design.environment)||forge?.defaultTheme?.(profile)||'signature';
  target.dataset.forgeClass=profile;target.dataset.forgeStatus='pending';target.dataset.forgeEnvironment=environment;
  function control(label,element){const l=E('label',label);l.append(element);fields.append(l);return element}
  function select(label,values,key){const s=E('select');s.dataset.forgeControl=key;for(const [v,l] of values){const o=E('option',l);o.value=v;s.append(o)}s.value=design[key];s.onchange=()=>change({[key]:s.value});control(label,s);return s}
- function change(patch){if(!forge)return;design=forge.normalize({...design,...patch});opts.onDesign?.({...design});rebuild()}
+ function change(patch){if(!forge)return;design=forge.normalize({...design,...patch},String(opts.model||''));opts.onDesign?.({...design});rebuild()}
  if(forge?.themes){
   const scene=E('select');scene.dataset.forgeControl='environment';
   const auto=E('option','Automatic · vehicle class');auto.value='auto';scene.append(auto);
   for(const [key,theme] of Object.entries(forge.themes)){const o=E('option',theme.label);o.value=key;scene.append(o)}
-  scene.value=design.environment||'auto';scene.onchange=()=>{design=forge.normalize({...design,environment:scene.value});environment=forge.resolveTheme(profile,design.environment);target.dataset.forgeEnvironment=environment;hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();opts.onDesign?.({...design});rebuild()};control('Showroom environment',scene);
+  scene.value=design.environment||'auto';scene.onchange=()=>{design=forge.normalize({...design,environment:scene.value},String(opts.model||''));environment=forge.resolveTheme(profile,design.environment);target.dataset.forgeEnvironment=environment;hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();opts.onDesign?.({...design});rebuild()};control('Showroom environment',scene);
   hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();
  }
  const finish=select('Surface finish',[['metallic','Metallic'],['satin','Satin'],['stealth','Stealth']], 'finish');
@@ -41,9 +41,63 @@ function mount(target,opts={}){
  if(road){
   select('Wheel design',[['classic','Classic six-spoke'],['mesh','Fine twelve-spoke'],['deepdish','Deep-dish five-spoke']],'wheels');
   select('Wheel finish',[['silver','Polished silver'],['gold','Warm gold'],['black','Satin black']],'rim');
-  select('Original livery',[['none','Factory-style clean'],['heritage','Heritage side band'],['velocity','Velocity diagonal'],['circuit','Circuit block'],['jura','Team Jura signature'],['fade','Two-tone fade']],'livery');
-  const pigment=E('input');pigment.type='color';pigment.value=design.liveryColor; pigment.dataset.forgeControl='liveryColor';pigment.oninput=()=>change({liveryColor:pigment.value});control('Livery RGB',pigment);
+  // Preserve old original designs without offering invented game livery options.
+  if(design.livery!=='none'){
+   const legacy=E('div');legacy.className='j412-legacy-livery';
+   legacy.append(E('p','Legacy studio pattern, not an in-game livery.'));
+   legacy.append(button('Clear legacy studio pattern',()=>{change({livery:'none'});legacy.remove()}));
+   fields.append(legacy);
+  }
   select('Racing stripe',[['none','None'],['single','Single accent stripe'],['dual','Twin accent stripes']],'stripe');
+ }
+ // Game workshop references are private plans, not game transactions.
+ const modelId=String(opts.model||'');
+ const workshopRows=forge?.workshopLiveries?.(modelId)||[];
+ const categories=forge?.workshopCatalog?.(modelId)||[];
+ if(road&&workshopRows.length){
+  const panel=E('details');panel.className='j412-workshop';panel.open=true;
+  panel.append(E('summary','GTA Online workshop · actual listed options'));
+  panel.append(E('p','Community-recorded model-specific menu. Prices and unlocks can vary. Visual approximations are explicitly labeled.'));
+  const menu=E('select');menu.dataset.forgeControl='workshopLivery';menu.setAttribute('aria-label','GTA Online workshop livery reference');
+  const blank=E('option','Not selected');blank.value='none';menu.append(blank);
+  for(const row of workshopRows){const option=E('option',row.name+(Number.isFinite(row.priceUSD)?' · GTA$'+row.priceUSD.toLocaleString('en-US'):' · price not recorded')+(row.condition?' · '+row.condition:''));option.value=row.id;menu.append(option)}
+  menu.value=design.workshopLivery;
+  const status=E('p');status.setAttribute('role','status');
+  const total=E('p');total.setAttribute('role','status');
+  const apply=button('Preview original stripe interpretation',()=>{
+   const row=workshopRows.find(r=>r.id===design.workshopLivery);if(!row?.stripeColor&&!row?.clear)return;
+   change(row.clear?{stripe:'none',livery:'none'}:{stripe:'dual',accent:row.stripeColor,livery:'none'});
+   fields.querySelector('[data-forge-control="stripe"]').value=design.stripe;
+   fields.querySelector('[data-forge-control="accent"]').value=design.accent;
+   fields.querySelector('.j412-legacy-livery')?.remove();update();
+  });
+  function update(){
+   const row=workshopRows.find(r=>r.id===design.workshopLivery);
+   status.textContent=row?(row.stripeColor||row.clear?'Source-listed choice; original approximate visual available.':'Source-listed choice; exact artwork not bundled. Planning only.'):'No workshop livery selected.';
+   apply.disabled=!(row?.stripeColor||row?.clear);
+   let sum=row?.priceUSD||0,n=row?1:0,unknown=row&&!Number.isFinite(row.priceUSD)?1:0;
+   for(const group of categories){const option=group.options.find(o=>o.id===design.workshopOptions?.[group.key]);if(option){n++;if(Number.isFinite(option.price))sum+=option.price;else unknown++}}
+   total.textContent=n+' choices · GTA$'+sum.toLocaleString('en-US')+' sum of listed prices'+(unknown?' · '+unknown+' without recorded price':'')+' (not incremental upgrade cost).';
+  }
+  menu.onchange=()=>{change({workshopLivery:menu.value});update()};
+  panel.append(menu,status,apply);
+  const planner=E('div');planner.className='j256-fields';
+  for(const group of categories){
+   const label=E('label',group.label),select=E('select');select.dataset.workshopCategory=group.key;
+   const blank=E('option','Not selected');blank.value='';select.append(blank);
+   for(const row of group.options){const option=E('option',row.name+' · GTA$'+row.price.toLocaleString('en-US')+(row.condition?' · '+row.condition:''));option.value=row.id;select.append(option)}
+   select.value=design.workshopOptions?.[group.key]||'';
+   select.onchange=()=>{change({workshopOptions:{...design.workshopOptions,[group.key]:select.value}});update()};
+   label.append(select);planner.append(label);
+  }
+  const source=E('a','Workshop sources & credits');source.href='./atlas-credits.html#'+(modelId==='banshee'?'forge-banshee-workshop':'forge-workshop-liveries');
+  panel.append(planner,total,E('p','Other categories, including horns, neon, respray, wheels and tire smoke, are not fully catalogued here. Performance choices are recorded, not simulated.'),source);styling.append(panel);update();
+ }else{
+  const vi=modelId.startsWith('vi_');
+  const info=E('p',vi?'GTA VI workshop: release-era shop research is available; exact model-specific options still need source verification. No GTA Online parts are assumed.':'This model’s exact workshop options are not yet catalogued locally.');
+  const ref=E('a',vi?'Leonida workshop research & sources':'GTADB vehicle configurator reference');
+  ref.href=vi?'./atlas-credits.html#forge-vi-workshops':'https://gtadb.net/gta-online/vehicle-configurator/?vehicle='+encodeURIComponent(modelId);
+  if(!vi){ref.target='_blank';ref.rel='noopener noreferrer'}styling.append(info,ref);
  }
  if(road)select('Ride height',[['street','Street'],['low','Low'],['raised','Raised']], 'stance');
  if(road||profile==='marine')select(road?'Aero styling':'Deck styling',[['clean','Clean'],['sport','Sport'],['track','Track']], 'kit');
