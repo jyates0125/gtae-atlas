@@ -2,8 +2,12 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.JuraForge=api})(typeof globalThis==='undefined'?null:globalThis,function forgeFactory(){
  'use strict';
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n)),hex=(s,fallback=[.42,.29,.65])=>typeof s==='string'&&/^#[a-f0-9]{6}$/i.test(s)?[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)/255):fallback;
+ // Independently recorded factual workshop labels, not imported livery artwork.
+ const workshop=Object.freeze({ellie:Object.freeze([["ellie-black-twin","Classic Twin Black Stripe",18240,"#111111"],["ellie-white-twin","Classic Twin White Stripe",19380,"#f4f4f4"],["ellie-8","No. '8' Classic Race",20520],["ellie-7","No. '7' Track Day",21660],["ellie-187","No. '187' Vintage Vapid",22800],["ellie-9","No. '9' Debonaire",23370],["ellie-53","No. '53' Classic Vapid",23939],["ellie-60","No. '60' Dense",24510],["ellie-1","No. '1' Globe Oil",25080],["ellie-18","No. '18' Hommegina",25650]].map(([id,name,priceUSD,stripeColor])=>Object.freeze({id,name,priceUSD,stripeColor:stripeColor||null})))});
+ const workshopLiveries=model=>Object.hasOwn(workshop,model)?workshop[model]:[];
+ const workshopIds=new Set(Object.values(workshop).flat().map(x=>x.id));
  const defaults={finish:'metallic',accent:'#eab56a',stance:'street',kit:'sport',lights:true};
- function normalize(d){d=d&&typeof d==='object'?d:{};return{finish:['metallic','satin','stealth'].includes(d.finish)?d.finish:defaults.finish,accent:typeof d.accent==='string'&&/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent.toLowerCase():defaults.accent,stance:['street','low','raised'].includes(d.stance)?d.stance:defaults.stance,kit:['clean','sport','track'].includes(d.kit)?d.kit:defaults.kit,lights:typeof d.lights==='boolean'?d.lights:defaults.lights,environment:['signature','marina','hangar','workshop'].includes(d.environment)?d.environment:'auto',wheels:['classic','mesh','deepdish'].includes(d.wheels)?d.wheels:'classic',rim:['silver','gold','black'].includes(d.rim)?d.rim:'silver',stripe:['none','single','dual'].includes(d.stripe)?d.stripe:'none',livery:['none','heritage','velocity','circuit','jura','fade'].includes(d.livery)?d.livery:'none',liveryColor:typeof d.liveryColor==='string'&&/^#[a-f0-9]{6}$/i.test(d.liveryColor)?d.liveryColor.toLowerCase():'#d5aa59'}}
+ function normalize(d){d=d&&typeof d==='object'?d:{};return{finish:['metallic','satin','stealth'].includes(d.finish)?d.finish:defaults.finish,accent:typeof d.accent==='string'&&/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent.toLowerCase():defaults.accent,stance:['street','low','raised'].includes(d.stance)?d.stance:defaults.stance,kit:['clean','sport','track'].includes(d.kit)?d.kit:defaults.kit,lights:typeof d.lights==='boolean'?d.lights:defaults.lights,environment:['signature','marina','hangar','workshop'].includes(d.environment)?d.environment:'auto',wheels:['classic','mesh','deepdish'].includes(d.wheels)?d.wheels:'classic',rim:['silver','gold','black'].includes(d.rim)?d.rim:'silver',stripe:['none','single','dual'].includes(d.stripe)?d.stripe:'none',livery:['none','heritage','velocity','circuit','jura','fade'].includes(d.livery)?d.livery:'none',workshopLivery:workshopIds.has(d.workshopLivery)?d.workshopLivery:'none',liveryColor:typeof d.liveryColor==='string'&&/^#[a-f0-9]{6}$/i.test(d.liveryColor)?d.liveryColor.toLowerCase():'#d5aa59'}}
  function classify(type,model=''){
   const t=String(type||'').toLowerCase(),m=String(model||'').toLowerCase();
   if(/watercraft|boat|marine|submarine/.test(t)||/^(jetmax|squalo|dinghy|speeder|longfin|tropic|suntrap|seashark|marquis|tug|kosatka|avisa|kraken|submersible)/.test(m))return 'marine';
@@ -180,5 +184,5 @@
   }
   return{kind,vertices:new Float32Array(data),surface:new Float32Array(normals),stencilCount,floorCount,vehicleStart,settings:d,profile:profile?.label||null};
  }
- return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile});
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,workshopLiveries});
 });
