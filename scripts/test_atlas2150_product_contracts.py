@@ -82,6 +82,13 @@ for(const id of ["bmx","cruiser","scorcher","tribike","tribike2","tribike3","ind
 assert.equal(forge.specialtyName('faggio2'),'Pegassi Faggio');assert.equal(forge.bikeDivision('vi','vi_faggio'),'scooters');assert.equal(forge.bikeDivision('vi','vi_bmx'),'bicycles');assert.equal(forge.bikeDivision('vi','bmx'),null);
 for(const id of [...forge.warehouseModels('v-online'),'oppressor','oppressor2'])assert.ok(seed.onlineWorkshopVehicles.includes(id),id);
 assert.equal(Object.keys(forge.viCatalog).length,seed.vi.length);
+assert.equal(forge.viBenefitModels('vi','ultimate').length,6);
+assert.equal(forge.viBenefitModels('vi','vintage').join(','),'vi_stanier55');
+assert.equal(forge.viBenefitModels('vi','member').join(','),'vi_venturas_blvd_elegy90');
+assert.equal(forge.viBenefit('vi','vi_ganado_retro').kind,'ultimate');
+assert.equal(forge.viBenefit('vi','vi_banshee'),null);
+for(const world of ['v-online','v-story']){assert.equal(forge.viBenefitModels(world,'ultimate').length,0);assert.equal(forge.viBenefit(world,'vi_stanier55'),null);}
+
 assert.equal(forge.returningVehicle('v-online','banshee').vi,'vi_banshee');
 assert.equal(forge.returningVehicle('vi','vi_banshee').online,'banshee');
 assert.equal(forge.returningVehicle('vi','vi_banshee').viSpeed,null);

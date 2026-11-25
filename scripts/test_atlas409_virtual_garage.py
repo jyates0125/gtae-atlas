@@ -61,6 +61,13 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             expect(garage.locator('[data-forge-control="workshopLivery"]')).to_have_value('ellie-black-twin')
             expect(garage.locator('[data-workshop-category="engine"]')).to_have_value('engine-3')
             before=p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])
+            p.goto(origin+'atlas-vehicle-configurator.html?world=vi&division=vi-benefit-ultimate',wait_until='domcontentloaded')
+            expect(p.locator('#forgeDivision')).to_have_value('vi-benefit-ultimate')
+            expect(p.locator('#modelSelect option')).to_have_count(6,timeout=15000)
+            p.locator('#forgeDivision').select_option('vi-benefit-member')
+            expect(p.locator('#modelSelect')).to_have_value('vi_venturas_blvd_elegy90')
+            expect(p.locator('#concept3d')).to_contain_text('Claim from Chapter 3')
+            assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])==before
             p.goto(origin+'atlas90-vehicles6.html?q=cheetah+95',wait_until='domcontentloaded')
             assert p.evaluate("typeof window.JuraForge?.viModelFromOwnership === 'function'")
             assert p.evaluate("window.JuraForge.viModelFromOwnership('vehicles6:cheetah-95')") == 'vi_cheetah95'

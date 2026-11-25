@@ -267,6 +267,8 @@ function mountReference(target,opts={}){
   if(returning.history)panel.append(E('p','Selected series appearances: '+returning.history.join(' · ')));
   const other=E('a',vi?'Open GTA Online version':'Open GTA VI version');other.href='./atlas-vehicle-configurator.html?'+(vi?'':'world=vi&')+'model='+encodeURIComponent(vi?returning.online:returning.vi);const source=E('a',' · Comparison sources');source.href='./atlas-credits.html#forge-returning-vehicles';panel.append(other,source);target.append(panel);
  }
+ const benefit=forge?.viBenefit?.(vi?'vi':'v-online',model);
+ if(benefit){const section=E('section');section.className='j412-workshop';section.append(E('h3',benefit.label),E('p',benefit.detail));const link=E('a','Official availability details');link.href='./atlas-credits.html#vi-edition-availability';section.append(link);target.append(section)}
  const purchase=forge?.vehicleDealers?.(vi?'vi':'v-online',model)||[];
  if(purchase.length){const line=E('p','Recorded purchase source: '+purchase.map(x=>x.label).join(' / ')+' · current availability may vary.');target.append(line)}
  const warehouse=forge?.warehouseVehicle?.(vi?'vi':'v-online',model);
