@@ -41,6 +41,8 @@ function mount(target,opts={}){
  if(road){
   select('Wheel design',[['classic','Classic six-spoke'],['mesh','Fine twelve-spoke'],['deepdish','Deep-dish five-spoke']],'wheels');
   select('Wheel finish',[['silver','Polished silver'],['gold','Warm gold'],['black','Satin black']],'rim');
+  select('Original livery',[['none','Factory-style clean'],['heritage','Heritage side band'],['velocity','Velocity diagonal'],['circuit','Circuit block'],['jura','Team Jura signature'],['fade','Two-tone fade']],'livery');
+  const pigment=E('input');pigment.type='color';pigment.value=design.liveryColor; pigment.dataset.forgeControl='liveryColor';pigment.oninput=()=>change({liveryColor:pigment.value});control('Livery RGB',pigment);
   select('Racing stripe',[['none','None'],['single','Single accent stripe'],['dual','Twin accent stripes']],'stripe');
  }
  if(road)select('Ride height',[['street','Street'],['low','Low'],['raised','Raised']], 'stance');
@@ -74,7 +76,8 @@ function mount(target,opts={}){
  }`;
  const fragment=`precision mediump float;
  varying vec3 vColor,vPos,vNormal;varying float vMaterial;
- uniform vec3 uEye,uFloor;
+ uniform vec3 uEye,uFloor,uLiveryColor;
+ uniform float uLivery;
  uniform float uMirror,uAlpha,uGloss,uStage;
  void main(){
   vec3 n=normalize(vNormal);vec3 v=normalize(uEye-vPos);
@@ -85,7 +88,20 @@ function mount(target,opts={}){
   float spec=pow(max(0.0,dot(n,h)),rough)+.45*pow(max(0.0,dot(n,h2)),rough*.72);
   float fresnel=pow(1.0-clamp(abs(dot(n,v)),0.0,1.0),3.0);
   float strip=pow(max(0.0,1.0-abs(dot(n,normalize(vec3(.42,.15,1.0))))),12.0);
-  vec3 light=vColor+vMaterial*(spec*vec3(.38,.28,.18)+fresnel*vec3(.10,.045,.20)+strip*vec3(.12,.09,.20)*uGloss);
+  // Original painted motifs in model coordinates: the same shader is used
+  // for the live body and its mirror pass. Glass, rubber and chrome stay clean.
+  vec3 painted=vColor;
+  if(vMaterial>.99&&uLivery>.5){
+   float side=abs(vPos.x),z=vPos.z,y=vPos.y;
+   float band=0.0;
+   if(uLivery<1.5){band=step(.55,side)*step(.47,y)*(1.0-step(.62,y));}
+   else if(uLivery<2.5){band=step(.55,side)*(1.0-step(.27,abs(z+1.5*y-.65)));}
+   else if(uLivery<3.5){band=step(.52,side)*step(.38,y)*(1.0-step(.75,y))*step(.5,mod(floor((z+3.0)*3.0),2.0));}
+   else if(uLivery<4.5){float chevron=abs(z+.35)-1.1*(y-.42);band=step(.48,side)*(1.0-step(.10,abs(chevron-.47)));band=max(band,step(.60,side)*(1.0-step(.045,abs(y-.47))));}
+   else{band=smoothstep(.35,1.13,y)*.85;}
+   painted=mix(vColor,uLiveryColor*.82,band);
+  }
+  vec3 light=painted+vMaterial*(spec*vec3(.38,.28,.18)+fresnel*vec3(.10,.045,.20)+strip*vec3(.12,.09,.20)*uGloss);
   light=mix(light,vColor,uStage);
   if(uMirror>.5){float fade=clamp(.85-vPos.y*.25,.25,.8);light=mix(uFloor,light,fade);}
   gl_FragColor=vec4(clamp(light,0.0,1.0),uAlpha);
@@ -109,6 +125,9 @@ function mount(target,opts={}){
   for(const [name,value] of [['uYaw',yaw],['uPitch',pitch],['uDist',distance],['uAspect',w/h],['uGloss',design.finish==='metallic'?1:design.finish==='satin'?.4:.12]])uniform(name,value);
   gl.uniform3f(gl.getUniformLocation(program,'uEye'),-Math.sin(yaw)*Math.cos(pitch)*distance,.42+Math.sin(pitch)*distance,Math.cos(yaw)*Math.cos(pitch)*distance);
   gl.uniform3fv(gl.getUniformLocation(program,'uFloor'),theme.deck);
+  uniform('uLivery',['none','heritage','velocity','circuit','jura','fade'].indexOf(design.livery));
+  const pigment=(design.liveryColor||'#d5aa59').slice(1).match(/../g).map(v=>parseInt(v,16)/255);
+  gl.uniform3fv(gl.getUniformLocation(program,'uLiveryColor'),pigment);
   function draw(first,n,mirror=0,alpha=1,stage=0){if(n<=0)return;uniform('uMirror',mirror);uniform('uAlpha',alpha);uniform('uStage',stage);gl.drawArrays(gl.TRIANGLES,first,n)}
   const reflective=reflection&&hasStencil&&pitch>.01&&vehicleStart>0;
   if(reflective){
