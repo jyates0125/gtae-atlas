@@ -30,6 +30,8 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             stage=p.locator('#concept3d')
             expect(stage).to_have_attribute('data-forge-status','reference',timeout=15000)
             expect(stage).to_have_attribute('data-forge-fidelity','reference-only')
+            expect(stage.get_by_role('link',name='Open this vehicle in GTADB 3D viewer')).to_have_attribute('href','https://gtadb.net/gta-online/vehicle-configurator/?vehicle=ellie')
+            expect(stage.get_by_role('link',name='Open this vehicle in GTADB 3D viewer')).to_have_attribute('referrerpolicy','no-referrer')
             expect(stage.locator('canvas')).to_have_count(0)
             expect(p.locator('#bodyStyle')).to_be_disabled()
             expect(stage.locator('[data-forge-control="wheels"]')).to_have_count(0)
@@ -85,6 +87,8 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             live=p.locator('.fc-live-preview .j256-forge')
             expect(live).to_have_attribute('data-forge-status','reference',timeout=15000)
             expect(live.locator('canvas')).to_have_count(0)
+            expect(live.locator('img')).to_have_count(1)
+            expect(live.get_by_role('link',name='Official Leonida reference gallery')).to_have_attribute('href','https://www.rockstargames.com/VI/media/screenshots')
             assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,VI,O])==stored
             p.get_by_role('button',name='Close build preview').click()
             p.locator('#forgeCollectionKind').select_option('garage')
