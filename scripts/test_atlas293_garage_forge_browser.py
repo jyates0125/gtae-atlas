@@ -54,6 +54,8 @@ try:
         expect(page.locator('#garage-divisions a')).to_have_count(14)
         page.locator('#garage-divisions a[href="./atlas-vehicle-configurator.html?world=vi&division=marine"]').click()
         expect(page.locator('#forgeDivision')).to_have_value('marine')
+        expect(page.locator('#forgeModelReferences')).to_have_attribute('href','./atlas-credits.html#forge-model-references-vi')
+        expect(page.locator('#forgeModelReferences')).to_have_text('GTA VI vehicle model research')
         expect(page.locator('#modelSelect option[value="vi_squalo"]')).to_have_count(1,timeout=30000)
         expect(page.locator('#modelSelect option[value="vi_crest_kayak"]')).to_have_count(1)
         assert all(x.startswith('vi_') for x in page.locator('#modelSelect option').evaluate_all('(rows)=>rows.map(x=>x.value)'))
@@ -62,6 +64,8 @@ try:
         page.goto(base + '/atlas-forge-collections.html',wait_until='domcontentloaded')
         page.locator('#garage-specialist-workshops a[href="./atlas-vehicle-configurator.html?division=hsw"]').click()
         expect(page.locator('#forgeDivision')).to_have_value('hsw')
+        expect(page.locator('#forgeModelReferences')).to_have_attribute('href','./atlas-credits.html#forge-model-references-online')
+        expect(page.locator('#forgeModelReferences')).to_have_text('GTA Online 3D model references')
         expect(page.locator('#modelSelect option')).to_have_count(31,timeout=30000)
         page.locator('#modelSelect').select_option('banshee')
         expect(page.locator('#concept3d [data-workshop-category="hsw-conversion"]')).to_be_visible()
@@ -72,6 +76,13 @@ try:
         expect(page.locator('#concept3d')).to_contain_text('distinct vehicle and ownership record')
         expect(page.locator('#concept3d [data-workshop-category="hsw-conversion"]')).to_have_count(0)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Specialist browsing modified saved data'
+        # World-specific external references are ordinary links, not embedded mesh requests.
+        page.goto(base + '/atlas-credits.html#forge-model-references-online', wait_until='domcontentloaded')
+        expect(page.locator('#forge-model-references-online a[href="https://gtadb.net/gta-online/vehicle-configurator/"]')).to_have_attribute('rel','noopener noreferrer')
+        expect(page.locator('#forge-model-references-vi a[href="https://gtadb.net/gta-6/vehicles/"]')).to_have_attribute('rel','noopener noreferrer')
+        expect(page.locator('#forge-model-references-vi a[href="https://gtascoop.com/wiki/vehicles/"]')).to_have_attribute('rel','noopener noreferrer')
+        expect(page.locator('#forge-model-references iframe')).to_have_count(0)
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'External source browsing modified saved data'
         # Official named and media references remain separate in both gallery and Forge.
         page.goto(base + '/atlas90-vehicles6.html?evidence=official-named',wait_until='domcontentloaded')
         expect(page.locator('#j90Evidence')).to_have_value('official-named')

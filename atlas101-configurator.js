@@ -3,6 +3,9 @@
 const $=id=>document.getElementById(id);
 const VI=new URLSearchParams(location.search).get('world')==='vi';
 const WORLD=VI?'vi':'v';
+// External references stay on the source page; no mesh downloads, embeds or inferred rights.
+const modelReferences=$('forgeModelReferences');
+if(modelReferences){modelReferences.href='./atlas-credits.html#forge-model-references-'+(VI?'vi':'online');modelReferences.textContent=VI?'GTA VI vehicle model research':'GTA Online 3D model references';}
 const KEY=VI?'team-jura-forge-vi-concept-presets-v1':'team-jura-atlas101-concept-presets-v1';
 const VI_SOURCE='https://www.rockstargames.com/VI/media/screenshots';
 // Official screenshot titles establish names and subject, not exact meshes or in-game specifications.
