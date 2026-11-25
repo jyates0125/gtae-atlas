@@ -6,7 +6,7 @@
 const $=id=>document.getElementById(id);
 const KEY='teamjura-vi-weapon-notes-v1';
 const make=(tag,cls,value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=value;return n};
-const state={seen:Object.create(null),notes:Object.create(null)};const COLLECTION='team-jura-vi-weapon-collected-v1';let collected=Object.create(null),collectionBlocked=false;let rows=[],query='',group='all',onlySeen=false,onlyCollected=false,variantFilter='all';
+const state={seen:Object.create(null),notes:Object.create(null)};const COLLECTION='team-jura-vi-weapon-collected-v1';let collected=Object.create(null),collectionBlocked=false;let rows=[],query='',group='all',onlySeen=false,onlyCollected=false,variantFilter='all',visualFilter='all';
 function readCollected(){const raw=localStorage.getItem(COLLECTION);if(raw===null)return Object.create(null);const v=JSON.parse(raw);if(!v||v.schema!==1||!v.collected||typeof v.collected!=='object'||Array.isArray(v.collected)||Object.values(v.collected).some(x=>x!==true))throw Error('Invalid collection save');return Object.assign(Object.create(null),v.collected)}
 function refreshCollected(){try{collected=readCollected();collectionBlocked=false}catch{collectionBlocked=true}}
 function writeCollected(next){localStorage.setItem(COLLECTION,JSON.stringify({schema:1,collected:next}));collected=next;collectionBlocked=false}
@@ -17,16 +17,56 @@ try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&saved.sc
 }}catch(_){}
 function announce(msg){if($('viWeaponStatus'))$('viWeaponStatus').textContent=msg}
 function save(){try{localStorage.setItem(KEY,JSON.stringify({schema:1,seen:state.seen,notes:state.notes,updated:new Date().toISOString()}));return true}catch(_){announce('Saving is unavailable on this device. Export your research notes.');return false}}
-function officialMedia(r){
- const m=r.officialMedia;if(!m||typeof m.url!=='string'||typeof m.caption!=='string'||m.source!=='https://www.rockstargames.com/VI/media/screenshots')return null;
- let u;try{u=new URL(m.url)}catch{return null}
- if(u.origin!=='https://www.rockstargames.com'||!/^\/VI\/_next\/static\/media\/ULTIMATE_EDITION_(?:WEAPON_VARIANTS_01|HAWK_AND_LITTLE_MORGAN_REVOLVERS_01)\.[a-zA-Z0-9_~.-]+\.jpg$/.test(u.pathname))return null;
- const f=make('figure','viweapon-media');const img=make('img','');img.alt=m.caption;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
- const cap=make('figcaption','',m.caption+' © Rockstar Games. ');const link=make('a','','Official media library ↗');link.href=m.source;link.target='_blank';link.rel='noopener noreferrer';cap.append(link);
- img.addEventListener('error',()=>{img.remove();f.prepend(make('p','viweapon-image-unavailable','Official image unavailable — open the publisher’s media library below.'));},{once:true});img.src=u.href;f.append(img,cap);return f;
+function mediaChoices(r){
+ const result=[];
+ const m=r.officialMedia;
+ if(m?.source==='https://www.rockstargames.com/VI/media/screenshots'&&typeof m.caption==='string'){
+  try{const u=new URL(m.url);if(u.origin==='https://www.rockstargames.com'&&/^\/VI\/_next\/static\/media\/ULTIMATE_EDITION_(?:WEAPON_VARIANTS_01|HAWK_AND_LITTLE_MORGAN_REVOLVERS_01)\.[a-zA-Z0-9_~.-]+\.jpg$/.test(u.pathname))result.push({url:u.href,label:m.caption,kind:'official',source:m.source})}catch{}
+ }
+ const base=r.variantOf?rows.find(x=>x.id===r.variantOf):r;
+ const v=base?.visualReference;
+ if(v?.provider==='gtax'&&v.source==='https://vi.gtax.dev/weapons'){
+  try{const u=new URL(v.image);if(u.origin==='https://vi.gtax.dev'&&/^\/images\/weapons\/[a-z0-9-]+\.webp$/.test(u.pathname)&&!u.search&&!u.hash){
+   const family=!!r.variantOf||v.relation==='family';
+   result.push({url:u.href,kind:family?'family':'model',label:family?'Base-family image · '+base.name+' · exact variant appearance not verified':'GTA VI community model reference · '+r.name,source:v.source});
+  }}catch{}
+ }
+ return result;
+}
+const GLYPHS=Object.freeze({
+ 'handgun':'M16 19H81L88 24V34H46L43 43L40 60H27L29 35H16Z',
+ 'revolver':'M15 23H73L86 27V36H48L43 44L40 59H27L29 38H15Z',
+ 'smg':'M8 27H22V21H69L88 26V35H61L58 56H48L47 37H35L30 49H20L23 36H8Z',
+ 'shotgun':'M7 38L27 27H92V32H46L35 37L25 48L7 53Z',
+ 'rifle':'M7 27H26L36 22H91V29H72V35H52L48 51H39L40 35H29L7 46Z',
+ 'sniper rifle':'M5 32H28L38 27H48V21H68V27H94V32H67L56 37H37L24 48H5Z',
+ 'lmg':'M6 27H25L36 21H91V29H77V37H56V50H40V37H29L6 45Z',
+ 'launcher':'M8 24H91V39H55L48 51H37L37 39H8Z',
+ 'melee':'M13 43L38 32L42 26L85 12L94 14L84 27L47 40L42 38L17 52Z',
+ 'throwable':'M43 13H57V21L66 31V52L58 60H42L34 52V31L43 21Z'
+});
+function classPlate(r){
+ const plate=make('div','viweapon-plate');plate.dataset.group=r.group.toLowerCase();plate.setAttribute('aria-label','Illustrated category card, not an exact GTA VI model');
+ const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 100 72');svg.setAttribute('aria-hidden','true');
+ const path=document.createElementNS(ns,'path');const group=r.group.toLowerCase(),key=group.includes('rifle')&&group!=='sniper rifle'?'rifle':group;path.setAttribute('d',GLYPHS[key]||'M50 10L80 24V45L50 62L20 45V24Z');svg.append(path);
+ plate.append(make('span','viweapon-plate-kicker','ELARIO / LEONIDA'),svg,make('strong','',r.group),make('small','','Category illustration · not game artwork'));
+ return plate;
+}
+function visualCard(r){
+ const options=mediaChoices(r),f=make('figure','viweapon-media'),plate=classPlate(r),cap=make('figcaption','','');
+ const link=make('a','','Sources & image credits ↗');link.href='./atlas-credits.html#vi-armory-visuals';const label=make('span','viweapon-media-label','');
+ cap.append(label,document.createTextNode(' '),link);f.append(plate,cap);f.dataset.visual='class';f.dataset.hasReference=String(options.length>0);
+ let idx=0;function next(){
+  const m=options[idx++];if(!m){label.textContent=options.length?'Linked image unavailable · original category card':'Item-specific image pending · original category card';return}
+  label.textContent=m.label;const img=make('img','');img.alt=m.label;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
+  img.addEventListener('load',()=>{plate.hidden=true;f.dataset.visual=m.kind;label.textContent=m.label+' · © Rockstar Games';},{once:true});
+  img.addEventListener('error',()=>{img.remove();plate.hidden=false;f.dataset.visual='class';next()},{once:true});
+  f.insertBefore(img,cap);img.src=m.url;
+ }
+ next();return f;
 }
 function render(){
- const found=rows.filter(r=>(group==='all'||r.group===group)&&(variantFilter==='all'||(variantFilter==='variants'?!!r.variantOf:!r.variantOf))&&(!onlySeen||state.seen[r.id])&&(!onlyCollected||collected[r.id])&&(!query||[r.name,r.group,r.evidence,r.description].join(' ').toLowerCase().includes(query)));
+ const found=rows.filter(r=>(group==='all'||r.group===group)&&(variantFilter==='all'||(variantFilter==='variants'?!!r.variantOf:!r.variantOf))&&(visualFilter==='all'||(visualFilter==='linked'?mediaChoices(r).length>0:mediaChoices(r).length===0))&&(!onlySeen||state.seen[r.id])&&(!onlyCollected||collected[r.id])&&(!query||[r.name,r.group,r.evidence,r.description].join(' ').toLowerCase().includes(query)));
  $('viWeaponCount').textContent=found.length+' of '+rows.length+' referenced items';
  $('viWeaponNoted').textContent=rows.filter(r=>state.seen[r.id]).length+' noted on this device';$('viWeaponCollected').textContent=collectionBlocked?'Collection unavailable':rows.filter(r=>collected[r.id]).length+' collected';
  const root=$('viWeaponCards');root.replaceChildren();
@@ -37,7 +77,7 @@ function render(){
   const mark=make('span','viweapon-type',r.group);
   const evidence=make('span','viweapon-grade '+(r.grade.includes('Named')?'viweapon-official':'viweapon-observed'),r.grade);
   card.dataset.collected=String(!!collected[r.id]);const ownership=make('span','viweapon-ownership',collectionBlocked?'Collection unavailable':collected[r.id]?'✓ Collected':'Not collected');ownership.dataset.collected=String(!!collected[r.id]);top.append(mark,evidence,ownership);card.append(top);
-  const h=make('h3','',r.name);card.append(h);if(r.variantOf){const base=rows.find(x=>x.id===r.variantOf);if(base)card.append(make('p','viweapon-evidence','Named variant · '+base.name));}const media=officialMedia(r);if(media)card.append(media);else card.append(make('p','viweapon-image-unavailable','Item-specific GTA VI image not yet verified.'));card.append(make('p','viweapon-copy',r.description));
+  const h=make('h3','',r.name);card.append(h);if(r.variantOf){const base=rows.find(x=>x.id===r.variantOf);if(base)card.append(make('p','viweapon-evidence','Named variant · '+base.name));}card.append(visualCard(r));card.append(make('p','viweapon-copy',r.description));
   const disclosure=make('p','viweapon-evidence',r.evidence);card.append(disclosure);
   const actions=make('div','viweapon-actions');
   const noted=make('button','viweapon-note',state.seen[r.id]?'✓ Added to my notes':'+ Mark reviewed');
@@ -115,9 +155,10 @@ async function start(){
  }catch(err){announce('Research catalog unavailable: '+String(err.message).slice(0,120));$('viWeaponCards').replaceChildren(make('p','viweapon-empty','GTA VI records could not load. GTA V records will not be substituted.'))}
  $('viWeaponSearch').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase().slice(0,120);render()});
  $('viWeaponClass').addEventListener('change',e=>{group=e.target.value;render()});
+ $('viWeaponVisual').addEventListener('change',e=>{visualFilter=e.target.value;render()});
  $('viWeaponVariant').addEventListener('change',e=>{variantFilter=e.target.value;render()});
  $('viWeaponMine').addEventListener('change',e=>{onlySeen=e.target.checked;render()});$('viWeaponOnlyCollected').addEventListener('change',e=>{onlyCollected=e.target.checked;render()});window.addEventListener('storage',e=>{if(e.key===COLLECTION||e.key===null){refreshCollected();render()}});
- $('viWeaponClear').addEventListener('click',()=>{$('viWeaponSearch').value='';$('viWeaponClass').value='all';$('viWeaponMine').checked=false;$('viWeaponOnlyCollected').checked=false;$('viWeaponVariant').value='all';query='';group='all';onlySeen=false;onlyCollected=false;variantFilter='all';render();});
+ $('viWeaponClear').addEventListener('click',()=>{$('viWeaponSearch').value='';$('viWeaponClass').value='all';$('viWeaponMine').checked=false;$('viWeaponOnlyCollected').checked=false;$('viWeaponVariant').value='all';$('viWeaponVisual').value='all';query='';group='all';onlySeen=false;onlyCollected=false;variantFilter='all';render();});
  $('viWeaponExport').addEventListener('click',exportNotes);
  $('viWeaponImport').addEventListener('change',importNotes);
 }
