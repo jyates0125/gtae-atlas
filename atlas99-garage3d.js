@@ -260,7 +260,9 @@ function mountReference(target,opts={}){
  }
  const craft=forge?.craftCustomization?.(vi?'vi':'v-online',model);
  if(craft&&craft.mode!=='unknown')target.append(E('p',craft.label));
- const rows=forge?.workshopLiveries?.(model)||[],groups=forge?.workshopCatalog?.(model)||[];
+ const special=forge?.specialtyWorkshop?.(model,vi?'vi':'v-online');
+ if(special?.hsw||special?.conversions.length||special?.converted){const section=E('section');section.className='j412-workshop';section.append(E('h3','Specialist workshop eligibility'));if(special.hsw)section.append(E('p',"HSW eligible · GTA$"+special.hsw.price.toLocaleString('en-US')+' conversion · retains this vehicle identity. PS5, Xbox Series X|S and PC Enhanced.'));if(special.converted){section.append(E('p',"Benny's custom variant of "+special.converted.baseName+' · distinct vehicle and ownership record.'));const base=E('a','View original vehicle');base.href='./atlas-vehicle-configurator.html?model='+encodeURIComponent(special.converted.base);section.append(base)}if(special.conversions.length){for(const variant of special.conversions){const a=E('a','View '+variant.name+' · GTA$'+variant.price.toLocaleString('en-US')+' conversion');a.href='./atlas-vehicle-configurator.html?model='+encodeURIComponent(variant.variant);const line=E('p');line.append(a);section.append(line)}}const credits=E('a',' Specialist workshop sources');credits.href='./atlas-credits.html#forge-specialist-workshops';section.append(credits);target.append(section)}
+ const rows=forge?.workshopLiveries?.(model)||[],groups=forge?.modelWorkshopCatalog?.(model)||[];
  function change(patch){design=forge?.normalize({...design,...patch},model)||{};opts.onDesign?.({...design})}
  if(craft?.mode!=='collection'&&(rows.length||groups.length)){
   const panel=E('section');panel.className='j412-workshop';
@@ -270,7 +272,7 @@ function mountReference(target,opts={}){
   const total=E('p');total.setAttribute('role','status');
   function update(){let n=0,sum=0,unknown=0;const livery=rows.find(x=>x.id===design.workshopLivery);if(livery){n++;if(Number.isFinite(livery.priceUSD))sum+=livery.priceUSD;else unknown++}
    for(const group of groups){const option=group.options.find(x=>x.id===design.workshopOptions?.[group.key]);if(option){n++;if(Number.isFinite(option.price))sum+=option.price;else unknown++}}
-   total.textContent=vi?n+' recorded choices. No combined price: kits and individual parts may overlap.':n+' choices · GTA$'+sum.toLocaleString('en-US')+' listed price sum'+(unknown?' · '+unknown+' without a recorded price':'')+' (not incremental upgrade cost).';
+   total.textContent=design.workshopOptions?.['hsw-conversion']&&design.workshopOptions?.['bennys-conversion']?'HSW and Benny’s are alternative conversion paths, not a combined build. Select one path before estimating costs.':vi?n+' recorded choices. No combined price: kits and individual parts may overlap.':n+' choices · GTA$'+sum.toLocaleString('en-US')+' listed price sum'+(unknown?' · '+unknown+' without a recorded price':'')+' (not incremental upgrade cost).';
   }
   function addSelect(parent,label,options,value,onchange,attribute,key){const wrapper=E('label',label),select=E('select');select.setAttribute(attribute,key);select.add(new Option(options.length?'Not selected':'Options not yet documented',''));for(const row of options){const price=row.priceUSD??row.price;select.add(new Option(row.name+(Number.isFinite(price)?' · GTA$'+price.toLocaleString('en-US'):' · price not recorded')+(row.condition?' · '+row.condition:''),row.id))}select.value=options.some(x=>x.id===value)?value:'';select.disabled=!options.length||opts.readOnly===true;select.onchange=()=>{onchange(select.value);update()};wrapper.append(select);parent.append(wrapper)}
   let liveryParent=grid,lastTab='',groupParent=grid;
