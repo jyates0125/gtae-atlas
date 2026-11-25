@@ -89,6 +89,14 @@ try:
         page.locator('#forgeDivision').select_option('evidence-official-named')
         expect(page.locator('#modelSelect option')).to_have_count(5)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
+        # Source-specific workshop choices must not bleed into another model.
+        page.goto(base + '/atlas-vehicle-configurator.html?model=zentorno',wait_until='domcontentloaded')
+        expect(page.locator('#concept3d [data-workshop-category="exhaust"]')).to_be_visible(timeout=30000)
+        expect(page.locator('#concept3d a[href="./atlas-credits.html#forge-vehicle-workshop-expansion-3"]')).to_have_count(1)
+        page.locator('#modelSelect').select_option('kuruma')
+        expect(page.locator('#concept3d [data-workshop-category="spoiler"]')).to_be_visible()
+        expect(page.locator('#concept3d [data-workshop-category="rear-bumper"]')).to_have_count(0)
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
         # New acquisition views preserve ownership and legacy builds.
         page.goto(base + '/atlas-vehicle-configurator.html?world=vi&division=returning&model=vi_cheetah95',wait_until='domcontentloaded')
         expect(page.locator('#forgeDivision')).to_have_value('returning')

@@ -82,6 +82,17 @@ for(const [model,[count,category,id,price]] of Object.entries(moreWorkshop)){
 }
 assert.equal(forge.workshopCatalog('jetmax').length,0);
 console.log('PASS 153 additional actual-model Online options and independent VI scope');
+for(const [model,count,category,option,price] of [['zentorno',41,'exhaust','exhaust-8',13750],['kuruma',50,'spoiler','spoiler-5',16000]]){
+ const groups=forge.workshopCatalog(model);
+ assert.equal(groups.reduce((n,g)=>n+g.options.length,0),count);
+ assert.equal(groups.find(g=>g.key===category).options.find(o=>o.id===option).price,price);
+ assert.equal(forge.normalize({workshopOptions:{[category]:option}},model).workshopOptions[category],option);
+ assert.deepEqual(forge.normalize({workshopOptions:{[category]:option}},'vi_'+model).workshopOptions,{});
+ assert.equal(forge.workshopSource(model),'forge-vehicle-workshop-expansion-3');
+}
+assert.equal(forge.workshopCatalog('kuruma2').length,0);
+assert.equal(forge.workshopEffect('zentorno','engine','engine-3'),'performance');
+assert.equal(forge.workshopEffect('kuruma','spoiler','spoiler-5'),'appearance-or-assembly');
 assert.equal(forge.hswRecords.length,31);
 assert.equal(forge.bennysRecords.length,31);
 assert.equal(forge.specialtyModels('bennys').length,61);
