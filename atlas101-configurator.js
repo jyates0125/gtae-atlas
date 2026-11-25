@@ -7,8 +7,8 @@ const KEY=VI?'team-jura-forge-vi-concept-presets-v1':'team-jura-atlas101-concept
 const VI_SOURCE='https://www.rockstargames.com/VI/media/screenshots';
 // Official screenshot titles establish names and subject, not exact meshes or in-game specifications.
 const VI_RECORDS=Object.freeze({
- vi_banshee:{"name":"Bravado Banshee","category":"Sports","sourceUrl":"https://gtadb.net/gta-6/vehicles/banshee/","inspiration":"Dodge Viper","referenceOnly":true},
- vi_dominator:{"name":"Vapid Dominator","category":"Muscle","sourceUrl":"https://gtadb.net/gta-6/vehicles/dominator/","inspiration":"Ford Mustang","referenceOnly":true},
+ vi_banshee:{"name":"Bravado Banshee","category":"Sports","sourceUrl":"https://gtadb.net/gta-6/vehicles/banshee/","inspiration":"Dodge Viper","referenceOnly":false},
+ vi_dominator:{"name":"Vapid Dominator","category":"Muscle","sourceUrl":"https://gtadb.net/gta-6/vehicles/dominator/","inspiration":"Ford Mustang","referenceOnly":false},
  vi_sugoi:{"name":"Dinka Sugoi","category":"Sports","sourceUrl":"https://gtadb.net/gta-6/vehicles/sugoi/","inspiration":"Honda Civic Type R FK8","referenceOnly":true},
  vi_stanier_modern:{"name":"Vapid Stanier","category":"Sedans","sourceUrl":"https://gtadb.net/gta-6/vehicles/stanier/","inspiration":"Ford Crown Victoria","referenceOnly":true},
  vi_sentinel_xs:{"name":"Übermacht Sentinel XS","category":"Coupes","sourceUrl":"https://gtadb.net/gta-6/vehicles/sentinel-xs/","inspiration":"","referenceOnly":true},

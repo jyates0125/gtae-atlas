@@ -11,9 +11,12 @@ function mount(target,opts={}){
  target.replaceChildren();target.classList.add('j256-forge');
  const title=E('strong','ELARIO FORGE · SIGNATURE SHOWROOM');
  const study=forge?.modelProfile?.(opts.type,opts.model);
- const note=E('small',study?'Elario original model-targeted concept · '+study.label+'. Approximate visual study; not a verified likeness, exact game mesh or modification catalog.':'Original class-based design for '+String(opts.name||'vehicle')+'. Not an exact game model or a verified modification catalogue.');
+ const shared=forge?.visualPlatform?.(opts.model)!==String(opts.model||'').toLowerCase();
+ const note=E('small',shared&&study?'Shared original visual platform · '+study.label+'. Temporary GTA V/VI approximation; game-specific body differences and actual workshop options are not established.':study?'Elario original model-targeted concept · '+study.label+'. Approximate visual study; not a verified likeness, exact game mesh or modification catalog.':'Original class-based design for '+String(opts.name||'vehicle')+'. Not an exact game model or a verified modification catalogue.');
  const rights=E('p','Original Elario concept — not a scanned or official model. Not an exact game mesh or a verified in-game customization.');rights.className='j256-rights';
  target.dataset.forgeFidelity=study?'model-study':'class-concept';
+ target.dataset.forgeVisualPlatform=forge?.visualPlatform?.(opts.model)||String(opts.model||'');
+ target.dataset.forgeSharedVisual=String(!!shared&&!!study);
  const wrap=E('div');wrap.className='j99-3d-stage j256-stage';
  const canvas=E('canvas');canvas.tabIndex=0;canvas.setAttribute('aria-label','Original 3D vehicle concept. Arrow keys rotate; plus and minus zoom. Drag to rotate.');wrap.append(canvas);
  const hud=E('div');hud.className='j256-hud';hud.setAttribute('aria-hidden','true');hud.textContent='FORGE / LIVE CONCEPT';wrap.append(hud);
