@@ -47,3 +47,17 @@ assert.equal(f.normalize({workshopOptions:{engine:'engine-1'}},'vi_ganado70').wo
 assert.deepEqual(f.normalize({workshopOptions:{engine:'engine-1'}},'vi_ganado_retro').workshopOptions,{});
 assert.equal(f.normalize({workshopLivery:'ganado-vintage'},'vi_cheetah95').workshopLivery,'none');
 console.log('PASS Ganado released-game workshop isolation');
+
+// Same temporary visual foundation, distinct game-specific workshop identity.
+for(const [type,v,vi] of [['Sports concept','banshee','vi_banshee'],['Touring concept','dominator','vi_dominator']]){
+ assert.equal(f.visualPlatform(vi),v);
+ assert.equal(f.modelProfile(type,vi),f.modelProfile(type,v));
+ assert.equal(hash(f.build(type,vi,'#30323a',{stripe:'dual',rim:'gold'})),hash(f.build(type,v,'#30323a',{stripe:'dual',rim:'gold'})));
+ assert.deepEqual(f.workshopCatalog(vi),[]);
+ assert.deepEqual(f.workshopLiveries(vi),[]);
+ assert.deepEqual(f.normalize({workshopLivery:'banshee-white-double',workshopOptions:{engine:'engine-1'}},vi).workshopOptions,{});
+ assert.equal(f.normalize({workshopLivery:'banshee-white-double'},vi).workshopLivery,'none');
+}
+assert.equal(f.visualPlatform('vi_dominator67_buggy'),'vi_dominator67_buggy');
+assert.equal(f.visualPlatform('vi_ganado70'),'vi_ganado70');
+console.log('PASS Atlas 41.5 shared visual platform, independent game workshop data');
