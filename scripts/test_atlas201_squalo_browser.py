@@ -168,10 +168,12 @@ try:
    expect(page.locator('#buildName')).to_have_value('QA Marina Edition',timeout=20000)
    expect(page.locator('#buildNote')).to_have_value('Private marina display idea')
    assert '#variant=' not in page.url and 'QA%20Marina' not in page.url
+   page.route('https://vi.gtax.dev/images/vehicles/**',lambda route:route.abort())
    page.goto(base+'atlas-vehicle-configurator.html?world=vi&model=vi_squalo',wait_until='domcontentloaded')
    expect(page.locator('#modelSelect')).to_have_value('vi_squalo',timeout=20000)
    expect(page.locator('#concept3d')).to_have_attribute('data-forge-fidelity','reference-only')
-   expect(page.locator('#referenceNote')).to_contain_text('not the named vehicle')
+   expect(page.locator('#referenceImage')).to_have_attribute('data-reference-kind','concept',timeout=20000)
+   expect(page.locator('#referenceNote')).to_contain_text('not this vehicle')
    assert not page.locator('#addToGarage').is_visible()
    page.goto(base+'atlas-forge-collections.html',wait_until='domcontentloaded')
    page.locator('#forgeCollectionWorld').select_option('vi')

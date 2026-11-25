@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Focused Chromium browser test: Garage -> Forge never overwrites stored designs."""
+"""Focused Chromium/Edge browser test: Garage -> Forge never overwrites stored designs."""
+import os
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -21,7 +22,7 @@ garage_key = 'team-jura-atlas93-garage-v1'
 forge_key = 'team-jura-atlas101-concept-presets-v1'
 try:
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
+        browser = pw.chromium.launch(headless=True, **({'channel':'msedge'} if os.getenv('ATLAS_BROWSER')=='msedge' else {}))
         context = browser.new_context(viewport={'width': 390, 'height': 844})
         page = context.new_page()
         page.goto(base + '/atlas-dashboard.html', wait_until='domcontentloaded')
