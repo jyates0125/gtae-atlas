@@ -72,6 +72,30 @@ for(const [model,[count,category,id,price]] of Object.entries(moreWorkshop)){
 }
 assert.equal(forge.workshopCatalog('jetmax').length,0);
 console.log('PASS 153 additional actual-model Online options and independent VI scope');
+assert.equal(forge.hswRecords.length,31);
+assert.equal(forge.bennysRecords.length,31);
+assert.equal(forge.specialtyModels('bennys').length,61);
+const seed=require('./atlas90-seed.json');
+for(const id of [...forge.specialtyModels('hsw'),...forge.specialtyModels('bennys')])assert.ok(seed.vehicles.includes(id),id);
+assert.equal(seed.onlineWorkshopVehicles.length,69);
+assert.equal(forge.specialtyWorkshop('sentinel').hsw.name,'Übermacht Sentinel XS');
+assert.equal(forge.specialtyWorkshop('sentinel2').hsw,null);
+assert.equal(forge.specialtyWorkshop('banshee').hsw.price,1840000);
+assert.equal(forge.specialtyWorkshop('banshee').conversions[0].variant,'banshee2');
+assert.equal(forge.specialtyWorkshop('banshee2').hsw,null);
+assert.equal(forge.specialtyWorkshop('banshee2').converted.base,'banshee');
+assert.equal(forge.specialtyWorkshop('faction').conversions.length,2);
+assert.equal(forge.specialtyWorkshop('elegy2').conversions[0].variant,'elegy');
+assert.equal(forge.specialtyWorkshop('voodoo2').conversions[0].variant,'voodoo');
+for(const world of ['vi','v-story'])assert.deepEqual(forge.specialtyWorkshop('banshee',world),{hsw:null,conversions:[],converted:null});
+assert.equal(forge.specialtyWorkshop('vi_banshee','vi').hsw,null);
+assert.equal(forge.normalize({workshopOptions:{'hsw-conversion':'hsw-conversion'}},'banshee').workshopOptions['hsw-conversion'],'hsw-conversion');
+assert.deepEqual(forge.normalize({workshopOptions:{'hsw-conversion':'hsw-conversion'}},'banshee2').workshopOptions,{});
+assert.equal(forge.normalize({workshopOptions:{'bennys-conversion':'bennys-banshee2'}},'banshee').workshopOptions['bennys-conversion'],'bennys-banshee2');
+assert.notEqual(forge.ownershipKey('v-online','banshee'),forge.ownershipKey('v-online','banshee2'));
+assert.equal(forge.modelWorkshopCatalog('jetmax').length,0);
+console.log('PASS specialist conversion catalog, distinct base/custom IDs, model-scoped save plans and no VI inheritance');
+
 
 
 const dataKey=forge.collectionKey;
