@@ -10,6 +10,23 @@ PINS = {
     'vehicles.json': '954baff7a7d6511d013518aeadfdc7e88ef3a56a',
 }
 REVISION = 'b65684e00f689fdec405c5f1055322c802d3c895'
+# Manually checked 2026-11-24: these two exact IDs are absent from the
+# pinned snapshot, but separately corroborated by model-specific sources.
+# Never count them as matches in the pinned upstream file.
+ALTERNATE_EVIDENCE = {
+    'horus': ['https://gtadb.net/gta-online/vehicles/horus/',
+              'https://www.gtabase.com/vehicles/grand-theft-auto-v/horus'],
+    'velenogt': ['https://gta.wiki/w/Veleno_GT',
+                 'https://www.gtabase.com/vehicles/grand-theft-auto-v/veleno-gt'],
+}
+def classify_specialist_ids(expected, ids):
+    missing = sorted(set(expected) - ids)
+    alternate = {model: ALTERNATE_EVIDENCE[model] for model in missing if model in ALTERNATE_EVIDENCE}
+    unresolved = sorted(set(missing) - set(alternate))
+    return {'expected': len(set(expected)), 'matched': len(set(expected))-len(missing),
+            'missingFromPin': missing, 'separatelyCorroborated': alternate,
+            'unresolved': unresolved}
+
 def audit(root):
     reports = {}
     for name, pin in PINS.items():
@@ -36,10 +53,10 @@ def audit(root):
                     for key, value in row.items():
                         if key.lower() in {'name', 'modelname', 'model', 'spawnname'} and isinstance(value, str):
                             ids.add(value.lower())
-            missing = sorted(set(expected) - ids)
-            reports[name]['specialistModelIDs'] = {'expected': len(expected), 'matched': len(expected)-len(missing), 'missing': missing}
-            print(f'Specialist IDs: {len(expected)-len(missing)}/{len(expected)} matched; unresolved: {missing}', flush=True)
-            if missing:
+            coverage = classify_specialist_ids(expected, ids)
+            reports[name]['specialistModelIDs'] = coverage
+            print(f"Specialist IDs: {coverage['matched']}/{coverage['expected']} pinned matches; separately corroborated: {list(coverage['separatelyCorroborated'])}; unresolved: {coverage['unresolved']}", flush=True)
+            if coverage['unresolved']:
                 raise ValueError('Unresolved specialist model IDs; verify against the upstream version before release')
 
     return {'revision': REVISION, 'publication': 'private schema audit only; no import approval', 'files': reports}

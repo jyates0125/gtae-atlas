@@ -6,7 +6,24 @@ magic,version,total=struct.unpack_from('<4sII',data,0)
 assert magic==b'glTF' and version==2 and total==len(data)
 length,kind=struct.unpack_from('<II',data,12)
 assert kind==0x4e4f534a and length+20<=len(data)
+assert length%4==0, 'Unaligned JSON chunk'
 j=json.loads(data[20:20+length])
+# A metadata-only scene must not masquerade as a complete GLB.
+offset=20+length
+bin_length=None
+while offset<len(data):
+    assert offset+8<=len(data), 'Truncated chunk header'
+    size,chunk_type=struct.unpack_from('<II',data,offset)
+    assert size%4==0 and offset+8+size<=len(data), 'Invalid chunk length'
+    if chunk_type==0x004e4942:
+        assert bin_length is None and offset==20+length, 'Unexpected BIN chunk'
+        bin_length=size
+    assert chunk_type!=0x4e4f534a, 'Duplicate JSON chunk'
+    offset+=8+size
+buffers=j.get('buffers',[])
+assert buffers and bin_length is not None, 'Missing embedded geometry buffer'
+byte_length=buffers[0].get('byteLength')
+assert type(byte_length) is int and 0<byte_length<=bin_length<=byte_length+3, 'BIN size mismatch'
 for entry in j.get('images',[])+j.get('buffers',[]):
     assert 'uri' not in entry, 'External dependency in binary asset'
 # Resolve only the actual default scene, not unused names in the source file.
@@ -32,7 +49,14 @@ for i in seen:
         mesh_ids.add(mesh)
 material_ids=set()
 for i in mesh_ids:
-    for primitive in meshes[i].get('primitives',[]):
+    primitives=meshes[i].get('primitives',[])
+    assert primitives, 'Active mesh has no primitives'
+    for primitive in primitives:
+        position=primitive.get('attributes',{}).get('POSITION')
+        accessors=j.get('accessors',[])
+        assert type(position) is int and 0<=position<len(accessors), 'Missing POSITION accessor'
+        accessor=accessors[position]
+        assert accessor.get('type')=='VEC3' and type(accessor.get('count')) is int and accessor['count']>0, 'Empty or invalid POSITION accessor'
         if 'material' in primitive:
             material=primitive['material']
             assert isinstance(material,int) and 0<=material<len(materials), 'Invalid material reference'

@@ -24,7 +24,9 @@ jobs:
         with:
           python-version: '3.12'
       - name: Enforce final Forge quality policy
-        run: node scripts/forge-pbr-lab/test-release-policy.mjs
+        run: |
+          node scripts/forge-pbr-lab/test-release-policy.mjs
+          python scripts/forge-pbr-lab/test_audit_glb.py
       - name: Prepare isolated local asset benchmark
         run: |
           mkdir -p qa-evidence/forge-pbr
