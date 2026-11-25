@@ -61,6 +61,18 @@ for(const [model,[count,category,id,price]] of Object.entries(expectedExpansion)
 }
 assert.equal(forge.workshopCatalog('jetmax').length,0);
 console.log('PASS 54 source-listed Online choices across three distinct vehicle classes');
+const moreWorkshop={avenger:[14,'engine','engine-0',900],bison:[27,'transmission','transmission-3',20000],adder:[27,'headlights','headlights-1',7500],buffalo:[37,'front-bumper','front-bumper-1',1000],dominator:[48,'roof','roof-3',1600]};
+for(const [model,[count,category,id,price]] of Object.entries(moreWorkshop)){
+ const groups=forge.workshopCatalog(model);
+ assert.equal(groups.reduce((n,g)=>n+g.options.length,0),count);
+ assert.equal(groups.find(g=>g.key===category).options.find(o=>o.id===id).price,price);
+ assert.equal(forge.normalize({workshopOptions:{[category]:id}},model).workshopOptions[category],id);
+ assert.deepEqual(forge.normalize({workshopOptions:{[category]:id}},'vi_'+model).workshopOptions,{});
+ assert.equal(forge.workshopSource(model),'forge-vehicle-workshop-expansion-2');
+}
+assert.equal(forge.workshopCatalog('jetmax').length,0);
+console.log('PASS 153 additional actual-model Online options and independent VI scope');
+
 
 const dataKey=forge.collectionKey;
 const mem=new Map([[dataKey,JSON.stringify({schema:1,owned:{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true},wishlist:{'vehicles6:squalo':true},note:{'vehicles5:jetmax':'keep'},futureField:'preserve'})]]);
