@@ -47,6 +47,23 @@ try:
         expect(page.locator('h1')).to_have_text('GARAGE MANAGEMENT.')
         expect(page.locator('.heroactions a[href="./atlas-forge-collections.html"]')).to_be_visible()
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Opening ownership management modified saved data'
+        # The garage front door opens real world-specific divisions, not mock cards.
+        page.goto(base + '/atlas-forge-collections.html', wait_until='domcontentloaded')
+        divisions=page.locator('#garage-divisions article')
+        expect(divisions).to_have_count(7)
+        expect(page.locator('#garage-divisions a')).to_have_count(14)
+        page.locator('#garage-divisions a[href="./atlas-vehicle-configurator.html?world=vi&division=marine"]').click()
+        expect(page.locator('#forgeDivision')).to_have_value('marine')
+        expect(page.locator('#modelSelect option[value="vi_squalo"]')).to_have_count(1,timeout=30000)
+        expect(page.locator('#modelSelect option[value="vi_crest_kayak"]')).to_have_count(1)
+        assert all(x.startswith('vi_') for x in page.locator('#modelSelect option').evaluate_all('(rows)=>rows.map(x=>x.value)'))
+        page.goto(base + '/atlas-vehicle-configurator.html?division=motorcycles&model=jetmax',wait_until='domcontentloaded')
+        expect(page.locator('#modelSelect')).to_have_value('jetmax',timeout=30000)
+        expect(page.locator('#forgeDivision')).to_have_value('all')
+        page.locator('#forgeDivision').select_option('marine')
+        expect(page.locator('#modelSelect')).to_have_value('jetmax')
+        assert 'division=marine' in page.url
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Division navigation modified existing saves'
         page.goto(base + '/atlas-vehicle-configurator.html?model=jetmax&source=garage', wait_until='domcontentloaded')
         expect(page.locator('#modelSelect')).to_have_value('jetmax', timeout=30000)
         expect(page.locator('#paintColor')).to_have_value('#12ab34')
