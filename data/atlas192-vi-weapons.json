@@ -29,6 +29,10 @@
     {
       "name": "GTAside · launch-week weapon names",
       "url": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "name": "Rockstar Games — official screenshot library",
+      "url": "https://www.rockstargames.com/VI/media/screenshots"
     }
   ],
   "records": [
@@ -44,6 +48,11 @@
       "officialEdition": {
         "label": "Ultimate Edition personalized variants — category confirmed, specific name from gameplay reporting",
         "source": "https://www.rockstargames.com/VI/editions/ultimate-edition"
+      },
+      "officialMedia": {
+        "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_WEAPON_VARIANTS_01.12licq0_o7mb5.jpg?akim=1&imdensity=1&imwidth=3840",
+        "caption": "Official Rockstar screenshot — personalized Girardi ES9 and Klose K17 together; not the stock model.",
+        "source": "https://www.rockstargames.com/VI/media/screenshots"
       }
     },
     {
@@ -58,6 +67,11 @@
       "officialEdition": {
         "label": "Ultimate Edition personalized variants — category confirmed, specific name from gameplay reporting",
         "source": "https://www.rockstargames.com/VI/editions/ultimate-edition"
+      },
+      "officialMedia": {
+        "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_WEAPON_VARIANTS_01.12licq0_o7mb5.jpg?akim=1&imdensity=1&imwidth=3840",
+        "caption": "Official Rockstar screenshot — personalized Girardi ES9 and Klose K17 together; not the stock model.",
+        "source": "https://www.rockstargames.com/VI/media/screenshots"
       }
     },
     {
@@ -72,6 +86,11 @@
       "officialEdition": {
         "label": "Ultimate Edition named item",
         "source": "https://www.rockstargames.com/VI/editions/ultimate-edition"
+      },
+      "officialMedia": {
+        "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_HAWK_AND_LITTLE_MORGAN_REVOLVERS_01.0~3pdc~~sing4.jpg?akim=1&imdensity=1&imwidth=3840",
+        "caption": "Official Rockstar screenshot — Hawk & Little Morgan Revolvers, Ultimate Edition.",
+        "source": "https://www.rockstargames.com/VI/media/screenshots"
       }
     },
     {
