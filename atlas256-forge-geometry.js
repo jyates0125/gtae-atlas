@@ -219,5 +219,36 @@
   if(world!=='v-online'||!Object.hasOwn(craftRules,id))return Object.freeze({mode:'unknown',label:'Model-specific customization not yet verified',location:null});
   return craftRules[id];
  }
- return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog,craftCustomization});
+ // Existing vehicle gallery IDs are authoritative for collection ownership.
+ const viOwnership=Object.freeze({vi_banshee:'banshee',vi_dominator:'dominator',vi_sugoi:'sugoi',vi_stanier_modern:'stanier',vi_sentinel_xs:'sentinel-xs',vi_stanier55:'stanier-55',vi_cheetah95:'cheetah-95',vi_dominator67_buggy:'buggy',vi_squalo:'squalo',vi_enduro:'dinka-enduro',vi_crest_kayak:'crest-kayak',vi_ganado_retro:'ganado-retro-build',vi_ganado70:'70-ganado'});
+ const safeOwnershipModel=id=>typeof id==='string'&&/^[a-z0-9_]{2,75}$/.test(id)&&!['__proto__','constructor','prototype'].includes(id);
+ function ownershipKey(world,id){
+  if(!safeOwnershipModel(id))return null;
+  if(world==='vi')return Object.hasOwn(viOwnership,id)?'vehicles6:'+viOwnership[id]:null;
+  if(id.startsWith('vi_'))return null;
+  return world==='v-online'?'vehicles5:'+id:world==='v-story'?'vehicles5-story:'+id:null;
+ }
+ function viModelFromOwnership(key){
+  if(typeof key!=='string'||!key.startsWith('vehicles6:'))return null;
+  return Object.keys(viOwnership).find(id=>ownershipKey('vi',id)===key)||null;
+ }
+ const collectionKey='team-jura-atlas90-collection-v1';
+ function readVehicleCollection(store){
+  const raw=store.getItem(collectionKey);
+  if(raw===null)return {raw,data:{schema:1,owned:{},wishlist:{},note:{}}};
+  const data=JSON.parse(raw);
+  if(!data||data.schema!==1||typeof data!=='object'||Array.isArray(data))throw Error('Invalid collection schema');
+  for(const key of ['owned','wishlist','note'])if(data[key]!==undefined&&(!data[key]||typeof data[key]!=='object'||Array.isArray(data[key])))throw Error('Invalid collection '+key);
+  return {raw,data:{...data,owned:{...(data.owned||{})},wishlist:{...(data.wishlist||{})},note:{...(data.note||{})}}};
+ }
+ function setVehicleOwned(store,world,id,value){
+  const key=ownershipKey(world,id);
+  if(!key||typeof value!=='boolean')throw Error('Unsupported vehicle ownership');
+  const {raw,data}=readVehicleCollection(store);
+  if(value){data.owned[key]=true;delete data.wishlist[key]}else delete data.owned[key];
+  if(store.getItem(collectionKey)!==raw)throw Error('Newer collection save arrived; retry');
+  store.setItem(collectionKey,JSON.stringify({...data,updated:new Date().toISOString()}));
+  return value;
+ }
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog,craftCustomization,ownershipKey,viModelFromOwnership,collectionKey,readVehicleCollection,setVehicleOwned});
 });
