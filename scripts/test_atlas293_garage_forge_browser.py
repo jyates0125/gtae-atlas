@@ -75,7 +75,7 @@ try:
         # New acquisition views preserve ownership and legacy builds.
         page.goto(base + '/atlas-vehicle-configurator.html?world=vi&division=returning&model=vi_cheetah95',wait_until='domcontentloaded')
         expect(page.locator('#forgeDivision')).to_have_value('returning')
-        expect(page.locator('#modelSelect option')).to_have_count(59,timeout=30000)
+        expect(page.locator('#modelSelect option')).to_have_count(68,timeout=30000)
         expect(page.locator('#modelSelect')).to_have_value('vi_cheetah95')
         expect(page.locator('#concept3d')).to_contain_text('Related vehicle family')
         # Empty searches must remove stale model/variant URL state without changing saves.
@@ -85,7 +85,7 @@ try:
         expect(page.locator('#forgeOwned')).to_be_disabled()
         assert page.evaluate("() => {const u=new URL(location.href);return u.searchParams.get('world')==='vi'&&u.searchParams.get('division')==='returning'&&!u.searchParams.has('model')&&!u.searchParams.has('variant')&&!u.hash}")
         page.locator('#modelSearch').fill('')
-        expect(page.locator('#modelSelect option')).to_have_count(59)
+        expect(page.locator('#modelSelect option')).to_have_count(68)
         page.locator('#modelSelect').select_option('vi_cheetah95')
         expect(page.locator('#concept3d')).to_contain_text('Related vehicle family')
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
