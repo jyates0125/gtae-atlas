@@ -4,11 +4,38 @@ export const divisions=Object.freeze(['road','motorcycle','marine','aviation','u
 const accepted=Object.freeze(Object.create(null));
 const scopes=Object.freeze(['v-story','v-online','vi']);
 const digest=/^[a-f0-9]{64}$/;
+// Accepted assets may be a single complete mesh. Do not require detachable parts.
+export const visualMethods=Object.freeze(['fixed','material','mesh-toggle','assembly','whole-model','nonvisual']);
+const safeName=v=>typeof v==='string'&&v.trim().length>0&&v.length<=180;
+const localAsset=v=>typeof v==='string'&&/^assets\/forge\/[a-z0-9/_-]+\.glb$/.test(v)&&!v.includes('..');
+function names(v){return Array.isArray(v)&&v.length>0&&v.every(safeName)&&new Set(v).size===v.length}
+export function validOptionMapping(mapping,asset){
+ if(!mapping||!safeName(mapping.optionId)||!safeName(mapping.category)||!safeName(mapping.evidence)||!visualMethods.includes(mapping.method))return false;
+ if(mapping.reviewed!==true)return false;
+ switch(mapping.method){
+ case 'fixed':case 'nonvisual':
+  return !mapping.materialNames&&!mapping.nodeNames&&!mapping.variantPath;
+ case 'material':return names(mapping.materialNames)&&!mapping.nodeNames&&!mapping.variantPath;
+ case 'mesh-toggle':return names(mapping.nodeNames)&&!mapping.materialNames&&!mapping.variantPath;
+ case 'assembly':return names(mapping.nodeNames)&&(!mapping.materialNames||names(mapping.materialNames))&&!mapping.variantPath;
+ case 'whole-model':return localAsset(mapping.variantPath)&&mapping.variantPath!==asset.assetPath&&digest.test(mapping.variantSha256||'')&&mapping.variantIdentityVerified===true&&mapping.variantRightsReviewed===true&&mapping.variantVisualAccepted===true&&mapping.variantMobilePassed===true&&mapping.variantDesktopPassed===true;
+ default:return false;
+ }
+}
+export function validCustomizationCoverage(record){
+ if(!record||!['collection-only','fixed-model','documented-options'].includes(record.customizationMode)||!Array.isArray(record.optionMappings))return false;
+ const ids=record.optionMappings.map(m=>JSON.stringify([m.category,m.optionId]));
+ if(new Set(ids).size!==ids.length||!record.optionMappings.every(m=>validOptionMapping(m,record)))return false;
+ if(record.customizationMode==='collection-only')return ids.length===0;
+ if(record.customizationMode==='fixed-model')return record.optionMappings.every(m=>['fixed','nonvisual','material'].includes(m.method));
+ return true;
+}
 export function validReleaseAsset(record){
  if(!record||!scopes.includes(record.world)||!divisions.includes(record.division))return false;
  if(typeof record.model!=='string'||!record.model||record.kind!=='model-specific-glb'||record.identity!=='verified')return false;
  if(typeof record.assetPath!=='string'||!/^assets\/forge\/[a-z0-9/_-]+\.glb$/.test(record.assetPath)||record.assetPath.includes('..'))return false;
  if(!digest.test(record.sha256||'')||!record.sourceRevision||!record.license||!record.attribution)return false;
+ if(!validCustomizationCoverage(record))return false;
  return ['rightsReviewed','visualAccepted','mobilePassed','desktopPassed','controlsPassed','materialAuditPassed'].every(key=>record[key]===true);
 }
 export function selectFinalVisual(world,model,division){
