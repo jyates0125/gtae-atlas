@@ -49,6 +49,10 @@
     {
       "name": "GTA 6 Everything · released-game index",
       "url": "https://www.gta6everything.com/weapons"
+    },
+    {
+      "name": "GTAX GTA VI Wiki · linked pictured reference and embed invitation",
+      "url": "https://vi.gtax.dev/embed"
     }
   ],
   "records": [
@@ -69,6 +73,12 @@
         "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_WEAPON_VARIANTS_01.12licq0_o7mb5.jpg?akim=1&imdensity=1&imwidth=3840",
         "caption": "Official Rockstar screenshot — personalized Girardi ES9 and Klose K17 together; not the stock model.",
         "source": "https://www.rockstargames.com/VI/media/screenshots"
+      },
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/es9.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "family"
       }
     },
     {
@@ -88,6 +98,12 @@
         "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_WEAPON_VARIANTS_01.12licq0_o7mb5.jpg?akim=1&imdensity=1&imwidth=3840",
         "caption": "Official Rockstar screenshot — personalized Girardi ES9 and Klose K17 together; not the stock model.",
         "source": "https://www.rockstargames.com/VI/media/screenshots"
+      },
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/k17.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "family"
       }
     },
     {
@@ -127,7 +143,13 @@
       "grade": "Observed in official media",
       "description": "A named shotgun shown in official gameplay coverage; item pricing and pickup coordinates are not specified here.",
       "sourceName": "PC Gamer — GTA VI weapons",
-      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/850.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "nipper-38",
@@ -137,7 +159,13 @@
       "grade": "Observed in official media",
       "description": "Name is reported from Rockstar's published promotional artwork, not an independently verified game-menu specification.",
       "sourceName": "PC Gamer — GTA VI weapons",
-      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/nipper-38.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "mustang-357",
@@ -147,7 +175,13 @@
       "grade": "Observed in official media",
       "description": "A revolver identified from official imagery coverage. Attributes and spawn locations are not inferred.",
       "sourceName": "PC Gamer — GTA VI weapons",
-      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mustang-357.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "girardi-es18",
@@ -157,7 +191,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/es18.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "klose-k17-mcd",
@@ -167,7 +207,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/k17-mcd.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "gorse-425",
@@ -177,7 +223,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/gorse-425.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "mason-keen-longshot",
@@ -187,7 +239,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/longshot.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "kozlov-kz-59",
@@ -197,7 +255,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/assault-rifle.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "wortham-w14",
@@ -217,7 +281,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/dw9.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "bushcraft-knife",
@@ -227,7 +297,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/bushcraft-knife.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "diving-knife",
@@ -237,7 +313,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/diving-knife.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "switchblade",
@@ -307,7 +389,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mp-inspired-pistol.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "duke-1922",
@@ -327,7 +415,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/kalinga-50.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "wortham-wcr1",
@@ -387,7 +481,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mp9-inspired-smg.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "vom-feuer-vf5",
@@ -427,7 +527,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/pd-90.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "shrewsbury-drifter",
@@ -437,7 +543,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/longfowler-inspired-shotgun.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "shrewsbury-hobo",
@@ -447,7 +559,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/hobo.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "mason-keen-shortstraw",
@@ -457,7 +575,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/shortstraw.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "girardi-az1200",
@@ -467,7 +591,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/az1200.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "girardi-verro",
@@ -497,7 +627,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/kvga-12.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "goodwin-comshot-12",
@@ -507,7 +643,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/comshot-12.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "hillinger-heathen",
@@ -517,7 +659,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/heathen.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "vom-feuer-vfg1",
@@ -537,7 +685,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/hind.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "adb-fra",
@@ -547,7 +701,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/fra.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "wortham-w22",
@@ -567,7 +727,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/m1a-inspired-rifle.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "hillinger-m306-tmr",
@@ -577,7 +743,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/m306-tmr.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "hawk-little-mediator",
@@ -587,7 +759,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mediator.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "fortune-son-laird350",
@@ -597,7 +775,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/remington-700-inspired-rifle.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "shrewsbury-sm69",
@@ -607,7 +791,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/sm-69.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "fairview-ffsr",
@@ -617,7 +807,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/ff-sr.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "fairview-ff50",
@@ -627,7 +823,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/ff-50.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "adb-m350",
@@ -727,7 +929,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/baton.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "cold-war-556",
@@ -1945,7 +2153,13 @@
           "name": "Leonida Waypoint · released-game index",
           "url": "https://leonidawaypoint.com/database/weapons"
         }
-      ]
+      ],
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/combat-knife.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "frag-grenade",
