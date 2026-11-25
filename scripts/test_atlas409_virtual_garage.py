@@ -62,6 +62,8 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             expect(garage.locator('[data-workshop-category="engine"]')).to_have_value('engine-3')
             before=p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])
             p.goto(origin+'atlas90-vehicles6.html?q=cheetah+95',wait_until='domcontentloaded')
+            assert p.evaluate("typeof window.JuraForge?.viModelFromOwnership === 'function'")
+            assert p.evaluate("window.JuraForge.viModelFromOwnership('vehicles6:cheetah-95')") == 'vi_cheetah95'
             link=p.locator('#j90Cards').get_by_role('link',name='Open Leonida Forge')
             expect(link).to_have_count(1,timeout=15000)
             link.click()

@@ -2,6 +2,7 @@
 """Focused real-browser character QA for Lamar, Agent 14, CJ and Claude."""
 from functools import partial
 import re
+import json
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
@@ -10,6 +11,8 @@ from playwright.sync_api import sync_playwright, expect
 root=Path(__file__).resolve().parents[1]
 public=root/'public'
 assert (public/'atlas-characters.html').is_file(), 'Build Cloudflare payload first'
+roster=[r for r in json.loads((public/'data/atlas-universe-profiles.json').read_text(encoding='utf-8'))['records'] if r.get('kind')=='character']
+assert len(roster)>=98 and len({r['id'] for r in roster})==len(roster)
 class Quiet(SimpleHTTPRequestHandler):
     def log_message(self,*args): pass
 server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(public)))
@@ -36,7 +39,7 @@ try:
             page.route('https://**/*',lambda route:route.abort())
             page.goto(base+'atlas-characters.html?game=all',wait_until='domcontentloaded')
             cards=page.locator('#j222-character-grid .j222-character-card')
-            expect(cards).to_have_count(40,timeout=20000)
+            expect(cards).to_have_count(len(roster),timeout=20000)
             search=page.locator('#j222-character-search')
             search.fill('Lamar')
             expect(cards).to_have_count(2)
