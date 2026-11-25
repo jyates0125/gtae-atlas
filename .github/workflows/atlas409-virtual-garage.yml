@@ -14,6 +14,7 @@ on:
       - 'atlas93-garage.html'
       - 'tests/atlas409-model-studies.test.cjs'
       - 'scripts/test_atlas409_virtual_garage.py'
+      - 'scripts/build_atlas410_forge_preview.py'
       - '.github/workflows/atlas409-virtual-garage.yml'
   workflow_dispatch:
 permissions:
@@ -51,12 +52,16 @@ jobs:
           python -m pip install 'playwright==1.58.0'
           python -m playwright install --with-deps chromium
       - name: Test original vehicle shapes and both world save journeys
-        run: python scripts/test_atlas409_virtual_garage.py
+        run: |
+          python scripts/build_atlas410_forge_preview.py
+          python scripts/test_atlas409_virtual_garage.py
       - name: Save rendered model evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: atlas409-vehicle-study-browser-evidence
-          path: qa-evidence/chromium/atlas409-*.png
+          path: |
+            qa-evidence/chromium/atlas409-*.png
+            qa-evidence/chromium/elario-forge-preview.html
           if-no-files-found: warn
           retention-days: 14
