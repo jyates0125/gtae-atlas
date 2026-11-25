@@ -1,5 +1,5 @@
 /* Elario Forge collection hub. Read-only projection of existing local stores. */
-(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else if(root)api.start(root)})(typeof window==='undefined'?null:window,function(){'use strict';
+(function(root,factory){const api=factory(typeof module==='object'&&module.exports?require('./atlas256-forge-geometry.js'):root?.JuraForge);if(typeof module==='object'&&module.exports)module.exports=api;else if(root)api.start(root)})(typeof window==='undefined'?null:window,function(forge){'use strict';
 const keys={v:'team-jura-atlas101-concept-presets-v1',vi:'team-jura-forge-vi-concept-presets-v1',garage:'team-jura-atlas93-garage-v1',owned:'team-jura-atlas90-collection-v1',story:'team-jura-forge-armory-story-v1',online:'team-jura-forge-armory-online-v1',viArmory:'team-jura-forge-armory-vi-v1'};
 const viNames={vi_banshee:"Bravado Banshee",vi_dominator:"Vapid Dominator",vi_sugoi:"Dinka Sugoi",vi_stanier_modern:"Vapid Stanier",vi_sentinel_xs:"Übermacht Sentinel XS",vi_cheetah95:'’95 Grotti Cheetah',vi_stanier55:'’55 Vapid Stanier',vi_dominator67_buggy:'’67 Vapid Dominator Buggy',vi_squalo:'Shitzu Squalo',vi_enduro:'Dinka Enduro Motorcycle',vi_crest_kayak:'Crest Kayak',vi_ganado_retro:'Ganado Retro Build',vi_ganado70:'Vapid ’70 Ganado'};
 const worldNames={v:'GTA V / Online',vi:'GTA VI · Leonida',story:'GTA V Story',online:'GTA Online'};
@@ -76,6 +76,11 @@ function collect(stores,weaponNames={}){
    subtitle:label(meta?.garage,'Unassigned'),
    detail:isSaved?(isOwned?'Saved Garage build · marked owned':'Saved Garage build · not marked owned'):'Marked owned in My Garage',
    paint:color(meta?.paint),href:'./atlas93-garage.html?addModel='+encodeURIComponent(id)});
+ }
+ for(const [key,mark] of Object.entries(ownedMarks)){
+  if(mark!==true)continue;
+  if(key.startsWith('vehicles5-story:')){const id=key.slice('vehicles5-story:'.length);if(!modelOK('v',id))continue;rows.push({world:'story',kind:'garage',model:id,title:nice(id),subtitle:'Story collection',detail:'Marked collected · Story',paint:color(null),href:'./atlas90-vehicles5.html?world=story&q='+encodeURIComponent(id)})}
+  else if(key.startsWith('vehicles6:')){const catalogId=key.slice('vehicles6:'.length);if(!safeId(catalogId))continue;const id=forge?.viModelFromOwnership?.(key);rows.push({world:'vi',kind:'garage',model:id||catalogId,title:id?viNames[id]:nice(catalogId),subtitle:'Leonida collection',detail:'Marked owned in My Garage VI',paint:color(null),href:id?vehicleLink('vi',id):'./atlas90-vehicles6.html?q='+encodeURIComponent(nice(catalogId))})}
  }
  for(const [world,store] of [['story',stores.story],['online',stores.online],['vi',stores.viArmory]]){
   if(!object(store)||store.schema!==1||!Array.isArray(store.items))continue;
@@ -161,7 +166,7 @@ function start(w){const d=w.document;async function init(){
    const card=make('article',undefined,'fc-entry'),swatch=make('span',undefined,'fc-swatch');
    swatch.style.setProperty('--fc-paint',row.paint);swatch.setAttribute('aria-hidden','true');
    card.append(swatch,make('p',worldNames[row.world]+' · '+row.detail,'eyebrow'),make('h3',row.title),make('p',row.subtitle));
-   const a=make('a','Open in '+(row.kind==='armory'?'Armory':row.kind==='garage'?'My Garage':'Forge Studio'));a.href=row.href;
+   const a=make('a','Open in '+(row.kind==='armory'?'Armory':row.kind==='garage'?(row.world==='vi'?'vehicle collection':row.world==='story'?'Story collection':'Garage management'):'Forge Studio'));a.href=row.href;
    if(row.privateVariant){
     a.addEventListener('click',event=>{
      try{w.sessionStorage.setItem(HANDOFF,JSON.stringify(row.privateVariant))}
