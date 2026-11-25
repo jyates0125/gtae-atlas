@@ -20,11 +20,13 @@
 # Atlas 39.0.3a: ensure dashboard header overrides the older high-specificity important background at both breakpoints.
 # Atlas 39.0.6a: freeze approved action cut and corrected cinematic headers for full nonpublishing release QA.
 # Atlas 39.0.7: owner requires uploaded artwork before release; retain approved dock opening and rerun exact-head QA.
+# Atlas 47.0.1: corrected gallery and static release checks; nonpublishing QA only.
 name: Atlas 31.8 - one-time staging full release launch
 on:
   push:
     branches:
       - feature/atlas294-integrated-staging-20261122
+      - release/atlas4701-review-20261125
     paths:
       - .github/workflows/atlas318-once-release-dispatch.yml
 permissions:
@@ -44,7 +46,10 @@ jobs:
           EXPECTED_HEAD: ${{ github.sha }}
         run: |
           set -euo pipefail
-          test "$STAGING_REF" = "feature/atlas294-integrated-staging-20261122"
+          case "$STAGING_REF" in
+            feature/atlas294-integrated-staging-20261122|release/atlas4701-review-20261125) ;;
+            *) echo "::error::Unexpected release-review branch"; exit 1 ;;
+          esac
           head_now="$(gh api "repos/$GH_REPO/git/ref/heads/$STAGING_REF" --jq '.object.sha')"
           if [ "$head_now" != "$EXPECTED_HEAD" ]; then
             echo "::error::Staging head changed; refusing to validate a stale candidate."
