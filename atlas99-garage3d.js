@@ -261,7 +261,7 @@ function mountReference(target,opts={}){
  const returning=forge?.returningVehicle?.(vi?'vi':'v-online',model);
  if(returning){
   const panel=E('section');panel.className='j412-workshop';panel.append(E('h3','Returning vehicle · GTA V / GTA VI'));
-  panel.append(E('p','Related vehicle identity, not identical bodywork, performance, prices, parts or ownership.'));
+  panel.append(E('p',returning.matchKind==='family-reference'?'Related vehicle family, not the same model or variant. The ’95 Cheetah is an official edition item.':returning.matchKind==='edition-name-reference'?'Shared name; the Leonida record is an edition benefit, not proof of identical standard availability.':returning.matchKind==='catalog-name-reference'?'Candidate name match across catalogs; exact version and game-specific specs require verification.':'Related vehicle identity, not identical bodywork, performance, prices, parts or ownership.'));
   panel.append(E('p','GTA Online: '+(returning.onlineSpeed===null?'Measured speed not catalogued':returning.onlineSpeed+' mph · '+returning.onlineSpeedBasis)+(returning.onlinePrice===null?'':' · Recorded purchase GTA$'+returning.onlinePrice.toLocaleString('en-US'))));
   panel.append(E('p','GTA VI: measured top speed and registration cost not verified. No Online figures transferred.'));
   if(returning.history)panel.append(E('p','Selected series appearances: '+returning.history.join(' · ')));

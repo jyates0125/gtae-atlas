@@ -642,3 +642,6 @@ Previous 44.9 exact integrated head reported 43 successful workflows, one pendin
 
 ### Atlas 45.1 — Leonida garage properties and playable game directory
 Added 13 named garage properties with reported individual costs, slots and progression, eight purchases totaling $160,000. Shared local checklist on map and My Garage; never modifies vehicle ownership. Note inconsistent published aggregate capacity, no maximum asserted. Add four named arcade/home games to activity panel with availability notes. Direct budget, isolation, malformed-save and roster tests passed; dedicated CI added. Exact coordinates and browser QA outstanding. Sources: https://www.powerpyx.com/gta-6-all-garage-locations/ and https://www.powerpyx.com/gta-6-all-video-game-locations/. No live deployment.
+
+### Atlas 45.2 — returning names and vehicle families
+Separate follow-up preserves 45.1 candidate while its final PBR workflow runs. 14 additional pairings (total 16) from existing registry and observed GTADB VI roster / individual Classic and Rockstar edition evidence. Distinguish name candidates, edition names and Cheetah family; possible overlapping ’95/Classic research identities remain unresolved. Bidirectional Forge filters, no new specs or cross-game saves. Direct mapping/isolation/syntax checks passed; focused browser test added, not yet run. No production change.

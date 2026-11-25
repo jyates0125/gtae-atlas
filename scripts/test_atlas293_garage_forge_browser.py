@@ -73,6 +73,15 @@ try:
         expect(page.locator('#concept3d [data-workshop-category="hsw-conversion"]')).to_have_count(0)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Specialist browsing modified saved data'
         # New acquisition views preserve ownership and legacy builds.
+        page.goto(base + '/atlas-vehicle-configurator.html?world=vi&division=returning&model=vi_cheetah95',wait_until='domcontentloaded')
+        expect(page.locator('#forgeDivision')).to_have_value('returning')
+        expect(page.locator('#modelSelect option')).to_have_count(16,timeout=30000)
+        expect(page.locator('#modelSelect')).to_have_value('vi_cheetah95')
+        expect(page.locator('#concept3d')).to_contain_text('Related vehicle family')
+        page.locator('#concept3d a[href="./atlas-vehicle-configurator.html?model=cheetah"]').click()
+        expect(page.locator('#modelSelect')).to_have_value('cheetah',timeout=30000)
+        expect(page.locator('#concept3d')).to_contain_text('Related vehicle family')
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
         page.goto(base + '/atlas-vehicle-configurator.html?division=pegasus',wait_until='domcontentloaded')
         expect(page.locator('#forgeDivision')).to_have_value('pegasus')
         expect(page.locator('#modelSelect option')).to_have_count(8,timeout=30000)
