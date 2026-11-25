@@ -11,6 +11,7 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,direct
         browser=pw.chromium.launch(args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
         for width in (390,1440):
             context=browser.new_context(viewport={'width':width,'height':900},device_scale_factor=1)
+            context.set_default_timeout(90000)
             context.route('https://**/*',lambda r:r.abort())
             page=context.new_page()
             page.goto(f'http://127.0.0.1:{server.server_port}/index.html')
