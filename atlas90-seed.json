@@ -383,7 +383,11 @@
       "archive": "banshee",
       "type": "Sports",
       "brand": "Bravado",
-      "confidence": "Community-identified"
+      "confidence": "GTADB community identification · VI stats and parts not verified",
+      "forgeId": "vi_banshee",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/banshee/",
+      "inspiration": "Dodge Viper",
+      "displayName": "Bravado Banshee"
     },
     {
       "name": "Aleutian",
@@ -523,7 +527,11 @@
       "archive": "dominator",
       "type": "Muscle",
       "brand": "Vapid",
-      "confidence": "Community-identified"
+      "confidence": "GTADB community identification · VI stats and parts not verified",
+      "forgeId": "vi_dominator",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/dominator/",
+      "inspiration": "Ford Mustang",
+      "displayName": "Vapid Dominator"
     },
     {
       "name": "Faggio",
@@ -634,6 +642,39 @@
       "archive": "",
       "confidence": "Released-game community menu evidence · Coastal Auto Care",
       "sourceUrl": "https://gta6motors.com/guides/car-customization/"
+    },
+    {
+      "name": "sugoi",
+      "displayName": "Dinka Sugoi",
+      "type": "Sports",
+      "brand": "Dinka",
+      "archive": "",
+      "confidence": "GTADB community identification · VI stats and parts not verified",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/sugoi/",
+      "forgeId": "vi_sugoi",
+      "inspiration": "Honda Civic Type R FK8"
+    },
+    {
+      "name": "stanier",
+      "displayName": "Vapid Stanier",
+      "type": "Sedans",
+      "brand": "Vapid",
+      "archive": "",
+      "confidence": "GTADB community identification · VI stats and parts not verified",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/stanier/",
+      "forgeId": "vi_stanier_modern",
+      "inspiration": "Ford Crown Victoria"
+    },
+    {
+      "name": "sentinel xs",
+      "displayName": "Übermacht Sentinel XS",
+      "type": "Coupes",
+      "brand": "Übermacht",
+      "archive": "",
+      "confidence": "GTADB community identification · VI stats and parts not verified",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/sentinel-xs/",
+      "forgeId": "vi_sentinel_xs",
+      "inspiration": ""
     }
   ]
 }
