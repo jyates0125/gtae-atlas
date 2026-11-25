@@ -10,7 +10,7 @@ from playwright.sync_api import sync_playwright, expect
 root = Path(os.environ.get("ATLAS_TEST_ROOT", "public")).resolve()
 roster = [r for r in json.loads((root / "data/atlas-universe-profiles.json").read_text(encoding="utf-8"))["records"] if r["kind"] == "character"]
 local_roster = [r for r in roster if r.get("conceptPortrait")]
-assert len(roster) == 59 and len(local_roster) >= 13
+assert len(roster) == 98 and len(local_roster) >= 13
 assert all(r.get("preferConceptPortrait") is True for r in local_roster)
 
 def decode_portrait(locator, identity):
