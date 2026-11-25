@@ -270,13 +270,9 @@ function mountReference(target,opts={}){
   const total=E('p');total.setAttribute('role','status');
   function update(){let n=0,sum=0,unknown=0;const livery=rows.find(x=>x.id===design.workshopLivery);if(livery){n++;if(Number.isFinite(livery.priceUSD))sum+=livery.priceUSD;else unknown++}
    for(const group of groups){const option=group.options.find(x=>x.id===design.workshopOptions?.[group.key]);if(option){n++;if(Number.isFinite(option.price))sum+=option.price;else unknown++}}
-   total.textContent=vi?n+' recorded choices. No combined price: kits and individual parts may overlap.':n+' choices · GTA{current?.paint(c)},reset(){current?.reset()},dispose(){current?.dispose();current=null},getDesign(){return current?.getDesign()}});
-})(window);
-+sum.toLocaleString('en-US')+' listed price sum'+(unknown?' · '+unknown+' without a recorded price':'')+' (not incremental upgrade cost).';
+   total.textContent=vi?n+' recorded choices. No combined price: kits and individual parts may overlap.':n+' choices · GTA$'+sum.toLocaleString('en-US')+' listed price sum'+(unknown?' · '+unknown+' without a recorded price':'')+' (not incremental upgrade cost).';
   }
-  function addSelect(parent,label,options,value,onchange,attribute,key){const wrapper=E('label',label),select=E('select');select.setAttribute(attribute,key);select.add(new Option(options.length?'Not selected':'Options not yet documented',''));for(const row of options){const price=row.priceUSD??row.price;select.add(new Option(row.name+(Number.isFinite(price)?' · GTA{current?.paint(c)},reset(){current?.reset()},dispose(){current?.dispose();current=null},getDesign(){return current?.getDesign()}});
-})(window);
-+price.toLocaleString('en-US'):' · price not recorded')+(row.condition?' · '+row.condition:''),row.id))}select.value=options.some(x=>x.id===value)?value:'';select.disabled=!options.length||opts.readOnly===true;select.onchange=()=>{onchange(select.value);update()};wrapper.append(select);parent.append(wrapper)}
+  function addSelect(parent,label,options,value,onchange,attribute,key){const wrapper=E('label',label),select=E('select');select.setAttribute(attribute,key);select.add(new Option(options.length?'Not selected':'Options not yet documented',''));for(const row of options){const price=row.priceUSD??row.price;select.add(new Option(row.name+(Number.isFinite(price)?' · GTA$'+price.toLocaleString('en-US'):' · price not recorded')+(row.condition?' · '+row.condition:''),row.id))}select.value=options.some(x=>x.id===value)?value:'';select.disabled=!options.length||opts.readOnly===true;select.onchange=()=>{onchange(select.value);update()};wrapper.append(select);parent.append(wrapper)}
   let liveryParent=grid,lastTab='',groupParent=grid;
   if(rows.length&&!vi)addSelect(grid,'Liveries',rows,design.workshopLivery,v=>change({workshopLivery:v||'none'}),'data-forge-control','workshopLivery');
   let liveryAdded=!vi;
