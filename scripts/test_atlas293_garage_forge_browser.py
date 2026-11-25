@@ -191,7 +191,7 @@ try:
         garage_page=context.new_page()
         garage_page.goto(base+'/atlas93-garage.html?addModel=jetmax',wait_until='domcontentloaded')
         expect(garage_page.locator('#garageDetails h2').filter(has_text='Jetmax')).to_be_visible(timeout=30000)
-        expect(garage_page.locator('.j99-studio-link')).to_have_attribute('href','./atlas-vehicle-configurator.html?model=jetmax&source=garage')
+        expect(garage_page.locator('[data-forge-handoff="true"]')).to_have_attribute('href','./atlas-vehicle-configurator.html?model=jetmax&source=garage')
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.studioName",garage_key)=='Refit Three'
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.sultan.favorite",garage_key) is True
         # Concurrent Forge edits to another model must survive a stale Garage tab save.
@@ -202,7 +202,7 @@ try:
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.adder.note",garage_key)=='Saved in another tab'
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.note",garage_key)=='Garage tab edited after Forge'
         assert garage_page.evaluate("() => localStorage.getItem('team-jura-atlas90-collection-v1')")==registry_snapshot
-        garage_page.locator('.j99-studio-link').click()
+        garage_page.locator('[data-forge-handoff="true"]').click()
         expect(garage_page).to_have_url(base+'/atlas-vehicle-configurator.html?model=jetmax&source=garage')
         expect(garage_page.locator('#buildName')).to_have_value('Refit Three',timeout=30000)
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.sultan.favorite",garage_key) is True

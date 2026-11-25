@@ -31,7 +31,12 @@ function render(){
   noted.type='button';noted.setAttribute('aria-pressed',String(!!state.seen[r.id]));
   noted.addEventListener('click',()=>{state.seen[r.id]=!state.seen[r.id];if(!state.seen[r.id])delete state.seen[r.id];const ok=save();render();if(ok)announce('Personal review updated.');});
   const source=make('a','viweapon-source','Check evidence');source.href=r.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';source.title=r.sourceName;
-  actions.append(noted,source);card.append(actions);
+  actions.append(noted,source);
+  if(r.officialEdition?.source==='https://www.rockstargames.com/VI/editions/ultimate-edition'&&typeof r.officialEdition.label==='string'){
+   card.append(make('p','viweapon-evidence',r.officialEdition.label));
+   const official=make('a','viweapon-source','Official edition listing ↗');official.href=r.officialEdition.source;official.target='_blank';official.rel='noopener noreferrer';actions.append(official);
+  }
+  card.append(actions);
   const d=make('details','viweapon-notes');d.append(make('summary','','My research notes'));
   const input=make('textarea','');input.rows=3;input.maxLength=900;input.value=String(state.notes[r.id]||'').slice(0,900);
   input.setAttribute('aria-label','Private research notes for '+r.name);input.placeholder='What did you verify in your own gameplay? No public edits are made.';

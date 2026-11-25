@@ -250,7 +250,7 @@ function mountReference(target,opts={}){
  const references=Object.freeze({akula:'akula',akuma:'akuma',adder:'adder',alpha:'alpha',ellie:'ellie',technical:'technical',bullet:'bullet',futo:'futo',vacca:'vacca',deluxo:'deluxo',stafford:'stafford',terminus:'terminus',visione:'visione',raiden:'raiden',club:'club',airtug:'airtug',stinger:'stinger',stallion:'stallion',manana:'manana',cognoscenti:'cognoscenti',havok:'havok',vetir:'vetir',rcv:'rcv',xls:'xls',flatbed:'flatbed',exemplar:'exemplar',f620:'f620',savestra:'savestra',rt3000:'rt3000'});
  const ref=E('a',vi?'Official Leonida reference gallery ↗':Object.hasOwn(references,model)?'Open this vehicle in GTADB 3D viewer ↗':'Browse GTADB vehicle viewer ↗');
  ref.href=vi?'https://www.rockstargames.com/VI/media/screenshots':'https://gtadb.net/gta-online/vehicle-configurator/'+(Object.hasOwn(references,model)?'?vehicle='+references[model]:'');
- ref.target='_blank';ref.rel='noopener noreferrer';ref.referrerPolicy='no-referrer';ref.className='j99-studio-link';target.append(ref);
+ ref.target='_blank';ref.rel='noopener noreferrer';ref.referrerPolicy='no-referrer';ref.className='j99-studio-link';ref.dataset.forgeExternalReference='true';target.append(ref);
  const externalNotice=E('small',vi?'Official visual evidence; not an interactive Forge model.':'External GTADB viewer. Its preview features may differ from actual game options; edits there do not sync into your private Forge builds.');target.append(externalNotice);
  if(opts.readOnly===true){
   const image=E('img');image.loading='lazy';image.decoding='async';image.style.cssText='display:block;width:100%;max-height:300px;object-fit:contain';
@@ -268,7 +268,7 @@ function mountReference(target,opts={}){
   const other=E('a',vi?'Open GTA Online version':'Open GTA VI version');other.href='./atlas-vehicle-configurator.html?'+(vi?'':'world=vi&')+'model='+encodeURIComponent(vi?returning.online:returning.vi);const source=E('a',' · Comparison sources');source.href='./atlas-credits.html#forge-returning-vehicles';panel.append(other,source);target.append(panel);
  }
  const benefit=forge?.viBenefit?.(vi?'vi':'v-online',model);
- if(benefit){const section=E('section');section.className='j412-workshop';section.append(E('h3',benefit.label),E('p',benefit.detail));const link=E('a','Official availability details');link.href='./atlas-credits.html#vi-edition-availability';section.append(link);target.append(section)}
+ if(benefit){const section=E('section');section.className='j412-workshop';section.append(E('h3',benefit.label),E('p',benefit.detail));const link=E('a','Official Rockstar reference ↗');link.href=benefit.source;link.target='_blank';link.rel='noopener noreferrer';const credits=E('a',' · Source notes');credits.href='./atlas-credits.html#vi-edition-availability';section.append(link,credits);target.append(section)}
  const purchase=forge?.vehicleDealers?.(vi?'vi':'v-online',model)||[];
  if(purchase.length){const line=E('p','Recorded purchase source: '+purchase.map(x=>x.label).join(' / ')+' · current availability may vary.');target.append(line)}
  const warehouse=forge?.warehouseVehicle?.(vi?'vi':'v-online',model);

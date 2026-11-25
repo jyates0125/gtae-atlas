@@ -40,7 +40,11 @@
       "grade": "Published gameplay report",
       "description": "GamesRadar+ reports that Jason can collect this personalized Ultimate Edition pistol variant from an in-game Ammu-Nation locker starting in Chapter 1.",
       "sourceName": "GamesRadar+ · launch gameplay guide",
-      "sourceUrl": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-ultimate-edition-pre-order-bonuses/"
+      "sourceUrl": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-ultimate-edition-pre-order-bonuses/",
+      "officialEdition": {
+        "label": "Ultimate Edition personalized variants — category confirmed, specific name from gameplay reporting",
+        "source": "https://www.rockstargames.com/VI/editions/ultimate-edition"
+      }
     },
     {
       "id": "klose-k17",
@@ -50,7 +54,11 @@
       "grade": "Published gameplay report",
       "description": "GamesRadar+ reports that Lucia can collect this personalized Ultimate Edition pistol variant from an in-game Ammu-Nation locker starting in Chapter 2.",
       "sourceName": "GamesRadar+ · launch gameplay guide",
-      "sourceUrl": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-ultimate-edition-pre-order-bonuses/"
+      "sourceUrl": "https://www.gamesradar.com/games/grand-theft-auto/gta-6-ultimate-edition-pre-order-bonuses/",
+      "officialEdition": {
+        "label": "Ultimate Edition personalized variants — category confirmed, specific name from gameplay reporting",
+        "source": "https://www.rockstargames.com/VI/editions/ultimate-edition"
+      }
     },
     {
       "id": "hawk-little-morgan",
@@ -60,7 +68,11 @@
       "grade": "Named official reference",
       "description": "Personalised revolvers are named with the Ultimate Edition items. No per-variant damage or inventory values are assumed.",
       "sourceName": "Rockstar Support — Editions",
-      "sourceUrl": "https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions"
+      "sourceUrl": "https://support.rockstargames.com/articles/4QfG4FmZCf5W1gS8jy4UVT/grand-theft-auto-vi-platform-editions-and-versions",
+      "officialEdition": {
+        "label": "Ultimate Edition named item",
+        "source": "https://www.rockstargames.com/VI/editions/ultimate-edition"
+      }
     },
     {
       "id": "duke-556",
