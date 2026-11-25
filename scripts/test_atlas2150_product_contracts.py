@@ -95,10 +95,10 @@ assert.equal(forge.returningVehicle('vi','vi_banshee').viSpeed,null);
 assert.equal(forge.returningVehicle('v-online','banshee').onlineSpeed,118.5);
 assert.equal(forge.returningVehicle('v-online','banshee3'),null);
 assert.equal(forge.returningVehicle('v-story','banshee'),null);
-assert.equal(forge.returningModels('vi').length,59);
-assert.equal(new Set(forge.returningModels('vi')).size,59);
-assert.equal(new Set(forge.returningModels('v-online')).size,59);
-for(const id of ['bmx','faggio','marquis','bus','sultan']){const row=forge.returningVehicle('v-online',id);assert.equal(row.vi,'vi_'+id);assert.equal(row.matchKind,'catalog-name-reference');assert.ok(row.source.startsWith('https://'));}
+assert.equal(forge.returningModels('vi').length,68);
+assert.equal(new Set(forge.returningModels('vi')).size,68);
+assert.equal(new Set(forge.returningModels('v-online')).size,68);
+for(const id of ['bmx','faggio','marquis','bus','sultan','dodo','luxor','maverick','shamal','swift','dinghy','seashark','tropic','speeder']){const row=forge.returningVehicle('v-online',id);assert.equal(row.vi,'vi_'+id);assert.equal(row.matchKind,'catalog-name-reference');assert.ok(row.source.startsWith('https://'));}
 assert.equal(forge.returningModels('v-story').length,0);
 for(const row of forge.returningVehicles){assert.ok(seed.vehicles.includes(row.online));assert.ok(forge.viCatalog[row.vi]);assert.equal(forge.returningVehicle('vi',row.vi),row);assert.equal(forge.returningVehicle('v-online',row.online),row);assert.notEqual(forge.ownershipKey('vi',row.vi),forge.ownershipKey('v-online',row.online));assert.equal(row.viSpeed,null);if(row.matchKind){assert.equal(row.onlineSpeed,null);assert.equal(row.onlinePrice,null);assert.equal(row.viRegistration,null);}}
 assert.equal(forge.returningVehicle('vi','vi_cheetah95').matchKind,'family-reference');

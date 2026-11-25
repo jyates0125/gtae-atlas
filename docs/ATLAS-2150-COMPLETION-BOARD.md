@@ -653,3 +653,7 @@ After 45.2 (46/46 CI, merged #208) and community reuse policy (3/3 CI, merged #2
 
 ### Atlas 45.4 — extend returning vehicle comparisons
 45.3 passed all 11 workflows and merged as b478dd7. Add 43 explicit same-name candidates from existing source-labelled VI records and existing GTA Online model IDs (59 comparisons total), including cycling, motorcycles, marine, commercial and passenger vehicles. Preserve prior family/edition distinctions and independent ownership; no new measured specs, prices, parts, availability or exact meshes inferred. Use existing source provenance, not a new roster verification. Update cache, central credits and existing tests; exact-head CI pending. No production change.
+
+
+### Atlas 45.6 — aviation and marine catalog gaps
+45.4 passed 20/20, AI charters 2/2 and 45.5 CI range safety 2/2; all merged. Individually checked nine missing V IDs against GTACars model pages (Dodo, Luxor, Maverick, Shamal, Swift, Dinghy, Seashark, Tropic, Speeder). Added IDs to the common catalog without changing Story/Online save keys, 310 V archive references and 68 cross-world name comparisons; VI records unchanged (185). Corrected missing class matches, refreshed shared scripts and credits. No source-derived geometry, prices or workshop claims. Existing source and browser contracts updated; exact-head CI pending. Production unchanged.
