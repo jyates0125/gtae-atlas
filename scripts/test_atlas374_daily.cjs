@@ -11,8 +11,8 @@ const source=fs.readFileSync('atlas87-daily.js','utf8');
 const hook="if(document.readyState==='loading')";
 assert.ok(source.includes(hook));
 const sandbox={window:{JuraConditions:{rulesForMode:()=>[]}},location:{pathname:'/atlas87-daily.html'},document:{readyState:'loading',addEventListener(){} }};
-vm.runInNewContext(source.replace(hook,'window.testVehicleOffers={memberOfferStatus,memberOffers,matchSimeon,simeonLists};'+hook),sandbox);
-const {memberOfferStatus,memberOffers,matchSimeon,simeonLists}=sandbox.window.testVehicleOffers;
+vm.runInNewContext(source.replace(hook,'window.testVehicleOffers={memberOfferStatus,memberOffers,matchSimeon,simeonLists,simeonReward,simeonAreas};'+hook),sandbox);
+const {memberOfferStatus,memberOffers,matchSimeon,simeonLists,simeonReward,simeonAreas}=sandbox.window.testVehicleOffers;
 assert.equal(simeonLists.length,8);
 assert.equal(new Set(simeonLists.flat()).size,20);
 for(const cars of simeonLists)assert.ok(matchSimeon(cars).length);
@@ -26,3 +26,11 @@ assert.equal(memberOfferStatus(long,Date.parse('2026-01-15T12:00:00Z')),'early-a
 assert.equal(memberOfferStatus(long,Date.parse('2026-01-21T12:00:00Z')),'general-release-date');
 assert.equal(memberOfferStatus({...long,end:'2026-02-30'},Date.now()),'unverified');
 console.log('PASS Simeon matching and independent GTA+ offer dates');
+
+assert.equal(simeonReward('Bullet'),20000);
+assert.equal(simeonReward('Coquette'),19800);
+assert.equal(simeonReward('__proto__'),null);
+for(const car of new Set(simeonLists.flat()))assert.ok(simeonReward(car)>0);
+assert.equal(simeonAreas.F620,'Del Perro Pier parking lot');
+assert.equal(matchSimeon(['Banshee']).length,3);
+assert.ok(fs.readFileSync('atlas-online.html','utf8').includes('id="j87-simeon-map"'));
