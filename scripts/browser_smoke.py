@@ -285,8 +285,10 @@ async def smoke():
                                     await pg.locator('#viWeaponSearch').fill('Girardi ES9')
                                     if await pg.locator('[data-weapon-id="girardi-es9"] .viweapon-note').get_attribute('aria-pressed')!='true':
                                         failures.append('GTA VI weapon review lost on refresh')
-                                    if await pg.locator('#viWeaponCards img').count()!=0:
-                                        failures.append('GTA VI weapons unexpectedly display recycled GTA V archive images')
+                                    if await pg.locator('#viWeaponCards img').evaluate_all("els=>els.some(e=>!e.src.startsWith('https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_'))"):
+                                        failures.append('GTA VI weapons display a non-approved media origin')
+                                    if await pg.locator('[data-weapon-id=\"girardi-es9\"] .viweapon-media figcaption').count()!=1:
+                                        failures.append('GTA VI official image provenance missing')
                                 except Exception as err:
                                     failures.append('GTA VI armory interactive checks failed: '+str(err)[:220])
                             if not failures and path=='atlas93-garage.html':
