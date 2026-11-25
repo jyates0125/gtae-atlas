@@ -706,3 +706,9 @@ Add 12 road vehicle references (191 → 203, 195 community); GTA6 Motors and Leo
 
 
 46.9 correction: three workflows failed on stale expected boat count 11 after adding Como (12 actual); update both browser suites to exact 12 watercraft and 17 aircraft, with explicit Como/Mallard assertions and all existing isolation checks retained. Add direct GTA Base vehicle directory to existing central external reference card. External catalog is a reference fallback only, not a grant to import its images or meshes. Revalidate exact corrected head before merge. No production change.
+
+
+46.9 corrected PR #228 exact head c6db3c4 passed 16/16; merged development a620d14f64cef66caa65f119efa779fca6999fcd. 
+
+### Atlas 47.0 — in-game naming fidelity and additional references
+Owner clarified correct in-game maker, model and variant names, not Elario renaming. Refine 15 displayed names in gallery and Forge while preserving every existing `name`-derived collection key, Forge ID and stored progress; add 11 distinct source-cross-listed candidates, 267 → 278 (270 community). Link external GTA Base catalog from VI gallery for missing pictures and reference coverage, retain labeled original concepts. No new rights or exact model claims. Remaining discrepancies and Standout roster require separate review. Exact-head CI pending. No production change.

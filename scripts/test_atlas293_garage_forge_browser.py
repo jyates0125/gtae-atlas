@@ -105,6 +105,12 @@ try:
         expect(page.locator('#modelSelect option[value="vi_bison_1800_police"]')).to_have_count(1)
         expect(page.locator('#modelSelect option[value="vi_bison_3800"]')).to_have_count(1)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'VI expanded roster modified GTA V saves'
+        page.goto(base + '/atlas-vehicle-configurator.html?world=vi&model=vi_furia',wait_until='domcontentloaded')
+        expect(page.locator('#modelSelect')).to_have_value('vi_furia',timeout=30000)
+        expect(page.locator('#referenceTitle')).to_have_text('Piccia Furia')
+        expect(page.locator('#referenceNote a')).to_have_attribute('href','https://fullsweepmap.com/wiki/gta6-vehicle-list/')
+        expect(page.locator('#modelSelect option[value="vi_dominator_65"]')).to_have_count(1)
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'VI naming review modified GTA V saves'
         # Official named and media references remain separate in both gallery and Forge.
         page.goto(base + '/atlas90-vehicles6.html?evidence=official-named',wait_until='domcontentloaded')
         expect(page.locator('#j90Evidence')).to_have_value('official-named')
