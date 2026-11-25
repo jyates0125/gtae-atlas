@@ -58,8 +58,8 @@ function visualCard(r){
  cap.append(label,document.createTextNode(' '),link);f.append(plate,cap);f.dataset.visual='class';f.dataset.hasReference=String(options.length>0);
  let idx=0;function next(){
   const m=options[idx++];if(!m){label.textContent=options.length?'Linked image unavailable · original category card':'Item-specific image pending · original category card';return}
-  label.textContent=m.label;const img=make('img','');img.alt=m.label;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
-  img.addEventListener('load',()=>{plate.hidden=true;f.dataset.visual=m.kind;label.textContent=m.label+' · © Rockstar Games';},{once:true});
+  label.textContent=m.label;const img=make('img','');img.alt=m.label;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.className='viweapon-linked-image';
+  img.addEventListener('load',()=>{plate.hidden=true;img.classList.add('is-loaded');f.dataset.visual=m.kind;label.textContent=m.label+' · © Rockstar Games';},{once:true});
   img.addEventListener('error',()=>{img.remove();plate.hidden=false;f.dataset.visual='class';next()},{once:true});
   f.insertBefore(img,cap);img.src=m.url;
  }
@@ -158,7 +158,7 @@ async function start(){
  $('viWeaponVisual').addEventListener('change',e=>{visualFilter=e.target.value;render()});
  $('viWeaponVariant').addEventListener('change',e=>{variantFilter=e.target.value;render()});
  $('viWeaponMine').addEventListener('change',e=>{onlySeen=e.target.checked;render()});$('viWeaponOnlyCollected').addEventListener('change',e=>{onlyCollected=e.target.checked;render()});window.addEventListener('storage',e=>{if(e.key===COLLECTION||e.key===null){refreshCollected();render()}});
- $('viWeaponClear').addEventListener('click',()=>{$('viWeaponSearch').value='';$('viWeaponClass').value='all';$('viWeaponMine').checked=false;$('viWeaponOnlyCollected').checked=false;$('viWeaponVariant').value='all';$('viWeaponVisual').value='all';query='';group='all';onlySeen=false;onlyCollected=false;variantFilter='all';render();});
+ $('viWeaponClear').addEventListener('click',()=>{$('viWeaponSearch').value='';$('viWeaponClass').value='all';$('viWeaponMine').checked=false;$('viWeaponOnlyCollected').checked=false;$('viWeaponVariant').value='all';$('viWeaponVisual').value='all';query='';group='all';onlySeen=false;onlyCollected=false;variantFilter='all';visualFilter='all';render();});
  $('viWeaponExport').addEventListener('click',exportNotes);
  $('viWeaponImport').addEventListener('change',importNotes);
 }
