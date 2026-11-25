@@ -34,6 +34,19 @@ try:
             }},variants:{}}));
         }""", [garage_key, forge_key])
         before = page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key])
+        page.goto(base + '/atlas-forge-collections.html', wait_until='domcontentloaded')
+        expect(page.locator('h1')).to_have_text('MY GARAGE.')
+        expect(page.locator('.hero-links a[href="./atlas-vehicle-configurator.html"]')).to_be_visible()
+        expect(page.locator('.fc-destinations a[href="./atlas93-garage.html"]')).to_be_visible()
+        for width in (390, 1440):
+            page.set_viewport_size({'width':width,'height':844})
+            assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2"), f'My Garage overflow at {width}px'
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Opening My Garage hub modified saved data'
+        page.set_viewport_size({'width':390,'height':844})
+        page.locator('.fc-destinations a[href="./atlas93-garage.html"]').click()
+        expect(page.locator('h1')).to_have_text('GARAGE MANAGEMENT.')
+        expect(page.locator('.heroactions a[href="./atlas-forge-collections.html"]')).to_be_visible()
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Opening ownership management modified saved data'
         page.goto(base + '/atlas-vehicle-configurator.html?model=jetmax&source=garage', wait_until='domcontentloaded')
         expect(page.locator('#modelSelect')).to_have_value('jetmax', timeout=30000)
         expect(page.locator('#paintColor')).to_have_value('#12ab34')
