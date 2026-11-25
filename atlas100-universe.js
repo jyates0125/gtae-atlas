@@ -78,7 +78,7 @@ function index(profile,seed,catalog,sets,viWeapons){
   result.push({id:'vi:weapon:'+r.id,kind:'weapon',scope:'vi',game:'GTA VI Story',
    name:r.name,group:r.group||'Weapon',summary:r.description||r.evidence||'Curated GTA VI source reference.',
    verification:r.grade||'Source-checked GTA VI weapon reference',sourceUrl:r.sourceUrl,
-   image:'',imageCredit:'',viMedia:viMediaChoices(r,viById),variantOf:r.variantOf,aliases:['GTA VI','GTA 6',r.group||'']});
+   image:'',imageCredit:'',viMedia:viMediaChoices(r,viById),viExample:r.illustrativeExampleOf?viMediaChoices(viById.get(r.illustrativeExampleOf)||{},viById).filter(m=>m.kind!=='official').map(m=>({...m,kind:'example',label:'Illustrative category example · not this exact item'})):[],variantOf:r.variantOf,aliases:['GTA VI','GTA 6',r.group||'']});
  }
  // Keep a pictured archive entry when a generic catalog index duplicates it; never merge Story into Online.
  const uniq=new Map();for(const r of result){const k=r.kind+'|'+slug(r.name)+'|'+r.scope+(r.kind==='character'&&r.scope==='classic'?'|'+slug(r.game):'');const old=uniq.get(k);
@@ -140,12 +140,12 @@ function artwork(r){
  const stage=make('div','u-visual-stage'),scene=make('img','u-scene-art'),note=make('span','u-image-note');
  scene.alt='Original Elario category artwork, not the exact '+r.name;scene.loading='lazy';scene.decoding='async';scene.src='./art/'+categoryArt(r);
  stage.append(scene);area.append(stage,note);area.dataset.artStatus='category-scene';
- const options=r.scope==='vi'&&r.kind==='weapon'?(r.viMedia||[]):r.image?[{url:r.image,kind:'model',label:'SOURCED REFERENCE IMAGE'}]:[];
+ const options=r.scope==='vi'&&r.kind==='weapon'?[...(r.viMedia||[]),...(r.viExample||[])]:r.image?[{url:r.image,kind:'model',label:'SOURCED REFERENCE IMAGE'}]:[];
  function fallback(){scene.hidden=false;area.dataset.artStatus='category-scene';note.textContent=(isUnverified(r)?'UNVERIFIED · ':'')+'ELARIO SCENE · ITEM IMAGE PENDING'}
  let idx=0;function next(){
   const m=options[idx++];if(!m){fallback();return}
   const img=make('img','u-model-art');img.alt=m.label||('Sourced reference image for '+r.name);img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
-  img.addEventListener('load',()=>{scene.hidden=true;img.classList.add('is-loaded');area.dataset.artStatus=m.kind==='family'?'family-reference':m.kind==='official'?'official-reference':'model-reference';note.textContent=m.kind==='family'?'FAMILY IMAGE · VARIANT PENDING':m.kind==='official'?'OFFICIAL EDITION IMAGE · EXACT APPEARANCE NOT IMPLIED':isUnverified(r)?'PROVISIONAL · REFERENCE IMAGE':'REFERENCE IMAGE';},{once:true});
+  img.addEventListener('load',()=>{scene.hidden=true;img.classList.add('is-loaded');area.dataset.artStatus=m.kind==='example'?'category-example':m.kind==='family'?'family-reference':m.kind==='official'?'official-reference':'model-reference';note.textContent=m.kind==='example'?'CATEGORY EXAMPLE · NOT EXACT ITEM':m.kind==='family'?'FAMILY IMAGE · VARIANT PENDING':m.kind==='official'?'OFFICIAL EDITION IMAGE · EXACT APPEARANCE NOT IMPLIED':isUnverified(r)?'PROVISIONAL · REFERENCE IMAGE':'REFERENCE IMAGE';},{once:true});
   img.addEventListener('error',()=>{img.remove();next()},{once:true});stage.append(img);img.src=m.url;
  }
  fallback();next();return area;
@@ -244,7 +244,7 @@ function actionsFor(r,box){
  }
  if(r.kind==='character'&&r.id.startsWith('character:')&&WORLD_CODES.has(r.scope))box.append(link('Open character profile',characterHref(r)));
  if(r.kind==='animal'||r.kind==='character'){const classics={'GTA III':'map-hub.html?game=iii','GTA Vice City':'map-hub.html?game=vc','GTA San Andreas':'atlas-sa.html','GTA IV':'atlas-iv.html','GTA Vice City Stories':'map-hub.html?game=vcs','GTA Liberty City Stories':'map-hub.html?game=lcs','GTA Chinatown Wars':'map-hub.html?game=ctw','GTA The Lost and Damned':'map-hub.html?game=tlad','GTA The Ballad of Gay Tony':'map-hub.html?game=tbogt'};box.append(link('Explore correct world map',r.scope==='vi'?'atlas-vi.html':r.scope==='online'?'atlas-online.html':r.scope==='classic'?(classics[r.game]||'maps.html'):'atlas.html'));}
- if(r.kind==='character'){if(r.sourceUrl&&r.sourceUrl.startsWith('https://'))box.append(link('Source ↗',r.sourceUrl));if(r.creditsUrl&&r.creditsUrl.startsWith('https://www.rockstargames.com/'))box.append(link('Rockstar cast credits ↗',r.creditsUrl));if(r.imageCredit)box.append(link('Artwork credits ↗',r.imageCredit));}else box.append(link('Sources & credits',r.scope==='vi'&&r.kind==='weapon'?'atlas-credits.html#vi-armory-visuals':'atlas-credits.html#universe-visuals'));
+ if(r.kind==='character'){if(r.sourceUrl&&r.sourceUrl.startsWith('https://'))box.append(link('Source ↗',r.sourceUrl));if(r.creditsUrl&&r.creditsUrl.startsWith('https://www.rockstargames.com/'))box.append(link('Rockstar cast credits ↗',r.creditsUrl));if(r.imageCredit)box.append(link('Artwork credits ↗',r.imageCredit));}else box.append(link('Sources & credits',r.scope==='vi'&&r.kind==='weapon'?'atlas-credits.html?armory='+encodeQuery(r.name)+'#vi-armory-visuals':'atlas-credits.html?universe='+encodeQuery(r.name)+'#universe-visuals'));
  if(r.id.startsWith('vi:weapon:'))box.append(viCollectionButton(r));
  if(r.key){const state=own();for(const [key,word] of [['owned','Mark owned'],['wishlist','Wishlist']]){const b=make('button','u-action',state?.[key]?.[r.key]?'✓ '+word:word);b.type='button';b.onclick=()=>{if(toggleOwned(r,key))details(r,false);else alert('Collection save unavailable or unreadable; no data was overwritten. Open the vehicle gallery and use Export collection for a recovery copy.');};box.append(b)}}
 }
