@@ -649,3 +649,7 @@ Separate follow-up preserves 45.1 candidate while its final PBR workflow runs. 1
 
 ### Atlas 45.3 — Forge returning-vehicle search recovery
 After 45.2 (46/46 CI, merged #208) and community reuse policy (3/3 CI, merged #209), fix an empty-search state that retained stale model and named-variant deep links. Clear stale model/variant query and legacy variant hash without changing world/division or stored designs. Add regression coverage to existing Garage/Forge browser journey; refresh script cache. Exact-head CI pending; no new vehicle identity, pricing, artwork, or asset-license claims. Keep model/source coverage and detailed customization phase open before resuming wider charter.
+
+
+### Atlas 45.4 — extend returning vehicle comparisons
+45.3 passed all 11 workflows and merged as b478dd7. Add 43 explicit same-name candidates from existing source-labelled VI records and existing GTA Online model IDs (59 comparisons total), including cycling, motorcycles, marine, commercial and passenger vehicles. Preserve prior family/edition distinctions and independent ownership; no new measured specs, prices, parts, availability or exact meshes inferred. Use existing source provenance, not a new roster verification. Update cache, central credits and existing tests; exact-head CI pending. No production change.
