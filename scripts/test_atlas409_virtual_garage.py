@@ -25,6 +25,8 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             ctx=browser.new_context(viewport={'width':width,'height':844},reduced_motion='reduce')
             ctx.route('https://**/*',lambda route:route.abort())
             p=ctx.new_page()
+            p.on('console',lambda msg: print(msg.text,flush=True) if '[Forge renderer]' in msg.text else None)
+            p.on('pageerror',lambda error: print('PAGE ERROR:',error,flush=True))
             p.goto(origin+'atlas-vehicle-configurator.html?model=ellie',wait_until='domcontentloaded')
             expect(p.locator('#modelSelect')).to_have_value('ellie',timeout=30000)
             stage=p.locator('#concept3d')
