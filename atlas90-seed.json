@@ -1289,6 +1289,896 @@
       "confidence": "GTADB individual community reference · availability, ownership and parts unverified",
       "sourceUrl": "https://gtadb.net/gta-6/vehicles/jugular/",
       "forgeId": "vi_jugular"
+    },
+    {
+      "name": "Blimp",
+      "brand": "",
+      "type": "Planes",
+      "archive": "",
+      "displayName": "Blimp",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/",
+      "forgeId": "vi_blimp"
+    },
+    {
+      "name": "Burrito",
+      "brand": "Declasse",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Declasse Burrito",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_burrito"
+    },
+    {
+      "name": "Bus",
+      "brand": "",
+      "type": "Service",
+      "archive": "",
+      "displayName": "Bus",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_bus"
+    },
+    {
+      "name": "Buzzard Attack Chopper",
+      "brand": "Nagasaki",
+      "type": "Helicopters",
+      "archive": "",
+      "displayName": "Nagasaki Buzzard Attack Chopper",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_buzzard_attack_chopper"
+    },
+    {
+      "name": "Caracara",
+      "brand": "Vapid",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Vapid Caracara",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_caracara"
+    },
+    {
+      "name": "Caracara 4x4",
+      "brand": "Vapid",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Vapid Caracara 4x4",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_caracara_4x4"
+    },
+    {
+      "name": "Chino",
+      "brand": "Vapid",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Vapid Chino",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_chino"
+    },
+    {
+      "name": "Comet Retro Custom",
+      "brand": "Pfister",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Pfister Comet Retro Custom",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_comet_retro_custom"
+    },
+    {
+      "name": "Comet S2 Cabrio",
+      "brand": "Pfister",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Pfister Comet S2 Cabrio",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_comet_s2_cabrio"
+    },
+    {
+      "name": "Contender",
+      "brand": "Vapid",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Vapid Contender",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_contender"
+    },
+    {
+      "name": "Creado",
+      "brand": "Vapid",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Vapid Creado",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_creado"
+    },
+    {
+      "name": "Dashound",
+      "brand": "",
+      "type": "Service",
+      "archive": "",
+      "displayName": "Dashound",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=2",
+      "forgeId": "vi_dashound"
+    },
+    {
+      "name": "Dinghy (2-seater)",
+      "brand": "Nagasaki",
+      "type": "Boats",
+      "archive": "",
+      "displayName": "Nagasaki Dinghy (2-seater)",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_dinghy_2_seater_"
+    },
+    {
+      "name": "Dominator ASP",
+      "brand": "Vapid",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Vapid Dominator ASP",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_dominator_asp"
+    },
+    {
+      "name": "Dominator GTX",
+      "brand": "Vapid",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Vapid Dominator GTX",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_dominator_gtx"
+    },
+    {
+      "name": "Dubsta",
+      "brand": "Benefactor",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Benefactor Dubsta",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_dubsta"
+    },
+    {
+      "name": "Duster",
+      "brand": "Western Company",
+      "type": "Planes",
+      "archive": "",
+      "displayName": "Western Company Duster",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_duster"
+    },
+    {
+      "name": "Elegy Retro Custom",
+      "brand": "Annis",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Annis Elegy Retro Custom",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_elegy_retro_custom"
+    },
+    {
+      "name": "Emperor",
+      "brand": "Albany",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Albany Emperor",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_emperor"
+    },
+    {
+      "name": "Freight Train",
+      "brand": "",
+      "type": "Service",
+      "archive": "",
+      "displayName": "Freight Train",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_freight_train"
+    },
+    {
+      "name": "Furia",
+      "brand": "Grotti",
+      "type": "Super",
+      "archive": "",
+      "displayName": "Grotti Furia",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_furia"
+    },
+    {
+      "name": "Futo",
+      "brand": "Karin",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Karin Futo",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_futo"
+    },
+    {
+      "name": "Gauntlet Classic",
+      "brand": "Bravado",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Bravado Gauntlet Classic",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_gauntlet_classic"
+    },
+    {
+      "name": "Gauntlet Hellfire",
+      "brand": "Bravado",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Bravado Gauntlet Hellfire",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_gauntlet_hellfire"
+    },
+    {
+      "name": "Granger",
+      "brand": "Declasse",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Declasse Granger",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_granger"
+    },
+    {
+      "name": "Granger 3600LX",
+      "brand": "Declasse",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Declasse Granger 3600LX",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=3",
+      "forgeId": "vi_granger_3600lx"
+    },
+    {
+      "name": "Growler",
+      "brand": "Pfister",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Pfister Growler",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_growler"
+    },
+    {
+      "name": "Hellion",
+      "brand": "Annis",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Annis Hellion",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_hellion"
+    },
+    {
+      "name": "Impaler LX",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Declasse Impaler LX",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_impaler_lx"
+    },
+    {
+      "name": "Impaler SZ",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Declasse Impaler SZ",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_impaler_sz"
+    },
+    {
+      "name": "Intruder",
+      "brand": "Karin",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Karin Intruder",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_intruder"
+    },
+    {
+      "name": "Jet",
+      "brand": "",
+      "type": "Planes",
+      "archive": "",
+      "displayName": "Jet",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_jet"
+    },
+    {
+      "name": "Journey",
+      "brand": "Zirconium",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Zirconium Journey",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_journey"
+    },
+    {
+      "name": "Landstalker XL",
+      "brand": "Dundreary",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Dundreary Landstalker XL",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_landstalker_xl"
+    },
+    {
+      "name": "Liberator",
+      "brand": "Vapid",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Vapid Liberator",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_liberator"
+    },
+    {
+      "name": "Lure Predator",
+      "brand": "",
+      "type": "Boats",
+      "archive": "",
+      "displayName": "Lure Predator",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_lure_predator"
+    },
+    {
+      "name": "Mammatus",
+      "brand": "JoBuilt",
+      "type": "Planes",
+      "archive": "",
+      "displayName": "JoBuilt Mammatus",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_mammatus"
+    },
+    {
+      "name": "Marquis",
+      "brand": "Dinka",
+      "type": "Boats",
+      "archive": "",
+      "displayName": "Dinka Marquis",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_marquis"
+    },
+    {
+      "name": "Mesa",
+      "brand": "Canis",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Canis Mesa",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_mesa"
+    },
+    {
+      "name": "Mule",
+      "brand": "Maibatsu",
+      "type": "Commercial",
+      "archive": "",
+      "displayName": "Maibatsu Mule",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_mule"
+    },
+    {
+      "name": "Novak",
+      "brand": "Lampadati",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Lampadati Novak",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_novak"
+    },
+    {
+      "name": "Oceanic",
+      "brand": "",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Oceanic",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=4",
+      "forgeId": "vi_oceanic"
+    },
+    {
+      "name": "Omnis e-GT",
+      "brand": "Obey",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Obey Omnis e-GT",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_omnis_e_gt"
+    },
+    {
+      "name": "Outlaw",
+      "brand": "Nagasaki",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Nagasaki Outlaw",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_outlaw"
+    },
+    {
+      "name": "Packer",
+      "brand": "MTL",
+      "type": "Commercial",
+      "archive": "",
+      "displayName": "MTL Packer",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_packer"
+    },
+    {
+      "name": "Paragon R",
+      "brand": "Enus",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Enus Paragon R",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_paragon_r"
+    },
+    {
+      "name": "Penumbra",
+      "brand": "Maibatsu",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Maibatsu Penumbra",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_penumbra"
+    },
+    {
+      "name": "Phantom",
+      "brand": "JoBuilt",
+      "type": "Commercial",
+      "archive": "",
+      "displayName": "JoBuilt Phantom",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_phantom"
+    },
+    {
+      "name": "PMP 700",
+      "brand": "Schyster",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Schyster PMP 700",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_pmp_700"
+    },
+    {
+      "name": "Police Buffalo Cruiser",
+      "brand": "Bravado",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Bravado Police Buffalo Cruiser",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_police_buffalo_cruiser"
+    },
+    {
+      "name": "Police Cruiser (Interceptor)",
+      "brand": "Vapid",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Vapid Police Cruiser (Interceptor)",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_police_cruiser_interceptor_"
+    },
+    {
+      "name": "Police Cruiser (Stanier LE)",
+      "brand": "Vapid",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Vapid Police Cruiser (Stanier LE)",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_police_cruiser_stanier_le_"
+    },
+    {
+      "name": "Police Gauntlet Interceptor",
+      "brand": "Bravado",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Bravado Police Gauntlet Interceptor",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_police_gauntlet_interceptor"
+    },
+    {
+      "name": "Police Maverick",
+      "brand": "Buckingham",
+      "type": "Helicopters",
+      "archive": "",
+      "displayName": "Buckingham Police Maverick",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_police_maverick"
+    },
+    {
+      "name": "Police Riot",
+      "brand": "Brute",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Brute Police Riot",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_police_riot"
+    },
+    {
+      "name": "Primo",
+      "brand": "Albany",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Albany Primo",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_primo"
+    },
+    {
+      "name": "Rancher",
+      "brand": "Declasse",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Declasse Rancher",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_rancher"
+    },
+    {
+      "name": "Rebel",
+      "brand": "Karin",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Karin Rebel",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_rebel"
+    },
+    {
+      "name": "Rebla GTS",
+      "brand": "Übermacht",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Übermacht Rebla GTS",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_rebla_gts"
+    },
+    {
+      "name": "Rental Shuttle Bus",
+      "brand": "Brute",
+      "type": "Service",
+      "archive": "",
+      "displayName": "Brute Rental Shuttle Bus",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_rental_shuttle_bus"
+    },
+    {
+      "name": "Rubble",
+      "brand": "JoBuilt",
+      "type": "Industrial",
+      "archive": "",
+      "displayName": "JoBuilt Rubble",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=5",
+      "forgeId": "vi_rubble"
+    },
+    {
+      "name": "Rumpo",
+      "brand": "Bravado",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Bravado Rumpo",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_rumpo"
+    },
+    {
+      "name": "Sabre Turbo",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Declasse Sabre Turbo",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_sabre_turbo"
+    },
+    {
+      "name": "Sandking XL",
+      "brand": "Vapid",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Vapid Sandking XL",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_sandking_xl"
+    },
+    {
+      "name": "Schafter V12",
+      "brand": "Benefactor",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Benefactor Schafter V12",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_schafter_v12"
+    },
+    {
+      "name": "Sea Sparrow",
+      "brand": "",
+      "type": "Helicopters",
+      "archive": "",
+      "displayName": "Sea Sparrow",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_sea_sparrow"
+    },
+    {
+      "name": "Seminole Frontier",
+      "brand": "Canis",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Canis Seminole Frontier",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_seminole_frontier"
+    },
+    {
+      "name": "Sentinel Classic",
+      "brand": "Übermacht",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Übermacht Sentinel Classic",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_sentinel_classic"
+    },
+    {
+      "name": "Sheriff SUV",
+      "brand": "Declasse",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Declasse Sheriff SUV",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_sheriff_suv"
+    },
+    {
+      "name": "Slamvan",
+      "brand": "Vapid",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Vapid Slamvan",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_slamvan"
+    },
+    {
+      "name": "Sovereign",
+      "brand": "Western",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Western Sovereign",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_sovereign"
+    },
+    {
+      "name": "Speedo",
+      "brand": "Vapid",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Vapid Speedo",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=6",
+      "forgeId": "vi_speedo"
+    },
+    {
+      "name": "Stratum",
+      "brand": "Zirconium",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Zirconium Stratum",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_stratum"
+    },
+    {
+      "name": "SuperVolito",
+      "brand": "Buckingham",
+      "type": "Helicopters",
+      "archive": "",
+      "displayName": "Buckingham SuperVolito",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_supervolito"
+    },
+    {
+      "name": "Tailgater",
+      "brand": "Obey",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Obey Tailgater",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_tailgater"
+    },
+    {
+      "name": "Taxi",
+      "brand": "Vapid",
+      "type": "Service",
+      "archive": "",
+      "displayName": "Vapid Taxi",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_taxi"
+    },
+    {
+      "name": "Toros",
+      "brand": "Pegassi",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Pegassi Toros",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_toros"
+    },
+    {
+      "name": "Tow Truck (Small)",
+      "brand": "Vapid",
+      "type": "Utility",
+      "archive": "",
+      "displayName": "Vapid Tow Truck (Small)",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_tow_truck_small_"
+    },
+    {
+      "name": "Tulip",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Declasse Tulip",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_tulip"
+    },
+    {
+      "name": "Tulip M-100",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Declasse Tulip M-100",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_tulip_m_100"
+    },
+    {
+      "name": "Vectre",
+      "brand": "Emperor",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Emperor Vectre",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_vectre"
+    },
+    {
+      "name": "Verus",
+      "brand": "Dinka",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Dinka Verus",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_verus"
+    },
+    {
+      "name": "Vigero ZX Convertible",
+      "brand": "Declasse",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Declasse Vigero ZX Convertible",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_vigero_zx_convertible"
+    },
+    {
+      "name": "Walton L35",
+      "brand": "Declasse",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Declasse Walton L35",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_walton_l35"
+    },
+    {
+      "name": "Windsor",
+      "brand": "Enus",
+      "type": "Coupes",
+      "archive": "",
+      "displayName": "Enus Windsor",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_windsor"
+    },
+    {
+      "name": "Yosemite 1500",
+      "brand": "Declasse",
+      "type": "Off-Road",
+      "archive": "",
+      "displayName": "Declasse Yosemite 1500",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_yosemite_1500"
+    },
+    {
+      "name": "Youga",
+      "brand": "Bravado",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Bravado Youga",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=7",
+      "forgeId": "vi_youga"
+    },
+    {
+      "name": "Youga Classic",
+      "brand": "Bravado",
+      "type": "Vans",
+      "archive": "",
+      "displayName": "Bravado Youga Classic",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=8",
+      "forgeId": "vi_youga_classic"
+    },
+    {
+      "name": "Zombie Chopper",
+      "brand": "Western",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Western Zombie Chopper",
+      "confidence": "Community roster identification · individual gameplay verification pending",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/?page=8",
+      "forgeId": "vi_zombie_chopper"
     }
   ],
   "onlineWorkshopVehicles": [

@@ -345,10 +345,10 @@ with AtlasTestServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as
             expect(evidence_rows.locator("a").first).to_have_attribute("href","./atlas81-hq.html?collection=online-snowmen#collections")
             # Restore Leonida-only notes with exact IDs, leaving conflicting local notes intact.
             page.goto(base+"atlas90-weapons6.html",wait_until="domcontentloaded")
-            expect(page.locator(".viweapon-card")).to_have_count(22,timeout=15000)
+            expect(page.locator(".viweapon-card")).to_have_count(65,timeout=15000)
             page.evaluate("""() => localStorage.setItem('teamjura-vi-weapon-notes-v1',JSON.stringify({schema:1,notes:{'girardi-es9':'Current note'},seen:{'girardi-es9':true}}))""")
             page.reload(wait_until="domcontentloaded")
-            expect(page.locator(".viweapon-card")).to_have_count(22,timeout=15000)
+            expect(page.locator(".viweapon-card")).to_have_count(65,timeout=15000)
             vi_backup={"schema":1,"app":"team-jura-vi-weapons","scope":"vi","notes":{"girardi-es9":"Do not replace","klose-k17":"Restored field note","unknown":"Ignore"},"seen":{"girardi-es9":False,"klose-k17":True}}
             page.locator("#viWeaponImport").set_input_files({"name":"vi-notes.json","mimeType":"application/json","buffer":json.dumps(vi_backup).encode()})
             expect(page.locator("#viWeaponStatus")).to_contain_text("2 note/review value(s) restored; 1 note conflict(s) kept; 1 invalid entries skipped")

@@ -3,7 +3,7 @@
   "scope": "vi",
   "kind": "weapon",
   "reviewedAt": "2026-11-24",
-  "status": "Curated research sample, not the full release roster",
+  "status": "Named launch-week roster plus provisional visual references; unique variants and remaining standard names incomplete",
   "disclaimer": "GTA VI weapon references are sourced by item. A name shown in official promotional material does not verify weapon performance, pricing, spawn locations or every edition. No GTA V archive art is repurposed as GTA VI in-game photography.",
   "sources": [
     {
@@ -86,7 +86,7 @@
     },
     {
       "id": "moreland-850",
-      "name": "Moreland 850",
+      "name": "Fortune & Son Moreland 850",
       "group": "Shotgun",
       "evidence": "Name read in published official gameplay material",
       "grade": "Observed in official media",
@@ -96,7 +96,7 @@
     },
     {
       "id": "nipper-38",
-      "name": "Nipper .38",
+      "name": "Scorpio Nipper .38",
       "group": "Handgun",
       "evidence": "Label identified in official published artwork",
       "grade": "Observed in official media",
@@ -106,7 +106,7 @@
     },
     {
       "id": "mustang-357",
-      "name": "Mustang .357",
+      "name": "Duke Mustang .357",
       "group": "Revolver",
       "evidence": "Name reported from official published artwork",
       "grade": "Observed in official media",
@@ -263,6 +263,436 @@
       "description": "Research reference only; playable availability and model-specific information remain unknown.",
       "sourceName": "GTADB individual reference",
       "sourceUrl": "https://gtadb.net/gta-6/weapons/heavy-pistol-gta-6/"
+    },
+    {
+      "id": "schlamm-drx",
+      "name": "Schlamm DRX",
+      "group": "Handgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "duke-1922",
+      "name": "Duke 1922",
+      "group": "Handgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "fairview-kalinga-50",
+      "name": "Fairview Kalinga .50",
+      "group": "Handgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "wortham-wcr1",
+      "name": "Wortham WCR1",
+      "group": "Revolver",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "hawk-little-38",
+      "name": "Hawk & Little .38",
+      "group": "Revolver",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "scorpio-akulus",
+      "name": "Scorpio Akulus",
+      "group": "Revolver",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "wortham-w10",
+      "name": "Wortham W-10",
+      "group": "SMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "zhang-wu-type-9",
+      "name": "Zhang Wu Type 9",
+      "group": "SMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "deever-tech-dsg",
+      "name": "Deever Tech DSG",
+      "group": "SMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "vom-feuer-vf5",
+      "name": "Vom Feuer VF5",
+      "group": "SMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "vom-feuer-vf5c",
+      "name": "Vom Feuer VF5C",
+      "group": "SMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "bzi-vatra",
+      "name": "BZI Vatra",
+      "group": "SMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "adb-pd90",
+      "name": "ADB PD-90",
+      "group": "SMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "shrewsbury-drifter",
+      "name": "Shrewsbury Drifter",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "shrewsbury-hobo",
+      "name": "Shrewsbury Hobo",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "mason-keen-shortstraw",
+      "name": "Mason & Keen Shortstraw",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "girardi-az1200",
+      "name": "Girardi AZ1200",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "girardi-verro",
+      "name": "Girardi Verro",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "girardi-super400",
+      "name": "Girardi Super400",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "kozlov-kvga12",
+      "name": "Kozlov KVGA-12",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "goodwin-comshot-12",
+      "name": "Goodwin Comshot 12",
+      "group": "Shotgun",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "hillinger-heathen",
+      "name": "Hillinger Heathen",
+      "group": "Assault rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "vom-feuer-vfg1",
+      "name": "Vom Feuer VF-G1",
+      "group": "Assault rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "kozlov-hind",
+      "name": "Kozlov Hind",
+      "group": "Assault rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "adb-fra",
+      "name": "ADB FRA",
+      "group": "Assault rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "wortham-w22",
+      "name": "Wortham W-22",
+      "group": "Rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "hillinger-m306",
+      "name": "Hillinger M306",
+      "group": "Rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "hillinger-m306-tmr",
+      "name": "Hillinger M306 TMR",
+      "group": "Rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "hawk-little-mediator",
+      "name": "Hawk & Little Mediator",
+      "group": "Rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "fortune-son-laird350",
+      "name": "Fortune & Son Laird 350",
+      "group": "Sniper rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "shrewsbury-sm69",
+      "name": "Shrewsbury SM-69",
+      "group": "Sniper rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "fairview-ffsr",
+      "name": "Fairview FF-SR",
+      "group": "Sniper rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "fairview-ff50",
+      "name": "Fairview FF-50",
+      "group": "Sniper rifle",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "adb-m350",
+      "name": "ADB M350",
+      "group": "LMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "goodwin-lmg6",
+      "name": "Goodwin LMG 6",
+      "group": "LMG",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "hillinger-boomer",
+      "name": "Hillinger Boomer",
+      "group": "Launcher",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "deever-tech-glr40",
+      "name": "Deever Tech GLR40",
+      "group": "Launcher",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "h-at",
+      "name": "H-AT",
+      "group": "Launcher",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "hunting-knife",
+      "name": "Hunting Knife",
+      "group": "Melee",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "edc-knife",
+      "name": "EDC Knife",
+      "group": "Melee",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "survival-knife",
+      "name": "Survival Knife",
+      "group": "Melee",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "brass-knuckles",
+      "name": "Brass Knuckles",
+      "group": "Melee",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "baton",
+      "name": "Baton",
+      "group": "Melee",
+      "grade": "Community gameplay reference",
+      "evidence": "Launch-week reported in-game name; independent model verification pending",
+      "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
+      "sourceName": "GTAside — November 23 launch roster",
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
     }
   ]
 }
