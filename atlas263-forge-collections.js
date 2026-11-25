@@ -1,7 +1,7 @@
 /* Elario Forge collection hub. Read-only projection of existing local stores. */
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else if(root)api.start(root)})(typeof window==='undefined'?null:window,function(){'use strict';
 const keys={v:'team-jura-atlas101-concept-presets-v1',vi:'team-jura-forge-vi-concept-presets-v1',garage:'team-jura-atlas93-garage-v1',owned:'team-jura-atlas90-collection-v1',story:'team-jura-forge-armory-story-v1',online:'team-jura-forge-armory-online-v1',viArmory:'team-jura-forge-armory-vi-v1'};
-const viNames={vi_cheetah95:'’95 Grotti Cheetah',vi_stanier55:'’55 Vapid Stanier',vi_dominator67_buggy:'’67 Vapid Dominator Buggy',vi_squalo:'Shitzu Squalo',vi_enduro:'Dinka Enduro Motorcycle',vi_crest_kayak:'Crest Kayak',vi_ganado_retro:'Ganado Retro Build'};
+const viNames={vi_cheetah95:'’95 Grotti Cheetah',vi_stanier55:'’55 Vapid Stanier',vi_dominator67_buggy:'’67 Vapid Dominator Buggy',vi_squalo:'Shitzu Squalo',vi_enduro:'Dinka Enduro Motorcycle',vi_crest_kayak:'Crest Kayak',vi_ganado_retro:'Ganado Retro Build',vi_ganado70:'Vapid ’70 Ganado'};
 const worldNames={v:'GTA V / Online',vi:'GTA VI · Leonida',story:'GTA V Story',online:'GTA Online'};
 const object=x=>x&&typeof x==='object'&&!Array.isArray(x);
 const safeId=id=>typeof id==='string'&&/^[a-z0-9_-]{2,75}$/.test(id)&&!['__proto__','prototype','constructor'].includes(id);

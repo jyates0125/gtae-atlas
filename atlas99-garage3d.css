@@ -20,3 +20,5 @@
 .fc-live-preview>h3{margin:0 0 7px}.fc-live-preview>.j256-forge{margin-top:12px}
 
 .j412-workshop{margin-top:14px;padding:12px;border:1px solid #aa875d;border-radius:10px;background:#21152d}.j412-workshop p{font-size:12px;color:#e4cede}.j412-workshop select{display:block;width:100%;min-height:44px;max-width:100%;background:#160d23;color:#fff;border:1px solid #ab89ad;border-radius:8px;padding:8px}.j412-workshop a{display:block;padding:9px 0;color:#ffd69c}.j412-workshop button:disabled{opacity:.6;cursor:not-allowed}
+
+.j413-tab,.j413-livery{grid-column:1/-1;min-width:0}.j413-tab{border:1px solid #76578a;border-radius:10px;padding:10px;margin:0}.j413-tab legend{color:#ffd293;font-weight:800;padding:0 5px}.j413-tab select:disabled{opacity:.65}.j413-livery{display:grid;gap:6px}.j413-livery strong{color:#ffd293;font-size:13px}

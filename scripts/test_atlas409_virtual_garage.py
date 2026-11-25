@@ -125,6 +125,31 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             p.get_by_role('button',name='Close 3D preview').click()
             expect(p.locator('.fc-live-preview')).to_be_hidden()
             assert p.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
+            # The new released-game Ganado remains distinct from the bonus Retro Build.
+            p.goto(origin+'atlas90-vehicles6.html?q=70+ganado',wait_until='domcontentloaded')
+            link=p.locator('#j90Cards').get_by_role('link',name='Open Leonida Forge')
+            expect(link).to_have_count(1,timeout=15000)
+            link.click()
+            expect(p.locator('#modelSelect')).to_have_value('vi_ganado70',timeout=15000)
+            expect(stage).to_have_attribute('data-forge-status','ready',timeout=15000)
+            expect(stage).to_have_attribute('data-forge-fidelity','model-study')
+            expect(stage.locator('.j413-tab legend')).to_have_count(6)
+            expect(stage.locator('[data-forge-control="workshopLivery"] option')).to_have_count(3)
+            expect(stage.locator('[data-workshop-category="hood"]')).to_be_disabled()
+            stage.locator('[data-workshop-category="engine"]').select_option('engine-1')
+            stage.locator('[data-forge-control="workshopLivery"]').select_option('ganado-vintage')
+            stage.get_by_role('button',name='Preview original stripe interpretation').click()
+            p.locator('#buildName').fill('Ganado launch build')
+            p.locator('#saveBuild').click()
+            vi=p.evaluate('k=>JSON.parse(localStorage.getItem(k))',VI)
+            assert vi['builds']['vi_ganado70']['design']['workshopOptions']['engine']=='engine-1'
+            assert vi['builds']['vi_ganado70']['design']['workshopLivery']=='ganado-vintage'
+            assert 'vi_ganado_retro' not in vi['builds']
+            assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])==before
+            p.reload(wait_until='domcontentloaded')
+            expect(stage.locator('[data-workshop-category="engine"]')).to_have_value('engine-1',timeout=15000)
+            expect(stage.locator('[data-forge-control="workshopLivery"]')).to_have_value('ganado-vintage')
+            p.locator('#concept3d canvas').screenshot(path=str(E/f'atlas409-ganado-{width}.png'))
             ctx.close()
             print(f'PASS Atlas 40.9 {width}: actual WebGL, V Garage save/reload, VI isolated save, gallery handoff and collection',flush=True)
         # Portable preview uses the exact same renderer, no site storage or network.
