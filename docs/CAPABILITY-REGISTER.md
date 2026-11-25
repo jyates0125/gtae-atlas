@@ -38,3 +38,6 @@ Owner clarified correct in-game maker, model and variant names, not Elario renam
 
 
 47.0 correction: shared gallery cache version must agree across GTA V vehicle, GTA V weapon and VI vehicle pages; align all to v470 without changing their world scope. First head failed world-completion source assertion; rerun corrected exact-head CI. Owner reiterates GTA VI is released: Rockstar's November 19, 2026 announcement https://www.rockstargames.com/VI/out-now establishes released status, not individual model identity. Prefer post-launch in-game evidence and preserve unresolved per-item labels. No production change.
+
+
+47.0 second correction: exact f6c17b7 passed focused Garage-to-Forge, product contracts and integrated Chromium; world-catalog browser test failed waiting for one search result. Add explicit asynchronous catalog-ready assertion at both widths, search-term diagnostics and 15-second bounded result assertion; retain all four existing official identity/source checks, add corrected Furia label, unchanged legacy record key and exact source-link assertion. Cause not yet proven; corrected exact-head run required. Owner requests freeze/release preparation; full release gate remains required, no production change.
