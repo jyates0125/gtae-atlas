@@ -437,3 +437,6 @@ Track GTA+ member-only launch dates separately from general purchase, free-claim
 
 ### Owner direction — official-first roster sweep (November 24, 2026)
 Research Rockstar media, people, editions, support and GTA+ first. Maintain independent GTA VI Story membership benefits, character identities and fictional weapon variants, with exact names and evidence tiers. Preserve known identifiers and approved art. Community names remain provisional until individually corroborated; a publisher screenshot is not proof of complete inventory or precise stats. Reuse only within documented grants; link to restricted databases and publisher media instead of republishing their protected content. Maintain coverage gaps and source review checkpoints for vehicles, characters, weapons and their variants.
+
+### Owner direction — Leonida equivalent vehicle activities
+Keep Moses Drop-Offs, Randy’s Wish List / Export Lists and Wyman classic restoration independent from Simeon and GTA Online. Track individual in-game objectives locally, not as guaranteed spawn points or ownership flags. Distinguish starter list, later targets, introduction and edition restrictions. Preserve community source uncertainty and central attribution.

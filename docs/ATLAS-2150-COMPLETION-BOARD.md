@@ -633,3 +633,6 @@ Sources: https://www.gtabase.com/gta-online/jobs/simeon-s-export-requests ; http
 
 ### Atlas 44.8 — Simeon scope and persistent regression test
 44.6+QA head 376ce3c reached 38/39 successful workflows, last PBR lab in progress, no failures at inspection. Hide the inline matcher when the map switches away from Online and add browser coverage for mount, matching, visibility refresh persistence and clear. The event focus uses only existing explicit activity identifiers; the map core currently has no Simeon-specific text fallback. Do not broaden it to dealership or generic vehicle markers without coordinate/source evidence. JS syntax and source anchors passed; exact browser and integrated CI still pending. No live changes.
+
+### Atlas 44.9 — Leonida vehicle jobs
+Add shared VI-only local checklist in map legend and My Garage: 7 Moses references including introduction, 22 reported Randy references including disputed later additions, 5 Ultimate Wyman restorations. Broad areas and reported Moses payouts; no invented coordinates, global ownership mutation or current rotation. Separate per-activity IDs, protect malformed data, synchronize tabs. Direct save/isolation/parse/wiring checks passed; persistent Node test added, browser and map coordinate evidence pending. Both charters and centralized credits updated. No deployment.
