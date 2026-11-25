@@ -1,3 +1,4 @@
+import json, re
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -17,6 +18,8 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,direct
             expect(stage).to_have_attribute('data-state','ready',timeout=60000)
             assert int(stage.get_attribute('data-triangles'))>=50000
             assert int(stage.get_attribute('data-paint-materials'))>0
+            wedge_names=json.loads(stage.get_attribute('data-paint-material-names'))
+            assert wedge_names and all(not re.search(r'rim|wheel|caliper|brake|stripe|glass|trim|interior',n,re.I) for n in wedge_names)
             canvas=stage.locator('canvas')
             initial=canvas.screenshot(path=str(root/f'metallic-{width}.png'))
             page.locator('#paint').evaluate("e=>{e.value='#bd252d';e.dispatchEvent(new Event('input'))}")
@@ -40,15 +43,25 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,direct
             factory=canvas.screenshot(path=str(root/f'fastback-front-{width}.png'))
             page.locator('#view').select_option('side')
             assert canvas.screenshot(path=str(root/f'fastback-side-{width}.png'))!=factory
+            fastback_names=json.loads(stage.get_attribute('data-paint-material-names'))
+            assert len(fastback_names)==int(stage.get_attribute('data-paint-materials'))
+            assert all(n.lower() in ('paint','paint_body') for n in fastback_names)
+            assert {'rim_paint','rim_paint_body','stripe_body','glass'}.issubset(json.loads(stage.get_attribute('data-material-names')))
+            audit=json.loads((root/'fastback-materials.json').read_text())
+            for name in fastback_names:
+                assert any(m['name']==name and m['baseColorTexture'] is None for m in audit['materials'])
             if int(stage.get_attribute('data-paint-materials')):
+                page.locator('#view').select_option('front')
+                before=canvas.screenshot()
                 page.locator('#paint').evaluate("e=>{e.value='#334455';e.dispatchEvent(new Event('input'))}")
-                canvas.screenshot(path=str(root/f'fastback-paint-{width}.png'))
+                assert canvas.screenshot(path=str(root/f'fastback-paint-{width}.png'))!=before
             else:
                 expect(page.locator('#paint')).to_be_disabled()
             print('Fastback material channels:',stage.get_attribute('data-material-names'),flush=True)
             page.locator('#model').select_option('wedge')
             expect(stage).to_have_attribute('data-state','ready',timeout=60000)
             expect(stage).to_have_attribute('data-asset','wedge')
+            assert json.loads(stage.get_attribute('data-paint-material-names'))==wedge_names
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
             assert page.evaluate('localStorage.length')==0
             context.close()
