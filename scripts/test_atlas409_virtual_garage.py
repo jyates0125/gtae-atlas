@@ -38,6 +38,14 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             assert int(stage.get_attribute('data-forge-triangles'))!=initial
             stage.locator('[data-forge-control="rim"]').select_option('gold')
             stage.locator('[data-forge-control="stripe"]').select_option('dual')
+            livery=stage.locator('[data-forge-control="livery"]')
+            livery.select_option('none')
+            baseline=stage.locator('canvas').screenshot()
+            for pattern in ('heritage','velocity','circuit','jura','fade'):
+                livery.select_option(pattern)
+                assert stage.locator('canvas').screenshot()!=baseline,pattern+' must change actual rendered pixels'
+            livery.select_option('jura')
+            stage.locator('[data-forge-control="liveryColor"]').evaluate("el=>{el.value='#ad7132';el.dispatchEvent(new Event('input',{bubbles:true}))}")
             p.locator('#paintColor').evaluate("(el)=>{el.value='#30323a';el.dispatchEvent(new Event('input',{bubbles:true}))}")
             p.locator('#buildName').fill('Jura Fastback')
             p.locator('#saveBuild').click()
@@ -46,6 +54,8 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             assert saved[0]['vehicles']['ellie']['studioDesign']['wheels']=='mesh'
             assert saved[0]['vehicles']['ellie']['studioDesign']['stripe']=='dual'
             assert saved[1]['builds']['ellie']['design']['rim']=='gold'
+            assert saved[0]['vehicles']['ellie']['studioDesign']['livery']=='jura'
+            assert saved[0]['vehicles']['ellie']['studioDesign']['liveryColor']=='#ad7132'
             assert saved[2] is None, 'Concept must not mark GTA ownership'
             p.reload(wait_until='domcontentloaded')
             expect(stage.locator('[data-forge-control="stripe"]')).to_have_value('dual',timeout=15000)
@@ -66,6 +76,7 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             expect(garage).to_have_attribute('data-forge-reflection','active')
             expect(garage.locator('[data-forge-control="wheels"]')).to_have_value('mesh')
             expect(garage.locator('[data-forge-control="stripe"]')).to_have_value('dual')
+            expect(garage.locator('[data-forge-control="livery"]')).to_have_value('jura')
             garage.locator('canvas').screenshot(path=str(E/f'atlas409-my-garage-{width}.png'))
             before=p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])
             p.goto(origin+'atlas90-vehicles6.html?q=cheetah+95',wait_until='domcontentloaded')
@@ -77,10 +88,12 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             expect(stage).to_have_attribute('data-forge-fidelity','model-study')
             stage.locator('[data-forge-control="wheels"]').select_option('deepdish')
             stage.locator('[data-forge-control="stripe"]').select_option('single')
+            stage.locator('[data-forge-control="livery"]').select_option('velocity')
             p.locator('#buildName').fill('Leonida Wedge')
             p.locator('#saveBuild').click()
             vi=p.evaluate('k=>JSON.parse(localStorage.getItem(k))',VI)
             assert vi['builds']['vi_cheetah95']['design']['wheels']=='deepdish'
+            assert vi['builds']['vi_cheetah95']['design']['livery']=='velocity'
             assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])==before
             p.locator('#concept3d canvas').screenshot(path=str(E/f'atlas409-leonida-{width}.png'))
             p.locator('#j409ViGarage').click()
@@ -94,6 +107,7 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             expect(live).to_have_attribute('data-forge-status','ready',timeout=15000)
             expect(live).to_have_attribute('data-forge-reflection','active')
             expect(live.locator('[data-forge-control="wheels"]')).to_have_value('deepdish')
+            expect(live.locator('[data-forge-control="livery"]')).to_have_value('velocity')
             live.locator('[data-forge-control="stripe"]').select_option('dual')
             assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,VI,O])==stored
             p.get_by_role('button',name='Close 3D preview').click()
@@ -101,4 +115,19 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             assert p.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
             ctx.close()
             print(f'PASS Atlas 40.9 {width}: actual WebGL, V Garage save/reload, VI isolated save, gallery handoff and collection',flush=True)
+        # Portable preview uses the exact same renderer, no site storage or network.
+        demo=browser.new_page(viewport={'width':1440,'height':900})
+        demo.route('http://**/*',lambda route:route.abort())
+        demo.route('https://**/*',lambda route:route.abort())
+        demo.goto((E/'elario-forge-preview.html').as_uri(),wait_until='domcontentloaded')
+        expect(demo.locator('#stage')).to_have_attribute('data-forge-status','ready',timeout=15000)
+        expect(demo.locator('#stage')).to_have_attribute('data-forge-reflection','active')
+        expect(demo.locator('[data-forge-control="livery"]')).to_have_value('jura')
+        demo.locator('#stage canvas').screenshot(path=str(E/'atlas409-portable-ellie.png'))
+        demo.locator('#model').select_option('vi_cheetah95')
+        expect(demo.locator('#stage')).to_have_attribute('data-forge-fidelity','model-study')
+        expect(demo.locator('#stage')).to_have_attribute('data-forge-status','ready')
+        demo.locator('[data-forge-control="livery"]').select_option('circuit')
+        demo.locator('#stage canvas').screenshot(path=str(E/'atlas409-portable-vi.png'))
+        print('PASS portable real-source interactive Forge preview with no network',flush=True)
         browser.close()
