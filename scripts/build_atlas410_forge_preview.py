@@ -11,6 +11,7 @@ models=[
  ['gauntlet','GTA Online · Bravado Gauntlet','Touring concept'],
  ['cheetah2','GTA Online · Grotti Cheetah Classic','Sports concept'],
  ['banshee','GTA Online · Bravado Banshee','Sports concept'],
+ ['vi_ganado70','GTA VI · Vapid ’70 Ganado','Pickup / Truck'],
  ['vi_cheetah95','GTA VI · ’95 Grotti Cheetah','Sports concept'],
  ['vi_stanier55','GTA VI · ’55 Vapid Stanier','Touring concept'],
  ['vi_dominator67_buggy','GTA VI · ’67 Vapid Dominator Buggy','Pickup / Truck'],
