@@ -3,7 +3,7 @@
   "scope": "vi",
   "kind": "weapon",
   "reviewedAt": "2026-11-25",
-  "status": "Named launch-week roster plus provisional visual references; unique variants and remaining standard names incomplete",
+  "status": "Released-game community reference roster; named variants and base identities remain individually reviewable.",
   "disclaimer": "GTA VI weapon references are sourced by item. A name shown in official promotional material does not verify weapon performance, pricing, spawn locations or every edition. No GTA V archive art is repurposed as GTA VI in-game photography.",
   "sources": [
     {
@@ -33,6 +33,18 @@
     {
       "name": "Rockstar Games — official screenshot library",
       "url": "https://www.rockstargames.com/VI/media/screenshots"
+    },
+    {
+      "name": "WikiGTAVI · variant family cross-check",
+      "url": "https://www.wikigtavi.com/weapons/unique-variants"
+    },
+    {
+      "name": "Leonida Waypoint · independent game-item catalog",
+      "url": "https://leonidawaypoint.com/database/weapons"
+    },
+    {
+      "name": "PowerPyx · Progress Database count reference",
+      "url": "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
     }
   ],
   "records": [
@@ -844,6 +856,1067 @@
       "sourceName": "GTA.ZONE · unique game-item index",
       "sourceUrl": "https://negentropy.studio/unique-weapons/",
       "variantOf": "girardi-es9"
+    },
+    {
+      "id": "assassin-nipper-38",
+      "name": "Assassin Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "turnt-nipper-38",
+      "name": "Turnt Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "zodiac-nipper-38",
+      "name": "Zodiac Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "convict-kalinga-50",
+      "name": "Convict Kalinga .50",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fairview Kalinga .50. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "fairview-kalinga-50",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "quarter-mile-es9",
+      "name": "Quarter Mile ES9",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi ES9. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "girardi-es9",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "nite-raptor-k17",
+      "name": "Nite Raptor K17",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "klose-k17",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "rogue-alpha-drx",
+      "name": "Rogue Alpha DRX",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Schlamm DRX. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "schlamm-drx",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "donnies-h-and-l-38",
+      "name": "Donnie's H&L .38",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hawk & Little .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "hawk-little-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "jack-sheepe-h-and-l-38",
+      "name": "Jack Sheepe H&L .38",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hawk & Little .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "hawk-little-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "honky-tonk-mustang-357",
+      "name": "Honky Tonk Mustang .357",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke Mustang .357. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "mustang-357",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "iron-and-oak-wcr-1",
+      "name": "Iron & Oak WCR-1",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham WCR1. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-wcr1",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kingfishers-akulus",
+      "name": "Kingfishers Akulus",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Akulus. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "scorpio-akulus",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "swamp-bait-akulus",
+      "name": "Swamp Bait Akulus",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Akulus. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "scorpio-akulus",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "chromium-w-10",
+      "name": "Chromium W-10",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-10. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-w10",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "little-friend-w-10",
+      "name": "Little Friend W-10",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-10. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-w10",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "moneymaker-w-10",
+      "name": "Moneymaker W-10",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-10. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-w10",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "conspiracist-type-9",
+      "name": "Conspiracist Type 9",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Zhang Wu Type 9. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "zhang-wu-type-9",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "neon-sunset-type-9",
+      "name": "Neon Sunset Type 9",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Zhang Wu Type 9. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "zhang-wu-type-9",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "crabshack-vf5",
+      "name": "Crabshack VF5",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Vom Feuer VF5. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "vom-feuer-vf5",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "double-cross-vatra",
+      "name": "Double Cross Vatra",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of BZI Vatra. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "bzi-vatra",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "spangled-vatra",
+      "name": "Spangled Vatra",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of BZI Vatra. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "bzi-vatra",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "backdoor-hobo",
+      "name": "Backdoor Hobo",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury Hobo. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-hobo",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "basher-gorse-425",
+      "name": "Basher Gorse 425",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Gorse 425. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "gorse-425",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "smuggler-gorse-425",
+      "name": "Smuggler Gorse 425",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Gorse 425. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "gorse-425",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "bruiser-super400",
+      "name": "Bruiser Super400",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi Super400. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "girardi-super400",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "darknite-drifter",
+      "name": "Darknite Drifter",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury Drifter. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-drifter",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "gutterball-moreland-850",
+      "name": "Gutterball Moreland 850",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Moreland 850. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "moreland-850",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "watcher-pro-moreland-850",
+      "name": "Watcher Pro Moreland 850",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Moreland 850. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "moreland-850",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "nitepower-az1200",
+      "name": "Nitepower AZ1200",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi AZ1200. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "girardi-az1200",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "unpacked-comshot-12",
+      "name": "Unpacked Comshot 12",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Goodwin Comshot 12. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "goodwin-comshot-12",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "woodhatch-longshot",
+      "name": "Woodhatch Longshot",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Mason & Keen Longshot. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "mason-keen-longshot",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "clunker-556",
+      "name": "Clunker 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "drug-mule-kz-59",
+      "name": "Drug Mule KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "cruel-huntsmans-sm-69",
+      "name": "Cruel Huntsman's SM-69",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury SM-69. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-sm69",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "firebreak-sm-69",
+      "name": "Firebreak SM-69",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury SM-69. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-sm69",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "killtelligence-sm-69",
+      "name": "Killtelligence SM-69",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury SM-69. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-sm69",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "fincredible-laird-350",
+      "name": "Fincredible Laird 350",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Laird 350. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "fortune-son-laird350",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "hunters-laird-350",
+      "name": "Hunter's Laird 350",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Laird 350. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "fortune-son-laird350",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kingfishers-laird-350",
+      "name": "Kingfishers Laird 350",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Laird 350. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "fortune-son-laird350",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kingfishers-w-22",
+      "name": "Kingfishers W-22",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-22. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-w22",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "mercenary-lmg-6",
+      "name": "Mercenary LMG 6",
+      "group": "LMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Goodwin LMG 6. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "goodwin-lmg6",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "la-polilla-negra-vf-g1",
+      "name": "La Polilla Negra VF-G1",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Vom Feuer VF-G1. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "vom-feuer-vfg1",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "eris-fresh-dsg",
+      "name": "Eris Fresh DSG",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Deever Tech DSG. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "deever-tech-dsg",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "mister-mangrove-laird-350",
+      "name": "Mister Mangrove Laird 350",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Laird 350. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "fortune-son-laird350",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "petes-kz-59",
+      "name": "Pete's KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "la-polilla-negra-kz-59",
+      "name": "La Polilla Negra KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "marabunta-grande-kz-59",
+      "name": "Marabunta Grande KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "san4san-kz-59",
+      "name": "San4San KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "guardia-brothers-fra",
+      "name": "Guardia Brothers FRA",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of ADB FRA. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "adb-fra",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kingpin-heathen",
+      "name": "Kingpin Heathen",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hillinger Heathen. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "hillinger-heathen",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "rauls-cqb-556",
+      "name": "Raul's CQB 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "rauls-heist-556",
+      "name": "Raul's Heist 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "cockroach-xtreme-556",
+      "name": "Cockroach Xtreme 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "grx-556",
+      "name": "GRX 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kolt-and-associates-556",
+      "name": "Kolt & Associates 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "franciscos-lmg-6",
+      "name": "Francisco's LMG 6",
+      "group": "LMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Goodwin LMG 6. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "goodwin-lmg6",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "low-point-nipper-38",
+      "name": "Low Point Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "mahi-nipper-38",
+      "name": "Mahi Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "gils-kalinga-50",
+      "name": "Gil's Kalinga .50",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fairview Kalinga .50. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "fairview-kalinga-50",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "the-guardian-es18",
+      "name": "The Guardian ES18",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi ES18. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "girardi-es18",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "stoner-k17-mcd",
+      "name": "Stoner K17 MCD",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17 MCD. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "klose-k17-mcd",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "dumpster-k17-mcd",
+      "name": "Dumpster K17 MCD",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17 MCD. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "klose-k17-mcd",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
     }
-  ]
+  ],
+  "completenessBenchmark": {
+    "reportedTotal": 196,
+    "standard": 66,
+    "variants": 130,
+    "source": "https://www.powerpyx.com/gta-6-collectible-guide-progress-database",
+    "note": "Reported in-game Progress Database totals, not a verified one-to-one match with Atlas references."
+  }
 }
