@@ -5,6 +5,8 @@ on:
     paths:
       - 'atlas192-weapons6.*'
       - 'atlas90-weapons6.html'
+      - 'atlas-credits.html'
+      - 'atlas4712-armory-credits.js'
       - 'data/atlas192-vi-weapons.json'
       - 'scripts/test_atlas4706_collection_browser.py'
       - 'scripts/browser_smoke.py'
@@ -34,6 +36,7 @@ jobs:
           python-version: '3.12'
       - run: |
           node --check atlas192-weapons6.js
+          node --check atlas4712-armory-credits.js
           python scripts/test_atlas192_world_completion.py
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
@@ -48,7 +51,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: atlas4711-armory-png-${{ matrix.browser }}
-          path: qa-evidence/atlas4711/
+          name: atlas4712-armory-png-${{ matrix.browser }}
+          path: qa-evidence/atlas4712/
           if-no-files-found: warn
           retention-days: 21
