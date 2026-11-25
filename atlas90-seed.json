@@ -132,6 +132,7 @@
     "blista",
     "blista2",
     "blista3",
+    "bmx",
     "bobcatxl",
     "bodhi",
     "boxville",
@@ -196,6 +197,9 @@
     "faction2",
     "faction3",
     "fagaloa",
+    "faggio",
+    "faggio2",
+    "faggio3",
     "fcr",
     "fcr2",
     "feltzer",
@@ -231,6 +235,8 @@
     "hotknife",
     "huntley",
     "ignus2",
+    "inductor",
+    "inductor2",
     "infernus",
     "insurgent",
     "issi",
@@ -315,6 +321,7 @@
     "schafter",
     "schlagen",
     "schlagen_gt",
+    "scorcher",
     "sentinel",
     "sentinel3",
     "sentinel4",
@@ -347,6 +354,9 @@
     "torero",
     "tornado",
     "tornado5",
+    "tribike",
+    "tribike2",
+    "tribike3",
     "turismo2",
     "turismo3",
     "tyrant",
@@ -643,10 +653,11 @@
     {
       "name": "Faggio",
       "archive": "faggio",
-      "type": "Motorcycles",
+      "type": "Scooters",
       "brand": "Pegassi",
       "confidence": "Community-identified",
-      "forgeId": "vi_faggio"
+      "forgeId": "vi_faggio",
+      "sourceUrl": "https://www.gta6map.net/wiki/gta-6/vehicles/motorcycles-and-bikes"
     },
     {
       "name": "Feltzer",
@@ -1047,6 +1058,176 @@
       "confidence": "Released-game community catalog identification · acquisition and parts pending",
       "sourceUrl": "https://gta6motors.com/vehicles/",
       "forgeId": "vi_itali_rsx"
+    },
+    {
+      "name": "BMX",
+      "brand": "Tuff",
+      "type": "Bicycles",
+      "archive": "",
+      "displayName": "Tuff BMX",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/best-cycles/",
+      "forgeId": "vi_bmx"
+    },
+    {
+      "name": "Cruiser",
+      "brand": "Walter",
+      "type": "Bicycles",
+      "archive": "",
+      "displayName": "Walter Cruiser",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/best-cycles/",
+      "forgeId": "vi_cruiser"
+    },
+    {
+      "name": "Scorcher",
+      "brand": "Del Perro",
+      "type": "Bicycles",
+      "archive": "",
+      "displayName": "Del Perro Scorcher",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/best-cycles/",
+      "forgeId": "vi_scorcher"
+    },
+    {
+      "name": "Aerobike",
+      "brand": "Endurex",
+      "type": "Bicycles",
+      "archive": "",
+      "displayName": "Endurex Aerobike",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/best-cycles/",
+      "forgeId": "vi_aerobike"
+    },
+    {
+      "name": "Candyman Scorcher",
+      "brand": "Del Perro",
+      "type": "Bicycles",
+      "archive": "",
+      "displayName": "Del Perro Candyman Scorcher",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/best-cycles/",
+      "forgeId": "vi_candyman_scorcher"
+    },
+    {
+      "name": "Ghost Cruiser",
+      "brand": "Walter",
+      "type": "Bicycles",
+      "archive": "",
+      "displayName": "Walter Ghost Cruiser",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/best-cycles/",
+      "forgeId": "vi_ghost_cruiser"
+    },
+    {
+      "name": "Immortal BMX",
+      "brand": "Tuff",
+      "type": "Bicycles",
+      "archive": "",
+      "displayName": "Tuff Immortal BMX",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/best-cycles/",
+      "forgeId": "vi_immortal_bmx"
+    },
+    {
+      "name": "Millionaire BMX",
+      "brand": "Tuff",
+      "type": "Bicycles",
+      "archive": "",
+      "displayName": "Tuff Millionaire BMX",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/best-cycles/",
+      "forgeId": "vi_millionaire_bmx"
+    },
+    {
+      "name": "Lombike",
+      "brand": "Walter",
+      "type": "Bicycles",
+      "archive": "",
+      "displayName": "Walter Lombike",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://gta6wiki.eu/vehicles/all/",
+      "forgeId": "vi_lombike"
+    },
+    {
+      "name": "Nimbe",
+      "brand": "Nagasaki",
+      "type": "Scooters",
+      "archive": "",
+      "displayName": "Nagasaki Nimbe",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://gta6wiki.eu/vehicles/all/",
+      "forgeId": "vi_nimbe"
+    },
+    {
+      "name": "Ragno",
+      "brand": "Taci",
+      "type": "Scooters",
+      "archive": "",
+      "displayName": "Taci Ragno",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://gta6wiki.eu/vehicles/all/",
+      "forgeId": "vi_ragno"
+    },
+    {
+      "name": "Fan-E",
+      "brand": "Shift-E",
+      "type": "Scooters",
+      "archive": "",
+      "displayName": "Shift-E Fan-E",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://gta6wiki.eu/vehicles/all/",
+      "forgeId": "vi_fan_e"
+    },
+    {
+      "name": "ZOOT electric scooter",
+      "brand": "",
+      "type": "Scooters",
+      "archive": "",
+      "displayName": "ZOOT electric scooter",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://www.gta6map.net/wiki/gta-6/vehicles/motorcycles-and-bikes",
+      "forgeId": "vi_zoot_electric_scooter"
+    },
+    {
+      "name": "Sovereign 107",
+      "brand": "Western",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Western Sovereign 107",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://gta6wiki.eu/vehicles/all/",
+      "forgeId": "vi_sovereign_107"
+    },
+    {
+      "name": "Zombie Bobber",
+      "brand": "Western",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Western Zombie Bobber",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://gta6wiki.eu/vehicles/all/",
+      "forgeId": "vi_zombie_bobber"
+    },
+    {
+      "name": "SFB 1000",
+      "brand": "Nagasaki",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Nagasaki SFB 1000",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://gta6wiki.eu/vehicles/all/",
+      "forgeId": "vi_sfb_1000"
+    },
+    {
+      "name": "Carbon RS",
+      "brand": "Nagasaki",
+      "type": "Motorcycles",
+      "archive": "",
+      "displayName": "Nagasaki Carbon RS",
+      "confidence": "Community-reported identity · acquisition, registration and parts unverified",
+      "sourceUrl": "https://gta6wiki.eu/vehicles/all/",
+      "forgeId": "vi_carbon_rs"
     }
   ],
   "onlineWorkshopVehicles": [
@@ -1073,6 +1254,8 @@
     "eurosx32",
     "faction2",
     "faction3",
+    "faggio",
+    "faggio3",
     "fcr",
     "fcr2",
     "feltzer3",
@@ -1084,6 +1267,8 @@
     "hakuchou2",
     "horus",
     "ignus2",
+    "inductor",
+    "inductor2",
     "issi8",
     "italigtb",
     "italigtb2",

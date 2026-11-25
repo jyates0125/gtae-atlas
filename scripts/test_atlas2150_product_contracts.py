@@ -77,7 +77,9 @@ assert.equal(forge.bennysRecords.length,31);
 assert.equal(forge.specialtyModels('bennys').length,61);
 const seed=require('./atlas90-seed.json');
 for(const id of [...forge.specialtyModels('hsw'),...forge.specialtyModels('bennys')])assert.ok(seed.vehicles.includes(id),id);
-assert.equal(seed.onlineWorkshopVehicles.length,79);
+assert.equal(seed.onlineWorkshopVehicles.length,83);
+for(const id of ["bmx","cruiser","scorcher","tribike","tribike2","tribike3","inductor","inductor2"]){assert.equal(forge.bikeDivision('v-online',id),'bicycles');assert.equal(forge.craftCustomization('v-online',id).mode,'collection');assert.ok(forge.dealershipModels('v-online','pedal-metal').includes(id));}
+assert.equal(forge.specialtyName('faggio2'),'Pegassi Faggio');assert.equal(forge.bikeDivision('vi','vi_faggio'),'scooters');assert.equal(forge.bikeDivision('vi','vi_bmx'),'bicycles');assert.equal(forge.bikeDivision('vi','bmx'),null);
 for(const id of [...forge.warehouseModels('v-online'),'oppressor','oppressor2'])assert.ok(seed.onlineWorkshopVehicles.includes(id),id);
 assert.equal(Object.keys(forge.viCatalog).length,seed.vi.length);
 assert.equal(forge.returningVehicle('v-online','banshee').vi,'vi_banshee');
