@@ -2,7 +2,7 @@
   "schema": 1,
   "scope": "vi",
   "kind": "weapon",
-  "reviewedAt": "2026-11-24",
+  "reviewedAt": "2026-11-25",
   "status": "Named launch-week roster plus provisional visual references; unique variants and remaining standard names incomplete",
   "disclaimer": "GTA VI weapon references are sourced by item. A name shown in official promotional material does not verify weapon performance, pricing, spawn locations or every edition. No GTA V archive art is repurposed as GTA VI in-game photography.",
   "sources": [
@@ -693,6 +693,138 @@
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
       "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "id": "cold-war-556",
+      "name": "Cold War 556",
+      "group": "Rifle",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Duke 556 Assault Rifle. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556"
+    },
+    {
+      "id": "mossy-mediator",
+      "name": "Mossy Mediator",
+      "group": "Rifle",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Hawk & Little Mediator. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "hawk-little-mediator"
+    },
+    {
+      "id": "shack-attack-w14",
+      "name": "Shack Attack W-14",
+      "group": "Rifle",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Wortham W-14. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "wortham-w14"
+    },
+    {
+      "id": "nightmare-kz59",
+      "name": "Nightmare KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Kozlov KZ-59. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-kz-59"
+    },
+    {
+      "id": "little-cuba-hind",
+      "name": "Little Cuba Hind",
+      "group": "Assault rifle",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Kozlov Hind. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-hind"
+    },
+    {
+      "id": "vice-city-heathen",
+      "name": "Vice City Heathen",
+      "group": "Assault rifle",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Hillinger Heathen. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "hillinger-heathen"
+    },
+    {
+      "id": "star-spangled-556",
+      "name": "Star Spangled 556",
+      "group": "Rifle",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Duke 556 Assault Rifle. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556"
+    },
+    {
+      "id": "explorers-knife",
+      "name": "Explorer's Knife",
+      "group": "Melee",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Diving Knife. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "diving-knife"
+    },
+    {
+      "id": "shark-knife",
+      "name": "Shark Knife",
+      "group": "Melee",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Diving Knife. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "diving-knife"
+    },
+    {
+      "id": "donnie-knife",
+      "name": "Donnie's Knife",
+      "group": "Melee",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Bushcraft Knife. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "bushcraft-knife"
+    },
+    {
+      "id": "cursed-knife",
+      "name": "Cursed Knife",
+      "group": "Melee",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Bushcraft Knife. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "bushcraft-knife"
+    },
+    {
+      "id": "sand-storm-es9",
+      "name": "Sand Storm ES9",
+      "group": "Handgun",
+      "evidence": "Named unique variant · community catalog",
+      "grade": "Community variant reference",
+      "description": "Reported distinct in-game variant of Girardi ES9. Individual gameplay availability and matching visual asset pending.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "girardi-es9"
     }
   ]
 }

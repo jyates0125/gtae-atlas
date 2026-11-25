@@ -39,7 +39,11 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(PUBLIC))) a
             expect(cards.locator('.j90-caption')).to_contain_text('Archive reference image')
             page.locator('#j90Class').select_option('Super')
             assert query(page)['class']==['Super'] and query(page)['world']==['online']
+            expect(cards).to_have_attribute('data-collected','false')
+            expect(cards.locator('.j90-flag-pending')).to_have_text('NOT COLLECTED')
             cards.get_by_role('button',name='+ Collect').click()
+            expect(cards).to_have_attribute('data-collected','true')
+            expect(cards.locator('.j90-flag-done')).to_contain_text('COLLECTED')
             page.locator('#j90Ownership').select_option('owned')
             assert query(page)['collection']==['owned']
             page.reload()

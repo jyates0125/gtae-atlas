@@ -1,0 +1,46 @@
+name: Atlas 47.0.6 - collection and armory browser checks
+on:
+  pull_request:
+    branches: [fix/atlas4703-targeted-browser-release, development]
+    paths:
+      - scripts/test_atlas4706_collection_browser.py
+      - atlas90-gallery.js
+      - atlas192-weapons6.js
+      - data/atlas192-vi-weapons.json
+permissions:
+  contents: read
+jobs:
+  collection:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    env:
+      ATLAS_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node --check atlas90-gallery.js
+          node --check atlas192-weapons6.js
+          node --check atlas256-forge-geometry.js
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install ${{ matrix.browser }}
+          python scripts/test_atlas4706_collection_browser.py
+      - name: Affected gallery and armory smoke
+        env:
+          ATLAS_SMOKE_ONLY: atlas90-vehicles5.html,atlas90-vehicles6.html,atlas90-weapons.html,atlas90-weapons6.html
+        run: python scripts/browser_smoke.py
