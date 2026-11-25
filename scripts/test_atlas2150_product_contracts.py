@@ -42,6 +42,13 @@ require("atlas101-configurator.js", "mergeVariants", "VARIANT_LIMIT=8", "saveVar
 subprocess.run(["node", "-e", """
 const assert = require('node:assert/strict');
 const forge = require('./atlas256-forge-geometry.js');
+for(const id of ['jetmax','squalo','avisa'])assert.equal(forge.craftCustomization('v-online',id).mode,'collection');
+for(const id of ['avenger','sparrow'])assert.equal(forge.craftCustomization('v-online',id).mode,'dedicated');
+assert.equal(forge.craftCustomization('v-online','kosatka').mode,'renovation');
+for(const world of ['vi','v-story'])for(const id of ['jetmax','squalo','avisa','avenger','sparrow','kosatka'])assert.equal(forge.craftCustomization(world,id).mode,'unknown');
+assert.equal(forge.craftCustomization('v-online','__proto__').mode,'unknown');
+assert.equal(forge.craftCustomization('v-online','unknown-aircraft').mode,'unknown');
+console.log('PASS craft workshop eligibility and independent world scope');
 const cases = [["Aircraft / Plane concept","lazer","air"],["Boat / Watercraft concept","jetmax","marine"],["Helicopter concept","akula","rotor"],["Sports concept","adder","sport"],["Truck / Utility concept","bison","utility"],["Touring concept","regina","touring"]];
 for (const [type,id,kind] of cases) {
   const model=forge.build(type,id,'#4473c2',{});
