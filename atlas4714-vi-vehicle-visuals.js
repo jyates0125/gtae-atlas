@@ -62,16 +62,16 @@ const records=Object.freeze({
     "kind": "community"
   },
   "vi_cheetah95": {
-    "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_GROTTI_CHEETAH_01.0a.wy3s_ogjey.jpg?akim=1&imdensity=1&imwidth=3840",
-    "source": "https://www.rockstargames.com/VI/media/screenshots",
-    "label": "Official edition screenshot · image availability not confirmed",
-    "kind": "official"
+    "url": "https://vi.gtax.dev/images/vehicles/large/3b761b0404ea5149.webp",
+    "source": "https://vi.gtax.dev/vehicles/cheetah-95",
+    "label": "GTA VI community visual reference",
+    "kind": "community"
   },
   "vi_stanier55": {
-    "url": "https://www.rockstargames.com/VI/_next/static/media/VINTAGE_VICE_CITY_PACK_VAPID_STANIER_01.004m_8d1~qngy.jpg?akim=1&imdensity=1&imwidth=3840",
-    "source": "https://www.rockstargames.com/VI/media/screenshots",
-    "label": "Official edition screenshot · image availability not confirmed",
-    "kind": "official"
+    "url": "https://vi.gtax.dev/images/vehicles/large/544dd4cdab177bb6.webp",
+    "source": "https://vi.gtax.dev/vehicles/stanier-55",
+    "label": "GTA VI community visual reference",
+    "kind": "community"
   },
   "vi_crest_kayak": {
     "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_SAFEHOUSE_VEHICLES_03.0c9.qtpdi.tf..jpg?akim=1&imdensity=1&imwidth=3840",
@@ -84,6 +84,12 @@ const records=Object.freeze({
     "source": "https://www.rockstargames.com/VI/media/screenshots",
     "label": "Official edition screenshot · image availability not confirmed",
     "kind": "official"
+  },
+  "vi_tailgater_s": {
+    "url": "https://vi.gtax.dev/images/vehicles/large/fb7fe6147e7840cc.webp",
+    "source": "https://vi.gtax.dev/vehicles/tailgater-s",
+    "label": "GTA VI community visual reference",
+    "kind": "community"
   }
 });
 window.JuraViVehicleVisuals=Object.freeze({get(id){return Object.hasOwn(records,id)?Object.freeze({...records[id]}):null},entries(){return Object.entries(records).map(([id,v])=>[id,{...v}])}});
