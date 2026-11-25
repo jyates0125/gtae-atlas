@@ -88,7 +88,17 @@ with ThreadingHTTPServer(('127.0.0.1', 0), partial(SimpleHTTPRequestHandler, dir
             for item, chapter in [('girardi-es9', 1), ('klose-k17', 2)]:
                 row = page.locator(f'[data-weapon-id="{item}"]')
                 expect(row).to_contain_text(f'Chapter {chapter}')
-                assert row.get_by_role('link', name='Check evidence').get_attribute('href').startswith('https://www.gamesradar.com/')
+                expect(row.get_by_role('link', name='Check evidence')).to_have_count(0)
+            source_rows=json.loads((public/'data/atlas192-vi-weapons.json').read_text(encoding='utf-8'))['records']
+            for item in ('girardi-es9','klose-k17'):
+                record=next(r for r in source_rows if r['id']==item)
+                page.goto(origin+'atlas-credits.html#vi-armory-visuals',wait_until='domcontentloaded')
+                page.locator('#viArmorySourceFilter').fill(record['name'])
+                detail=page.locator('#viArmorySources details').filter(has=page.get_by_text(record['name']+' · '+record['group'],exact=True))
+                expect(detail).to_have_count(1,timeout=15000)
+                detail.locator('summary').click()
+                expect(detail.locator('a[href="'+record['sourceUrl']+'"]').first).to_be_visible()
+                assert record['sourceUrl'].startswith('https://www.gamesradar.com/')
             page.close()
         browser.close()
     server.shutdown()

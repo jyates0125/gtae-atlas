@@ -180,8 +180,16 @@ async def smoke():
                                         await after.click()
                                         if await before.get_attribute('aria-pressed')!=original:
                                             failures.append('Gallery action did not restore: '+off)
-                                    if path=='atlas90-vehicles6.html' and await card.locator('img').get_attribute('src')!='./art/jura161-vehicles6.webp':
-                                        failures.append('VI gallery displayed out-of-world imagery')
+                                    if path=='atlas90-vehicles6.html':
+                                        invalid=await pg.locator('#j90Cards .j90-card').evaluate_all("""cards=>cards.some(card=>{
+                                          const src=card.querySelector('img')?.getAttribute('src');
+                                          const local=['./art/jura161-vehicles6.webp','./art/elario-watercraft-showroom.webp'];
+                                          const model=window.JuraForge?.viModelFromOwnership(card.dataset.recordId);
+                                          const visual=window.JuraViVehicleVisuals?.get(model);
+                                          return !!src&&!local.includes(src)&&src!==visual?.url;
+                                        })""")
+                                        if invalid:
+                                            failures.append('VI gallery displayed out-of-world imagery')
                                     await pg.locator('#j90Search').fill('zzx-nonexistent-atlas-marker')
                                     if '0 visible' not in await pg.locator('#j90Results').inner_text():
                                         failures.append('Gallery search failed to apply an empty-result filter')

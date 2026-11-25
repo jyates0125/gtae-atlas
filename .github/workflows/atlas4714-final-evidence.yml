@@ -7,6 +7,9 @@ on:
       - 'scripts/test_atlas201_squalo_browser.py'
       - 'scripts/test_atlas293_garage_forge_browser.py'
       - 'scripts/test_atlas408_gallery_continuity.py'
+      - 'atlas101-configurator.js'
+      - 'scripts/browser_smoke.py'
+      - 'atlas-collectibles.html'
   workflow_dispatch:
 permissions:
   contents: read
