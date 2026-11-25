@@ -1,9 +1,13 @@
-import os,threading
+import os,threading,json
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from playwright.sync_api import sync_playwright,expect
 ROOT=Path(__file__).resolve().parents[1]
+records=json.loads((ROOT/'data/atlas192-vi-weapons.json').read_text(encoding='utf-8'))['records']
+ids={r['id'] for r in records}; variants={r['id'] for r in records if r.get('variantOf')}
+assert len(records)==185 and len(ids)==185 and len(variants)==114
+assert all(r['variantOf'] in ids and r['variantOf'] not in variants for r in records if r.get('variantOf'))
 class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args): pass
 with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'public'))) as server:
@@ -16,6 +20,15 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    context.route('https://**/*',lambda r:r.abort())
    page=context.new_page()
    page.goto(base+'atlas90-weapons6.html')
+   expect(page.locator('.viweapon-card')).to_have_count(len(records),timeout=15000)
+   expect(page.locator('#viWeaponBenchmark')).to_contain_text('196 items')
+   page.locator('#viWeaponVariant').select_option('variants')
+   expect(page.locator('.viweapon-card')).to_have_count(len(variants))
+   expect(page.locator('[data-weapon-id="gutterball-moreland-850"]')).to_contain_text('Named variant')
+   page.locator('#viWeaponVariant').select_option('base')
+   expect(page.locator('.viweapon-card')).to_have_count(len(records)-len(variants))
+   page.locator('#viWeaponClear').click()
+   expect(page.locator('.viweapon-card')).to_have_count(len(records))
    card=page.locator('[data-weapon-id="girardi-es9"]')
    expect(card).to_have_attribute('data-collected','false',timeout=15000)
    expect(card.locator('.viweapon-media figcaption')).to_contain_text('not the stock model')
