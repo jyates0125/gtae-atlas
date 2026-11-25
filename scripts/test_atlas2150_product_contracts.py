@@ -92,6 +92,17 @@ for(const id of ["bmx","cruiser","scorcher","tribike","tribike2","tribike3","ind
 assert.equal(forge.specialtyName('faggio2'),'Pegassi Faggio');assert.equal(forge.bikeDivision('vi','vi_faggio'),'scooters');assert.equal(forge.bikeDivision('vi','vi_bmx'),'bicycles');assert.equal(forge.bikeDivision('vi','bmx'),null);
 for(const id of [...forge.warehouseModels('v-online'),'oppressor','oppressor2'])assert.ok(seed.onlineWorkshopVehicles.includes(id),id);
 assert.equal(Object.keys(forge.viCatalog).length,seed.vi.length);
+assert.equal(forge.viEvidenceModels('vi','official-named').length,5);
+assert.equal(forge.viEvidenceModels('vi','official-media').length,3);
+assert.equal(forge.viEvidenceModels('vi','community').length,177);
+assert.equal(forge.viEvidence('vi','vi_squalo'),'official-named');
+assert.equal(forge.viEvidence('vi','vi_enduro'),'official-media');
+assert.equal(forge.viCatalog.vi_enduro.name,'Dinka Enduro');
+assert.equal(forge.viEvidence('vi','vi_banshee'),'community');
+assert.equal(forge.viEvidence('vi','__proto__'),null);
+assert.deepEqual(forge.viEvidenceModels('vi','__proto__'),[]);
+for(const world of ['v-story','v-online']){assert.equal(forge.viEvidence(world,'vi_squalo'),null);assert.deepEqual(forge.viEvidenceModels(world,'official-named'),[]);}
+for(const row of seed.vi)assert.ok(forge.viEvidence('vi',row.forgeId),row.forgeId);
 assert.equal(forge.viBenefitModels('vi','ultimate').length,6);
 assert.equal(forge.viBenefitModels('vi','vintage').join(','),'vi_stanier55');
 assert.equal(forge.viBenefitModels('vi','member').join(','),'vi_venturas_blvd_elegy90');
