@@ -20,8 +20,8 @@ const CLASSIC={
  'GTA Vice City Stories':'map-hub.html?game=vcs',
  'GTA Liberty City Stories':'map-hub.html?game=lcs',
  'GTA Chinatown Wars':'map-hub.html?game=ctw',
- 'GTA The Lost and Damned':'map-hub.html?game=tlad',
- 'GTA The Ballad of Gay Tony':'map-hub.html?game=tbogt'
+ 'GTA The Lost and Damned':'atlas-iv.html?scope=tlad',
+ 'GTA The Ballad of Gay Tony':'atlas-iv.html?scope=tbogt'
 };
 const worlds={story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story',classic:'Classic GTA'};
 let indexedCharacters=[],visibleCharacters=[];

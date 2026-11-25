@@ -18,8 +18,8 @@ maps = {
     'map-hub.html?game=vcs': 'GTA Vice City Stories',
     'map-hub.html?game=lcs': 'GTA Liberty City Stories',
     'map-hub.html?game=ctw': 'GTA Chinatown Wars',
-    'map-hub.html?game=tlad': 'GTA The Lost and Damned',
-    'map-hub.html?game=tbogt': 'GTA The Ballad of Gay Tony',
+    'atlas-iv.html?scope=tlad': 'GTA The Lost and Damned',
+    'atlas-iv.html?scope=tbogt': 'GTA The Ballad of Gay Tony',
 }
 
 with ThreadingHTTPServer(('127.0.0.1', 0), partial(SimpleHTTPRequestHandler, directory=str(public))) as server:
@@ -32,6 +32,8 @@ with ThreadingHTTPServer(('127.0.0.1', 0), partial(SimpleHTTPRequestHandler, dir
             page.route('https://**/*', lambda route: route.abort())
             for path, edition in maps.items():
                 page.goto(origin + path, wait_until='domcontentloaded')
+                if '?scope=' in path:
+                    expect(page.locator('#j190-iv-scope')).to_have_value(path.split('=')[1])
                 cast = page.locator('#classicCastLink')
                 expect(cast).to_contain_text('characters')
                 cast.click()
@@ -45,7 +47,7 @@ with ThreadingHTTPServer(('127.0.0.1', 0), partial(SimpleHTTPRequestHandler, dir
                 assert urljoin(page.url, return_map.get_attribute('href')) == origin + path
             page.goto(origin + 'atlas-iv.html', wait_until='domcontentloaded')
             page.wait_for_function('window.TeamJuraIV3DBridge?.hasData()')
-            for scope, edition in [('tlad', maps['map-hub.html?game=tlad']), ('tbogt', maps['map-hub.html?game=tbogt']), ('iv', 'GTA IV'), ('landmarks', 'GTA IV')]:
+            for scope, edition in [('tlad', maps['atlas-iv.html?scope=tlad']), ('tbogt', maps['atlas-iv.html?scope=tbogt']), ('iv', 'GTA IV'), ('landmarks', 'GTA IV')]:
                 page.locator('#j190-iv-scope').select_option(scope)
                 assert page.locator('#classicCastLink').evaluate("el => new URL(el.href).searchParams.get('edition')") == edition
                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 2')

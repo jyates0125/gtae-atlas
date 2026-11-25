@@ -42,6 +42,17 @@ def check(root):
     assert "./atlas-source-registry.html" in credits
     assert "MIT License" in credits and "CC BY 4.0" in credits
     assert "not an invitation" in terms.lower()
+    assert "reuse" in b.ids and "#reuse" in b.links
+    for phrase in ("noncommercial sharing and adaptation of limited excerpts",
+                   "separate written permission", "not a blanket CC BY 4.0 license",
+                   "does not restrict or revoke rights independently granted",
+                   "withdraw our own limited community permission prospectively",
+                   "remove material from its own service", "restore it where warranted",
+                   "dedicated private rights contact is pending verification"):
+        assert phrase.lower() in terms.lower(), phrase
+    assert "https://creativecommons.org/licenses/by/4.0/" in b.links
+    assert "https://github.com/rolux/gtadb.org/blob/main/LICENSE-DATA" in b.links
+    assert "./atlas-credits.html#corrections" in b.links and "corrections" in a.ids
     print("PASS rights/permissions, upstream source credits and non-claim boundaries:",root)
 
 check(ROOT)

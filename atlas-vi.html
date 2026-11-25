@@ -40,11 +40,11 @@
 <script defer src="./atlas95-ui.js?v=95"></script>
 <link rel="stylesheet" href="./atlas97-connect.css?v=97">
 <script defer src="./atlas97-connect.js?v=97"></script>
-<link rel="stylesheet" href="./atlas117-world-brand.css?v=117"><link rel="stylesheet" href="./atlas128-map-chrome.css?v=128"><link rel="stylesheet" href="./atlas141-leonida-views.css?v=141"><link rel="stylesheet" href="./atlas143-official-map-view.css?v=143"><script defer src="./atlas143-official-map-view.js?v=369"></script><link rel="stylesheet" href="./atlas290-official-landmarks.css?v=291"><script defer src="./atlas290-official-landmarks.js?v=291"></script><link rel="stylesheet" href="./atlas145-leonida-map-ux.css?v=145"><script defer src="./atlas145-leonida-map-ux.js?v=370"></script>
+<link rel="stylesheet" href="./atlas117-world-brand.css?v=117"><link rel="stylesheet" href="./atlas128-map-chrome.css?v=128"><link rel="stylesheet" href="./atlas141-leonida-views.css?v=141"><link rel="stylesheet" href="./atlas143-official-map-view.css?v=143"><script defer src="./atlas143-official-map-view.js?v=391"></script><link rel="stylesheet" href="./atlas290-official-landmarks.css?v=291"><script defer src="./atlas290-official-landmarks.js?v=291"></script><link rel="stylesheet" href="./atlas145-leonida-map-ux.css?v=145"><script defer src="./atlas145-leonida-map-ux.js?v=370"></script>
 <link rel="stylesheet" href="./atlas145-mobile-map-entry.css?v=211"><script defer src="./atlas145-mobile-map-entry.js?v=156"></script><link rel="stylesheet" href="./atlas154-map-zoom.css?v=154"><script defer src="./atlas154-map-zoom.js?v=154"></script><link rel="stylesheet" href="./atlas171-research-usability.css?v=171"><script defer src="./atlas171-research-usability.js?v=171"></script><link rel="stylesheet" href="./atlas217-vi-world.css?v=217"><script defer src="./atlas217-vi-world.js?v=217"></script><link rel="stylesheet" href="./atlas220-vi-mobile.css?v=220"><script defer src="./atlas220-vi-mobile.js?v=369"></script><link rel="stylesheet" href="./atlas222-vi-release.css?v=222"><script defer src="./atlas222-vi-release.js?v=222"></script><link rel="stylesheet" href="./atlas160-premium-headers.css?v=160"><link rel="stylesheet" href="./atlas162-subject-heroes.css?v=162"><link rel="stylesheet" href="./atlas153-advisory.css?v=153"><script defer src="./atlas153-advisory.js?v=153"></script><link rel="stylesheet" href="./atlas132-nav.css?v=132"><script defer src="./atlas132-nav.js?v=375"></script><link rel="stylesheet" href="./atlas131-social-icons.css?v=133"><script defer src="./atlas131-social-icons.js?v=133"></script><link rel="stylesheet" href="./atlas302-map-marker-exit.css?v=302"><script defer src="./atlas302-map-marker-exit.js?v=302"></script><link rel="stylesheet" href="./atlas362-vi-map-clarity.css?v=362"><link rel="stylesheet" href="./atlas363-elevation-probe.css?v=363"><link rel="stylesheet" href="./atlas364-map-credit.css?v=364">
 <script defer src="./atlas364-map-credit.js?v=364"></script>
 <link rel="stylesheet" href="./atlas368-approx-terrain.css?v=368">
-<link rel="stylesheet" href="./atlas369-map-controls.css?v=385"><script defer src="./atlas369-map-controls.js?v=3691"></script></head>
+<link rel="stylesheet" href="./atlas369-map-controls.css?v=391"><script defer src="./atlas369-map-controls.js?v=4715"></script><link rel="stylesheet" href="./atlas449-vi-jobs.css?v=449"><script defer src="./atlas449-vi-jobs.js?v=449"></script><link rel="stylesheet" href="./atlas450-vi-progress.css?v=450"><script defer src="./atlas450-vi-progress.js?v=451"></script><link rel="stylesheet" href="./atlas451-vi-garages.css?v=451"><script defer src="./atlas451-vi-garages.js?v=451"></script></head>
 <body data-start-world="6" class="j117-map-world j128-map-chrome">
 <header class="topbar">
   <a href="./index.html" class="brand"><span class="emblem"><img src="./art/elario-crest.svg" width="43" height="43" alt=""></span><span><b>GTAE · GTA EXPLORER</b><small>ELARIO STUDIOS · MANY CREWS · ONE VISION</small></span></a>
@@ -84,7 +84,7 @@
 
     <details class="atlas-filter-drawer" id="atlasFilterDrawer" open><summary>⚑ Every map category &amp; filters <span>On / off</span></summary>
     <div class="sectionrow"><strong>LOCATION LEGEND · ON / OFF</strong><div><button id="allOn" class="link-btn" type="button">All on</button><button id="allOff" class="link-btn" type="button">All off</button></div></div>
-    <p class="jura-legend-credit">Map filters · One pin per mapped place · Provisional GTA VI coordinates. <a href="./atlas-credits.html#licensed">Full source credits</a></p><div class="legend" id="legend" aria-label="Toggle location categories"></div>
+    <p class="jura-legend-credit">Map filters · One pin per mapped place · Provisional GTA VI coordinates. <a href="./atlas-credits.html#licensed">Full source credits</a></p><div class="legend" id="legend" aria-label="Toggle location categories"></div><section id="j449-vi-jobs" aria-label="Leonida vehicle activities"></section><section id="j450-vi-progress" aria-label="Leonida activity progress"></section><section id="j451-vi-garages" aria-label="Leonida garage properties"></section>
     <details class="j101-special-layers"><summary>🎯 Special spawn and collection layers</summary>
     <section class="named-layer-section" aria-label="Map layers and visibility"><div class="named-layer-head"><strong>⚑ Mapped location layers</strong><small id="namedLayerCount">Finding layers…</small></div><p>Click any label to switch its mapped pins on or off. Missing or unverified positions are never invented.</p><div class="named-layer-actions"><input type="search" id="namedLayerSearch" placeholder="Find a layer: clovers, Ammu-Nation…" aria-label="Search map layer labels"><button type="button" id="namedLayerShowAll">Show all</button><button type="button" id="namedLayerHideAll">Hide all</button></div><div id="namedLayers" class="named-layers" aria-label="Named map layer visibility"></div></section>
     </details>
@@ -129,6 +129,7 @@
       <div class="gridbuttons"><button id="pickRouteStart" type="button">⌖ Pick start on map</button><button id="routeVisible" type="button" class="accent">Smart route · visible unfinished</button></div>
       <p id="routeStartStatus" class="hint" role="status">Pick your starting point, then generate a route.</p>
       <p class="hint">Routes are geometric approximations, not GTA road navigation. Maximum 250 stops per automatic hunt; filter categories for more targeted routes.</p>
+      <section id="j397-daily-route" class="hint" hidden><button id="j397-add-daily" class="accent" type="button">Add today’s mainland stops</button><small style="display:block;margin-top:6px" aria-live="polite">Checking dated selections…</small></section>
       <div id="routeList" class="results"></div>
       <div class="gridbuttons"><button id="optimize" type="button">Order nearest</button><button id="fitRoute" type="button">See route on map</button><button id="clearRoute" type="button">Clear route</button><button id="copyRoute" type="button">Copy stops</button></div>
     </section>
@@ -171,8 +172,9 @@
   </aside>
   <main class="map-wrap">
     <details class="j217-vi-hub" id="j217-vi-hub">
-      <summary>VI tools</summary>
+      <summary>VI world guide</summary>
       <section class="j217-vi-panel" aria-label="GTA VI Leonida world guide">
+        <div class="j391-guide-head"><button type="button" id="j391-guide-back" aria-label="Close VI world guide and return to map">← Back to map</button></div>
         <span class="j217-kicker">ELARIO STUDIOS · LEONIDA</span><h2>One world. Every VI tool.</h2>
         <p>Choose In-game Map, Scaly or Loki. Each research style supports 2D and approximate 3D. The in-game Day tiles supply the in-game artwork. Rockstar's separate official printable poster view remains available. The Day image shows game geography; community marker placement and gameplay claims still need independent verification. VI databases and progress remain independent of GTA V Story and Online.</p>
         <figure><img src="./art/jura155-vi.webp" loading="lazy" decoding="async" alt="Original Elario Studios cinematic Leonida artwork, not a Rockstar screenshot"><figcaption>Original Elario Leonida scene · community coordinates remain provisional</figcaption></figure>

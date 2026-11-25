@@ -1,0 +1,67 @@
+name: Atlas 40.9 - original model studies and virtual garage
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas256-forge-geometry.js'
+      - 'atlas99-garage3d.js'
+      - 'atlas101-configurator.js'
+      - 'atlas263-forge-collections.js'
+      - 'atlas90-gallery.js'
+      - 'atlas90-seed.json'
+      - 'data/atlas-vehicle-intel.json'
+      - 'atlas-vehicle-configurator.html'
+      - 'atlas93-garage.html'
+      - 'tests/atlas409-model-studies.test.cjs'
+      - 'scripts/test_atlas409_virtual_garage.py'
+      - 'scripts/build_atlas410_forge_preview.py'
+      - '.github/workflows/atlas409-virtual-garage.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-vehicle-models:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Original geometry, existing configuration and Garage source contracts
+        run: |
+          node tests/atlas409-model-studies.test.cjs
+          python scripts/test_configurator_101.py
+          python scripts/test_vehicle_intel_104.py
+          python scripts/test_atlas293_garage_forge_handoff.py
+          node --check atlas99-garage3d.js
+          node --check atlas101-configurator.js
+          node --check atlas263-forge-collections.js
+          node --check atlas90-gallery.js
+      - name: Build actual public Cloudflare payload and audit
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install Chromium
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install --with-deps chromium
+      - name: Test original vehicle shapes and both world save journeys
+        run: |
+          python scripts/build_atlas410_forge_preview.py
+          python scripts/test_atlas409_virtual_garage.py
+      - name: Save rendered model evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas409-vehicle-study-browser-evidence
+          path: |
+            qa-evidence/chromium/atlas409-*.png
+            qa-evidence/chromium/elario-forge-preview.html
+          if-no-files-found: warn
+          retention-days: 14

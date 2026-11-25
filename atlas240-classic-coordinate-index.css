@@ -18,3 +18,6 @@
 
 /* Player-placed CTW map pins remain visually distinct from source-aligned references. */
 #j273-camera-pins .j241-source-pin[data-personal="true"]{background:#653474;border-color:#ffe08d;box-shadow:0 0 0 2px #211126,0 0 10px #ffce69ab}#j283-toggle-pins{font-weight:760}#j273-camera-list li button{min-height:40px}
+
+/* Classic source legend uses one shared category selection; no duplicate map layers. */
+.j402-category-legend{min-width:0;margin:12px 0;padding:10px;border:1px solid #936ca4;border-radius:10px}.j402-category-legend legend{padding:0 6px;color:#ffdf9f;font-weight:700}.j402-legend-actions,.j402-legend-rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:6px}.j402-legend-actions{margin-bottom:8px}.j402-legend-actions button,.j402-legend-rows label{box-sizing:border-box;min-height:44px;min-width:0;padding:8px;border:1px solid #846784;border-radius:8px;background:#352044;color:#f6e9ff;font:inherit;overflow-wrap:anywhere}.j402-legend-rows label{display:flex;align-items:center;gap:8px;cursor:pointer}.j402-legend-rows input{flex:none;width:18px;height:18px;accent-color:#ffcb72}.j402-legend-actions button:disabled{opacity:.5}.j402-legend-rows label:focus-within{outline:2px solid #ffdb9b;outline-offset:2px}

@@ -1,0 +1,37 @@
+name: Forge pinned vehicle metadata source audit
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'scripts/audit_durtyfree_vehicle_sources.py'
+      - '.github/workflows/forge-vehicle-source-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Fetch pinned source bytes outside the public payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/forge-source-audit"
+          mkdir -p "$dir"
+          trap 'rm -rf "$dir"' EXIT
+          for name in vehicleModKits.json vehicles.json; do
+            curl --fail --location --proto '=https' --retry 2 --max-time 90 --max-filesize 100000000 \
+              "https://raw.githubusercontent.com/DurtyFree/gta-v-data-dumps/b65684e00f689fdec405c5f1055322c802d3c895/$name" -o "$dir/$name"
+          done
+          mkdir -p qa-evidence/forge-source
+          python3 scripts/audit_durtyfree_vehicle_sources.py "$dir" qa-evidence/forge-source/schema-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: forge-vehicle-source-schema-audit
+          path: qa-evidence/forge-source/schema-report.json
+          retention-days: 7
+          if-no-files-found: error

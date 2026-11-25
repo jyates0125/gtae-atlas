@@ -1,0 +1,117 @@
+name: Atlas 47.1.4 - final candidate evidence
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - '.github/workflows/atlas4714-final-evidence.yml'
+      - 'scripts/test_atlas201_squalo_browser.py'
+      - 'scripts/test_atlas293_garage_forge_browser.py'
+      - 'scripts/test_atlas408_gallery_continuity.py'
+      - 'atlas101-configurator.js'
+      - 'scripts/browser_smoke.py'
+      - 'atlas-collectibles.html'
+      - 'atlas369-map-controls.js'
+      - 'atlas-vi.html'
+      - 'scripts/test_atlas222_vi_browser.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas4714-final-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  source-package:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit and build exact candidate
+        shell: bash
+        run: |
+          export CF_PAGES_COMMIT_SHA="$(git rev-parse HEAD)"
+          python scripts/audit_release.py
+          python scripts/test_universe_100.py
+          python scripts/test_atlas192_world_completion.py
+          python scripts/test_atlas293_garage_forge_handoff.py
+          python scripts/test_atlas151_visual_release.py
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Package verified static payload
+        shell: bash
+        run: |
+          git rev-parse HEAD > /tmp/atlas-candidate-sha
+          python - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          root=pathlib.Path('public')
+          expected=pathlib.Path('/tmp/atlas-candidate-sha').read_text().strip()
+          assert json.loads((root/'atlas-build-identity.json').read_text())['revision']==expected
+          files=sorted(p for p in root.rglob('*') if p.is_file())
+          assert files
+          with zipfile.ZipFile('atlas4714-candidate.zip','w',zipfile.ZIP_DEFLATED,compresslevel=3) as z:
+              for p in files:z.write(p,p.relative_to(root).as_posix())
+          with zipfile.ZipFile('atlas4714-candidate.zip') as z:
+              assert z.testzip() is None
+              assert set(z.namelist())=={p.relative_to(root).as_posix() for p in files}
+              assert json.loads(z.read('atlas-build-identity.json'))['revision']==expected
+          with open('atlas4714-candidate.zip','rb') as f:digest=hashlib.file_digest(f,'sha256').hexdigest()
+          pathlib.Path('atlas4714-candidate.sha256').write_text(digest+'  atlas4714-candidate.zip\n')
+          print('Exact candidate',expected,len(files),'files',digest)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: atlas4714-candidate-package-not-production
+          path: |
+            atlas4714-candidate.zip
+            atlas4714-candidate.sha256
+          if-no-files-found: error
+          retention-days: 21
+  affected-forge-and-gallery:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    env:
+      ATLAS_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+          python -m pip install playwright==1.58.0
+          python -m playwright install ${{ matrix.browser }}
+      - name: Affected Garage/Forge journeys
+        run: |
+          python scripts/test_atlas201_squalo_browser.py
+          python scripts/test_atlas293_garage_forge_browser.py
+      - name: Gallery continuity
+        if: matrix.browser == 'chromium'
+        run: python scripts/test_atlas408_gallery_continuity.py
+      - name: Owner visual review captures
+        run: python scripts/capture_design_review.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas4714-review-${{ matrix.browser }}
+          path: qa-evidence/
+          if-no-files-found: warn
+          retention-days: 21

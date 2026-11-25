@@ -8,7 +8,7 @@ loader=(root/'heist-pages.js').read_text()
 assert "j169-views" in js and 'j169-view' in css
 for phrase in ['Enhanced map','Objective details','Route planning','Game map + pins','Vault & objectives','Museum & objectives','Compound & objectives']:
  assert phrase in js,phrase
-assert "id==='cayo-perico'" in js and "originalFrame.src='./atlas-cayo.html'" in js
+assert "id==='cayo-perico'" in js and "open.href='#j180-shell'" in js and "originalFrame.src='./atlas-cayo.html'" not in js
 assert 'oldLink.replaceWith(sourceBtn)' in js, 'Cayo original map CTA must not duplicate the existing full-size source link'
 assert "id==='diamond-casino'?'Vault & objectives'" in js
 assert 'jura159-heist-' in js and 'jura159-heist-' in loader

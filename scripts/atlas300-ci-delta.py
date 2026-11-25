@@ -2,12 +2,14 @@
 """Atlas 30.0: skip expensive unrelated PR synchronize checks.
 
 GitHub's pull_request.paths matches the *whole PR diff*. For successive
-commits on a long-lived staging PR, match only the actual new HEAD delta.
+commits on a long-lived staging PR, match the event's complete before/after delta.
 Initial PR checks and manually dispatched release checks always run.
 If a Git diff cannot be trusted, fail open and run the requested checks.
 """
 from __future__ import annotations
 import fnmatch
+import json
+import re
 import os
 from pathlib import Path
 import subprocess
@@ -47,12 +49,32 @@ def should_run(event: str, action: str, changed: list[str] | None, patterns: lis
     return changed is None or relevant(changed,patterns)
 
 def current_changes() -> list[str] | None:
+    """Only skip when the complete synchronize event range is trustworthy.
+
+    Shallow checkouts often lack an earlier pushed commit; in that case run
+    checks rather than guessing a range or silently inspecting only HEAD^.
+    """
     try:
-        command=["git","diff","--name-only","--no-renames","--diff-filter=ACDMRT","HEAD^","HEAD"]
-        result=subprocess.run(command,cwd=ROOT,check=True,text=True,capture_output=True,timeout=15)
-        return [name.strip() for name in result.stdout.splitlines() if name.strip()]
-    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
-        return None # Insufficient checkout history -> safety-first run tests
+        event_path=os.environ.get("GITHUB_EVENT_PATH")
+        if not event_path:
+            return None
+        payload=json.loads(Path(event_path).read_text(encoding="utf-8"))
+        if not isinstance(payload,dict) or payload.get("action")!="synchronize":
+            return None
+        before,after=payload.get("before"),payload.get("after")
+        if not all(isinstance(v,str) and re.fullmatch(r"[0-9a-f]{40}",v) and v!="0"*40 for v in (before,after)):
+            return None
+        def git(*args):
+            return subprocess.run(["git",*args],cwd=ROOT,check=True,text=True,capture_output=True,timeout=15).stdout
+        if git("rev-parse","HEAD").strip()!=after:
+            return None
+        # Non-ancestor/force-push or unavailable shallow history is fail-open.
+        git("merge-base","--is-ancestor",before,after)
+        output=git("diff","--name-only","-z","--no-renames","--diff-filter=ACDMRT",before,after)
+        return [name for name in output.split("\0") if name]
+    except (OSError, ValueError, TypeError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return None
+
 
 def main() -> None:
     if len(sys.argv)!=2 or not sys.argv[1].startswith(".github/workflows/") or not sys.argv[1].endswith(".yml"):

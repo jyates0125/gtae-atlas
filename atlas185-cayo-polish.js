@@ -124,16 +124,17 @@ function markerLabel(button){
  return (button.getAttribute('aria-label')||button.title||'Cayo location')
    .replace(/\s*\(approximate\)\s*$/i,'');
 }
-function presentNearby(items){
+function presentNearby(items,origin){
  info.hidden=false;info.replaceChildren();
- const close=makeButton('j180-info-close','×',()=>{info.hidden=true});
+ const close=makeButton('j180-info-close','×',()=>{info.hidden=true;origin?.focus({preventScroll:true})});
  close.setAttribute('aria-label','Close nearby locations');
  const heading=document.createElement('strong');
  heading.textContent='Choose nearby location';
  const note=document.createElement('p');
- note.textContent=items.length+' markers share this small map area. Choose the exact location below; positions remain approximate.';
+ note.textContent=items.length+' markers share this small map area. Choose the intended reference below; positions remain approximate.';
  const list=document.createElement('div');list.className='j185-cluster-choices';
- for(const node of items.slice(0,12)){
+ // Keep every eligible marker available, even in a dense group at low zoom.
+ for(const node of items){
   const choice=makeButton('j185-cluster-choice',markerLabel(node),()=>{
    directSelection=true;
    try{node.click();}finally{directSelection=false;}
@@ -144,17 +145,19 @@ function presentNearby(items){
  requestAnimationFrame(()=>list.querySelector('button')?.focus({preventScroll:true}));
 }
 world?.addEventListener('click',event=>{
- if(directSelection)return;
+ // Enter/Space already identifies one focused marker unambiguously.
+ if(directSelection||event.detail===0)return;
  const target=event.target.closest?.('.j181-hotspot,.j180-chest');
  if(!target||target.hidden)return;
  const rect=target.getBoundingClientRect();
  const x=rect.left+rect.width/2,y=rect.top+rect.height/2;
  const visible=[...world.querySelectorAll('.j181-hotspot,.j180-chest')].filter(node=>{
-  if(node.hidden||getComputedStyle(node).display==='none')return false;
+  if(node.hidden||node.disabled||node.closest('[hidden],[inert]')||getComputedStyle(node).display==='none'||getComputedStyle(node).visibility!=='visible')return false;
   const r=node.getBoundingClientRect();
   if(!r.width||!r.height)return false;
   const dx=r.left+r.width/2-x,dy=r.top+r.height/2-y;
-  return Math.hypot(dx,dy)<=28;
+  const overlaps=r.left<rect.right&&r.right>rect.left&&r.top<rect.bottom&&r.bottom>rect.top;
+  return overlaps||Math.hypot(dx,dy)<=28;
  });
  if(visible.length<2)return;
  event.preventDefault();event.stopImmediatePropagation();
@@ -164,7 +167,7 @@ world?.addEventListener('click',event=>{
   const db=Math.hypot(rb.left+rb.width/2-x,rb.top+rb.height/2-y);
   return da-db;
  });
- presentNearby(visible);
+ presentNearby(visible,target);
 },true);
  return true;
 }

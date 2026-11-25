@@ -50,6 +50,8 @@ function flatReference(){const ref=publicFlatMaps[id];if(!ref)return;const ep=do
 const alias={'vice-city':'vc','gta-iii':'iii','vice-city-stories':'vcs','liberty-city-stories':'lcs','chinatown-wars':'ctw','lost-and-damned':'tlad','ballad-of-gay-tony':'tbogt'};
 const $=q=>document.querySelector(q),E=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
 const params=new URLSearchParams(location.search),raw=(params.get('game')||params.get('world')||'iii').toLowerCase();const id=worlds[raw]?raw:(alias[raw]||'iii'),w=worlds[id];
+// Legacy episode bookmarks now enter the native map unless the notebook is explicitly requested.
+if(['tlad','tbogt'].includes(id)&&params.get('notebook')!=='1'){location.replace('./atlas-iv.html?scope='+id);return;}
 const key='team-jura-atlas98-classic-'+id+'-v1';const blank=()=>({schema:'team-jura-atlas98-classic-v1',world:id,markers:[],completed:[],background:null});
 function mergeNotebook(existing,incoming,world,sets,collections){
  if(!incoming||incoming.schema!=='team-jura-atlas98-classic-v1'||incoming.world!==world||!Array.isArray(incoming.markers)||incoming.markers.length>1000)throw Error('Invalid world schema');

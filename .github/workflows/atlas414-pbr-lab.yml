@@ -1,0 +1,77 @@
+name: Atlas 41.4 - isolated automotive PBR lab
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'scripts/forge-pbr-lab/**'
+      - 'scripts/test_atlas414_pbr_lab.py'
+      - '.github/workflows/atlas414-pbr-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pbr-lab:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Enforce final Forge quality policy
+        run: |
+          node scripts/forge-pbr-lab/test-release-policy.mjs
+          python scripts/forge-pbr-lab/test_audit_glb.py
+      - name: Prepare isolated local asset benchmark
+        run: |
+          mkdir -p qa-evidence/forge-pbr
+          cp scripts/forge-pbr-lab/{index.html,lab.js,assets.js,ASSET-SOURCES.txt} qa-evidence/forge-pbr/
+          curl --fail --location --retry 3 https://raw.githubusercontent.com/drcollect/collect-cars/9b8eb87431d86cc9c9b4a8c89c1d402d978e337c/models/full/wedge.glb -o qa-evidence/forge-pbr/wedge.glb
+          test "$(git hash-object qa-evidence/forge-pbr/wedge.glb)" = c966f913a65e84cc22526d3617792bb5681fee8b
+          curl --fail --location --retry 3 https://raw.githubusercontent.com/drcollect/collect-cars/9b8eb87431d86cc9c9b4a8c89c1d402d978e337c/LICENSE -o qa-evidence/forge-pbr/SOURCE-LICENSE.txt
+          test "$(git hash-object qa-evidence/forge-pbr/SOURCE-LICENSE.txt)" = 80ec292f2897ae16ae537a6a30b772ce0a57a253
+          curl --fail --location --retry 3 --max-time 90 https://tevy.dev/models/muscle-car/v1/lod0.glb -o qa-evidence/forge-pbr/fastback.glb
+          echo 'ecf099c15c25ef42f42d5778932b2907307d03468c9abd86776c83db1f69c12d  qa-evidence/forge-pbr/fastback.glb' | sha256sum -c -
+          python scripts/forge-pbr-lab/audit_glb.py qa-evidence/forge-pbr/fastback.glb > qa-evidence/forge-pbr/fastback-materials.json
+          # Check pinned digests for all candidate bytes before rendering.
+          curl --fail --location --retry 3 --max-time 90 --max-filesize 12000000 https://tevy.dev/models/supercar/v2/lod0.glb -o qa-evidence/forge-pbr/supercar.glb
+          curl --fail --location --retry 3 --max-time 90 --max-filesize 5000000 https://tevy.dev/models/supercar/v2/lod1.glb -o qa-evidence/forge-pbr/supercar-balanced.glb
+          curl --fail --location --retry 3 --max-time 90 --max-filesize 4000000 https://tevy.dev/models/formula-car/v1/lod0.glb -o qa-evidence/forge-pbr/formula.glb
+          echo '60b2270427220e045af1fa8368b9107021c473178045eb8fa2395698b4e183ab  qa-evidence/forge-pbr/supercar.glb' | sha256sum -c -
+          echo '7c43eb11cbd921c9c23b6767c0b0d94f7084dff76680479bec94c7cb0bde5dd9  qa-evidence/forge-pbr/supercar-balanced.glb' | sha256sum -c -
+          echo '2ab5f663afa09effe72e049c60f00f3e06d488f0007ba628f53d06c56ea98722  qa-evidence/forge-pbr/formula.glb' | sha256sum -c -
+          for candidate in supercar supercar-balanced formula; do
+            python scripts/forge-pbr-lab/audit_glb.py "qa-evidence/forge-pbr/$candidate.glb" > "qa-evidence/forge-pbr/$candidate-materials.json"
+          done
+          (cd qa-evidence/forge-pbr && sha256sum supercar.glb supercar-balanced.glb formula.glb | tee CANDIDATE-SHA256.txt)
+          npm install --prefix qa-evidence/forge-pbr --ignore-scripts --no-audit --no-fund three@0.186.0
+      - name: Render and test actual model
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install --with-deps chromium
+          python scripts/test_atlas414_pbr_lab.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas414-pbr-lab-evidence
+          path: |
+            qa-evidence/forge-pbr/*.png
+            qa-evidence/forge-pbr/index.html
+            qa-evidence/forge-pbr/lab.js
+            qa-evidence/forge-pbr/assets.js
+            qa-evidence/forge-pbr/wedge.glb
+            qa-evidence/forge-pbr/fastback.glb
+            qa-evidence/forge-pbr/*-materials.json
+            qa-evidence/forge-pbr/supercar.glb
+            qa-evidence/forge-pbr/supercar-balanced.glb
+            qa-evidence/forge-pbr/formula.glb
+            qa-evidence/forge-pbr/CANDIDATE-SHA256.txt
+            qa-evidence/forge-pbr/ASSET-SOURCES.txt
+            qa-evidence/forge-pbr/SOURCE-LICENSE.txt
+            qa-evidence/forge-pbr/node_modules/three/
+          retention-days: 14

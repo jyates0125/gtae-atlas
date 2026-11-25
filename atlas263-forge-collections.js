@@ -1,11 +1,11 @@
 /* Elario Forge collection hub. Read-only projection of existing local stores. */
-(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else if(root)api.start(root)})(typeof window==='undefined'?null:window,function(){'use strict';
+(function(root,factory){const api=factory(typeof module==='object'&&module.exports?require('./atlas256-forge-geometry.js'):root?.JuraForge);if(typeof module==='object'&&module.exports)module.exports=api;else if(root)api.start(root)})(typeof window==='undefined'?null:window,function(forge){'use strict';
 const keys={v:'team-jura-atlas101-concept-presets-v1',vi:'team-jura-forge-vi-concept-presets-v1',garage:'team-jura-atlas93-garage-v1',owned:'team-jura-atlas90-collection-v1',story:'team-jura-forge-armory-story-v1',online:'team-jura-forge-armory-online-v1',viArmory:'team-jura-forge-armory-vi-v1'};
-const viNames={vi_cheetah95:'’95 Grotti Cheetah',vi_stanier55:'’55 Vapid Stanier',vi_dominator67_buggy:'’67 Vapid Dominator Buggy',vi_squalo:'Shitzu Squalo',vi_enduro:'Dinka Enduro Motorcycle',vi_crest_kayak:'Crest Kayak',vi_ganado_retro:'Ganado Retro Build'};
+const viNames=Object.freeze(Object.fromEntries(Object.entries(forge?.viCatalog||{}).map(([id,row])=>[id,row.name])));
 const worldNames={v:'GTA V / Online',vi:'GTA VI · Leonida',story:'GTA V Story',online:'GTA Online'};
 const object=x=>x&&typeof x==='object'&&!Array.isArray(x);
 const safeId=id=>typeof id==='string'&&/^[a-z0-9_-]{2,75}$/.test(id)&&!['__proto__','prototype','constructor'].includes(id);
-const nice=id=>id.replace(/_mk(\d+)/g,' Mk $1').replace(/[_-]/g,' ').replace(/([a-z])([0-9])/g,'$1 $2').replace(/\b[a-z]/g,c=>c.toUpperCase());
+const nice=id=>forge?.specialtyName?.(id)||id.replace(/_mk(\d+)/g,' Mk $1').replace(/[_-]/g,' ').replace(/([a-z])([0-9])/g,'$1 $2').replace(/\b[a-z]/g,c=>c.toUpperCase());
 const label=(value,fallback)=>typeof value==='string'&&value.trim()?value.trim().slice(0,72):fallback;
 const color=value=>typeof value==='string'&&/^#[a-f0-9]{6}$/i.test(value)?value:'#b99ad5';
 const HANDOFF='team-jura-forge-private-handoff-v1';
@@ -27,12 +27,13 @@ function summarize(world,model,kind,entry,name){
   accent:typeof d.accent==='string'&&/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent.toLowerCase():'Not saved',
   stance:savedText(d.stance,['street','low','raised']),
   kit:savedText(d.kit,['clean','sport','track']),
+  wheels:savedText(d.wheels,['classic','mesh','deepdish']),rim:savedText(d.rim,['silver','gold','black']),stripe:savedText(d.stripe,['none','single','dual']),livery:savedText(d.livery,['none','heritage','velocity','circuit','jura','fade']),liveryColor:typeof d.liveryColor==='string'&&/^#[a-f0-9]{6}$/i.test(d.liveryColor)?d.liveryColor.toLowerCase():'Not saved',
   lights:typeof d.lights==='boolean'?(d.lights?'On':'Off'):'Not saved'
  });
 }
 function compareFields(a,b){
  if(!a||!b||a.key===b.key||a.world!==b.world||a.model!==b.model)return null;
- const fields=[['Body', 'body'],['Showroom environment','environment'],['Surface finish','finish'],['Accent','accent'],['Ride height','stance'],['Aero / deck styling','kit'],['Concept lighting','lights']];
+ const fields=[['Body', 'body'],['Showroom environment','environment'],['Surface finish','finish'],['Accent','accent'],['Ride height','stance'],['Aero / deck styling','kit'],['Wheel design','wheels'],['Wheel finish','rim'],['Racing stripe','stripe'],['Original livery','livery'],['Livery RGB','liveryColor'],['Concept lighting','lights']];
  return [['Paint','paint',a.paint,b.paint],...fields.map(([label,key])=>[label,key,a[key],b[key]])]
   .filter(([label,key,left,right])=>label==='Paint'||left!=='Not saved'||right!=='Not saved');
 }
@@ -46,7 +47,7 @@ function collect(stores,weaponNames={}){
    for(const [id,raw] of Object.entries(source)){
     if(!modelOK(world,id))continue;
     const entries=kind==='named'?(Array.isArray(raw)?raw.slice(0,8):[]):[raw],seen=new Set();
-    for(const entry of entries){if(!object(entry)||entry.model!==id||!/^#[a-f0-9]{6}$/i.test(entry.paint||''))continue;const name=label(entry.name,kind==='primary'?'Primary design':'');if(!name||seen.has(name.toLowerCase()))continue;seen.add(name.toLowerCase());rows.push({world,kind:'vehicle',model:id,title:name,subtitle:world==='vi'?viNames[id]:nice(id),detail:kind==='primary'?'Primary design':'Named build',paint:color(entry.paint),href:vehicleLink(world,id,kind==='named'?name:''),privateVariant:kind==='named'?{world,model:id,name}:null,compare:summarize(world,id,kind,entry,name)})}
+    for(const entry of entries){if(!object(entry)||entry.model!==id||!/^#[a-f0-9]{6}$/i.test(entry.paint||''))continue;const name=label(entry.name,kind==='primary'?'Primary design':'');if(!name||seen.has(name.toLowerCase()))continue;seen.add(name.toLowerCase());rows.push({world,kind:'vehicle',model:id,title:name,subtitle:world==='vi'?viNames[id]:nice(id),detail:kind==='primary'?'Primary design':'Named build',paint:color(entry.paint),href:vehicleLink(world,id,kind==='named'?name:''),privateVariant:kind==='named'?{world,model:id,name}:null,preview:{body:entry.body,design:object(entry.design)?entry.design:{}},compare:summarize(world,id,kind,entry,name)})}
    }
   }
  }
@@ -76,6 +77,11 @@ function collect(stores,weaponNames={}){
    detail:isSaved?(isOwned?'Saved Garage build · marked owned':'Saved Garage build · not marked owned'):'Marked owned in My Garage',
    paint:color(meta?.paint),href:'./atlas93-garage.html?addModel='+encodeURIComponent(id)});
  }
+ for(const [key,mark] of Object.entries(ownedMarks)){
+  if(mark!==true)continue;
+  if(key.startsWith('vehicles5-story:')){const id=key.slice('vehicles5-story:'.length);if(!modelOK('v',id))continue;rows.push({world:'story',kind:'garage',model:id,title:nice(id),subtitle:'Story collection',detail:'Marked collected · Story',paint:color(null),href:'./atlas90-vehicles5.html?world=story&q='+encodeURIComponent(id)})}
+  else if(key.startsWith('vehicles6:')){const catalogId=key.slice('vehicles6:'.length);if(!safeId(catalogId))continue;const id=forge?.viModelFromOwnership?.(key);rows.push({world:'vi',kind:'garage',model:id||catalogId,title:id?viNames[id]:nice(catalogId),subtitle:'Leonida collection',detail:'Marked owned in My Garage VI',paint:color(null),href:id?vehicleLink('vi',id):'./atlas90-vehicles6.html?q='+encodeURIComponent(nice(catalogId))})}
+ }
  for(const [world,store] of [['story',stores.story],['online',stores.online],['vi',stores.viArmory]]){
   if(!object(store)||store.schema!==1||!Array.isArray(store.items))continue;
   for(const id of [...new Set(store.items)].slice(0,8)){
@@ -90,7 +96,30 @@ function start(w){const d=w.document;async function init(){
  const root=d.getElementById('forgeCollectionRows');if(!root)return;
  const make=(tag,txt,cls)=>{const n=d.createElement(tag);if(txt!==undefined)n.textContent=txt;if(cls)n.className=cls;return n};
  const search=d.getElementById('forgeCollectionSearch'),world=d.getElementById('forgeCollectionWorld'),kind=d.getElementById('forgeCollectionKind'),count=d.getElementById('forgeCollectionCount');
+ const params=new URL(w.location.href).searchParams;
+ if([...world.options].some(o=>o.value===params.get('world')))world.value=params.get('world');
+ if([...kind.options].some(o=>o.value===params.get('kind')))kind.value=params.get('kind');
  let names={},rows=[],unavailable=false,selected=[],comparisonHint='';
+ const preview=make('section',undefined,'fc-live-preview');preview.hidden=true;
+ const previewTitle=make('h3','Saved vehicle build'),previewNote=make('p','Review recorded workshop choices for this vehicle. Open Forge Workshop to edit and save.'),previewClose=make('button','Close build preview'),previewHost=make('div');
+ previewClose.type='button';preview.append(previewTitle,previewNote,previewClose,previewHost);root.before(preview);
+ let previewTrigger=null;
+ function closePreview(restoreFocus=false){w.TeamJuraGarage3D?.dispose();previewHost.replaceChildren();preview.hidden=true;if(restoreFocus&&previewTrigger?.isConnected)previewTrigger.focus();previewTrigger=null}
+ previewClose.onclick=()=>closePreview(true);
+ function previewType(row){
+  if(!row.preview||!w.JuraForge?.modelProfile)return null;
+  const types=['Sports concept','Touring concept','Pickup / Truck','Boat / Watercraft concept'];
+  const original=types.find(type=>w.JuraForge.modelProfile(type,row.model));
+  if(!original)return null;
+  if(original.includes('Watercraft'))return original;
+  const chosen={sports:'Sports concept',standard:'Touring concept',truck:'Pickup / Truck'}[row.preview.body];
+  return chosen||original;
+ }
+ function openPreview(row,button,type){
+  closePreview();previewTrigger=button;previewTitle.textContent=row.title+' · '+row.subtitle;preview.hidden=false;
+  w.TeamJuraGarage3D.mountReference(previewHost,{name:row.subtitle,model:row.model,type,paint:row.paint,design:row.preview.design,readOnly:true});
+  previewClose.focus();preview.scrollIntoView({block:'nearest',behavior:'auto'});
+ }
  const comparePanel=d.getElementById('forgeComparePanel'),compareStatus=d.getElementById('forgeCompareStatus'),compareBody=d.getElementById('forgeCompareBody'),compareClear=d.getElementById('forgeCompareClear');
  const read=key=>{try{return JSON.parse(w.localStorage.getItem(key)||'null')}catch{unavailable=true;return null}};
  try{const res=await w.fetch('./data/atlas192-vi-weapons.json');if(res.ok){const data=await res.json();if(data.scope==='vi'&&data.kind==='weapon'&&Array.isArray(data.records))for(const item of data.records)if(safeId(item.id)&&typeof item.name==='string')names[item.id]=item.name}}catch{}
@@ -119,7 +148,7 @@ function start(w){const d=w.document;async function init(){
    const tr=make('tr'),head=make('th',name);head.scope='row';tr.append(head);
    for(const value of [left,right]){
     const cell=make('td');
-    if((key==='paint'||key==='accent')&&/^#[0-9a-f]{6}$/i.test(value)){
+    if((key==='paint'||key==='accent'||key==='liveryColor')&&/^#[0-9a-f]{6}$/i.test(value)){
      const chip=make('span',undefined,'fc-mini-paint');chip.style.setProperty('--fc-paint',value);chip.setAttribute('aria-hidden','true');cell.append(chip);
     }
     cell.append(make('span',value));tr.append(cell);
@@ -132,12 +161,12 @@ function start(w){const d=w.document;async function init(){
   const term=search.value.trim().toLowerCase();
   const matches=rows.filter(x=>(world.value==='all'||x.world===world.value)&&(kind.value==='all'||x.kind===kind.value)&&(!term||[x.title,x.subtitle,x.detail,x.model].join(' ').toLowerCase().includes(term)));
   count.textContent=matches.length+' of '+rows.length+' saved entries'+(unavailable?' · Some local data unavailable':'');
-  root.replaceChildren();
+  closePreview();root.replaceChildren();
   for(const row of matches){
    const card=make('article',undefined,'fc-entry'),swatch=make('span',undefined,'fc-swatch');
    swatch.style.setProperty('--fc-paint',row.paint);swatch.setAttribute('aria-hidden','true');
    card.append(swatch,make('p',worldNames[row.world]+' · '+row.detail,'eyebrow'),make('h3',row.title),make('p',row.subtitle));
-   const a=make('a','Open in '+(row.kind==='armory'?'Armory':row.kind==='garage'?'My Garage':'Forge Studio'));a.href=row.href;
+   const a=make('a','Open in '+(row.kind==='armory'?'Armory':row.kind==='garage'?(row.world==='vi'?'vehicle collection':row.world==='story'?'Story collection':'Garage management'):'Forge Studio'));a.href=row.href;
    if(row.privateVariant){
     a.addEventListener('click',event=>{
      try{w.sessionStorage.setItem(HANDOFF,JSON.stringify(row.privateVariant))}
@@ -148,6 +177,8 @@ function start(w){const d=w.document;async function init(){
     });
    }
    card.append(a);
+   const type=previewType(row);
+   if(row.preview&&w.TeamJuraGarage3D?.mountReference){const live=make('button','Review saved build','fc-live-model');live.type='button';live.onclick=()=>openPreview(row,live,type);card.append(live)}
    if(row.compare){
     const chosen=selected.includes(row.compare.key);
     const button=make('button',chosen?'Remove from comparison':'Compare saved design','fc-compare-toggle');

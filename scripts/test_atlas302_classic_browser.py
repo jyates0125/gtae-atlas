@@ -35,7 +35,7 @@ try:
    errors=[]
    page.on('pageerror',lambda e:errors.append(str(e)))
    for game in IDS:
-    page.goto(BASE+'map-hub.html?game='+game,wait_until='domcontentloaded',timeout=45000)
+    page.goto(BASE+'map-hub.html?game='+game+'&notebook=1',wait_until='domcontentloaded',timeout=45000)
     key=store_key(game)
     raw=json.dumps(valid(game),separators=(',',':'))
     page.evaluate("([key,text])=>localStorage.setItem(key,text)",[key,raw])

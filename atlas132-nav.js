@@ -4,8 +4,8 @@
 (()=>{'use strict';
 const CATEGORIES=[
  {title:'START & COMMUNITY',prefix:'start',items:[['Welcome','index.html'],['Enter Atlas dashboard','atlas-dashboard.html'],['Choose a world','atlas97-journey.html'],['All 13 maps','maps.html'],['Guest progress & backup','atlas-account.html'],['Share the Atlas','atlas-share.html'],['One Last Ride','one-last-ride.html'],['Team Jura','team-jura.html'],['Elario Studios','elario.html']]},
- {title:'GAME MAPS & EXPLORERS',prefix:'maps',items:[['GTA V Story','atlas.html'],['GTA Online','atlas-online.html'],['Leonida · Community Research 2D / 3D','atlas-vi.html'],['GTA VI Story · Official map','atlas-vi.html?view=rockstar'],['Cayo Perico','heist-cayo-perico.html'],['GTA IV','atlas-iv.html'],['San Andreas','atlas-sa.html'],['Vice City','map-hub.html?game=vc'],['GTA III','map-hub.html?game=iii'],['Vice City Stories','map-hub.html?game=vcs'],['Liberty City Stories','map-hub.html?game=lcs'],['Chinatown Wars','map-hub.html?game=ctw'],['The Lost and Damned (TLAD)','map-hub.html?game=tlad'],['The Ballad of Gay Tony (TBOGT)','map-hub.html?game=tbogt'],['Map directory','maps.html']]},
- {title:'COLLECTIONS & PLAYER TOOLS',prefix:'tools',items:[['Universe database','atlas-database.html'],['GTA V vehicles','atlas90-vehicles5.html'],['GTA VI vehicle research','atlas90-vehicles6.html'],['GTA V Story Weapons','atlas90-weapons.html?world=story'],['GTA Online Weapons','atlas90-weapons.html'],['GTA VI Weapon Research','atlas90-weapons6.html'],['All searchable characters','atlas-characters.html'],['Animals','atlas-animals.html'],['Collectibles','atlas-collectibles.html'],['My Garage','atlas93-garage.html'],['My Crew','my-crew.html'],['Vehicle 3D concept','atlas-vehicle-configurator.html'],['Atlas Passport','atlas-passport.html'],['Tracker & HQ','atlas81-hq.html'],['Cheat sheets','atlas-cheats.html'],['Guides','guides.html'],['Activities','atlas-activities.html'],['Your toolkit','atlas-toolkit.html']]},
+ {title:'GAME MAPS & EXPLORERS',prefix:'maps',items:[['GTA V Story','atlas.html'],['GTA Online','atlas-online.html'],['Leonida · Community Research 2D / 3D','atlas-vi.html'],['GTA VI Story · Official map','atlas-vi.html?view=rockstar'],['Cayo Perico','heist-cayo-perico.html'],['GTA IV','atlas-iv.html'],['San Andreas','atlas-sa.html'],['Vice City','map-hub.html?game=vc'],['GTA III','map-hub.html?game=iii'],['Vice City Stories','map-hub.html?game=vcs'],['Liberty City Stories','map-hub.html?game=lcs'],['Chinatown Wars','map-hub.html?game=ctw'],['The Lost and Damned (TLAD)','atlas-iv.html?scope=tlad'],['The Ballad of Gay Tony (TBOGT)','atlas-iv.html?scope=tbogt'],['Map directory','maps.html']]},
+ {title:'COLLECTIONS & PLAYER TOOLS',prefix:'tools',items:[['Universe database','atlas-database.html'],['GTA V vehicles','atlas90-vehicles5.html'],['GTA VI vehicle research','atlas90-vehicles6.html'],['GTA V Story Weapons','atlas90-weapons.html?world=story'],['GTA Online Weapons','atlas90-weapons.html'],['GTA VI Weapon Research','atlas90-weapons6.html'],['All searchable characters','atlas-characters.html'],['Animals','atlas-animals.html'],['Collectibles','atlas-collectibles.html'],['My Garage','atlas-forge-collections.html'],['My Crew','my-crew.html'],['Garage workshop','atlas-vehicle-configurator.html'],['Atlas Passport','atlas-passport.html'],['Tracker & HQ','atlas81-hq.html'],['Cheat sheets','atlas-cheats.html'],['Guides','guides.html'],['Activities','atlas-activities.html'],['Your toolkit','atlas-toolkit.html']]},
  {title:'HEISTS & MISSIONS',prefix:'heists',items:[['Heists HQ','heists.html'],['Cayo Perico heist','heist-cayo-perico.html'],['Diamond Casino','heist-diamond-casino.html'],['Doomsday Act I','heist-doomsday-act-1.html'],['Doomsday Act II','heist-doomsday-act-2.html'],['Doomsday Act III','heist-doomsday-act-3.html'],['Pacific Standard','heist-pacific-standard.html'],['Fleeca Job','heist-fleeca.html'],['Prison Break','heist-prison-break.html'],['Humane Labs','heist-humane-labs.html'],['Auto Shop','heist-auto-shop.html'],['Cluckin Bell','heist-cluckin-bell.html'],['Series A Funding','heist-series-a.html'],['Agency VIP Contract','heist-agency-vip.html'],['Salvage Yard','heist-salvage-yard.html'],['Kortz Center research','heist-kortz-center.html']]},
  {title:'RESEARCH & STUDIO',prefix:'research',items:[['GTA VI Research','atlas-research.html'],['Landmark Library','atlas98-landmarks.html'],['Newsroom','atlas-news.html'],['Daily Intel','atlas87-daily.html'],['Atlas Dispatch','atlas93-dispatch.html'],['Source Registry','atlas-source-registry.html'],['Evidence & Verification','atlas-verification.html'],['Credits & Rights','atlas-credits.html'],['Style Lab','atlas98-style-lab.html'],['Data Lab','atlas98-data-lab.html']]}
 ];
@@ -87,7 +87,17 @@ function build(){
  const mapHost=document.getElementById('j369-site-tools');
  if(cayoHost)cayoHost.append(wrap);
  else if(mapHost)mapHost.append(wrap);
- else document.body.append(wrap);
+ else {
+   // A dedicated normal-flow menu row cannot cover another page action.
+   // Prefer the page header when it is in flow, otherwise use the existing footer position.
+   wrap.classList.add('j391-inline');
+   // Rehome a legacy standalone All Maps link without changing its destination.
+   const standaloneMaps=document.querySelector('body > a[data-j87-maps-link]');
+   if(standaloneMaps)wrap.prepend(standaloneMaps);
+   const header=document.querySelector('body > header');
+   if(header&&!['fixed','absolute'].includes(getComputedStyle(header).position))header.after(wrap);
+   else document.body.append(wrap);
+ }
  render();
  // Production builder records all public HTML pages; expose the ones not in
  // the prominent categories under an honest "Other public pages" section.

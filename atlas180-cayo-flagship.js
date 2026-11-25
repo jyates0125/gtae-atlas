@@ -46,7 +46,7 @@ const legendEntries=[
 const categoryDefaults={'entry':true,'exit':true,'loot':true,'intel':true,'ref-loot':true,'ref-bolts':true,'ref-grapple':true,'ref-clothes':true,'ref-truck':true,'ref-powder':true,'ref-water':true,'chest':true};
 const disabled=new Set();
 function repaintLegend(){
- for(const b of legendRows.querySelectorAll('button'))b.setAttribute('aria-pressed',String(!disabled.has(b.dataset.cat)));
+ for(const b of legendRows.querySelectorAll('button:not([data-j181-cat])'))b.setAttribute('aria-pressed',String(!disabled.has(b.dataset.cat)));
  for(const b of refLayer.querySelectorAll('.j180-refpin'))b.hidden=disabled.has(b.dataset.cat)||focus.dataset.mapSource!=='original';
  for(const b of chestLayer.querySelectorAll('.j180-chest'))b.hidden=disabled.has('chest')||focus.dataset.mapSource!=='original'||(todayOnly&&Boolean(activeIds.length)&&!activeIds.includes(+b.dataset.chest));
 }
@@ -89,8 +89,8 @@ const dailyCopy=el('div');
 dailyCopy.append(el('h3','','Daily treasure chests'),el('p','','One land, one underwater · 19 possible locations · daily reset 06:00 UTC'));
 dailyHead.append(dailyCopy);
 const dailyButtons=el('div','j180-daily-buttons');
-const allBtn=btn('All 19 possible','j180-action',()=>{todayOnly=false;allBtn.setAttribute('aria-pressed','true');todayBtn.setAttribute('aria-pressed','false');repaintLegend();renderDaily();});
-const todayBtn=btn('Today’s two','j180-action',()=>{if(!activeIds.length){todayOnly=false;renderDaily();return;}todayOnly=true;allBtn.setAttribute('aria-pressed','false');todayBtn.setAttribute('aria-pressed','true');repaintLegend();renderDaily();});
+const allBtn=btn('All 19 possible','j180-action',()=>{preference='all';todayOnly=false;allBtn.setAttribute('aria-pressed','true');todayBtn.setAttribute('aria-pressed','false');repaintLegend();renderDaily();});
+const todayBtn=btn('Today’s two','j180-action',()=>{if(!activeIds.length){todayOnly=false;renderDaily();return;}preference='today';todayOnly=true;allBtn.setAttribute('aria-pressed','false');todayBtn.setAttribute('aria-pressed','true');repaintLegend();renderDaily();});
 allBtn.setAttribute('aria-pressed','true');todayBtn.setAttribute('aria-pressed','false');
 const checkLink=el('a','j180-action','Check current daily ↗');checkLink.href='https://gtamap.io/gta-online/daily/treasure-chests/';checkLink.target='_blank';checkLink.rel='noopener noreferrer';
 dailyButtons.append(allBtn,todayBtn,checkLink);dailyHead.append(dailyButtons);daily.append(dailyHead);
@@ -171,7 +171,8 @@ for(const [category,name,x,y,symbol] of equipmentRef){
  const p=btn(symbol,'j180-refpin',()=>showInfo(name,'Screenshot-referenced possible equipment/loot area. This is NOT a verified active spawn or exact coordinate. Use the game’s current Gather Intel results.'));
  p.dataset.cat=category;p.style.left=x+'%';p.style.top=y+'%';p.title=name+' · illustrative reference';p.setAttribute('aria-label',name+' (approximate)');refLayer.append(p);
 }
-let chestData=null,dailyData=null,bundledDaily=null,reviewedDaily={schema:1,rotations:{}},dailyPending=false,lastDailyAttempt=0,activeIds=[],todayOnly=false,personal=null,activeLabel='';
+let preference=null; // null means automatic current-pair mode when a valid pair arrives
+let chestData=null,dailyData=null,bundledDaily=null,reviewedDaily={schema:1,rotations:{}},dailyPending=false,lastDailyAttempt=0,activeIds=[],todayOnly=true,personal=null,activeLabel='';
 try{const p=JSON.parse(localStorage.getItem('teamjura-cayo-daily-choice-v1')||'null');if(p&&typeof p==='object')personal=p;}catch(_){}
 function dayKey(d){return new Date(d.getTime()-6*3600*1000).toISOString().slice(0,10)}
 function showInfo(title,description,number){
@@ -206,19 +207,24 @@ function updateActive(){
   activeIds=[dailyData.land,dailyData.underwater];activeLabel='calculated / unverified';}
  if(personal?.day===key&&Number.isInteger(personal.land)&&Number.isInteger(personal.underwater)&&personal.land>=1&&personal.land<=10&&personal.underwater>=11&&personal.underwater<=19){
   activeIds=[personal.land,personal.underwater];activeLabel='player-selected / not verified';}
- if(!activeIds.length&&todayOnly){todayOnly=false;allBtn.setAttribute('aria-pressed','true');todayBtn.setAttribute('aria-pressed','false')}
+ todayOnly=activeIds.length===2&&preference!=='all';
+ allBtn.setAttribute('aria-pressed',String(!todayOnly));todayBtn.setAttribute('aria-pressed',String(todayOnly));
  paintChests();renderDaily();
 }
 function renderDaily(){
  const now=new Date();dailyList.replaceChildren();
  if(!chestData){dailyStatus.textContent='Reference locations unavailable. Check the source map for today’s two chests.';return;}
  const current=activeIds.length===2;
- dailyStatus.textContent=current?('Current 06:00 UTC cycle · land #'+activeIds[0]+' + underwater #'+activeIds[1]+' highlighted in cyan · '+activeLabel+'. Check gameplay if a location differs.'):
+ dailyStatus.textContent=current?('Current 06:00 UTC cycle · land #'+activeIds[0]+' + underwater #'+activeIds[1]+' highlighted in cyan · '+activeLabel+'. Other locations are unavailable this cycle; All 19 possible is reference-only. Check gameplay if a location differs.'):
   'No current dated chest selection available. All 19 possible locations are shown in yellow; none is falsely marked active. Check the live source or enter your own two.';
  todayBtn.disabled=!current;todayBtn.title=current?'Show only the two current selections':'Current daily selection unavailable; all 19 remain visible';
- const list=chestData.spawns.filter(s=>!todayOnly||!current||activeIds.includes(s.id));
+ const list=chestData.spawns; // retain every numbered legend/reference entry
+ const chestLegend=legendRows.querySelector('[data-cat="chest"] .j180-legend-copy small');
+ if(chestLegend)chestLegend.textContent=current?'2 active (cyan) · 17 unavailable today':'19 possible · current pair unconfirmed';
  for(const s of list){
+  const inactive=current&&!activeIds.includes(s.id);
   const row=btn('','j180-chest-row',()=>{
+   if(inactive&&todayOnly){dailyStatus.textContent='Chest #'+s.id+' · '+s.landmark+' is not selected this cycle. It may return on a later daily reset at 06:00 UTC. All 19 possible opens reference positions; today’s two remain highlighted.';return;}
    if(focus.dataset.mapSource!=='original')activate('original');
    const pin=chestLayer.querySelector('[data-chest="'+s.id+'"]');
    pin?.focus({preventScroll:true});pin?.click();
@@ -226,7 +232,9 @@ function renderDaily(){
   });
   row.append(el('span','j180-chest-dot'+(activeIds.includes(s.id)?' is-active':''),'●'),
              el('span','', '#'+s.id+' · '+s.landmark),
-             el('small','',s.kind==='land'?'LAND':'UNDERWATER'));
+             el('small','',(s.kind==='land'?'LAND':'UNDERWATER')+' · '+(activeIds.includes(s.id)?'TODAY':inactive?'NOT ACTIVE':'UNCONFIRMED')));
+  row.classList.toggle('j393-inactive',inactive);row.setAttribute('data-availability',inactive?'inactive':activeIds.includes(s.id)?'active':'unconfirmed');
+  row.title=inactive?'Not available this cycle; All 19 possible opens archived/reference locations':'Chest location reference';
   dailyList.append(row);
  }
 }

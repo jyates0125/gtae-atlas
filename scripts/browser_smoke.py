@@ -25,7 +25,8 @@ CLASSIC_WORLDS={
     'tlad':('The Lost and Damned','Gang wars'),
     'tbogt':('The Ballad of Gay Tony','Base jumps'),
 }
-PAGES.extend('map-hub.html?game='+world for world in CLASSIC_WORLDS if world!='vc')
+PAGES.extend('map-hub.html?game='+world for world in CLASSIC_WORLDS if world not in ('vc','tlad','tbogt'))
+PAGES.extend(['atlas-iv.html?scope=tlad','atlas-iv.html?scope=tbogt'])
 HEIST_PAGES={p.name for p in ROOT.glob('heist-*.html')}
 if len(HEIST_PAGES)<15:
     raise SystemExit('The release must contain all 15 heist planning pages')
@@ -141,13 +142,14 @@ async def smoke():
                                     if not await drawer.is_visible():
                                         failures.append('All Pages button did not open navigation')
                                     else:
-                                        if path.startswith('map-hub.html?game=') or path=='atlas93-garage.html':
+                                        if path.startswith('map-hub.html?game=') or path in ('atlas93-garage.html','atlas-forge-collections.html'):
                                             active=drawer.locator('a[aria-current="page"]')
                                             if await active.count()!=1 or await active.get_attribute('href')!='./'+path:
                                                 failures.append('Directory current destination does not match '+path)
                                         await pg.locator('#j132-search').fill('My Garage')
-                                        if await drawer.locator('a[href="./atlas93-garage.html"]').count()!=1:
-                                            failures.append('All Pages search omitted My Garage')
+                                        garage_link=drawer.get_by_role('link',name='My Garage',exact=True)
+                                        if await garage_link.count()!=1 or await garage_link.get_attribute('href')!='./atlas-forge-collections.html':
+                                            failures.append('All Pages search omitted canonical My Garage collection hub')
                                         await pg.keyboard.press('Escape')
                                         if await drawer.is_visible():
                                             failures.append('All Pages Escape did not dismiss navigation')
@@ -178,8 +180,16 @@ async def smoke():
                                         await after.click()
                                         if await before.get_attribute('aria-pressed')!=original:
                                             failures.append('Gallery action did not restore: '+off)
-                                    if path=='atlas90-vehicles6.html' and await card.locator('img').get_attribute('src')!='./art/jura161-vehicles6.webp':
-                                        failures.append('VI gallery displayed out-of-world imagery')
+                                    if path=='atlas90-vehicles6.html':
+                                        invalid=await pg.locator('#j90Cards .j90-card').evaluate_all("""cards=>cards.some(card=>{
+                                          const src=card.querySelector('img')?.getAttribute('src');
+                                          const local=['./art/jura161-vehicles6.webp','./art/elario-watercraft-showroom.webp'];
+                                          const model=window.JuraForge?.viModelFromOwnership(card.dataset.recordId);
+                                          const visual=window.JuraViVehicleVisuals?.get(model);
+                                          return !!src&&!local.includes(src)&&src!==visual?.url;
+                                        })""")
+                                        if invalid:
+                                            failures.append('VI gallery displayed out-of-world imagery')
                                     await pg.locator('#j90Search').fill('zzx-nonexistent-atlas-marker')
                                     if '0 visible' not in await pg.locator('#j90Results').inner_text():
                                         failures.append('Gallery search failed to apply an empty-result filter')
@@ -262,23 +272,33 @@ async def smoke():
                                     failures.append('Story armory scope/collection failed: '+str(err)[:220])
                             if not failures and path=='atlas90-weapons6.html':
                                 try:
-                                    await pg.wait_for_function("document.querySelectorAll('#viWeaponCards .viweapon-card').length===7",timeout=10000)
+                                    weapon_records=json.loads((ROOT/'data/atlas192-vi-weapons.json').read_text(encoding='utf-8'))['records']
+                                    expected_ids={r['id'] for r in weapon_records}
+                                    await pg.wait_for_function("n => document.querySelectorAll('#viWeaponCards .viweapon-card').length===n",arg=len(expected_ids),timeout=15000)
+                                    if set(await pg.locator('#viWeaponCards .viweapon-card').evaluate_all("els=>els.map(e=>e.dataset.weaponId)"))!=expected_ids:
+                                        failures.append('GTA VI armory omitted source records')
                                     if await pg.locator('#viWeaponClass option').count()<3:
                                         failures.append('GTA VI weapon classes did not load from source evidence')
-                                    await pg.locator('#viWeaponSearch').fill('Girardi')
-                                    if await pg.locator('#viWeaponCards .viweapon-card').count()!=1:
-                                        failures.append('GTA VI armory search did not isolate Girardi evidence')
-                                    await pg.locator('#viWeaponCards .viweapon-note').click()
+                                    await pg.locator('#viWeaponSearch').fill('Girardi ES9')
+                                    expected_search={r['id'] for r in weapon_records if 'girardi es9' in ' '.join(str(r.get(k,'')) for k in ('name','group','evidence','description')).lower()}
+                                    actual_search=set(await pg.locator('#viWeaponCards .viweapon-card').evaluate_all("els=>els.map(e=>e.dataset.weaponId)"))
+                                    if actual_search!=expected_search or 'girardi-es9' not in actual_search:
+                                        failures.append('GTA VI armory search omitted base or variant evidence')
+                                    await pg.locator('[data-weapon-id="girardi-es9"] .viweapon-note').click()
                                     notes=await pg.evaluate("JSON.parse(localStorage.getItem('teamjura-vi-weapon-notes-v1')||'{}')")
                                     if not notes.get('seen',{}).get('girardi-es9'):
                                         failures.append('GTA VI weapon review did not persist to its own storage key')
                                     await pg.reload(wait_until='domcontentloaded')
-                                    await pg.wait_for_function("document.querySelectorAll('#viWeaponCards .viweapon-card').length===7",timeout=10000)
-                                    await pg.locator('#viWeaponSearch').fill('Girardi')
-                                    if await pg.locator('.viweapon-note').get_attribute('aria-pressed')!='true':
+                                    await pg.wait_for_function("n => document.querySelectorAll('#viWeaponCards .viweapon-card').length===n",arg=len(expected_ids),timeout=15000)
+                                    await pg.locator('#viWeaponSearch').fill('Girardi ES9')
+                                    if await pg.locator('[data-weapon-id="girardi-es9"] .viweapon-note').get_attribute('aria-pressed')!='true':
                                         failures.append('GTA VI weapon review lost on refresh')
-                                    if await pg.locator('#viWeaponCards img').count()!=0:
-                                        failures.append('GTA VI weapons unexpectedly display recycled GTA V archive images')
+                                    if await pg.locator('#viWeaponCards img.viweapon-linked-image').evaluate_all("els=>els.some(e=>!e.src.startsWith('https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_')&&!e.src.startsWith('https://vi.gtax.dev/images/weapons/'))"):
+                                        failures.append('GTA VI weapons display a non-approved media origin')
+                                    if await pg.locator('[data-weapon-id=\"girardi-es9\"] .viweapon-media figcaption').count()!=1:
+                                        failures.append('GTA VI official image provenance missing')
+                                    if await pg.locator('#viWeaponCards .viweapon-media').count()!=len(expected_search):
+                                        failures.append('GTA VI visual card missing from search results')
                                 except Exception as err:
                                     failures.append('GTA VI armory interactive checks failed: '+str(err)[:220])
                             if not failures and path=='atlas93-garage.html':
@@ -464,7 +484,7 @@ async def smoke():
                                     if not scoped or len(scoped)<1:
                                         failures.append('Mission-specific scoped POI did not persist')
                                     if mission=='cayo-perico':
-                                        if await pg.locator('#j167-heist-map a[href="./atlas-cayo.html"]').count()!=1:
+                                        if await pg.locator('#j167-heist-map a[href="#j180-shell"]').count()!=1:
                                             failures.append('Cayo island original-map and scoping source is not linked')
                                     actual_art=await pg.locator('.mapbox > img').get_attribute('src')
                                     mission=path.removeprefix('heist-').removesuffix('.html')
@@ -478,7 +498,7 @@ async def smoke():
                                     frame=pg.locator('#j164-map-frame')
                                     if not await frame.is_visible():
                                         failures.append('Embedded world map did not open')
-                                    expect='./atlas-cayo.html' if mission=='cayo-perico' else './atlas-online.html'
+                                    expect='./atlas-online.html'
                                     if await frame.get_attribute('src')!=expect:
                                         failures.append('Wrong game map loaded in mission workspace')
                                     await pg.locator('.j164-main').click()
@@ -549,8 +569,11 @@ async def smoke():
                                 try:
                                     await pg.wait_for_function("document.querySelector('#modelSelect')?.options.length > 20",timeout=8500)
                                     await pg.locator('#modelSelect').select_option('adder')
-                                    if await pg.locator('#concept3d canvas').count()!=1:
-                                        failures.append('Original 3D canvas missing')
+                                    stage=pg.locator('#concept3d')
+                                    if await stage.get_attribute('data-forge-status')!='reference' or await stage.get_attribute('data-forge-fidelity')!='reference-only' or await stage.locator('canvas').count()!=0:
+                                        failures.append('Unapproved substitute model or missing reference workshop')
+                                    if not await stage.locator('[data-forge-external-reference]').is_visible():
+                                        failures.append('Model reference link missing')
                                     await pg.locator('#paintColor').fill('#d84443')
                                     await pg.locator('#buildName').fill('Team Jura test concept')
                                     await pg.locator('#saveBuild').click()
@@ -559,7 +582,8 @@ async def smoke():
                                         failures.append('Concept preset did not save into isolated local storage')
                                     if 'addModel=adder' not in (await pg.locator('#addToGarage').get_attribute('href') or ''):
                                         failures.append('Chosen model does not link to My Garage')
-                                    await pg.locator('#resetCamera').click()
+                                    if await pg.locator('#resetCamera').is_visible() or not await pg.locator('#bodyStyle').is_disabled():
+                                        failures.append('Unavailable reference-only camera or body controls presented as usable')
                                 except Exception as exc:
                                     failures.append('Original 3D configurator browser check failed: '+str(exc)[:450])
                             if not failures and path in ('atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'):
@@ -617,19 +641,27 @@ async def smoke():
                                                 await target.close()
                                         await pg.locator('#recordDialog .u-close').click()
                                     if path=='atlas-characters.html':
-                                        portrait=pg.locator('#recordGrid .u-card').first
-                                        if await portrait.locator('a.u-portrait-source').count()!=1:
-                                            failures.append('Character image source credit not visible on its card')
+                                        # Use a known credited external reference, not the first alphabetically
+                                        # sorted card, which may have no individual portrait.
+                                        await pg.locator('#universeSearch').fill('Lester Crest')
+                                        portrait=pg.locator('#recordGrid .u-card').filter(has=pg.get_by_role('button',name='Lester Crest',exact=True))
+                                        await portrait.first.wait_for(timeout=10000)
+                                        portrait=portrait.first
+                                        credit=portrait.locator('a.u-portrait-source')
+                                        if await credit.count()!=1 or await credit.get_attribute('href')!='https://gta.fandom.com/wiki/Lester_Crest':
+                                            failures.append('Character image source credit not visible on its sourced card')
                                         art=portrait.locator('.u-image-character')
-                                        if await art.locator('img').count():
+                                        if await art.get_attribute('data-art-status')!='world-scene' and await art.locator('img').count():
                                             await art.locator('img').first.evaluate("(el)=>el.dispatchEvent(new Event('error'))")
-                                        fallback=art.locator('img').first
+                                        fallback=art.locator('img')
                                         if await fallback.count()!=1 or not (await fallback.get_attribute('src') or '').endswith('.webp'):
                                             failures.append('Character broken-image fallback must be a bundled cinematic world illustration, not initials')
                                         elif 'not an exact portrait' not in (await fallback.get_attribute('alt') or '').lower():
                                             failures.append('Fallback image must disclose that the scene is not a character likeness')
-                                        if 'NOT A PORTRAIT' not in (await art.locator('.u-image-note').inner_text()):
-                                            failures.append('Character fallback must disclose that illustrative world art is not a portrait')
+                                        note=art.locator('.u-image-note')
+                                        if await note.count()!=1 or 'NOT A PORTRAIT' not in (await note.inner_text()):
+                                            failures.append('Character fallback must have exactly one honest world-art disclaimer')
+                                        await pg.locator('#universeSearch').fill('')
                                     if path=='atlas-database.html':
                                         await pg.locator('#filterKind').select_option('vehicle')
                                         if await pg.locator('#recordGrid .u-card').count()<2:
@@ -856,7 +888,7 @@ async def smoke():
                                     await global_nav.click()
                                     if not await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot open')
                                     await pg.locator('#j132-search').fill('garage')
-                                    if await pg.locator('#j132-groups a[href="./atlas93-garage.html"]').count()==0:failures.append('Universal page search did not find garage')
+                                    if await pg.locator('#j132-groups a[href="./atlas-forge-collections.html"]').count()!=1:failures.append('Universal page search did not find My Garage collection hub')
                                     await pg.locator('.j132-close').click()
                                     if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot close')
                             if not failures and path in ('index.html','maps.html'):
@@ -937,8 +969,8 @@ async def smoke():
                                     if label in ('Graffiti Tags','Unique Stunt Jumps') and not await pg.locator('#item-1 a[href^="https://"]').count():
                                         failures.append(f'SA {label} source link missing')
                             if not failures and path=='atlas-cayo.html':
-                                if await pg.locator('#j121Original').count()!=1 or await pg.locator('#j121Planner').count()!=1:
-                                    failures.append('Original Cayo game map and separate heist planning tabs missing')
+                                if await pg.locator('#j180-shell').count()!=1:
+                                    failures.append('Old Cayo URL did not redirect to native island workspace')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 header_hq=pg.locator('header.topbar nav a[href="./atlas81-hq.html"]')
                                 if await header_hq.count()!=1 or not await header_hq.first.is_visible():
@@ -1061,7 +1093,7 @@ async def smoke():
                                             if await pg.locator('.j104-optional-world summary').count()!=1:
                                                 failures.append('General map not demoted to optional reference')
                                         if path=='heist-cayo-perico.html':
-                                            if await pg.locator('.j104-heist-actions a[href="./atlas-cayo.html"]').count()!=1:
+                                            if await pg.locator('.j104-heist-actions a[href="#j180-shell"]').count()!=1:
                                                 failures.append('Cayo island planner not directly linked')
                                 except Exception as exc:
                                     failures.append('Heist-specific planning UI unavailable: '+str(exc)[:330])
@@ -1247,8 +1279,10 @@ async def smoke():
                             if not failures and path=='atlas93-garage.html':
                                 if width==390:
                                     garage_nav=pg.locator('.mast nav')
-                                    if await garage_nav.locator('a').count()!=8:
-                                        failures.append('Mobile Garage navigation must preserve all eight current destinations, including GTA VI vehicles')
+                                    destinations=set(await garage_nav.locator('a').evaluate_all("els=>els.map(a=>a.getAttribute('href'))"))
+                                    expected={'./atlas81-hq.html','./maps.html','./heists.html','./atlas90-vehicles5.html','./atlas-database.html?kind=vehicle','./atlas-vehicle-configurator.html','./atlas93-dispatch.html','./atlas90-vehicles6.html','./atlas-forge-collections.html?world=vi&kind=vehicle'}
+                                    if destinations!=expected:
+                                        failures.append('Mobile Garage navigation must preserve all nine scoped destinations')
                                     metrics=await garage_nav.evaluate('(el)=>({height:el.getBoundingClientRect().height, scroll:el.scrollWidth,client:el.clientWidth,wrap:getComputedStyle(el).flexWrap})')
                                     if metrics['height']>65 or metrics['wrap']!='nowrap':
                                         failures.append('Garage mobile header navigation wraps into multiple rows')
@@ -1258,28 +1292,15 @@ async def smoke():
                                 buttons=pg.locator('#garageCards article.card button.primary')
                                 if await buttons.count()>0:
                                     await buttons.first.click()
-                                    if await pg.locator('#garageDetails .j99-showroom canvas').count()!=1:failures.append('3D concept preview missing from selected Garage vehicle')
                                     showroom=pg.locator('#garageDetails .j99-showroom')
-                                    camera_buttons=showroom.locator('.j99-3d-controls button')
-                                    expected_controls={'3/4 view','Front','Side','Top','＋ Zoom','− Zoom','Auto rotate'}
-                                    if set(await camera_buttons.all_text_contents())!=expected_controls:
-                                        failures.append('Current Forge camera or rotation controls missing')
-                                    if not await showroom.locator('.j256-rights').is_visible() or 'not a scanned or official model' not in (await showroom.locator('.j256-rights').inner_text()).lower():
-                                        failures.append('3D concept rights disclaimer missing')
-                                    forge_status=await showroom.get_attribute('data-forge-status')
-                                    if forge_status=='ready':
-                                        await camera_buttons.filter(has_text='Top').click()
-                                        await camera_buttons.filter(has_text='Auto rotate').click()
-                                        if await camera_buttons.filter(has_text='Stop rotation').get_attribute('aria-pressed')!='true':
-                                            failures.append('Forge rotation control did not activate')
-                                        await camera_buttons.filter(has_text='Stop rotation').click()
-                                    elif forge_status=='fallback':
-                                        if await showroom.locator('.j99-3d-stage').is_visible() or await showroom.locator('.j99-3d-controls').is_visible():
-                                            failures.append('Unavailable WebGL controls still presented as usable')
-                                        if not await showroom.locator('.j256-style').is_visible():
-                                            failures.append('Design controls missing in WebGL fallback')
-                                    else:
-                                        failures.append('Unknown Forge renderer status: '+str(forge_status))
+                                    if await showroom.get_attribute('data-forge-status')!='reference' or await showroom.get_attribute('data-forge-fidelity')!='reference-only':
+                                        failures.append('Garage must preserve honest reference-only workshop mode')
+                                    if await showroom.locator('canvas').count()!=0 or await showroom.locator('.j99-3d-controls').is_visible():
+                                        failures.append('Garage exposed substitute geometry or inactive camera controls')
+                                    if not await showroom.locator('.j256-rights').is_visible() or 'not replaced with a generic 3D body' not in (await showroom.locator('.j256-rights').inner_text()):
+                                        failures.append('Reference-only Garage disclaimer missing')
+                                    if not await showroom.locator('[data-forge-external-reference]').is_visible():
+                                        failures.append('Garage external reference link missing')
                                 else:failures.append('Garage vehicle catalogue did not load')
                                 await pg.locator('#garageSearch').fill('squalo')
                                 await pg.locator('#garageClassFilter').select_option('Boats & Watercraft')
@@ -1294,18 +1315,11 @@ async def smoke():
                                     if await pg.locator('#garageDetails .j99-showroom canvas').count()!=0:
                                         failures.append('Boat incorrectly represented as generic 3D car')
                                     else:
-                                        launch=pg.locator('#garageDetails .j256-launch')
-                                        if await launch.count()!=1:
-                                            failures.append('Class-specific marine concept launch missing')
-                                        else:
-                                            await launch.click()
-                                            marine=pg.locator('#garageDetails .j256-forge')
-                                            if await marine.get_attribute('data-forge-class')!='marine':
-                                                failures.append('Squalo must use marine geometry, never a road car')
-                                            if await marine.get_attribute('data-forge-status') not in ('ready','fallback'):
-                                                failures.append('Marine renderer did not initialize or provide fallback')
-                                            if not await marine.locator('.j256-rights').is_visible():
-                                                failures.append('Marine model disclaimer missing')
+                                        marine=pg.locator('#garageDetails .j256-forge')
+                                        if await marine.get_attribute('data-forge-status')!='reference' or await marine.get_attribute('data-forge-fidelity')!='reference-only':
+                                            failures.append('Squalo must retain honest reference-only mode until marine asset approval')
+                                        if not await marine.locator('.j256-rights').is_visible() or not await marine.locator('[data-forge-external-reference]').is_visible():
+                                            failures.append('Marine reference and disclaimer missing')
                                 await pg.locator('#garageClassFilter').select_option('all')
                                 await pg.locator('#garageSearch').fill('')
                             if not failures and path=='atlas-research.html':

@@ -1,0 +1,57 @@
+name: Atlas 47.1.1 - VI armory visual collection
+on:
+  pull_request:
+    branches: [development, feature/atlas4708-vi-official-weapon-media]
+    paths:
+      - 'atlas192-weapons6.*'
+      - 'atlas90-weapons6.html'
+      - 'atlas-credits.html'
+      - 'atlas4712-armory-credits.js'
+      - 'data/atlas192-vi-weapons.json'
+      - 'scripts/test_atlas4706_collection_browser.py'
+      - 'scripts/browser_smoke.py'
+      - '.github/workflows/atlas4711-vi-armory-visuals.yml'
+permissions:
+  contents: read
+jobs:
+  armory-visuals:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    env:
+      ATLAS_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node --check atlas192-weapons6.js
+          node --check atlas4712-armory-credits.js
+          python scripts/test_atlas192_world_completion.py
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install ${{ matrix.browser }}
+          python scripts/test_atlas4706_collection_browser.py
+      - name: Targeted Armory smoke
+        env:
+          ATLAS_SMOKE_ONLY: atlas90-weapons6.html
+        run: python scripts/browser_smoke.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas4712-armory-png-${{ matrix.browser }}
+          path: qa-evidence/atlas4712/
+          if-no-files-found: warn
+          retention-days: 21

@@ -1,0 +1,41 @@
+name: Atlas 40.1 - classic landmark layers
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas240-classic-coordinate-index.js'
+      - 'atlas271-source-progress.js'
+      - 'data/atlas401-*-landmarks.json'
+      - 'map-hub.html'
+      - 'atlas267-world-evidence.js'
+      - 'atlas277-offline-classic.js'
+      - 'scripts/test_atlas401_classic_landmarks.py'
+      - '.github/workflows/atlas401-classic-landmarks.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  classic-landmarks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          node --check atlas240-classic-coordinate-index.js
+          node --check atlas267-world-evidence.js
+          node --check atlas-sw.js
+          node tests/atlas400-source-progress.test.cjs
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+          node scripts/test-atlas277-offline.cjs
+          python -m pip install playwright==1.58.0
+          python -m playwright install chromium
+      - run: python scripts/test_atlas401_classic_landmarks.py

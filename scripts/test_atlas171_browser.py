@@ -30,8 +30,8 @@ try:
         context=browser.new_context(viewport={'width':width,'height':height},device_scale_factor=1)
         page=context.new_page()
         # Deterministic independent daily channel fixture: no live data or account dependency.
-        page.clock.set_fixed_time(datetime(2026,11,23,10,tzinfo=timezone.utc))
-        feed={'schema':1,'rotations':{'cayo-chests':{'activeIds':['cayo-chest-10','cayo-chest-18'],'checkedAtUtc':'2026-11-23T06:00:00Z','validUntilUtc':'2026-11-24T06:00:00Z','source':'QA fixture'}}}
+        page.clock.set_fixed_time(datetime(2026,11,24,10,tzinfo=timezone.utc))
+        feed={'schema':1,'rotations':{'cayo-chests':{'activeIds':['cayo-chest-10','cayo-chest-11'],'checkedAtUtc':'2026-11-24T06:00:00Z','validUntilUtc':'2026-11-25T06:00:00Z','source':'QA fixture'}}}
         page.route('https://raw.githubusercontent.com/jyates0125/gtae-atlas/refs/heads/data/online-rotations/online-rotation-current.json',lambda route:route.fulfill(json=feed,headers={'Access-Control-Allow-Origin':'*'}))
         page.goto(url,wait_until='domcontentloaded',timeout=50000)
         # The modern site header remains usable, but the old global floating
@@ -51,7 +51,7 @@ try:
         # Atlas 18 flagship starts in map-first mode; open the linked planning drawer.
         page.locator('#j180-shell').wait_for(state='visible',timeout=30000)
         page.wait_for_function("document.querySelectorAll('.j180-chest').length === 19",timeout=20000)
-        page.wait_for_function("Array.from(document.querySelectorAll('.j180-chest-active')).map(n=>n.dataset.chest).join(',')==='10,18'",timeout=20000)
+        page.wait_for_function("Array.from(document.querySelectorAll('.j180-chest-active')).map(n=>n.dataset.chest).join(',')==='10,11'",timeout=20000)
         assert 'calculated / unverified' in page.locator('.j180-daily-status').inner_text()
         assert page.locator('.j180-chest').count()==19, 'Published data must not delete possible spawn references'
         page.wait_for_function("['gta-wiki','local-trace'].includes(document.querySelector('#j167-heist-map')?.dataset.mapAsset)",timeout=30000)
@@ -71,6 +71,19 @@ try:
         page.get_by_role('button',name='Game map',exact=True).click()
         page.wait_for_function("document.querySelector('#j167-heist-map')?.dataset.mapSource==='original'",timeout=30000)
         assert page.locator('.j180-chest').count()==19,'All 19 possible chest references render'
+        assert page.locator('.j180-chest-active:visible').count()==2,'Current pair is visible on the Cayo island map'
+        assert page.locator('.j180-chest:visible').count()==2,'Current daily pair is the default map view'
+        assert page.locator('.j180-chest-row.j393-inactive:enabled').count()==17,'Inactive entries remain inspectable without spawning pins'
+        page.locator('.j180-chest-row.j393-inactive').first.click()
+        assert 'not selected this cycle' in page.locator('.j180-daily-status').inner_text()
+        assert page.locator('.j180-chest:visible').count()==2
+        assert page.locator('.j180-chest-row').count()==19,'All chest references stay in the daily legend list'
+        page.get_by_role('button',name='Today’s two',exact=True).click()
+        assert page.locator('.j180-chest:visible').count()==2,'Today filter shows only the current pair on Cayo'
+        page.get_by_role('button',name='All 19 possible',exact=True).click()
+        assert page.locator('.j180-chest:visible').count()==19,'All possible chest references remain accessible'
+        assert page.locator('.j180-chest-row.j393-inactive').count()==17,'Reference mode retains inactive markings'
+
         assert page.locator('.j180-legend-row').count()==14,'All 14 interactive marker legend rows render'
         page.locator('#j181-hotspots').wait_for(state='attached',timeout=10000)
         assert page.locator('.j181-hotspot').count()>=50,'Reference colored map icons must have clickable hotspots'
@@ -112,6 +125,15 @@ try:
         page.locator('.j181-hotspot[data-category="control"]').first.click()
         assert page.locator('.j180-pin-info').is_visible(),'Existing colorful source icon click opens map details'
         assert page.locator('.j185-cluster-choices').is_visible(),'Overlapping icons should expose a specific-target picker'
+        # Every eligible entry must appear; the chooser must not silently truncate.
+        choices=page.locator('.j185-cluster-choice')
+        note=page.locator('.j180-pin-info > p').first.inner_text()
+        assert choices.count()==int(note.split()[0]), 'All nearby markers must be selectable'
+        origin=page.locator('.j181-hotspot[data-category="control"]').first
+        page.get_by_role('button',name='Close nearby locations').click()
+        assert page.locator('.j180-pin-info').is_hidden(),'Close hides nearby chooser'
+        assert origin.evaluate('(node)=>document.activeElement===node'),'Closing chooser restores marker focus'
+        origin.click()
         option=page.locator('.j185-cluster-choice').filter(has_text='Airstrip infiltration')
         assert option.count()==1,'Crowded entry marker remains individually selectable'
         option.click()
@@ -133,6 +155,17 @@ try:
         )
         page.keyboard.press('Escape')
         assert page.locator('.j180-pin-info').is_hidden(),'Escape closes marker details'
+        # Keyboard activation identifies the exact focused marker; no pointer
+        # collision chooser should intercept its Enter/Space activation.
+        entry=page.locator('.j181-hotspot[data-category="entry"]').first
+        for key in ('Enter','Space'):
+            entry.focus()
+            entry.press(key)
+            assert page.locator('.j180-pin-info').is_visible(),'Keyboard activates the focused pin'
+            assert 'Airstrip infiltration' in page.locator('.j180-pin-info').inner_text()
+            assert page.locator('.j185-cluster-choices').count()==0,'Keyboard activation selects the exact pin'
+            page.keyboard.press('Escape')
+            assert page.locator('.j180-pin-info').is_hidden()
         page.locator('#j180-shell').screenshot(path=str(path/('cayo-180-map-'+kind+'.png')),animations='disabled',timeout=35000)
         page.locator('.j180-menu-link').filter(has_text='Entry & exit planning').click()
         page.locator('#j171-cayo-board').wait_for(state='visible',timeout=10000)

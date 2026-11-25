@@ -151,8 +151,8 @@
     {
       "id": "activities",
       "label": "Activities",
-      "status": "Research",
-      "note": "Explore and verify distinct gameplay activities; do not label imagined events as active.",
+      "status": "Community gameplay references",
+      "note": "Selected launch-week progress totals, completion targets and named activity venues are available in the activity tracker; coordinate verification remains separate.",
       "href": "atlas-activities.html?mode=vi",
       "sourceId": "rockstar-vi"
     },

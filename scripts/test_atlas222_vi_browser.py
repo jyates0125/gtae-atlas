@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Atlas 22.2 — serve the Cloudflare build and exercise real desktop/phone character UI."""
-import os,threading
+import os,threading,json
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
@@ -14,6 +14,8 @@ s=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P)))
 threading.Thread(target=s.serve_forever,daemon=True).start()
 base='http://127.0.0.1:%d/'%s.server_port
 engine=os.environ.get('ATLAS_BROWSER','chromium')
+roster=json.loads((P/'data/atlas-universe-profiles.json').read_text(encoding='utf-8'))['records']
+counts={scope:sum(r.get('kind')=='character' and r.get('scope')==scope for r in roster) for scope in ('vi','online','story')}
 try:
  with sync_playwright() as pw:
   browser=pw.chromium.launch(headless=True,**({'channel':'msedge'} if engine=='msedge' else {}))
@@ -66,14 +68,14 @@ try:
    page.locator('#j222-reset').click()
    assert cards.count()>=30,'Reset must restore all records'
    page.locator('[data-j222-scope="vi"]').click()
-   expect(cards).to_have_count(8,timeout=10000)
+   expect(cards).to_have_count(counts['vi'],timeout=15000)
    assert 'game=vi' in page.url,'World filters must be deep-linkable'
-   assert cards.first.get_attribute('data-j222-world')=='vi'
+   assert all(c.get_attribute('data-j222-world')=='vi' for c in cards.all())
    page.locator('[data-j222-scope="online"]').click()
-   expect(cards).to_have_count(8,timeout=10000)
+   expect(cards).to_have_count(counts['online'],timeout=15000)
    assert all(card.get_attribute('data-j222-world')=='online' for card in cards.all())
    page.locator('[data-j222-scope="story"]').click()
-   expect(cards).to_have_count(10,timeout=10000)
+   expect(cards).to_have_count(counts['story'],timeout=15000)
    assert all(card.get_attribute('data-j222-world')=='story' for card in cards.all())
    page.locator('[data-j222-scope="classic"]').click()
    selector=page.locator('.j226-edition-select')
@@ -128,7 +130,10 @@ try:
    assert 'profile=' not in page.url,'Closing a shared character must leave the gallery usable'
    page.goto(base+'atlas-vi.html',wait_until='domcontentloaded',timeout=60000)
    hub=page.locator('#j217-vi-hub')
-   hub.locator('summary').first.click(timeout=15000)
+   summary=hub.locator('summary').first
+   summary.scroll_into_view_if_needed()
+   page.wait_for_function('''()=>{const top=document.querySelector('.maptop'),button=document.querySelector('#j217-vi-hub>summary');if(!top||!button)return false;const t=top.getBoundingClientRect(),b=button.getBoundingClientRect();return b.top>=t.bottom-1}''',timeout=15000)
+   summary.click(timeout=15000)
    directory=page.locator('#j222-vi-release')
    directory.locator('summary').first.click(timeout=15000)
    cards6=page.locator('#j222-vi-categories .j222-launch-card')
@@ -139,7 +144,7 @@ try:
    assert not issues,('page Javascript exceptions',issues)
    if width<=390:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'VI page horizontal overflow'
-   print('PASS Atlas 22.2 %s %s: All characters, 8 Rockstar VI profiles, world isolation, global search and 11-category launch hub'%(engine,width),flush=True)
+   print('PASS Atlas 22.2 %s %s: All characters, source-indexed VI profiles, world isolation, global search and 11-category launch hub'%(engine,width),flush=True)
    context.close()
   browser.close()
 finally:s.shutdown()

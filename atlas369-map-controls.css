@@ -94,3 +94,12 @@ body.jura-in-3d:not(.jura-perspective-fallback) #j371-compass{display:grid!impor
 body[data-start-world="6"]:has(#atlasCanvas) .map-wrap .zoom{top:var(--j369-next-top,205px)!important}
 body[data-start-world="6"]:has(#atlasCanvas) .map-wrap .zoom #j371-compass{display:none!important}
 body[data-start-world="6"].jura-in-3d:not(.jura-perspective-fallback):has(#atlasCanvas) .map-wrap .zoom #j371-compass{display:grid!important;color:#fff1cf!important;background:#49315e!important;border-color:#e9bd79!important}
+
+/* Atlas 39.1 — the VI world guide is a separate left-side control with a
+   real return action inside the scrollable panel, including expanded maps. */
+body[data-start-world="6"] .j217-vi-hub{left:8px!important;right:auto!important}
+body[data-start-world="6"] .j217-vi-hub>summary{max-width:calc(100% - 64px);white-space:normal;min-height:44px!important}
+body[data-start-world="6"] .j217-vi-panel{max-height:min(58dvh,560px,max(100px,calc(100% - 70px)))}
+body[data-start-world="6"] .j391-guide-head{position:sticky;top:-10px;z-index:5;background:#392449;padding:5px 0 8px;margin-bottom:8px;border-bottom:1px solid #815b86}
+body[data-start-world="6"] #j391-guide-back{display:inline-flex;align-items:center;min-height:44px;max-width:100%;padding:8px 12px;border:1px solid #ffd38e;border-radius:9px;background:#f4bd78;color:#2a1738;font:850 12px system-ui;cursor:pointer}
+body[data-start-world="6"] #j391-guide-back:focus-visible{outline:3px solid #fff;outline-offset:2px}

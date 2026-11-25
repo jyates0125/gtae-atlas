@@ -171,7 +171,7 @@ if(id==='cayo-perico'){
  const island=el('div','j167-island-note');
  island.append(el('strong','','Original island map available'));
  island.append(el('p','','The separate Cayo Perico Explorer has the original game-island view and an individual interactive scoping layer. Pins in this focused overview remain illustrative.'));
- const a=el('a','','Open Cayo’s original island map and scoping tools ↗');a.href='./atlas-cayo.html';island.append(a);
+ const a=el('a','','Open the interactive Cayo island workspace ↗');a.href='#j180-shell';island.append(a);
  const daily=el('p','','Daily chests: two locations rotate. These overview markers are not today’s chest positions; verify daily data before setting a route.');
  island.append(daily);sec.append(island);
 }
@@ -185,7 +185,7 @@ const oldDesc=box.querySelector(':scope > p');
 const oldLink=box.querySelector(':scope > a.btn');
 const oldNote=box.querySelector(':scope > .small');
 if(oldTitle)oldTitle.textContent=id==='cayo-perico'?'Original Cayo island map · source reference':'Regional support map · optional';
-if(oldDesc)oldDesc.textContent=id==='cayo-perico'?'The complete Cayo explorer offers the original island image and separate interactive schematic. Your mission-specific POIs and personal route are above.':'Use the regional GTA Online map for wider setups and long-distance routes. The localized mission diagram, pin list and progress tools are above.';
+if(oldDesc)oldDesc.textContent=id==='cayo-perico'?'The interactive Cayo island workspace is on this page. Mainland support remains separate.':'Use the regional GTA Online map for wider setups and long-distance routes. The localized mission diagram, pin list and progress tools are above.';
 if(oldLink)oldLink.textContent=id==='cayo-perico'?'Open original Cayo island explorer ↗':'Open GTA Online regional map ↗';
 if(oldNote)oldNote.textContent='The mission map above is an original illustration, not verified game geography.';
 function seed(s){let h=2166136261;for(const ch of s)h=Math.imul(h^ch.charCodeAt(0),16777619);return h>>>0}

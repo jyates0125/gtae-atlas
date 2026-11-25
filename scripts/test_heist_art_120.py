@@ -42,7 +42,11 @@ for slug in SLUGS:
     assert (ROOT/'heist-pages.js').is_file() and './heist-pages.js' in html
     for id in ('stepSearch','progress','progressBar','exportProgress','resetProgress'):
         assert id in parsed.ids,(path,id)
-    assert 'Sources & licenses' in html and './atlas-credits.html' in html
+    if slug=='cayo-perico':
+        assert 'Sources & licenses' in html and './atlas-credits.html' in html
+    else:
+        assert 'Sources &amp; credits' in html and './atlas-credits.html#online-heist-sources' in html
+        assert 'id="online-heist-sources"' in (ROOT/'atlas-credits.html').read_text(encoding='utf-8')
     assert 'Not a verified heist overlay' in html and 'No fictional pins or invented routes' in html
     missing=[u for u in parsed.urls if u and not (ROOT/u).is_file()]
     assert not missing,(path,missing)
