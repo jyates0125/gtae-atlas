@@ -66,7 +66,11 @@ function mountSimeon(root,mapMode=false){if(!root||root.dataset.simeonReady)retu
 
 function init(){
  mountSimeon($('j87-simeon'));
- if(path==='atlas-online.html')mountSimeon($('j87-simeon-map'),true);
+ if(path==='atlas-online.html'){
+  const root=$('j87-simeon-map');mountSimeon(root,true);
+  const sync=()=>{if(!root)return;const state=window.JuraAtlas85?.state();root.hidden=!!state&&(state.game!=='5'||state.mode!=='online');};
+  sync();document.addEventListener('jura:legend-updated',sync);
+ }
  if(path==='atlas87-daily.html')dashboard();panel();autoFeed();
  if(path==='atlas87-daily.html'){const id=location.hash.slice(1);if(selected.some(r=>r.id===id))requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:'start'}))}
  window.addEventListener('storage',e=>{if(e.key==='jura68-rotation-feed')refreshStatus()});

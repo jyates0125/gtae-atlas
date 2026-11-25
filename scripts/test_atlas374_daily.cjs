@@ -34,3 +34,6 @@ for(const car of new Set(simeonLists.flat()))assert.ok(simeonReward(car)>0);
 assert.equal(simeonAreas.F620,'Del Perro Pier parking lot');
 assert.equal(matchSimeon(['Banshee']).length,3);
 assert.ok(fs.readFileSync('atlas-online.html','utf8').includes('id="j87-simeon-map"'));
+
+assert.match(source,/jura:legend-updated/);
+assert.match(source,/state\.game!=='5'\|\|state\.mode!=='online'/);

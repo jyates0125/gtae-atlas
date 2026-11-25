@@ -89,6 +89,19 @@ try:
         page.locator('#modelSelect').select_option('oppressor2')
         expect(page.locator('#concept3d')).to_contain_text('Terrorbyte')
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
+        # Inline matcher must retain selections on ordinary daily refreshes.
+        page.goto(base + '/atlas-online.html',wait_until='domcontentloaded')
+        map_matcher=page.locator('#j87-simeon-map')
+        expect(map_matcher.locator('.j87-simeon > summary')).to_have_count(1,timeout=15000)
+        expect(map_matcher).not_to_have_attribute('hidden','')
+        # DOM interactions here also work when the mobile map drawer is collapsed.
+        map_matcher.locator('.j87-simeon > summary').evaluate('(el)=>el.click()')
+        map_matcher.locator('input[value="Banshee"]').evaluate('(el)=>el.click()')
+        expect(map_matcher.locator('.j87-simeon details')).to_have_count(3)
+        page.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
+        expect(map_matcher.locator('input[value="Banshee"]')).to_be_checked()
+        map_matcher.get_by_role('button',name='Clear selection').evaluate('(el)=>el.click()')
+        expect(map_matcher.locator('.j87-simeon details')).to_have_count(8)
         page.goto(base + '/atlas87-daily.html#j87-simeon',wait_until='domcontentloaded')
         page.locator('#j87-simeon .j87-simeon > summary').click()
         for name in ['Banshee','Coquette','Sentinel','Dubsta','Infernus']:
