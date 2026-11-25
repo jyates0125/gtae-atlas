@@ -16,3 +16,9 @@ Pending 46.6: external detailed-model reference discovery, with Online and VI li
 46.6 candidate correction: retain source route but replace unavailable VI model link with reachable VI research catalogs. Source availability and rights require separate verification.
 
 Pending 46.7: six distinct released-game VI community references (185 → 191 proposed), preserving all earlier IDs and source separation. No detailed model reuse permission or workshop eligibility inferred.
+
+
+46.7 PR #226 exact head 4c41ed0 passed 16/16 returned workflow conclusions; merged development 9588540. Relevant browser step execution still needs log review. Production unchanged by this branch.
+
+### Atlas 46.8 — cross-listed VI road vehicle references
+Add 12 road vehicle references (191 → 203, 195 community); GTA6 Motors and Leonida Waypoint catalog cross-check. Preserve all old IDs, separate Tailgater S and Baller ST-D, keep individual eligibility, mesh and workshop evidence pending. No source images or geometry imported. Focused source/browser tests extended; candidate CI pending. GTA.ZONE direct model catalog continues to return HTTP 410; no public link or acquisition claim. Existing classification/brand conflicts remain under review. Rollback via isolated PR revert.

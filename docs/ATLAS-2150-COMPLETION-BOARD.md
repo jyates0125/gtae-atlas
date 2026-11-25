@@ -693,3 +693,9 @@ Owner prioritizes existing accurate, rights-cleared vehicle models before recons
 
 ### Atlas 46.7 — VI-specific roster cross-check, distinct variants
 46.6 corrected head 17bd525 passed 18/18 and merged development ea9233b. Add six distinct released-game community references cross-listed by GTA Scoop and GTA Base: Allander, Bison 3800, Bison 900 '95, Transgressor '67, Sungrazer '61 and Spritz. Catalog 185 → 191; 183 community, five named official and three official-media. Separate VI ownership identities, no legacy key changes, no GTA V images or mesh claims, no guessed workshop options. Vivanite classification conflict and Alpha source-status conflict remain research questions; no automatic change to existing saved models. Sources centralized. Exact head pending.
+
+
+46.7 PR #226 exact head 4c41ed0 passed 16/16 returned workflow conclusions; merged development 9588540. Relevant browser step execution still needs log review. Production unchanged by this branch.
+
+### Atlas 46.8 — cross-listed VI road vehicle references
+Add 12 road vehicle references (191 → 203, 195 community); GTA6 Motors and Leonida Waypoint catalog cross-check. Preserve all old IDs, separate Tailgater S and Baller ST-D, keep individual eligibility, mesh and workshop evidence pending. No source images or geometry imported. Focused source/browser tests extended; candidate CI pending. GTA.ZONE direct model catalog continues to return HTTP 410; no public link or acquisition claim. Existing classification/brand conflicts remain under review. Rollback via isolated PR revert.

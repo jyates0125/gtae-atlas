@@ -2248,6 +2248,126 @@
       "confidence": "Community released-game roster cross-reference · individual mesh and workshop verification pending",
       "sourceUrl": "https://www.gtabase.com/gta-6/vehicles/comparison/?vehicle1=spritz",
       "forgeId": "vi_spritz"
+    },
+    {
+      "name": "Asterope GZ",
+      "brand": "Karin",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Karin Asterope GZ",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_asterope_gz"
+    },
+    {
+      "name": "Greta",
+      "brand": "BF",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "BF Greta",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_greta"
+    },
+    {
+      "name": "Bogan",
+      "brand": "Bravado",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Bravado Bogan",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_bogan"
+    },
+    {
+      "name": "Tailgater S",
+      "brand": "Obey",
+      "type": "Sedans",
+      "archive": "",
+      "displayName": "Obey Tailgater S",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_tailgater_s"
+    },
+    {
+      "name": "XLS",
+      "brand": "Benefactor",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Benefactor XLS",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_xls"
+    },
+    {
+      "name": "Baller ST-D",
+      "brand": "Gallivanter",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Gallivanter Baller ST-D",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_baller_st_d"
+    },
+    {
+      "name": "Gresley XT",
+      "brand": "Bravado",
+      "type": "SUVs",
+      "archive": "",
+      "displayName": "Bravado Gresley XT",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_gresley_xt"
+    },
+    {
+      "name": "FR36",
+      "brand": "Fathom",
+      "type": "Coupes",
+      "archive": "",
+      "displayName": "Fathom FR36",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_fr36"
+    },
+    {
+      "name": "Akane",
+      "brand": "Declasse",
+      "type": "Coupes",
+      "archive": "",
+      "displayName": "Declasse Akane",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_akane"
+    },
+    {
+      "name": "8F Drafter",
+      "brand": "Obey",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Obey 8F Drafter",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_8f_drafter"
+    },
+    {
+      "name": "Neon",
+      "brand": "Pfister",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Pfister Neon",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_neon"
+    },
+    {
+      "name": "Thrax",
+      "brand": "Truffade",
+      "type": "Super",
+      "archive": "",
+      "displayName": "Truffade Thrax",
+      "confidence": "Community roster cross-reference · individual mesh and workshop verification pending",
+      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "forgeId": "vi_thrax"
     }
   ],
   "onlineWorkshopVehicles": [
