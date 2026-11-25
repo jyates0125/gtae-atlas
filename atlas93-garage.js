@@ -108,7 +108,7 @@ function setVehicle(id,v){
   return true;
  }catch(e){notice('Garage save blocked: stored data could not be read safely. Export your backup before retrying.');return false}
 }
-function modelInfo(id){const stat=intel[id];return {id,name:stat?.displayName||nice(id),type:kind(id),spec:stat||null,image:BASE+encodeURIComponent(id)+'.webp'}}
+function modelInfo(id){const stat=intel[id];return {id,name:stat?.displayName||window.JuraForge?.specialtyName?.(id)||nice(id),type:kind(id),spec:stat||null,image:BASE+encodeURIComponent(id)+'.webp'}}
 function getPhoto(r){const img=document.createElement('img');img.loading='lazy';img.decoding='async';img.alt='GTA V archive reference render: '+r.name;img.src=r.image;img.onerror=()=>{img.onerror=null;img.src=r.type==='Boats & Watercraft'?'./art/elario-watercraft-showroom.webp':'./art/jura161-vehicles.webp';img.alt='Original Elario vehicle-showroom concept; a verified model-specific reference render is not available for '+r.name};return img}
 function paintColor(name){return typeof name==='string'&&/^#[0-9a-f]{6}$/i.test(name)?name:PAINTS.find(([n])=>n===name)?.[1]||'#5b6270'}
 function garages(){const select=$('garageLocation');const prior=select.value;select.replaceChildren(new Option('All locations',''));for(const g of meta.garages)select.add(new Option(g,g));select.value=meta.garages.includes(prior)?prior:'';
