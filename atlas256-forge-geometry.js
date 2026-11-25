@@ -246,6 +246,19 @@
   }
   return{kind,vertices:new Float32Array(data),surface:new Float32Array(normals),stencilCount,floorCount,vehicleStart,settings:d,profile:profile?.label||null};
  }
+ // Pegasus catalog covers only source-confirmed exact identities currently in the seed.
+ const pegasusRecords=Object.freeze({
+  jetmax:Object.freeze({mode:'collection',label:'Pegasus · ownership only',location:'Pegasus'}),
+  squalo:Object.freeze({mode:'collection',label:'Pegasus · ownership only',location:'Pegasus'}),
+  rhino:Object.freeze({mode:'collection',label:'Pegasus · ownership only',location:'Pegasus'}),
+  liberator:Object.freeze({mode:'collection',label:'Pegasus · ownership only',location:'Pegasus'}),
+  insurgent:Object.freeze({mode:'collection',label:'Pegasus · Insurgent Pick-up; separate Custom conversion available',location:'Pegasus',conversion:'insurgent3'}),
+  technical:Object.freeze({mode:'collection',label:'Pegasus · separate Technical Custom conversion available',location:'Pegasus',conversion:'technical3'}),
+  annihilator:Object.freeze({mode:'collection',label:'Pegasus · ownership only; converted Personal Aircraft has separate Hangar respray eligibility',location:'Pegasus',personalAircraft:true}),
+  lazer:Object.freeze({mode:'collection',label:'Pegasus · ownership only; converted Personal Aircraft has separate Hangar respray eligibility',location:'Pegasus',personalAircraft:true})
+ });
+ function pegasusModels(world){return world==='v-online'?Object.keys(pegasusRecords):[];}
+ function pegasusEligibility(world,model){return world==='v-online'&&Object.hasOwn(pegasusRecords,model)?pegasusRecords[model]:null;}
  // Workshop eligibility is separate from collection ownership and visual capability.
  const craftRules=Object.freeze({
   jetmax:Object.freeze({mode:'collection',label:'Collection only · no in-game modifications',location:'Pegasus'}),
@@ -257,6 +270,7 @@
  });
  function craftCustomization(world,model){
   const id=String(model||'').toLowerCase();
+  const pegasus=pegasusEligibility(world,id);if(pegasus)return pegasus;
   if(world!=='v-online'||!Object.hasOwn(craftRules,id))return Object.freeze({mode:'unknown',label:'Model-specific customization not yet verified',location:null});
   return craftRules[id];
  }
@@ -291,5 +305,5 @@
   store.setItem(collectionKey,JSON.stringify({...data,updated:new Date().toISOString()}));
   return value;
  }
- return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog,modelWorkshopCatalog,workshopEffect,applyWorkshopSelection,specialtyWorkshop,specialtyModels,specialtyName,hswRecords,bennysRecords,workshopSource,craftCustomization,ownershipKey,viModelFromOwnership,collectionKey,readVehicleCollection,setVehicleOwned});
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog,modelWorkshopCatalog,workshopEffect,applyWorkshopSelection,specialtyWorkshop,specialtyModels,specialtyName,hswRecords,bennysRecords,workshopSource,craftCustomization,pegasusModels,pegasusEligibility,ownershipKey,viModelFromOwnership,collectionKey,readVehicleCollection,setVehicleOwned});
 });
