@@ -645,3 +645,7 @@ Added 13 named garage properties with reported individual costs, slots and progr
 
 ### Atlas 45.2 — returning names and vehicle families
 Separate follow-up preserves 45.1 candidate while its final PBR workflow runs. 14 additional pairings (total 16) from existing registry and observed GTADB VI roster / individual Classic and Rockstar edition evidence. Distinguish name candidates, edition names and Cheetah family; possible overlapping ’95/Classic research identities remain unresolved. Bidirectional Forge filters, no new specs or cross-game saves. Direct mapping/isolation/syntax checks passed; focused browser test added, not yet run. No production change.
+
+
+### Atlas 45.3 — Forge returning-vehicle search recovery
+After 45.2 (46/46 CI, merged #208) and community reuse policy (3/3 CI, merged #209), fix an empty-search state that retained stale model and named-variant deep links. Clear stale model/variant query and legacy variant hash without changing world/division or stored designs. Add regression coverage to existing Garage/Forge browser journey; refresh script cache. Exact-head CI pending; no new vehicle identity, pricing, artwork, or asset-license claims. Keep model/source coverage and detailed customization phase open before resuming wider charter.
