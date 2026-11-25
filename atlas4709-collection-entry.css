@@ -1,0 +1,14 @@
+/* Dedicated subject artwork and immediate collection entry points. */
+.j4709-entry{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0;color:#fff3de}
+.j4709-entry>article{min-width:0;border:1px solid #976ca5;border-radius:16px;padding:clamp(16px,3vw,28px);background:linear-gradient(90deg,#180d27f5,#241332b8),var(--entry-art) center/cover;display:grid;gap:10px}
+.j4709-entry>article:first-child{--entry-art:url('./art/atlas93-garage-hero.webp')}
+.j4709-entry>article:nth-child(2){--entry-art:url('./art/jura161-weapons.webp')}
+.j4709-entry h2,.j4709-entry p{margin:0}.j4709-entry p{font-size:14px}
+.j4709-actions{display:flex;flex-wrap:wrap;gap:8px}
+.j4709-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 14px;border:1px solid #c29ab9;border-radius:9px;background:#422550;color:#fff1da;text-decoration:none;font-weight:750;font-size:14px}
+.j4709-actions a:first-child{background:#f5ca91;color:#251535;border-color:#f5ca91}
+.j4709-actions a:focus-visible{outline:3px solid #ffe0a6;outline-offset:3px}
+body.j4709-garage .c-hero{background:linear-gradient(95deg,#28113fe8,#3d1e5c66),url('./art/atlas93-garage-hero.webp') center/cover!important}
+body.j4709-workshop .c-hero{background:linear-gradient(95deg,#28113fe8,#3d1e5c66),url('./art/jura161-vehicles.webp') center/cover!important}
+body.j4709-workshop[data-j4709-world="vi"] .c-hero{background:linear-gradient(95deg,#28113fe8,#3d1e5c66),url('./art/jura161-vehicles6.webp') center/cover!important}
+@media(max-width:650px){.j4709-entry{grid-template-columns:1fr}.j4709-actions a{flex:1 1 130px}}
