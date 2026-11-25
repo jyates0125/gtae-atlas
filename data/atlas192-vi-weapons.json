@@ -341,7 +341,8 @@
       "evidence": "Pictured alongside the Morgan revolvers in publisher media; independent item availability not verified",
       "description": "Visual reference only. Do not assume a standalone unlock, purchase or unique variant.",
       "sourceName": "Rockstar official screenshots; GTAside caption review",
-      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots",
+      "illustrativeExampleOf": "edc-knife"
     },
     {
       "id": "akm-assault-rifle",
@@ -351,7 +352,8 @@
       "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
       "description": "Research reference only; playable availability and model-specific information remain unknown.",
       "sourceName": "GTADB individual reference",
-      "sourceUrl": "https://gtadb.net/gta-6/weapons/assault-rifle-gta-6/"
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/assault-rifle-gta-6/",
+      "illustrativeExampleOf": "kozlov-kz-59"
     },
     {
       "id": "bolt-action-sniper",
@@ -361,7 +363,8 @@
       "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
       "description": "Research reference only; playable availability and model-specific information remain unknown.",
       "sourceName": "GTADB individual reference",
-      "sourceUrl": "https://gtadb.net/gta-6/weapons/bolt-action-sniper-gta-6/"
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/bolt-action-sniper-gta-6/",
+      "illustrativeExampleOf": "fortune-son-laird350"
     },
     {
       "id": "combat-mg",
@@ -381,7 +384,8 @@
       "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
       "description": "Research reference only; playable availability and model-specific information remain unknown.",
       "sourceName": "GTADB individual reference",
-      "sourceUrl": "https://gtadb.net/gta-6/weapons/double-barrel-shotgun-gta-6/"
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/double-barrel-shotgun-gta-6/",
+      "illustrativeExampleOf": "shrewsbury-drifter"
     },
     {
       "id": "heavy-pistol",
@@ -391,7 +395,8 @@
       "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
       "description": "Research reference only; playable availability and model-specific information remain unknown.",
       "sourceName": "GTADB individual reference",
-      "sourceUrl": "https://gtadb.net/gta-6/weapons/heavy-pistol-gta-6/"
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/heavy-pistol-gta-6/",
+      "illustrativeExampleOf": "girardi-es9"
     },
     {
       "id": "schlamm-drx",
@@ -417,7 +422,8 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "illustrativeExampleOf": "girardi-es9"
     },
     {
       "id": "fairview-kalinga-50",
@@ -959,7 +965,8 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "illustrativeExampleOf": "hillinger-boomer"
     },
     {
       "id": "h-at",
@@ -985,7 +992,8 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "illustrativeExampleOf": "bushcraft-knife"
     },
     {
       "id": "edc-knife",
@@ -2317,7 +2325,8 @@
           "name": "Leonida Waypoint · released-game index",
           "url": "https://leonidawaypoint.com/database/weapons"
         }
-      ]
+      ],
+      "illustrativeExampleOf": "frag-grenade"
     },
     {
       "id": "flash-grenade",
