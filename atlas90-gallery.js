@@ -150,6 +150,7 @@ function renderComparison(){
   const r=data.find(row=>row.id===id);if(!r)continue;
   const card=el('article','jura-compare-model');
   card.append(el('h3','',r.name));
+  if(r.kind==='vehicles6'&&r.viVisual){const pic=document.createElement('img');pic.alt=r.viVisual.label+' for '+r.name;pic.loading='lazy';pic.referrerPolicy='no-referrer';pic.style.cssText='display:block;width:100%;max-height:160px;object-fit:contain;border-radius:8px;background:#150d20';pic.onerror=()=>{pic.onerror=null;pic.src=imageFallback(r);pic.alt='Original category artwork, not exact vehicle'};pic.src=r.viVisual.url;card.append(pic);}
   const details=el('dl','');
   function field(label,value){details.append(el('dt','',label),el('dd','',value))}
   field('Catalog class',r.group);
