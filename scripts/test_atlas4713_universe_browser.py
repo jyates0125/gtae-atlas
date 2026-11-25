@@ -1,0 +1,83 @@
+"""Focused Universe visual and canonical gallery/save handoff checks."""
+import os,threading,base64,re
+from pathlib import Path
+from functools import partial
+from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
+from playwright.sync_api import sync_playwright,expect
+ROOT=Path(__file__).resolve().parents[1]
+OUT=ROOT/'qa-evidence'/'atlas4713'/os.getenv('ATLAS_BROWSER','chromium');OUT.mkdir(parents=True,exist_ok=True)
+PIXEL=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jfZkAAAAASUVORK5CYII=')
+class Quiet(SimpleHTTPRequestHandler):
+ def log_message(self,*args): pass
+with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'public'))) as server:
+ thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+ try:
+  base=f'http://127.0.0.1:{server.server_port}/'
+  with sync_playwright() as pw:
+   browser=pw.chromium.launch(**({'channel':'msedge'} if os.getenv('ATLAS_BROWSER')=='msedge' else {}))
+   for width in (390,1440):
+    ctx=browser.new_context(viewport={'width':width,'height':900})
+    ctx.route('https://**/*',lambda route:route.abort())
+    page=ctx.new_page()
+    page.goto(base+'atlas-database.html?kind=weapon&game=vi&q=Girardi%20ES9')
+    card=page.locator('.u-card').filter(has=page.get_by_role('button',name='Girardi ES9',exact=True))
+    expect(card).to_have_count(1,timeout=15000)
+    expect(page.locator('.u-hero-art')).to_have_css('background-image',re.compile('jura161-weapons'))
+    expect(page.locator('.u-world-armories a')).to_have_count(3)
+    card.scroll_into_view_if_needed()
+    expect(card.locator('.u-image')).to_have_attribute('data-art-status','category-scene')
+    expect(card.locator('.u-scene-art')).to_be_visible()
+    assert card.locator('.u-scene-art').evaluate('(e)=>e.decode().then(()=>e.naturalWidth>0)')
+    expect(card.locator('.u-vi-collect')).to_have_attribute('aria-pressed','false')
+    card.locator('.u-vi-collect').click()
+    expect(card.locator('.u-vi-collect')).to_have_attribute('aria-pressed','true')
+    card.get_by_role('link',name='Open Armory').click()
+    expect(page.locator('#viWeaponSearch')).to_have_value('Girardi ES9',timeout=15000)
+    vi=page.locator('[data-weapon-id="girardi-es9"]')
+    expect(vi).to_have_attribute('data-collected','true')
+    vi.locator('.viweapon-collect').click()
+    page.goto(base+'atlas-database.html?kind=weapon&game=vi&q=Girardi%20ES9')
+    expect(card.locator('.u-vi-collect')).to_have_attribute('aria-pressed','false',timeout=15000)
+    ctx.route('https://vi.gtax.dev/images/weapons/**',lambda route:route.fulfill(status=200,content_type='image/png',body=PIXEL))
+    page.reload();card.scroll_into_view_if_needed()
+    expect(card.locator('.u-image')).to_have_attribute('data-art-status','family-reference',timeout=15000)
+    expect(card.locator('.u-image-note')).to_contain_text('VARIANT PENDING')
+    page.goto(base+'atlas-database.html?kind=weapon&game=story&q=pistol')
+    first=page.locator('.u-card').filter(has=page.get_by_role('button',name='Pistol',exact=True))
+    expect(first).to_have_count(1,timeout=15000)
+    expect(first.get_by_role('link',name='Open Armory')).to_have_attribute('href',re.compile('world=story'))
+    first.get_by_role('button',name='View details').click()
+    expect(page.locator('#recordDialog')).to_be_visible()
+    page.get_by_role('button',name='Mark owned',exact=True).click()
+    assert page.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas90-collection-v1')).owned['weapons-story:pistol']===true")
+    assert page.evaluate("!JSON.parse(localStorage.getItem('team-jura-atlas90-collection-v1')).owned['weapons:pistol']")
+    page.get_by_role('button',name='Close details').click()
+    page.goto(base+'atlas-database.html?kind=weapon&game=online&q=pistol')
+    expect(first.get_by_role('link',name='Open Armory')).to_have_attribute('href',re.compile('world=online'),timeout=15000)
+    page.goto(base+'atlas-database.html?kind=vehicle&game=vi&q=squalo')
+    expect(page.locator('.u-hero-art')).to_have_css('background-image',re.compile('jura161-vehicles6'))
+    expect(page.locator('.u-card').first.get_by_role('link',name='Vehicle gallery')).to_have_attribute('href',re.compile('atlas90-vehicles6.html'))
+    page.locator('.u-card').first.scroll_into_view_if_needed()
+    expect(page.locator('.u-card .u-image').first).to_have_attribute('data-art-status','category-scene')
+    page.goto(base+'atlas-database.html?kind=vehicle&game=online&q=adder')
+    expect(page.locator('.u-hero-art')).to_have_css('background-image',re.compile('jura161-vehicles'))
+    expect(page.locator('.u-card').first.get_by_role('link',name='Vehicle gallery')).to_have_attribute('href',re.compile('world=online'))
+    page.goto(base+'atlas-credits.html?armory=Girardi%20ES9#vi-armory-visuals')
+    expect(page.locator('#viArmorySourceFilter')).to_have_value('Girardi ES9',timeout=15000)
+    expect(page.locator('#viArmorySources details').first).to_be_attached()
+    page.goto(base+'atlas-credits.html?universe=adder#universe-visuals')
+    expect(page.locator('#universeSourceFilter')).to_have_value('adder',timeout=15000)
+    expect(page.locator('#universeSourceRows details').first).to_be_attached()
+    ctx.unroute('https://vi.gtax.dev/images/weapons/**');ctx.unroute('https://**/*')
+    page.goto(base+'atlas-database.html?kind=weapon&game=vi')
+    expect(page.locator('.u-card').first).to_be_visible(timeout=15000)
+    page.locator('.u-hero').screenshot(path=str(OUT/f'hero-{width}.png'),animations='disabled')
+    page.locator('.u-card').first.scroll_into_view_if_needed()
+    page.wait_for_timeout(1400)
+    page.screenshot(path=str(OUT/f'catalog-{width}.png'),animations='disabled')
+    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
+    ctx.close()
+   browser.close()
+ finally:
+  server.shutdown();thread.join(timeout=10)
+print('PASS Universe art, game routing, shared Armory collection and central sources')
