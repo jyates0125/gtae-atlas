@@ -3,6 +3,7 @@
 import hashlib
 import json
 import sys
+import subprocess
 from pathlib import Path
 PINS = {
     'vehicleModKits.json': '2c83148f677e4410758e4309c199456b8eb33414',
@@ -26,6 +27,21 @@ def audit(root):
         reports[name] = {'bytes': len(raw), 'gitBlob': git_blob, 'sha256': hashlib.sha256(raw).hexdigest(),
                          'rootType': type(data).__name__, 'rootEntries': len(rows), 'recordKeys': keys}
         print(f'{name}: verified Git blob; {len(rows)} root entries', flush=True)
+        if name == 'vehicles.json':
+            repo = Path(__file__).resolve().parents[1]
+            expected = json.loads(subprocess.check_output(['node','-e',"const f=require('./atlas256-forge-geometry.js');console.log(JSON.stringify([...new Set([...f.specialtyModels('hsw'),...f.specialtyModels('bennys')])].sort()))"], cwd=repo, text=True))
+            ids = set()
+            for row in rows:
+                if isinstance(row, dict):
+                    for key, value in row.items():
+                        if key.lower() in {'name', 'modelname', 'model', 'spawnname'} and isinstance(value, str):
+                            ids.add(value.lower())
+            missing = sorted(set(expected) - ids)
+            reports[name]['specialistModelIDs'] = {'expected': len(expected), 'matched': len(expected)-len(missing), 'missing': missing}
+            print(f'Specialist IDs: {len(expected)-len(missing)}/{len(expected)} matched; unresolved: {missing}', flush=True)
+            if missing:
+                raise ValueError('Unresolved specialist model IDs; verify against the upstream version before release')
+
     return {'revision': REVISION, 'publication': 'private schema audit only; no import approval', 'files': reports}
 if __name__ == '__main__':
     if len(sys.argv) != 3:
