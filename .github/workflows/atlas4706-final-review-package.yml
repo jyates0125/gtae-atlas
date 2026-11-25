@@ -1,0 +1,43 @@
+name: Atlas 47.0.6 - exact development review package
+on:
+  push:
+    branches: [release/atlas4706-final-review-20261125]
+    paths: [.github/workflows/atlas4706-final-review-package.yml]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 5925b45af1226470e7b01ec851850c3339442ae1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check exact tested source identity
+        run: |
+          test "$(git rev-parse HEAD)" = "5925b45af1226470e7b01ec851850c3339442ae1"
+          test "$(git rev-parse HEAD^{tree})" = "60a14b7f07034f994c304d2da6f41c5b87f75933"
+      - name: Build and validate filtered review candidate
+        env:
+          CF_PAGES_COMMIT_SHA: 5925b45af1226470e7b01ec851850c3339442ae1
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+          python scripts/test_atlas192_world_completion.py
+          python scripts/test_atlas347_rights_boundary.py
+          python scripts/test_atlas151_visual_release.py
+          python -c "import json; from pathlib import Path; p=Path('public'); assert json.loads((p/'atlas-build-identity.json').read_text())['revision']=='5925b45af1226470e7b01ec851850c3339442ae1'; rows=json.loads((p/'data/atlas192-vi-weapons.json').read_text())['records']; ids={r['id'] for r in rows}; assert len(rows)==len(ids)==77; assert all(r.get('variantOf') in ids for r in rows if 'variantOf' in r)"
+      - name: Store exact candidate review package (no deployment)
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas4706-validated-public-review
+          path: public/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 21
