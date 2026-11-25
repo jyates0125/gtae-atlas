@@ -1,0 +1,51 @@
+name: Atlas 41.4 - isolated automotive PBR lab
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'scripts/forge-pbr-lab/**'
+      - 'scripts/test_atlas414_pbr_lab.py'
+      - '.github/workflows/atlas414-pbr-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pbr-lab:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare isolated local asset benchmark
+        run: |
+          mkdir -p qa-evidence/forge-pbr
+          cp scripts/forge-pbr-lab/{index.html,lab.js} qa-evidence/forge-pbr/
+          curl --fail --location --retry 3 https://raw.githubusercontent.com/drcollect/collect-cars/9b8eb87431d86cc9c9b4a8c89c1d402d978e337c/models/full/wedge.glb -o qa-evidence/forge-pbr/wedge.glb
+          test "$(git hash-object qa-evidence/forge-pbr/wedge.glb)" = c966f913a65e84cc22526d3617792bb5681fee8b
+          curl --fail --location --retry 3 https://raw.githubusercontent.com/drcollect/collect-cars/9b8eb87431d86cc9c9b4a8c89c1d402d978e337c/LICENSE -o qa-evidence/forge-pbr/SOURCE-LICENSE.txt
+          test "$(git hash-object qa-evidence/forge-pbr/SOURCE-LICENSE.txt)" = 80ec292f2897ae16ae537a6a30b772ce0a57a253
+          npm install --prefix qa-evidence/forge-pbr --ignore-scripts --no-audit --no-fund three@0.186.0
+      - name: Render and test actual model
+        run: |
+          python -m pip install 'playwright==1.58.0'
+          python -m playwright install --with-deps chromium
+          python scripts/test_atlas414_pbr_lab.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: atlas414-pbr-lab-evidence
+          path: |
+            qa-evidence/forge-pbr/*.png
+            qa-evidence/forge-pbr/index.html
+            qa-evidence/forge-pbr/lab.js
+            qa-evidence/forge-pbr/wedge.glb
+            qa-evidence/forge-pbr/SOURCE-LICENSE.txt
+            qa-evidence/forge-pbr/node_modules/three/
+          retention-days: 14

@@ -150,6 +150,19 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             expect(stage.locator('[data-workshop-category="engine"]')).to_have_value('engine-1',timeout=15000)
             expect(stage.locator('[data-forge-control="workshopLivery"]')).to_have_value('ganado-vintage')
             p.locator('#concept3d canvas').screenshot(path=str(E/f'atlas409-ganado-{width}.png'))
+            p.goto(origin+'atlas90-vehicles6.html?q=sugoi',wait_until='domcontentloaded')
+            card=p.locator('#j90Cards .j90-card')
+            expect(card).to_have_count(1,timeout=15000)
+            expect(card.get_by_role('link',name='Research source')).to_have_attribute('href','https://gtadb.net/gta-6/vehicles/sugoi/')
+            card.get_by_role('link',name='Open Leonida Forge').click()
+            expect(p.locator('#modelSelect')).to_have_value('vi_sugoi',timeout=15000)
+            expect(p.locator('#bodyStyle')).to_be_disabled()
+            expect(stage.locator('canvas')).to_have_count(0)
+            expect(stage).to_contain_text('A matching original 3D body is not available')
+            p.locator('#buildName').fill('Sugoi future design')
+            p.locator('#saveBuild').click()
+            assert p.evaluate('k=>JSON.parse(localStorage.getItem(k)).builds.vi_sugoi.design.workshopOptions',VI)=={}
+            assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])==before
             ctx.close()
             print(f'PASS Atlas 40.9 {width}: actual WebGL, V Garage save/reload, VI isolated save, gallery handoff and collection',flush=True)
         # Portable preview uses the exact same renderer, no site storage or network.
