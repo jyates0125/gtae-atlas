@@ -21,18 +21,18 @@ function mount(target,opts={}){
  const button=(label,fn)=>{const b=E('button',label);b.type='button';b.onclick=fn;return b};
  const styling=E('details');styling.className='j256-style';styling.open=true;styling.append(E('summary','Design lab · concept styling'));
  const fields=E('div');fields.className='j256-fields';styling.append(fields);
- let design=forge?.normalize(opts.design)||{},paint=opts.paint||'#586478',gl=null,program=null,buffer=null,surfaceBuffer=null,count=0,vehicleStart=0,floorCount=0,stencilCount=0,reflection=true,hasStencil=false,dead=false,raf=0,observer=null,drag=null;
+ let design=forge?.normalize(opts.design,String(opts.model||''))||{},paint=opts.paint||'#586478',gl=null,program=null,buffer=null,surfaceBuffer=null,count=0,vehicleStart=0,floorCount=0,stencilCount=0,reflection=true,hasStencil=false,dead=false,raf=0,observer=null,drag=null;
  let yaw=.7,pitch=.30,distance=7.9,profile=forge?.classify(opts.type,opts.model)||'touring';
  let environment=forge?.resolveTheme?.(profile,design.environment)||forge?.defaultTheme?.(profile)||'signature';
  target.dataset.forgeClass=profile;target.dataset.forgeStatus='pending';target.dataset.forgeEnvironment=environment;
  function control(label,element){const l=E('label',label);l.append(element);fields.append(l);return element}
  function select(label,values,key){const s=E('select');s.dataset.forgeControl=key;for(const [v,l] of values){const o=E('option',l);o.value=v;s.append(o)}s.value=design[key];s.onchange=()=>change({[key]:s.value});control(label,s);return s}
- function change(patch){if(!forge)return;design=forge.normalize({...design,...patch});opts.onDesign?.({...design});rebuild();syncWorkshop()}
+ function change(patch){if(!forge)return;design=forge.normalize({...design,...patch},String(opts.model||''));opts.onDesign?.({...design});rebuild();syncWorkshop()}
  if(forge?.themes){
   const scene=E('select');scene.dataset.forgeControl='environment';
   const auto=E('option','Automatic · vehicle class');auto.value='auto';scene.append(auto);
   for(const [key,theme] of Object.entries(forge.themes)){const o=E('option',theme.label);o.value=key;scene.append(o)}
-  scene.value=design.environment||'auto';scene.onchange=()=>{design=forge.normalize({...design,environment:scene.value});environment=forge.resolveTheme(profile,design.environment);target.dataset.forgeEnvironment=environment;hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();opts.onDesign?.({...design});rebuild()};control('Showroom environment',scene);
+  scene.value=design.environment||'auto';scene.onchange=()=>{design=forge.normalize({...design,environment:scene.value},String(opts.model||''));environment=forge.resolveTheme(profile,design.environment);target.dataset.forgeEnvironment=environment;hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();opts.onDesign?.({...design});rebuild()};control('Showroom environment',scene);
   hud.textContent='FORGE / '+forge.themes[environment].label.toUpperCase();
  }
  const finish=select('Surface finish',[['metallic','Metallic'],['satin','Satin'],['stealth','Stealth']], 'finish');
