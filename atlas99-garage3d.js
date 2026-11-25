@@ -9,7 +9,7 @@ function mount(target,opts={}){
  const forge=root.JuraForge;
  const E=(tag,str)=>{const e=document.createElement(tag);if(str!==undefined)e.textContent=str;return e};
  target.replaceChildren();target.classList.add('j256-forge');
- const title=E('strong','ELARIO 2150 · FORGE SHOWROOM');
+ const title=E('strong','ELARIO FORGE · SIGNATURE SHOWROOM');
  const study=forge?.modelProfile?.(opts.type,opts.model);
  const note=E('small',study?'Elario original model-targeted concept · '+study.label+'. Approximate visual study; not a verified likeness, exact game mesh or modification catalog.':'Original class-based design for '+String(opts.name||'vehicle')+'. Not an exact game model or a verified modification catalogue.');
  const rights=E('p','Original Elario concept — not a scanned or official model. Not an exact game mesh or a verified in-game customization.');rights.className='j256-rights';
@@ -21,7 +21,7 @@ function mount(target,opts={}){
  const button=(label,fn)=>{const b=E('button',label);b.type='button';b.onclick=fn;return b};
  const styling=E('details');styling.className='j256-style';styling.open=true;styling.append(E('summary','Design lab · concept styling'));
  const fields=E('div');fields.className='j256-fields';styling.append(fields);
- let design=forge?.normalize(opts.design)||{},paint=opts.paint||'#586478',gl=null,program=null,buffer=null,count=0,dead=false,raf=0,observer=null,drag=null;
+ let design=forge?.normalize(opts.design)||{},paint=opts.paint||'#586478',gl=null,program=null,buffer=null,surfaceBuffer=null,count=0,vehicleStart=0,floorCount=0,stencilCount=0,reflection=true,hasStencil=false,dead=false,raf=0,observer=null,drag=null;
  let yaw=.7,pitch=.30,distance=7.9,profile=forge?.classify(opts.type,opts.model)||'touring';
  let environment=forge?.resolveTheme?.(profile,design.environment)||forge?.defaultTheme?.(profile)||'signature';
  target.dataset.forgeClass=profile;target.dataset.forgeStatus='pending';target.dataset.forgeEnvironment=environment;
@@ -46,6 +46,7 @@ function mount(target,opts={}){
  if(road)select('Ride height',[['street','Street'],['low','Low'],['raised','Raised']], 'stance');
  if(road||profile==='marine')select(road?'Aero styling':'Deck styling',[['clean','Clean'],['sport','Sport'],['track','Track']], 'kit');
  const lights=E('input');lights.type='checkbox';lights.checked=design.lights!==false;lights.dataset.forgeControl='lights';lights.onchange=()=>change({lights:lights.checked});control('Concept lighting',lights);
+ const reflectionControl=E('input');reflectionControl.type='checkbox';reflectionControl.checked=true;reflectionControl.dataset.forgeControl='reflection';reflectionControl.onchange=()=>{reflection=reflectionControl.checked;render()};control('Live floor reflection',reflectionControl);
  const changeCamera=(a,b,d=7.9)=>{yaw=a;pitch=b;distance=d;render()};
  const zoom=d=>{distance=Math.max(5.9,Math.min(14,distance+d));render()};
  controls.append(button('3/4 view',()=>changeCamera(.7,.30)),button('Front',()=>changeCamera(0,.16)),button('Side',()=>changeCamera(Math.PI/2,.16)),button('Top',()=>changeCamera(0,1.48,9.3)),button('＋ Zoom',()=>zoom(-.6)),button('− Zoom',()=>zoom(.6)));
@@ -57,23 +58,84 @@ function mount(target,opts={}){
  target.append(title,note,rights,wrap,controls,styling);
  function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
  function init(){
-  gl=canvas.getContext('webgl',{alpha:false,antialias:true,preserveDrawingBuffer:false});if(!gl)throw Error('WebGL unavailable');
-  const vertex='attribute vec3 aPos,aColor;varying vec3 vColor;uniform float uYaw,uPitch,uDist,uAspect;void main(){float cy=cos(uYaw),sy=sin(uYaw),cp=cos(uPitch),sp=sin(uPitch);vec3 p=vec3(aPos.x,aPos.y-.42,aPos.z);p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);float z=uDist-p.z;float f=2.35*min(1.0,uAspect);gl_Position=vec4(p.x*f/uAspect,p.y*f,1.008032*z-.2008032,z);vColor=aColor;}';
-  const fragment='precision mediump float;varying vec3 vColor;void main(){gl_FragColor=vec4(vColor,1.0);}';
+  gl=canvas.getContext('webgl',{alpha:false,antialias:true,stencil:true,preserveDrawingBuffer:false});if(!gl)throw Error('WebGL unavailable');hasStencil=gl.getParameter(gl.STENCIL_BITS)>0;if(!hasStencil){reflectionControl.checked=false;reflectionControl.disabled=true;reflectionControl.title='Stencil reflections unavailable on this device';}
+  const vertex=`attribute vec3 aPos,aColor;
+ attribute vec4 aSurface;varying vec3 vColor,vPos,vNormal;varying float vMaterial;
+ uniform float uYaw,uPitch,uDist,uAspect,uMirror;
+ void main(){
+  float cy=cos(uYaw),sy=sin(uYaw),cp=cos(uPitch),sp=sin(uPitch);
+  vec3 p=vec3(aPos.x,mix(aPos.y,-aPos.y-.07,uMirror)-.42,aPos.z);
+  p=vec3(cy*p.x+sy*p.z,p.y,-sy*p.x+cy*p.z);
+  p=vec3(p.x,cp*p.y-sp*p.z,sp*p.y+cp*p.z);
+  float z=uDist-p.z;float f=2.35*min(1.0,uAspect);
+  gl_Position=vec4(p.x*f/uAspect,p.y*f,1.008032*z-.2008032,z);
+  vColor=aColor;vNormal=aSurface.xyz;vMaterial=aSurface.w;vPos=aPos;
+ }`;
+ const fragment=`precision mediump float;
+ varying vec3 vColor,vPos,vNormal;varying float vMaterial;
+ uniform vec3 uEye,uFloor;
+ uniform float uMirror,uAlpha,uGloss,uStage;
+ void main(){
+  vec3 n=normalize(vNormal);vec3 v=normalize(uEye-vPos);
+  if(dot(n,v)<0.0)n=-n;
+  vec3 key=normalize(vec3(-.6,.9,.6));vec3 fill=normalize(vec3(.8,.3,-.55));
+  vec3 h=normalize(key+v);vec3 h2=normalize(fill+v);
+  float rough=mix(9.0,36.0,uGloss);
+  float spec=pow(max(0.0,dot(n,h)),rough)+.45*pow(max(0.0,dot(n,h2)),rough*.72);
+  float fresnel=pow(1.0-clamp(abs(dot(n,v)),0.0,1.0),3.0);
+  float strip=pow(max(0.0,1.0-abs(dot(n,normalize(vec3(.42,.15,1.0))))),12.0);
+  vec3 light=vColor+vMaterial*(spec*vec3(.38,.28,.18)+fresnel*vec3(.10,.045,.20)+strip*vec3(.12,.09,.20)*uGloss);
+  light=mix(light,vColor,uStage);
+  if(uMirror>.5){float fade=clamp(.85-vPos.y*.25,.25,.8);light=mix(uFloor,light,fade);}
+  gl_FragColor=vec4(clamp(light,0.0,1.0),uAlpha);
+ }`;
   program=gl.createProgram();const vs=shader(gl.VERTEX_SHADER,vertex),ss=shader(gl.FRAGMENT_SHADER,fragment);gl.attachShader(program,vs);gl.attachShader(program,ss);gl.linkProgram(program);gl.deleteShader(vs);gl.deleteShader(ss);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
-  buffer=gl.createBuffer();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
+  buffer=gl.createBuffer();surfaceBuffer=gl.createBuffer();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
  }
  function render(){
   if(dead||!gl||!program)return;
   const dpr=Math.min(root.devicePixelRatio||1,1.75),w=Math.max(1,Math.round(canvas.clientWidth*dpr)),h=Math.max(1,Math.round(canvas.clientHeight*dpr));
   if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}
-  gl.viewport(0,0,w,h);gl.clearColor(...(forge?.themes?.[environment]?.background||[.057,.031,.095]),1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+  const theme=forge.themes[environment]||forge.themes.signature;
+  gl.viewport(0,0,w,h);gl.clearColor(...theme.background,1);
+  gl.depthMask(true);gl.colorMask(true,true,true,true);gl.stencilMask(255);
+  gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT|gl.STENCIL_BUFFER_BIT);gl.useProgram(program);
+  gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
   for(const [name,offset] of [['aPos',0],['aColor',12]]){const k=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(k);gl.vertexAttribPointer(k,3,gl.FLOAT,false,24,offset)}
-  for(const [name,value] of [['uYaw',yaw],['uPitch',pitch],['uDist',distance],['uAspect',w/h]])gl.uniform1f(gl.getUniformLocation(program,name),value);
-  gl.drawArrays(gl.TRIANGLES,0,count);
+  gl.bindBuffer(gl.ARRAY_BUFFER,surfaceBuffer);
+  const surface=gl.getAttribLocation(program,'aSurface');gl.enableVertexAttribArray(surface);gl.vertexAttribPointer(surface,4,gl.FLOAT,false,16,0);
+  const uniform=(name,value)=>gl.uniform1f(gl.getUniformLocation(program,name),value);
+  for(const [name,value] of [['uYaw',yaw],['uPitch',pitch],['uDist',distance],['uAspect',w/h],['uGloss',design.finish==='metallic'?1:design.finish==='satin'?.4:.12]])uniform(name,value);
+  gl.uniform3f(gl.getUniformLocation(program,'uEye'),-Math.sin(yaw)*Math.cos(pitch)*distance,.42+Math.sin(pitch)*distance,Math.cos(yaw)*Math.cos(pitch)*distance);
+  gl.uniform3fv(gl.getUniformLocation(program,'uFloor'),theme.deck);
+  function draw(first,n,mirror=0,alpha=1,stage=0){if(n<=0)return;uniform('uMirror',mirror);uniform('uAlpha',alpha);uniform('uStage',stage);gl.drawArrays(gl.TRIANGLES,first,n)}
+  const reflective=reflection&&hasStencil&&pitch>.01&&vehicleStart>0;
+  if(reflective){
+   // Mask reflections to the actual turntable. The reflected geometry is
+   // rendered below the floor using the same live vehicle vertex buffer.
+   gl.enable(gl.STENCIL_TEST);gl.stencilFunc(gl.ALWAYS,1,255);gl.stencilOp(gl.KEEP,gl.KEEP,gl.REPLACE);
+   gl.colorMask(false,false,false,false);gl.depthMask(false);draw(0,stencilCount,0,1,1);
+   gl.colorMask(true,true,true,true);gl.depthMask(true);gl.stencilMask(0);
+   gl.stencilFunc(gl.EQUAL,1,255);gl.stencilOp(gl.KEEP,gl.KEEP,gl.KEEP);
+   draw(vehicleStart,count-vehicleStart,1);gl.disable(gl.STENCIL_TEST);
+   gl.clear(gl.DEPTH_BUFFER_BIT);
+   gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+   draw(0,stencilCount,0,.50,1);draw(stencilCount,floorCount-stencilCount,0,.38,1);
+   gl.disable(gl.BLEND);draw(floorCount,vehicleStart-floorCount,0,1,1);
+  }else draw(0,vehicleStart,0,1,1);
+  draw(vehicleStart,count-vehicleStart);
+  target.dataset.forgeReflection=reflective?'active':'off';
  }
- function rebuild(){if(!gl||dead||!forge)return;const model=forge.build(opts.type,opts.model,paint,design,environment);count=model.vertices.length/6;target.dataset.forgeTriangles=String(count/3);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,model.vertices,gl.STATIC_DRAW);render()}
- function dispose(){if(dead)return;dead=true;if(raf)cancelAnimationFrame(raf);raf=0;observer?.disconnect();if(gl){if(buffer)gl.deleteBuffer(buffer);if(program)gl.deleteProgram(program);gl.getExtension('WEBGL_lose_context')?.loseContext()}gl=null}
+ function rebuild(){
+  if(!gl||dead||!forge)return;
+  const model=forge.build(opts.type,opts.model,paint,design,environment);
+  count=model.vertices.length/6;vehicleStart=model.vehicleStart;floorCount=model.floorCount;stencilCount=model.stencilCount;
+  if(!model.surface||model.surface.length!==count*4)throw Error('Forge surface buffer mismatch');
+  target.dataset.forgeTriangles=String(count/3);target.dataset.forgeRenderer='lit-reflective';
+  gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,model.vertices,gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER,surfaceBuffer);gl.bufferData(gl.ARRAY_BUFFER,model.surface,gl.STATIC_DRAW);render()
+ }
+ function dispose(){if(dead)return;dead=true;if(raf)cancelAnimationFrame(raf);raf=0;observer?.disconnect();if(gl){if(buffer)gl.deleteBuffer(buffer);if(surfaceBuffer)gl.deleteBuffer(surfaceBuffer);if(program)gl.deleteProgram(program);gl.getExtension('WEBGL_lose_context')?.loseContext()}gl=null}
  const instance={dispose,paint(color){paint=color;rebuild()},getDesign(){return {...design}},reset(){changeCamera(.7,.30)}};
  current=instance;
  try{if(!forge)throw Error('Forge module unavailable');init();rebuild();target.dataset.forgeStatus='ready';if(root.ResizeObserver){observer=new ResizeObserver(render);observer.observe(canvas)}}catch(e){target.dataset.forgeStatus='fallback';wrap.hidden=true;controls.hidden=true;note.textContent='WebGL preview unavailable on this device. Reference image and private design settings remain usable.'}
