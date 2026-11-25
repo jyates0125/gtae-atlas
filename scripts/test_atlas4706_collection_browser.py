@@ -1,4 +1,4 @@
-import os,threading,json
+import os,threading,json,base64
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
@@ -8,6 +8,11 @@ records=json.loads((ROOT/'data/atlas192-vi-weapons.json').read_text(encoding='ut
 ids={r['id'] for r in records}; variants={r['id'] for r in records if r.get('variantOf')}
 assert len(records)==187 and len(ids)==187 and len(variants)==115
 assert all(r['variantOf'] in ids and r['variantOf'] not in variants for r in records if r.get('variantOf'))
+by_id={r['id']:r for r in records}
+linked={r['id'] for r in records if r.get('officialMedia') or by_id.get(r.get('variantOf',r['id']),{}).get('visualReference')}
+assert len(linked)==173
+PIXEL=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jfZkAAAAASUVORK5CYII=')
+OUT=ROOT/'qa-evidence'/'atlas4711'/os.getenv('ATLAS_BROWSER','chromium');OUT.mkdir(parents=True,exist_ok=True)
 class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args): pass
 with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'public'))) as server:
@@ -31,11 +36,30 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    expect(page.locator('.viweapon-card')).to_have_count(len(records))
    card=page.locator('[data-weapon-id="girardi-es9"]')
    expect(card).to_have_attribute('data-collected','false',timeout=15000)
-   expect(card.locator('.viweapon-media figcaption')).to_contain_text('not the stock model')
+   expect(page.locator('.viweapon-card .viweapon-media')).to_have_count(len(records))
+   page.locator('#viWeaponVisual').select_option('linked')
+   expect(page.locator('.viweapon-card')).to_have_count(len(linked))
+   page.locator('#viWeaponVisual').select_option('pending')
+   expect(page.locator('.viweapon-card')).to_have_count(len(records)-len(linked))
+   page.locator('#viWeaponClear').click()
+   expect(page.locator('#viWeaponVisual')).to_have_value('all')
    card.locator('.viweapon-media').scroll_into_view_if_needed()
-   expect(card.locator('.viweapon-image-unavailable')).to_be_visible(timeout=15000)
-   expect(page.locator('[data-weapon-id="duke-556"] .viweapon-image-unavailable')).to_contain_text('not yet verified')
-   assert page.locator('#viWeaponCards img').evaluate_all("els=>els.every(e=>e.src.startsWith('https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_'))")
+   expect(card.locator('.viweapon-media-label')).to_contain_text('Linked image unavailable',timeout=15000)
+   expect(card.locator('.viweapon-plate')).to_be_visible()
+   pending=page.locator('[data-weapon-id="switchblade"]')
+   expect(pending.locator('.viweapon-media-label')).to_contain_text('Item-specific image pending')
+   expect(pending.locator('.viweapon-plate')).to_be_visible()
+   context.route('https://vi.gtax.dev/images/weapons/**',lambda route:route.fulfill(status=200,content_type='image/png',body=PIXEL))
+   page.locator('#viWeaponSearch').fill('Gutterball Moreland 850')
+   variant=page.locator('[data-weapon-id="gutterball-moreland-850"]')
+   variant.locator('.viweapon-media').scroll_into_view_if_needed()
+   expect(variant.locator('.viweapon-media')).to_have_attribute('data-visual','family',timeout=15000)
+   expect(variant.locator('.viweapon-media-label')).to_contain_text('exact variant appearance not verified')
+   page.locator('#viWeaponSearch').fill('Girardi ES9')
+   card.locator('.viweapon-media').scroll_into_view_if_needed()
+   expect(card.locator('.viweapon-media')).to_have_attribute('data-visual','family',timeout=15000)
+   expect(card.locator('.viweapon-media-label')).to_contain_text('Base-family image')
+   page.locator('#viWeaponClear').click()
    card.locator('.viweapon-note').click()
    expect(card).to_have_attribute('data-collected','false')
    card.locator('.viweapon-collect').click()
@@ -51,6 +75,16 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    page.locator('#viWeaponClear').click()
    expect(page.locator('[data-weapon-id="cold-war-556"]')).to_have_count(1)
    assert page.evaluate("localStorage.getItem('team-jura-atlas90-collection-v1')") is None
+   context.unroute('https://vi.gtax.dev/images/weapons/**')
+   context.unroute('https://**/*')
+   page.reload();expect(page.locator('.viweapon-card')).to_have_count(len(records),timeout=15000)
+   page.locator('#viWeaponCards').scroll_into_view_if_needed()
+   for img in page.locator('#viWeaponCards .viweapon-card').all()[:3]:
+    img.scroll_into_view_if_needed()
+   page.locator('#viWeaponCards').locator('.viweapon-card').first.scroll_into_view_if_needed()
+   page.wait_for_timeout(1800)
+   page.screenshot(path=str(OUT/f'armory-{width}.png'),animations='disabled')
+   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
    page.goto(base+'atlas90-vehicles6.html?q=squalo')
    v=page.locator('#j90Cards .j90-card')
    expect(v).to_have_count(1,timeout=15000)
