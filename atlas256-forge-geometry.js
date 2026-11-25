@@ -30,6 +30,30 @@
   return groups;
  }
  const workshopCatalog=model=>Object.hasOwn(workshopGroups,model)?workshopGroups[model].map(([key,label,options])=>({key,label,tab:workshopTab(model,key),options:options.map(([name,price,condition],index)=>({id:key+'-'+index,name,price,condition:condition||''}))})):[];
+ // Game choice eligibility and the visual implementation are independent.
+ // This describes the planning intent, not a claim that a separate mesh exists.
+ function workshopEffect(model,key,optionId){
+  const group=modelWorkshopCatalog(model).find(g=>g.key===key);
+  if(!group||!group.options.some(o=>o.id===optionId))return null;
+  if(key==='bennys-conversion')return 'distinct-model';
+  if(key==='hsw-conversion')return 'performance-conversion';
+  if(['engine','transmission','turbo','brakes','handling','armor'].includes(key))return 'performance';
+  if(['respray','headlights','plates','curated-liveries'].includes(key))return 'appearance';
+  return 'appearance-or-assembly';
+ }
+ function applyWorkshopSelection(model,raw,key,optionId){
+  const prior=normalizeWorkshop(raw,model);
+  const group=modelWorkshopCatalog(model).find(g=>g.key===key);
+  if(!group)return prior;
+  if(optionId===''){delete prior[key];return prior}
+  if(!workshopEffect(model,key,optionId))return prior;
+  prior[key]=optionId;
+  // Only an explicit newly selected conversion changes the working plan.
+  // Never transfer or modify ownership, or migrate persisted records on load.
+  if(key==='hsw-conversion')delete prior['bennys-conversion'];
+  if(key==='bennys-conversion')delete prior['hsw-conversion'];
+  return prior;
+ }
  function normalizeWorkshop(raw,model){
   const out={};
   if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
@@ -267,5 +291,5 @@
   store.setItem(collectionKey,JSON.stringify({...data,updated:new Date().toISOString()}));
   return value;
  }
- return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog,modelWorkshopCatalog,specialtyWorkshop,specialtyModels,specialtyName,hswRecords,bennysRecords,workshopSource,craftCustomization,ownershipKey,viModelFromOwnership,collectionKey,readVehicleCollection,setVehicleOwned});
+ return Object.freeze({normalize,classify,build,themes,themeFor,defaultTheme,resolveTheme,modelProfile,visualPlatform,workshopLiveries,workshopCatalog,modelWorkshopCatalog,workshopEffect,applyWorkshopSelection,specialtyWorkshop,specialtyModels,specialtyName,hswRecords,bennysRecords,workshopSource,craftCustomization,ownershipKey,viModelFromOwnership,collectionKey,readVehicleCollection,setVehicleOwned});
 });
