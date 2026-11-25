@@ -59,7 +59,8 @@ function mount(target,opts={}){
  function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
  function init(){
   gl=canvas.getContext('webgl',{alpha:false,antialias:true,stencil:true,preserveDrawingBuffer:false});if(!gl)throw Error('WebGL unavailable');hasStencil=gl.getParameter(gl.STENCIL_BITS)>0;if(!hasStencil){reflectionControl.checked=false;reflectionControl.disabled=true;reflectionControl.title='Stencil reflections unavailable on this device';}
-  const vertex=`attribute vec3 aPos,aColor;
+  const vertex=`precision mediump float;
+ attribute vec3 aPos,aColor;
  attribute vec4 aSurface;varying vec3 vColor,vPos,vNormal;varying float vMaterial;
  uniform float uYaw,uPitch,uDist,uAspect,uMirror;
  void main(){
@@ -138,7 +139,7 @@ function mount(target,opts={}){
  function dispose(){if(dead)return;dead=true;if(raf)cancelAnimationFrame(raf);raf=0;observer?.disconnect();if(gl){if(buffer)gl.deleteBuffer(buffer);if(surfaceBuffer)gl.deleteBuffer(surfaceBuffer);if(program)gl.deleteProgram(program);gl.getExtension('WEBGL_lose_context')?.loseContext()}gl=null}
  const instance={dispose,paint(color){paint=color;rebuild()},getDesign(){return {...design}},reset(){changeCamera(.7,.30)}};
  current=instance;
- try{if(!forge)throw Error('Forge module unavailable');init();rebuild();target.dataset.forgeStatus='ready';if(root.ResizeObserver){observer=new ResizeObserver(render);observer.observe(canvas)}}catch(e){target.dataset.forgeStatus='fallback';wrap.hidden=true;controls.hidden=true;note.textContent='WebGL preview unavailable on this device. Reference image and private design settings remain usable.'}
+ try{if(!forge)throw Error('Forge module unavailable');init();rebuild();target.dataset.forgeStatus='ready';if(root.ResizeObserver){observer=new ResizeObserver(render);observer.observe(canvas)}}catch(e){console.warn('[Forge renderer]',e.message);target.dataset.forgeStatus='fallback';wrap.hidden=true;controls.hidden=true;note.textContent='WebGL preview unavailable on this device. Reference image and private design settings remain usable.'}
  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();if(dead)return;target.dataset.forgeStatus='fallback';wrap.hidden=true;controls.hidden=true;note.textContent='3D context lost. Reopen this vehicle to restore the preview.';if(raf)cancelAnimationFrame(raf);raf=0});
  canvas.addEventListener('pointerdown',e=>{drag={id:e.pointerId,x:e.clientX,y:e.clientY};canvas.setPointerCapture?.(e.pointerId)});
  canvas.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;yaw+=(e.clientX-drag.x)*.012;pitch=Math.max(-.25,Math.min(1.48,pitch+(e.clientY-drag.y)*.009));drag.x=e.clientX;drag.y=e.clientY;render()});
