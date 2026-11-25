@@ -3,7 +3,7 @@
   "scope": "vi",
   "kind": "weapon",
   "reviewedAt": "2026-11-25",
-  "status": "Named launch-week roster plus provisional visual references; unique variants and remaining standard names incomplete",
+  "status": "Released-game community reference roster; named variants and base identities remain individually reviewable.",
   "disclaimer": "GTA VI weapon references are sourced by item. A name shown in official promotional material does not verify weapon performance, pricing, spawn locations or every edition. No GTA V archive art is repurposed as GTA VI in-game photography.",
   "sources": [
     {
@@ -29,6 +29,30 @@
     {
       "name": "GTAside · launch-week weapon names",
       "url": "https://gtaside.com/games/gta6/weapons/"
+    },
+    {
+      "name": "Rockstar Games — official screenshot library",
+      "url": "https://www.rockstargames.com/VI/media/screenshots"
+    },
+    {
+      "name": "WikiGTAVI · variant family cross-check",
+      "url": "https://www.wikigtavi.com/weapons/unique-variants"
+    },
+    {
+      "name": "Leonida Waypoint · independent game-item catalog",
+      "url": "https://leonidawaypoint.com/database/weapons"
+    },
+    {
+      "name": "PowerPyx · Progress Database count reference",
+      "url": "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
+    },
+    {
+      "name": "GTA 6 Everything · released-game index",
+      "url": "https://www.gta6everything.com/weapons"
+    },
+    {
+      "name": "GTAX GTA VI Wiki · linked pictured reference and embed invitation",
+      "url": "https://vi.gtax.dev/embed"
     }
   ],
   "records": [
@@ -44,6 +68,17 @@
       "officialEdition": {
         "label": "Ultimate Edition personalized variants — category confirmed, specific name from gameplay reporting",
         "source": "https://www.rockstargames.com/VI/editions/ultimate-edition"
+      },
+      "officialMedia": {
+        "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_WEAPON_VARIANTS_01.12licq0_o7mb5.jpg?akim=1&imdensity=1&imwidth=3840",
+        "caption": "Official Rockstar screenshot — personalized Girardi ES9 and Klose K17 together; not the stock model.",
+        "source": "https://www.rockstargames.com/VI/media/screenshots"
+      },
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/es9.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "family"
       }
     },
     {
@@ -58,6 +93,17 @@
       "officialEdition": {
         "label": "Ultimate Edition personalized variants — category confirmed, specific name from gameplay reporting",
         "source": "https://www.rockstargames.com/VI/editions/ultimate-edition"
+      },
+      "officialMedia": {
+        "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_WEAPON_VARIANTS_01.12licq0_o7mb5.jpg?akim=1&imdensity=1&imwidth=3840",
+        "caption": "Official Rockstar screenshot — personalized Girardi ES9 and Klose K17 together; not the stock model.",
+        "source": "https://www.rockstargames.com/VI/media/screenshots"
+      },
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/k17.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "family"
       }
     },
     {
@@ -72,6 +118,11 @@
       "officialEdition": {
         "label": "Ultimate Edition named item",
         "source": "https://www.rockstargames.com/VI/editions/ultimate-edition"
+      },
+      "officialMedia": {
+        "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_HAWK_AND_LITTLE_MORGAN_REVOLVERS_01.0~3pdc~~sing4.jpg?akim=1&imdensity=1&imwidth=3840",
+        "caption": "Official Rockstar screenshot — Hawk & Little Morgan Revolvers, Ultimate Edition.",
+        "source": "https://www.rockstargames.com/VI/media/screenshots"
       }
     },
     {
@@ -82,7 +133,13 @@
       "grade": "Observed in official media",
       "description": "Named in coverage of official gameplay footage; final model variants and technical statistics require direct game-source checking.",
       "sourceName": "PC Gamer — GTA VI weapons",
-      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/556.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "moreland-850",
@@ -92,7 +149,13 @@
       "grade": "Observed in official media",
       "description": "A named shotgun shown in official gameplay coverage; item pricing and pickup coordinates are not specified here.",
       "sourceName": "PC Gamer — GTA VI weapons",
-      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/850.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "nipper-38",
@@ -102,7 +165,13 @@
       "grade": "Observed in official media",
       "description": "Name is reported from Rockstar's published promotional artwork, not an independently verified game-menu specification.",
       "sourceName": "PC Gamer — GTA VI weapons",
-      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/nipper-38.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "mustang-357",
@@ -112,7 +181,13 @@
       "grade": "Observed in official media",
       "description": "A revolver identified from official imagery coverage. Attributes and spawn locations are not inferred.",
       "sourceName": "PC Gamer — GTA VI weapons",
-      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/"
+      "sourceUrl": "https://www.pcgamer.com/games/grand-theft-auto/gta-6-weapons-list/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mustang-357.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "girardi-es18",
@@ -122,7 +197,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/es18.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "klose-k17-mcd",
@@ -132,7 +213,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/k17-mcd.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "gorse-425",
@@ -142,7 +229,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/gorse-425.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "mason-keen-longshot",
@@ -152,7 +245,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/longshot.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "kozlov-kz-59",
@@ -162,7 +261,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/assault-rifle.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "wortham-w14",
@@ -172,7 +277,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/w-14.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "schlamm-dw9",
@@ -182,7 +293,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/dw9.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "bushcraft-knife",
@@ -192,7 +309,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/bushcraft-knife.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "diving-knife",
@@ -202,7 +325,13 @@
       "evidence": "Released-game catalogue, reviewed 2026-11-24; individual availability and exact identity pending",
       "description": "Named in launch-week community reporting. No confirmed price, location, unlock, performance or modification data in this record.",
       "sourceName": "GTAside · launch-week named weapon reference",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/diving-knife.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "switchblade",
@@ -212,7 +341,8 @@
       "evidence": "Pictured alongside the Morgan revolvers in publisher media; independent item availability not verified",
       "description": "Visual reference only. Do not assume a standalone unlock, purchase or unique variant.",
       "sourceName": "Rockstar official screenshots; GTAside caption review",
-      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
+      "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots",
+      "illustrativeExampleOf": "edc-knife"
     },
     {
       "id": "akm-assault-rifle",
@@ -222,7 +352,8 @@
       "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
       "description": "Research reference only; playable availability and model-specific information remain unknown.",
       "sourceName": "GTADB individual reference",
-      "sourceUrl": "https://gtadb.net/gta-6/weapons/assault-rifle-gta-6/"
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/assault-rifle-gta-6/",
+      "illustrativeExampleOf": "kozlov-kz-59"
     },
     {
       "id": "bolt-action-sniper",
@@ -232,7 +363,8 @@
       "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
       "description": "Research reference only; playable availability and model-specific information remain unknown.",
       "sourceName": "GTADB individual reference",
-      "sourceUrl": "https://gtadb.net/gta-6/weapons/bolt-action-sniper-gta-6/"
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/bolt-action-sniper-gta-6/",
+      "illustrativeExampleOf": "fortune-son-laird350"
     },
     {
       "id": "combat-mg",
@@ -252,7 +384,8 @@
       "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
       "description": "Research reference only; playable availability and model-specific information remain unknown.",
       "sourceName": "GTADB individual reference",
-      "sourceUrl": "https://gtadb.net/gta-6/weapons/double-barrel-shotgun-gta-6/"
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/double-barrel-shotgun-gta-6/",
+      "illustrativeExampleOf": "shrewsbury-drifter"
     },
     {
       "id": "heavy-pistol",
@@ -262,7 +395,8 @@
       "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
       "description": "Research reference only; playable availability and model-specific information remain unknown.",
       "sourceName": "GTADB individual reference",
-      "sourceUrl": "https://gtadb.net/gta-6/weapons/heavy-pistol-gta-6/"
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/heavy-pistol-gta-6/",
+      "illustrativeExampleOf": "girardi-es9"
     },
     {
       "id": "schlamm-drx",
@@ -272,7 +406,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mp-inspired-pistol.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "duke-1922",
@@ -282,7 +422,8 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "illustrativeExampleOf": "girardi-es9"
     },
     {
       "id": "fairview-kalinga-50",
@@ -292,7 +433,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/kalinga-50.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "wortham-wcr1",
@@ -302,7 +449,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/wcr1.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "hawk-little-38",
@@ -312,7 +465,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/38.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "scorpio-akulus",
@@ -322,7 +481,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/akulus.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "wortham-w10",
@@ -332,7 +497,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mac-11-inspired-smg.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "zhang-wu-type-9",
@@ -342,7 +513,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/type-9.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "deever-tech-dsg",
@@ -352,7 +529,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mp9-inspired-smg.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "vom-feuer-vf5",
@@ -362,7 +545,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mp5-40-inspired-smg.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "vom-feuer-vf5c",
@@ -372,7 +561,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/vf5c.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "bzi-vatra",
@@ -382,7 +577,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/vatra.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "adb-pd90",
@@ -392,7 +593,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/pd-90.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "shrewsbury-drifter",
@@ -402,7 +609,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/longfowler-inspired-shotgun.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "shrewsbury-hobo",
@@ -412,7 +625,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/hobo.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "mason-keen-shortstraw",
@@ -422,7 +641,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/shortstraw.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "girardi-az1200",
@@ -432,7 +657,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/az1200.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "girardi-verro",
@@ -442,7 +673,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/verro.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "girardi-super400",
@@ -452,7 +689,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/super400.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "kozlov-kvga12",
@@ -462,7 +705,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/kvga-12.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "goodwin-comshot-12",
@@ -472,7 +721,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/comshot-12.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "hillinger-heathen",
@@ -482,7 +737,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/heathen.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "vom-feuer-vfg1",
@@ -492,7 +753,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/vom-feuer-assault-rifle.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "kozlov-hind",
@@ -502,7 +769,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/hind.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "adb-fra",
@@ -512,7 +785,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/fra.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "wortham-w22",
@@ -522,7 +801,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/ruger-10-22-inspired-rifle.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "hillinger-m306",
@@ -532,7 +817,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/m1a-inspired-rifle.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "hillinger-m306-tmr",
@@ -542,7 +833,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/m306-tmr.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "hawk-little-mediator",
@@ -552,7 +849,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/mediator.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "fortune-son-laird350",
@@ -562,7 +865,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/remington-700-inspired-rifle.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "shrewsbury-sm69",
@@ -572,7 +881,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/sm-69.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "fairview-ffsr",
@@ -582,7 +897,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/ff-sr.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "fairview-ff50",
@@ -592,7 +913,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/ff-50.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "adb-m350",
@@ -622,7 +949,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/boomer.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "deever-tech-glr40",
@@ -632,7 +965,8 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "illustrativeExampleOf": "hillinger-boomer"
     },
     {
       "id": "h-at",
@@ -642,7 +976,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/h-at.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "hunting-knife",
@@ -652,7 +992,8 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "illustrativeExampleOf": "bushcraft-knife"
     },
     {
       "id": "edc-knife",
@@ -662,7 +1003,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/edc-knife.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "survival-knife",
@@ -672,7 +1019,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/survival-knife.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "brass-knuckles",
@@ -682,7 +1035,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/knuckle-dusters.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "baton",
@@ -692,7 +1051,13 @@
       "evidence": "Launch-week reported in-game name; independent model verification pending",
       "description": "Catalogued fictional game item. Availability, price and customization remain unverified.",
       "sourceName": "GTAside — November 23 launch roster",
-      "sourceUrl": "https://gtaside.com/games/gta6/weapons/"
+      "sourceUrl": "https://gtaside.com/games/gta6/weapons/",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/baton.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
     },
     {
       "id": "cold-war-556",
@@ -825,6 +1190,1901 @@
       "sourceName": "GTA.ZONE · unique game-item index",
       "sourceUrl": "https://negentropy.studio/unique-weapons/",
       "variantOf": "girardi-es9"
+    },
+    {
+      "id": "assassin-nipper-38",
+      "name": "Assassin Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "turnt-nipper-38",
+      "name": "Turnt Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "zodiac-nipper-38",
+      "name": "Zodiac Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "convict-kalinga-50",
+      "name": "Convict Kalinga .50",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fairview Kalinga .50. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "fairview-kalinga-50",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "quarter-mile-es9",
+      "name": "Quarter Mile ES9",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi ES9. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "girardi-es9",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "nite-raptor-k17",
+      "name": "Nite Raptor K17",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "klose-k17",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "rogue-alpha-drx",
+      "name": "Rogue Alpha DRX",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Schlamm DRX. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "schlamm-drx",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "donnies-h-and-l-38",
+      "name": "Donnie's H&L .38",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hawk & Little .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "hawk-little-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "jack-sheepe-h-and-l-38",
+      "name": "Jack Sheepe H&L .38",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hawk & Little .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "hawk-little-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "honky-tonk-mustang-357",
+      "name": "Honky Tonk Mustang .357",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke Mustang .357. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "mustang-357",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "iron-and-oak-wcr-1",
+      "name": "Iron & Oak WCR-1",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham WCR1. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-wcr1",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kingfishers-akulus",
+      "name": "Kingfishers Akulus",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Akulus. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "scorpio-akulus",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "swamp-bait-akulus",
+      "name": "Swamp Bait Akulus",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Akulus. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "scorpio-akulus",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "chromium-w-10",
+      "name": "Chromium W-10",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-10. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-w10",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "little-friend-w-10",
+      "name": "Little Friend W-10",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-10. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-w10",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "moneymaker-w-10",
+      "name": "Moneymaker W-10",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-10. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-w10",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "conspiracist-type-9",
+      "name": "Conspiracist Type 9",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Zhang Wu Type 9. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "zhang-wu-type-9",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "neon-sunset-type-9",
+      "name": "Neon Sunset Type 9",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Zhang Wu Type 9. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "zhang-wu-type-9",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "crabshack-vf5",
+      "name": "Crabshack VF5",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Vom Feuer VF5. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "vom-feuer-vf5",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "double-cross-vatra",
+      "name": "Double Cross Vatra",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of BZI Vatra. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "bzi-vatra",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "spangled-vatra",
+      "name": "Spangled Vatra",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of BZI Vatra. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "bzi-vatra",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "backdoor-hobo",
+      "name": "Backdoor Hobo",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury Hobo. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-hobo",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "basher-gorse-425",
+      "name": "Basher Gorse 425",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Gorse 425. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "gorse-425",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "smuggler-gorse-425",
+      "name": "Smuggler Gorse 425",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Gorse 425. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "gorse-425",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "bruiser-super400",
+      "name": "Bruiser Super400",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi Super400. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "girardi-super400",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "darknite-drifter",
+      "name": "Darknite Drifter",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury Drifter. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-drifter",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "gutterball-moreland-850",
+      "name": "Gutterball Moreland 850",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Moreland 850. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "moreland-850",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "watcher-pro-moreland-850",
+      "name": "Watcher Pro Moreland 850",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Moreland 850. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "moreland-850",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "nitepower-az1200",
+      "name": "Nitepower AZ1200",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi AZ1200. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "girardi-az1200",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "unpacked-comshot-12",
+      "name": "Unpacked Comshot 12",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Goodwin Comshot 12. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "goodwin-comshot-12",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "woodhatch-longshot",
+      "name": "Woodhatch Longshot",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Mason & Keen Longshot. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "mason-keen-longshot",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "clunker-556",
+      "name": "Clunker 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "drug-mule-kz-59",
+      "name": "Drug Mule KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "cruel-huntsmans-sm-69",
+      "name": "Cruel Huntsman's SM-69",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury SM-69. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-sm69",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "firebreak-sm-69",
+      "name": "Firebreak SM-69",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury SM-69. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-sm69",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "killtelligence-sm-69",
+      "name": "Killtelligence SM-69",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury SM-69. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "shrewsbury-sm69",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "fincredible-laird-350",
+      "name": "Fincredible Laird 350",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Laird 350. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "fortune-son-laird350",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "hunters-laird-350",
+      "name": "Hunter's Laird 350",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Laird 350. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "fortune-son-laird350",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kingfishers-laird-350",
+      "name": "Kingfishers Laird 350",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Laird 350. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "fortune-son-laird350",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kingfishers-w-22",
+      "name": "Kingfishers W-22",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-22. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "wortham-w22",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "mercenary-lmg-6",
+      "name": "Mercenary LMG 6",
+      "group": "LMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Goodwin LMG 6. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "goodwin-lmg6",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "la-polilla-negra-vf-g1",
+      "name": "La Polilla Negra VF-G1",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Vom Feuer VF-G1. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "vom-feuer-vfg1",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "eris-fresh-dsg",
+      "name": "Eris Fresh DSG",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Deever Tech DSG. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "deever-tech-dsg",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "mister-mangrove-laird-350",
+      "name": "Mister Mangrove Laird 350",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Laird 350. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "fortune-son-laird350",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "petes-kz-59",
+      "name": "Pete's KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "la-polilla-negra-kz-59",
+      "name": "La Polilla Negra KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "marabunta-grande-kz-59",
+      "name": "Marabunta Grande KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "san4san-kz-59",
+      "name": "San4San KZ-59",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KZ-59. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "kozlov-kz-59",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "guardia-brothers-fra",
+      "name": "Guardia Brothers FRA",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of ADB FRA. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "adb-fra",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kingpin-heathen",
+      "name": "Kingpin Heathen",
+      "group": "Assault rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hillinger Heathen. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "hillinger-heathen",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "rauls-cqb-556",
+      "name": "Raul's CQB 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "rauls-heist-556",
+      "name": "Raul's Heist 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "cockroach-xtreme-556",
+      "name": "Cockroach Xtreme 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "grx-556",
+      "name": "GRX 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kolt-and-associates-556",
+      "name": "Kolt & Associates 556",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke 556 Assault Rifle. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "duke-556",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "franciscos-lmg-6",
+      "name": "Francisco's LMG 6",
+      "group": "LMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Goodwin LMG 6. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "goodwin-lmg6",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "low-point-nipper-38",
+      "name": "Low Point Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "mahi-nipper-38",
+      "name": "Mahi Nipper .38",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Scorpio Nipper .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "nipper-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "gils-kalinga-50",
+      "name": "Gil's Kalinga .50",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fairview Kalinga .50. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "fairview-kalinga-50",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "the-guardian-es18",
+      "name": "The Guardian ES18",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi ES18. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "girardi-es18",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "stoner-k17-mcd",
+      "name": "Stoner K17 MCD",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17 MCD. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "klose-k17-mcd",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "dumpster-k17-mcd",
+      "name": "Dumpster K17 MCD",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17 MCD. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA.ZONE · unique game-item index",
+      "sourceUrl": "https://negentropy.studio/unique-weapons/",
+      "variantOf": "klose-k17-mcd",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · unique variants",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "shrewsbury-sms-01",
+      "name": "Shrewsbury SMS-01",
+      "group": "Sniper rifle",
+      "evidence": "Released-game guide reference",
+      "grade": "Community reference",
+      "description": "Listed by released-game guides as a GTA VI item. Individual in-game collection identity and visual evidence remain pending.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "corroboration": [
+        {
+          "name": "Leonida Waypoint · released-game index",
+          "url": "https://leonidawaypoint.com/database/weapons"
+        }
+      ],
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/sms-01.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
+    },
+    {
+      "id": "combat-knife",
+      "name": "Combat Knife",
+      "group": "Melee",
+      "evidence": "Released-game guide reference",
+      "grade": "Community reference",
+      "description": "Listed by released-game guides as a GTA VI item. Individual in-game collection identity and visual evidence remain pending.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "corroboration": [
+        {
+          "name": "Leonida Waypoint · released-game index",
+          "url": "https://leonidawaypoint.com/database/weapons"
+        }
+      ],
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/combat-knife.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
+    },
+    {
+      "id": "frag-grenade",
+      "name": "Frag Grenade",
+      "group": "Throwable",
+      "evidence": "Released-game guide reference",
+      "grade": "Community reference",
+      "description": "Listed by released-game guides as a GTA VI item. Individual in-game collection identity and visual evidence remain pending.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "corroboration": [
+        {
+          "name": "Leonida Waypoint · released-game index",
+          "url": "https://leonidawaypoint.com/database/weapons"
+        }
+      ],
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/frag-grenade.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
+    },
+    {
+      "id": "sticky-bomb",
+      "name": "Sticky Bomb",
+      "group": "Throwable",
+      "evidence": "Released-game guide reference",
+      "grade": "Community reference",
+      "description": "Listed by released-game guides as a GTA VI item. Individual in-game collection identity and visual evidence remain pending.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "corroboration": [
+        {
+          "name": "Leonida Waypoint · released-game index",
+          "url": "https://leonidawaypoint.com/database/weapons"
+        }
+      ],
+      "illustrativeExampleOf": "frag-grenade"
+    },
+    {
+      "id": "flash-grenade",
+      "name": "Flash Grenade",
+      "group": "Throwable",
+      "evidence": "Released-game guide reference",
+      "grade": "Community reference",
+      "description": "Listed by released-game guides as a GTA VI item. Individual in-game collection identity and visual evidence remain pending.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "corroboration": [
+        {
+          "name": "Leonida Waypoint · released-game index",
+          "url": "https://leonidawaypoint.com/database/weapons"
+        }
+      ],
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/flash-grenade.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
+    },
+    {
+      "id": "molotov",
+      "name": "Molotov",
+      "group": "Throwable",
+      "evidence": "Released-game guide reference",
+      "grade": "Community reference",
+      "description": "Listed by released-game guides as a GTA VI item. Individual in-game collection identity and visual evidence remain pending.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "corroboration": [
+        {
+          "name": "Leonida Waypoint · released-game index",
+          "url": "https://leonidawaypoint.com/database/weapons"
+        }
+      ],
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/molotov-cocktail.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
+    },
+    {
+      "id": "the-patriarch-drx",
+      "name": "The Patriarch DRX",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Schlamm DRX. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "schlamm-drx",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "black-eagle-import-kalinga",
+      "name": "Black Eagle Import Kalinga",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fairview Kalinga .50. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "fairview-kalinga-50",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "cargo-h-and-l-38",
+      "name": "Cargo H&L .38",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hawk & Little .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "hawk-little-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "lyles-h-and-l-38",
+      "name": "Lyle's H&L .38",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hawk & Little .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "hawk-little-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "ride-free-h-and-l-38",
+      "name": "Ride Free H&L .38",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hawk & Little .38. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "hawk-little-38",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "couch-potato-mustang-357",
+      "name": "Couch Potato Mustang .357",
+      "group": "Revolver",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Duke Mustang .357. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "mustang-357",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "marabunta-grande-type-9",
+      "name": "Marabunta Grande Type 9",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Zhang Wu Type 9. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "zhang-wu-type-9",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "chronic-vatra",
+      "name": "Chronic Vatra",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of BZI Vatra. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "bzi-vatra",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "kolt-and-associates-vatra",
+      "name": "Kolt & Associates Vatra",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of BZI Vatra. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "bzi-vatra",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "furry-dw-9",
+      "name": "Furry DW-9",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Schlamm DW-9. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "schlamm-dw9",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "guardia-brothers-vf5",
+      "name": "Guardia Brothers VF5",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Vom Feuer VF5. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "vom-feuer-vf5",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "midlife-crisis-vf5",
+      "name": "Midlife Crisis VF5",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Vom Feuer VF5. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "vom-feuer-vf5",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "scrapper-vf5c",
+      "name": "Scrapper VF5C",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Vom Feuer VF5C. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "vom-feuer-vf5c",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "cpd-moreland-850",
+      "name": "CPD Moreland 850",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Moreland 850. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "moreland-850",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "san4san-gorse-425",
+      "name": "San4San Gorse 425",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Gorse 425. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "gorse-425",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "dirty-drifter",
+      "name": "Dirty Drifter",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury Drifter. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "shrewsbury-drifter",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "marabunta-grande-hobo",
+      "name": "Marabunta Grande Hobo",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury Hobo. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "shrewsbury-hobo",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "final-chapter-shortstraw",
+      "name": "Final Chapter Shortstraw",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Mason & Keen Shortstraw. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "mason-keen-shortstraw",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "throttler-verro",
+      "name": "Throttler Verro",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi Verro. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "girardi-verro",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "hostile-super400",
+      "name": "Hostile Super400",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Girardi Super400. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "girardi-super400",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "final-chapter-kvga-12",
+      "name": "Final Chapter KVGA-12",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Kozlov KVGA-12. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "kozlov-kvga12",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "hellspawn-comshot-12",
+      "name": "Hellspawn Comshot 12",
+      "group": "Shotgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Goodwin Comshot 12. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "goodwin-comshot-12",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "copperheads-w-14",
+      "name": "Copperheads W-14",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-14. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "wortham-w14",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "black-eagle-import-m306-tmr",
+      "name": "Black Eagle Import M306 TMR",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Hillinger M306 TMR. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "hillinger-m306-tmr",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "redneck-w-22",
+      "name": "Redneck W-22",
+      "group": "Rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-22. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "wortham-w22",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "twins-laird-350",
+      "name": "Twin's Laird 350",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fortune & Son Laird 350. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "fortune-son-laird350",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "gun-nut-sms-01",
+      "name": "Gun Nut SMS-01",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury SMS-01. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "shrewsbury-sms-01",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "internal-affairs-ff-sr",
+      "name": "Internal Affairs FF-SR",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fairview FF-SR. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "fairview-ffsr",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "island-poacher-ff-50",
+      "name": "Island Poacher FF-50",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Fairview FF-50. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "fairview-ff50",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "soldiers-combat-knife",
+      "name": "Soldier's Combat Knife",
+      "group": "Melee",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Combat Knife. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "combat-knife",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "tallaloko-knife",
+      "name": "Tallaloko Knife",
+      "group": "Melee",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Bushcraft Knife. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "bushcraft-knife",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "bae-luxs-w-10",
+      "name": "Bae-Lux's W-10",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-10. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "wortham-w10",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "dwnplys-k17",
+      "name": "DWNPLY's K17",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "klose-k17",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "ejs-k17",
+      "name": "EJ's K17",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "klose-k17",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "fib-sm-69",
+      "name": "FIB SM-69",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury SM-69. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "shrewsbury-sm69",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "iaa-sms-01",
+      "name": "IAA SMS-01",
+      "group": "Sniper rifle",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Shrewsbury SMS-01. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "shrewsbury-sms-01",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "roxys-w-10",
+      "name": "Roxy's W-10",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-10. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "wortham-w10",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "tyrones-w-10",
+      "name": "Tyrone's W-10",
+      "group": "SMG",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Wortham W-10. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "wortham-w10",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "ptt-youngin-k17",
+      "name": "PTT Youngin$ K17",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "klose-k17",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "san4san-k17",
+      "name": "San4San K17",
+      "group": "Handgun",
+      "evidence": "Named variant · cross-listed community reference",
+      "grade": "Community variant reference",
+      "description": "Reported named variant of Klose K17. Confirm its individual identity and appearance in GTA VI before treating it as verified.",
+      "sourceName": "GTA 6 Everything · released-game index",
+      "sourceUrl": "https://www.gta6everything.com/weapons",
+      "variantOf": "klose-k17",
+      "corroboration": [
+        {
+          "name": "WikiGTAVI · named game items",
+          "url": "https://www.wikigtavi.com/weapons/unique-variants"
+        }
+      ]
+    },
+    {
+      "id": "baseball-bat",
+      "name": "Baseball Bat",
+      "group": "Melee",
+      "evidence": "Released-game community index",
+      "grade": "Community reference",
+      "description": "Named melee reference in the GTA VI community index. Individual collection identity and image pending.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "visualReference": {
+        "provider": "gtax",
+        "image": "https://vi.gtax.dev/images/weapons/baseball-bat.webp",
+        "source": "https://vi.gtax.dev/weapons",
+        "relation": "model"
+      }
+    },
+    {
+      "id": "brontasaurus-bat",
+      "name": "Brontasaurus Bat",
+      "group": "Melee",
+      "evidence": "Named variant · community reference",
+      "grade": "Community variant reference",
+      "description": "Named bat variant listed in released-game community research. Individual collection identity and image pending.",
+      "sourceName": "Leonida Waypoint · weapon index",
+      "sourceUrl": "https://leonidawaypoint.com/database/weapons",
+      "variantOf": "baseball-bat"
     }
-  ]
+  ],
+  "completenessBenchmark": {
+    "reportedTotal": 196,
+    "standard": 66,
+    "variants": 130,
+    "source": "https://www.powerpyx.com/gta-6-collectible-guide-progress-database",
+    "note": "Reported in-game Progress Database totals, not a verified one-to-one match with Atlas references."
+  }
 }

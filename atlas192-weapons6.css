@@ -45,3 +45,28 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .j230-vi-backup{display:grid;gap:12px;max-width:650px;border:1px solid #936ca7;border-radius:12px;padding:13px;margin:12px 0;background:#2c193d;min-width:0}.j230-vi-backup label{display:grid;gap:7px;color:#ffdfad;font-weight:750;min-width:0}.j230-vi-backup input{box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:44px;padding:8px;border:1px solid #9e77af;border-radius:9px;background:#1a102b;color:#fff;font:13px system-ui}.j230-vi-backup p{margin:0;color:#e6d1e8;font-size:12px}.j230-vi-backup button{min-height:44px}
 
 .viweapon-ownership{display:inline-block;border:1px solid #c6a4ce;border-radius:7px;padding:4px 8px;color:#fff1d4;background:#241637;font-size:11px;font-weight:850}.viweapon-ownership[data-collected=true],.viweapon-actions .viweapon-collect[aria-pressed=true]{background:#16573c;color:#fff;border-color:#90d7b0}.viweapon-actions .viweapon-collect{flex:1 0 100%;min-height:44px}.viweapon-actions .viweapon-collect:disabled{opacity:.6;cursor:not-allowed}
+
+.viweapon-media{margin:10px 0 14px;overflow:hidden;border:1px solid #79598a;border-radius:10px;background:#1b1129}.viweapon-media img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain}.viweapon-media figcaption,.viweapon-image-unavailable{font-size:12px;color:#ecd4ae;padding:9px;line-height:1.45}.viweapon-image-unavailable{border:1px dashed #79598a;border-radius:8px;margin:10px 0}.viweapon-media a{color:#ffe0aa}
+
+/* Visual references never replace the identity, collection controls or source grade. */
+.viweapon-media{position:relative;min-width:0;background:radial-gradient(ellipse at 50% 30%,#554067,#1b1129 75%);border-color:#9d7ca8}
+.viweapon-media .viweapon-linked-image{position:absolute;top:0;left:0;width:100%;aspect-ratio:16/9;object-fit:contain;opacity:0;pointer-events:none}
+.viweapon-media .viweapon-linked-image.is-loaded{position:relative;opacity:1;pointer-events:auto}
+.viweapon-plate{aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px;text-align:center;color:#f9deb0;background:linear-gradient(135deg,#422b5a,#1c122b)}
+.viweapon-plate[hidden]{display:none!important}.viweapon-plate svg{width:58%;max-height:55%;fill:#d3ad78;filter:drop-shadow(0 5px 8px #0008)}
+.viweapon-plate-kicker{font-size:10px;letter-spacing:.18em;font-weight:800}.viweapon-plate strong{font-size:15px}.viweapon-plate small{font-size:10px;color:#d3bedb}
+.viweapon-media figcaption{border-top:1px solid #76578b;min-height:55px;overflow-wrap:anywhere}
+.viweapon-hero-art{background-image:linear-gradient(90deg,#25112e35,#12071820),url('./art/jura161-weapons.webp')}
+
+/* Atlas 47.1.2: preserve original renders; the surrounding scene is a separate display layer. */
+.viweapon-media{background:#1b1129}
+.viweapon-stage{position:relative;isolation:isolate;aspect-ratio:16/9;overflow:hidden;display:grid;place-items:center;background:linear-gradient(0deg,#130921a8,#180b2f40),url('./art/jura155-vi.webp') center/cover}
+.viweapon-stage .viweapon-linked-image{position:absolute;inset:8%;width:84%;height:84%;aspect-ratio:auto;object-fit:contain;opacity:0;border-radius:8px;filter:none;mix-blend-mode:normal}
+.viweapon-stage .viweapon-linked-image.is-loaded{position:absolute;opacity:1;box-shadow:0 4px 20px #0c051a55}
+.viweapon-stage .viweapon-plate{position:absolute;inset:0;width:100%;height:100%;padding:0;display:block;aspect-ratio:auto;background:#1d102d}
+.viweapon-stage .viweapon-concept-art{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
+.viweapon-stage .viweapon-plate-overlay{position:absolute;inset:auto 0 0;display:grid;justify-items:center;padding:22px 10px 10px;background:linear-gradient(transparent,#160a29f0);text-shadow:0 2px 4px #08040d}
+.viweapon-stage .viweapon-plate-overlay strong{font-size:17px}.viweapon-media figcaption{min-height:44px;font-size:11px;line-height:1.4}
+.viweapon-card-top{min-height:40px;align-content:start}.viweapon-card h3{min-height:2.4em}
+.viweapon-credits-link{margin:0 0 12px;text-align:right;font-size:12px}
+@media(max-width:650px){.viweapon-card h3{min-height:0}.viweapon-card-top{min-height:0}}

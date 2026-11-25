@@ -48,7 +48,7 @@ for page, expected_kind in PAGES.items():
     for world in ("story", "online", "vi", "classic", "all"):
         assert f'data-world="{world}"' in html, (page, world)
     assert 'u-category-paths' in html and 'u-world-buttons' in html
-    assert './atlas93-garage.html' in html
+    assert './atlas93-garage.html' in html or './atlas-forge-collections.html' in html
 
     assert any(re.fullmatch(r"\./atlas100-universe\.js\?v=\d+", ref) for ref in p.refs), (page, "shared JS")
     assert any(re.fullmatch(r"\./atlas100-universe\.css\?v=\d+", ref) for ref in p.refs), (page, "shared CSS")

@@ -16,9 +16,10 @@ function init(){
    const navTop=Math.max(72,Math.ceil(t.bottom-rect.top+8));
    const navHeight=n.height;
    const legendHeight=legend&&!legend.hidden?legend.getBoundingClientRect().height+8:0;
-   const nextTop=Math.ceil(navTop+navHeight+legendHeight+10);
-   map.style.setProperty('--j369-toolbar-top',navTop+'px');
-   map.style.setProperty('--j369-next-top',nextTop+'px');
+   const nextTop=Math.ceil(Math.max(navTop+navHeight+legendHeight,t.bottom-rect.top)+10);
+   const set=(name,value)=>{const px=value+'px';if(map.style.getPropertyValue(name)!==px)map.style.setProperty(name,px)};
+   set('--j369-toolbar-top',navTop);
+   set('--j369-next-top',nextTop);
   };
   const requestLayout=()=>{if(!frame)frame=requestAnimationFrame(layout)};
   if(typeof ResizeObserver==='function'){
@@ -26,6 +27,15 @@ function init(){
    for(const node of [map,top,nav,legend])if(node)ro.observe(node);
   }
   window.addEventListener('resize',requestLayout,{passive:true});
+  window.addEventListener('scroll',requestLayout,{passive:true,capture:true});
+  window.visualViewport?.addEventListener('resize',requestLayout,{passive:true});
+  window.addEventListener('load',requestLayout,{once:true});
+  document.fonts?.ready.then(requestLayout).catch(()=>{});
+  // Wrapped or asynchronously inserted toolbar controls may alter geometry.
+  const changes=new MutationObserver(requestLayout);
+  if(top)changes.observe(top,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class','style']});
+  if(nav)changes.observe(nav,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class','style']});
+  layout();
   document.addEventListener('jura:legend-updated',requestLayout);
   requestLayout();
  }

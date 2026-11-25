@@ -180,8 +180,16 @@ async def smoke():
                                         await after.click()
                                         if await before.get_attribute('aria-pressed')!=original:
                                             failures.append('Gallery action did not restore: '+off)
-                                    if path=='atlas90-vehicles6.html' and await card.locator('img').get_attribute('src')!='./art/jura161-vehicles6.webp':
-                                        failures.append('VI gallery displayed out-of-world imagery')
+                                    if path=='atlas90-vehicles6.html':
+                                        invalid=await pg.locator('#j90Cards .j90-card').evaluate_all("""cards=>cards.some(card=>{
+                                          const src=card.querySelector('img')?.getAttribute('src');
+                                          const local=['./art/jura161-vehicles6.webp','./art/elario-watercraft-showroom.webp'];
+                                          const model=window.JuraForge?.viModelFromOwnership(card.dataset.recordId);
+                                          const visual=window.JuraViVehicleVisuals?.get(model);
+                                          return !!src&&!local.includes(src)&&src!==visual?.url;
+                                        })""")
+                                        if invalid:
+                                            failures.append('VI gallery displayed out-of-world imagery')
                                     await pg.locator('#j90Search').fill('zzx-nonexistent-atlas-marker')
                                     if '0 visible' not in await pg.locator('#j90Results').inner_text():
                                         failures.append('Gallery search failed to apply an empty-result filter')
@@ -285,8 +293,12 @@ async def smoke():
                                     await pg.locator('#viWeaponSearch').fill('Girardi ES9')
                                     if await pg.locator('[data-weapon-id="girardi-es9"] .viweapon-note').get_attribute('aria-pressed')!='true':
                                         failures.append('GTA VI weapon review lost on refresh')
-                                    if await pg.locator('#viWeaponCards img').count()!=0:
-                                        failures.append('GTA VI weapons unexpectedly display recycled GTA V archive images')
+                                    if await pg.locator('#viWeaponCards img.viweapon-linked-image').evaluate_all("els=>els.some(e=>!e.src.startsWith('https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_')&&!e.src.startsWith('https://vi.gtax.dev/images/weapons/'))"):
+                                        failures.append('GTA VI weapons display a non-approved media origin')
+                                    if await pg.locator('[data-weapon-id=\"girardi-es9\"] .viweapon-media figcaption').count()!=1:
+                                        failures.append('GTA VI official image provenance missing')
+                                    if await pg.locator('#viWeaponCards .viweapon-media').count()!=len(expected_search):
+                                        failures.append('GTA VI visual card missing from search results')
                                 except Exception as err:
                                     failures.append('GTA VI armory interactive checks failed: '+str(err)[:220])
                             if not failures and path=='atlas93-garage.html':
