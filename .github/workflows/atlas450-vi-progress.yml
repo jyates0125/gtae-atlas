@@ -1,0 +1,23 @@
+name: Atlas 45.0 Leonida activity progress
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas450-vi-progress.js'
+      - 'atlas450-vi-progress.css'
+      - 'atlas-vi.html'
+      - 'atlas-activities.html'
+      - 'tests/atlas450-vi-progress.test.cjs'
+      - '.github/workflows/atlas450-vi-progress.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  counts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas450-vi-progress.js && node tests/atlas450-vi-progress.test.cjs

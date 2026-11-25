@@ -1,0 +1,12 @@
+Elario Forge isolated automotive renderer benchmark. Not a game-asset pack.
+Collect Cars 80s Wedge: drcollect, CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).
+Pinned source: https://github.com/drcollect/collect-cars/tree/9b8eb87431d86cc9c9b4a8c89c1d402d978e337c
+GLB Git blob c966f913a65e84cc22526d3617792bb5681fee8b. Geometry unchanged; materials and stage adapted. Viewer lighting approach informed by drcollect MIT viewer (SOURCE-LICENSE.txt).
+Tevy Muscle Car v1: https://tevy.dev/models/muscle-car
+CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
+Pinned download https://tevy.dev/models/muscle-car/v1/lod0.glb
+SHA256 ecf099c15c25ef42f42d5778932b2907307d03468c9abd86776c83db1f69c12d
+Source catalog https://tevy.dev/models.json. This is a generic original late-60s fastback, not a Rockstar mesh or verified exact Ellie body. Material mapping and visual likeness require review.
+Three.js 0.186.0 MIT (included license in node_modules/three). No runtime network dependencies.
+
+Tevy supercar v2: https://tevy.dev/models/supercar ; CC0 1.0. Metadata https://tevy.dev/models/supercar.json . LOD0 159952 triangles, SHA256 60b2270427220e045af1fa8368b9107021c473178045eb8fa2395698b4e183ab ; LOD1 44632 triangles, SHA256 7c43eb11cbd921c9c23b6767c0b0d94f7084dff76680479bec94c7cb0bde5dd9. Tevy formula car v1: https://tevy.dev/models/formula-car ; CC0 1.0; LOD0 46816 triangles; SHA256 2ab5f663afa09effe72e049c60f00f3e06d488f0007ba628f53d06c56ea98722 (observed on two independent CI runs, now pinned). Both are generic view-only evaluation candidates pending material/part mapping and visual review; no game identities or GTA options assigned.

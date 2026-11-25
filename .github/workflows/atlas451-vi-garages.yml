@@ -1,0 +1,23 @@
+name: Atlas 45.1 Leonida garage properties
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas451-vi-garages.js'
+      - 'atlas451-vi-garages.css'
+      - 'atlas-vi.html'
+      - 'atlas-forge-collections.html'
+      - 'tests/atlas451-vi-garages.test.cjs'
+      - '.github/workflows/atlas451-vi-garages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  properties:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas451-vi-garages.js && node tests/atlas451-vi-garages.test.cjs

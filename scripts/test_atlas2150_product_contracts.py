@@ -34,14 +34,128 @@ require("atlas93-garage.js", "atlas-vehicle-configurator.html?model=",
         "TeamJuraGarage3D")
 require("atlas101-configurator.js", "Aircraft / Plane concept",
         "Boat / Watercraft concept", "Helicopter concept", "sceneType()",
-        "prepareImport", "Object.hasOwn(merged,id)", "classLocked")
+        "prepareImport", "Object.hasOwn(merged,id)", "style.disabled=true", "mountReference")
 require("atlas99-garage3d.js", "forge.build(opts.type,opts.model,paint,design,environment)", "forgeStatus")
-require("atlas-vehicle-configurator.html", "atlas256-forge-geometry.js", 'id="forgeVariant"', 'id="saveVariant"', 'id="loadVariant"')
+require("atlas99-garage3d.js", "mountReference", "reference-only", "no-referrer", "opts.readOnly===true")
+require("atlas-vehicle-configurator.html", "atlas256-forge-geometry.js", 'id="forgeOwned"', 'id="forgeVariant"', 'id="saveVariant"', 'id="loadVariant"')
 require("atlas101-configurator.js", "mergeVariants", "VARIANT_LIMIT=8", "saveVariant", "loadVariant")
 # Exercise the replacement geometry engine, not retired renderer variable names.
 subprocess.run(["node", "-e", """
 const assert = require('node:assert/strict');
 const forge = require('./atlas256-forge-geometry.js');
+for(const id of ['jetmax','squalo','avisa'])assert.equal(forge.craftCustomization('v-online',id).mode,'collection');
+for(const id of ['avenger','sparrow'])assert.equal(forge.craftCustomization('v-online',id).mode,'dedicated');
+assert.equal(forge.craftCustomization('v-online','kosatka').mode,'renovation');
+for(const world of ['vi','v-story'])for(const id of ['jetmax','squalo','avisa','avenger','sparrow','kosatka'])assert.equal(forge.craftCustomization(world,id).mode,'unknown');
+assert.equal(forge.craftCustomization('v-online','__proto__').mode,'unknown');
+assert.equal(forge.craftCustomization('v-online','unknown-aircraft').mode,'unknown');
+console.log('PASS craft workshop eligibility and independent world scope');
+const expectedExpansion={akula:[14,'handling','handling-3',35000],akuma:[19,'exhaust','exhaust-2',1800],bullet:[21,'suspension','suspension-4',4400]};
+for(const [model,[count,category,id,price]] of Object.entries(expectedExpansion)){
+ const groups=forge.workshopCatalog(model);
+ assert.equal(groups.reduce((n,g)=>n+g.options.length,0),count);
+ assert.equal(groups.find(g=>g.key===category).options.find(o=>o.id===id).price,price);
+ assert.equal(forge.normalize({workshopOptions:{[category]:id}},model).workshopOptions[category],id);
+ assert.deepEqual(forge.normalize({workshopOptions:{[category]:id}},'vi_'+model).workshopOptions,{});
+ assert.equal(forge.workshopSource(model),'forge-expanded-workshops');
+}
+assert.equal(forge.workshopCatalog('jetmax').length,0);
+console.log('PASS 54 source-listed Online choices across three distinct vehicle classes');
+const moreWorkshop={avenger:[14,'engine','engine-0',900],bison:[27,'transmission','transmission-3',20000],adder:[27,'headlights','headlights-1',7500],buffalo:[37,'front-bumper','front-bumper-1',1000],dominator:[48,'roof','roof-3',1600]};
+for(const [model,[count,category,id,price]] of Object.entries(moreWorkshop)){
+ const groups=forge.workshopCatalog(model);
+ assert.equal(groups.reduce((n,g)=>n+g.options.length,0),count);
+ assert.equal(groups.find(g=>g.key===category).options.find(o=>o.id===id).price,price);
+ assert.equal(forge.normalize({workshopOptions:{[category]:id}},model).workshopOptions[category],id);
+ assert.deepEqual(forge.normalize({workshopOptions:{[category]:id}},'vi_'+model).workshopOptions,{});
+ assert.equal(forge.workshopSource(model),'forge-vehicle-workshop-expansion-2');
+}
+assert.equal(forge.workshopCatalog('jetmax').length,0);
+console.log('PASS 153 additional actual-model Online options and independent VI scope');
+assert.equal(forge.hswRecords.length,31);
+assert.equal(forge.bennysRecords.length,31);
+assert.equal(forge.specialtyModels('bennys').length,61);
+const seed=require('./atlas90-seed.json');
+for(const id of [...forge.specialtyModels('hsw'),...forge.specialtyModels('bennys')])assert.ok(seed.vehicles.includes(id),id);
+assert.equal(seed.onlineWorkshopVehicles.length,83);
+for(const id of ["bmx","cruiser","scorcher","tribike","tribike2","tribike3","inductor","inductor2"]){assert.equal(forge.bikeDivision('v-online',id),'bicycles');assert.equal(forge.craftCustomization('v-online',id).mode,'collection');assert.ok(forge.dealershipModels('v-online','pedal-metal').includes(id));}
+assert.equal(forge.specialtyName('faggio2'),'Pegassi Faggio');assert.equal(forge.bikeDivision('vi','vi_faggio'),'scooters');assert.equal(forge.bikeDivision('vi','vi_bmx'),'bicycles');assert.equal(forge.bikeDivision('vi','bmx'),null);
+for(const id of [...forge.warehouseModels('v-online'),'oppressor','oppressor2'])assert.ok(seed.onlineWorkshopVehicles.includes(id),id);
+assert.equal(Object.keys(forge.viCatalog).length,seed.vi.length);
+assert.equal(forge.viBenefitModels('vi','ultimate').length,6);
+assert.equal(forge.viBenefitModels('vi','vintage').join(','),'vi_stanier55');
+assert.equal(forge.viBenefitModels('vi','member').join(','),'vi_venturas_blvd_elegy90');
+assert.equal(forge.viBenefit('vi','vi_ganado_retro').kind,'ultimate');
+assert.equal(forge.viBenefit('vi','vi_banshee'),null);
+for(const world of ['v-online','v-story']){assert.equal(forge.viBenefitModels(world,'ultimate').length,0);assert.equal(forge.viBenefit(world,'vi_stanier55'),null);}
+
+assert.equal(forge.returningVehicle('v-online','banshee').vi,'vi_banshee');
+assert.equal(forge.returningVehicle('vi','vi_banshee').online,'banshee');
+assert.equal(forge.returningVehicle('vi','vi_banshee').viSpeed,null);
+assert.equal(forge.returningVehicle('v-online','banshee').onlineSpeed,118.5);
+assert.equal(forge.returningVehicle('v-online','banshee3'),null);
+assert.equal(forge.returningVehicle('v-story','banshee'),null);
+assert.equal(forge.returningModels('vi').length,16);
+assert.equal(forge.returningModels('v-story').length,0);
+for(const row of forge.returningVehicles){assert.ok(seed.vehicles.includes(row.online));assert.ok(forge.viCatalog[row.vi]);assert.equal(forge.returningVehicle('vi',row.vi),row);assert.equal(forge.returningVehicle('v-online',row.online),row);assert.notEqual(forge.ownershipKey('vi',row.vi),forge.ownershipKey('v-online',row.online));assert.equal(row.viSpeed,null);if(row.matchKind){assert.equal(row.onlineSpeed,null);assert.equal(row.onlinePrice,null);assert.equal(row.viRegistration,null);}}
+assert.equal(forge.returningVehicle('vi','vi_cheetah95').matchKind,'family-reference');
+assert.equal(forge.returningVehicle('vi','vi_cheetah_classic').online,'cheetah2');
+
+assert.notEqual(forge.ownershipKey('v-online','banshee'),forge.ownershipKey('vi','vi_banshee'));
+
+for(const r of seed.vi){const key='vehicles6:'+r.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');assert.equal(forge.ownershipKey('vi',r.forgeId),key);assert.equal(forge.viModelFromOwnership(key),r.forgeId);assert.ok(forge.viCatalog[r.forgeId]);assert.equal(forge.ownershipKey('v-online',r.forgeId),null);}
+assert.equal(forge.specialtyWorkshop('sentinel').hsw.name,'Übermacht Sentinel XS');
+assert.equal(forge.specialtyWorkshop('sentinel2').hsw,null);
+assert.equal(forge.specialtyWorkshop('banshee').hsw.price,1840000);
+assert.equal(forge.specialtyWorkshop('banshee').conversions[0].variant,'banshee2');
+assert.equal(forge.specialtyWorkshop('banshee2').hsw,null);
+assert.equal(forge.specialtyWorkshop('banshee2').converted.base,'banshee');
+assert.equal(forge.specialtyWorkshop('faction').conversions.length,2);
+assert.equal(forge.specialtyWorkshop('elegy2').conversions[0].variant,'elegy');
+assert.equal(forge.specialtyWorkshop('voodoo2').conversions[0].variant,'voodoo');
+for(const world of ['vi','v-story'])assert.deepEqual(forge.specialtyWorkshop('banshee',world),{hsw:null,conversions:[],converted:null});
+assert.equal(forge.specialtyWorkshop('vi_banshee','vi').hsw,null);
+assert.equal(forge.normalize({workshopOptions:{'hsw-conversion':'hsw-conversion'}},'banshee').workshopOptions['hsw-conversion'],'hsw-conversion');
+assert.deepEqual(forge.normalize({workshopOptions:{'hsw-conversion':'hsw-conversion'}},'banshee2').workshopOptions,{});
+assert.equal(forge.normalize({workshopOptions:{'bennys-conversion':'bennys-banshee2'}},'banshee').workshopOptions['bennys-conversion'],'bennys-banshee2');
+assert.notEqual(forge.ownershipKey('v-online','banshee'),forge.ownershipKey('v-online','banshee2'));
+assert.equal(forge.modelWorkshopCatalog('jetmax').length,0);
+console.log('PASS specialist conversion catalog, distinct base/custom IDs, model-scoped save plans and no VI inheritance');
+const hswPlan={'hsw-conversion':'hsw-conversion'};
+const bennyPlan=forge.applyWorkshopSelection('banshee',hswPlan,'bennys-conversion','bennys-banshee2');
+assert.deepEqual(bennyPlan,{'bennys-conversion':'bennys-banshee2'});
+assert.deepEqual(hswPlan,{'hsw-conversion':'hsw-conversion'});
+assert.deepEqual(forge.applyWorkshopSelection('banshee',bennyPlan,'hsw-conversion','hsw-conversion'),hswPlan);
+assert.deepEqual(forge.applyWorkshopSelection('banshee',hswPlan,'hsw-conversion',''),{});
+assert.deepEqual(forge.applyWorkshopSelection('vi_banshee',{},'hsw-conversion','hsw-conversion'),{});
+assert.equal(forge.workshopEffect('banshee','bennys-conversion','bennys-banshee2'),'distinct-model');
+assert.equal(forge.workshopEffect('banshee','hsw-conversion','hsw-conversion'),'performance-conversion');
+assert.equal(forge.workshopEffect('ellie','engine','engine-3'),'performance');
+assert.equal(forge.workshopEffect('dominator','hood','hood-1'),'appearance-or-assembly');
+assert.equal(forge.workshopEffect('jetmax','hood','hood-1'),null);
+console.log('PASS exclusive conversion planning, nonvisual upgrade intent, assembly options and unknown-part protection');
+
+
+
+
+const dataKey=forge.collectionKey;
+const mem=new Map([[dataKey,JSON.stringify({schema:1,owned:{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true},wishlist:{'vehicles6:squalo':true},note:{'vehicles5:jetmax':'keep'},futureField:'preserve'})]]);
+const store={getItem:k=>mem.has(k)?mem.get(k):null,setItem:(k,v)=>mem.set(k,v)};
+assert.equal(forge.ownershipKey('vi','vi_squalo'),'vehicles6:squalo');
+assert.equal(forge.viModelFromOwnership('vehicles6:squalo'),'vi_squalo');
+assert.equal(forge.ownershipKey('v-story','jetmax'),'vehicles5-story:jetmax');
+assert.equal(forge.ownershipKey('v-online','vi_squalo'),null);
+assert.equal(forge.ownershipKey('vi','__proto__'),null);
+forge.setVehicleOwned(store,'vi','vi_squalo',true);
+let snapshot=JSON.parse(mem.get(dataKey));
+assert.deepEqual(snapshot.owned,{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true,'vehicles6:squalo':true});
+assert.equal(snapshot.wishlist['vehicles6:squalo'],undefined);
+assert.equal(snapshot.note['vehicles5:jetmax'],'keep');
+assert.equal(snapshot.futureField,'preserve');
+forge.setVehicleOwned(store,'vi','vi_squalo',false);
+assert.deepEqual(JSON.parse(mem.get(dataKey)).owned,{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true});
+mem.set(dataKey,'{broken');assert.throws(()=>forge.setVehicleOwned(store,'vi','vi_squalo',true));assert.equal(mem.get(dataKey),'{broken');
+console.log('PASS authoritative cross-world collection keys, merge preservation and malformed-save protection');
 const cases = [["Aircraft / Plane concept","lazer","air"],["Boat / Watercraft concept","jetmax","marine"],["Helicopter concept","akula","rotor"],["Sports concept","adder","sport"],["Truck / Utility concept","bison","utility"],["Touring concept","regina","touring"]];
 for (const [type,id,kind] of cases) {
   const model=forge.build(type,id,'#4473c2',{});
@@ -97,6 +211,12 @@ assert.ok(!rows.some(x=>x.model==='bison'));
 assert.ok(!rows.some(x=>x.model==='unknown'));
 assert.ok(!rows.some(x=>x.title==='wrong'));
 console.log('PASS eight Forge collection projection assertions');
+const ownedOnly=hub.collect({owned:{schema:1,owned:{'vehicles5:jetmax':true,'vehicles5-story:jetmax':true,'vehicles6:squalo':true,'vehicles6:other-craft':true}}});
+assert.equal(ownedOnly.length,4);
+assert.ok(ownedOnly.some(x=>x.world==='vi'&&x.model==='vi_squalo'&&x.href.includes('world=vi&model=vi_squalo')));
+assert.ok(ownedOnly.some(x=>x.world==='story'&&x.href.includes('world=story')));
+assert.ok(ownedOnly.some(x=>x.world==='vi'&&x.model==='other-craft'&&x.href.includes('atlas90-vehicles6.html')));
+console.log('PASS owned-only collection visibility across three game scopes');
 """], cwd=ROOT, check=True)
 
 # World and heist navigation: these pages must remain in the release.

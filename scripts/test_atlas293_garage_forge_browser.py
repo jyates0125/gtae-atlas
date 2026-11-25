@@ -34,6 +34,104 @@ try:
             }},variants:{}}));
         }""", [garage_key, forge_key])
         before = page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key])
+        page.goto(base + '/atlas-forge-collections.html', wait_until='domcontentloaded')
+        expect(page.locator('h1')).to_have_text('MY GARAGE.')
+        expect(page.locator('.hero-links a[href="./atlas-vehicle-configurator.html"]')).to_be_visible()
+        expect(page.locator('.fc-destinations a[href="./atlas93-garage.html"]')).to_be_visible()
+        for width in (390, 1440):
+            page.set_viewport_size({'width':width,'height':844})
+            assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2"), f'My Garage overflow at {width}px'
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Opening My Garage hub modified saved data'
+        page.set_viewport_size({'width':390,'height':844})
+        page.locator('.fc-destinations a[href="./atlas93-garage.html"]').click()
+        expect(page.locator('h1')).to_have_text('GARAGE MANAGEMENT.')
+        expect(page.locator('.heroactions a[href="./atlas-forge-collections.html"]')).to_be_visible()
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Opening ownership management modified saved data'
+        # The garage front door opens real world-specific divisions, not mock cards.
+        page.goto(base + '/atlas-forge-collections.html', wait_until='domcontentloaded')
+        divisions=page.locator('#garage-divisions article')
+        expect(divisions).to_have_count(7)
+        expect(page.locator('#garage-divisions a')).to_have_count(14)
+        page.locator('#garage-divisions a[href="./atlas-vehicle-configurator.html?world=vi&division=marine"]').click()
+        expect(page.locator('#forgeDivision')).to_have_value('marine')
+        expect(page.locator('#modelSelect option[value="vi_squalo"]')).to_have_count(1,timeout=30000)
+        expect(page.locator('#modelSelect option[value="vi_crest_kayak"]')).to_have_count(1)
+        assert all(x.startswith('vi_') for x in page.locator('#modelSelect option').evaluate_all('(rows)=>rows.map(x=>x.value)'))
+        expect(page.locator('#forgeDivision option[value="hsw"]')).to_have_count(0)
+        expect(page.locator('#forgeDivision option[value="bennys"]')).to_have_count(0)
+        page.goto(base + '/atlas-forge-collections.html',wait_until='domcontentloaded')
+        page.locator('#garage-specialist-workshops a[href="./atlas-vehicle-configurator.html?division=hsw"]').click()
+        expect(page.locator('#forgeDivision')).to_have_value('hsw')
+        expect(page.locator('#modelSelect option')).to_have_count(31,timeout=30000)
+        page.locator('#modelSelect').select_option('banshee')
+        expect(page.locator('#concept3d [data-workshop-category="hsw-conversion"]')).to_be_visible()
+        expect(page.locator('#concept3d [data-workshop-category="bennys-conversion"]')).to_be_visible()
+        page.locator('#forgeDivision').select_option('bennys')
+        expect(page.locator('#modelSelect option')).to_have_count(61)
+        page.locator('#modelSelect').select_option('banshee2')
+        expect(page.locator('#concept3d')).to_contain_text('distinct vehicle and ownership record')
+        expect(page.locator('#concept3d [data-workshop-category="hsw-conversion"]')).to_have_count(0)
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Specialist browsing modified saved data'
+        # New acquisition views preserve ownership and legacy builds.
+        page.goto(base + '/atlas-vehicle-configurator.html?world=vi&division=returning&model=vi_cheetah95',wait_until='domcontentloaded')
+        expect(page.locator('#forgeDivision')).to_have_value('returning')
+        expect(page.locator('#modelSelect option')).to_have_count(16,timeout=30000)
+        expect(page.locator('#modelSelect')).to_have_value('vi_cheetah95')
+        expect(page.locator('#concept3d')).to_contain_text('Related vehicle family')
+        page.locator('#concept3d a[href="./atlas-vehicle-configurator.html?model=cheetah"]').click()
+        expect(page.locator('#modelSelect')).to_have_value('cheetah',timeout=30000)
+        expect(page.locator('#concept3d')).to_contain_text('Related vehicle family')
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
+        page.goto(base + '/atlas-vehicle-configurator.html?division=pegasus',wait_until='domcontentloaded')
+        expect(page.locator('#forgeDivision')).to_have_value('pegasus')
+        expect(page.locator('#modelSelect option')).to_have_count(8,timeout=30000)
+        page.locator('#modelSelect').select_option('jetmax')
+        expect(page.locator('#concept3d')).to_contain_text('Pegasus')
+        expect(page.locator('#concept3d select')).to_have_count(0)
+        page.locator('#forgeDivision').select_option('warehouse')
+        expect(page.locator('#modelSelect option')).to_have_count(8)
+        page.locator('#modelSelect').select_option('dune5')
+        expect(page.locator('#concept3d')).to_contain_text('Vehicle Warehouse')
+        expect(page.locator('#concept3d')).to_contain_text('Not a Pegasus delivery')
+        page.locator('#forgeDivision').select_option('dealer-warstock')
+        expect(page.locator('#modelSelect option[value="oppressor2"]')).to_have_count(1)
+        page.locator('#modelSelect').select_option('oppressor2')
+        expect(page.locator('#concept3d')).to_contain_text('Terrorbyte')
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
+        # Inline matcher must retain selections on ordinary daily refreshes.
+        page.goto(base + '/atlas-online.html',wait_until='domcontentloaded')
+        map_matcher=page.locator('#j87-simeon-map')
+        expect(map_matcher.locator('.j87-simeon > summary')).to_have_count(1,timeout=15000)
+        expect(map_matcher).not_to_have_attribute('hidden','')
+        # DOM interactions here also work when the mobile map drawer is collapsed.
+        map_matcher.locator('.j87-simeon > summary').evaluate('(el)=>el.click()')
+        map_matcher.locator('input[value="Banshee"]').evaluate('(el)=>el.click()')
+        expect(map_matcher.locator('.j87-simeon details')).to_have_count(3)
+        page.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
+        expect(map_matcher.locator('input[value="Banshee"]')).to_be_checked()
+        map_matcher.get_by_role('button',name='Clear selection').evaluate('(el)=>el.click()')
+        expect(map_matcher.locator('.j87-simeon details')).to_have_count(8)
+        page.goto(base + '/atlas87-daily.html#j87-simeon',wait_until='domcontentloaded')
+        page.locator('#j87-simeon .j87-simeon > summary').click()
+        for name in ['Banshee','Coquette','Sentinel','Dubsta','Infernus']:
+            page.locator('#j87-simeon input[value="'+name+'"]').check()
+        expect(page.locator('#j87-simeon [role="status"]')).to_have_text('2 matching list(s)')
+        expect(page.locator('#j87-simeon .j87-simeon details')).to_have_count(2)
+        page.get_by_role('button',name='Clear selection').click()
+        expect(page.locator('#j87-simeon .j87-simeon details')).to_have_count(8)
+        expect(page.locator('#j87-member-offers article')).to_have_count(3)
+        for width in (390,1440):
+            page.set_viewport_size({'width':width,'height':844})
+            assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2"), f'Daily page overflow at {width}px'
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before
+        page.set_viewport_size({'width':390,'height':844})
+        page.goto(base + '/atlas-vehicle-configurator.html?division=motorcycles&model=jetmax',wait_until='domcontentloaded')
+        expect(page.locator('#modelSelect')).to_have_value('jetmax',timeout=30000)
+        expect(page.locator('#forgeDivision')).to_have_value('all')
+        page.locator('#forgeDivision').select_option('marine')
+        expect(page.locator('#modelSelect')).to_have_value('jetmax')
+        assert 'division=marine' in page.url
+        assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'Division navigation modified existing saves'
         page.goto(base + '/atlas-vehicle-configurator.html?model=jetmax&source=garage', wait_until='domcontentloaded')
         expect(page.locator('#modelSelect')).to_have_value('jetmax', timeout=30000)
         expect(page.locator('#paintColor')).to_have_value('#12ab34')
@@ -115,7 +213,7 @@ try:
         garage_page=context.new_page()
         garage_page.goto(base+'/atlas93-garage.html?addModel=jetmax',wait_until='domcontentloaded')
         expect(garage_page.locator('#garageDetails h2').filter(has_text='Jetmax')).to_be_visible(timeout=30000)
-        expect(garage_page.locator('.j99-studio-link')).to_have_attribute('href','./atlas-vehicle-configurator.html?model=jetmax&source=garage')
+        expect(garage_page.locator('[data-forge-handoff="true"]')).to_have_attribute('href','./atlas-vehicle-configurator.html?model=jetmax&source=garage')
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.studioName",garage_key)=='Refit Three'
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.sultan.favorite",garage_key) is True
         # Concurrent Forge edits to another model must survive a stale Garage tab save.
@@ -126,7 +224,7 @@ try:
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.adder.note",garage_key)=='Saved in another tab'
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.jetmax.note",garage_key)=='Garage tab edited after Forge'
         assert garage_page.evaluate("() => localStorage.getItem('team-jura-atlas90-collection-v1')")==registry_snapshot
-        garage_page.locator('.j99-studio-link').click()
+        garage_page.locator('[data-forge-handoff="true"]').click()
         expect(garage_page).to_have_url(base+'/atlas-vehicle-configurator.html?model=jetmax&source=garage')
         expect(garage_page.locator('#buildName')).to_have_value('Refit Three',timeout=30000)
         assert garage_page.evaluate("g => JSON.parse(localStorage.getItem(g)).vehicles.sultan.favorite",garage_key) is True

@@ -1205,6 +1205,980 @@
       "summary": "Rockstar places this garage near Ocean Beach and pairs it with the 1955 Vapid Stanier in the Vintage Vice City Pack. The garage includes a weapon locker.",
       "verification": "Publisher location description · exact coordinates unverified",
       "sourceUrl": "https://www.rockstargames.com/VI/add-ons/vintage-vice-city"
+    },
+    {
+      "id": "character:vi-bae-luxe",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Bae-Luxe",
+      "group": "Performer",
+      "region": "Leonida",
+      "summary": "Member of the Real Dimez duo.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "attributes": {
+        "performer": "Hood Brat"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-roxy",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Roxy Rashad",
+      "group": "Performer",
+      "region": "Leonida",
+      "summary": "Member of the Real Dimez duo.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "aliases": [
+        "Roxy"
+      ],
+      "attributes": {
+        "performer": "Krissy Celess"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-dwnply",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "DWNPLY",
+      "group": "Performer",
+      "region": "Leonida",
+      "summary": "Rapper associated with an early Real Dimez release.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "attributes": {
+        "performer": "Denzel Curry"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-andres-de-leon",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Andrés de León",
+      "group": "Supporting character",
+      "region": "Leonida",
+      "summary": "Named supporting cast reference.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "attributes": {
+        "performer": "J. Eddie Martinez"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-lori-heder",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Lori Heder",
+      "group": "Supporting character",
+      "region": "Leonida",
+      "summary": "Named supporting cast reference.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "attributes": {
+        "performer": "Orlagh Cassidy"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-ernesto",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Ernesto",
+      "group": "Supporting character",
+      "region": "Leonida",
+      "summary": "Named supporting cast reference.",
+      "verification": "Rockstar official full cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Ed Trucco"
+      }
+    },
+    {
+      "id": "character:vi-gustavo",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Gustavo Herrera",
+      "group": "Supporting character",
+      "region": "Leonida",
+      "summary": "Named supporting cast reference.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "aliases": [
+        "Gustavo"
+      ],
+      "attributes": {
+        "performer": "Josue Gutierrez"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-jimmy-canto",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Jimmy Canto",
+      "group": "Supporting character",
+      "region": "Leonida",
+      "summary": "Named supporting cast reference.",
+      "verification": "GTADB community cast reference · story role and portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait."
+    },
+    {
+      "id": "character:vi-mendez",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Captain Aldo Méndez",
+      "group": "Supporting character",
+      "region": "Leonida",
+      "summary": "Named supporting cast reference.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "aliases": [
+        "Méndez"
+      ],
+      "attributes": {
+        "performer": "Chris McKinney"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-petra-navarro",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Petra Navarro",
+      "group": "Supporting character",
+      "region": "Leonida",
+      "summary": "Named supporting cast reference.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "attributes": {
+        "performer": "Elaine Del Valle"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-raymond",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Raymond",
+      "group": "Supporting character",
+      "region": "Leonida",
+      "summary": "Named supporting cast reference.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "attributes": {
+        "performer": "Jaime Lincoln Smith"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-rudi",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Rudi",
+      "group": "Minor character",
+      "region": "Leonida",
+      "summary": "Named minor cast reference.",
+      "verification": "GTADB community cast reference · story role and portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait."
+    },
+    {
+      "id": "character:vi-stefanie",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Counselor Stefanie Gates",
+      "group": "Supporting character",
+      "region": "Leonida",
+      "summary": "Named supporting cast reference.",
+      "verification": "Rockstar official full cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "No individual image supplied; world illustration is not a character portrait.",
+      "aliases": [
+        "Stefanie"
+      ],
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Kimberly S. Fairbanks"
+      }
+    },
+    {
+      "id": "character:vi-erin-henshaw",
+      "name": "Erin Henshaw",
+      "group": "Mentioned character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Referenced in Leonida community research; an on-screen appearance is not established.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/erin-henshaw/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
+    },
+    {
+      "id": "character:vi-jack-howitzer",
+      "name": "Jack Howitzer",
+      "group": "Mentioned character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Referenced in Leonida community research; an on-screen appearance is not established.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/jack-howitzer/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
+    },
+    {
+      "id": "character:vi-jay-norris",
+      "name": "Jay Norris",
+      "group": "Mentioned character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Referenced in Leonida community research; an on-screen appearance is not established.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/jay-norris/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
+    },
+    {
+      "id": "character:vi-kenny-brewster",
+      "name": "Kenny Brewster",
+      "group": "Mentioned character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Referenced in Leonida community research; an on-screen appearance is not established.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/kenny-brewster/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
+    },
+    {
+      "id": "character:vi-valentina",
+      "name": "Valentina",
+      "group": "Supporting character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Named in Leonida community character research; detailed story role requires further verification.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only.",
+      "attributes": {
+        "performer": "Josephine Phoenix"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-wyman",
+      "name": "Wyman",
+      "group": "Mission giver",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Named in Leonida community character research; detailed story role requires further verification.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only.",
+      "attributes": {
+        "performer": "David Stishan"
+      },
+      "creditsUrl": "https://www.rockstargames.com/VI/credits"
+    },
+    {
+      "id": "character:vi-donnie",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Donnie",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Brad Carter"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-kenton-rees",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Kenton Rees",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Machel Montano"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-andy",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Andy",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Mallory Wu"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-katerina-rosselli",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Katerina Rosselli",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Edwina Rai"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-mattia-tauro",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Mattia Tauro",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Massi Pregoni"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-pilot-pete",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Pilot Pete",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Carl Palmer"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-linda",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Linda",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Lisa Emery"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-vicki",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Vicki",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Taryn Manning"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-dunk",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Dunk",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Brad Fleischer"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-moses-mo-watkins",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Moses “Mo” Watkins",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Aaron Morton"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-billy",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Billy",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Spenser Granese"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-bret-vogel",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Bret Vogel",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Jariko Denman"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-tyrone-russo",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Tyrone Russo",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Taylor Novak"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-mia-caminos",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Mia Caminos",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Roselyn Sanchez"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-papa-audacity",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Papa Audacity",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Brian Furey"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-yago-jimenez",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Yago Jiménez",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Victor Almanzar"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-yasmani-cabrera",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Yasmani Cabrera",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Hiram Delgado"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-randy-kozlov",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Randy Kozlov",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Serge Didenko"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-benedict-halifax",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Benedict Halifax",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Ian Scott McGregor"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-karim",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Karim",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Rafi Silver"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-andrea",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Andrea",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Christine Spang"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-felipe",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Felipe",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Alfredo Diaz"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-nicole-park",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Nicole Park",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Sierra Katow"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-abraham-gonzalez",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Abraham Gonzalez",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Nick Pupo"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-francisco-cisco-delgado",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Francisco “Cisco” Delgado",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Mario D'Leon"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-nathan-nate-bozer",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Nathan “Nate” Bozer",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Brendan Sagalow"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-raina-koleva",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Raina Koleva",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Oksana Grishina"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-kordell-grant",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Kordell Grant",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Michael Jai White"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-cesar-navarro",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "César Navarro",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Anthony Ruiz"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-kd",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "KD",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Jordan J. Adams"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-rafa-de-leon-navarro",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Rafa de León Navarro",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Sebastian Montañez"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-omar-dawoud",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Omar Dawoud",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Barzin Akhavan"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-dardan",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Dardan",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Jake Ventimiglia"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-giorgio-gallo",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Giorgio Gallo",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Sergio Castellitto"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-vinny-capsik",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Vinny Capsik",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Roger Wayne"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-liz-jackson",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Liz Jackson",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Tifané Williams"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-kevin-kueh",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Kevin Kueh",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Abraham Lim"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-the-hitman",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "The Hitman",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Michael Hollick"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
+    },
+    {
+      "id": "character:vi-deputy-sarah-fitzroy",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "name": "Deputy Sarah Fitzroy",
+      "group": "Credited main cast",
+      "region": "Leonida",
+      "summary": "Named in Rockstar’s game credits. Further story context and an individual portrait remain to be verified.",
+      "verification": "Rockstar official main cast credit · biography not independently verified",
+      "sourceUrl": "https://www.rockstargames.com/VI/credits",
+      "creditsUrl": "https://www.rockstargames.com/VI/credits",
+      "attributes": {
+        "performer": "Kelly Grago"
+      },
+      "imageRights": "No individual portrait supplied; world illustration is not a portrait."
     }
   ]
 }

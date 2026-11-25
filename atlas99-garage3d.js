@@ -232,5 +232,80 @@ function mount(target,opts={}){
  canvas.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')yaw-=.18;else if(e.key==='ArrowRight')yaw+=.18;else if(e.key==='ArrowUp')pitch=Math.min(1.48,pitch+.1);else if(e.key==='ArrowDown')pitch=Math.max(-.25,pitch-.1);else if(e.key==='+'||e.key==='=')zoom(-.5);else if(e.key==='-')zoom(.5);else return;e.preventDefault();render()});
  return instance;
 }
-root.TeamJuraGarage3D=Object.freeze({mount,paint(c){current?.paint(c)},reset(){current?.reset()},dispose(){current?.dispose();current=null},getDesign(){return current?.getDesign()}});
+// Reference-first workshop. Existing models keep their identity; no generic mesh is substituted.
+function mountReference(target,opts={}){
+ if(!target)return;
+ current?.dispose();current=null;
+ const forge=root.JuraForge,model=String(opts.model||''),vi=model.startsWith('vi_');
+ let design=forge?.normalize(opts.design,model)||{};
+ const E=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node};
+ target.replaceChildren();target.classList.add('j256-forge');
+ for(const key of ['forgeTriangles','forgeReflection','forgeEnvironment','forgeVisualPlatform','forgeSharedVisual'])delete target.dataset[key];
+ target.dataset.forgeStatus='reference';target.dataset.forgeFidelity='reference-only';target.dataset.forgeRenderer='reference';
+ const title=E('strong','ELARIO FORGE · '+String(opts.name||model));
+ const note=E('p','No accepted model-specific interactive asset is available yet. The vehicle reference is not replaced with a generic 3D body. Recorded workshop choices are planning only until the exact parts can be rendered.');
+ note.className='j256-rights';
+ target.append(title,note);
+ // Explicit external reference, not an embedded or locally hosted mesh. Never send private build details.
+ const references=Object.freeze({akula:'akula',akuma:'akuma',adder:'adder',alpha:'alpha',ellie:'ellie',technical:'technical',bullet:'bullet',futo:'futo',vacca:'vacca',deluxo:'deluxo',stafford:'stafford',terminus:'terminus',visione:'visione',raiden:'raiden',club:'club',airtug:'airtug',stinger:'stinger',stallion:'stallion',manana:'manana',cognoscenti:'cognoscenti',havok:'havok',vetir:'vetir',rcv:'rcv',xls:'xls',flatbed:'flatbed',exemplar:'exemplar',f620:'f620',savestra:'savestra',rt3000:'rt3000'});
+ const ref=E('a',vi?'Official Leonida reference gallery ↗':Object.hasOwn(references,model)?'Open this vehicle in GTADB 3D viewer ↗':'Browse GTADB vehicle viewer ↗');
+ ref.href=vi?'https://www.rockstargames.com/VI/media/screenshots':'https://gtadb.net/gta-online/vehicle-configurator/'+(Object.hasOwn(references,model)?'?vehicle='+references[model]:'');
+ ref.target='_blank';ref.rel='noopener noreferrer';ref.referrerPolicy='no-referrer';ref.className='j99-studio-link';ref.dataset.forgeExternalReference='true';target.append(ref);
+ const externalNotice=E('small',vi?'Official visual evidence; not an interactive Forge model.':'External GTADB viewer. Its preview features may differ from actual game options; edits there do not sync into your private Forge builds.');target.append(externalNotice);
+ if(opts.readOnly===true){
+  const image=E('img');image.loading='lazy';image.decoding='async';image.style.cssText='display:block;width:100%;max-height:300px;object-fit:contain';
+  const fallback=()=>{image.onerror=null;image.src='./art/jura161-vehicles.webp';image.alt='Original Elario showroom illustration, not this vehicle';};
+  if(vi||!/^[a-z0-9_]{2,75}$/.test(model))fallback();else{image.onerror=fallback;image.alt='GTA V archive reference for '+String(opts.name||model);image.src='https://cdn.jsdelivr.net/gh/Stuyk/gtav-image-archive@main/vehicles/'+encodeURIComponent(model)+'.webp'}
+  target.append(image);
+ }
+ const returning=forge?.returningVehicle?.(vi?'vi':'v-online',model);
+ if(returning){
+  const panel=E('section');panel.className='j412-workshop';panel.append(E('h3','Returning vehicle · GTA V / GTA VI'));
+  panel.append(E('p',returning.matchKind==='family-reference'?'Related vehicle family, not the same model or variant. The ’95 Cheetah is an official edition item.':returning.matchKind==='edition-name-reference'?'Shared name; the Leonida record is an edition benefit, not proof of identical standard availability.':returning.matchKind==='catalog-name-reference'?'Candidate name match across catalogs; exact version and game-specific specs require verification.':'Related vehicle identity, not identical bodywork, performance, prices, parts or ownership.'));
+  panel.append(E('p','GTA Online: '+(returning.onlineSpeed===null?'Measured speed not catalogued':returning.onlineSpeed+' mph · '+returning.onlineSpeedBasis)+(returning.onlinePrice===null?'':' · Recorded purchase GTA$'+returning.onlinePrice.toLocaleString('en-US'))));
+  panel.append(E('p','GTA VI: measured top speed and registration cost not verified. No Online figures transferred.'));
+  if(returning.history)panel.append(E('p','Selected series appearances: '+returning.history.join(' · ')));
+  const other=E('a',vi?'Open GTA Online version':'Open GTA VI version');other.href='./atlas-vehicle-configurator.html?'+(vi?'':'world=vi&')+'model='+encodeURIComponent(vi?returning.online:returning.vi);const source=E('a',' · Comparison sources');source.href='./atlas-credits.html#forge-returning-vehicles';panel.append(other,source);target.append(panel);
+ }
+ const benefit=forge?.viBenefit?.(vi?'vi':'v-online',model);
+ if(benefit){const section=E('section');section.className='j412-workshop';section.append(E('h3',benefit.label),E('p',benefit.detail));const link=E('a','Official Rockstar reference ↗');link.href=benefit.source;link.target='_blank';link.rel='noopener noreferrer';const credits=E('a',' · Source notes');credits.href='./atlas-credits.html#vi-edition-availability';section.append(link,credits);target.append(section)}
+ const purchase=forge?.vehicleDealers?.(vi?'vi':'v-online',model)||[];
+ if(purchase.length){const line=E('p','Recorded purchase source: '+purchase.map(x=>x.label).join(' / ')+' · current availability may vary.');target.append(line)}
+ const warehouse=forge?.warehouseVehicle?.(vi?'vi':'v-online',model);
+ if(warehouse){target.append(E('p','Storage: '+warehouse.storage+'. Requires an owned Vehicle Warehouse.'),E('p','Request: '+warehouse.request+'. Not a Pegasus delivery. Workshop eligibility must be verified per model.'))}
+ const craft=forge?.craftCustomization?.(vi?'vi':'v-online',model);
+ if(craft&&craft.mode!=='unknown')target.append(E('p',craft.label));
+ const special=forge?.specialtyWorkshop?.(model,vi?'vi':'v-online');
+ if(special?.hsw||special?.conversions.length||special?.converted){const section=E('section');section.className='j412-workshop';section.append(E('h3','Specialist workshop eligibility'));if(special.hsw)section.append(E('p',"HSW eligible · GTA$"+special.hsw.price.toLocaleString('en-US')+' conversion · retains this vehicle identity. PS5, Xbox Series X|S and PC Enhanced.'));if(special.converted){section.append(E('p',"Benny's custom variant of "+special.converted.baseName+' · distinct vehicle and ownership record.'));const base=E('a','View original vehicle');base.href='./atlas-vehicle-configurator.html?model='+encodeURIComponent(special.converted.base);section.append(base)}if(special.conversions.length){for(const variant of special.conversions){const a=E('a','View '+variant.name+' · GTA$'+variant.price.toLocaleString('en-US')+' conversion');a.href='./atlas-vehicle-configurator.html?model='+encodeURIComponent(variant.variant);const line=E('p');line.append(a);section.append(line)}}const credits=E('a',' Specialist workshop sources');credits.href='./atlas-credits.html#forge-specialist-workshops';section.append(credits);target.append(section)}
+ const rows=forge?.workshopLiveries?.(model)||[],groups=forge?.modelWorkshopCatalog?.(model)||[];
+ function change(patch){design=forge?.normalize({...design,...patch},model)||{};opts.onDesign?.({...design})}
+ if(craft?.mode!=='collection'&&(rows.length||groups.length)){
+  const panel=E('section');panel.className='j412-workshop';
+  panel.append(E('h3',vi?'GTA VI · recorded workshop options':'GTA Online · recorded workshop options'));
+  panel.append(E('p','Source-listed choices only. No invented parts or visual previews. Prices and unlocks may vary.'));
+  panel.append(E('p','Performance changes may not have separate visual parts. Appearance changes may use existing materials, built-in assemblies or interchangeable components. A recorded option does not imply any particular 3D part exists.'));
+  const grid=E('div');grid.className='j256-fields';
+  const total=E('p');total.setAttribute('role','status');
+  function update(){let n=0,sum=0,unknown=0;const livery=rows.find(x=>x.id===design.workshopLivery);if(livery){n++;if(Number.isFinite(livery.priceUSD))sum+=livery.priceUSD;else unknown++}
+   for(const group of groups){const option=group.options.find(x=>x.id===design.workshopOptions?.[group.key]);if(option){n++;if(Number.isFinite(option.price))sum+=option.price;else unknown++}}
+   total.textContent=design.workshopOptions?.['hsw-conversion']&&design.workshopOptions?.['bennys-conversion']?'HSW and Benny’s are alternative conversion paths, not a combined build. Select one path before estimating costs.':vi?n+' recorded choices. No combined price: kits and individual parts may overlap.':n+' choices · GTA$'+sum.toLocaleString('en-US')+' listed price sum'+(unknown?' · '+unknown+' without a recorded price':'')+' (not incremental upgrade cost).';
+  }
+  function addSelect(parent,label,options,value,onchange,attribute,key){const wrapper=E('label',label),select=E('select');select.setAttribute(attribute,key);select.add(new Option(options.length?'Not selected':'Options not yet documented',''));for(const row of options){const price=row.priceUSD??row.price;select.add(new Option(row.name+(Number.isFinite(price)?' · GTA$'+price.toLocaleString('en-US'):' · price not recorded')+(row.condition?' · '+row.condition:''),row.id))}select.value=options.some(x=>x.id===value)?value:'';if(attribute==='data-workshop-category'){const effect=options[0]?forge.workshopEffect(model,key,options[0].id):null;if(effect)select.dataset.workshopEffect=effect;}select.disabled=!options.length||opts.readOnly===true;select.onchange=()=>{onchange(select.value);update()};wrapper.append(select);parent.append(wrapper)}
+  let liveryParent=grid,lastTab='',groupParent=grid;
+  if(rows.length&&!vi)addSelect(grid,'Liveries',rows,design.workshopLivery,v=>change({workshopLivery:v||'none'}),'data-forge-control','workshopLivery');
+  let liveryAdded=!vi;
+  for(const group of groups){
+   if(vi&&group.tab!==lastTab){lastTab=group.tab;const fieldset=E('fieldset');fieldset.className='j413-tab';fieldset.append(E('legend',lastTab||'Workshop'));groupParent=E('div');groupParent.className='j256-fields';fieldset.append(groupParent);grid.append(fieldset);
+    if(lastTab==='Cosmetics'&&rows.length&&!liveryAdded){addSelect(groupParent,'Customizable liveries',rows,design.workshopLivery,v=>change({workshopLivery:v||'none'}),'data-forge-control','workshopLivery');liveryAdded=true}}
+   addSelect(groupParent,group.label,group.options,design.workshopOptions?.[group.key],v=>{change({workshopOptions:forge.applyWorkshopSelection(model,design.workshopOptions,group.key,v)});if(v&&['hsw-conversion','bennys-conversion'].includes(group.key)){const other=group.key==='hsw-conversion'?'bennys-conversion':'hsw-conversion';const select=grid.querySelector('[data-workshop-category="'+other+'"]');if(select)select.value=''}},'data-workshop-category',group.key);
+  }
+  if(rows.length&&!liveryAdded)addSelect(liveryParent,'Liveries',rows,design.workshopLivery,v=>change({workshopLivery:v||'none'}),'data-forge-control','workshopLivery');
+  const source=E('a','Workshop sources & credits');source.href='./atlas-credits.html#'+(forge?.workshopSource?.(model)||'forge-workshop-liveries');panel.append(grid,total,source);target.append(panel);update();
+ }else{
+  target.append(E('p',craft?.mode==='collection'?'Collection only. Ownership, favorites and private notes remain available.':vi?'GTA VI workshop: model-specific options not yet verified.':'Model-specific workshop options not yet verified.'));
+  const link=E('a','Vehicle and workshop sources');link.href='./atlas-credits.html#forge-craft-customization';target.append(link);
+ }
+ const instance={dispose(){},paint(){},reset(){},getDesign(){return {...design}}};current=instance;return instance;
+}
+root.TeamJuraGarage3D=Object.freeze({mount,mountReference,paint(c){current?.paint(c)},reset(){current?.reset()},dispose(){current?.dispose();current=null},getDesign(){return current?.getDesign()}});
 })(window);
