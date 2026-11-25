@@ -33,10 +33,12 @@ html=(D/'atlas93-garage.html').read_text(encoding='utf-8')
 assert "data/atlas-vehicle-intel.json" in js
 assert "function modelInfo(id)" in js and "r.spec" in js
 assert "j104-intelligence" in js and "View individual GTADB vehicle facts" in js
-assert "j104-no-car" in js
-assert "This '+r.type.toLowerCase()+' has an original Elario class-specific 3D concept" in js
-assert "It is not the exact '+r.name+' game model" in js
-assert "has no verified matching 3D vehicle mesh here" in js
+# Actual vehicle identity is retained; the retired generic class display is not public.
+viewer=(D/'atlas99-garage3d.js').read_text(encoding='utf-8')
+assert 'mountReference(showroom,previewOpts)' in js
+assert 'TeamJuraGarage3D?.mount(showroom' not in js
+assert 'reference-only' in viewer and 'No accepted model-specific interactive asset' in viewer
+assert 'craftCustomization' in js and 'Collection only' in viewer
 assert "garageClassFilter" in js and 'id="garageClassFilter"' in html
 assert "atlas104-garage-intel.css?v=201" in html
 assert "team-jura-atlas90-collection-v1" in js
