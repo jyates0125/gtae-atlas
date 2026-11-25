@@ -49,6 +49,16 @@ assert.equal(forge.craftCustomization('v-online','kosatka').mode,'renovation');
 for(const world of ['vi','v-story'])for(const id of ['jetmax','squalo','avisa','avenger','sparrow','kosatka'])assert.equal(forge.craftCustomization(world,id).mode,'unknown');
 assert.equal(forge.craftCustomization('v-online','__proto__').mode,'unknown');
 assert.equal(forge.craftCustomization('v-online','unknown-aircraft').mode,'unknown');
+const newAir=["dodo","luxor","maverick","shamal","swift"],newMarine=["dinghy","seashark","tropic","speeder"];
+assert.equal(forge.pegasusModels('v-online').length,17);
+for(const id of [...newAir,...newMarine]){
+ const aircraft=newAir.includes(id), record=forge.pegasusEligibility('v-online',id);
+ assert.equal(record.mode,'collection');assert.equal(Boolean(record.personalAircraft),aircraft);
+ assert.equal(forge.vehicleDealers('v-online',id)[0].id,aircraft?'elitas':'docktease');
+ assert.ok(forge.dealershipModels('v-online',aircraft?'elitas':'docktease').includes(id));
+ assert.equal(forge.workshopCatalog(id).length,0);
+ for(const world of ['vi','v-story']){assert.equal(forge.pegasusEligibility(world,id),null);assert.deepEqual(forge.vehicleDealers(world,id),[]);assert.equal(forge.craftCustomization(world,id).mode,'unknown');}
+}
 console.log('PASS craft workshop eligibility and independent world scope');
 const expectedExpansion={akula:[14,'handling','handling-3',35000],akuma:[19,'exhaust','exhaust-2',1800],bullet:[21,'suspension','suspension-4',4400]};
 for(const [model,[count,category,id,price]] of Object.entries(expectedExpansion)){

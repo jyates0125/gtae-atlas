@@ -129,7 +129,8 @@ const bg=part('div','preview');bg.style.setProperty('--paint',paintColor(v.paint
  const data=r.spec;const craft=window.JuraForge?.craftCustomization?.('v-online',r.id);const panel=part('section','j104-intelligence');const heading=document.createElement('div');heading.className='j104-intel-heading';heading.innerHTML='<span class="j104-beacon" aria-hidden="true">◈</span><div><small>ATLAS VEHICLE INTELLIGENCE / SOURCE-CHECKED FIELDS</small><h3>Vehicle technical profile</h3></div>';panel.append(heading);
  const grid=document.createElement('dl');grid.className='j104-facts';const fact=(label,value)=>{const cell=document.createElement('div');const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value===null||value===undefined||value===''?'Not independently verified':String(value);cell.append(dt,dd);grid.append(cell)};
  fact('Vehicle / craft type',r.type);fact('Manufacturer',data?.manufacturer);fact('Passenger seats',data?.seats);fact('Purchase price in GTA currency',Number.isFinite(data?.priceUSD)?'GTA$'+data.priceUSD.toLocaleString('en-US'):null);
- if(data?.purchaseSite)fact('Purchase website',data.purchaseSite);
+ const dealers=window.JuraForge?.vehicleDealers?.('v-online',r.id)||[];
+ if(data?.purchaseSite||dealers.length)fact('Purchase website',data?.purchaseSite||dealers.map(x=>x.label).join(' / ')+' · availability may vary');
  if(data?.storage)fact('Ownership / storage',data.storage);
  if(data?.delivery)fact('Delivery service',data.delivery);
  fact('Tested top speed',Number.isFinite(data?.topSpeedMph)?data.topSpeedMph+' mph':null);
