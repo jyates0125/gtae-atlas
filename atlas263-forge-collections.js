@@ -27,13 +27,13 @@ function summarize(world,model,kind,entry,name){
   accent:typeof d.accent==='string'&&/^#[a-f0-9]{6}$/i.test(d.accent)?d.accent.toLowerCase():'Not saved',
   stance:savedText(d.stance,['street','low','raised']),
   kit:savedText(d.kit,['clean','sport','track']),
-  wheels:savedText(d.wheels,['classic','mesh','deepdish']),rim:savedText(d.rim,['silver','gold','black']),stripe:savedText(d.stripe,['none','single','dual']),
+  wheels:savedText(d.wheels,['classic','mesh','deepdish']),rim:savedText(d.rim,['silver','gold','black']),stripe:savedText(d.stripe,['none','single','dual']),livery:savedText(d.livery,['none','heritage','velocity','circuit','jura','fade']),liveryColor:typeof d.liveryColor==='string'&&/^#[a-f0-9]{6}$/i.test(d.liveryColor)?d.liveryColor.toLowerCase():'Not saved',
   lights:typeof d.lights==='boolean'?(d.lights?'On':'Off'):'Not saved'
  });
 }
 function compareFields(a,b){
  if(!a||!b||a.key===b.key||a.world!==b.world||a.model!==b.model)return null;
- const fields=[['Body', 'body'],['Showroom environment','environment'],['Surface finish','finish'],['Accent','accent'],['Ride height','stance'],['Aero / deck styling','kit'],['Wheel design','wheels'],['Wheel finish','rim'],['Racing stripe','stripe'],['Concept lighting','lights']];
+ const fields=[['Body', 'body'],['Showroom environment','environment'],['Surface finish','finish'],['Accent','accent'],['Ride height','stance'],['Aero / deck styling','kit'],['Wheel design','wheels'],['Wheel finish','rim'],['Racing stripe','stripe'],['Original livery','livery'],['Livery RGB','liveryColor'],['Concept lighting','lights']];
  return [['Paint','paint',a.paint,b.paint],...fields.map(([label,key])=>[label,key,a[key],b[key]])]
   .filter(([label,key,left,right])=>label==='Paint'||left!=='Not saved'||right!=='Not saved');
 }
@@ -143,7 +143,7 @@ function start(w){const d=w.document;async function init(){
    const tr=make('tr'),head=make('th',name);head.scope='row';tr.append(head);
    for(const value of [left,right]){
     const cell=make('td');
-    if((key==='paint'||key==='accent')&&/^#[0-9a-f]{6}$/i.test(value)){
+    if((key==='paint'||key==='accent'||key==='liveryColor')&&/^#[0-9a-f]{6}$/i.test(value)){
      const chip=make('span',undefined,'fc-mini-paint');chip.style.setProperty('--fc-paint',value);chip.setAttribute('aria-hidden','true');cell.append(chip);
     }
     cell.append(make('span',value));tr.append(cell);
