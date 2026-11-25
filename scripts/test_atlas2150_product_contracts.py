@@ -95,6 +95,20 @@ assert.equal(forge.normalize({workshopOptions:{'bennys-conversion':'bennys-bansh
 assert.notEqual(forge.ownershipKey('v-online','banshee'),forge.ownershipKey('v-online','banshee2'));
 assert.equal(forge.modelWorkshopCatalog('jetmax').length,0);
 console.log('PASS specialist conversion catalog, distinct base/custom IDs, model-scoped save plans and no VI inheritance');
+const hswPlan={'hsw-conversion':'hsw-conversion'};
+const bennyPlan=forge.applyWorkshopSelection('banshee',hswPlan,'bennys-conversion','bennys-banshee2');
+assert.deepEqual(bennyPlan,{'bennys-conversion':'bennys-banshee2'});
+assert.deepEqual(hswPlan,{'hsw-conversion':'hsw-conversion'});
+assert.deepEqual(forge.applyWorkshopSelection('banshee',bennyPlan,'hsw-conversion','hsw-conversion'),hswPlan);
+assert.deepEqual(forge.applyWorkshopSelection('banshee',hswPlan,'hsw-conversion',''),{});
+assert.deepEqual(forge.applyWorkshopSelection('vi_banshee',{},'hsw-conversion','hsw-conversion'),{});
+assert.equal(forge.workshopEffect('banshee','bennys-conversion','bennys-banshee2'),'distinct-model');
+assert.equal(forge.workshopEffect('banshee','hsw-conversion','hsw-conversion'),'performance-conversion');
+assert.equal(forge.workshopEffect('ellie','engine','engine-3'),'performance');
+assert.equal(forge.workshopEffect('dominator','hood','hood-1'),'appearance-or-assembly');
+assert.equal(forge.workshopEffect('jetmax','hood','hood-1'),null);
+console.log('PASS exclusive conversion planning, nonvisual upgrade intent, assembly options and unknown-part protection');
+
 
 
 
