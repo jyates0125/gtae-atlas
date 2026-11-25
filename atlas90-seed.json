@@ -506,10 +506,11 @@
     {
       "name": "Alvino V1",
       "archive": "",
-      "type": "Sports",
+      "type": "Motorcycles",
       "brand": "Principe",
       "confidence": "Community-identified",
-      "forgeId": "vi_alvino_v1"
+      "forgeId": "vi_alvino_v1",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/alvino-v1/"
     },
     {
       "name": "Astron",
@@ -1001,12 +1002,12 @@
     },
     {
       "name": "Jubilee",
-      "displayName": "Buckingham Jubilee",
-      "brand": "Buckingham",
+      "displayName": "Enus Jubilee",
+      "brand": "Enus",
       "type": "SUVs",
       "archive": "",
       "confidence": "Released-game community catalog identification · acquisition and parts pending",
-      "sourceUrl": "https://gta6motors.com/vehicles/",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/jubilee/",
       "forgeId": "vi_jubilee"
     },
     {
@@ -1238,6 +1239,56 @@
       "confidence": "Rockstar official GTA+ benefit · Chapter 3 · active console membership",
       "sourceUrl": "https://www.rockstargames.com/VI/gta-plus",
       "forgeId": "vi_venturas_blvd_elegy90"
+    },
+    {
+      "name": "Airboat",
+      "brand": "",
+      "type": "Boats",
+      "archive": "",
+      "displayName": "Airboat",
+      "confidence": "GTADB individual community reference · availability, ownership and parts unverified",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/airboat-fanboat/",
+      "forgeId": "vi_airboat"
+    },
+    {
+      "name": "Airboat 09",
+      "brand": "",
+      "type": "Boats",
+      "archive": "",
+      "displayName": "Airboat 09",
+      "confidence": "GTADB individual community reference · availability, ownership and parts unverified",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/airboat-09/",
+      "forgeId": "vi_airboat_09"
+    },
+    {
+      "name": "Buccaneer Custom",
+      "brand": "Albany",
+      "type": "Muscle",
+      "archive": "",
+      "displayName": "Albany Buccaneer Custom",
+      "confidence": "GTADB individual community reference · availability, ownership and parts unverified",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/buccaneer-custom/",
+      "forgeId": "vi_buccaneer_custom"
+    },
+    {
+      "name": "Buffalo STX Pursuit",
+      "brand": "Bravado",
+      "type": "Emergency",
+      "archive": "",
+      "displayName": "Bravado Buffalo STX Pursuit",
+      "confidence": "GTADB individual community reference · availability, ownership and parts unverified",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/police-buffalo-stx-pursuit/",
+      "forgeId": "vi_buffalo_stx_pursuit"
+    },
+    {
+      "name": "Jugular",
+      "brand": "Ocelot",
+      "type": "Sports",
+      "archive": "",
+      "displayName": "Ocelot Jugular",
+      "confidence": "GTADB individual community reference · availability, ownership and parts unverified",
+      "sourceUrl": "https://gtadb.net/gta-6/vehicles/jugular/",
+      "forgeId": "vi_jugular"
     }
   ],
   "onlineWorkshopVehicles": [

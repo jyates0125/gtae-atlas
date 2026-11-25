@@ -8,8 +8,8 @@ records=json.loads((root/'data/atlas-universe-profiles.json').read_text(encoding
 records=[r for r in records if r.get('kind')=='character']
 concepts=[r for r in records if r.get('preferConceptPortrait') is True and
           isinstance(r.get('conceptPortrait'),str) and r['conceptPortrait'].startswith('art/')]
-assert len(records)==53 and len(concepts)==15,(len(records),len(concepts))
-assert len(records)-len(concepts)==38
+assert len(records)==59 and len(concepts)==15,(len(records),len(concepts))
+assert len(records)-len(concepts)==44
 assert {r['scope'] for r in records}=={'classic','story','online','vi'}
 assert {r['scope'] for r in records if r['name']=='Lamar Davis'}=={'story','online'}
 html=(root/'atlas-characters.html').read_text(encoding='utf-8')
@@ -26,4 +26,4 @@ assert 'j304-profile-browse' in css and '@media(max-height:540px)' in css
 for name in ('atlas222-characters.js','atlas100-universe.js'):
  p=subprocess.run(['node','--check',str(root/name)],capture_output=True,text=True)
  assert p.returncode==0,(name,p.stderr)
-print('Atlas 30.4 source contracts: 53 appearances, 15 local concepts, 38 reference/pending records, URL navigation')
+print('Atlas 30.4 source contracts: 59 appearances, 15 local concepts, 44 reference/pending records, URL navigation')

@@ -1374,6 +1374,84 @@
       "verification": "GTADB community cast reference · story role and portrait pending",
       "sourceUrl": "https://gtadb.net/gta-6/characters/",
       "imageRights": "No individual image supplied; world illustration is not a character portrait."
+    },
+    {
+      "id": "character:vi-erin-henshaw",
+      "name": "Erin Henshaw",
+      "group": "Mentioned character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Referenced in Leonida community research; an on-screen appearance is not established.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/erin-henshaw/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
+    },
+    {
+      "id": "character:vi-jack-howitzer",
+      "name": "Jack Howitzer",
+      "group": "Mentioned character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Referenced in Leonida community research; an on-screen appearance is not established.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/jack-howitzer/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
+    },
+    {
+      "id": "character:vi-jay-norris",
+      "name": "Jay Norris",
+      "group": "Mentioned character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Referenced in Leonida community research; an on-screen appearance is not established.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/jay-norris/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
+    },
+    {
+      "id": "character:vi-kenny-brewster",
+      "name": "Kenny Brewster",
+      "group": "Mentioned character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Referenced in Leonida community research; an on-screen appearance is not established.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/kenny-brewster/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
+    },
+    {
+      "id": "character:vi-valentina",
+      "name": "Valentina",
+      "group": "Supporting character",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Named in Leonida community character research; detailed story role requires further verification.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/valentina/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
+    },
+    {
+      "id": "character:vi-wyman",
+      "name": "Wyman",
+      "group": "Mission giver",
+      "kind": "character",
+      "scope": "vi",
+      "game": "GTA VI Story",
+      "region": "Leonida",
+      "summary": "Named in Leonida community character research; detailed story role requires further verification.",
+      "verification": "GTADB community individual reference · individual portrait pending",
+      "sourceUrl": "https://gtadb.net/gta-6/characters/wyman/",
+      "imageRights": "Individual portrait not supplied; world art is illustrative only."
     }
   ]
 }

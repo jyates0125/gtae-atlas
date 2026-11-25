@@ -31,7 +31,7 @@ assert all(s['url'].startswith('https://www.rockstargames.com/')
 assert len({x['id'] for x in release['categories']})==len(release['categories'])
 
 cast=[r for r in profiles['records'] if r.get('kind')=='character' and r.get('scope')=='vi']
-assert len(cast)==21,cast
+assert len(cast)==27,cast
 # The eight publisher-hosted references are source-linked images, not a rights grant.
 rockstar_media=[r for r in cast if r.get('image','').startswith('https://www.rockstargames.com/VI/_next/static/media/')]
 assert len(rockstar_media)==8,[(r['name'],r.get('image','')) for r in cast]
@@ -41,7 +41,7 @@ assert all('/VI/_next/static/media/' in r['image'] for r in rockstar_media)
 assert len({r['image'] for r in rockstar_media})==8,'Character-specific Rockstar media URLs must not repeat'
 assert len({r['id'] for r in cast})==len(cast)
 all_cast=[r for r in profiles['records'] if r.get('kind')=='character']
-assert len(all_cast)==53 and len({r['id'] for r in all_cast})==53
+assert len(all_cast)==59 and len({r['id'] for r in all_cast})==59
 for name in ('Lamar Davis','Lester Crest','Franklin Clinton','Chop'):
  editions=[r for r in all_cast if r['name']==name]
  assert len(editions)==2 and {r['scope'] for r in editions}=={'story','online'}, (name,editions)
@@ -53,7 +53,7 @@ for name in ('Lucia Caminos','Jason Duval','Cal Hampton','Boobie Ike',
  assert name in names,name
 for r in cast:
  assert r['game']=='GTA VI Story',r
- assert r['sourceUrl'] in (official,'https://gtadb.net/gta-6/characters/'),r
+ assert r['sourceUrl']==official or r['sourceUrl'].startswith('https://gtadb.net/gta-6/characters/'),r
  assert r['verification'].startswith(('Rockstar official','GTADB community')),r
  if r in rockstar_media: assert 'Rockstar official character profile' in r['verification'],r
  assert r['summary'] and 'spoiler' not in r['summary'].lower()
@@ -107,4 +107,4 @@ assert "!!r.markerColor&&!r.activityId" in mapjs and "compactLandmark:isViLandma
 assert "if(game==='6'&&!atlas85Icon&&typeof Path2D==='function')" not in mapjs
 assert "r.category==='collectible'&&!r.activityId" in mapjs
 
-print('PASS Atlas 22.2: 8 verified VI profile groups, 6 official regions, 11 source-labeled categories, global character search and isolated world routes')
+print('PASS Atlas 22.2: 8 official VI profile groups plus community references, 6 official regions, 11 source-labeled categories, global character search and isolated world routes')

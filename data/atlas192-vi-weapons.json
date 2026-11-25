@@ -201,6 +201,56 @@
       "description": "Visual reference only. Do not assume a standalone unlock, purchase or unique variant.",
       "sourceName": "Rockstar official screenshots; GTAside caption review",
       "sourceUrl": "https://www.rockstargames.com/VI/media/screenshots"
+    },
+    {
+      "id": "akm-assault-rifle",
+      "name": "AKM-style Assault Rifle",
+      "group": "Assault rifle",
+      "grade": "Provisional model identification",
+      "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
+      "description": "Research reference only; playable availability and model-specific information remain unknown.",
+      "sourceName": "GTADB individual reference",
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/assault-rifle-gta-6/"
+    },
+    {
+      "id": "bolt-action-sniper",
+      "name": "Bolt-action Sniper",
+      "group": "Sniper rifle",
+      "grade": "Provisional model identification",
+      "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
+      "description": "Research reference only; playable availability and model-specific information remain unknown.",
+      "sourceName": "GTADB individual reference",
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/bolt-action-sniper-gta-6/"
+    },
+    {
+      "id": "combat-mg",
+      "name": "Combat MG",
+      "group": "LMG",
+      "grade": "Provisional model identification",
+      "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
+      "description": "Research reference only; playable availability and model-specific information remain unknown.",
+      "sourceName": "GTADB individual reference",
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/combat-mg-gta-6/"
+    },
+    {
+      "id": "double-barrel-shotgun",
+      "name": "Double-barrel Shotgun",
+      "group": "Shotgun",
+      "grade": "Provisional model identification",
+      "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
+      "description": "Research reference only; playable availability and model-specific information remain unknown.",
+      "sourceName": "GTADB individual reference",
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/double-barrel-shotgun-gta-6/"
+    },
+    {
+      "id": "heavy-pistol",
+      "name": "Heavy Pistol",
+      "group": "Handgun",
+      "grade": "Provisional model identification",
+      "evidence": "GTADB reports a depicted weapon type; the exact GTA VI model identity is not established.",
+      "description": "Research reference only; playable availability and model-specific information remain unknown.",
+      "sourceName": "GTADB individual reference",
+      "sourceUrl": "https://gtadb.net/gta-6/weapons/heavy-pistol-gta-6/"
     }
   ]
 }
