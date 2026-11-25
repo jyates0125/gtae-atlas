@@ -56,10 +56,14 @@ assert "atlas-cayo.html" in hej
 assert "atlas104-heist-experience.js?v=104" in (D/'atlas93-global.js').read_text(encoding='utf-8')
 for page in ('heists.html','heist-fleeca.html','heist-cayo-perico.html'):
     assert "./atlas93-global.js?v=93" in (D/page).read_text(encoding='utf-8')
+universe_versions=set()
 for page in ('atlas-database.html','atlas-characters.html','atlas-animals.html','atlas-collectibles.html'):
     text=(D/page).read_text(encoding='utf-8')
-    css_version='377' if page=='atlas-database.html' else '130'
-    assert f"atlas100-universe.css?v={css_version}" in text and re.search(r"atlas100-universe\.js\?v=\d+", text)
+    css=re.findall(r"atlas100-universe\.css\?v=(\d+)",text)
+    js_version=re.findall(r"atlas100-universe\.js\?v=(\d+)",text)
+    assert len(css)==1 and int(css[0])>=377 and len(js_version)==1 and int(js_version[0])>=4704, page
+    universe_versions.add((css[0],js_version[0]))
+assert len(universe_versions)==1, 'Shared Universe assets must use consistent cache versions'
 assert "document.body.dataset.activeWorld=game" in (D/'atlas100-universe.js').read_text(encoding='utf-8')
 assert "https://www.rockstargames.com/VI/media/screenshots" in (D/'atlas-animals.html').read_text(encoding='utf-8')
 print('PASS Atlas 10.4 source-checked craft specs, separate concepts, original E crest, dedicated heist ops and game-specific artwork')
