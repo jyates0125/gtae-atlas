@@ -101,7 +101,7 @@ function start(w){const d=w.document;async function init(){
  if([...kind.options].some(o=>o.value===params.get('kind')))kind.value=params.get('kind');
  let names={},rows=[],unavailable=false,selected=[],comparisonHint='';
  const preview=make('section',undefined,'fc-live-preview');preview.hidden=true;
- const previewTitle=make('h3','Saved 3D design'),previewNote=make('p','Preview uses your stored design. Changes here are temporary; open Forge Studio to save changes.'),previewClose=make('button','Close 3D preview'),previewHost=make('div');
+ const previewTitle=make('h3','Saved vehicle build'),previewNote=make('p','Review recorded workshop choices for this vehicle. Open Forge Workshop to edit and save.'),previewClose=make('button','Close build preview'),previewHost=make('div');
  previewClose.type='button';preview.append(previewTitle,previewNote,previewClose,previewHost);root.before(preview);
  let previewTrigger=null;
  function closePreview(restoreFocus=false){w.TeamJuraGarage3D?.dispose();previewHost.replaceChildren();preview.hidden=true;if(restoreFocus&&previewTrigger?.isConnected)previewTrigger.focus();previewTrigger=null}
@@ -117,7 +117,7 @@ function start(w){const d=w.document;async function init(){
  }
  function openPreview(row,button,type){
   closePreview();previewTrigger=button;previewTitle.textContent=row.title+' · '+row.subtitle;preview.hidden=false;
-  w.TeamJuraGarage3D.mount(previewHost,{name:row.subtitle,model:row.model,type,paint:row.paint,design:row.preview.design});
+  w.TeamJuraGarage3D.mountReference(previewHost,{name:row.subtitle,model:row.model,type,paint:row.paint,design:row.preview.design,readOnly:true});
   previewClose.focus();preview.scrollIntoView({block:'nearest',behavior:'auto'});
  }
  const comparePanel=d.getElementById('forgeComparePanel'),compareStatus=d.getElementById('forgeCompareStatus'),compareBody=d.getElementById('forgeCompareBody'),compareClear=d.getElementById('forgeCompareClear');
@@ -178,7 +178,7 @@ function start(w){const d=w.document;async function init(){
    }
    card.append(a);
    const type=previewType(row);
-   if(type&&w.TeamJuraGarage3D?.mount){const live=make('button','View saved 3D model','fc-live-model');live.type='button';live.onclick=()=>openPreview(row,live,type);card.append(live)}
+   if(row.preview&&w.TeamJuraGarage3D?.mountReference){const live=make('button','Review saved build','fc-live-model');live.type='button';live.onclick=()=>openPreview(row,live,type);card.append(live)}
    if(row.compare){
     const chosen=selected.includes(row.compare.key);
     const button=make('button',chosen?'Remove from comparison':'Compare saved design','fc-compare-toggle');
