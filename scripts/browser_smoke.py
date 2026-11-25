@@ -272,16 +272,18 @@ async def smoke():
                                     if await pg.locator('#viWeaponClass option').count()<3:
                                         failures.append('GTA VI weapon classes did not load from source evidence')
                                     await pg.locator('#viWeaponSearch').fill('Girardi ES9')
-                                    if await pg.locator('#viWeaponCards .viweapon-card').count()!=1:
-                                        failures.append('GTA VI armory search did not isolate Girardi evidence')
-                                    await pg.locator('#viWeaponCards .viweapon-note').click()
+                                    expected_search={r['id'] for r in weapon_records if 'girardi es9' in ' '.join(str(r.get(k,'')) for k in ('name','group','evidence','description')).lower()}
+                                    actual_search=set(await pg.locator('#viWeaponCards .viweapon-card').evaluate_all("els=>els.map(e=>e.dataset.weaponId)"))
+                                    if actual_search!=expected_search or 'girardi-es9' not in actual_search:
+                                        failures.append('GTA VI armory search omitted base or variant evidence')
+                                    await pg.locator('[data-weapon-id="girardi-es9"] .viweapon-note').click()
                                     notes=await pg.evaluate("JSON.parse(localStorage.getItem('teamjura-vi-weapon-notes-v1')||'{}')")
                                     if not notes.get('seen',{}).get('girardi-es9'):
                                         failures.append('GTA VI weapon review did not persist to its own storage key')
                                     await pg.reload(wait_until='domcontentloaded')
                                     await pg.wait_for_function("n => document.querySelectorAll('#viWeaponCards .viweapon-card').length===n",arg=len(expected_ids),timeout=15000)
                                     await pg.locator('#viWeaponSearch').fill('Girardi ES9')
-                                    if await pg.locator('.viweapon-note').get_attribute('aria-pressed')!='true':
+                                    if await pg.locator('[data-weapon-id="girardi-es9"] .viweapon-note').get_attribute('aria-pressed')!='true':
                                         failures.append('GTA VI weapon review lost on refresh')
                                     if await pg.locator('#viWeaponCards img').count()!=0:
                                         failures.append('GTA VI weapons unexpectedly display recycled GTA V archive images')

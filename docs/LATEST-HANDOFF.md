@@ -57,3 +57,5 @@ Owner directed targeted retries: do not repeat unrelated passing Cayo or other t
 
 
 47.0.6 separate stacked candidate: explicit Collected/Not collected on shared gallery cards, larger touch button, separate VI weapon collection from research review, local backup extension, 12 distinct named variant references (65→77), VI Squalo edition detail. No image/model imports. GTA Base prohibits substantial copying, link only. Requires parent PR #231 acceptance, affected gallery/armory browser checks and source/build validation; no production change.
+
+47.0.6 exact 09a60f4 Chromium collection browser test passed (local ownership, independent review, reload and world isolation); 6/8 affected smoke checks passed, 2 armory checks failed because Girardi ES9 query now matches base plus Sand Storm variant. Correct smoke to check all exact matching source IDs, select base record by stable ID, retain no-recycled-image assertion. Edge still pending. No product changes in this repair; no Cayo rerun. Revalidate affected checks.
