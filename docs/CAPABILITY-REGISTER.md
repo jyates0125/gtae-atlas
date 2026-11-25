@@ -35,3 +35,6 @@ Add 12 road vehicle references (191 → 203, 195 community); GTA6 Motors and Leo
 
 ### Atlas 47.0 — in-game naming fidelity and additional references
 Owner clarified correct in-game maker, model and variant names, not Elario renaming. Refine 15 displayed names in gallery and Forge while preserving every existing `name`-derived collection key, Forge ID and stored progress; add 11 distinct source-cross-listed candidates, 267 → 278 (270 community). Link external GTA Base catalog from VI gallery for missing pictures and reference coverage, retain labeled original concepts. No new rights or exact model claims. Remaining discrepancies and Standout roster require separate review. Exact-head CI pending. No production change.
+
+
+47.0 correction: shared gallery cache version must agree across GTA V vehicle, GTA V weapon and VI vehicle pages; align all to v470 without changing their world scope. First head failed world-completion source assertion; rerun corrected exact-head CI. Owner reiterates GTA VI is released: Rockstar's November 19, 2026 announcement https://www.rockstargames.com/VI/out-now establishes released status, not individual model identity. Prefer post-launch in-game evidence and preserve unresolved per-item labels. No production change.
