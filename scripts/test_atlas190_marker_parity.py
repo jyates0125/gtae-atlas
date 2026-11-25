@@ -47,7 +47,10 @@ for token in ('hitTargets.push','const clustered=size>1','getComputedStyle' if F
 for token in ('j190-iv-scope','GTA IV · 200 Flying Rats','50 Seagulls','j190-iv-found',
               'j190-marker-status','pigeon-locator','MIT'):
     assert token in ivhtml,token
-assert 'atlas-iv.js?v=334' in ivhtml and 'atlas-iv.css?v=200' in ivhtml
+# Preserve versioned, local, singular dependencies without locking future releases to v334.
+for asset,minimum in (('atlas-iv.js',334),('atlas-iv.css',200)):
+    versions=re.findall(r'(?:src|href)="\./'+re.escape(asset)+r'\?v=(\d+)"',ivhtml)
+    assert len(versions)==1 and int(versions[0])>=minimum and (ROOT/asset).is_file(), (asset,versions)
 # New touch support must preserve accessible single-pointer, marker, wheel and keyboard behavior.
 for token in ("const activePointers=new Map()", "activePointers.size>=2",
               "pinch.zoom+Math.log2(distance/pinch.distance)",
