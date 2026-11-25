@@ -130,7 +130,10 @@ try:
    assert 'profile=' not in page.url,'Closing a shared character must leave the gallery usable'
    page.goto(base+'atlas-vi.html',wait_until='domcontentloaded',timeout=60000)
    hub=page.locator('#j217-vi-hub')
-   hub.locator('summary').first.click(timeout=15000)
+   summary=hub.locator('summary').first
+   summary.scroll_into_view_if_needed()
+   page.wait_for_function('''()=>{const top=document.querySelector('.maptop'),button=document.querySelector('#j217-vi-hub>summary');if(!top||!button)return false;const t=top.getBoundingClientRect(),b=button.getBoundingClientRect();return b.top>=t.bottom-1}''',timeout=15000)
+   summary.click(timeout=15000)
    directory=page.locator('#j222-vi-release')
    directory.locator('summary').first.click(timeout=15000)
    cards6=page.locator('#j222-vi-categories .j222-launch-card')

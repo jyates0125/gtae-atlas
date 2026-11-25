@@ -10,6 +10,9 @@ on:
       - 'atlas101-configurator.js'
       - 'scripts/browser_smoke.py'
       - 'atlas-collectibles.html'
+      - 'atlas369-map-controls.js'
+      - 'atlas-vi.html'
+      - 'scripts/test_atlas222_vi_browser.py'
   workflow_dispatch:
 permissions:
   contents: read
