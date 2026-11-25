@@ -258,6 +258,10 @@ function mountReference(target,opts={}){
   if(vi||!/^[a-z0-9_]{2,75}$/.test(model))fallback();else{image.onerror=fallback;image.alt='GTA V archive reference for '+String(opts.name||model);image.src='https://cdn.jsdelivr.net/gh/Stuyk/gtav-image-archive@main/vehicles/'+encodeURIComponent(model)+'.webp'}
   target.append(image);
  }
+ const purchase=forge?.vehicleDealers?.(vi?'vi':'v-online',model)||[];
+ if(purchase.length){const line=E('p','Recorded purchase source: '+purchase.map(x=>x.label).join(' / ')+' · current availability may vary.');target.append(line)}
+ const warehouse=forge?.warehouseVehicle?.(vi?'vi':'v-online',model);
+ if(warehouse){target.append(E('p','Storage: '+warehouse.storage+'. Requires an owned Vehicle Warehouse.'),E('p','Request: '+warehouse.request+'. Not a Pegasus delivery. Workshop eligibility must be verified per model.'))}
  const craft=forge?.craftCustomization?.(vi?'vi':'v-online',model);
  if(craft&&craft.mode!=='unknown')target.append(E('p',craft.label));
  const special=forge?.specialtyWorkshop?.(model,vi?'vi':'v-online');
