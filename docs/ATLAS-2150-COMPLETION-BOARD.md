@@ -688,3 +688,5 @@ Add Online-only Pegasus eligibility and documented purchase channel for five air
 
 ### Atlas 46.6 — actual-model discovery and world-scoped reference routes
 Owner prioritizes existing accurate, rights-cleared vehicle models before reconstruction of missing models. GTADB.net's Online 3D configurator and GTA.ZONE's released VI model catalog reviewed as external reference sources; no redistribution permission established. Add compact per-world links to central credits; no copied mesh, external iframe, save transfer or change to identity/price/ownership. Extend existing Garage-to-Forge browser test. Exact-head CI pending; no production change.
+
+46.6 correction: direct checks of discovered GTA.ZONE pages returned HTTP 410. Do not publish an active link or infer available meshes from indexed descriptions. Use reachable GTADB VI and GTA Scoop catalog references; exclude leaked candidates. GTA V is supporting research only for VI identities and geometry. Corrected exact-head validation required.

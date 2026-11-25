@@ -7,3 +7,5 @@ Read the Team Jura Standing Charter, Elario Studios Operating Charter, completio
 Next: improve model-specific vehicle evidence and runtime readiness; integrate only reviewed, rights-cleared, hash-pinned assets. Verify relevant browser tests, rights, mobile behavior and final visual acceptance before release. Keep Tower Approval and other future projects separate. Update capability history for substantive measured changes and save a fresh handoff before ending a session.
 
 Update: PR #224 passed 2/2 and merged development 20d5bd24a211d721f69825d76cc6ecafbd958a91. Owner requests existing rights-cleared models first and reconstruction only where needed. Pending 46.6 branch feature/atlas466-external-model-references adds world-scoped central source links, not assets; inspect exact CI before integration. Actual model acquisition and release gates remain outstanding.
+
+46.6 correction: direct model-catalog access failed (410), so replace public link with reachable VI vehicle research references. Inspect corrected head before merge. GTA V comparison is not VI geometry proof.

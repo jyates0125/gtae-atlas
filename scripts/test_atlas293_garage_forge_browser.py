@@ -55,7 +55,7 @@ try:
         page.locator('#garage-divisions a[href="./atlas-vehicle-configurator.html?world=vi&division=marine"]').click()
         expect(page.locator('#forgeDivision')).to_have_value('marine')
         expect(page.locator('#forgeModelReferences')).to_have_attribute('href','./atlas-credits.html#forge-model-references-vi')
-        expect(page.locator('#forgeModelReferences')).to_have_text('GTA VI 3D model references')
+        expect(page.locator('#forgeModelReferences')).to_have_text('GTA VI vehicle model research')
         expect(page.locator('#modelSelect option[value="vi_squalo"]')).to_have_count(1,timeout=30000)
         expect(page.locator('#modelSelect option[value="vi_crest_kayak"]')).to_have_count(1)
         assert all(x.startswith('vi_') for x in page.locator('#modelSelect option').evaluate_all('(rows)=>rows.map(x=>x.value)'))
@@ -79,7 +79,8 @@ try:
         # World-specific external references are ordinary links, not embedded mesh requests.
         page.goto(base + '/atlas-credits.html#forge-model-references-online', wait_until='domcontentloaded')
         expect(page.locator('#forge-model-references-online a[href="https://gtadb.net/gta-online/vehicle-configurator/"]')).to_have_attribute('rel','noopener noreferrer')
-        expect(page.locator('#forge-model-references-vi a[href="https://negentropy.studio/3d-models/"]')).to_have_attribute('rel','noopener noreferrer')
+        expect(page.locator('#forge-model-references-vi a[href="https://gtadb.net/gta-6/vehicles/"]')).to_have_attribute('rel','noopener noreferrer')
+        expect(page.locator('#forge-model-references-vi a[href="https://gtascoop.com/wiki/vehicles/"]')).to_have_attribute('rel','noopener noreferrer')
         expect(page.locator('#forge-model-references iframe')).to_have_count(0)
         assert page.evaluate("([g,f]) => [localStorage.getItem(g),localStorage.getItem(f)]", [garage_key, forge_key]) == before, 'External source browsing modified saved data'
         # Official named and media references remain separate in both gallery and Forge.
