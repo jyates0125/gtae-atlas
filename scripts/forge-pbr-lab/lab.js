@@ -58,6 +58,13 @@ function frameVehicle(preset='front'){
  camera.position.copy(target).addScaledVector(dir,distance);controls.target.copy(target);controls.minDistance=Math.max(size.z*.50,2);controls.maxDistance=Math.max(distance*2.1,18);controls.update();stage.dataset.cameraView=preset;render();
 }
 function resize(){if(disposed||!renderer)return;const w=Math.max(1,stage.clientWidth),h=Math.max(1,stage.clientHeight);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();if(bounds)frameVehicle(view.value);else render()}
+function paintChannel(asset,m){
+ const name=m.name.trim().toLowerCase();
+ // Only explicitly named body channels on the audited fastback are candidates.
+ // A baked base-color map is never silently tinted; rim and stripe remain independent.
+ if(asset==='fastback')return !m.map && (name==='paint'||name==='paint_body') ? 'body' : null;
+ return /paint|liquidgraphite/i.test(name)&& !/rim|wheel|caliper|brake|stripe|glass|trim|interior/i.test(name) ? 'body' : null;
+}
 function update(){
  for(const m of materials){m.color.set(paint.value);const settings={metallic:[.65,.24,1,.06],gloss:[.12,.18,1,.04],satin:[.5,.48,.25,.3],matte:[.05,.85,0,.6]}[finish.value];[m.metalness,m.roughness,m.clearcoat,m.clearcoatRoughness]=settings;m.needsUpdate=true}
  requestRender()
@@ -65,7 +72,7 @@ function update(){
 function dispose(){if(disposed)return;disposed=true;sequence++;if(frame)cancelAnimationFrame(frame);observer?.disconnect();controls?.dispose();ktx?.dispose();disposeTree(scene);floor?.getRenderTarget()?.dispose();envTarget?.dispose();renderer?.dispose()}
 async function load(){
  const ticket=++sequence,asset=assets[model.value];if(!asset)return;
- if(car){scene.remove(car);disposeTree(car);car=null;}bounds=null;materials=[];stage.dataset.state='loading';paint.disabled=finish.disabled=true;label('Loading local '+asset.name+'…');render();
+ if(car){scene.remove(car);disposeTree(car);car=null;}bounds=null;materials=[];stage.dataset.paintMaterialNames='[]';stage.dataset.state='loading';paint.disabled=finish.disabled=true;label('Loading local '+asset.name+'…');render();
  try{
   const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).setKTX2Loader(ktx);
   const gltf=await loader.loadAsync('./'+asset.file);
@@ -75,7 +82,7 @@ async function load(){
    const convert=m=>{names.add(m.name||'(unnamed)');
     // Only known separate paint channels are editable. Preserve baked textures
     // and all unmapped materials rather than falsely repainting the entire car.
-    if(!/Paint|LiquidGraphite/i.test(m.name)||model.value==='fastback'&&m.map)return m;
+    if(paintChannel(model.value,m)!=='body')return m;
     if(!map.has(m)){const replacement=new THREE.MeshPhysicalMaterial({name:m.name,color:m.color,metalness:.65,roughness:.24,clearcoat:1,clearcoatRoughness:.06,map:m.map,normalMap:m.normalMap,side:m.side});map.set(m,replacement);materials.push(replacement);originals.add(m)}
     return map.get(m)
    };
@@ -84,7 +91,7 @@ async function load(){
   originals.forEach(m=>m.dispose());
   if(triangles<10000||Math.abs(triangles-asset.triangles)>Math.max(20,asset.triangles*.02))throw Error('Unexpected triangle count: '+triangles);
   scene.add(car);const box=new THREE.Box3().setFromObject(car);car.position.y-=box.min.y;car.updateMatrixWorld(true);bounds=new THREE.Box3().setFromObject(car);
-  stage.dataset.triangles=String(Math.round(triangles));stage.dataset.paintMaterials=String(materials.length);stage.dataset.asset=model.value;stage.dataset.materialNames=JSON.stringify([...names].sort());
+  stage.dataset.triangles=String(Math.round(triangles));stage.dataset.paintMaterials=String(materials.length);stage.dataset.asset=model.value;stage.dataset.materialNames=JSON.stringify([...names].sort());stage.dataset.paintMaterialNames=JSON.stringify(materials.map(m=>m.name).sort());
   $('credit').href=asset.source;$('credit').textContent=asset.name+' · '+asset.license;
   paint.disabled=finish.disabled=!materials.length;if(materials.length)update();
   frameVehicle(view.value);stage.dataset.state='ready';label(Math.round(triangles).toLocaleString('en-US')+' triangles · '+(materials.length?materials.length+' editable paint channels':'factory finish only — paint mapping needs review')+' · real-time reflection');
