@@ -7,12 +7,12 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {Reflector} from 'three/addons/objects/Reflector.js';
 const $=id=>document.getElementById(id);
-const stage=$('stage'),status=$('status'),paint=$('paint'),finish=$('finish'),mirror=$('mirror'),model=$('model'),view=$('view'),rim=$('rim'),rimReset=$('rim-reset'),rimStatus=$('rim-status');
+const stage=$('stage'),status=$('status'),paint=$('paint'),finish=$('finish'),mirror=$('mirror'),model=$('model'),view=$('view'),rim=$('rim'),rimReset=$('rim-reset'),rimStatus=$('rim-status'),paintReset=$('paint-reset'),interior=$('interior'),interiorReset=$('interior-reset'),interiorStatus=$('interior-status');
 const assets=Object.freeze({
  wedge:{file:'wedge.glb',name:'80s Wedge · drcollect',source:'https://github.com/drcollect/collect-cars',license:'CC BY 4.0',triangles:71240},
  fastback:{file:'fastback.glb',name:'Late-60s fastback · tevy',source:'https://tevy.dev/models/muscle-car',license:'CC0 1.0',triangles:54908}
 });
-let renderer,scene,camera,controls,floor,matte,observer,disposed=false,car,bounds,envTarget,ktx,sequence=0,materials=[],wheelMaterials=new Map(),keyLight,frame=0;
+let renderer,scene,camera,controls,floor,matte,observer,disposed=false,car,bounds,envTarget,ktx,sequence=0,materials=[],wheelMaterials=new Map(),interiorMaterials=new Map(),bodyOriginals=new Map(),keyLight,frame=0;
 const label=(text)=>{status.textContent=text};
 function render(){if(!disposed&&renderer)renderer.render(scene,camera)}
 function requestRender(){if(!frame&&!disposed)frame=requestAnimationFrame(()=>{frame=0;render()})}
@@ -67,21 +67,32 @@ function paintChannel(asset,m){
 }
 function publishMaterialState(){
  const values=entries=>[...entries].map(m=>({name:m.name,color:m.color.getHexString(),metalness:m.metalness,roughness:m.roughness})).sort((a,b)=>a.name.localeCompare(b.name));
- stage.dataset.bodyState=JSON.stringify(values(materials));stage.dataset.rimState=JSON.stringify(values(wheelMaterials.keys()));
+ stage.dataset.bodyState=JSON.stringify(values(materials));stage.dataset.rimState=JSON.stringify(values(wheelMaterials.keys()));stage.dataset.interiorState=JSON.stringify(values(interiorMaterials.keys()));
 }
 function updateRims(reset=false){
  for(const [m,original] of wheelMaterials){if(reset)m.color.copy(original);else m.color.set(rim.value)}
  if(reset&&wheelMaterials.size)rim.value='#'+wheelMaterials.values().next().value.getHexString();
  publishMaterialState();requestRender();
 }
+function updateInterior(reset=false){
+ for(const [m,original] of interiorMaterials){if(reset)m.color.copy(original);else m.color.set(interior.value)}
+ if(reset&&interiorMaterials.size)interior.value='#'+interiorMaterials.values().next().value.getHexString();
+ publishMaterialState();requestRender();
+}
+function restoreBody(){
+ for(const [m,original] of bodyOriginals){m.color.copy(original.color);for(const k of ['metalness','roughness','clearcoat','clearcoatRoughness'])m[k]=original[k];m.needsUpdate=true}
+ if(bodyOriginals.size)paint.value='#'+bodyOriginals.values().next().value.color.getHexString();
+ finish.value='factory';publishMaterialState();requestRender();
+}
 function update(){
+ if(finish.value==='factory'){for(const m of materials)m.color.set(paint.value);publishMaterialState();requestRender();return}
  for(const m of materials){m.color.set(paint.value);const settings={metallic:[.65,.24,1,.06],gloss:[.12,.18,1,.04],satin:[.5,.48,.25,.3],matte:[.05,.85,0,.6]}[finish.value];[m.metalness,m.roughness,m.clearcoat,m.clearcoatRoughness]=settings;m.needsUpdate=true}
  publishMaterialState();requestRender()
 }
 function dispose(){if(disposed)return;disposed=true;sequence++;if(frame)cancelAnimationFrame(frame);observer?.disconnect();controls?.dispose();ktx?.dispose();disposeTree(scene);floor?.getRenderTarget()?.dispose();envTarget?.dispose();renderer?.dispose()}
 async function load(){
  const ticket=++sequence,asset=assets[model.value];if(!asset)return;
- if(car){scene.remove(car);disposeTree(car);car=null;}bounds=null;materials=[];wheelMaterials.clear();stage.dataset.paintMaterialNames='[]';stage.dataset.rimMaterialNames='[]';publishMaterialState();stage.dataset.state='loading';paint.disabled=finish.disabled=rim.disabled=rimReset.disabled=true;rimStatus.textContent='Checking independent rim materials…';label('Loading local '+asset.name+'…');render();
+ if(car){scene.remove(car);disposeTree(car);car=null;}bounds=null;materials=[];wheelMaterials.clear();interiorMaterials.clear();bodyOriginals.clear();stage.dataset.interiorMaterialNames='[]';stage.dataset.paintMaterialNames='[]';stage.dataset.rimMaterialNames='[]';publishMaterialState();stage.dataset.state='loading';paint.disabled=finish.disabled=paintReset.disabled=rim.disabled=rimReset.disabled=interior.disabled=interiorReset.disabled=true;rimStatus.textContent='Checking independent rim materials…';interiorStatus.textContent='Checking independent upholstery materials…';label('Loading local '+asset.name+'…');render();
  try{
   const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).setKTX2Loader(ktx);
   const gltf=await loader.loadAsync('./'+asset.file);
@@ -94,8 +105,18 @@ async function load(){
     if(model.value==='fastback'&&!m.map&&m.color&&/^(rim_paint|rim_paint_body)$/i.test(m.name)){
      if(!wheelMaterials.has(m))wheelMaterials.set(m,m.color.clone());return m;
     }
+    if(model.value==='fastback'&&!m.map&&m.color&&/^(interior|leather)$/i.test(m.name)){
+     if(!interiorMaterials.has(m))interiorMaterials.set(m,m.color.clone());return m;
+    }
     if(paintChannel(model.value,m)!=='body')return m;
-    if(!map.has(m)){const replacement=new THREE.MeshPhysicalMaterial({name:m.name,color:m.color,metalness:.65,roughness:.24,clearcoat:1,clearcoatRoughness:.06,map:m.map,normalMap:m.normalMap,side:m.side});map.set(m,replacement);materials.push(replacement);originals.add(m)}
+    if(!map.has(m)){
+     // Keep every source PBR map and material flag instead of reconstructing a subset.
+     if(!m.isMeshStandardMaterial)return m;
+     const replacement=m.isMeshPhysicalMaterial?m.clone():new THREE.MeshPhysicalMaterial();
+     if(!m.isMeshPhysicalMaterial)THREE.MeshStandardMaterial.prototype.copy.call(replacement,m);
+     bodyOriginals.set(replacement,{color:replacement.color.clone(),metalness:replacement.metalness,roughness:replacement.roughness,clearcoat:replacement.clearcoat,clearcoatRoughness:replacement.clearcoatRoughness});
+     map.set(m,replacement);materials.push(replacement);originals.add(m)
+    }
     return map.get(m)
    };
    o.material=Array.isArray(o.material)?o.material.map(convert):convert(o.material);
@@ -105,13 +126,17 @@ async function load(){
   scene.add(car);const box=new THREE.Box3().setFromObject(car);car.position.y-=box.min.y;car.updateMatrixWorld(true);bounds=new THREE.Box3().setFromObject(car);
   stage.dataset.triangles=String(Math.round(triangles));stage.dataset.paintMaterials=String(materials.length);stage.dataset.asset=model.value;stage.dataset.materialNames=JSON.stringify([...names].sort());stage.dataset.paintMaterialNames=JSON.stringify(materials.map(m=>m.name).sort());
   $('credit').href=asset.source;$('credit').textContent=asset.name+' · '+asset.license;
-  paint.disabled=finish.disabled=!materials.length;if(materials.length)update();
+  paint.disabled=finish.disabled=paintReset.disabled=!materials.length;if(materials.length)restoreBody();
   stage.dataset.rimMaterialNames=JSON.stringify([...wheelMaterials.keys()].map(m=>m.name).sort());
   rim.disabled=rimReset.disabled=!wheelMaterials.size;
   rimStatus.textContent=wheelMaterials.size?'Independent rim paint — machined surfaces, tires, brakes and baked textures remain unchanged.':'Factory rims only — no independent untextured rim paint mapping verified for this model.';
   updateRims(true);
+  stage.dataset.interiorMaterialNames=JSON.stringify([...interiorMaterials.keys()].map(m=>m.name).sort());
+  interior.disabled=interiorReset.disabled=!interiorMaterials.size;
+  interiorStatus.textContent=interiorMaterials.size?'Independent interior material tint — glass and baked textures remain unchanged.':'Factory interior only — no separate untextured upholstery mapping verified.';
+  updateInterior(true);
   frameVehicle(view.value);stage.dataset.state='ready';label(Math.round(triangles).toLocaleString('en-US')+' triangles · '+(materials.length?materials.length+' editable paint channels':'factory finish only — paint mapping needs review')+' · real-time reflection');
- }catch(e){if(ticket!==sequence||disposed)return;if(car){scene.remove(car);disposeTree(car);car=null;}stage.dataset.state='error';paint.disabled=finish.disabled=rim.disabled=rimReset.disabled=true;rimStatus.textContent='Rim controls unavailable.';label('Model unavailable: '+e.message);render();console.error(e)}
+ }catch(e){if(ticket!==sequence||disposed)return;if(car){scene.remove(car);disposeTree(car);car=null;}stage.dataset.state='error';paint.disabled=finish.disabled=paintReset.disabled=rim.disabled=rimReset.disabled=interior.disabled=interiorReset.disabled=true;rimStatus.textContent='Rim controls unavailable.';interiorStatus.textContent='Interior controls unavailable.';label('Model unavailable: '+e.message);render();console.error(e)}
 }
 try{
  renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.toneMapping=THREE.NeutralToneMapping;renderer.toneMappingExposure=1.25;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;stage.append(renderer.domElement);
@@ -127,7 +152,8 @@ try{
  ktx=new KTX2Loader().setTranscoderPath('./node_modules/three/examples/jsm/libs/basis/').detectSupport(renderer);
  observer=new ResizeObserver(resize);observer.observe(stage);resize();
  rim.addEventListener('input',()=>updateRims());rimReset.addEventListener('click',()=>updateRims(true));
- paint.addEventListener('input',update);finish.addEventListener('change',update);mirror.addEventListener('change',()=>{floor.visible=mirror.checked;matte.visible=!mirror.checked;requestRender()});
+ interior.addEventListener('input',()=>updateInterior());interiorReset.addEventListener('click',()=>updateInterior(true));paintReset.addEventListener('click',restoreBody);
+ paint.addEventListener('input',update);finish.addEventListener('change',()=>{if(finish.value==='factory')restoreBody();else update()});mirror.addEventListener('change',()=>{floor.visible=mirror.checked;matte.visible=!mirror.checked;requestRender()});
  view.addEventListener('change',()=>frameVehicle(view.value));model.addEventListener('change',load);
  window.addEventListener('pagehide',dispose,{once:true});await load();
 }catch(e){stage.dataset.state='error';label('3D laboratory unavailable: '+e.message);dispose();console.error(e)}
