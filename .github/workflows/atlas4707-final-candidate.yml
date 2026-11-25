@@ -26,7 +26,9 @@ jobs:
         with:
           python-version: '3.12'
       - name: Audit integrated candidate and changed shared modules
+        shell: bash
         run: |
+          export CF_PAGES_COMMIT_SHA="$(git rev-parse HEAD)"
           python scripts/audit_release.py
           python scripts/test_atlas192_world_completion.py
           node --check atlas90-gallery.js
@@ -90,7 +92,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: |
+      - name: Build exact reviewed head
+        shell: bash
+        run: |
+          export CF_PAGES_COMMIT_SHA="$(git rev-parse HEAD)"
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
       - run: |
