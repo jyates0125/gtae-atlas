@@ -258,6 +258,15 @@ function mountReference(target,opts={}){
   if(vi||!/^[a-z0-9_]{2,75}$/.test(model))fallback();else{image.onerror=fallback;image.alt='GTA V archive reference for '+String(opts.name||model);image.src='https://cdn.jsdelivr.net/gh/Stuyk/gtav-image-archive@main/vehicles/'+encodeURIComponent(model)+'.webp'}
   target.append(image);
  }
+ const returning=forge?.returningVehicle?.(vi?'vi':'v-online',model);
+ if(returning){
+  const panel=E('section');panel.className='j412-workshop';panel.append(E('h3','Returning vehicle · GTA V / GTA VI'));
+  panel.append(E('p','Related vehicle identity, not identical bodywork, performance, prices, parts or ownership.'));
+  panel.append(E('p','GTA Online: '+(returning.onlineSpeed===null?'Measured speed not catalogued':returning.onlineSpeed+' mph · '+returning.onlineSpeedBasis)+(returning.onlinePrice===null?'':' · Recorded purchase GTA$'+returning.onlinePrice.toLocaleString('en-US'))));
+  panel.append(E('p','GTA VI: measured top speed and registration cost not verified. No Online figures transferred.'));
+  if(returning.history)panel.append(E('p','Selected series appearances: '+returning.history.join(' · ')));
+  const other=E('a',vi?'Open GTA Online version':'Open GTA VI version');other.href='./atlas-vehicle-configurator.html?'+(vi?'':'world=vi&')+'model='+encodeURIComponent(vi?returning.online:returning.vi);const source=E('a',' · Comparison sources');source.href='./atlas-credits.html#forge-returning-vehicles';panel.append(other,source);target.append(panel);
+ }
  const purchase=forge?.vehicleDealers?.(vi?'vi':'v-online',model)||[];
  if(purchase.length){const line=E('p','Recorded purchase source: '+purchase.map(x=>x.label).join(' / ')+' · current availability may vary.');target.append(line)}
  const warehouse=forge?.warehouseVehicle?.(vi?'vi':'v-online',model);

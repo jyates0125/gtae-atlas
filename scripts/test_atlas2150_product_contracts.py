@@ -80,6 +80,14 @@ for(const id of [...forge.specialtyModels('hsw'),...forge.specialtyModels('benny
 assert.equal(seed.onlineWorkshopVehicles.length,79);
 for(const id of [...forge.warehouseModels('v-online'),'oppressor','oppressor2'])assert.ok(seed.onlineWorkshopVehicles.includes(id),id);
 assert.equal(Object.keys(forge.viCatalog).length,seed.vi.length);
+assert.equal(forge.returningVehicle('v-online','banshee').vi,'vi_banshee');
+assert.equal(forge.returningVehicle('vi','vi_banshee').online,'banshee');
+assert.equal(forge.returningVehicle('vi','vi_banshee').viSpeed,null);
+assert.equal(forge.returningVehicle('v-online','banshee').onlineSpeed,118.5);
+assert.equal(forge.returningVehicle('v-online','banshee3'),null);
+assert.equal(forge.returningVehicle('v-story','banshee'),null);
+assert.notEqual(forge.ownershipKey('v-online','banshee'),forge.ownershipKey('vi','vi_banshee'));
+
 for(const r of seed.vi){const key='vehicles6:'+r.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');assert.equal(forge.ownershipKey('vi',r.forgeId),key);assert.equal(forge.viModelFromOwnership(key),r.forgeId);assert.ok(forge.viCatalog[r.forgeId]);assert.equal(forge.ownershipKey('v-online',r.forgeId),null);}
 assert.equal(forge.specialtyWorkshop('sentinel').hsw.name,'Übermacht Sentinel XS');
 assert.equal(forge.specialtyWorkshop('sentinel2').hsw,null);
