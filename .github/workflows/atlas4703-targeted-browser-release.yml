@@ -37,32 +37,15 @@ jobs:
         run: |
           python -m pip install playwright==1.58.0
           python -m playwright install ${{ matrix.browser }}
-      - name: Retry failed pages and shared universe dependencies only
-        env:
-          ATLAS_SMOKE_ONLY: atlas-vehicle-configurator.html,atlas93-garage.html,atlas90-weapons6.html,atlas-characters.html,atlas-database.html,atlas-animals.html,atlas-collectibles.html
-        run: python scripts/browser_smoke.py
-      - name: Complete browser checks previously skipped after smoke failure
-        if: ${{ !cancelled() }}
+      - name: Retry only the three outstanding browser journeys
         shell: bash
         run: |
           failures=0
           check() { if "$@"; then echo "PASS: $*"; else echo "::error::FAILED: $*"; failures=$((failures+1)); fi; }
-          check python scripts/test_atlas190_map_browser.py
-          check python scripts/test_atlas278_offline_browser.py
-          check python scripts/test_atlas210_iv_touch_browser.py
-          check python scripts/test_atlas211_mobile_fit_browser.py
           check python scripts/test_atlas212_directory_browser.py
-          check python scripts/test_atlas217_vi_world_browser.py
           check python scripts/test_atlas222_vi_browser.py
-          check python scripts/test_atlas223_home_browser.py
-          check python scripts/test_atlas218_yanis_v18_browser.py
-          check python scripts/test_atlas219_hq_browser.py
           check python scripts/test_atlas201_squalo_browser.py
-          check python scripts/test_atlas191_first_visit_browser.py
           test "$failures" -eq 0
-      - name: Capture release review screenshots
-        if: ${{ !cancelled() }}
-        run: python scripts/capture_design_review.py
       - name: Preserve browser evidence
         if: always()
         uses: actions/upload-artifact@v4

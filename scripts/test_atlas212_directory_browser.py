@@ -37,22 +37,22 @@ try:
     card=page.locator('.directory-card[data-id="'+world+'"]')
     assert card.is_visible() and query.lower() in card.inner_text().lower()
    search.fill('')
-   # Gateway URLs include a game query: preserve the exact world, not a general IV map.
+   # Episodes now use the actual IV workspace, retaining the precise episode query.
    card=page.locator('.directory-card[data-id="tlad"]')
-   assert card.get_attribute('href')=='./map-hub.html?game=tlad'
+   assert card.get_attribute('href')=='./atlas-iv.html?scope=tlad'
    card.click()
-   page.wait_for_url('**/map-hub.html?game=tlad')
+   page.wait_for_url('**/atlas-iv.html?scope=tlad')
    entry=page.evaluate('(k)=>JSON.parse(localStorage.getItem(k))',key)
-   assert entry=={'id':'tlad','href':'map-hub.html?game=tlad'},entry
+   assert entry=={'id':'tlad','href':'atlas-iv.html?scope=tlad'},entry
    page.goto(base+'maps.html',wait_until='domcontentloaded')
    recent=page.locator('#j212Recent')
    assert recent.is_visible()
    link=page.locator('#j212RecentLink')
-   assert link.get_attribute('href')=='./map-hub.html?game=tlad'
+   assert link.get_attribute('href')=='./atlas-iv.html?scope=tlad'
    assert 'The Lost and Damned' in link.inner_text()
    link.click()
-   page.wait_for_url('**/map-hub.html?game=tlad')
-   assert parse_qs(urlparse(page.url).query).get('game')==['tlad']
+   page.wait_for_url('**/atlas-iv.html?scope=tlad')
+   assert parse_qs(urlparse(page.url).query).get('scope')==['tlad']
    # New visit updates only the map shortcut, not the canonical world data.
    page.goto(base+'maps.html',wait_until='domcontentloaded')
    page.locator('.directory-card[data-id="story"]').click()
