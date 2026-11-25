@@ -232,5 +232,54 @@ function mount(target,opts={}){
  canvas.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')yaw-=.18;else if(e.key==='ArrowRight')yaw+=.18;else if(e.key==='ArrowUp')pitch=Math.min(1.48,pitch+.1);else if(e.key==='ArrowDown')pitch=Math.max(-.25,pitch-.1);else if(e.key==='+'||e.key==='=')zoom(-.5);else if(e.key==='-')zoom(.5);else return;e.preventDefault();render()});
  return instance;
 }
-root.TeamJuraGarage3D=Object.freeze({mount,paint(c){current?.paint(c)},reset(){current?.reset()},dispose(){current?.dispose();current=null},getDesign(){return current?.getDesign()}});
+// Reference-first workshop. Existing models keep their identity; no generic mesh is substituted.
+function mountReference(target,opts={}){
+ if(!target)return;
+ current?.dispose();current=null;
+ const forge=root.JuraForge,model=String(opts.model||''),vi=model.startsWith('vi_');
+ let design=forge?.normalize(opts.design,model)||{};
+ const E=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node};
+ target.replaceChildren();target.classList.add('j256-forge');
+ for(const key of ['forgeTriangles','forgeReflection','forgeEnvironment','forgeVisualPlatform','forgeSharedVisual'])delete target.dataset[key];
+ target.dataset.forgeStatus='reference';target.dataset.forgeFidelity='reference-only';target.dataset.forgeRenderer='reference';
+ const title=E('strong','ELARIO FORGE · '+String(opts.name||model));
+ const note=E('p','No accepted model-specific interactive asset is available yet. The vehicle reference is not replaced with a generic 3D body. Recorded workshop choices are planning only until the exact parts can be rendered.');
+ note.className='j256-rights';
+ target.append(title,note);
+ const craft=forge?.craftCustomization?.(vi?'vi':'v-online',model);
+ if(craft&&craft.mode!=='unknown')target.append(E('p',craft.label));
+ const rows=forge?.workshopLiveries?.(model)||[],groups=forge?.workshopCatalog?.(model)||[];
+ function change(patch){design=forge?.normalize({...design,...patch},model)||{};opts.onDesign?.({...design})}
+ if(craft?.mode!=='collection'&&(rows.length||groups.length)){
+  const panel=E('section');panel.className='j412-workshop';
+  panel.append(E('h3',vi?'GTA VI · recorded workshop options':'GTA Online · recorded workshop options'));
+  panel.append(E('p','Source-listed choices only. No invented parts or visual previews. Prices and unlocks may vary.'));
+  const grid=E('div');grid.className='j256-fields';
+  const total=E('p');total.setAttribute('role','status');
+  function update(){let n=0,sum=0,unknown=0;const livery=rows.find(x=>x.id===design.workshopLivery);if(livery){n++;if(Number.isFinite(livery.priceUSD))sum+=livery.priceUSD;else unknown++}
+   for(const group of groups){const option=group.options.find(x=>x.id===design.workshopOptions?.[group.key]);if(option){n++;if(Number.isFinite(option.price))sum+=option.price;else unknown++}}
+   total.textContent=vi?n+' recorded choices. No combined price: kits and individual parts may overlap.':n+' choices · GTA{current?.paint(c)},reset(){current?.reset()},dispose(){current?.dispose();current=null},getDesign(){return current?.getDesign()}});
+})(window);
++sum.toLocaleString('en-US')+' listed price sum'+(unknown?' · '+unknown+' without a recorded price':'')+' (not incremental upgrade cost).';
+  }
+  function addSelect(parent,label,options,value,onchange,attribute,key){const wrapper=E('label',label),select=E('select');select.setAttribute(attribute,key);select.add(new Option(options.length?'Not selected':'Options not yet documented',''));for(const row of options){const price=row.priceUSD??row.price;select.add(new Option(row.name+(Number.isFinite(price)?' · GTA{current?.paint(c)},reset(){current?.reset()},dispose(){current?.dispose();current=null},getDesign(){return current?.getDesign()}});
+})(window);
++price.toLocaleString('en-US'):' · price not recorded')+(row.condition?' · '+row.condition:''),row.id))}select.value=options.some(x=>x.id===value)?value:'';select.disabled=!options.length||opts.readOnly===true;select.onchange=()=>{onchange(select.value);update()};wrapper.append(select);parent.append(wrapper)}
+  let liveryParent=grid,lastTab='',groupParent=grid;
+  if(rows.length&&!vi)addSelect(grid,'Liveries',rows,design.workshopLivery,v=>change({workshopLivery:v||'none'}),'data-forge-control','workshopLivery');
+  let liveryAdded=!vi;
+  for(const group of groups){
+   if(vi&&group.tab!==lastTab){lastTab=group.tab;const fieldset=E('fieldset');fieldset.className='j413-tab';fieldset.append(E('legend',lastTab||'Workshop'));groupParent=E('div');groupParent.className='j256-fields';fieldset.append(groupParent);grid.append(fieldset);
+    if(lastTab==='Cosmetics'&&rows.length&&!liveryAdded){addSelect(groupParent,'Customizable liveries',rows,design.workshopLivery,v=>change({workshopLivery:v||'none'}),'data-forge-control','workshopLivery');liveryAdded=true}}
+   addSelect(groupParent,group.label,group.options,design.workshopOptions?.[group.key],v=>change({workshopOptions:{...design.workshopOptions,[group.key]:v}}),'data-workshop-category',group.key);
+  }
+  if(rows.length&&!liveryAdded)addSelect(liveryParent,'Liveries',rows,design.workshopLivery,v=>change({workshopLivery:v||'none'}),'data-forge-control','workshopLivery');
+  const source=E('a','Workshop sources & credits');source.href='./atlas-credits.html#'+(vi?'forge-ganado-workshop':model==='banshee'?'forge-banshee-workshop':'forge-workshop-liveries');panel.append(grid,total,source);target.append(panel);update();
+ }else{
+  target.append(E('p',craft?.mode==='collection'?'Collection only. Ownership, favorites and private notes remain available.':vi?'GTA VI workshop: model-specific options not yet verified.':'Model-specific workshop options not yet verified.'));
+  const link=E('a','Vehicle and workshop sources');link.href='./atlas-credits.html#forge-craft-customization';target.append(link);
+ }
+ const instance={dispose(){},paint(){},reset(){},getDesign(){return {...design}}};current=instance;return instance;
+}
+root.TeamJuraGarage3D=Object.freeze({mount,mountReference,paint(c){current?.paint(c)},reset(){current?.reset()},dispose(){current?.dispose();current=null},getDesign(){return current?.getDesign()}});
 })(window);
