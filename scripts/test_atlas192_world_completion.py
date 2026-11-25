@@ -17,7 +17,8 @@ story=read('film/atlas192-storyboard.js')
 nav=read('atlas132-nav.js')
 assert 'data-gallery="weapons"' in html
 assert 'atlas192-armory-worlds.css?v=192' in html
-assert 'atlas90-gallery.js?v=408' in html
+gallery_versions=[re.search(r'atlas90-gallery\.js\?v=(\d+)',read(page)) for page in ('atlas90-weapons.html','atlas90-vehicles5.html','atlas90-vehicles6.html')]
+assert all(gallery_versions) and len({m.group(1) for m in gallery_versions})==1 and int(gallery_versions[0].group(1))>=408, 'Shared gallery engine versions must match'
 assert 'j90-image-warning' in gallery and 'Original Elario' in gallery
 showroom=read('atlas100-showroom.css')
 for world,asset in (('vehicles5','jura161-vehicles.webp'),('vehicles6','jura161-vehicles6.webp'),('weapons','jura161-weapons.webp')):
