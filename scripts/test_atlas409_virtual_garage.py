@@ -163,6 +163,20 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(P))) as ser
             p.locator('#saveBuild').click()
             assert p.evaluate('k=>JSON.parse(localStorage.getItem(k)).builds.vi_sugoi.design.workshopOptions',VI)=={}
             assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])==before
+            for vi_id,platform in [('vi_banshee','banshee'),('vi_dominator','dominator')]:
+                p.goto(origin+'atlas-vehicle-configurator.html?world=vi&model='+vi_id,wait_until='domcontentloaded')
+                expect(p.locator('#modelSelect')).to_have_value(vi_id,timeout=15000)
+                expect(stage).to_have_attribute('data-forge-status','ready',timeout=15000)
+                expect(stage).to_have_attribute('data-forge-visual-platform',platform)
+                expect(stage).to_have_attribute('data-forge-shared-visual','true')
+                expect(stage).to_contain_text('Temporary GTA V/VI approximation')
+                expect(stage.locator('[data-forge-control="workshopLivery"]')).to_have_count(0)
+                stage.locator('[data-forge-control="rim"]').select_option('gold')
+                p.locator('#buildName').fill(vi_id+' shared preview')
+                p.locator('#saveBuild').click()
+                record=p.evaluate('([k,id])=>JSON.parse(localStorage.getItem(k)).builds[id]',[VI,vi_id])
+                assert record['model']==vi_id and record['design']['workshopOptions']=={} and record['design']['workshopLivery']=='none'
+                assert p.evaluate('keys=>keys.map(k=>localStorage.getItem(k))',[G,V,O])==before
             ctx.close()
             print(f'PASS Atlas 40.9 {width}: actual WebGL, V Garage save/reload, VI isolated save, gallery handoff and collection',flush=True)
         # Portable preview uses the exact same renderer, no site storage or network.
