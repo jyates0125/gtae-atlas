@@ -31,12 +31,32 @@ export function validCustomizationCoverage(record){
  if(record.customizationMode==='fixed-model')return record.optionMappings.every(m=>['fixed','nonvisual','material'].includes(m.method));
  return true;
 }
+// A declaration is not proof: exact reviewed GLB metadata must bind to the pinned bytes.
+function auditedNames(actual, requested) {
+ return Array.isArray(actual)&&requested.every(name=>actual.filter(n=>n===name).length===1);
+}
+export function validAssetAudit(record,audit,variantAudits={}){
+ if(!record||!audit||audit.sha256!==record.sha256||audit.selfContained!==true||
+    !Array.isArray(audit.activeNodeNames)||!Array.isArray(audit.usedMaterialNames)||
+    !Number.isInteger(audit.activeMeshCount)||audit.activeMeshCount<1||
+    !validCustomizationCoverage(record))return false;
+ for(const mapping of record.optionMappings){
+  if(mapping.nodeNames&&!auditedNames(audit.activeNodeNames,mapping.nodeNames))return false;
+  if(mapping.materialNames&&!auditedNames(audit.usedMaterialNames,mapping.materialNames))return false;
+  if(mapping.method==='whole-model'){
+   const variant=Object.prototype.hasOwnProperty.call(variantAudits,mapping.variantPath)?variantAudits[mapping.variantPath]:null;
+   if(!variant||variant.sha256!==mapping.variantSha256||variant.selfContained!==true||
+      !Number.isInteger(variant.activeMeshCount)||variant.activeMeshCount<1)return false;
+  }
+ }
+ return true;
+}
 export function validReleaseAsset(record){
  if(!record||!scopes.includes(record.world)||!divisions.includes(record.division))return false;
  if(typeof record.model!=='string'||!record.model||record.kind!=='model-specific-glb'||record.identity!=='verified')return false;
  if(typeof record.assetPath!=='string'||!/^assets\/forge\/[a-z0-9/_-]+\.glb$/.test(record.assetPath)||record.assetPath.includes('..'))return false;
  if(!digest.test(record.sha256||'')||!record.sourceRevision||!record.license||!record.attribution)return false;
- if(!validCustomizationCoverage(record))return false;
+ if(!validAssetAudit(record,record.assetAudit,record.variantAudits))return false;
  return ['rightsReviewed','visualAccepted','mobilePassed','desktopPassed','controlsPassed','materialAuditPassed'].every(key=>record[key]===true);
 }
 export function selectFinalVisual(world,model,division){

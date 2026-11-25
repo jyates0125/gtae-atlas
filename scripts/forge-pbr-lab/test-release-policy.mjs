@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import {divisions,validReleaseAsset,validOptionMapping,validCustomizationCoverage,selectFinalVisual} from './release-policy.mjs';
-const good={world:'v-online',division:'road',model:'ellie',kind:'model-specific-glb',identity:'verified',assetPath:'assets/forge/ellie.glb',sha256:'a'.repeat(64),sourceRevision:'fixture',license:'fixture',attribution:'fixture',rightsReviewed:true,visualAccepted:true,mobilePassed:true,desktopPassed:true,controlsPassed:true,materialAuditPassed:true,customizationMode:'collection-only',optionMappings:[]};
+import {divisions,validReleaseAsset,validAssetAudit,validOptionMapping,validCustomizationCoverage,selectFinalVisual} from './release-policy.mjs';
+const good={world:'v-online',division:'road',model:'ellie',kind:'model-specific-glb',identity:'verified',assetPath:'assets/forge/ellie.glb',sha256:'a'.repeat(64),sourceRevision:'fixture',license:'fixture',attribution:'fixture',rightsReviewed:true,visualAccepted:true,mobilePassed:true,desktopPassed:true,controlsPassed:true,materialAuditPassed:true,customizationMode:'collection-only',optionMappings:[],assetAudit:{sha256:'a'.repeat(64),selfContained:true,activeMeshCount:1,activeNodeNames:['bumper_stock','bumper_sport'],usedMaterialNames:['paint_body','trim']},variantAudits:{'assets/forge/ellie_custom.glb':{sha256:'b'.repeat(64),selfContained:true,activeMeshCount:1}}};
 assert.equal(validReleaseAsset(good),true);
 for(const key of ['rightsReviewed','visualAccepted','mobilePassed','desktopPassed','controlsPassed','materialAuditPassed','sourceRevision','license','attribution','sha256','assetPath','model'])assert.equal(validReleaseAsset({...good,[key]:null}),false,key);
 for(const kind of ['procedural','generic-glb','concept-study'])assert.equal(validReleaseAsset({...good,kind}),false);
@@ -33,3 +33,16 @@ assert.equal(validCustomizationCoverage({...fixed,optionMappings:[{...option,rev
 assert.equal(validReleaseAsset({...good,customizationMode:undefined}),false);
 console.log('PASS whole fixed assemblies, material changes, nonvisual upgrades, interchangeable parts and complete-model variants; unverified mappings rejected');
 
+
+assert.equal(validReleaseAsset({...good,assetAudit:undefined}),false);
+assert.equal(validReleaseAsset({...good,assetAudit:{...good.assetAudit,sha256:'c'.repeat(64)}}),false);
+assert.equal(validReleaseAsset({...good,assetAudit:{...good.assetAudit,activeMeshCount:0}}),false);
+assert.equal(validReleaseAsset({...good,assetAudit:{...good.assetAudit,selfContained:false}}),false);
+const documented={...good,customizationMode:'documented-options',optionMappings:[bumper,paint,variant]};
+assert.equal(validReleaseAsset(documented),true);
+assert.equal(validAssetAudit(documented,{...good.assetAudit,activeNodeNames:['bumper_stock']},good.variantAudits),false);
+assert.equal(validAssetAudit(documented,{...good.assetAudit,activeNodeNames:['bumper_stock','bumper_sport','bumper_sport']},good.variantAudits),false);
+assert.equal(validAssetAudit(documented,{...good.assetAudit,usedMaterialNames:['trim']},good.variantAudits),false);
+assert.equal(validAssetAudit(documented,good.assetAudit,{}),false);
+assert.equal(validAssetAudit(documented,good.assetAudit,{'assets/forge/ellie_custom.glb':{...good.variantAudits['assets/forge/ellie_custom.glb'],sha256:'c'.repeat(64)}}),false);
+console.log('PASS exact asset digest, active node/material identity, and whole-model variant audit gating');
