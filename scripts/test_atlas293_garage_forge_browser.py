@@ -78,6 +78,8 @@ try:
         expect(page.locator('#modelSelect option')).to_have_count(68,timeout=30000)
         expect(page.locator('#modelSelect')).to_have_value('vi_cheetah95')
         expect(page.locator('#concept3d')).to_contain_text('Related vehicle family')
+        expect(page.locator('#concept3d')).to_contain_text('Ultimate Edition claim guide')
+        expect(page.locator('#concept3d a[href="https://support.rockstargames.com/articles/1tnvcdbUMG0v1yJ1SVn0WU/claiming-ultimate-edition-bonuses-in-grand-theft-auto-vi"]')).to_have_count(1)
         # Empty searches must remove stale model/variant URL state without changing saves.
         page.evaluate("() => {const u=new URL(location.href);u.searchParams.set('variant','Old design');u.hash='variant=Old%20design';history.replaceState(null,'',u)}")
         page.locator('#modelSearch').fill('no-such-vehicle-453')

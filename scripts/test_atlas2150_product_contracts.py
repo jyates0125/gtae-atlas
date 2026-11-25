@@ -97,6 +97,12 @@ assert.equal(forge.viBenefitModels('vi','vintage').join(','),'vi_stanier55');
 assert.equal(forge.viBenefitModels('vi','member').join(','),'vi_venturas_blvd_elegy90');
 assert.equal(forge.viBenefit('vi','vi_ganado_retro').kind,'ultimate');
 assert.equal(forge.viBenefit('vi','vi_banshee'),null);
+for(const id of forge.viBenefitModels('vi','ultimate')){assert.equal(forge.viClaimGuide('vi',id).source,'https://support.rockstargames.com/articles/1tnvcdbUMG0v1yJ1SVn0WU/claiming-ultimate-edition-bonuses-in-grand-theft-auto-vi');assert.ok(forge.viClaimGuide('vi',id).steps.includes('Store'));}
+assert.equal(forge.viClaimGuide('vi','vi_venturas_blvd_elegy90').source,'https://support.rockstargames.com/articles/xnog5TdRlbJNQosdltLFS/claiming-gta-benefits-in-grand-theft-auto-vi');
+assert.ok(forge.viClaimGuide('vi','vi_venturas_blvd_elegy90').steps.includes('Chapter 3'));
+assert.ok(forge.viClaimGuide('vi','vi_stanier55').steps.includes('November 20, 2026'));
+for(const world of ['v-online','v-story','vi'])assert.equal(forge.viClaimGuide(world,'banshee'),null);
+for(const world of ['v-online','v-story'])assert.equal(forge.viClaimGuide(world,'vi_cheetah95'),null);
 for(const world of ['v-online','v-story']){assert.equal(forge.viBenefitModels(world,'ultimate').length,0);assert.equal(forge.viBenefit(world,'vi_stanier55'),null);}
 
 assert.equal(forge.returningVehicle('v-online','banshee').vi,'vi_banshee');
