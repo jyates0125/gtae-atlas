@@ -666,3 +666,6 @@ Add Online-only Pegasus eligibility and documented purchase channel for five air
 
 ### Atlas 45.9 — Leonida identity evidence filters
 45.8 passed 20/20 and merged into development a36943e. Shared VI evidence classification now separates five Rockstar named edition/membership references, three Rockstar screenshot references, and 177 community references. Adds shareable gallery filter, Forge divisions, and edition-aware search/comparison. Corrects duplicated Dinka manufacturer in Forge without changing any IDs. No new roster, assets, specs, save keys or inference of gameplay eligibility. Existing contract/browser checks expanded. Exact-head validation pending; production unchanged.
+
+### Atlas 46.0 — Zentorno and standard Kuruma workshop choices
+45.9 passed 15/15 and merged at 561ac2f. Add 41 Zentorno and 50 standard Kuruma source-listed Online options (91 total) with recorded costs and distinct categories. Source GTA Base individual pages and official Rockstar general workshop guide. No copied meshes or inferred Story/VI menu; armored variant not conflated. Extend existing cross-product/browser tests and update source credits/cache; exact-head CI pending. No production change.
