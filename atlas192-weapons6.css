@@ -57,3 +57,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .viweapon-plate-kicker{font-size:10px;letter-spacing:.18em;font-weight:800}.viweapon-plate strong{font-size:15px}.viweapon-plate small{font-size:10px;color:#d3bedb}
 .viweapon-media figcaption{border-top:1px solid #76578b;min-height:55px;overflow-wrap:anywhere}
 .viweapon-hero-art{background-image:linear-gradient(90deg,#25112e35,#12071820),url('./art/jura161-weapons.webp')}
+
+/* Atlas 47.1.2: preserve original renders; the surrounding scene is a separate display layer. */
+.viweapon-media{background:#1b1129}
+.viweapon-stage{position:relative;isolation:isolate;aspect-ratio:16/9;overflow:hidden;display:grid;place-items:center;background:linear-gradient(0deg,#130921a8,#180b2f40),url('./art/jura155-vi.webp') center/cover}
+.viweapon-stage .viweapon-linked-image{position:absolute;inset:8%;width:84%;height:84%;aspect-ratio:auto;object-fit:contain;opacity:0;border-radius:8px;filter:none;mix-blend-mode:normal}
+.viweapon-stage .viweapon-linked-image.is-loaded{position:absolute;opacity:1;box-shadow:0 4px 20px #0c051a55}
+.viweapon-stage .viweapon-plate{position:absolute;inset:0;width:100%;height:100%;padding:0;display:block;aspect-ratio:auto;background:#1d102d}
+.viweapon-stage .viweapon-concept-art{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
+.viweapon-stage .viweapon-plate-overlay{position:absolute;inset:auto 0 0;display:grid;justify-items:center;padding:22px 10px 10px;background:linear-gradient(transparent,#160a29f0);text-shadow:0 2px 4px #08040d}
+.viweapon-stage .viweapon-plate-overlay strong{font-size:17px}.viweapon-media figcaption{min-height:44px;font-size:11px;line-height:1.4}
+.viweapon-card-top{min-height:40px;align-content:start}.viweapon-card h3{min-height:2.4em}
+.viweapon-credits-link{margin:0 0 12px;text-align:right;font-size:12px}
+@media(max-width:650px){.viweapon-card h3{min-height:0}.viweapon-card-top{min-height:0}}
