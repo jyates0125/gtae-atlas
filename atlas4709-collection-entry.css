@@ -14,3 +14,6 @@ body.j4709-workshop[data-j4709-world="vi"] .c-hero{background:linear-gradient(95
 @media(max-width:650px){.j4709-entry{grid-template-columns:1fr}.j4709-actions a{flex:1 1 130px}}
 
 .j4709-cover{display:block;width:100%;aspect-ratio:16/7;object-fit:cover;border-radius:10px;border:1px solid #9d77a7;min-width:0}.j4709-entry>article{background:#241631;align-content:start}
+
+/* Prevent intrinsic image widths and flex button labels from widening narrow screens. */
+.j4709-entry{min-width:0;max-width:100%;box-sizing:border-box}.j4709-entry>article{grid-template-columns:minmax(0,1fr);max-width:100%;box-sizing:border-box}.j4709-cover{max-width:100%;height:auto;box-sizing:border-box}.j4709-actions{min-width:0;max-width:100%}.j4709-actions a{box-sizing:border-box;min-width:0;max-width:100%;overflow-wrap:anywhere;text-align:center;white-space:normal}
