@@ -26,7 +26,7 @@ const encodeQuery=value=>encodeURIComponent(value).replace(/[!'()*]/g,c=>'%'+c.c
 const characterHref=r=>'atlas-characters.html?game='+encodeQuery(r.scope)+(r.scope==='classic'?'&edition='+encodeQuery(r.game):'')+'&q='+encodeQuery(r.name)+'&profile='+encodeQuery(r.id)+'#mainCharacterEra';
 const nice=s=>normalize(s).replace(/_mk(\d+)/g,' Mk $1').replace(/_([a-z])/g,(_,a)=>' '+a.toUpperCase()).replace(/([a-z])(\d)/g,'$1 $2').replace(/\b[a-z]/g,x=>x.toUpperCase());
 const world=s=>({story:'GTA V Story',online:'GTA Online',vi:'GTA VI Story',classic:'Classic GTA',both:'GTA V + Online'})[s]||'Reference';
-const isUnverified=r=>/unverified|provisional|community-tracked|pending/i.test(r.verification||'');
+const isUnverified=r=>/unverified|provisional|community-tracked|pending/i.test(r.verification||'')||(r.scope==='vi'&&r.kind==='weapon'&&!/Named official reference|Observed in official media/i.test(r.verification||''));
 const image=(kind,id)=>IMAGE_ROOT+(kind==='weapon'?'weapons/weapon_':'vehicles/')+encodeURIComponent(id)+'.webp';
 function weaponGroup(id){if(/knife|bat$|axe|bottle|crowbar|dagger|golfclub|hammer|hatchet|knuckle|machete|nightstick|poolcue|switchblade|wrench|flashlight/.test(id))return'Melee';if(/grenade|molotov|snowball|sticky|proximity|pipebomb|tear|smoke|petrol|hazard|fireextinguisher/.test(id))return'Throwable';if(/launcher|rpg|railgun|minigun|widowsmaker|unholy|firework/.test(id))return'Heavy';if(/sniper|marksman|precision/.test(id))return'Sniper';if(/shotgun|musket/.test(id))return'Shotgun';if(/rifle|carbine/.test(id))return'Rifle';if(/smg|pdw|machinepistol|mg$/.test(id))return'SMG / MG';if(/pistol|revolver|stungun/.test(id))return'Pistol';return'Other Weapons'}
 function carGroup(id){
@@ -145,7 +145,7 @@ function artwork(r){
  let idx=0;function next(){
   const m=options[idx++];if(!m){fallback();return}
   const img=make('img','u-model-art');img.alt=m.label||('Sourced reference image for '+r.name);img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
-  img.addEventListener('load',()=>{scene.hidden=true;img.classList.add('is-loaded');area.dataset.artStatus=m.kind==='family'?'family-reference':m.kind==='official'?'official-reference':'model-reference';note.textContent=m.kind==='family'?'FAMILY IMAGE · VARIANT PENDING':m.kind==='official'?'OFFICIAL EDITION IMAGE':isUnverified(r)?'PROVISIONAL · REFERENCE IMAGE':'REFERENCE IMAGE';},{once:true});
+  img.addEventListener('load',()=>{scene.hidden=true;img.classList.add('is-loaded');area.dataset.artStatus=m.kind==='family'?'family-reference':m.kind==='official'?'official-reference':'model-reference';note.textContent=m.kind==='family'?'FAMILY IMAGE · VARIANT PENDING':m.kind==='official'?'OFFICIAL EDITION IMAGE · EXACT APPEARANCE NOT IMPLIED':isUnverified(r)?'PROVISIONAL · REFERENCE IMAGE':'REFERENCE IMAGE';},{once:true});
   img.addEventListener('error',()=>{img.remove();next()},{once:true});stage.append(img);img.src=m.url;
  }
  fallback();next();return area;
@@ -166,6 +166,22 @@ function own(){
   for(const key of ['owned','wishlist','note'])if(saved[key]!==undefined&&(!saved[key]||typeof saved[key]!=='object'||Array.isArray(saved[key])))return null;
   return {...saved,owned:{...(saved.owned||{})},wishlist:{...(saved.wishlist||{})},note:{...(saved.note||{})}};
  }catch{return null}
+}
+const VI_COLLECTION='team-jura-vi-weapon-collected-v1';
+function viCollected(){
+ try{
+  const raw=localStorage.getItem(VI_COLLECTION);if(raw===null)return Object.create(null);
+  const v=JSON.parse(raw);if(!v||v.schema!==1||!v.collected||typeof v.collected!=='object'||Array.isArray(v.collected)||Object.values(v.collected).some(x=>x!==true))return null;
+  return Object.assign(Object.create(null),v.collected);
+ }catch{return null}
+}
+function viCollectionButton(r){
+ const id=r.id.slice('vi:weapon:'.length),b=make('button','u-action u-vi-collect');
+ b.type='button';
+ function refresh(){const saved=viCollected();b.disabled=saved===null;b.setAttribute('aria-pressed',String(!!saved?.[id]));b.textContent=saved===null?'Collection unavailable':saved[id]?'✓ Collected':'+ Collect';}
+ refresh();b.onclick=()=>{const saved=viCollected();if(saved===null){refresh();return;}if(saved[id])delete saved[id];else saved[id]=true;
+  try{localStorage.setItem(VI_COLLECTION,JSON.stringify({schema:1,collected:saved}));draw();refresh();}catch{b.disabled=true;b.textContent='Collection unavailable';}
+ };return b;
 }
 function toggleOwned(r,which){
  if(!r.key)return false;
@@ -190,7 +206,7 @@ function card(r){const node=make('article','u-card');node.append(artwork(r));con
  if(r.kind==='character'&&r.id.startsWith('character:')&&WORLD_CODES.has(r.scope))actions.append(link('Open character profile',characterHref(r)));
  if(r.kind==='vehicle'||r.kind==='weapon'){const target=galleryHref(r);if(target)actions.append(link(r.kind==='vehicle'?'Vehicle gallery':'Open Armory',target));}
  if(r.kind==='vehicle'||r.kind==='weapon'){const cmp=make('button','u-action u-muted-action',compare.some(x=>x.id===r.id)?'✓ Selected':'+ Compare');cmp.type='button';cmp.setAttribute('aria-pressed',String(compare.some(x=>x.id===r.id)));cmp.disabled=compare.length>=3&&!compare.some(x=>x.id===r.id);if(cmp.disabled)cmp.textContent='Compare limit reached';cmp.onclick=()=>selectCompare(r);actions.append(cmp)}
- body.append(actions);if(r.kind==='character'&&r.imageCredit&&r.imageCredit.startsWith('https://')){const credit=link('Portrait source ↗',r.imageCredit);credit.className='u-portrait-source';body.append(credit)}node.append(body);return node}
+ if(r.id.startsWith('vi:weapon:'))actions.append(viCollectionButton(r));body.append(actions);if(r.kind==='character'&&r.imageCredit&&r.imageCredit.startsWith('https://')){const credit=link('Portrait source ↗',r.imageCredit);credit.className='u-portrait-source';body.append(credit)}node.append(body);return node}
 function syncURL(){
  const url=new URL(location.href);
  const options=[
@@ -229,11 +245,12 @@ function actionsFor(r,box){
  if(r.kind==='character'&&r.id.startsWith('character:')&&WORLD_CODES.has(r.scope))box.append(link('Open character profile',characterHref(r)));
  if(r.kind==='animal'||r.kind==='character'){const classics={'GTA III':'map-hub.html?game=iii','GTA Vice City':'map-hub.html?game=vc','GTA San Andreas':'atlas-sa.html','GTA IV':'atlas-iv.html','GTA Vice City Stories':'map-hub.html?game=vcs','GTA Liberty City Stories':'map-hub.html?game=lcs','GTA Chinatown Wars':'map-hub.html?game=ctw','GTA The Lost and Damned':'map-hub.html?game=tlad','GTA The Ballad of Gay Tony':'map-hub.html?game=tbogt'};box.append(link('Explore correct world map',r.scope==='vi'?'atlas-vi.html':r.scope==='online'?'atlas-online.html':r.scope==='classic'?(classics[r.game]||'maps.html'):'atlas.html'));}
  if(r.kind==='character'){if(r.sourceUrl&&r.sourceUrl.startsWith('https://'))box.append(link('Source ↗',r.sourceUrl));if(r.creditsUrl&&r.creditsUrl.startsWith('https://www.rockstargames.com/'))box.append(link('Rockstar cast credits ↗',r.creditsUrl));if(r.imageCredit)box.append(link('Artwork credits ↗',r.imageCredit));}else box.append(link('Sources & credits',r.scope==='vi'&&r.kind==='weapon'?'atlas-credits.html#vi-armory-visuals':'atlas-credits.html#universe-visuals'));
+ if(r.id.startsWith('vi:weapon:'))box.append(viCollectionButton(r));
  if(r.key){const state=own();for(const [key,word] of [['owned','Mark owned'],['wishlist','Wishlist']]){const b=make('button','u-action',state?.[key]?.[r.key]?'✓ '+word:word);b.type='button';b.onclick=()=>{if(toggleOwned(r,key))details(r,false);else alert('Collection save unavailable or unreadable; no data was overwritten. Open the vehicle gallery and use Export collection for a recovery copy.');};box.append(b)}}
 }
 function details(r,updateURL){const dialog=$('recordDialog'),area=$('detailContent');area.replaceChildren();const hero=make('div','u-detail-hero');hero.append(artwork(r));const copy=make('div');copy.append(make('p','u-eyebrow',(LABELS[r.kind]||'Reference')+' / '+world(r.scope)),Object.assign(make('h2','',r.name),{id:'detailTitle'}),make('p','u-detail-desc',r.summary||'Curated reference record.'));hero.append(copy);area.append(hero);
  const list=make('dl','u-facts');field(list,'Record type',LABELS[r.kind]||'Reference');field(list,'Game / scope',r.game||world(r.scope));field(list,'Class or group',r.group);if(r.brand)field(list,'Brand / manufacturer',r.brand);if(r.region)field(list,'Setting / habitat',r.region);if(r.total!==null&&r.total!==undefined)field(list,'Collection total',r.total);field(list,'Verification',r.verification);if(r.kind==='vehicle')field(list,'Price / top speed',r.attributes?.price??null);if(r.kind==='weapon')field(list,'Damage / ammo',r.attributes?.damage??null);if(r.kind==='character'){if(r.attributes?.performer)field(list,'Credited performer(s)',r.attributes.performer);if(r.attributes?.affiliation)field(list,'Officially described connections',r.attributes.affiliation);}if(r.scope==='vi')field(list,'Source distinction',isUnverified(r)?'Provisional research; locations, spawns and exact performance remain unverified.':'This specific entry has an official published reference; exact locations, stats and collectible placement are not implied.');area.append(list);
- const actions=make('div','u-detail-actions');actionsFor(r,actions);area.append(actions);if(updateURL){const url=new URL(location.href);url.searchParams.set('item',r.id);history.replaceState(null,'',url)}if(dialog.showModal)dialog.showModal();}
+ const actions=make('div','u-detail-actions');actionsFor(r,actions);area.append(actions);if(updateURL){const url=new URL(location.href);url.searchParams.set('item',r.id);history.replaceState(null,'',url)}if(dialog.showModal&&!dialog.open)dialog.showModal();}
 function selectCompare(r){const idx=compare.findIndex(x=>x.id===r.id);if(idx>=0)compare.splice(idx,1);else if(compare.length<3)compare.push(r);draw()}
 function showCompare(){if(compare.length<2)return;const area=$('compareContent');area.replaceChildren();for(const r of compare){const col=make('section','u-compare-col');col.append(artwork(r),make('h3','',r.name),make('p','',world(r.scope)));const dl=make('dl','u-facts');field(dl,'Type',LABELS[r.kind]);field(dl,'Category',r.group);field(dl,'Verification',r.verification);field(dl,'Price',r.attributes?.price??null);col.append(dl);area.append(col)}$('compareDialog').showModal()}
 async function loadJSON(url){
@@ -269,6 +286,7 @@ async function init(){const args=new URLSearchParams(location.search);kind=MODE=
  $('filterGroup').addEventListener('change',e=>{group=e.target.value;page=0;draw()});$('sortBy').addEventListener('change',e=>{order=e.target.value;draw()});$('researchOnly').addEventListener('change',e=>{researchOnly=e.target.checked;page=0;draw()});
  $('gridView').onclick=()=>{view='grid';draw()};$('listView').onclick=()=>{view='list';draw()};$('clearFilters').onclick=()=>{kind=DEFAULT_KIND;game=DEFAULT_GAME;group='all';query='';researchOnly=false;page=0;order='name';$('universeSearch').value='';paramsKind.value=kind;$('filterGame').value=game;$('researchOnly').checked=false;$('sortBy').value='name';updateGroups();draw()};
  $('prevRecords').onclick=()=>{page--;draw();$('results').scrollIntoView({block:'start'})};$('nextRecords').onclick=()=>{page++;draw();$('results').scrollIntoView({block:'start'})};
+ window.addEventListener('storage',e=>{if(e.key===VI_COLLECTION||e.key===STORE||e.key===null)draw()});
  $('resetCompare').onclick=()=>{compare=[];draw()};$('openCompare').onclick=showCompare;
  for(const d of [$('recordDialog'),$('compareDialog')])d.addEventListener('close',()=>{if(d.id==='recordDialog'){const url=new URL(location.href);url.searchParams.delete('item');history.replaceState(null,'',url)}});
  draw();const id=args.get('item');if(id){const found=all.find(x=>x.id===id);if(found)details(found,false)}
