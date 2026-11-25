@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import {divisions,validReleaseAsset,selectFinalVisual} from './release-policy.mjs';
-const good={world:'v-online',division:'road',model:'ellie',kind:'model-specific-glb',identity:'verified',assetPath:'assets/forge/ellie.glb',sha256:'a'.repeat(64),sourceRevision:'fixture',license:'fixture',attribution:'fixture',rightsReviewed:true,visualAccepted:true,mobilePassed:true,desktopPassed:true,controlsPassed:true,materialAuditPassed:true};
+import {divisions,validReleaseAsset,validOptionMapping,validCustomizationCoverage,selectFinalVisual} from './release-policy.mjs';
+const good={world:'v-online',division:'road',model:'ellie',kind:'model-specific-glb',identity:'verified',assetPath:'assets/forge/ellie.glb',sha256:'a'.repeat(64),sourceRevision:'fixture',license:'fixture',attribution:'fixture',rightsReviewed:true,visualAccepted:true,mobilePassed:true,desktopPassed:true,controlsPassed:true,materialAuditPassed:true,customizationMode:'collection-only',optionMappings:[]};
 assert.equal(validReleaseAsset(good),true);
 for(const key of ['rightsReviewed','visualAccepted','mobilePassed','desktopPassed','controlsPassed','materialAuditPassed','sourceRevision','license','attribution','sha256','assetPath','model'])assert.equal(validReleaseAsset({...good,[key]:null}),false,key);
 for(const kind of ['procedural','generic-glb','concept-study'])assert.equal(validReleaseAsset({...good,kind}),false);
@@ -10,3 +10,26 @@ for(const world of ['v-story','v-online','vi'])for(const division of divisions)a
 for(const model of ['wedge','fastback','supercar','supercar-balanced','formula','__proto__'])assert.equal(selectFinalVisual('v-online',model,'road').mode,'reference');
 assert.equal(selectFinalVisual('v-online','ellie','road').mode,'reference','fixture cannot populate accepted registry');
 console.log('PASS final Forge visual quality policy across seven divisions and three game scopes');
+
+const option={category:'engine',optionId:'engine-3',evidence:'source fixture',reviewed:true,method:'nonvisual'};
+const fixed={...good,customizationMode:'fixed-model',optionMappings:[option]};
+assert.equal(validReleaseAsset(fixed),true,'Complete fixed assembly may have performance-only upgrades');
+const paint={category:'respray',optionId:'red',evidence:'source fixture',reviewed:true,method:'material',materialNames:['paint_body']};
+assert.equal(validReleaseAsset({...fixed,optionMappings:[option,paint]}),true);
+const bumper={category:'bumper',optionId:'sport',evidence:'source fixture',reviewed:true,method:'mesh-toggle',nodeNames:['bumper_stock','bumper_sport']};
+const assembly={...bumper,method:'assembly',materialNames:['trim']};
+const variant={category:'conversion',optionId:'custom',evidence:'source fixture',reviewed:true,method:'whole-model',variantPath:'assets/forge/ellie_custom.glb',variantSha256:'b'.repeat(64),variantIdentityVerified:true,variantRightsReviewed:true,variantVisualAccepted:true,variantMobilePassed:true,variantDesktopPassed:true};
+for(const map of [bumper,assembly,variant])assert.equal(validReleaseAsset({...good,customizationMode:'documented-options',optionMappings:[map]}),true);
+assert.equal(validReleaseAsset({...fixed,optionMappings:[bumper]}),false);
+assert.equal(validReleaseAsset({...good,optionMappings:[option]}),false);
+assert.equal(validReleaseAsset({...fixed,optionMappings:[option,option]}),false);
+assert.equal(validOptionMapping({...bumper,nodeNames:[]},good),false);
+assert.equal(validOptionMapping({...paint,materialNames:['paint_body','paint_body']},good),false);
+assert.equal(validOptionMapping({...option,nodeNames:['imaginary_engine']},good),false);
+assert.equal(validOptionMapping({...variant,variantRightsReviewed:false},good),false);
+assert.equal(validOptionMapping({...variant,variantPath:good.assetPath},good),false);
+assert.equal(validOptionMapping({...variant,variantSha256:'unknown'},good),false);
+assert.equal(validCustomizationCoverage({...fixed,optionMappings:[{...option,reviewed:false}]}),false);
+assert.equal(validReleaseAsset({...good,customizationMode:undefined}),false);
+console.log('PASS whole fixed assemblies, material changes, nonvisual upgrades, interchangeable parts and complete-model variants; unverified mappings rejected');
+
