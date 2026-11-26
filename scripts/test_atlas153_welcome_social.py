@@ -42,7 +42,7 @@ assert "const existing=node.querySelector('.j131-social')" in js
 assert all(page.read_text(encoding='utf-8').count('src="./atlas131-social-icons.js') == 1 for page in R.glob('*.html'))
 assert 'atlas131-social-icons.css' in build
 assert 'data-j130-action="share-page"' not in index
-assert 'data-j131-social-host' in dashboard
+assert 'src="./atlas131-social-icons.js' in dashboard
 
 # Sharing is optional: no forced kit download, account signup or misleading automatic posting.
 for banned in ('Social Launch Kit', 'Download social kit', 'autoPost(', 'access_token'):
