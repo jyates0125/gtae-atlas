@@ -125,7 +125,7 @@ const ROTATION_PERIOD_MS=86400000, ROTATION_REFRESH_MS=600000, ROTATION_STATUS_M
 // known categories are discovered on the next reset check, not endlessly polled.
 const INITIAL_PUBLISHED_GROUPS=['gun-van','shipwreck','street-dealers','cayo-chests'];
 function expectedRotationGroups(snapshot){
- return [...new Set([...INITIAL_PUBLISHED_GROUPS,...Object.keys(snapshot?.rotations||{}),...safeMainlandCatalog(snapshot?.catalog).map(r=>r.activityId)])].filter(id=>BY_ID[id]?.kind==='rotation');
+ return [...new Set([...INITIAL_PUBLISHED_GROUPS,...(Array.isArray(snapshot?.supportedGroups)?snapshot.supportedGroups:[]),...Object.keys(snapshot?.rotations||{}),...safeMainlandCatalog(snapshot?.catalog).map(r=>r.activityId)])].filter(id=>BY_ID[id]?.kind==='rotation');
 }
 function rotationRefreshDue(lastAttempt,snapshot,now=Date.now(),onlyIds=null){
  if(!lastAttempt||now<lastAttempt)return true;
@@ -163,6 +163,7 @@ async function refreshPublishedRotations(fetcher,previous,{force=false,onlyIds=n
  publicPending=(async()=>{
   try{
    const next=await loadPublishedRotations(fetcher,'./data/online-rotation-current.json?update=1',snapshot,now);
+   next.supportedGroups=expectedRotationGroups({...next,supportedGroups:[...expectedRotationGroups(snapshot),...expectedRotationGroups(next)]});
    storePublicRotationCache({lastAttempt:now,snapshot:next});return next;
   }catch{return snapshot}
  })();
@@ -300,6 +301,7 @@ function mergePublishedRotations(snapshots,now=Date.now()){
  // corrections take precedence over cached and bundled records.
  const catalog=[],catalogCounts={};for(const snapshot of snapshots)for(const row of safeMainlandCatalog(snapshot?.catalog)){if(catalog.some(r=>r.id===row.id)||(catalogCounts[row.activityId]||0)>=(BY_ID[row.activityId].pool||100))continue;catalog.push(row);catalogCounts[row.activityId]=(catalogCounts[row.activityId]||0)+1;}
  const accepted=safeMainlandCatalog(catalog);if(accepted.length)out.catalog=accepted;
+ const supported=[...new Set(snapshots.flatMap(s=>Array.isArray(s?.supportedGroups)?s.supportedGroups:[]).filter(id=>BY_ID[id]?.kind==='rotation'))];if(supported.length)out.supportedGroups=supported;
  return out;
 }
 // The public feed is a set of independently validated categories. One broken
@@ -309,6 +311,7 @@ function safePublishedSnapshot(s){
  if(!s||s.schema!==1||!s.rotations||typeof s.rotations!=='object'||Array.isArray(s.rotations))throw Error('Expected schema 1 with a rotations object.');
  const result={schema:1,rotations:{}};
  const catalog=safeMainlandCatalog(s.catalog);if(catalog.length)result.catalog=catalog;
+ if(Array.isArray(s.supportedGroups)){const ids=[...new Set(s.supportedGroups.filter(id=>typeof id==='string'&&BY_ID[id]?.kind==='rotation'))];if(ids.length)result.supportedGroups=ids;}
  for(const [id,value] of Object.entries(s.rotations)){
   if(BY_ID[id]?.kind!=='rotation')continue;
   try{Object.assign(result.rotations,safeSnapshot({schema:1,rotations:{[id]:value}}).rotations)}catch{/* isolate invalid category */}
