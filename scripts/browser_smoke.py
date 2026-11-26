@@ -892,7 +892,7 @@ async def smoke():
                                     await pg.locator('.j132-close').click()
                                     if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot close')
                             if not failures and path=='maps.html':
-                                dest='./atlas97-journey.html'
+                                dest='./atlas-dashboard.html'
                                 start=pg.locator('a.j99-start-link[href="'+dest+'"]')
                                 if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
                             if not failures and path=='index.html':
