@@ -68,6 +68,23 @@ for(const r of VI_RULES)r.mode='vi';
 RULES.push(...STORY_RULES,...VI_RULES);
 const BY_ID=Object.fromEntries(RULES.map(r=>[r.id,r]));
 function rulesForMode(mode){return RULES.filter(r=>r.mode===mode)};
+// Individually researched game-world XY facts. This is a partial reference
+// catalog, not the full spawn pool or a dated active selection.
+const MAINLAND_ROTATION_REFERENCES=Object.freeze([
+ ['gun-van-procopio-beach','gun-van','Gun Van · Procopio Beach',1465.6,6553.7,'gun-van',false],
+ ['shipwreck-noose-rock-arch','shipwreck','Shipwreck · Southeast of NOOSE HQ',2820.2,-759.2,'shipwreck',false],
+ ['street-dealer-sandy-shores-1986-3787','street-dealers','Street Dealer · Sandy Shores',1986.3,3786.8,'street-dealers',true],
+ ['street-dealer-del-perro-1561-413','street-dealers','Street Dealer · Del Perro',-1560.6,-413.3,'street-dealers',true],
+ ['street-dealer-paleto-bay-156-6657','street-dealers','Street Dealer · Paleto Bay',156.2,6656.5,'street-dealers',true]
+].map(([id,activityId,name,x,y,slug,uncertain])=>Object.freeze({
+ id:'jura-online-'+id,rotationMarkerId:id,activityId,name,x,y,game:'5',scope:'online',category:activityId==='shipwreck'?'collectible':'activity',
+ source:'GTAMap.io · individual factual coordinate reference',sourceUrl:'https://gtamap.io/gta-online/daily/'+slug+'/',uncertain,
+ confidence:uncertain?'forecast coordinate · current selection unconfirmed':'source-reported position · not gameplay verified',
+ evidence:'November 26, 2026 research; GTA Boss district comparison; no bulk catalog imported',
+ detail:'Partial spawn reference catalog. Presence requires a separate complete, valid dated selection; not a full pool or guaranteed spawn.'
+})));
+function mainlandRotationReferences(mode){return mode==='online'?MAINLAND_ROTATION_REFERENCES:[];}
+
 const PREREQS=[['spray-can','Collected a spray can'],['metal-detector','Found Metal Detector'],['cayo-intel','Can access Gather Intel'],['auto-shop','Own an Auto Shop'],['owned-vehicle','Own the delivery vehicle'],['story-submarine','Unlocked suitable submersible'],['story-epsilon','Reached the appropriate Epsilon progression'],['story-progress','Relevant story progression unlocked']];
 const EVENT_NAMES={halloween:'Halloween event confirmed active',peyote:'Peyote event confirmed active',holiday:'Holiday event confirmed active'};
 function validIso(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(s)&&Number.isFinite(Date.parse(s));}
@@ -230,5 +247,5 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
  // snapshot or last successful fetch. Newer observation timestamps still win.
  return mergePublishedRotations([responses[1].status==='fulfilled'?responses[1].value:null,previous,responses[0].status==='fulfilled'?responses[0].value:null],now);
 }
-return{activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{mainlandRotationReferences,activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
