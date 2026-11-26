@@ -84,7 +84,7 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  // A dashboard deep link selects only the requested Online rule. Retry after async map sources arrive.
  const requested=new URLSearchParams(location.search).get('event');
  const requestedRule=mapPage&&groups().find(r=>r.id===requested);
- if(requestedRule){category='all';search.value=requestedRule.name;let attempts=0;const tryFocus=()=>{
+ if(requestedRule){const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true;category='all';search.value=requestedRule.name;let attempts=0;const tryFocus=()=>{
   if(++attempts>12)return;
   const bridge=window.JuraAtlasEventLocations;
   if(bridge&&bridge.count(requestedRule)>0){locate(requestedRule);return}
