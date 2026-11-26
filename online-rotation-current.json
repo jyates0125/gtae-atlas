@@ -12,9 +12,50 @@
       "confidence": "calculated_unconfirmed_in_game",
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles",
       "sourceObservation": "November 26 dated GTAMap.io selections 3 and 14 match bundled land and underwater XYZ exactly; GTA Boss November 26 lists its own #2 land and #2 underwater, matching landmarks in its full catalog. Not gameplay verified."
+    },
+    "gun-van": {
+      "activeIds": [
+        "gun-van-procopio-beach"
+      ],
+      "checkedAtUtc": "2026-11-26T15:53:49Z",
+      "validUntilUtc": "2026-11-27T06:00:00Z",
+      "source": "https://gtamap.io/gta-online/daily/gun-van/",
+      "confidence": "calculated_unconfirmed_in_game",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "sourceObservation": "November 26 current source comparison: Procopio Beach current location agrees with GTA Boss; coordinates match existing production marker. Not gameplay verified."
+    },
+    "shipwreck": {
+      "activeIds": [
+        "shipwreck-noose-rock-arch"
+      ],
+      "checkedAtUtc": "2026-11-26T15:53:49Z",
+      "validUntilUtc": "2026-11-27T06:00:00Z",
+      "source": "https://gtamap.io/gta-online/daily/shipwreck/",
+      "confidence": "calculated_unconfirmed_in_game",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "sourceObservation": "November 26 current source comparison: Rock arch southeast of NOOSE HQ; GTA Boss reports the broader Palomino Highlands South area. Existing production coordinate. Not gameplay verified."
+    },
+    "street-dealers": {
+      "activeIds": [
+        "street-dealer-sandy-shores-1986-3787",
+        "street-dealer-del-perro-1561-413",
+        "street-dealer-paleto-bay-156-6657"
+      ],
+      "checkedAtUtc": "2026-11-26T15:53:49Z",
+      "validUntilUtc": "2026-11-27T07:00:00Z",
+      "source": "https://gtamap.io/gta-online/daily/street-dealers/",
+      "confidence": "calculated_unconfirmed_in_game",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "sourceObservation": "November 26 current source comparison: All three districts agree with GTA Boss; current coordinate references match production. Use conservative 07 UTC expiry boundary; reset time sources disagree. Not gameplay verified."
     }
   },
-  "checkedAtUtc": "2026-11-26T06:00:00Z",
+  "checkedAtUtc": "2026-11-26T15:53:49Z",
   "status": "partially-populated-calculated-not-gameplay-verified",
-  "notes": "Nov 26 Cayo selection validated against production bundled coordinates and kinds; other categories not asserted."
+  "notes": "Nov 26: Cayo selection retained; three mainland groups match existing production reference IDs and dated independent source reports. Remaining categories not asserted.",
+  "supportedGroups": [
+    "cayo-chests",
+    "gun-van",
+    "shipwreck",
+    "street-dealers"
+  ]
 }
