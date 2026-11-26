@@ -72,13 +72,19 @@ const PREREQS=[['spray-can','Collected a spray can'],['metal-detector','Found Me
 const EVENT_NAMES={halloween:'Halloween event confirmed active',peyote:'Peyote event confirmed active',holiday:'Holiday event confirmed active'};
 function validIso(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(s)&&Number.isFinite(Date.parse(s));}
 function nextReset(now,utcHour){const d=new Date(now);d.setUTCHours(utcHour,0,0,0);if(d.getTime()<=now)d.setUTCDate(d.getUTCDate()+1);return d.getTime();}
+function validCayoIds(ids){
+ if(!Array.isArray(ids)||ids.length!==2)return false;
+ const numbers=ids.map(id=>/^cayo-chest-(?:[1-9]|1[0-9])$/.test(String(id))?Number(String(id).slice(11)):NaN);
+ return numbers.some(n=>n>=1&&n<=10)&&numbers.some(n=>n>=11&&n<=19);
+}
 function rotationFeed(snapshot,id,now=Date.now()){
  const s=snapshot?.rotations?.[id];if(!s||!Array.isArray(s.activeIds)||!validIso(s.checkedAtUtc)||!validIso(s.validUntilUtc))return null;
  const checked=Date.parse(s.checkedAtUtc),end=Date.parse(s.validUntilUtc);
  if(checked>now+5*60e3||end<=now||end<=checked||checked<now-48*3600e3||s.activeIds.length>200||s.activeIds.some(v=>!/^[-a-z0-9_:]{1,80}$/i.test(String(v))))return null;
- const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length>rule.today))return null;
+ const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length!==rule.today))return null;
+ if(id==='cayo-chests'&&!validCayoIds(s.activeIds))return null;
  // Daily selections cannot survive the activity's next UTC reset, even when an imported file says otherwise.
- if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6))return null;
+ if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6)||nextReset(checked,rule.reset??6)!==nextReset(now,rule.reset??6))return null;
  if(!s.activeIds.length||new Set(s.activeIds.map(String)).size!==s.activeIds.length)return null;
  return{active:new Set(s.activeIds.map(String)),checkedAtUtc:s.checkedAtUtc,validUntilUtc:s.validUntilUtc,source:typeof s.source==='string'?s.source.slice(0,200):'Imported snapshot',confidence:'user-imported; independently unverified'};
 }
