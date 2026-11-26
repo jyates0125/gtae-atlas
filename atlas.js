@@ -200,7 +200,7 @@ function records(){
  const custom=personal.filter(p=>p.game===game&&(game==='6'||(p.scope||'story')===mode));
  const packed=packRecords.filter(p=>p.game===game&&(game==='6'||p.scope==='both'||p.scope===mode));
  const permitted=Object.entries(sourceRecords).filter(([id])=>sourceEnabled[id]&&window.JuraSources?.SOURCES[id]?.game===game&&(game==='6'||mode==='story'||window.JuraSources.SOURCES[id].scope==='both')).flatMap(([,rows])=>rows);
- const rotationReferences=game==='5'&&mode==='online'?(window.JuraConditions?.mainlandRotationReferences?.(mode)||[]):[];
+ const rotationReferences=game==='5'&&mode==='online'?(window.JuraConditions?.mainlandRotationReferences?.(mode,reviewedRotationSnapshot)||[]):[];
  const combined=[...(researchOn()?datasets[game]:[]),...rotationReferences,...permitted,...packed,...custom];
  const scoped=game==='5'&&mode==='story'?combined.filter(storyPermitted):
   game==='5'&&mode==='online'?combined.filter(r=>r.scope!=='story'):
