@@ -27,7 +27,7 @@
   'atlas-iv.html':['IV Landmarks','atlas98-landmarks.html?game=4'],
   'atlas81-hq.html':['Story Map','atlas.html'],
   'atlas93-garage.html':['Vehicles','atlas90-vehicles5.html'],
-  'atlas90-vehicles5.html':['My Garage','atlas93-garage.html'],
+  'atlas90-vehicles5.html':['My Garage','atlas-forge-collections.html'],
   'atlas90-weapons.html':['Online Map','atlas-online.html'],
   'atlas87-daily.html':['Online Map','atlas-online.html'],
   'heists.html':['Cayo Map','heist-cayo-perico.html']

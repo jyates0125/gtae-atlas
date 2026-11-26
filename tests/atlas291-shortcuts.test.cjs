@@ -15,7 +15,7 @@ assert.equal((section.match(/<nav\b/g) || []).length, 1);
 assert.equal((section.match(/<\/nav>/g) || []).length, 1);
 assert.equal((section.match(/<a href=/g) || []).length, 13, 'Keep all 13 shortcut links');
 assert.ok(!section.startsWith('<details open'), 'Start collapsed');
-for (const dest of ['maps.html', 'heists.html', 'atlas93-garage.html', 'atlas-research.html']) {
+for (const dest of ['maps.html', 'heists.html', 'atlas-forge-collections.html', 'atlas-research.html']) {
   assert.ok(section.includes('href="./' + dest + '"'), 'Missing ' + dest);
 }
 assert.ok(html.includes('href="./atlas291-shortcuts.css?v=291"'));

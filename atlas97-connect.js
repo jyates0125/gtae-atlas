@@ -13,7 +13,7 @@ const legacy={
  'hunt-hq.html':['Hunt HQ','atlas81-hq.html'],
  'leonida-hq.html':['Leonida HQ','atlas-vi.html']
 };
-const resume={'atlas.html':1,'atlas-online.html':1,'atlas-vi.html':1,'atlas-research.html':1,'atlas-cayo.html':1,'heist-cayo-perico.html':1,'atlas93-garage.html':1,'atlas81-hq.html':1,'heists.html':1,'atlas90-vehicles5.html':1,'atlas90-vehicles6.html':1,'atlas87-daily.html':1,'atlas93-dispatch.html':1};
+const resume={'atlas.html':1,'atlas-online.html':1,'atlas-vi.html':1,'atlas-research.html':1,'atlas-cayo.html':1,'heist-cayo-perico.html':1,'atlas93-garage.html':1,'atlas-forge-collections.html':1,'atlas81-hq.html':1,'heists.html':1,'atlas90-vehicles5.html':1,'atlas90-vehicles6.html':1,'atlas87-daily.html':1,'atlas93-dispatch.html':1};
 function addMenu(){const menu=document.getElementById('j89-menu');if(!menu||menu.querySelector('[data-j97-start]'))return;
  const a=n('a','j97-menu-start','✦ Start here · Choose your adventure');a.href='./atlas97-journey.html';a.dataset.j97Start='true';
  const top=menu.querySelector('.j89-panel-head');if(top)top.insertAdjacentElement('afterend',a);else menu.prepend(a);
@@ -34,7 +34,7 @@ function oldPage(){const hint=legacy[page];if(!hint||document.getElementById('j9
 function catalog(){if(page!=='atlas-catalog.html')return;
  const main=document.querySelector('main');if(!main||main.querySelector('.j97-catalog-bridge'))return;
  const box=n('section','j97-catalog-bridge');box.append(n('b','','Looking for pictured vehicles or your actual saved garage?'));
- for(const [label,href] of [['◆ Browse GTA V vehicles','atlas90-vehicles5.html'],['▣ My Garage & parking','atlas93-garage.html']]){const a=n('a','',label);a.href='./'+href;box.append(a)}main.prepend(box);
+ for(const [label,href] of [['◆ Browse GTA V vehicles','atlas90-vehicles5.html'],['▣ My Garage & parking','atlas-forge-collections.html']]){const a=n('a','',label);a.href='./'+href;box.append(a)}main.prepend(box);
 }
 function init(){if(resume[page]){try{localStorage.setItem('team-jura-atlas97-last-workspace-v1',JSON.stringify({page,visitedAt:new Date().toISOString()}))}catch{}}
  addMenu();onHomepage();oldPage();catalog();}

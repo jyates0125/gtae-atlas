@@ -7,7 +7,7 @@ function values(o){return o&&typeof o==='object'&&!Array.isArray(o)?Object.value
 const PATHS={
  'atlas.html':'GTA V Story map','atlas-online.html':'GTA Online map',
  'atlas-vi.html':'GTA VI Explorer','atlas-research.html':'Leonida Research desk',
- 'atlas-cayo.html':'Cayo Perico planner','heist-cayo-perico.html':'Cayo Perico island','atlas93-garage.html':'My Garage',
+ 'atlas-cayo.html':'Cayo Perico planner','heist-cayo-perico.html':'Cayo Perico island','atlas93-garage.html':'Garage management','atlas-forge-collections.html':'My Garage',
  'atlas81-hq.html':'Collection HQ','heists.html':'Heist HQ',
  'atlas90-vehicles5.html':'GTA V vehicle gallery','atlas90-vehicles6.html':'GTA VI vehicle gallery',
  'atlas87-daily.html':'Daily Intelligence','atlas93-dispatch.html':'Atlas Dispatch'

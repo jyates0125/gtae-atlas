@@ -8,7 +8,7 @@ css = (ROOT/"atlas127-catalog-brand.css").read_text(encoding="utf-8")
 js = (ROOT/"atlas-catalog.js").read_text(encoding="utf-8")
 assert 'class="j112-unified j113-workspace j127-catalog"' in page
 assert './atlas127-catalog-brand.css?v=127' in page
-for target in ("atlas-database.html","atlas90-vehicles5.html","atlas93-garage.html","atlas-credits.html"):
+for target in ("atlas-database.html","atlas90-vehicles5.html","atlas-forge-collections.html","atlas-credits.html"):
     assert 'href="./'+target+'"' in page and (ROOT/target).exists(), target
 for control in ("dbSearch","dbType","dbScope","dbOwned","dbCards","dbExport","dbImport","dbCsv",
                 "dbGarageForm","dbVehicleForm","dbFile","dbGarageSelect","dbVehicles","dbGarages",
