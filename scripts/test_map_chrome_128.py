@@ -17,7 +17,7 @@ for page,(mode,art) in worlds.items():
  assert './atlas128-map-chrome.css?v=128' in html,page
  for id in ("sidebar","search","legend","allOn","allOff","atlasCanvas","atlasFilterDrawer","districtFilter","dataStatus"):
   assert 'id="'+id+'"' in html,(page,id)
- assert html.count('./atlas.js?v=375')==1,page
+ assert html.count('./atlas.js?v=4721')==1,page
  assert 'url(\'./art/'+art+'\')' in css,art
  assert (ROOT/"art"/art).is_file(),art
  assert "atlas117-world-brand.css?v=117" in html
