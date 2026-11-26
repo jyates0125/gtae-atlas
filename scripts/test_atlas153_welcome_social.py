@@ -11,11 +11,12 @@ js = read('atlas131-social-icons.js')
 build = read('scripts/build-cloudflare.cjs')
 css = read('atlas130-launch.css')
 
-# Owner-approved public FB poster is first; the complete interactive dashboard is a distinct second step.
+# Preserve approved public artwork; current gameplay starts directly on the homepage.
 assert 'j130-public-hero j132-poster-welcome' in index
 assert index.index('j132-poster-welcome') < index.index('id="featuredGrid"')
 assert "url('./art/atlas97-proposed-loki-scaly-hero.webp')" in css
-assert 'href="./atlas-dashboard.html">✦ Enter Atlas · Continue as Guest' in index
+assert 'href="#featured">✦ Choose your game · Play as guest' in index
+assert 'href="./atlas-dashboard.html"' not in index
 assert 'href="./atlas-account.html">◎ Guest Progress &amp; Backups' in index
 assert 'id="publicEntryNote"' in index and 'No download or account is required' in index
 assert 'id="featuredGrid"' in dashboard
@@ -46,4 +47,4 @@ assert index.index('data-j130-action="share-page"') > index.index('id="featuredG
 # Sharing is optional: no forced kit download, account signup or misleading automatic posting.
 for banned in ('Social Launch Kit', 'Download social kit', 'autoPost(', 'access_token'):
     assert banned not in index, banned
-print('PASS Atlas 15.3: approved poster → guest dashboard / honest account; footer-only sharing; no launch-kit regression')
+print('PASS Atlas 15.3: approved poster → direct guest game selection / honest account; footer-only sharing; no launch-kit regression')
