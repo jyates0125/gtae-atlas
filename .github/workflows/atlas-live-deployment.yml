@@ -1,0 +1,39 @@
+name: GTAE - verify live Cloudflare deployment
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [development]
+    paths:
+      - 'scripts/verify_live_deployment.py'
+      - 'scripts/test_verify_live_deployment.py'
+      - '.github/workflows/atlas-live-deployment.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: atlas-live-verification-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify-public-site:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate probe behavior offline
+        run: python scripts/test_verify_live_deployment.py
+      - name: Verify anonymous live production and exact deployed revision
+        shell: bash
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = push ]; then
+            expected="$GITHUB_SHA"
+          else
+            expected="$(git ls-remote https://github.com/jyates0125/gtae-atlas.git refs/heads/main | cut -f1)"
+          fi
+          python scripts/verify_live_deployment.py "$expected" --attempts 6
