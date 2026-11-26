@@ -39,6 +39,10 @@ try:
                     today=page.locator(".topbar .j4726-today-link")
                     expect(today).to_be_visible()
                     expect(today).to_have_attribute("href","./atlas-online.html#j393-online-activity-slot")
+                    expect(page.locator("a.action.primary[href='#featured']")).to_be_visible()
+                    assert page.locator("#featuredGrid").count()==1
+                    expect(page.locator("a[href='./atlas-dashboard.html']")).to_have_count(0)
+                    assert page.locator("#featuredGrid").evaluate("(el)=>!!(el.compareDocumentPosition(document.querySelector('.j4709-entry')) & Node.DOCUMENT_POSITION_FOLLOWING)")
                 menu=page.locator("#j132-nav-toggle")
                 expect(menu).to_have_count(1)
                 menu.click()
@@ -60,6 +64,15 @@ try:
                     assert "./atlas-online.html#j393-online-activity-slot" not in hrefs
                 directory.locator("summary").click()
                 assert directory.evaluate("(node)=>node.open")
+                legacy=("atlas-dashboard.html","atlas97-journey.html","atlas93-dispatch.html","atlas-catalog.html","atlas8-preview.html","command-center.html","directory.html","discovery.html","explorer.html","legacy-explorer.html","leonida-hq.html","online-explorer.html")
+                for old in legacy:
+                    expect(drawer.locator(f'a[href="./{old}"]')).to_have_count(0)
+                if path=="index.html":
+                    drawer.locator("#j132-search").fill("dashboard")
+                    expect(drawer.locator('a[href="./index.html"]')).to_have_count(1)
+                    expect(drawer.locator('a[href="./atlas-dashboard.html"]')).to_have_count(0)
+                    drawer.locator("#j132-search").fill("legacy archive")
+                    expect(drawer.locator('a[href="./atlas-dashboard.html"]')).to_have_count(1)
                 drawer.locator("#j132-search").fill("garage")
                 expect(drawer.locator('a[href="./atlas-forge-collections.html"]')).to_have_count(1)
                 drawer.locator("#j132-search").fill("GTA VI")
