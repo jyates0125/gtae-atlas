@@ -121,7 +121,53 @@ const EVENT_NAMES={halloween:'Halloween event confirmed active',peyote:'Peyote e
 function validIso(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(s)&&Number.isFinite(Date.parse(s));}
 // All currently supported globally dated selections rotate every real 24h.
 const ROTATION_PERIOD_MS=86400000, ROTATION_REFRESH_MS=600000, ROTATION_STATUS_MS=60000;
-function rotationRefreshDue(lastAttempt,now=Date.now()){return !lastAttempt||now-lastAttempt>=ROTATION_REFRESH_MS||now<lastAttempt;}
+// Only supported/published groups keep the retry loop alive. The remaining
+// known categories are discovered on the next reset check, not endlessly polled.
+const INITIAL_PUBLISHED_GROUPS=['gun-van','shipwreck','street-dealers','cayo-chests'];
+function expectedRotationGroups(snapshot){
+ return [...new Set([...INITIAL_PUBLISHED_GROUPS,...Object.keys(snapshot?.rotations||{}),...safeMainlandCatalog(snapshot?.catalog).map(r=>r.activityId)])].filter(id=>BY_ID[id]?.kind==='rotation');
+}
+function rotationRefreshDue(lastAttempt,snapshot,now=Date.now(),onlyIds=null){
+ if(!lastAttempt||now<lastAttempt)return true;
+ const ids=onlyIds||expectedRotationGroups(snapshot);
+ // Check every relevant UTC boundary once, even if the source was contacted
+ // shortly before reset; never trust an expired selection.
+ const resetRules=onlyIds?ids.map(id=>BY_ID[id]).filter(Boolean):RULES.filter(r=>r.kind==='rotation');
+ if(resetRules.some(r=>nextReset(lastAttempt,r.reset??6)<=now))return true;
+ if(ids.every(id=>rotationFeed(snapshot,id,now)))return false;
+ return now-lastAttempt>=ROTATION_REFRESH_MS;
+}
+const ROTATION_CACHE_KEY='jura-public-rotation-cache-v1';
+let publicCache={lastAttempt:0,snapshot:{schema:1,rotations:{}}},publicPending=null;
+function publicRotationCache(now=Date.now()){
+ try{
+  const raw=JSON.parse(globalThis.localStorage?.getItem(ROTATION_CACHE_KEY)||'null');
+  if(raw&&Number.isFinite(raw.lastAttempt)&&raw.lastAttempt>=publicCache.lastAttempt&&raw.lastAttempt<=now&&raw.snapshot){
+   const snap=safePublishedSnapshot(raw.snapshot);
+   publicCache={lastAttempt:raw.lastAttempt,snapshot:mergePublishedRotations([snap,publicCache.snapshot],now)};
+  }
+ }catch{}
+ return {lastAttempt:publicCache.lastAttempt,snapshot:mergePublishedRotations([publicCache.snapshot],now)};
+}
+function storePublicRotationCache(value){
+ publicCache=value;
+ try{globalThis.localStorage?.setItem(ROTATION_CACHE_KEY,JSON.stringify(value))}catch{}
+}
+// Shared within a page (map + sidebar), persisted public-only across navigation.
+// A force action deliberately bypasses the automatic retry interval.
+async function refreshPublishedRotations(fetcher,previous,{force=false,onlyIds=null,now=Date.now()}={}){
+ if(publicPending)return publicPending;
+ const cached=publicRotationCache(now),snapshot=mergePublishedRotations([cached.snapshot,previous],now);
+ if(!force&&!rotationRefreshDue(cached.lastAttempt,snapshot,now,onlyIds))return snapshot;
+ storePublicRotationCache({lastAttempt:now,snapshot});
+ publicPending=(async()=>{
+  try{
+   const next=await loadPublishedRotations(fetcher,'./data/online-rotation-current.json?update=1',snapshot,now);
+   storePublicRotationCache({lastAttempt:now,snapshot:next});return next;
+  }catch{return snapshot}
+ })();
+ try{return await publicPending}finally{publicPending=null}
+}
 function nextReset(now,utcHour){const d=new Date(now);d.setUTCHours(utcHour,0,0,0);if(d.getTime()<=now)d.setUTCDate(d.getUTCDate()+1);return d.getTime();}
 function validCayoIds(ids){
  if(!Array.isArray(ids)||ids.length!==2)return false;
@@ -286,5 +332,5 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
  // snapshot or last successful fetch. Newer observation timestamps still win.
  return mergePublishedRotations([responses[1].status==='fulfilled'?responses[1].value:null,previous,responses[0].status==='fulfilled'?responses[0].value:null],now);
 }
-return{ROTATION_PERIOD_MS,ROTATION_REFRESH_MS,ROTATION_STATUS_MS,rotationRefreshDue,mainlandRotationReferences,safeMainlandCatalog,activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{ROTATION_PERIOD_MS,ROTATION_REFRESH_MS,ROTATION_STATUS_MS,ROTATION_CACHE_KEY,rotationRefreshDue,expectedRotationGroups,refreshPublishedRotations,mainlandRotationReferences,safeMainlandCatalog,activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
