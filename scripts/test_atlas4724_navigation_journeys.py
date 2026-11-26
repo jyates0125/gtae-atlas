@@ -34,6 +34,11 @@ try:
                     advanced.locator("summary").click()
                     expect(page.locator("#loadPack")).to_be_hidden()
                     expect(page.locator("#atlasFilterDrawer")).to_have_count(1)
+                if path=="index.html":
+                    expect(page.locator(".topbar .menu-toggle")).to_have_count(0)
+                    today=page.locator(".topbar .j4726-today-link")
+                    expect(today).to_be_visible()
+                    expect(today).to_have_attribute("href","./atlas-online.html#j393-online-activity-slot")
                 menu=page.locator("#j132-nav-toggle")
                 expect(menu).to_have_count(1)
                 menu.click()
