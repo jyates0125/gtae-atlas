@@ -12,7 +12,7 @@ const ORDER=[
  ['atlas168-heist-guides.js','168','j168-heist-guide'],
  ['atlas169-heist-views.js','169','j169-views'],
  ['atlas171-cayo-board.js','171','j171-cayo-board'],
- ['atlas180-cayo-flagship.js','383','j180-shell'],
+ ['atlas180-cayo-flagship.js','4722','j180-shell'],
  ['atlas181-cayo-hotspots.js','191','j181-hotspots'],
  ['atlas185-cayo-polish.js','392','j185-polish'],
  ['atlas186-cayo-route.js','191','j186-route'],

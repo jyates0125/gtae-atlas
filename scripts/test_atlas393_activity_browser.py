@@ -32,6 +32,10 @@ try:
             expect(switch).to_have_attribute("aria-pressed","true")
             zones=lambda:page.evaluate("window.JuraAtlasEventLocations.zones().length")
             assert zones()==0
+            # Real partial catalog stays online-only and unconfirmed without a dated feed.
+            for rule_id, count in [('gun-van',1),('shipwreck',1),('street-dealers',3)]:
+                page.wait_for_function("([id,n])=>window.JuraAtlasEventLocations.count({id})===n",arg=[rule_id,count])
+                assert page.evaluate("(id)=>window.JuraAtlasEventLocations.availableCount({id})",rule_id)==0
             card.locator('.j395-guide summary').click()
             expect(card.locator('.j395-guide')).to_contain_text('At least 16 minutes in session')
             expect(card.locator('.j395-guide')).to_contain_text('In-game time 01:00–06:00')

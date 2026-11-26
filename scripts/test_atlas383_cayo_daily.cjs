@@ -7,8 +7,8 @@ assert.equal(current.land,8);assert.equal(current.underwater,14);assert.equal(cu
 assert.equal(current.windowEndUTC,'2026-11-24T06:00:00.000Z');assert.equal(current.confidence,'calculated_unconfirmed_in_game');
 for(const ids of [['cayo-chest-1','cayo-chest-2'],['cayo-chest-11','cayo-chest-12'],['cayo-chest-0','cayo-chest-14'],['cayo-chest-1','cayo-chest-20'],['cayo-chest-1'],['8','14']]){assert.equal(C.cayoChestSelection(pack(ids),now),null);assert.deepEqual(C.mergePublishedRotations([pack(ids)],now),{schema:1,rotations:{}})}
 assert.equal(C.cayoChestSelection(s,end),null);assert.deepEqual(C.mergePublishedRotations([s],end),{schema:1,rotations:{}});
-const f=fs.readFileSync('atlas180-cayo-flagship.js','utf8');assert.match(f,/C\.loadPublishedRotations/);assert.match(f,/personal\?\.day===key/);assert.match(f,/lastDailyAttempt<300000/);assert.match(f,/teamjura-cayo-daily-choice-v1/);
-assert.match(fs.readFileSync('heist-cayo-perico.html','utf8'),/atlas-conditions\.js\?v=383/);
+const f=fs.readFileSync('atlas180-cayo-flagship.js','utf8');assert.match(f,/C\.refreshPublishedRotations/);assert.match(f,/personal\?\.day===key/);assert.match(f,/onlyIds:\['cayo-chests'\]/);assert.match(f,/teamjura-cayo-daily-choice-v1/);
+assert.match(fs.readFileSync('heist-cayo-perico.html','utf8'),/atlas-conditions\.js\?v=4722/);
 console.log('PASS Cayo published rotation, exact island IDs, one land/one underwater, expiry and guest override');
 
 // Availability must not convert missing evidence into a false inactive claim.

@@ -68,17 +68,121 @@ for(const r of VI_RULES)r.mode='vi';
 RULES.push(...STORY_RULES,...VI_RULES);
 const BY_ID=Object.fromEntries(RULES.map(r=>[r.id,r]));
 function rulesForMode(mode){return RULES.filter(r=>r.mode===mode)};
+// Individually researched game-world XY facts. This is a partial reference
+// catalog, not the full spawn pool or a dated active selection.
+const MAINLAND_ROTATION_REFERENCES=Object.freeze([
+ ['gun-van-procopio-beach','gun-van','Gun Van · Procopio Beach',1465.6,6553.7,'gun-van',false],
+ ['shipwreck-noose-rock-arch','shipwreck','Shipwreck · Southeast of NOOSE HQ',2820.2,-759.2,'shipwreck',false],
+ ['street-dealer-sandy-shores-1986-3787','street-dealers','Street Dealer · Sandy Shores',1986.3,3786.8,'street-dealers',false],
+ ['street-dealer-del-perro-1561-413','street-dealers','Street Dealer · Del Perro',-1560.6,-413.3,'street-dealers',false],
+ ['street-dealer-paleto-bay-156-6657','street-dealers','Street Dealer · Paleto Bay',156.2,6656.5,'street-dealers',false]
+].map(([id,activityId,name,x,y,slug,uncertain])=>Object.freeze({
+ id:'jura-online-'+id,rotationMarkerId:id,activityId,name,x,y,game:'5',scope:'online',category:activityId==='shipwreck'?'collectible':'activity',
+ source:'GTAMap.io · individual factual coordinate reference',sourceUrl:'https://gtamap.io/gta-online/daily/'+slug+'/',uncertain,
+ confidence:uncertain?'forecast coordinate · current selection unconfirmed':'source-reported position · not gameplay verified',
+ evidence:'November 26, 2026 research; GTA Boss district comparison; no bulk catalog imported',
+ detail:'Partial spawn reference catalog. Presence requires a separate complete, valid dated selection; not a full pool or guaranteed spawn.'
+})));
+// Data-only publisher may extend the catalog. This is a separate public
+// reference collection: coordinates never establish active availability.
+const MAINLAND_IDS=new Set(['gun-van','shipwreck','street-dealers','smoke-products','ls-tags','hidden-caches','junk-skydives']);
+function safeCatalogSource(value){
+ try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&['gtadb.net','gtadb.org','map.gtadb.org','gtaweb.eu','gtamap.io','www.gtaboss.gg','gtaboss.gg','gtamap.net','thegta.wiki','www.rockstargames.com','support.rockstargames.com'].includes(u.hostname)&&u.href.length<=500?u.href:null;}catch{return null}
+}
+function safeMainlandCatalog(raw){
+ if(!Array.isArray(raw)||raw.length>300)return [];
+ const seen=new Set(),out=[],counts={};
+ for(const row of raw){
+  if(!row||!MAINLAND_IDS.has(row.activityId)||typeof row.id!=='string'||!/^[-a-z0-9]{3,78}$/.test(row.id)||typeof row.name!=='string'||!row.name.trim()||row.name.length>120||!Number.isFinite(row.x)||!Number.isFinite(row.y)||Math.abs(row.x)>16384||Math.abs(row.y)>16384)continue;
+  const seed=MAINLAND_ROTATION_REFERENCES.find(r=>r.rotationMarkerId===row.id);
+  if(seed&&(seed.activityId!==row.activityId||Math.hypot(seed.x-row.x,seed.y-row.y)>2))continue;
+  if(!seed&&!row.id.startsWith(row.activityId+'-'))continue;
+  const sourceUrl=safeCatalogSource(row.sourceUrl),comparisonSource=safeCatalogSource(row.comparisonSource);
+  if(!sourceUrl||!comparisonSource||new URL(sourceUrl).hostname===new URL(comparisonSource).hostname||row.confidence!=='source-crosschecked'||seen.has(row.id))continue;
+  const count=(counts[row.activityId]||0)+1;
+  if(count>(BY_ID[row.activityId].pool||100))continue;
+  counts[row.activityId]=count;seen.add(row.id);
+  out.push({id:row.id,activityId:row.activityId,name:row.name.trim(),x:row.x,y:row.y,sourceUrl,comparisonSource,confidence:row.confidence});
+ }
+ return out;
+}
+function mainlandRotationReferences(mode,snapshot){
+ if(mode!=='online')return [];
+ const byId=new Map(MAINLAND_ROTATION_REFERENCES.map(r=>[r.rotationMarkerId,r]));
+ for(const row of safeMainlandCatalog(snapshot?.catalog)){
+  if(byId.has(row.id))continue;
+  byId.set(row.id,{id:'jura-online-'+row.id,rotationMarkerId:row.id,activityId:row.activityId,name:row.name,x:row.x,y:row.y,game:'5',scope:'online',category:row.activityId==='shipwreck'||row.activityId==='hidden-caches'?'collectible':'activity',source:'Public rotation catalog · source-crosschecked',sourceUrl:row.sourceUrl,comparisonSource:row.comparisonSource,uncertain:false,confidence:'source-crosschecked · not gameplay verified',detail:'Possible location; a complete dated selection is required for active availability.'});
+ }
+ return [...byId.values()];
+}
+
 const PREREQS=[['spray-can','Collected a spray can'],['metal-detector','Found Metal Detector'],['cayo-intel','Can access Gather Intel'],['auto-shop','Own an Auto Shop'],['owned-vehicle','Own the delivery vehicle'],['story-submarine','Unlocked suitable submersible'],['story-epsilon','Reached the appropriate Epsilon progression'],['story-progress','Relevant story progression unlocked']];
 const EVENT_NAMES={halloween:'Halloween event confirmed active',peyote:'Peyote event confirmed active',holiday:'Holiday event confirmed active'};
 function validIso(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(s)&&Number.isFinite(Date.parse(s));}
+// All currently supported globally dated selections rotate every real 24h.
+const ROTATION_PERIOD_MS=86400000, ROTATION_REFRESH_MS=600000, ROTATION_STATUS_MS=60000;
+// Only supported/published groups keep the retry loop alive. The remaining
+// known categories are discovered on the next reset check, not endlessly polled.
+const INITIAL_PUBLISHED_GROUPS=['gun-van','shipwreck','street-dealers','cayo-chests'];
+function expectedRotationGroups(snapshot){
+ return [...new Set([...INITIAL_PUBLISHED_GROUPS,...(Array.isArray(snapshot?.supportedGroups)?snapshot.supportedGroups:[]),...Object.keys(snapshot?.rotations||{}),...safeMainlandCatalog(snapshot?.catalog).map(r=>r.activityId)])].filter(id=>BY_ID[id]?.kind==='rotation');
+}
+function rotationRefreshDue(lastAttempt,snapshot,now=Date.now(),onlyIds=null){
+ if(!lastAttempt||now<lastAttempt)return true;
+ const ids=onlyIds||expectedRotationGroups(snapshot);
+ // Check every relevant UTC boundary once, even if the source was contacted
+ // shortly before reset; never trust an expired selection.
+ const resetRules=onlyIds?ids.map(id=>BY_ID[id]).filter(Boolean):RULES.filter(r=>r.kind==='rotation');
+ if(resetRules.some(r=>nextReset(lastAttempt,r.reset??6)<=now))return true;
+ if(ids.every(id=>rotationFeed(snapshot,id,now)))return false;
+ return now-lastAttempt>=ROTATION_REFRESH_MS;
+}
+const ROTATION_CACHE_KEY='jura-public-rotation-cache-v1';
+let publicCache={lastAttempt:0,snapshot:{schema:1,rotations:{}}},publicPending=null;
+function publicRotationCache(now=Date.now()){
+ try{
+  const raw=JSON.parse(globalThis.localStorage?.getItem(ROTATION_CACHE_KEY)||'null');
+  if(raw&&Number.isFinite(raw.lastAttempt)&&raw.lastAttempt>=publicCache.lastAttempt&&raw.lastAttempt<=now&&raw.snapshot){
+   const snap=safePublishedSnapshot(raw.snapshot);
+   publicCache={lastAttempt:raw.lastAttempt,snapshot:mergePublishedRotations([snap,publicCache.snapshot],now)};
+  }
+ }catch{}
+ return {lastAttempt:publicCache.lastAttempt,snapshot:mergePublishedRotations([publicCache.snapshot],now)};
+}
+function storePublicRotationCache(value){
+ publicCache=value;
+ try{globalThis.localStorage?.setItem(ROTATION_CACHE_KEY,JSON.stringify(value))}catch{}
+}
+// Shared within a page (map + sidebar), persisted public-only across navigation.
+// A force action deliberately bypasses the automatic retry interval.
+async function refreshPublishedRotations(fetcher,previous,{force=false,onlyIds=null,now=Date.now()}={}){
+ if(publicPending)return publicPending;
+ const cached=publicRotationCache(now),snapshot=mergePublishedRotations([cached.snapshot,previous],now);
+ if(!force&&!rotationRefreshDue(cached.lastAttempt,snapshot,now,onlyIds))return snapshot;
+ storePublicRotationCache({lastAttempt:now,snapshot});
+ publicPending=(async()=>{
+  try{
+   const next=await loadPublishedRotations(fetcher,'./data/online-rotation-current.json?update=1',snapshot,now);
+   next.supportedGroups=expectedRotationGroups({...next,supportedGroups:[...expectedRotationGroups(snapshot),...expectedRotationGroups(next)]});
+   storePublicRotationCache({lastAttempt:now,snapshot:next});return next;
+  }catch{return snapshot}
+ })();
+ try{return await publicPending}finally{publicPending=null}
+}
 function nextReset(now,utcHour){const d=new Date(now);d.setUTCHours(utcHour,0,0,0);if(d.getTime()<=now)d.setUTCDate(d.getUTCDate()+1);return d.getTime();}
+function validCayoIds(ids){
+ if(!Array.isArray(ids)||ids.length!==2)return false;
+ const numbers=ids.map(id=>/^cayo-chest-(?:[1-9]|1[0-9])$/.test(String(id))?Number(String(id).slice(11)):NaN);
+ return numbers.some(n=>n>=1&&n<=10)&&numbers.some(n=>n>=11&&n<=19);
+}
 function rotationFeed(snapshot,id,now=Date.now()){
  const s=snapshot?.rotations?.[id];if(!s||!Array.isArray(s.activeIds)||!validIso(s.checkedAtUtc)||!validIso(s.validUntilUtc))return null;
  const checked=Date.parse(s.checkedAtUtc),end=Date.parse(s.validUntilUtc);
  if(checked>now+5*60e3||end<=now||end<=checked||checked<now-48*3600e3||s.activeIds.length>200||s.activeIds.some(v=>!/^[-a-z0-9_:]{1,80}$/i.test(String(v))))return null;
- const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length>rule.today))return null;
+ const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length!==rule.today))return null;
+ if(id==='cayo-chests'&&!validCayoIds(s.activeIds))return null;
  // Daily selections cannot survive the activity's next UTC reset, even when an imported file says otherwise.
- if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6))return null;
+ if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6)||nextReset(checked,rule.reset??6)!==nextReset(now,rule.reset??6))return null;
  if(!s.activeIds.length||new Set(s.activeIds.map(String)).size!==s.activeIds.length)return null;
  return{active:new Set(s.activeIds.map(String)),checkedAtUtc:s.checkedAtUtc,validUntilUtc:s.validUntilUtc,source:typeof s.source==='string'?s.source.slice(0,200):'Imported snapshot',confidence:'user-imported; independently unverified'};
 }
@@ -188,12 +292,31 @@ function mergePublishedRotations(snapshots,now=Date.now()){
   let chosen=null;
   for(const snapshot of snapshots){
    const candidate=snapshot?.rotations?.[rule.id],valid=rotationFeed(snapshot,rule.id,now);
-   if(!valid||candidate.activeIds.length!==rule.today||(rule.id==='cayo-chests'&&!cayoChestSelection(snapshot,now)))continue;
+   if(!valid||Date.parse(candidate.checkedAtUtc)>now||candidate.activeIds.length!==rule.today||(rule.id==='cayo-chests'&&!cayoChestSelection(snapshot,now)))continue;
    if(!chosen||Date.parse(candidate.checkedAtUtc)>Date.parse(chosen.checkedAtUtc))chosen=candidate;
   }
   if(chosen)out.rotations[rule.id]=chosen;
  }
+ // A catalog survives daily expiry; only the selected IDs expire. Remote
+ // corrections take precedence over cached and bundled records.
+ const catalog=[],catalogCounts={};for(const snapshot of snapshots)for(const row of safeMainlandCatalog(snapshot?.catalog)){if(catalog.some(r=>r.id===row.id)||(catalogCounts[row.activityId]||0)>=(BY_ID[row.activityId].pool||100))continue;catalog.push(row);catalogCounts[row.activityId]=(catalogCounts[row.activityId]||0)+1;}
+ const accepted=safeMainlandCatalog(catalog);if(accepted.length)out.catalog=accepted;
+ const supported=[...new Set(snapshots.flatMap(s=>Array.isArray(s?.supportedGroups)?s.supportedGroups:[]).filter(id=>BY_ID[id]?.kind==='rotation'))];if(supported.length)out.supportedGroups=supported;
  return out;
+}
+// The public feed is a set of independently validated categories. One broken
+// category must not discard an otherwise usable current selection. Keep the
+// strict safeSnapshot contract for explicit user imports.
+function safePublishedSnapshot(s){
+ if(!s||s.schema!==1||!s.rotations||typeof s.rotations!=='object'||Array.isArray(s.rotations))throw Error('Expected schema 1 with a rotations object.');
+ const result={schema:1,rotations:{}};
+ const catalog=safeMainlandCatalog(s.catalog);if(catalog.length)result.catalog=catalog;
+ if(Array.isArray(s.supportedGroups)){const ids=[...new Set(s.supportedGroups.filter(id=>typeof id==='string'&&BY_ID[id]?.kind==='rotation'))];if(ids.length)result.supportedGroups=ids;}
+ for(const [id,value] of Object.entries(s.rotations)){
+  if(BY_ID[id]?.kind!=='rotation')continue;
+  try{Object.assign(result.rotations,safeSnapshot({schema:1,rotations:{[id]:value}}).rotations)}catch{/* isolate invalid category */}
+ }
+ return result;
 }
 async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-current.json?update=1',previous={schema:1,rotations:{}},now=Date.now()){
  async function read(url){
@@ -203,12 +326,14 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
    const r=await fetcher(url,{cache:'no-cache',credentials:'omit',referrerPolicy:'no-referrer',...(controller?{signal:controller.signal}:{})});
    if(!r.ok)throw Error('Daily source unavailable');
    const body=await r.text();if(body.length>100000)throw Error('Daily feed too large');
-   return safeSnapshot(JSON.parse(body));
+   return safePublishedSnapshot(JSON.parse(body));
   }finally{if(timer!==null)clearTimeout(timer)}
  }
  const responses=await Promise.allSettled([read(localURL),read(PUBLISHED_ROTATIONS_URL)]);
  if(responses.every(r=>r.status==='rejected'))throw Error('Both daily feeds unavailable');
- return mergePublishedRotations([...responses.filter(r=>r.status==='fulfilled').map(r=>r.value),previous],now);
+ // A correction published for the same reset timestamp beats a bundled
+ // snapshot or last successful fetch. Newer observation timestamps still win.
+ return mergePublishedRotations([responses[1].status==='fulfilled'?responses[1].value:null,previous,responses[0].status==='fulfilled'?responses[0].value:null],now);
 }
-return{activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{ROTATION_PERIOD_MS,ROTATION_REFRESH_MS,ROTATION_STATUS_MS,ROTATION_CACHE_KEY,rotationRefreshDue,expectedRotationGroups,refreshPublishedRotations,mainlandRotationReferences,safeMainlandCatalog,activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });

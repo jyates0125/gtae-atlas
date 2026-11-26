@@ -5,6 +5,7 @@ import threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit, parse_qs
 from playwright.sync_api import sync_playwright, expect
 
 root = Path(os.environ.get("ATLAS_TEST_ROOT", "public")).resolve()
@@ -12,6 +13,17 @@ roster = [r for r in json.loads((root / "data/atlas-universe-profiles.json").rea
 local_roster = [r for r in roster if r.get("conceptPortrait")]
 assert len(roster) == 98 and len(local_roster) >= 13
 assert all(r.get("preferConceptPortrait") is True for r in local_roster)
+vi_catalog = json.loads((root / 'data/atlas192-vi-weapons.json').read_text(encoding='utf-8'))
+assert vi_catalog['schema'] == 1 and vi_catalog['scope'] == 'vi' and vi_catalog['kind'] == 'weapon'
+vi_weapon_ids = [r['id'] for r in vi_catalog['records']]
+assert len(vi_weapon_ids) >= 187 and len(set(vi_weapon_ids)) == len(vi_weapon_ids), 'Expanded VI weapon catalog must retain at least 187 unique records'
+assert {'girardi-es9', 'klose-k17'} <= set(vi_weapon_ids)
+
+def verify_vi_weapon_cards(page):
+    cards = page.locator('.viweapon-card')
+    expect(cards).to_have_count(len(vi_weapon_ids), timeout=15000)
+    rendered = cards.evaluate_all('cards => cards.map(card => card.dataset.weaponId)')
+    assert sorted(rendered) == sorted(vi_weapon_ids), 'Every catalog ID must render exactly once'
 
 def decode_portrait(locator, identity):
     # Native lazy loading and layout may not yet have scheduled an image request.
@@ -142,12 +154,25 @@ with AtlasTestServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as
             record.get_by_role("button",name="View details").click()
             expect(page.locator("#recordDialog").get_by_role("link",name="Open character profile")).to_have_attribute("href",profile_link.get_attribute("href"))
             page.locator("#recordDialog").get_by_role("button",name="Close details").click()
-            for world, url in (("vi","atlas90-weapons6.html"),("online","atlas90-weapons.html?world=online")):
+            for world, url in (("vi","atlas90-weapons6.html"),("online","atlas90-weapons.html")):
                 page.goto(base + "atlas-database.html?kind=weapon&game=" + world, wait_until="domcontentloaded")
                 page.get_by_role("button",name="View details").first.click()
                 detail = page.locator("#recordDialog")
-                expect(detail).to_have_accessible_name(detail.locator("h2").inner_text())
-                expect(detail.locator(f'a[href="./{url}"]')).to_be_visible()
+                name = detail.locator("h2").inner_text()
+                expect(detail).to_have_accessible_name(name)
+                # The current Universe-to-Armory contract includes a record-specific q.
+                # Assert the destination and scope, not the superseded bare URL.
+                armory = detail.locator(f'a[href^="./{url}?"]')
+                expect(armory).to_have_count(1)
+                expect(armory).to_be_visible()
+                target = urlsplit(armory.get_attribute("href"))
+                query = parse_qs(target.query)
+                assert target.path == "./" + url and not target.netloc
+                assert len(query.get("q", [])) == 1 and query["q"][0].strip()
+                if world == "vi":
+                    assert query["q"][0] == name and "world" not in query
+                else:
+                    assert query.get("world") == ["online"]
                 detail.evaluate("d => d.scrollTop = d.scrollHeight")
                 expect(detail.get_by_role("button", name="Close details")).to_be_in_viewport()
                 detail.get_by_role("button", name="Close details").click()
@@ -345,10 +370,10 @@ with AtlasTestServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as
             expect(evidence_rows.locator("a").first).to_have_attribute("href","./atlas81-hq.html?collection=online-snowmen#collections")
             # Restore Leonida-only notes with exact IDs, leaving conflicting local notes intact.
             page.goto(base+"atlas90-weapons6.html",wait_until="domcontentloaded")
-            expect(page.locator(".viweapon-card")).to_have_count(65,timeout=15000)
+            verify_vi_weapon_cards(page)
             page.evaluate("""() => localStorage.setItem('teamjura-vi-weapon-notes-v1',JSON.stringify({schema:1,notes:{'girardi-es9':'Current note'},seen:{'girardi-es9':true}}))""")
             page.reload(wait_until="domcontentloaded")
-            expect(page.locator(".viweapon-card")).to_have_count(65,timeout=15000)
+            verify_vi_weapon_cards(page)
             vi_backup={"schema":1,"app":"team-jura-vi-weapons","scope":"vi","notes":{"girardi-es9":"Do not replace","klose-k17":"Restored field note","unknown":"Ignore"},"seen":{"girardi-es9":False,"klose-k17":True}}
             page.locator("#viWeaponImport").set_input_files({"name":"vi-notes.json","mimeType":"application/json","buffer":json.dumps(vi_backup).encode()})
             expect(page.locator("#viWeaponStatus")).to_contain_text("2 note/review value(s) restored; 1 note conflict(s) kept; 1 invalid entries skipped")

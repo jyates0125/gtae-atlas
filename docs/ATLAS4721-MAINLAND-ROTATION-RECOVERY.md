@@ -1,0 +1,26 @@
+# Mainland rotation catalog recovery — November 26, 2026
+
+## Evidence and next action
+GTADB publishes nine calculated categories, but its web snapshot retrieved in this review is dated November 25; the landmark-only bundled JSON is not the activity catalog. The upstream repository requests git-based updates, not production scraping: https://github.com/rolux/gtadb.org/blob/main/readme.md. GTAWeb.eu is a useful behavior/accuracy comparison per owner firsthand use, not a blanket data reuse grant.
+
+The following limited factual location observations are research leads, not a copied spawn-pool database or a production feed. Coordinates in game-world XY, not latitude/longitude. No new live IDs until source-specific data rights and actual map alignment are established.
+
+| Category | Location | XY | Date evidence |
+|---|---|---|---|
+| Gun Van | Procopio Beach | 1465.6, 6553.7 | GTAMap.io Nov 26 06 UTC, GTA Boss current district agrees |
+| Shipwreck | Southeast of NOOSE HQ | 2820.2, -759.2 | GTAMap.io Nov 26 06 UTC, GTA Boss gives broader Palomino Highlands South |
+| Street Dealers | Sandy Shores | 1986.3, 3786.8 | GTAMap.io Nov 25 forecast for Nov 26; GTA Boss current district agrees |
+| Street Dealers | Del Perro | -1560.6, -413.3 | same |
+| Street Dealers | Paleto Bay | 156.2, 6656.5 | same |
+
+Sources: https://gtamap.io/gta-online/daily/gun-van/ ; https://gtamap.io/gta-online/daily/shipwreck/ ; https://gtamap.io/gta-online/daily/street-dealers/ ; https://www.gtaboss.gg/gta-5-online/dailies ; https://gtadb.net/gta-online-map/interactive/ ; https://gtaweb.eu/gtao-map/ .
+
+GTADB dealer reset 07 UTC vs GTAMap.io 06 UTC remains unresolved; keep current rule until evidence. Cayo already published #3/#14 on independent branch, do not overwrite. Catalog priority: documented rights-cleared upstream game coordinate records, stable Atlas IDs independent of source ordering, test unique mapping and scope, then independently publish data-only complete categories. Add all possible records as reference only; active pins require a full dated selection. Do not block already supported categories on missing categories. No bulk extraction of proprietary catalogs.
+
+This follow-up also requires full selection size on personal and published inputs, valid Cayo land/water IDs, and identical reset window at observation and evaluation. It builds on PR #240 to preserve its remote/cache/bundled precedence and asset version updates. No production changes or new active IDs.
+
+## Implementation follow-up
+Five stable Atlas reference IDs now connect to the existing Online search, legend and route eligibility engine; no new active selection published. Fresh Nov 26 GTAMap.io and GTA Boss reports now corroborate all three Street Dealer districts; the stable reference positions are usable when a complete dated selection is published. A documented source lead for independent rotation-index calculation is [ShinyWasabi/GTAO-Bot](https://github.com/ShinyWasabi/GTAO-Bot/tree/8394e090afa584938c8e9a63a55b22e2803a51e0), ISC-licensed software, not a coordinate catalog. Its historical algorithm requires current independent validation; no code or table copied. Full source-cleared pools and native device testing remain open.
+
+### Data-only catalog extension
+The public schema-1 feed may now include optional `catalog` rows with `id`, `activityId`, `name`, finite `x`/`y` game coordinates, `sourceUrl`, `comparisonSource`, and `confidence: source-crosschecked`. Use stable category-prefixed IDs, reuse existing IDs at the same physical spot, and retain previously reviewed catalog rows rather than deleting them at reset. Two distinct approved source hosts and pool bounds are required; record evidence and reuse basis separately. Cayo remains on its own island catalog. Only the dated `rotations` selections expire. GTADB and GTA Wiki specify 07 UTC for Street Dealers; GTAMap.io and GTA Boss publish 06 UTC updates. Keep the general-player 07 UTC validity boundary; do not activate an early forecast. Other seven mainland/island position rules reset at 06 UTC except as separately verified. No production publishing or gameplay verification claimed.

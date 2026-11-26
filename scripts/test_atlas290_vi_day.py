@@ -18,8 +18,8 @@ assert 'Rockstar/Take-Two intellectual property' in credits
 assert "LICENSE-DATA" in credits and 'creativecommons.org/licenses/by/4.0/' in credits
 for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
     html=(R/page).read_text(encoding='utf-8')
-    assert 'atlas.js?v=375' in html, (page,'stale map engine')
-    assert html.count('atlas.js?v=375')==1,page
+    assert 'atlas.js?v=4722' in html, (page,'stale map engine')
+    assert html.count('atlas.js?v=4722')==1,page
 assert 'atlas-sw.js?v=290' in engine
 assert "const LAYERS=" in engine and "'5':[['radar','In-game radar']" in engine
 assert "SHELL='team-jura-atlas-v290-shell'" in (R/'atlas-sw.js').read_text(encoding='utf-8')
