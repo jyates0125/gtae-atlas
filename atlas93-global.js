@@ -6,10 +6,10 @@ function init(){document.body.classList.add('jura93-designed-brand');
  // Existing universal dock is the only sitewide navigation owner; append, don't duplicate.
  if(/^heist-[a-z0-9-]+\.html$/.test(page)){document.body.dataset.j93World='heist';const slug=page.slice(0,-5);document.body.style.setProperty('--j93-banner-image',"url('./art/atlas93-"+slug+".svg')");}
  const worlds={'atlas.html':'story','atlas-online.html':'online','atlas-vi.html':'vi','atlas-cayo.html':'cayo','atlas-sa.html':'sa','atlas-iv.html':'iv','heists.html':'heists'};if(worlds[page])document.body.dataset.j93World=worlds[page];
- const nav=document.getElementById('j89-menu');if(nav){addLink(nav,'◆ My Garage','atlas93-garage.html');addLink(nav,'⚡ Atlas Dispatch','atlas93-dispatch.html');}
+ const nav=document.getElementById('j89-menu');if(nav){addLink(nav,'◆ My Garage','atlas-forge-collections.html');addLink(nav,'⚡ Atlas Dispatch','atlas93-dispatch.html');}
  // Add discoverable shortcuts to existing primary navigation while respecting old links.
  const primary=document.querySelector('header nav:not(#j89-shell)');if(primary&&window.matchMedia('(min-width:1200px)').matches&&!['atlas93-garage.html','atlas93-dispatch.html'].includes(page)){
-  addLink(primary,'◆ Garage','atlas93-garage.html');addLink(primary,'⚡ Dispatch','atlas93-dispatch.html')
+  addLink(primary,'◆ Garage','atlas-forge-collections.html');addLink(primary,'⚡ Dispatch','atlas93-dispatch.html')
  }
  // Legacy version text is a presentation label, not an instruction to revert files.
  const branded=document.querySelectorAll('header .brand,header .mast-title,.sitebar .brand');
@@ -33,7 +33,7 @@ function init(){document.body.classList.add('jura93-designed-brand');
  }
  }
  // Dynamic category landing cards and utility links, without altering collection-engine data.
- const quick=document.querySelector('.j87-tools > div');if(page==='maps.html'&&quick){addLink(quick,'◆ My Garage','atlas93-garage.html');addLink(quick,'⚡ Atlas Dispatch','atlas93-dispatch.html')}
+ const quick=document.querySelector('.j87-tools > div');if(page==='maps.html'&&quick){addLink(quick,'◆ My Garage','atlas-forge-collections.html');addLink(quick,'⚡ Atlas Dispatch','atlas93-dispatch.html')}
  const heistNav=document.querySelector('.sitebar nav');if(/^heist-.+\.html$/.test(page)&&heistNav)addLink(heistNav,'⚡ Dispatch','atlas93-dispatch.html');
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
