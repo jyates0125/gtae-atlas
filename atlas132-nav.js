@@ -13,7 +13,7 @@ const CATEGORIES=[
 const CORE=[
  {title:'CHOOSE YOUR GAME',prefix:'choose',items:[['GTA Online','atlas-online.html'],['GTA V Story','atlas.html'],['GTA VI Story','atlas-vi.html'],['Classic GTA & all 13 maps','maps.html']]},
  {title:'MY STUFF',prefix:'personal',items:[['My Garage','atlas-forge-collections.html'],['My Crew','my-crew.html'],['My Progress & backup','atlas-account.html']]},
- {title:'EXPLORE',prefix:'explore',items:[['Home','index.html'],['Universe database','atlas-database.html'],['Heists & missions','heists.html'],['Guides','guides.html']]}
+ {title:'EXPLORE',prefix:'explore',items:[['Home','atlas-dashboard.html'],['Universe database','atlas-database.html'],['Heists & missions','heists.html'],['Guides','guides.html']]}
 ];
 function currentWorld(){
  const page=location.pathname.split('/').pop(),args=new URLSearchParams(location.search);
@@ -39,9 +39,9 @@ function worldTasks(){
  return {title:{online:'GTA ONLINE',story:'GTA V STORY',vi:'GTA VI STORY'}[scope]+' · YOUR GAME',prefix:'world',items};
 }
 // Retained URLs are intentionally excluded from ordinary navigation and search.
-const LEGACY_ROUTES=new Set(['atlas-dashboard.html','atlas97-journey.html','atlas93-dispatch.html','atlas-catalog.html','atlas8-preview.html','command-center.html','directory.html','discovery.html','explorer.html','legacy-explorer.html','leonida-hq.html','online-explorer.html']);
+const LEGACY_ROUTES=new Set(['atlas97-journey.html','atlas93-dispatch.html','atlas-catalog.html','atlas8-preview.html','command-center.html','directory.html','discovery.html','explorer.html','legacy-explorer.html','leonida-hq.html','online-explorer.html']);
 const isLegacy=url=>LEGACY_ROUTES.has(url.split(/[?#]/)[0]);
-const CURRENT_ALIASES={title:'CURRENT PLAYER WORKSPACES',prefix:'current-alias',items:[['Home','index.html','dashboard'],['All 13 maps','maps.html','start here choose a world discovery directory command center'],['Today’s activities','atlas-online.html#j393-online-activity-slot','dispatch daily intel online explorer'],['Universe database','atlas-database.html','vehicle location catalog'],['GTA VI Story','atlas-vi.html','leonida hq leonida explorer']]};
+const CURRENT_ALIASES={title:'CURRENT PLAYER WORKSPACES',prefix:'current-alias',items:[['Home','atlas-dashboard.html','dashboard'],['All 13 maps','maps.html','start here choose a world discovery directory command center'],['Today’s activities','atlas-online.html#j393-online-activity-slot','dispatch daily intel online explorer'],['Universe database','atlas-database.html','vehicle location catalog'],['GTA VI Story','atlas-vi.html','leonida hq leonida explorer']]};
 const ALL=new Set(CATEGORIES.flatMap(x=>x.items.map(y=>y[1].split(/[?#]/)[0])));
 const safeHref=x=>/^[a-z0-9-]+\.html$/i.test(x);
 const searchText=value=>String(value??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
@@ -62,7 +62,7 @@ function pageLink(a){const l=document.createElement('a');l.href='./'+a[1];l.text
  if(pathnameMatch&&scopedQuery&&armoryMatches)l.setAttribute('aria-current','page');
  return l}
 function build(){
- if(document.querySelector('#j132-nav-toggle'))return;
+ if(document.body.dataset.j4728Welcome==='true'||document.querySelector('#j132-nav-toggle'))return;
  const wrap=document.createElement('div');wrap.className='j132-nav';
  if(/^atlas(?:-online|-vi)?\.html$/i.test(location.pathname.split('/').pop()||''))wrap.classList.add('j132-map-nav');
  wrap.innerHTML='<button id="j132-nav-toggle" type="button" aria-controls="j132-nav-drawer" aria-expanded="false" aria-label="Open GTAE menu">☰ <span>MENU</span></button><aside id="j132-nav-drawer" aria-label="All GTAE navigation" hidden><div class="j132-nav-head"><img src="./art/elario-crest.svg" width="35" height="35" alt=""><div><strong>ELARIO STUDIOS · GTAE</strong><small>GTA EXPLORER · BY TEAM JURA</small></div><button type="button" class="j132-close" aria-label="Close site navigation">✕</button></div><label class="j132-search">Search every page<input type="search" id="j132-search" placeholder="Maps, garages, collectibles, heists..." autocomplete="off"></label><div class="j132-groups" id="j132-groups"></div><p class="j132-nav-tail">Many Crews. One Vision. · Independent GTA fan companion</p></aside>';
