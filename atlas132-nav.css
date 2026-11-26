@@ -103,3 +103,9 @@ body:has(#j132-nav-toggle) #j89-shell{display:none!important}
 /* Three older workspaces apply mobile off-canvas transforms to every aside.
    The current directory is a separate viewport drawer, not their sidebar. */
 #j132-nav-drawer{transform:none!important;transition:none!important}
+
+/* Compact task menu: one game context, primary choices, optional directory. */
+.j4724-primary a{min-height:42px;max-width:100%;overflow-wrap:anywhere;box-sizing:border-box}
+.j4724-all-pages{border-top:1px solid #83578c;margin-top:12px;padding-top:6px}
+.j4724-all-pages>summary{cursor:pointer;color:#ffe3ac;font:800 13px/1.4 system-ui;padding:12px 4px;min-height:44px;box-sizing:border-box}
+.j4724-all-pages>summary:focus-visible{outline:3px solid #ffe49c;outline-offset:2px}
