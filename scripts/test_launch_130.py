@@ -25,9 +25,11 @@ def local_ok(name,source):
  return p
 assert 'class="j98-home j130-home"' in index
 assert 'id="heroTitle"' in index and 'id="featuredGrid"' in index
-assert 'href="./atlas-dashboard.html"' in index
+assert 'href="./atlas-dashboard.html"' not in index, 'No legacy dashboard detour from current homepage'
 assert 'href="./atlas-share.html"' in index
-assert '<a class="j99-start-link" href="./atlas-dashboard.html">' in index
+assert '<a class="j99-start-link" href="./maps.html">' in index
+assert 'href="#featured"' in index
+assert index.index('id="featuredGrid"') < index.index('class="j4709-entry"')
 assert 'href="./atlas-account.html"' in index
 assert 'j132-poster-welcome' in index
 assert 'Many Crews. One Vision.' in index or 'MANY CREWS. ONE VISION.' in index

@@ -24,7 +24,11 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
      page.goto(base+path)
      panel=page.locator('.j4709-entry')
      expect(panel).to_be_visible()
-     assert panel.evaluate("(e)=>{const hero=e.parentElement.querySelector('.j130-public-hero,.j223-hero');return !!hero && Boolean(hero.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING) && !e.previousElementSibling?.matches('.j223-worlds,.j130-worlds')}")
+     assert panel.evaluate("(e)=>{const hero=e.parentElement.querySelector('.j130-public-hero,.j223-hero');return !!hero && Boolean(hero.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)}")
+     if path=='index.html':
+      assert panel.evaluate("(e)=>{const worlds=e.parentElement.querySelector('#featured');return !!worlds && Boolean(worlds.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)}"), 'Game selection must precede Garage and Armory on current home'
+     else:
+      assert not panel.evaluate("(e)=>!!e.previousElementSibling?.matches('.j223-worlds,.j130-worlds')"), 'Retained dashboard collection placement changed'
      for target in ('atlas-forge-collections.html','atlas90-vehicles5.html?world=story','atlas90-vehicles5.html?world=online','atlas90-vehicles6.html','atlas90-weapons.html?world=story','atlas90-weapons.html?world=online','atlas90-weapons6.html'):
       expect(panel.locator(f'a[href="./{target}"]')).to_have_count(1)
      for img in panel.locator('img').all():

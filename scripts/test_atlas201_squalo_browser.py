@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Browser QA: Squalo profile, craft art, gallery deep-link, persistence and mobile width."""
-import os, threading, json
+import os, threading, json, urllib.request, urllib.error, time
 from functools import partial
 from pathlib import Path
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
@@ -134,9 +134,17 @@ try:
    if width==390:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+8'),'Studio handoff causes phone horizontal overflow'
    # Forge 26.5: test the actual served collection hub and cross-world deep links.
-   identity=page.request.get(base+'atlas-build-identity.json')
-   assert identity.ok,'Published build identity missing'
-   assert identity.json()['schema']==1
+   # Check the same locally served HTTP identity independently of Playwright's
+   # request transport, with a bounded retry for transient loopback refusal.
+   for attempt in range(3):
+    try:
+     with urllib.request.urlopen(base+'atlas-build-identity.json',timeout=5) as identity:
+      assert identity.status==200,'Published build identity missing'
+      assert json.load(identity)['schema']==1
+     break
+    except urllib.error.URLError:
+     if attempt==2: raise
+     time.sleep(0.3*(attempt+1))
    page.goto(base+'atlas-vehicle-configurator.html?model=jetmax',wait_until='domcontentloaded')
    expect(page.locator('#concept3d')).to_have_attribute('data-forge-fidelity','reference-only',timeout=20000)
    page.locator('#buildName').fill('QA Marina Edition')

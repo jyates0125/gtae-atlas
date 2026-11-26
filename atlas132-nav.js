@@ -38,6 +38,10 @@ function worldTasks(){
  if(scope==='vi')items.push(['Community research','atlas-research.html']);
  return {title:{online:'GTA ONLINE',story:'GTA V STORY',vi:'GTA VI STORY'}[scope]+' · YOUR GAME',prefix:'world',items};
 }
+// Retained URLs are intentionally excluded from ordinary navigation and search.
+const LEGACY_ROUTES=new Set(['atlas-dashboard.html','atlas97-journey.html','atlas93-dispatch.html','atlas-catalog.html','atlas8-preview.html','command-center.html','directory.html','discovery.html','explorer.html','legacy-explorer.html','leonida-hq.html','online-explorer.html']);
+const isLegacy=url=>LEGACY_ROUTES.has(url.split(/[?#]/)[0]);
+const CURRENT_ALIASES={title:'CURRENT PLAYER WORKSPACES',prefix:'current-alias',items:[['Home','index.html','dashboard'],['All 13 maps','maps.html','start here choose a world discovery directory command center'],['Today’s activities','atlas-online.html#j393-online-activity-slot','dispatch daily intel online explorer'],['Universe database','atlas-database.html','vehicle location catalog'],['GTA VI Story','atlas-vi.html','leonida hq leonida explorer']]};
 const ALL=new Set(CATEGORIES.flatMap(x=>x.items.map(y=>y[1].split(/[?#]/)[0])));
 const safeHref=x=>/^[a-z0-9-]+\.html$/i.test(x);
 const searchText=value=>String(value??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
@@ -71,11 +75,13 @@ function build(){
   const contextual=worldTasks();
   if(!q){for(const group of [...(contextual?[contextual]:[]),...CORE]){const section=document.createElement('section');section.className='j132-group j4724-primary';const title=document.createElement('h3');title.textContent=group.title;section.append(title);for(const data of group.items){if(list.querySelectorAll('a').length&&[...list.querySelectorAll('a')].some(a=>a.getAttribute('href')==='./'+data[1]))continue;section.append(pageLink(data));}list.append(section);}const details=document.createElement('details');details.className='j4724-all-pages';details.open=directoryOpen;const summary=document.createElement('summary');summary.textContent='All pages & advanced tools';details.append(summary);details.addEventListener('toggle',()=>{directoryOpen=details.open});list.append(details);}
   const destination=q?list:list.querySelector('.j4724-all-pages');
-  const groups=q?[...(contextual?[contextual]:[]),...CORE,...allCategories]:allCategories;
+  const groups=q?[...(contextual?[contextual]:[]),...CORE,CURRENT_ALIASES,...allCategories]:allCategories;
+  const explicitArchive=q==='legacy archive';
   const seen=new Set(q?[]:[...list.querySelectorAll('.j4724-primary a')].map(a=>a.getAttribute('href').slice(2)));
   for(const group of groups){
     if(!q&&group.prefix==='characters')continue; // Search-only results, not an extra 36-item navigation dump.
     const matches=group.items.filter(([label,url,keywords,record])=>{
+      if(isLegacy(url))return explicitArchive;
       if(group.prefix!=='characters')return (label+' '+url+' '+(keywords||'')).toLocaleLowerCase().includes(q);
       const s=searchText(q);
       if(!s||!record)return false;
@@ -86,10 +92,10 @@ function build(){
     const distinct=matches.filter(item=>{if(seen.has(item[1]))return false;seen.add(item[1]);return true});
     if(!distinct.length)continue;
     const section=document.createElement('section');section.className='j132-group';
-    const title=document.createElement('h3');title.textContent=group.title;section.append(title);
+    const title=document.createElement('h3');title.textContent=explicitArchive?'LEGACY ARCHIVE · RETAINED LINKS':group.title;section.append(title);
     for(const data of distinct){section.append(pageLink(data));shown++}destination.append(section);
   }
-  if(q&&!shown){const msg=document.createElement('p');msg.textContent='No pages matched. Try a game or feature name.';list.append(msg)}
+  if(q&&!shown){const msg=document.createElement('p');msg.textContent='No current pages matched. Try a game or feature name.';list.append(msg)}
  }
  const fullMenu=document.getElementById('j369-full-map-menu');
  let returnFocus=button;
