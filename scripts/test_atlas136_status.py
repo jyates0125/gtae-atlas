@@ -9,7 +9,8 @@ engine=(R/'atlas-conditions.js').read_text(encoding='utf8')
 assert "C.rotationFeed(getFeed(),r.id,Date.now())" in daily
 assert "dated selection(s) · not verified live" in daily
 assert "ELIGIBLE · NOT LIVE VERIFIED" in events
-assert "NOT proof that it is currently spawning" in events
+assert "Not gameplay-verified." in events, "Legend must distinguish dated selections from verified spawns"
+assert "Current dated selection · not gameplay verified" in events, "Each dated activity must retain its uncertainty label"
 assert "Eligible / selected (not verified live)" in engine
 script=r"""
 const assert=require('node:assert/strict');
