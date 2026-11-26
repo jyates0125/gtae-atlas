@@ -13,6 +13,17 @@ roster = [r for r in json.loads((root / "data/atlas-universe-profiles.json").rea
 local_roster = [r for r in roster if r.get("conceptPortrait")]
 assert len(roster) == 98 and len(local_roster) >= 13
 assert all(r.get("preferConceptPortrait") is True for r in local_roster)
+vi_catalog = json.loads((root / 'data/atlas192-vi-weapons.json').read_text(encoding='utf-8'))
+assert vi_catalog['schema'] == 1 and vi_catalog['scope'] == 'vi' and vi_catalog['kind'] == 'weapon'
+vi_weapon_ids = [r['id'] for r in vi_catalog['records']]
+assert len(vi_weapon_ids) >= 187 and len(set(vi_weapon_ids)) == len(vi_weapon_ids), 'Expanded VI weapon catalog must retain at least 187 unique records'
+assert {'girardi-es9', 'klose-k17'} <= set(vi_weapon_ids)
+
+def verify_vi_weapon_cards(page):
+    cards = page.locator('.viweapon-card')
+    expect(cards).to_have_count(len(vi_weapon_ids), timeout=15000)
+    rendered = cards.evaluate_all('cards => cards.map(card => card.dataset.weaponId)')
+    assert sorted(rendered) == sorted(vi_weapon_ids), 'Every catalog ID must render exactly once'
 
 def decode_portrait(locator, identity):
     # Native lazy loading and layout may not yet have scheduled an image request.
@@ -359,10 +370,10 @@ with AtlasTestServer(("127.0.0.1", 0), partial(QuietHandler, directory=root)) as
             expect(evidence_rows.locator("a").first).to_have_attribute("href","./atlas81-hq.html?collection=online-snowmen#collections")
             # Restore Leonida-only notes with exact IDs, leaving conflicting local notes intact.
             page.goto(base+"atlas90-weapons6.html",wait_until="domcontentloaded")
-            expect(page.locator(".viweapon-card")).to_have_count(65,timeout=15000)
+            verify_vi_weapon_cards(page)
             page.evaluate("""() => localStorage.setItem('teamjura-vi-weapon-notes-v1',JSON.stringify({schema:1,notes:{'girardi-es9':'Current note'},seen:{'girardi-es9':true}}))""")
             page.reload(wait_until="domcontentloaded")
-            expect(page.locator(".viweapon-card")).to_have_count(65,timeout=15000)
+            verify_vi_weapon_cards(page)
             vi_backup={"schema":1,"app":"team-jura-vi-weapons","scope":"vi","notes":{"girardi-es9":"Do not replace","klose-k17":"Restored field note","unknown":"Ignore"},"seen":{"girardi-es9":False,"klose-k17":True}}
             page.locator("#viWeaponImport").set_input_files({"name":"vi-notes.json","mimeType":"application/json","buffer":json.dumps(vi_backup).encode()})
             expect(page.locator("#viWeaponStatus")).to_contain_text("2 note/review value(s) restored; 1 note conflict(s) kept; 1 invalid entries skipped")
