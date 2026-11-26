@@ -26,6 +26,17 @@ const fetcher=(a,b)=>async(url,options)=>{assert.equal(options.credentials,'omit
  const tomorrow=pack('gun-van',['next'],reset,C.nextReset(reset,6));
  assert.deepEqual(C.mergePublishedRotations([tomorrow],beforeReset),empty);
  assert.deepEqual(C.mergePublishedRotations([tomorrow],reset).rotations['gun-van'].activeIds,['next']);
+ const refs=C.mainlandRotationReferences('online');
+ assert.equal(refs.length,5);
+ assert.equal(new Set(refs.map(r=>r.rotationMarkerId)).size,5);
+ assert.ok(refs.every(r=>r.game==='5'&&r.scope==='online'&&Number.isFinite(r.x)&&Number.isFinite(r.y)));
+ for(const mode of ['story','vi'])assert.deepEqual(C.mainlandRotationReferences(mode),[]);
+ const van=refs.find(r=>r.activityId==='gun-van');
+ assert.equal(van.x,1465.6);assert.equal(van.y,6553.7);
+ assert.equal(C.markerAvailability('gun-van',{now,mode:'online',markerId:van.rotationMarkerId}).hide,true);
+ assert.equal(C.markerAvailability('gun-van',{now,mode:'online',markerId:van.rotationMarkerId,snapshot:pack('gun-van',[van.rotationMarkerId])}).hide,false);
+ assert.ok(refs.filter(r=>r.activityId==='street-dealers').every(r=>r.uncertain));
+ assert.match(fs.readFileSync('atlas.js','utf8'),/mainlandRotationReferences/);
  const partial=pack('street-dealers',['a','b']);
  assert.equal(C.rotationFeed(partial,'street-dealers',now),null);
  assert.deepEqual(C.selectRotationSnapshot(partial,dealer,now).rotations['street-dealers'].activeIds,['a','b','c']);
