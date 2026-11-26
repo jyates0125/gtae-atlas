@@ -188,12 +188,24 @@ function mergePublishedRotations(snapshots,now=Date.now()){
   let chosen=null;
   for(const snapshot of snapshots){
    const candidate=snapshot?.rotations?.[rule.id],valid=rotationFeed(snapshot,rule.id,now);
-   if(!valid||candidate.activeIds.length!==rule.today||(rule.id==='cayo-chests'&&!cayoChestSelection(snapshot,now)))continue;
+   if(!valid||Date.parse(candidate.checkedAtUtc)>now||candidate.activeIds.length!==rule.today||(rule.id==='cayo-chests'&&!cayoChestSelection(snapshot,now)))continue;
    if(!chosen||Date.parse(candidate.checkedAtUtc)>Date.parse(chosen.checkedAtUtc))chosen=candidate;
   }
   if(chosen)out.rotations[rule.id]=chosen;
  }
  return out;
+}
+// The public feed is a set of independently validated categories. One broken
+// category must not discard an otherwise usable current selection. Keep the
+// strict safeSnapshot contract for explicit user imports.
+function safePublishedSnapshot(s){
+ if(!s||s.schema!==1||!s.rotations||typeof s.rotations!=='object'||Array.isArray(s.rotations))throw Error('Expected schema 1 with a rotations object.');
+ const result={schema:1,rotations:{}};
+ for(const [id,value] of Object.entries(s.rotations)){
+  if(BY_ID[id]?.kind!=='rotation')continue;
+  try{Object.assign(result.rotations,safeSnapshot({schema:1,rotations:{[id]:value}}).rotations)}catch{/* isolate invalid category */}
+ }
+ return result;
 }
 async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-current.json?update=1',previous={schema:1,rotations:{}},now=Date.now()){
  async function read(url){
@@ -203,12 +215,14 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
    const r=await fetcher(url,{cache:'no-cache',credentials:'omit',referrerPolicy:'no-referrer',...(controller?{signal:controller.signal}:{})});
    if(!r.ok)throw Error('Daily source unavailable');
    const body=await r.text();if(body.length>100000)throw Error('Daily feed too large');
-   return safeSnapshot(JSON.parse(body));
+   return safePublishedSnapshot(JSON.parse(body));
   }finally{if(timer!==null)clearTimeout(timer)}
  }
  const responses=await Promise.allSettled([read(localURL),read(PUBLISHED_ROTATIONS_URL)]);
  if(responses.every(r=>r.status==='rejected'))throw Error('Both daily feeds unavailable');
- return mergePublishedRotations([...responses.filter(r=>r.status==='fulfilled').map(r=>r.value),previous],now);
+ // A correction published for the same reset timestamp beats a bundled
+ // snapshot or last successful fetch. Newer observation timestamps still win.
+ return mergePublishedRotations([responses[1].status==='fulfilled'?responses[1].value:null,previous,responses[0].status==='fulfilled'?responses[0].value:null],now);
 }
 return{activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
