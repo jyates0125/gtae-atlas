@@ -1,7 +1,9 @@
 name: Team Jura Atlas - validate production website
 on:
-  # Full cross-browser / Cayo / ZIP suite is a manual pre-merge release gate.
-  # Feature PRs use path-filtered focused workflows instead.
+  # Only production promotion PRs trigger full validation; routine development stays focused.
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 permissions:
   contents: read
@@ -10,10 +12,14 @@ concurrency:
   cancel-in-progress: true
 jobs:
   chromium-and-static:
+   if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'release/')
    runs-on: ubuntu-24.04 
    timeout-minutes: 30
    steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -231,10 +237,14 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
   microsoft-edge:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'release/')
     runs-on: windows-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -307,10 +317,14 @@ jobs:
   # Fast, isolated Atlas 22.0 gate. Finds phone popup regressions before the
   # broader 80-page Chromium/Edge smoke and heist suites complete.
   atlas22-focus-chromium:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -358,10 +372,14 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
   atlas22-focus-edge:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'release/')
     runs-on: windows-latest
     timeout-minutes: 16
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -409,12 +427,16 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
   validated-zip:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'release/')
     needs: [chromium-and-static, microsoft-edge, atlas22-focus-chromium, atlas22-focus-edge]
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
