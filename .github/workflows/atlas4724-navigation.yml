@@ -5,6 +5,17 @@ on:
     paths:
       - 'atlas132-nav.js'
       - 'atlas132-nav.css'
+      - 'atlas*.html'
+      - 'index.html'
+      - 'maps.html'
+      - 'atlas98-flow.js'
+      - 'atlas93-global.js'
+      - 'atlas97-connect.js'
+      - 'atlas100-showroom.js'
+      - 'atlas223-home.js'
+      - 'atlas98-portal.js'
+      - 'atlas97-journey.js'
+      - 'scripts/test_atlas4725_player_entry.py'
       - 'scripts/test_atlas4724_navigation_journeys.py'
       - '.github/workflows/atlas4724-navigation.yml'
   workflow_dispatch:
@@ -37,6 +48,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: node --check atlas132-nav.js
+      - run: python scripts/test_atlas4725_player_entry.py
       - run: node scripts/build-cloudflare.cjs
       - run: python -m pip install playwright==1.58.0
       - run: python -m playwright install ${{ matrix.browser }}
