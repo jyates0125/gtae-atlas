@@ -69,7 +69,7 @@ function build(){
   if(target.origin!==location.origin||!target.pathname.endsWith('/index.html')||target.search||target.hash)continue;
   const label=(link.getAttribute('aria-label')||link.textContent||'').trim();
   if(/welcome|sign.in|guest/i.test(label))continue;
-  if(link.classList.contains('brand')||/^(?:⌂\\s*)?(?:home|back to home|back home)$/i.test(label))link.href='./atlas-dashboard.html';
+  if(link.classList.contains('brand')||/^(?:[⌂✦]\s*)?(?:home|back to home|back home)$/i.test(label))link.href='./atlas-dashboard.html';
  }
  const wrap=document.createElement('div');wrap.className='j132-nav';
  if(/^atlas(?:-online|-vi)?\.html$/i.test(location.pathname.split('/').pop()||''))wrap.classList.add('j132-map-nav');
