@@ -172,7 +172,7 @@ for(const [category,name,x,y,symbol] of equipmentRef){
  p.dataset.cat=category;p.style.left=x+'%';p.style.top=y+'%';p.title=name+' · illustrative reference';p.setAttribute('aria-label',name+' (approximate)');refLayer.append(p);
 }
 let preference=null; // null means automatic current-pair mode when a valid pair arrives
-let chestData=null,dailyData=null,bundledDaily=null,reviewedDaily={schema:1,rotations:{}},dailyPending=false,lastDailyAttempt=0,activeIds=[],todayOnly=true,personal=null,activeLabel='';
+let chestData=null,dailyData=null,bundledDaily=null,reviewedDaily={schema:1,rotations:{}},dailyPending=false,activeIds=[],todayOnly=true,personal=null,activeLabel='';
 try{const p=JSON.parse(localStorage.getItem('teamjura-cayo-daily-choice-v1')||'null');if(p&&typeof p==='object')personal=p;}catch(_){}
 function dayKey(d){return new Date(d.getTime()-6*3600*1000).toISOString().slice(0,10)}
 function showInfo(title,description,number){
@@ -248,9 +248,9 @@ Promise.all([
  chestData=spots;bundledDaily=d;updateActive();void refreshDaily();
 }).catch(()=>renderDaily());
 async function refreshDaily(){
- const C=window.JuraConditions;if(!C||dailyPending||!C.rotationRefreshDue(lastDailyAttempt))return;
- dailyPending=true;lastDailyAttempt=Date.now();
- try{reviewedDaily=await C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedDaily);updateActive()}catch{}finally{dailyPending=false}
+ const C=window.JuraConditions;if(!C||dailyPending)return;
+ dailyPending=true;
+ try{reviewedDaily=await C.refreshPublishedRotations(fetch,reviewedDaily,{onlyIds:['cayo-chests']});updateActive()}catch{}finally{dailyPending=false}
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){updateActive();void refreshDaily()}});
 setInterval(()=>{if(chestData){updateActive();if(!document.hidden)void refreshDaily()}},window.JuraConditions?.ROTATION_STATUS_MS||60000);
