@@ -892,11 +892,11 @@ async def smoke():
                                     await pg.locator('.j132-close').click()
                                     if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot close')
                             if not failures and path in ('index.html','maps.html'):
-                                dest='./atlas-dashboard.html' if path=='index.html' else './atlas97-journey.html'
+                                dest='./maps.html' if path=='index.html' else './atlas97-journey.html'
                                 start=pg.locator('a.j99-start-link[href="'+dest+'"]')
                                 if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
                             if not failures and path=='index.html':
-                                if await pg.locator('a[href="./atlas-dashboard.html"]').count()==0:failures.append('Guest dashboard entry missing')
+                                if await pg.locator('a.action.primary[href="#featured"]').count()!=1:failures.append('Direct guest game selector missing')
                                 if await pg.locator('[data-j130-action="share-page"]').count()==0:failures.append('Launch share action missing')
                                 if await pg.locator('#featuredGrid a').count()<4:failures.append('Fewer than four flagship world cards')
                                 if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
