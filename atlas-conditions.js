@@ -119,6 +119,9 @@ function mainlandRotationReferences(mode,snapshot){
 const PREREQS=[['spray-can','Collected a spray can'],['metal-detector','Found Metal Detector'],['cayo-intel','Can access Gather Intel'],['auto-shop','Own an Auto Shop'],['owned-vehicle','Own the delivery vehicle'],['story-submarine','Unlocked suitable submersible'],['story-epsilon','Reached the appropriate Epsilon progression'],['story-progress','Relevant story progression unlocked']];
 const EVENT_NAMES={halloween:'Halloween event confirmed active',peyote:'Peyote event confirmed active',holiday:'Holiday event confirmed active'};
 function validIso(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(s)&&Number.isFinite(Date.parse(s));}
+// All currently supported globally dated selections rotate every real 24h.
+const ROTATION_PERIOD_MS=86400000, ROTATION_REFRESH_MS=600000, ROTATION_STATUS_MS=60000;
+function rotationRefreshDue(lastAttempt,now=Date.now()){return !lastAttempt||now-lastAttempt>=ROTATION_REFRESH_MS||now<lastAttempt;}
 function nextReset(now,utcHour){const d=new Date(now);d.setUTCHours(utcHour,0,0,0);if(d.getTime()<=now)d.setUTCDate(d.getUTCDate()+1);return d.getTime();}
 function validCayoIds(ids){
  if(!Array.isArray(ids)||ids.length!==2)return false;
@@ -283,5 +286,5 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
  // snapshot or last successful fetch. Newer observation timestamps still win.
  return mergePublishedRotations([responses[1].status==='fulfilled'?responses[1].value:null,previous,responses[0].status==='fulfilled'?responses[0].value:null],now);
 }
-return{mainlandRotationReferences,safeMainlandCatalog,activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{ROTATION_PERIOD_MS,ROTATION_REFRESH_MS,ROTATION_STATUS_MS,rotationRefreshDue,mainlandRotationReferences,safeMainlandCatalog,activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
