@@ -24,17 +24,17 @@ def local_ok(name,source):
   assert target.is_file(),f'{name}: local link missing: {uri}'
  return p
 assert 'class="j98-home j130-home"' in index
-assert 'id="heroTitle"' in index and 'id="featuredGrid"' in index
-assert 'href="./atlas-dashboard.html"' not in index, 'No legacy dashboard detour from current homepage'
+assert 'id="heroTitle"' in index and 'id="featuredGrid"' not in index
+assert 'href="./atlas-dashboard.html">Continue as Guest' in index
+assert 'class="action outline j4728-signin" disabled' in index
 assert 'href="./atlas-share.html"' in index
-assert '<a class="j99-start-link" href="./maps.html">' in index
-assert 'href="#featured"' in index
-assert index.index('id="featuredGrid"') < index.index('class="j4709-entry"')
+assert 'class="menu-toggle"' not in index and 'class="j4709-entry"' not in index
+assert dash.index('class="j223-worlds"') < dash.index('class="j4709-entry"')
 assert 'href="./atlas-account.html"' in index
 assert 'j132-poster-welcome' in index
 assert 'Many Crews. One Vision.' in index or 'MANY CREWS. ONE VISION.' in index
-assert 'Public development preview' in index and '13 destinations' in index
-assert 'data-j130-action="share-page"' in index
+assert 'Public development preview' in index and '13 destinations' in dash
+assert 'data-j131-social-host' in index
 assert index.count('<h1')==1
 assert 'id="featuredGrid"' in dash
 assert 'id="progressCollections"' in dash and 'id="progressVehicles"' in dash and 'id="progressGarage"' in dash
