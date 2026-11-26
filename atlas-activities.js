@@ -7,13 +7,13 @@ const slasherSession={freeroam:false,elapsed:false,vehicle:false,cooldown:false}
 let state=C.safeState(load(KEY,{})),snapshot=null,needle='',group='';try{snapshot=C.safeSnapshot(load(FEED,{schema:1,rotations:{}}))}catch{snapshot={schema:1,rotations:{}}}
 function load(k,def){try{return JSON.parse(localStorage.getItem(k)||'null')??def}catch{return def}}
 let sourceLabel='Personal imported snapshot · not verified',reviewedSnapshot={schema:1,rotations:{}};
-let lastRotationAttempt=0,rotationPending=false;
+let rotationPending=false;
 async function loadReviewedRotations(force=false){
- if(mode!=='online'||rotationPending||(!force&&!C.rotationRefreshDue(lastRotationAttempt)))return;
- rotationPending=true;lastRotationAttempt=Date.now();
+ if(mode!=='online'||rotationPending)return;
+ rotationPending=true;
  const status=$('autoRotationStatus');
  try{
-  const reviewed=await C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedSnapshot);reviewedSnapshot=reviewed;
+  const reviewed=await C.refreshPublishedRotations(fetch,reviewedSnapshot,{force});reviewedSnapshot=reviewed;
   // A personal import is kept separate and never replaced or described as verified.
   const personal=load(FEED,null);
   if(personal&&Object.keys(personal.rotations||{}).length){
