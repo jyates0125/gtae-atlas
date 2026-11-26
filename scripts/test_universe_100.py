@@ -102,7 +102,12 @@ for page in ("atlas90-vehicles5.html", "atlas90-vehicles6.html", "atlas90-weapon
 assert len(gallery_versions)==1, "Vehicle and weapon galleries must use the same gallery engine version"
 assert "const STORE='team-jura-atlas90-collection-v1'" in (D/'atlas90-gallery.js').read_text(), "Preserve original gallery collection key"
 
-for page in ("index.html", "maps.html", "atlas93-garage.html", "atlas97-journey.html", "atlas81-hq.html"):
+# The approved welcome is a guest gateway; database access lives on functional Home.
+welcome=(D/"index.html").read_text(encoding="utf8")
+assert 'data-j4728-welcome="true"' in welcome
+assert 'class="action primary" href="./atlas-dashboard.html"' in welcome
+assert "./atlas-database.html" not in welcome
+for page in ("atlas-dashboard.html", "maps.html", "atlas93-garage.html", "atlas97-journey.html", "atlas81-hq.html"):
     assert "./atlas-database.html" in (D / page).read_text(encoding="utf8"), page
 
 # Confirm current map directory still references its 13 existing local covers.

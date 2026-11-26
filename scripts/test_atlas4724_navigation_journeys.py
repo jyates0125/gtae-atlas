@@ -21,6 +21,8 @@ try:
             ctx=browser.new_context(viewport={"width":width,"height":height})
             ctx.route("https://**/*",lambda r:r.abort())
             page=ctx.new_page()
+            page_errors=[]
+            page.on("pageerror",lambda error:page_errors.append(str(error)))
             page.goto(base+"index.html",wait_until="domcontentloaded")
             expect(page.locator("#j132-nav-toggle")).to_have_count(0)
             expect(page.locator(".j4728-signin")).to_be_disabled()
@@ -30,7 +32,10 @@ try:
             page.locator("a.action.primary").click()
             expect(page).to_have_url(base+"atlas-dashboard.html")
             for path,scope in [("atlas-dashboard.html",None),("atlas-online.html","online"),("atlas.html","story"),("atlas-vi.html","vi"),("atlas90-vehicles5.html?world=story","story"),("atlas-characters.html?game=vi","vi"),("atlas-sa.html",None),("atlas-forge-collections.html",None)]:
-                page.goto(base+path,wait_until="domcontentloaded",timeout=50000)
+                page_errors.clear()
+                print(f"Checking {width}px {path}",flush=True)
+                response=page.goto(base+path,wait_until="domcontentloaded",timeout=50000)
+                assert response and response.ok,(path,response.status if response else None)
                 # Public labels use the collection hub, not the management child.
                 wrong=page.locator('a[href="./atlas93-garage.html"]').filter(has_text="My Garage")
                 expect(wrong).to_have_count(0)
@@ -51,7 +56,11 @@ try:
                     expect(today).to_have_attribute("href","./atlas-online.html#j393-online-activity-slot")
                     assert page.locator(".j223-worlds").evaluate("(el)=>!!(el.compareDocumentPosition(document.querySelector('.j4709-entry')) & Node.DOCUMENT_POSITION_FOLLOWING)")
                 menu=page.locator("#j132-nav-toggle")
-                expect(menu).to_have_count(1)
+                try:
+                    expect(menu).to_have_count(1,timeout=15000)
+                    expect(menu).to_be_visible()
+                except AssertionError as error:
+                    raise AssertionError((path,width,page.url,page_errors,page.evaluate("({ready:document.readyState,welcome:document.body.dataset.j4728Welcome,scripts:[...document.scripts].map(s=>s.src).filter(s=>s.includes(\x27atlas132-nav\x27))})"))) from error
                 menu.click()
                 drawer=page.locator("#j132-nav-drawer")
                 expect(drawer).to_be_visible()
