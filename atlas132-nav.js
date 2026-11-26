@@ -65,7 +65,7 @@ function build(){
  if(document.body.dataset.j4728Welcome==='true'||document.querySelector('#j132-nav-toggle'))return;
  // Normal Home links and brand shortcuts go to the gameplay homepage; explicit Welcome links remain valid.
  for(const link of document.querySelectorAll('a[href]')){
-  const target=new URL(link.href,location.href);
+  let target;try{target=new URL(link.href,location.href)}catch{continue}
   if(target.origin!==location.origin||!target.pathname.endsWith('/index.html')||target.search||target.hash)continue;
   const label=(link.getAttribute('aria-label')||link.textContent||'').trim();
   if(/welcome|sign.in|guest/i.test(label))continue;
@@ -152,7 +152,7 @@ function build(){
  // the prominent categories under an honest "Other public pages" section.
  fetch('./atlas132-page-directory.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
    if(!data||!Array.isArray(data.pages))return;
-   const remainder=data.pages.filter(x=>x&&safeHref(x.path)&&!ALL.has(x.path)&&x.path!=='map-hub.html').map(x=>[String(x.title||x.path).replace(/\s*[|·].*$/,'').slice(0,80),x.path]);
+   const remainder=data.pages.filter(x=>x&&safeHref(x.path)&&!ALL.has(x.path)&&x.path!=='map-hub.html'&&x.path!=='index.html').map(x=>[String(x.title||x.path).replace(/\s*[|·].*$/,'').slice(0,80),x.path]);
    remainder.sort((a,b)=>a[0].localeCompare(b[0]));
    otherPages=remainder.length?[{title:'OTHER PUBLIC WORKSPACES & ARCHIVE',prefix:'other',items:remainder}]:[];
    rebuildCategories();
