@@ -1005,14 +1005,18 @@ window.JuraAtlasEventLocations=Object.freeze({
  enabled:id=>!eventHidden.has(id),
  setEnabled:(id,on)=>{if(game!=='5'||mode!=='online'||!window.JuraConditions?.BY_ID[id])return false;dropEventFocus();if(on){eventHidden.delete(id);showPins=true;}else eventHidden.add(id);page=0;render();return true;},
  availableCount:rule=>{if(game!=='5'||mode!=='online')return 0;const cache=activityCache();return records().filter(r=>matchesEventResearch(rule,r)&&activityPinVisible(r,cache)).length;},
- focus:rule=>{
+ focus:(rule,{center=false}={})=>{
   if(game!=='5'||mode!=='online')return {count:0};
   const found=records().filter(r=>matchesEventResearch(rule,r));
   if(!found.length){dropEventFocus();page=0;render();return {count:0}}
   eventFocusIds=new Set(found.map(r=>r.id));eventFocusName=String(rule.name||rule.id).slice(0,120);
   if(selected&&!eventFocusIds.has(selected.id))selected=null;
+  const cache=activityCache(),available=found.filter(r=>activityPinVisible(r,cache));
+  // An explicit search may center the sole currently eligible location, but
+  // never select an expired reference or collapse the mobile event legend.
+  if(center&&available.length===1){const place=available[0];selected=place;camera.x=place.x;camera.y=place.y;camera.z=clamp(Math.max(3.4,camera.z),MIN_Z,MAX_Z);}
   page=0;showTab('Find');render();
-  return {count:found.length,available:found.filter(r=>activityPinVisible(r,activityCache())).length};
+  return {count:found.length,available:available.length};
  },
  clear:()=>{dropEventFocus();page=0;render()},
  refresh:()=>{if(game==='5'&&mode==='online'){renderNamedLayers();renderFind();renderRoute();if(nearbyActive)renderNearby();updateSelected();schedulePaint()}},
