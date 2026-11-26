@@ -87,7 +87,7 @@ const MAINLAND_ROTATION_REFERENCES=Object.freeze([
 // reference collection: coordinates never establish active availability.
 const MAINLAND_IDS=new Set(['gun-van','shipwreck','street-dealers','smoke-products','ls-tags','hidden-caches','junk-skydives']);
 function safeCatalogSource(value){
- try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password&&['gtadb.net','gtadb.org','map.gtadb.org','gtaweb.eu','gtamap.io','www.gtaboss.gg','gtaboss.gg','gtamap.net','thegta.wiki','www.rockstargames.com','support.rockstargames.com'].includes(u.hostname)&&u.href.length<=500?u.href:null;}catch{return null}
+ try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&['gtadb.net','gtadb.org','map.gtadb.org','gtaweb.eu','gtamap.io','www.gtaboss.gg','gtaboss.gg','gtamap.net','thegta.wiki','www.rockstargames.com','support.rockstargames.com'].includes(u.hostname)&&u.href.length<=500?u.href:null;}catch{return null}
 }
 function safeMainlandCatalog(raw){
  if(!Array.isArray(raw)||raw.length>300)return [];
@@ -249,7 +249,7 @@ function mergePublishedRotations(snapshots,now=Date.now()){
  }
  // A catalog survives daily expiry; only the selected IDs expire. Remote
  // corrections take precedence over cached and bundled records.
- const catalog=[];for(const snapshot of snapshots)for(const row of safeMainlandCatalog(snapshot?.catalog))if(!catalog.some(r=>r.id===row.id))catalog.push(row);
+ const catalog=[],catalogCounts={};for(const snapshot of snapshots)for(const row of safeMainlandCatalog(snapshot?.catalog)){if(catalog.some(r=>r.id===row.id)||(catalogCounts[row.activityId]||0)>=(BY_ID[row.activityId].pool||100))continue;catalog.push(row);catalogCounts[row.activityId]=(catalogCounts[row.activityId]||0)+1;}
  const accepted=safeMainlandCatalog(catalog);if(accepted.length)out.catalog=accepted;
  return out;
 }
