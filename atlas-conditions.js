@@ -68,17 +68,71 @@ for(const r of VI_RULES)r.mode='vi';
 RULES.push(...STORY_RULES,...VI_RULES);
 const BY_ID=Object.fromEntries(RULES.map(r=>[r.id,r]));
 function rulesForMode(mode){return RULES.filter(r=>r.mode===mode)};
+// Individually researched game-world XY facts. This is a partial reference
+// catalog, not the full spawn pool or a dated active selection.
+const MAINLAND_ROTATION_REFERENCES=Object.freeze([
+ ['gun-van-procopio-beach','gun-van','Gun Van · Procopio Beach',1465.6,6553.7,'gun-van',false],
+ ['shipwreck-noose-rock-arch','shipwreck','Shipwreck · Southeast of NOOSE HQ',2820.2,-759.2,'shipwreck',false],
+ ['street-dealer-sandy-shores-1986-3787','street-dealers','Street Dealer · Sandy Shores',1986.3,3786.8,'street-dealers',false],
+ ['street-dealer-del-perro-1561-413','street-dealers','Street Dealer · Del Perro',-1560.6,-413.3,'street-dealers',false],
+ ['street-dealer-paleto-bay-156-6657','street-dealers','Street Dealer · Paleto Bay',156.2,6656.5,'street-dealers',false]
+].map(([id,activityId,name,x,y,slug,uncertain])=>Object.freeze({
+ id:'jura-online-'+id,rotationMarkerId:id,activityId,name,x,y,game:'5',scope:'online',category:activityId==='shipwreck'?'collectible':'activity',
+ source:'GTAMap.io · individual factual coordinate reference',sourceUrl:'https://gtamap.io/gta-online/daily/'+slug+'/',uncertain,
+ confidence:uncertain?'forecast coordinate · current selection unconfirmed':'source-reported position · not gameplay verified',
+ evidence:'November 26, 2026 research; GTA Boss district comparison; no bulk catalog imported',
+ detail:'Partial spawn reference catalog. Presence requires a separate complete, valid dated selection; not a full pool or guaranteed spawn.'
+})));
+// Data-only publisher may extend the catalog. This is a separate public
+// reference collection: coordinates never establish active availability.
+const MAINLAND_IDS=new Set(['gun-van','shipwreck','street-dealers','smoke-products','ls-tags','hidden-caches','junk-skydives']);
+function safeCatalogSource(value){
+ try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&['gtadb.net','gtadb.org','map.gtadb.org','gtaweb.eu','gtamap.io','www.gtaboss.gg','gtaboss.gg','gtamap.net','thegta.wiki','www.rockstargames.com','support.rockstargames.com'].includes(u.hostname)&&u.href.length<=500?u.href:null;}catch{return null}
+}
+function safeMainlandCatalog(raw){
+ if(!Array.isArray(raw)||raw.length>300)return [];
+ const seen=new Set(),out=[],counts={};
+ for(const row of raw){
+  if(!row||!MAINLAND_IDS.has(row.activityId)||typeof row.id!=='string'||!/^[-a-z0-9]{3,78}$/.test(row.id)||typeof row.name!=='string'||!row.name.trim()||row.name.length>120||!Number.isFinite(row.x)||!Number.isFinite(row.y)||Math.abs(row.x)>16384||Math.abs(row.y)>16384)continue;
+  const seed=MAINLAND_ROTATION_REFERENCES.find(r=>r.rotationMarkerId===row.id);
+  if(seed&&(seed.activityId!==row.activityId||Math.hypot(seed.x-row.x,seed.y-row.y)>2))continue;
+  if(!seed&&!row.id.startsWith(row.activityId+'-'))continue;
+  const sourceUrl=safeCatalogSource(row.sourceUrl),comparisonSource=safeCatalogSource(row.comparisonSource);
+  if(!sourceUrl||!comparisonSource||new URL(sourceUrl).hostname===new URL(comparisonSource).hostname||row.confidence!=='source-crosschecked'||seen.has(row.id))continue;
+  const count=(counts[row.activityId]||0)+1;
+  if(count>(BY_ID[row.activityId].pool||100))continue;
+  counts[row.activityId]=count;seen.add(row.id);
+  out.push({id:row.id,activityId:row.activityId,name:row.name.trim(),x:row.x,y:row.y,sourceUrl,comparisonSource,confidence:row.confidence});
+ }
+ return out;
+}
+function mainlandRotationReferences(mode,snapshot){
+ if(mode!=='online')return [];
+ const byId=new Map(MAINLAND_ROTATION_REFERENCES.map(r=>[r.rotationMarkerId,r]));
+ for(const row of safeMainlandCatalog(snapshot?.catalog)){
+  if(byId.has(row.id))continue;
+  byId.set(row.id,{id:'jura-online-'+row.id,rotationMarkerId:row.id,activityId:row.activityId,name:row.name,x:row.x,y:row.y,game:'5',scope:'online',category:row.activityId==='shipwreck'||row.activityId==='hidden-caches'?'collectible':'activity',source:'Public rotation catalog · source-crosschecked',sourceUrl:row.sourceUrl,comparisonSource:row.comparisonSource,uncertain:false,confidence:'source-crosschecked · not gameplay verified',detail:'Possible location; a complete dated selection is required for active availability.'});
+ }
+ return [...byId.values()];
+}
+
 const PREREQS=[['spray-can','Collected a spray can'],['metal-detector','Found Metal Detector'],['cayo-intel','Can access Gather Intel'],['auto-shop','Own an Auto Shop'],['owned-vehicle','Own the delivery vehicle'],['story-submarine','Unlocked suitable submersible'],['story-epsilon','Reached the appropriate Epsilon progression'],['story-progress','Relevant story progression unlocked']];
 const EVENT_NAMES={halloween:'Halloween event confirmed active',peyote:'Peyote event confirmed active',holiday:'Holiday event confirmed active'};
 function validIso(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(s)&&Number.isFinite(Date.parse(s));}
 function nextReset(now,utcHour){const d=new Date(now);d.setUTCHours(utcHour,0,0,0);if(d.getTime()<=now)d.setUTCDate(d.getUTCDate()+1);return d.getTime();}
+function validCayoIds(ids){
+ if(!Array.isArray(ids)||ids.length!==2)return false;
+ const numbers=ids.map(id=>/^cayo-chest-(?:[1-9]|1[0-9])$/.test(String(id))?Number(String(id).slice(11)):NaN);
+ return numbers.some(n=>n>=1&&n<=10)&&numbers.some(n=>n>=11&&n<=19);
+}
 function rotationFeed(snapshot,id,now=Date.now()){
  const s=snapshot?.rotations?.[id];if(!s||!Array.isArray(s.activeIds)||!validIso(s.checkedAtUtc)||!validIso(s.validUntilUtc))return null;
  const checked=Date.parse(s.checkedAtUtc),end=Date.parse(s.validUntilUtc);
  if(checked>now+5*60e3||end<=now||end<=checked||checked<now-48*3600e3||s.activeIds.length>200||s.activeIds.some(v=>!/^[-a-z0-9_:]{1,80}$/i.test(String(v))))return null;
- const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length>rule.today))return null;
+ const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length!==rule.today))return null;
+ if(id==='cayo-chests'&&!validCayoIds(s.activeIds))return null;
  // Daily selections cannot survive the activity's next UTC reset, even when an imported file says otherwise.
- if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6))return null;
+ if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6)||nextReset(checked,rule.reset??6)!==nextReset(now,rule.reset??6))return null;
  if(!s.activeIds.length||new Set(s.activeIds.map(String)).size!==s.activeIds.length)return null;
  return{active:new Set(s.activeIds.map(String)),checkedAtUtc:s.checkedAtUtc,validUntilUtc:s.validUntilUtc,source:typeof s.source==='string'?s.source.slice(0,200):'Imported snapshot',confidence:'user-imported; independently unverified'};
 }
@@ -193,6 +247,10 @@ function mergePublishedRotations(snapshots,now=Date.now()){
   }
   if(chosen)out.rotations[rule.id]=chosen;
  }
+ // A catalog survives daily expiry; only the selected IDs expire. Remote
+ // corrections take precedence over cached and bundled records.
+ const catalog=[],catalogCounts={};for(const snapshot of snapshots)for(const row of safeMainlandCatalog(snapshot?.catalog)){if(catalog.some(r=>r.id===row.id)||(catalogCounts[row.activityId]||0)>=(BY_ID[row.activityId].pool||100))continue;catalog.push(row);catalogCounts[row.activityId]=(catalogCounts[row.activityId]||0)+1;}
+ const accepted=safeMainlandCatalog(catalog);if(accepted.length)out.catalog=accepted;
  return out;
 }
 // The public feed is a set of independently validated categories. One broken
@@ -201,6 +259,7 @@ function mergePublishedRotations(snapshots,now=Date.now()){
 function safePublishedSnapshot(s){
  if(!s||s.schema!==1||!s.rotations||typeof s.rotations!=='object'||Array.isArray(s.rotations))throw Error('Expected schema 1 with a rotations object.');
  const result={schema:1,rotations:{}};
+ const catalog=safeMainlandCatalog(s.catalog);if(catalog.length)result.catalog=catalog;
  for(const [id,value] of Object.entries(s.rotations)){
   if(BY_ID[id]?.kind!=='rotation')continue;
   try{Object.assign(result.rotations,safeSnapshot({schema:1,rotations:{[id]:value}}).rotations)}catch{/* isolate invalid category */}
@@ -224,5 +283,5 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
  // snapshot or last successful fetch. Newer observation timestamps still win.
  return mergePublishedRotations([responses[1].status==='fulfilled'?responses[1].value:null,previous,responses[0].status==='fulfilled'?responses[0].value:null],now);
 }
-return{activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{mainlandRotationReferences,safeMainlandCatalog,activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
