@@ -69,10 +69,10 @@ function build(){
   const q=query.trim().toLocaleLowerCase();list.replaceChildren();
   let shown=0;
   const contextual=worldTasks();
-  if(!q){for(const group of [...(contextual?[contextual]:[]),...CORE]){const section=document.createElement('section');section.className='j132-group j4724-primary';const title=document.createElement('h3');title.textContent=group.title;section.append(title);for(const data of group.items)section.append(pageLink(data));list.append(section);}const details=document.createElement('details');details.className='j4724-all-pages';details.open=directoryOpen;const summary=document.createElement('summary');summary.textContent='All pages & advanced tools';details.append(summary);details.addEventListener('toggle',()=>{directoryOpen=details.open});list.append(details);}
+  if(!q){for(const group of [...(contextual?[contextual]:[]),...CORE]){const section=document.createElement('section');section.className='j132-group j4724-primary';const title=document.createElement('h3');title.textContent=group.title;section.append(title);for(const data of group.items){if(list.querySelectorAll('a').length&&[...list.querySelectorAll('a')].some(a=>a.getAttribute('href')==='./'+data[1]))continue;section.append(pageLink(data));}list.append(section);}const details=document.createElement('details');details.className='j4724-all-pages';details.open=directoryOpen;const summary=document.createElement('summary');summary.textContent='All pages & advanced tools';details.append(summary);details.addEventListener('toggle',()=>{directoryOpen=details.open});list.append(details);}
   const destination=q?list:list.querySelector('.j4724-all-pages');
-  const groups=q?[...(contextual?[contextual]:[]),...allCategories]:allCategories;
-  const seen=new Set();
+  const groups=q?[...(contextual?[contextual]:[]),...CORE,...allCategories]:allCategories;
+  const seen=new Set(q?[]:[...list.querySelectorAll('.j4724-primary a')].map(a=>a.getAttribute('href').slice(2)));
   for(const group of groups){
     if(!q&&group.prefix==='characters')continue; // Search-only results, not an extra 36-item navigation dump.
     const matches=group.items.filter(([label,url,keywords,record])=>{
@@ -109,7 +109,7 @@ function build(){
    if(drawer.hidden)return;
    if(e.key==='Escape'){e.preventDefault();close();return;}
    if(e.key!=='Tab')return;
-   const focusables=[...drawer.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),summary')].filter(el=>el.getClientRects().length&&!el.closest('details:not([open])')||el.tagName==='SUMMARY'&&el.getClientRects().length);
+   const focusables=[...drawer.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),summary')].filter(el=>el.getClientRects().length&&(!el.closest('details:not([open])')||el.tagName==='SUMMARY'));
    if(!focusables.length)return;
    const first=focusables[0],last=focusables[focusables.length-1];
    if(e.shiftKey&&(document.activeElement===first||!drawer.contains(document.activeElement))){e.preventDefault();last.focus();}
