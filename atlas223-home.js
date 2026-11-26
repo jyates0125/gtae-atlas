@@ -18,7 +18,7 @@ const staticLinks=[
  ['GTA VI Weapons','atlas90-weapons6.html','guns equipment pistol'],
  ['All Characters','atlas-characters.html','protagonists NPC people cast'],
  ['GTA VI Research','atlas-research.html','provisional community mapped research'],
- ['My Garage','atlas93-garage.html','personal saved vehicles'],
+ ['My Garage','atlas-forge-collections.html','personal saved vehicles'],
  ['All records','atlas-database.html?kind=all&game=all','database catalog'],
  ['Guides','guides.html','walkthroughs'],
  ['Activities','atlas-activities.html','events'],
