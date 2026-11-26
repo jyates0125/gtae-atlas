@@ -41,8 +41,9 @@ def run():
             check(name+': home has all maps',page.locator('a[href="./maps.html"]').count()>0)
             check(name+': homepage runtime',not js_errors)
             if name=='mobile':
-                page.locator('.menu-toggle').click();check('mobile: menu opens',page.locator('.menu-toggle').get_attribute('aria-expanded')=='true')
-                page.keyboard.press('Escape');check('mobile: menu closes',page.locator('.menu-toggle').get_attribute('aria-expanded')=='false')
+                page.locator('#j132-nav-toggle').click();check('mobile: unified menu opens',page.locator('#j132-nav-toggle').get_attribute('aria-expanded')=='true')
+                page.keyboard.press('Escape');check('mobile: unified menu closes',page.locator('#j132-nav-toggle').get_attribute('aria-expanded')=='false')
+                check('mobile: no duplicate legacy menu',page.locator('.topbar .menu-toggle').count()==0)
             page.set_content(fixture('maps.html'),wait_until='load')
             check(name+': 13 world cards',page.locator('.directory-card').count()==13)
             page.locator('#worldSearch').fill('Vice City Stories');check(name+': directory search',page.locator('.directory-card').count()==1)
