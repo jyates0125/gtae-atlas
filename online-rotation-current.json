@@ -3,18 +3,18 @@
   "rotations": {
     "cayo-chests": {
       "activeIds": [
-        "cayo-chest-6",
-        "cayo-chest-19"
+        "cayo-chest-3",
+        "cayo-chest-14"
       ],
-      "checkedAtUtc": "2026-11-25T06:00:00Z",
-      "validUntilUtc": "2026-11-26T06:00:00Z",
+      "checkedAtUtc": "2026-11-26T06:00:00Z",
+      "validUntilUtc": "2026-11-27T06:00:00Z",
       "source": "https://gtamap.io/gta-online/daily/treasure-chests/",
       "confidence": "calculated_unconfirmed_in_game",
-      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
-      "sourceObservation": "GTAMap.io explicitly dated Nov 25 selects land 6 north of West Beach and underwater 19 under Main Dock jetty. GTA Boss current dailies lists land 01 and water 01; its separate full location catalog maps those numbers to the same landmarks. Independent current page says Today but has no explicit calendar date. Atlas main/development coordinates agree within 0.1 game unit. Calculated, not gameplay verified."
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles",
+      "sourceObservation": "November 26 dated GTAMap.io selections 3 and 14 match bundled land and underwater XYZ exactly; GTA Boss November 26 lists its own #2 land and #2 underwater, matching landmarks in its full catalog. Not gameplay verified."
     }
   },
-  "checkedAtUtc": "2026-11-25T09:23:35.000Z",
+  "checkedAtUtc": "2026-11-26T06:00:00Z",
   "status": "partially-populated-calculated-not-gameplay-verified",
-  "notes": "Nov 25 Cayo selection cross-checked against source landmarks and bundled catalog. Other categories are absent unless independently mapped and current."
+  "notes": "Nov 26 Cayo selection validated against production bundled coordinates and kinds; other categories not asserted."
 }
