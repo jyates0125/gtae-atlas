@@ -36,4 +36,13 @@ jobs:
           else
             expected="$(git ls-remote https://github.com/jyates0125/gtae-atlas.git refs/heads/main | cut -f1)"
           fi
-          python scripts/verify_live_deployment.py "$expected" --attempts 6
+          set -o pipefail
+          python scripts/verify_live_deployment.py "$expected" --attempts 6 | tee live-deployment-evidence.jsonl
+      - name: Save exact production verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gtae-live-deployment-evidence-${{ github.sha }}
+          path: live-deployment-evidence.jsonl
+          if-no-files-found: warn
+          retention-days: 21
