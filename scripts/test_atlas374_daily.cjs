@@ -1,10 +1,18 @@
 const assert=require('node:assert/strict'),fs=require('node:fs');
 for(const p of ['atlas.js','atlas87-daily.js','atlas-activities.js']){
- const s=fs.readFileSync(p,'utf8');assert.match(s,/online-rotation-current\.json\?update=1/);assert.match(s,/300000/);assert.match(s,/visibilitychange/);assert.match(s,/60000/);assert.match(s,/finally\{(?:rotationPending|pending)=false\}/);
+ const s=fs.readFileSync(p,'utf8');assert.match(s,/online-rotation-current\.json\?update=1/);assert.match(s,/rotationRefreshDue/);assert.match(s,/visibilitychange/);assert.match(s,/ROTATION_STATUS_MS/);assert.match(s,/finally\{(?:rotationPending|pending)=false\}/);
 }
 const C=require('../atlas-conditions.js');const now=Date.parse('2026-11-23T06:05:00Z'),s={schema:1,rotations:{'gun-van':{checkedAtUtc:new Date(now).toISOString(),validUntilUtc:new Date(C.nextReset(now,6)).toISOString(),activeIds:['test-only'],source:'fixture'}}};
 assert.ok(C.rotationFeed(s,'gun-van',now));assert.equal(C.rotationFeed(s,'gun-van',C.nextReset(now,6)),null);assert.equal(C.rotationFeed({schema:1,rotations:{}},'gun-van',now),null);
-console.log('Daily refresh contracts and expiry passed');
+assert.equal(C.ROTATION_PERIOD_MS,86400000);
+assert.equal(C.ROTATION_REFRESH_MS,600000);
+assert.equal(C.ROTATION_STATUS_MS,60000);
+assert.equal(C.rotationRefreshDue(0,now),true);
+assert.equal(C.rotationRefreshDue(now,now+599999),false);
+assert.equal(C.rotationRefreshDue(now,now+600000),true);
+assert.equal(C.rotationRefreshDue(now,now-1),true);
+for(const r of C.RULES.filter(r=>r.kind==='rotation')){const next=C.nextReset(now,r.reset);assert.equal(C.nextReset(next,r.reset)-next,C.ROTATION_PERIOD_MS);}
+console.log('Daily refresh contracts, 10 minute network throttle, local expiry and 24h rotation periods passed');
 // Exercise the actual private helpers without initializing page timers or network.
 const vm=require('node:vm');
 const source=fs.readFileSync('atlas87-daily.js','utf8');
