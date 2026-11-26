@@ -248,12 +248,12 @@ Promise.all([
  chestData=spots;bundledDaily=d;updateActive();void refreshDaily();
 }).catch(()=>renderDaily());
 async function refreshDaily(){
- const C=window.JuraConditions;if(!C||dailyPending||Date.now()-lastDailyAttempt<300000)return;
+ const C=window.JuraConditions;if(!C||dailyPending||!C.rotationRefreshDue(lastDailyAttempt))return;
  dailyPending=true;lastDailyAttempt=Date.now();
  try{reviewedDaily=await C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedDaily);updateActive()}catch{}finally{dailyPending=false}
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){updateActive();void refreshDaily()}});
-setInterval(()=>{if(chestData){updateActive();if(!document.hidden)void refreshDaily()}},60000);
+setInterval(()=>{if(chestData){updateActive();if(!document.hidden)void refreshDaily()}},window.JuraConditions?.ROTATION_STATUS_MS||60000);
 const smallMeta=el('p','j180-credit','Research: GTA Wiki, GTALens, GTAMap.io and Rockstar. Original Elario UI and pin styling; underlying in-game artwork © Rockstar Games / Take-Two. Daily predictions are not official confirmation. ');
 const sourceLink=el('a','','Sources & licenses ↗');sourceLink.href='./atlas-credits.html';smallMeta.append(sourceLink);mapStage.append(smallMeta);
 activate('original');
