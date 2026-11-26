@@ -111,13 +111,13 @@
       <p class="hint">Choose Add pin, then tap the map. Saved pins stay in their own game.</p><button type="button" id="addPin" class="wide accent">+ Add pin on map</button>
       <div class="results" id="pinsList"></div><div class="gridbuttons"><button id="exportData" type="button">Export backup</button><button id="importData" type="button" title="Merge missing map data without replacing existing progress">Merge backup</button></div><input type="file" id="importFile" class="hidden" accept=".json,application/json" aria-label="Import progress file">
     </section>
-    <section class="offline" id="datasets"><strong>🗂 Licensed location packs</strong>
-      <p class="hint">Manage optional location packs. Inferred services and provisional records are not confirmed gameplay locations.</p>
+    <section class="offline" id="datasets"><details class="j4725-advanced"><summary>Advanced · optional custom map packs</summary>
+      <p class="hint">Only for custom data. The built-in map and automatic activities do not require an import.</p>
       <p id="packCount" class="hint">0 imported locations</p>
       <button id="loadPack" type="button" class="wide">Import a licensed data pack</button>
       <input type="file" id="packFile" class="hidden" accept=".json,application/json" aria-label="Import licensed Atlas map pack">
       <a class="small-link" href="./atlas-pack-format.html">Data pack format & source rules</a>
-    </section>
+    </details></section>
     <section class="offline source-panel"><strong>🧭 Open-source map layers · calibrated</strong>
       <p class="hint">Optional overlays: Story collectibles, world props and provisional VI research. Heavy layers start off to protect performance; world props are not collectible locations.</p>
       <div id="sourceToggles" aria-label="Enable or disable source overlays"></div>
