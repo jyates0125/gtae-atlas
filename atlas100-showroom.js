@@ -29,7 +29,7 @@ function init(){
  ['♟ Characters','atlas-characters.html?game='+edition],
  ['✿ Animals','atlas-animals.html?game='+edition],
  ['◈ Collectibles','atlas-collectibles.html?game='+edition],
- ['▣ '+(edition==='vi'?'GTA Online My Garage':'My Garage & 3D'),'atlas93-garage.html'],
+ ['▣ My Garage','atlas-forge-collections.html'],
  ['◈ Original 3D configurator',edition==='vi'?'atlas-vehicle-configurator.html?world=vi':'atlas-vehicle-configurator.html']
  ];
  for(const [label,href]of related){const a=make('a','',label);a.href='./'+href;links.append(a)}
