@@ -108,3 +108,15 @@
 .j130-home .topbar>.j4726-today-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:1px solid #f2af64;border-radius:9px;background:#352049;color:#ffeabd;font-size:12px;font-weight:800;text-align:center;text-decoration:none;flex:0 0 auto}
 .j130-home .topbar>.j4726-today-link:hover,.j130-home .topbar>.j4726-today-link:focus-visible{background:#4c2863}
 @media(max-width:470px){.j130-home .topbar>.brand{flex:1 0 100%}.j130-home .topbar>.j99-start-link,.j130-home .topbar>.j4726-today-link{order:2;flex:1 1 0;width:auto;min-width:0;min-height:44px;margin:0;white-space:normal}.j130-home .topbar{gap:8px}}
+
+/* Atlas 47.2.8: cinematic welcome only; no duplicate player navigation. */
+body[data-j4728-welcome="true"] .topbar{position:relative;justify-content:center}
+body[data-j4728-welcome="true"] .j130-public-hero{min-height:min(640px,calc(100svh - 92px));align-items:center}
+body[data-j4728-welcome="true"] .j130-public-hero::before{background:linear-gradient(180deg,#11051d45,#180a2c80 38%,#10051de8 100%),url('./art/atlas97-proposed-loki-scaly-hero.webp') center/cover;transform:none}
+body[data-j4728-welcome="true"] .j130-public-copy{width:min(100%,620px);padding:clamp(22px,5vw,58px) clamp(16px,4vw,42px);box-sizing:border-box}
+body[data-j4728-welcome="true"] .j130-public-copy h1{font-size:clamp(44px,8vw,88px);line-height:.94}
+body[data-j4728-welcome="true"] .j130-hero-actions{display:grid;max-width:350px;margin:24px auto 12px;gap:12px}
+body[data-j4728-welcome="true"] .j130-hero-actions .action{width:100%;min-width:0;min-height:50px;justify-content:center;white-space:normal}
+body[data-j4728-welcome="true"] .j4728-signin:disabled{opacity:.78;cursor:not-allowed;background:#241632;border:1px solid #a47bb9;color:#eadff4}
+body[data-j4728-welcome="true"] .j130-public-disclaimer{margin-top:12px}
+body[data-j4728-welcome="true"] .j132-nav{display:none!important}
