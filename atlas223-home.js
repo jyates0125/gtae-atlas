@@ -7,6 +7,8 @@ const staticLinks=[
  ['Maps','maps.html','13 maps GTAV GTA online Leonida Liberty City San Andreas Vice City'],
  ['GTA V Story','atlas.html','Michael Franklin Trevor Los Santos'],
  ['GTA Online','atlas-online.html','Online multiplayer missions and collectibles'],
+ ['Gun Van location','atlas-online.html?event=gun-van#j393-online-activity-slot','GTA Online daily gun van weapons vendor current rotation'],
+ ['Today in GTA Online','atlas-online.html#j393-online-activity-slot','daily rotations street dealers shipwreck hidden caches LS tags activities'],
  ['GTA VI · Leonida','atlas-vi.html','Lucia Jason GTA 6 Vice City Florida'],
  ['GTA IV','atlas-iv.html','Niko Liberty City'],
  ['San Andreas','atlas-sa.html','CJ Carl Johnson Grove Street'],
