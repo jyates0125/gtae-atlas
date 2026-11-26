@@ -41,7 +41,7 @@ function worldTasks(){
 // Retained URLs are intentionally excluded from ordinary navigation and search.
 const LEGACY_ROUTES=new Set(['atlas97-journey.html','atlas93-dispatch.html','atlas-catalog.html','atlas8-preview.html','command-center.html','directory.html','discovery.html','explorer.html','legacy-explorer.html','leonida-hq.html','online-explorer.html']);
 const isLegacy=url=>LEGACY_ROUTES.has(url.split(/[?#]/)[0]);
-const CURRENT_ALIASES={title:'CURRENT PLAYER WORKSPACES',prefix:'current-alias',items:[['Home','atlas-dashboard.html','dashboard'],['All 13 maps','maps.html','start here choose a world discovery directory command center'],['Today’s activities','atlas-online.html#j393-online-activity-slot','dispatch daily intel online explorer'],['Universe database','atlas-database.html','vehicle location catalog'],['GTA VI Story','atlas-vi.html','leonida hq leonida explorer']]};
+const CURRENT_ALIASES={title:'CURRENT PLAYER WORKSPACES',prefix:'current-alias',items:[['Home','atlas-dashboard.html','dashboard'],['All 13 maps','maps.html','start here choose a world discovery directory command center'],['Today’s activities','atlas-online.html#j393-online-activity-slot','dispatch daily intel online explorer'],['Gun Van location','atlas-online.html?event=gun-van#j393-online-activity-slot','gun van gunvan daily weapons vendor GTA Online'],['Universe database','atlas-database.html','vehicle location catalog'],['GTA VI Story','atlas-vi.html','leonida hq leonida explorer']]};
 const ALL=new Set(CATEGORIES.flatMap(x=>x.items.map(y=>y[1].split(/[?#]/)[0])));
 const safeHref=x=>/^[a-z0-9-]+\.html$/i.test(x);
 const searchText=value=>String(value??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
