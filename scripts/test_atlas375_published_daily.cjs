@@ -11,6 +11,21 @@ const fetcher=(a,b)=>async(url,options)=>{assert.equal(options.credentials,'omit
  assert.deepEqual(C.mergePublishedRotations([remote],C.nextReset(now,6)),empty);
  assert.deepEqual(C.mergePublishedRotations([pack('street-dealers',['a','b'])],now),empty);
  assert.deepEqual(C.mergePublishedRotations([pack('street-dealers',['a','a','b'])],now),empty);
+ // Bad category isolation: keep valid Cayo and independently recover dealer data.
+ const cayo=pack('cayo-chests',['cayo-chest-3','cayo-chest-14']);
+ const corrupt={schema:1,rotations:{...cayo.rotations,'street-dealers':{activeIds:null}}};
+ assert.throws(()=>C.safeSnapshot(corrupt)); // strict personal import unchanged
+ assert.deepEqual(Object.keys((await C.loadPublishedRotations(fetcher(dealer,corrupt),'./local',empty,now)).rotations).sort(),['cayo-chests','street-dealers']);
+ // Same-reset remote corrections take precedence; cached corrections survive outages.
+ const sameOld=pack('gun-van',['old']),sameNew=pack('gun-van',['new']);
+ assert.deepEqual((await C.loadPublishedRotations(fetcher(sameOld,sameNew),'./local',empty,now)).rotations['gun-van'].activeIds,['new']);
+ assert.deepEqual((await C.loadPublishedRotations(fetcher(sameOld,null),'./local',sameNew,now)).rotations['gun-van'].activeIds,['new']);
+ assert.deepEqual((await C.loadPublishedRotations(fetcher(remote,sameOld),'./local',empty,now)).rotations['gun-van'].activeIds,['old']);
+ // A published selection for the next reset must never appear early.
+ const beforeReset=Date.parse('2026-11-24T05:58:00Z'),reset=Date.parse('2026-11-24T06:00:00Z');
+ const tomorrow=pack('gun-van',['next'],reset,C.nextReset(reset,6));
+ assert.deepEqual(C.mergePublishedRotations([tomorrow],beforeReset),empty);
+ assert.deepEqual(C.mergePublishedRotations([tomorrow],reset).rotations['gun-van'].activeIds,['next']);
  await assert.rejects(C.loadPublishedRotations(fetcher(null,null),'./local',empty,now));
  for(const file of ['atlas.js','atlas87-daily.js','atlas-activities.js'])assert.match(fs.readFileSync(file,'utf8'),/loadPublishedRotations/);
  const art=fs.readFileSync('atlas155-art-review.html','utf8');assert.match(art,/GTAE <em>GTA EXPLORER<\/em>/);assert.equal((art.match(/<article class="r155-card">/g)||[]).length,32); // 4 flagship + 4 section + 9 classic + 15 heists
