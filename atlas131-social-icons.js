@@ -53,6 +53,7 @@ function inject(node){
  region.append(heading,grid,hint,live);node.append(region);
 }
 function init(){
+ if(document.querySelector('.j133-universal-footer'))return;
  // One small, predictable footer on every published route; never interrupt the page body.
  // Relocate older per-page sharing modules rather than duplicating them.
  let host=document.querySelector('[data-j131-social-host]');
@@ -70,7 +71,7 @@ function init(){
  const links=document.createElement('nav');
  links.className='j133-footer-links';
  links.setAttribute('aria-label','Footer navigation');
- links.innerHTML='<a href="./index.html">Welcome</a><a href="./maps.html">Maps</a><a href="./atlas93-garage.html">My Garage</a><a href="./atlas-account.html">Guest backup</a><a href="./atlas-credits.html">Sources &amp; rights</a><a href="./atlas-share.html">Share</a>';
+ links.innerHTML='<a href="./index.html">Welcome</a><a href="./maps.html">Maps</a><a href="./atlas-forge-collections.html">My Garage</a><a href="./atlas-account.html">Guest backup</a><a href="./atlas-credits.html">Sources &amp; rights</a><a href="./atlas-share.html">Share</a>';
  const legal=document.createElement('p');legal.className='j133-footer-legal';legal.textContent='Elario Studios · Team Jura Atlas · Independent fan project. Not affiliated with Rockstar Games or Take-Two Interactive.';
  footer.append(links,legal);
  document.body.append(footer);
