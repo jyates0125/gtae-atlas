@@ -47,4 +47,4 @@ assert index.index('data-j130-action="share-page"') > index.index('id="featuredG
 # Sharing is optional: no forced kit download, account signup or misleading automatic posting.
 for banned in ('Social Launch Kit', 'Download social kit', 'autoPost(', 'access_token'):
     assert banned not in index, banned
-print('PASS Atlas 15.3: approved poster → direct guest game selection / honest account; footer-only sharing; no launch-kit regression')
+print('PASS Atlas 15.3: approved poster to direct guest game selection / honest account; footer-only sharing; no launch-kit regression')
