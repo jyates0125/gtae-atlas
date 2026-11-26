@@ -47,7 +47,7 @@
    const slots=safe('team-jura-atlas96-parking-v1',{slots:[]}).slots;
    if($('#progressGarage'))$('#progressGarage').textContent=(Array.isArray(slots)?slots.length:0).toLocaleString();
    const last=safe('team-jura-atlas97-last-workspace-v1',{});
-   const known={'atlas.html':'Story map','atlas-online.html':'Online map','atlas-vi.html':'Leonida map','atlas-research.html':'VI research','atlas-cayo.html':'Cayo island','heist-cayo-perico.html':'Cayo island','atlas81-hq.html':'Collection HQ','atlas93-garage.html':'My Garage','heists.html':'Heist HQ','atlas93-dispatch.html':'Dispatch','atlas87-daily.html':'Daily Intel','atlas90-vehicles5.html':'Vehicle gallery'};
+   const known={'atlas.html':'Story map','atlas-online.html':'Online map','atlas-vi.html':'Leonida map','atlas-research.html':'VI research','atlas-cayo.html':'Cayo island','heist-cayo-perico.html':'Cayo island','atlas81-hq.html':'Collection HQ','atlas93-garage.html':'Garage management','atlas-forge-collections.html':'My Garage','heists.html':'Heist HQ','atlas93-dispatch.html':'Dispatch','atlas87-daily.html':'Daily Intel','atlas90-vehicles5.html':'Vehicle gallery'};
    if(known[last.page]){const a=$('#resumeLink'),label=$('#resumeLabel');if(a){a.href='./'+last.page;a.textContent='Continue '+known[last.page]+' ›'}if(label)label.textContent='Welcome back · '+known[last.page]}
  }
  function directory(){const feature=$('#directoryFeatured'),additional=$('#directoryAdditional'),inp=$('#worldSearch'),count=$('#worldCount'),buttons=$$('[data-world-filter]');if(!feature||!additional)return;
