@@ -21,6 +21,19 @@ try:
             page=ctx.new_page()
             for path,scope in [("index.html",None),("atlas-online.html","online"),("atlas.html","story"),("atlas-vi.html","vi"),("atlas90-vehicles5.html?world=story","story"),("atlas-characters.html?game=vi","vi"),("atlas-sa.html",None),("atlas-forge-collections.html",None)]:
                 page.goto(base+path,wait_until="domcontentloaded",timeout=50000)
+                # Public labels use the collection hub, not the management child.
+                wrong=page.locator('a[href="./atlas93-garage.html"]').filter(has_text="My Garage")
+                expect(wrong).to_have_count(0)
+                if path in ("atlas.html","atlas-online.html","atlas-vi.html"):
+                    advanced=page.locator("#datasets > details.j4725-advanced")
+                    expect(advanced).to_have_count(1)
+                    assert not advanced.evaluate("(node)=>node.open")
+                    expect(page.locator("#loadPack")).to_be_hidden()
+                    advanced.locator("summary").click()
+                    expect(page.locator("#loadPack")).to_be_visible()
+                    advanced.locator("summary").click()
+                    expect(page.locator("#loadPack")).to_be_hidden()
+                    expect(page.locator("#atlasFilterDrawer")).to_have_count(1)
                 menu=page.locator("#j132-nav-toggle")
                 expect(menu).to_have_count(1)
                 menu.click()
