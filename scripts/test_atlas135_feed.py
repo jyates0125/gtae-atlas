@@ -6,9 +6,9 @@ sidebar=(R/'atlas88-events.js').read_text(encoding='utf8')
 dashboard=(R/'atlas87-daily.js').read_text(encoding='utf8')
 activities=(R/'atlas-activities.js').read_text(encoding='utf8')
 for js in [sidebar,dashboard,activities]:
- assert "C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1'" in js, 'Missing shared automatic feed for one Online surface'
-assert 'reviewedFeed=await C.loadPublishedRotations' in sidebar
-assert 'lastAttempt' in sidebar and 'pending' in sidebar
+ assert "C.refreshPublishedRotations(fetch," in js, 'Missing shared automatic feed for one Online surface'
+assert 'reviewedFeed=await C.refreshPublishedRotations' in sidebar
+assert 'pending' in sidebar and 'refreshPublishedRotations' in sidebar
 assert 'mergePublishedRotations' in (R/'atlas-conditions.js').read_text(encoding='utf8')
 assert 'const raw=rotationFeed();' in sidebar
 assert 'finally{pending=false}' in sidebar

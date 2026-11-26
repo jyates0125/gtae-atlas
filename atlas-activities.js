@@ -7,13 +7,13 @@ const slasherSession={freeroam:false,elapsed:false,vehicle:false,cooldown:false}
 let state=C.safeState(load(KEY,{})),snapshot=null,needle='',group='';try{snapshot=C.safeSnapshot(load(FEED,{schema:1,rotations:{}}))}catch{snapshot={schema:1,rotations:{}}}
 function load(k,def){try{return JSON.parse(localStorage.getItem(k)||'null')??def}catch{return def}}
 let sourceLabel='Personal imported snapshot · not verified',reviewedSnapshot={schema:1,rotations:{}};
-let lastRotationAttempt=0,rotationPending=false;
+let rotationPending=false;
 async function loadReviewedRotations(force=false){
- if(mode!=='online'||rotationPending||(!force&&Date.now()-lastRotationAttempt<300000))return;
- rotationPending=true;lastRotationAttempt=Date.now();
+ if(mode!=='online'||rotationPending)return;
+ rotationPending=true;
  const status=$('autoRotationStatus');
  try{
-  const reviewed=await C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedSnapshot);reviewedSnapshot=reviewed;
+  const reviewed=await C.refreshPublishedRotations(fetch,reviewedSnapshot,{force});reviewedSnapshot=reviewed;
   // A personal import is kept separate and never replaced or described as verified.
   const personal=load(FEED,null);
   if(personal&&Object.keys(personal.rotations||{}).length){
@@ -51,7 +51,7 @@ function build(){document.title='Atlas Activities · '+titles[mode];$('headline'
  $('search').oninput=e=>{needle=e.target.value.toLowerCase().trim();render()};$('group').onchange=e=>{group=e.target.value;render()};
  $('resetProgress').onclick=()=>{if(!confirm('Reset only '+titles[mode]+' progress on this device?'))return;state=C.emptyState();save();location.reload()};
  $('export').onclick=()=>{const doc={schema:1,mode,exportedAtUtc:new Date().toISOString(),progress:state};const data=new Blob([JSON.stringify(doc,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(data);a.download='team-jura-'+mode+'-activity-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
- render();loadReviewedRotations();if(mode==='online'){let last='';const refresh=()=>{if(document.hidden)return;void loadReviewedRotations();const current=C.rulesForMode(mode).map(r=>evaluation(r).status+':'+evaluation(r).reason).join('|');if(current!==last){last=current;render()}updateResets()};setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);}}
+ render();loadReviewedRotations();if(mode==='online'){let last='';const refresh=()=>{if(document.hidden)return;void loadReviewedRotations();const current=C.rulesForMode(mode).map(r=>evaluation(r).status+':'+evaluation(r).reason).join('|');if(current!==last){last=current;render()}updateResets()};setInterval(refresh,C.ROTATION_STATUS_MS);document.addEventListener('visibilitychange',refresh);}}
 function context(){return {mode,state,snapshot:C.selectRotationSnapshot(snapshot,reviewedSnapshot),now:Date.now(),hour:$('gameHour').value===''?NaN:Number($('gameHour').value),slasherSession}}
 function evaluation(r){return C.evaluate(r.id,context())}
 function guidance(r){const details=document.createElement('details');details.className='j396-guidance';details.open=expandedGuides.has(r.id);const title=document.createElement('summary');title.textContent='How to play / requirements';details.append(title);const steps=C.activityGuidance(r.id,context());if(steps.length){const list=document.createElement('ul');for(const step of steps){const li=document.createElement('li');li.textContent=(step.met?'✓ ':'○ ')+step.label;list.append(li)}details.append(list)}else{const info=document.createElement('p');info.textContent=r.kind==='research'||r.kind==='unreleased'?'Research information only; gameplay availability requires evidence.':'No additional prerequisite is documented in this rule. Check the description and current game state.';details.append(info)}details.addEventListener('toggle',()=>{if(details.open)expandedGuides.add(r.id);else expandedGuides.delete(r.id)});return details}
@@ -61,5 +61,5 @@ function render(){const all=C.rulesForMode(mode),selected=all.filter(r=>(!group|
  // Detailed attribution is centralized on the credits page.
  const map=document.createElement('a');map.href=mode==='vi'?'./atlas-vi.html':mode==='story'?'./atlas.html':r.id==='cayo-chests'?'./heist-cayo-perico.html':'./atlas-online.html?event='+encodeURIComponent(r.id);map.textContent=mode==='vi'?'Explore Leonida':mode==='story'?'Open Story map':r.id==='cayo-chests'?'Open Cayo map':'Open Online map';actions.append(map);card.append(heading,desc,why,guidance(r),actions);root.append(card)}
  if(!selected.length){const empty=document.createElement('p');empty.className='empty';empty.textContent='No matching activities';root.append(empty)}$('ruleCount').textContent=all.length;$('completeCount').textContent=finished;$('activeCount').textContent=active;$('statusCount').textContent=unknown;$('resultTotal').textContent=selected.length+' shown';if(mode==='online'){$('snapshotStatus').textContent=Object.keys(C.selectRotationSnapshot(snapshot,reviewedSnapshot).rotations||{}).length+' rotation group(s) loaded. '+sourceLabel+'. Dated positions do not imply Rockstar live verification.';}}
-function updateResets(){const list=[['Gun Van, Shipwreck, tags and many daily rotations',6],['Street Dealers',7]];const now=Date.now();const date=d=>new Date(d).toUTCString().slice(0,25);$('resetInfo').textContent=list.map(([name,h])=>name+': next reset '+date(C.nextReset(now,h))).join(' · ')}
+function updateResets(){const list=[['Gun Van, Shipwreck, tags and many daily rotations',6],['Street Dealers',7]];const now=Date.now();const date=d=>new Date(d).toUTCString().slice(0,25);$('resetInfo').textContent=list.map(([name,h])=>name+': every 24h · next reset '+date(C.nextReset(now,h))).join(' · ')}
 build();})();

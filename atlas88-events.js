@@ -10,7 +10,7 @@ const icons=[[/ghost/i,'👻'],[/gun van/i,'🚐'],[/shipwreck/i,'⚓'],[/street
 const icon=(r)=>icons.find(([re])=>re.test(r.name||''))?.[1]||'✦';
 window.TeamJuraEventIcon88=Object.freeze({forName:n=>icon({name:n}),forRecord:r=>r?.activityId?icon(C.BY_ID[r.activityId]||r):null});
 const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch{return d}};
-let reviewedFeed={schema:1,rotations:{}},lastAttempt=0,pending=false;
+let reviewedFeed={schema:1,rotations:{}},pending=false;
 const rotationFeed=()=>{let personal;try{personal=C.safeSnapshot(read('jura68-rotation-feed',{schema:1,rotations:{}}))}catch{}return C.selectRotationSnapshot(personal,reviewedFeed)};
 const statusFor=r=>{const state=C.safeState(read('jura68-conditions-online',{}));const raw=rotationFeed();let feed;try{feed=C.safeSnapshot(raw)}catch{feed={schema:1,rotations:{}}};const hour=read('jura68-online-hour',null);return C.evaluate(r.id,{mode:'online',state,snapshot:feed,hour:hour===null||hour===''?NaN:Number(hour),slasherSession:window.JuraSlasherSession,now:Date.now()})};
 const human=s=>({active:'ELIGIBLE · NOT LIVE VERIFIED',possible:'REFERENCE / NOT ACTIVE',unknown:'NOT CONFIRMED',closed:'NOT ACTIVE',locked:'REQUIREMENTS',complete:'COMPLETED',research:'RESEARCH',excluded:'NOT IN THIS GAME', 'available-feed':'DATED SELECTION'})[s]||s.toUpperCase();
@@ -79,7 +79,7 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
   const signature=groups().map(r=>{const s=statusFor(r);return r.id+':'+s.status+':'+s.reason}).join('|');
   if(signature!==lastEvidence){lastEvidence=signature;render();redrawMap()}
  }
- setInterval(refreshEvidence,60000);document.addEventListener('visibilitychange',refreshEvidence);
+ setInterval(refreshEvidence,C.ROTATION_STATUS_MS);document.addEventListener('visibilitychange',refreshEvidence);
  // A dashboard deep link selects only the requested Online rule. Retry after async map sources arrive.
  const requested=new URLSearchParams(location.search).get('event');
  const requestedRule=mapPage&&groups().find(r=>r.id===requested);
@@ -93,9 +93,9 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  render();
  // Shared published/bundled rotation selection. Expired data remains unknown.
  async function loadReviewed(force=false){
-  if(pending||(!force&&Date.now()-lastAttempt<300000))return;
-  pending=true;lastAttempt=Date.now();
-  try{reviewedFeed=await C.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedFeed);render();redrawMap()}catch{}finally{pending=false}
+  if(pending)return;
+  pending=true;
+  try{reviewedFeed=await C.refreshPublishedRotations(fetch,reviewedFeed,{force});render();redrawMap()}catch{}finally{pending=false}
  }
  void loadReviewed();
 

@@ -60,7 +60,7 @@ const fetcher=(a,b)=>async(url,options)=>{assert.equal(options.credentials,'omit
  assert.equal(C.rotationFeed(tomorrow,'gun-van',beforeReset),null);
  assert.equal(C.rotationFeed(pack('cayo-chests',['cayo-chest-1','cayo-chest-2']),'cayo-chests',now),null);
  await assert.rejects(C.loadPublishedRotations(fetcher(null,null),'./local',empty,now));
- for(const file of ['atlas.js','atlas87-daily.js','atlas-activities.js'])assert.match(fs.readFileSync(file,'utf8'),/loadPublishedRotations/);
+ for(const file of ['atlas.js','atlas87-daily.js','atlas-activities.js'])assert.match(fs.readFileSync(file,'utf8'),/refreshPublishedRotations/);
  const art=fs.readFileSync('atlas155-art-review.html','utf8');assert.match(art,/GTAE <em>GTA EXPLORER<\/em>/);assert.equal((art.match(/<article class="r155-card">/g)||[]).length,32); // 4 flagship + 4 section + 9 classic + 15 heists
  console.log('Independent daily channel, expiry, fallback and artwork masthead checks passed');
 })().catch(e=>{console.error(e);process.exitCode=1});

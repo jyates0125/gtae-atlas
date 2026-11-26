@@ -1117,12 +1117,12 @@ function init(){
  if(cat&&CATEGORIES[cat]){active[filterScope()]=new Set([cat]);showTab('Services')}
  if(q||cat)render();readPacks();renderSources();loadDataset('5');loadDataset('6');loadSources();
  if(document.body.dataset.startWorld==='online'&&window.JuraConditions){
-  let rotationLastAttempt=0,rotationPending=false;
-  const pullRotation=async()=>{if(rotationPending||Date.now()-rotationLastAttempt<300000)return;rotationPending=true;rotationLastAttempt=Date.now();
-   try{reviewedRotationSnapshot=await window.JuraConditions.loadPublishedRotations(fetch,'./data/online-rotation-current.json?update=1',reviewedRotationSnapshot);if(mode==='online'&&game==='5'){renderNamedLayers();renderFind();renderRoute();if(nearbyActive)renderNearby();updateSelected();schedulePaint()}}catch{}finally{rotationPending=false}
+  let rotationPending=false;
+  const pullRotation=async()=>{if(rotationPending)return;rotationPending=true;
+   try{reviewedRotationSnapshot=await window.JuraConditions.refreshPublishedRotations(fetch,reviewedRotationSnapshot);if(mode==='online'&&game==='5'){renderNamedLayers();renderFind();renderRoute();if(nearbyActive)renderNearby();updateSelected();schedulePaint()}}catch{}finally{rotationPending=false}
   };
   const refresh=()=>{if(!document.hidden&&mode==='online'&&game==='5'){renderNamedLayers();renderFind();renderRoute();if(nearbyActive)renderNearby();updateSelected();schedulePaint();void pullRotation()}};
-  void pullRotation();setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
+  void pullRotation();setInterval(refresh,window.JuraConditions.ROTATION_STATUS_MS);document.addEventListener('visibilitychange',refresh);
   window.addEventListener('storage',e=>{if(['jura68-rotation-feed','jura68-conditions-online','jura68-online-hour'].includes(e.key))refresh()});
  }
  if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./atlas-sw.js?v=290',{scope:'./'}).catch(()=>{});
