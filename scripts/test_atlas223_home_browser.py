@@ -147,6 +147,8 @@ try:
    dre=page.locator('#j223-search-results a').filter(has_text="Dre'Quan Priest")
    expect(dre).to_have_count(1,timeout=15000)
    assert '%27' in dre.get_attribute('href') and 'profile=character%3Adre-quan-priest' in dre.get_attribute('href')
+   page.locator('#j223-search-input').fill('Gun Van')
+   expect(page.locator('#j223-search-results a[href="./atlas-online.html?event=gun-van#j393-online-activity-slot"]')).to_have_count(1)
    page.locator('#j223-search-input').fill('online')
    suggest=page.locator('#j223-search-results a')
    expect(suggest.first).to_be_visible(timeout=15000)
