@@ -217,16 +217,7 @@ jobs:
           python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
-      - name: Independently capture designed-brand screenshots (Chromium)
-        if: success()
-        continue-on-error: true
-        env:
-          ATLAS_BROWSER: chromium
-        run: |
-          python -m pip install 'playwright==1.58.0'
-          python -m playwright install chromium
-          python scripts/capture_design_review.py
-      - name: Save Elario designed-brand review screenshots (Chromium)
+      - name: Save functional QA and targeted visual evidence (Chromium)
         if: success()
         uses: actions/upload-artifact@v4
         with:
@@ -295,16 +286,7 @@ jobs:
           python scripts/test_atlas220_vi_mobile_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
-      - name: Independently capture designed-brand screenshots (Edge)
-        if: success()
-        continue-on-error: true
-        env:
-          ATLAS_BROWSER: msedge
-        run: |
-          python -m pip install playwright==1.58.0
-          python -m playwright install msedge
-          python scripts/capture_design_review.py
-      - name: Save Elario designed-brand review screenshots (Edge)
+      - name: Save functional QA and targeted visual evidence (Edge)
         if: success()
         uses: actions/upload-artifact@v4
         with:
