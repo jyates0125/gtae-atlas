@@ -103,3 +103,8 @@
 .j132-poster-island{background-image:url('./art/atlas93-cayo.svg');transform:rotate(7deg);margin-bottom:3%}
 .j132-login-note{font-size:11px;color:#f8d6ed;max-width:720px;margin:15px auto 0}
 @media(max-width:730px){.j132-poster-welcome{min-height:650px}.j132-poster-welcome .j130-public-copy{padding:100px 15px 28px}.j132-poster-art{opacity:.3;padding-bottom:42%;gap:4px}.j132-poster-panel{max-width:34%;height:26%}.j132-poster-welcome .j130-public-copy h1{font-size:clamp(56px,13vw,83px)}.j132-poster-welcome .j130-hero-actions{gap:7px}.j132-poster-welcome .j130-hero-actions .action,.j132-poster-welcome .j130-hero-actions .j130-share-button{min-height:46px;font-size:12px;padding:10px 12px}}
+
+/* Atlas 47.2.6: one homepage menu; replace legacy duplicate with direct gameplay shortcut. */
+.j130-home .topbar>.j4726-today-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:1px solid #f2af64;border-radius:9px;background:#352049;color:#ffeabd;font-size:12px;font-weight:800;text-align:center;text-decoration:none;flex:0 0 auto}
+.j130-home .topbar>.j4726-today-link:hover,.j130-home .topbar>.j4726-today-link:focus-visible{background:#4c2863}
+@media(max-width:470px){.j130-home .topbar>.brand{flex:1 0 100%}.j130-home .topbar>.j99-start-link,.j130-home .topbar>.j4726-today-link{order:2;flex:1 1 0;width:auto;min-width:0;min-height:44px;margin:0;white-space:normal}.j130-home .topbar{gap:8px}}
