@@ -109,7 +109,7 @@ try:
             card=legend.locator(".j88-event-card").filter(has_text="Gun Van location")
             expect(card).to_have_count(1)
             expect(card.locator(".j4723-current-locations")).to_contain_text("Procopio Beach",timeout=25000)
-            card.get_by_role("button",name="Find on map").click()
+            # A search result must focus the real map without a second manual action.
             page.wait_for_function("window.JuraAtlasEventLocations?.focused() && window.JuraAtlasEventLocations.availableCount(window.JuraConditions.BY_ID['gun-van'])===1",timeout=25000)
             expect(page.locator('header a.brand')).to_have_attribute("href","./atlas-dashboard.html")
             ctx.close()
