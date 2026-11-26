@@ -28,7 +28,7 @@ for name,markers in checks.items():
         assert marker in text,(name,marker)
 release=(ROOT/'.github/workflows/team-jura-release.yml').read_text(encoding='utf-8')
 header=release.split('permissions:',1)[0]
-assert '  pull_request:' not in header and '  push:' not in header, 'Full release gate must stay manual-only during staging'
+assert '  push:' not in header and '  pull_request:' in header and 'branches: [main]' in header and 'workflow_dispatch:' in header, 'Full release gate must trigger on production PRs, not routine staging'
 for name in ('atlas290-vi-source-ledger.css','atlas290-official-landmarks.css',
              'atlas292-shortcut-filter.css','atlas291-shortcuts.css',
              'docs/ATLAS294-INTEGRATED-STAGING-GATE.md'):

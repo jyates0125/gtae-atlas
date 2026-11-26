@@ -26,6 +26,10 @@ try:
             panel=page.locator("#sidebar #j393-online-activity-slot #j88-events")
             expect(panel).to_have_count(1)
             expect(panel).to_be_visible()
+            expect(page.locator('#atlasFilterDrawer #j393-online-activity-slot #j88-events')).to_have_count(1)
+            if width <= 820:
+                assert page.evaluate('''() => { const s=document.querySelector('.shell'), a=document.querySelector('#sidebar'), f=document.querySelector('.j133-universal-footer'); return !!f && f.getBoundingClientRect().top >= Math.max(s.getBoundingClientRect().bottom,a.getBoundingClientRect().bottom)-2 && document.documentElement.scrollWidth<=innerWidth+2 }'''), 'Footer must follow entire workspace, not overlap sidebar'
+                expect(page.locator('.jura-brand-map')).to_be_hidden()
             card=panel.locator(".j88-event-card").filter(has_text="Halloween free-roam Slashers")
             expect(card).to_have_count(1)
             switch=card.locator(".j393-event-switch")
