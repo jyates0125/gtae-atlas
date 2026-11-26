@@ -19,7 +19,15 @@ try:
             ctx=browser.new_context(viewport={"width":width,"height":height})
             ctx.route("https://**/*",lambda r:r.abort())
             page=ctx.new_page()
-            for path,scope in [("index.html",None),("atlas-online.html","online"),("atlas.html","story"),("atlas-vi.html","vi"),("atlas90-vehicles5.html?world=story","story"),("atlas-characters.html?game=vi","vi"),("atlas-sa.html",None),("atlas-forge-collections.html",None)]:
+            page.goto(base+"index.html",wait_until="domcontentloaded")
+            expect(page.locator("#j132-nav-toggle")).to_have_count(0)
+            expect(page.locator(".j4728-signin")).to_be_disabled()
+            expect(page.locator("input[type=password],input[type=email],#featuredGrid,.j4709-entry")).to_have_count(0)
+            expect(page.locator(".j130-public-hero")).to_be_visible()
+            assert "atlas97-proposed-loki-scaly-hero.webp" in page.locator(".j130-public-hero").evaluate("(e)=>getComputedStyle(e,'::before').backgroundImage")
+            page.locator("a.action.primary").click()
+            expect(page).to_have_url(base+"atlas-dashboard.html")
+            for path,scope in [("atlas-dashboard.html",None),("atlas-online.html","online"),("atlas.html","story"),("atlas-vi.html","vi"),("atlas90-vehicles5.html?world=story","story"),("atlas-characters.html?game=vi","vi"),("atlas-sa.html",None),("atlas-forge-collections.html",None)]:
                 page.goto(base+path,wait_until="domcontentloaded",timeout=50000)
                 # Public labels use the collection hub, not the management child.
                 wrong=page.locator('a[href="./atlas93-garage.html"]').filter(has_text="My Garage")
@@ -34,15 +42,12 @@ try:
                     advanced.locator("summary").click()
                     expect(page.locator("#loadPack")).to_be_hidden()
                     expect(page.locator("#atlasFilterDrawer")).to_have_count(1)
-                if path=="index.html":
+                if path=="atlas-dashboard.html":
                     expect(page.locator(".topbar .menu-toggle")).to_have_count(0)
-                    today=page.locator(".topbar .j4726-today-link")
+                    today=page.locator(".topbar .j99-start-link")
                     expect(today).to_be_visible()
                     expect(today).to_have_attribute("href","./atlas-online.html#j393-online-activity-slot")
-                    expect(page.locator("a.action.primary[href='#featured']")).to_be_visible()
-                    assert page.locator("#featuredGrid").count()==1
-                    expect(page.locator("a[href='./atlas-dashboard.html']")).to_have_count(0)
-                    assert page.locator("#featuredGrid").evaluate("(el)=>!!(el.compareDocumentPosition(document.querySelector('.j4709-entry')) & Node.DOCUMENT_POSITION_FOLLOWING)")
+                    assert page.locator(".j223-worlds").evaluate("(el)=>!!(el.compareDocumentPosition(document.querySelector('.j4709-entry')) & Node.DOCUMENT_POSITION_FOLLOWING)")
                 menu=page.locator("#j132-nav-toggle")
                 expect(menu).to_have_count(1)
                 menu.click()
@@ -64,15 +69,14 @@ try:
                     assert "./atlas-online.html#j393-online-activity-slot" not in hrefs
                 directory.locator("summary").click()
                 assert directory.evaluate("(node)=>node.open")
-                legacy=("atlas-dashboard.html","atlas97-journey.html","atlas93-dispatch.html","atlas-catalog.html","atlas8-preview.html","command-center.html","directory.html","discovery.html","explorer.html","legacy-explorer.html","leonida-hq.html","online-explorer.html")
+                legacy=("atlas97-journey.html","atlas93-dispatch.html","atlas-catalog.html","atlas8-preview.html","command-center.html","directory.html","discovery.html","explorer.html","legacy-explorer.html","leonida-hq.html","online-explorer.html")
                 for old in legacy:
                     expect(drawer.locator(f'a[href="./{old}"]')).to_have_count(0)
-                if path=="index.html":
+                if path=="atlas-dashboard.html":
                     drawer.locator("#j132-search").fill("dashboard")
-                    expect(drawer.locator('a[href="./index.html"]')).to_have_count(1)
-                    expect(drawer.locator('a[href="./atlas-dashboard.html"]')).to_have_count(0)
-                    drawer.locator("#j132-search").fill("legacy archive")
                     expect(drawer.locator('a[href="./atlas-dashboard.html"]')).to_have_count(1)
+                    drawer.locator("#j132-search").fill("legacy archive")
+                    expect(drawer.locator('a[href="./atlas97-journey.html"]')).to_have_count(1)
                 drawer.locator("#j132-search").fill("garage")
                 expect(drawer.locator('a[href="./atlas-forge-collections.html"]')).to_have_count(1)
                 drawer.locator("#j132-search").fill("GTA VI")
