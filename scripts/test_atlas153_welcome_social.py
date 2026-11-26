@@ -13,11 +13,11 @@ css = read('atlas130-launch.css')
 
 # Preserve approved public artwork; current gameplay starts directly on the homepage.
 assert 'j130-public-hero j132-poster-welcome' in index
-assert index.index('j132-poster-welcome') < index.index('id="featuredGrid"')
+assert 'id="featuredGrid"' not in index and 'j4709-entry' not in index
 assert "url('./art/atlas97-proposed-loki-scaly-hero.webp')" in css
-assert 'href="#featured">✦ Choose your game · Play as guest' in index
-assert 'href="./atlas-dashboard.html"' not in index
-assert 'href="./atlas-account.html">◎ Guest Progress &amp; Backups' in index
+assert 'href="./atlas-dashboard.html">Continue as Guest' in index
+assert 'class="action outline j4728-signin" disabled' in index
+assert 'data-j4728-welcome="true"' in index
 assert 'id="publicEntryNote"' in index and 'No download or account is required' in index
 assert 'id="featuredGrid"' in dashboard
 assert 'href="./atlas-dashboard.html">Enter Atlas as a guest' in account
@@ -41,8 +41,8 @@ assert "document.body.append(footer)" in js and "footer.append(host)" in js
 assert "const existing=node.querySelector('.j131-social')" in js
 assert all(page.read_text(encoding='utf-8').count('src="./atlas131-social-icons.js') == 1 for page in R.glob('*.html'))
 assert 'atlas131-social-icons.css' in build
-assert 'data-j130-action="share-page"' in index
-assert index.index('data-j130-action="share-page"') > index.index('id="featuredGrid"')
+assert 'data-j130-action="share-page"' not in index
+assert 'data-j131-social-host' in dashboard
 
 # Sharing is optional: no forced kit download, account signup or misleading automatic posting.
 for banned in ('Social Launch Kit', 'Download social kit', 'autoPost(', 'access_token'):
