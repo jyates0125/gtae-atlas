@@ -72,13 +72,19 @@ const PREREQS=[['spray-can','Collected a spray can'],['metal-detector','Found Me
 const EVENT_NAMES={halloween:'Halloween event confirmed active',peyote:'Peyote event confirmed active',holiday:'Holiday event confirmed active'};
 function validIso(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(s)&&Number.isFinite(Date.parse(s));}
 function nextReset(now,utcHour){const d=new Date(now);d.setUTCHours(utcHour,0,0,0);if(d.getTime()<=now)d.setUTCDate(d.getUTCDate()+1);return d.getTime();}
+function validCayoIds(ids){
+ if(!Array.isArray(ids)||ids.length!==2)return false;
+ const numbers=ids.map(id=>/^cayo-chest-(?:[1-9]|1[0-9])$/.test(String(id))?Number(String(id).slice(11)):NaN);
+ return numbers.some(n=>n>=1&&n<=10)&&numbers.some(n=>n>=11&&n<=19);
+}
 function rotationFeed(snapshot,id,now=Date.now()){
  const s=snapshot?.rotations?.[id];if(!s||!Array.isArray(s.activeIds)||!validIso(s.checkedAtUtc)||!validIso(s.validUntilUtc))return null;
  const checked=Date.parse(s.checkedAtUtc),end=Date.parse(s.validUntilUtc);
  if(checked>now+5*60e3||end<=now||end<=checked||checked<now-48*3600e3||s.activeIds.length>200||s.activeIds.some(v=>!/^[-a-z0-9_:]{1,80}$/i.test(String(v))))return null;
- const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length>rule.today))return null;
+ const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length!==rule.today))return null;
+ if(id==='cayo-chests'&&!validCayoIds(s.activeIds))return null;
  // Daily selections cannot survive the activity's next UTC reset, even when an imported file says otherwise.
- if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6))return null;
+ if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6)||nextReset(checked,rule.reset??6)!==nextReset(now,rule.reset??6))return null;
  if(!s.activeIds.length||new Set(s.activeIds.map(String)).size!==s.activeIds.length)return null;
  return{active:new Set(s.activeIds.map(String)),checkedAtUtc:s.checkedAtUtc,validUntilUtc:s.validUntilUtc,source:typeof s.source==='string'?s.source.slice(0,200):'Imported snapshot',confidence:'user-imported; independently unverified'};
 }
@@ -169,7 +175,7 @@ function markerColor(status){return {active:'#facc15',possible:'#f8fafc',closed:
 function statusText(status){return {active:'Eligible / selected (not verified live)',possible:'Possible · not currently selected',locked:'Requirements to meet',closed:'Not active',complete:'Completed',unknown:'Unconfirmed / no live data','available-feed':'Snapshot available',research:'Research lead',excluded:'Not part of this game mode'}[status]||status;}
 function emptyState(){return {completed:{},seen:{},flags:{},events:{}};}
 function safeState(s){const o=emptyState();if(!s||typeof s!=='object')return o;for(const k of Object.keys(o)){if(!s[k]||typeof s[k]!=='object'||Array.isArray(s[k]))continue;for(const [key,val] of Object.entries(s[k]))if(/^[a-z0-9-]{1,70}$/i.test(key)&&typeof val==='boolean')o[k][key]=val;}return o;}
-function safeSnapshot(s){if(!s||typeof s!=='object'||s.schema!==1||!s.rotations||typeof s.rotations!=='object')throw Error('Expected schema 1 with a rotations object.');const a={schema:1,rotations:{}};for(const [id,v] of Object.entries(s.rotations)){const r=BY_ID[id];if(!r||r.kind!=='rotation')continue;if(!v||!Array.isArray(v.activeIds)||v.activeIds.length>200||v.activeIds.some(i=>!/^[-a-z0-9_:]{1,80}$/i.test(String(i)))||!validIso(v.checkedAtUtc)||!validIso(v.validUntilUtc))throw Error('Invalid position data for '+id);
+function safeSnapshot(s,{isolateInvalid=false}={}){if(!s||typeof s!=='object'||s.schema!==1||!s.rotations||typeof s.rotations!=='object'||Array.isArray(s.rotations))throw Error('Expected schema 1 with a rotations object.');const a={schema:1,rotations:{}};for(const [id,v] of Object.entries(s.rotations)){const r=BY_ID[id];if(!r||r.kind!=='rotation')continue;if(!v||!Array.isArray(v.activeIds)||v.activeIds.length>200||v.activeIds.some(i=>!/^[-a-z0-9_:]{1,80}$/i.test(String(i)))||!validIso(v.checkedAtUtc)||!validIso(v.validUntilUtc)){if(isolateInvalid)continue;throw Error('Invalid position data for '+id);}
  a.rotations[id]={checkedAtUtc:v.checkedAtUtc,validUntilUtc:v.validUntilUtc,activeIds:v.activeIds.map(String),source:String(v.source||'User-supplied').slice(0,200)};}return a;}
 // Read-only public data channel, independent of Cloudflare code deployments.
 const PUBLISHED_ROTATIONS_URL='https://raw.githubusercontent.com/jyates0125/gtae-atlas/refs/heads/data/online-rotations/online-rotation-current.json';
@@ -203,12 +209,12 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
    const r=await fetcher(url,{cache:'no-cache',credentials:'omit',referrerPolicy:'no-referrer',...(controller?{signal:controller.signal}:{})});
    if(!r.ok)throw Error('Daily source unavailable');
    const body=await r.text();if(body.length>100000)throw Error('Daily feed too large');
-   return safeSnapshot(JSON.parse(body));
+   return safeSnapshot(JSON.parse(body),{isolateInvalid:true});
   }finally{if(timer!==null)clearTimeout(timer)}
  }
  const responses=await Promise.allSettled([read(localURL),read(PUBLISHED_ROTATIONS_URL)]);
  if(responses.every(r=>r.status==='rejected'))throw Error('Both daily feeds unavailable');
- return mergePublishedRotations([...responses.filter(r=>r.status==='fulfilled').map(r=>r.value),previous],now);
+ return mergePublishedRotations([...responses.slice().reverse().filter(r=>r.status==='fulfilled').map(r=>r.value),previous],now);
 }
 return{activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });
