@@ -77,6 +77,8 @@ try:
                     expect(drawer.locator('a[href="./atlas-dashboard.html"]')).to_have_count(1)
                     drawer.locator("#j132-search").fill("legacy archive")
                     expect(drawer.locator('a[href="./atlas97-journey.html"]')).to_have_count(1)
+                drawer.locator("#j132-search").fill("Gun Van")
+                expect(drawer.locator('a[href="./atlas-online.html?event=gun-van#j393-online-activity-slot"]')).to_have_count(1)
                 drawer.locator("#j132-search").fill("garage")
                 expect(drawer.locator('a[href="./atlas-forge-collections.html"]')).to_have_count(1)
                 drawer.locator("#j132-search").fill("GTA VI")
