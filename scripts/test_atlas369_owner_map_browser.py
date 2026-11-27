@@ -64,10 +64,29 @@ try:
     assert page.locator('#original').is_hidden()
     hq=page.locator('#j369-site-tools>a')
     menu=page.locator('#j132-nav-toggle')
-    expect(hq).to_be_visible()
-    a,b=hq.bounding_box(),menu.bounding_box()
-    assert a and b and a['x']+a['width']<=b['x']+1,(file,width,a,b)
-    assert b['x']+b['width']<=width+2,(file,width,b)
+    # The compact mobile V/Online header intentionally hides the redundant
+    # HQ shortcut only when the canonical menu exists. VI remains unchanged.
+    if width<=820 and file in ('atlas.html','atlas-online.html'):
+     expect(hq).to_have_count(1)
+     expect(hq).to_be_hidden()
+     expect(menu).to_be_visible()
+     b=menu.bounding_box()
+     assert b and b['x']>=-2 and b['x']+b['width']<=width+2,(file,width,b)
+     menu.click()
+     drawer=page.locator('#j132-nav-drawer')
+     expect(drawer).to_be_visible()
+     drawer.locator('#j132-search').fill('Home')
+     expect(drawer.locator('a[href="./atlas-dashboard.html"]')).to_be_visible()
+     drawer.locator('#j132-search').fill('Tracker & HQ')
+     expect(drawer.locator('a[href="./atlas81-hq.html"]')).to_be_visible()
+     drawer.locator('.j132-close').click()
+     expect(drawer).to_be_hidden()
+     expect(menu).to_be_focused()
+    else:
+     expect(hq).to_be_visible()
+     a,b=hq.bounding_box(),menu.bounding_box()
+     assert a and b and a['x']+a['width']<=b['x']+1,(file,width,a,b)
+     assert b['x']+b['width']<=width+2,(file,width,b)
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),(file,width,'horizontal overflow')
    # Full-map tools must still access the same global directory.
    page.locator('#j171-expand-map').click()
@@ -88,6 +107,10 @@ try:
    assert labels==['In-game Map','Scaly · YANIS V18','Loki · DUPZOR V51'], labels
    page.locator('#layer').select_option('scaly,view')
    expect(page.locator('#legend .j371-landmark-legend')).to_have_count(1)
+   # Every ordinary VI category in the legend keeps its explicit category color.
+   ordinary=page.locator('#legend .legend-symbol:not(.j371-landmark-legend) svg')
+   assert ordinary.count()>0
+   assert ordinary.evaluate_all('(nodes)=>nodes.every(n=>n.closest(".legend-symbol").style.color!=="")')
    page.locator('#jura3d').click()
    page.wait_for_function('teamJuraNav.terrain().isActive()||teamJuraNav.terrain().getFrameReport()!==null',timeout=30000)
    assert page.evaluate('teamJuraNav.terrain().isActive()'),page.evaluate('teamJuraNav.terrain().getFrameReport()')

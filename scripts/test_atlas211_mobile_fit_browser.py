@@ -30,6 +30,8 @@ engine=os.getenv('ATLAS_BROWSER','chromium')
 def inspect(page, stage, path, width):
     data=page.evaluate("""() => {
       const nav=document.querySelector('.topbar>nav');
+      const menu=document.querySelector('#j132-nav-toggle');
+      const menuBox=menu?.getBoundingClientRect();
       const shortcut=document.querySelector('#sidebar a.j145-open-map[href="#atlasCanvas"]');
       const sidebar=document.querySelector('#sidebar');
       const box=shortcut?.getBoundingClientRect();
@@ -38,6 +40,8 @@ def inspect(page, stage, path, width):
         viewport:vw, scroll:document.documentElement.scrollWidth,
         navClient:nav?.clientWidth||0, navScroll:nav?.scrollWidth||0,
         navOverflow:nav?getComputedStyle(nav).overflowX:'',
+        navDisplay:nav?getComputedStyle(nav).display:'',
+        menuWidth:menuBox?.width||0, menuLeft:menuBox?.left, menuRight:menuBox?.right,
         shortcutLeft:box?.left,shortcutRight:box?.right,
         sidebarRight:sidebar?.getBoundingClientRect().right,
         offenders:[...document.body.querySelectorAll('*')].filter(el=>{
@@ -49,8 +53,12 @@ def inspect(page, stage, path, width):
     }""")
     assert data['viewport']==width, (stage,path,data)
     assert data['scroll']<=width+1, (stage,path,data)
-    assert 0<data['navClient']<=width, (stage,path,data)
-    assert data['navOverflow'] in ('auto','scroll'),(stage,path,data)
+    if path in ('atlas.html','atlas-online.html'):
+        assert data['navDisplay']=='none' and data['navClient']==0, (stage,path,data)
+        assert data['menuWidth']>=38 and data['menuLeft']>=0 and data['menuRight']<=width+1,(stage,path,data)
+    else:
+        assert 0<data['navClient']<=width, (stage,path,data)
+        assert data['navOverflow'] in ('auto','scroll'),(stage,path,data)
     assert data['shortcutRight'] is not None and data['shortcutRight']<=width+1, (stage,path,data)
     assert data['sidebarRight']<=width+1, (stage,path,data)
     return data
@@ -67,6 +75,14 @@ try:
                 page=context.new_page()
                 page.goto(origin+path,wait_until='domcontentloaded',timeout=45000)
                 page.locator('#sidebar a.j145-open-map[href="#atlasCanvas"]').wait_for(state='visible',timeout=15000)
+                if path in ('atlas.html','atlas-online.html'):
+                    page.locator('#j132-nav-toggle').wait_for(state='visible',timeout=15000)
+                    page.locator('#j132-nav-toggle').click()
+                    page.locator('#j132-search').fill('Tracker & HQ')
+                    page.locator('#j132-groups a[href="./atlas81-hq.html"]').wait_for(state='visible',timeout=6500)
+                    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+                    page.keyboard.press('Escape')
+                    page.locator('#j132-nav-drawer').wait_for(state='hidden',timeout=6500)
                 page.wait_for_timeout(350)
                 inspect(page,'loaded',path,width)
                 # This shortcut must retain real map-first interaction and must
@@ -82,6 +98,6 @@ try:
                 page.close()
             context.close()
         browser.close()
-        print('PASS Atlas 21.1 %s: Story/Online/VI mobile widths 375/390, scrollable navigation, no document overflow, live map shortcut' % engine)
+        print('PASS Atlas 21.1 %s: Story/Online/VI mobile widths 375/390, compact unified/scrollable VI navigation, no document overflow, live map shortcut' % engine)
 finally:
     server.shutdown()

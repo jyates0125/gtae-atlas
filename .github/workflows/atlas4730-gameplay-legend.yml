@@ -1,0 +1,56 @@
+name: Atlas 47.3 — Gameplay legend and directions
+on:
+  pull_request:
+    paths:
+      - 'atlas.js'
+      - 'atlas-navigation.js'
+      - 'atlas.css'
+      - 'atlas88-events.js'
+      - 'atlas4723-map-flow.css'
+      - 'scripts/test_atlas4732_player_map_browser.py'
+      - 'atlas.html'
+      - 'atlas-online.html'
+      - 'scripts/test_atlas4730_gameplay_legend.cjs'
+      - '.github/workflows/atlas4730-gameplay-legend.yml'
+  workflow_dispatch:
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/test_atlas4730_gameplay_legend.cjs
+
+  player-browser:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    env:
+      ATLAS_BROWSER: ${{ matrix.browser }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node scripts/build-cloudflare.cjs
+      - run: python -m pip install playwright==1.58.0
+      - if: matrix.browser == 'chromium'
+        run: python -m playwright install --with-deps chromium
+      - if: matrix.browser == 'msedge'
+        run: python -m playwright install msedge
+      - run: python scripts/test_atlas4732_player_map_browser.py

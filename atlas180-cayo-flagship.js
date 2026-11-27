@@ -35,6 +35,16 @@ const mapFrame=el('div','j180-map-frame');
 const legend=el('div','j180-legend'),mapArea=el('div','j180-map-area');
 legend.append(el('h3','','⌖ Map legend'),el('p','j180-legend-intro','Select a category to show or hide its mission markers. Variable spawn points are references, not current-run guarantees.'));
 const legendRows=el('div','j180-legend-rows');legend.append(legendRows);
+// Independent stash toggle survives the original 14-category hotspot renderer.
+let stashShown=true,stashAll=true;
+function stashIcon(){
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');svg.setAttribute('width','24');svg.setAttribute('height','24');
+ const ring=document.createElementNS(svg.namespaceURI,'circle');ring.setAttribute('cx','12');ring.setAttribute('cy','12');ring.setAttribute('r','9');ring.setAttribute('fill','none');ring.setAttribute('stroke','currentColor');ring.setAttribute('stroke-width','2');ring.setAttribute('stroke-dasharray','3 2');svg.append(ring);
+ const cross=document.createElementNS(svg.namespaceURI,'path');cross.setAttribute('d','M8 12h8M12 8v8');cross.setAttribute('stroke','currentColor');cross.setAttribute('stroke-width','2');svg.append(cross);return svg;
+}
+const stashToggle=btn('','j4740-stash-toggle',()=>{stashShown=!stashShown;paintStashes()});
+stashToggle.setAttribute('aria-label','Toggle buried stash search areas');stashToggle.setAttribute('aria-pressed','true');
+stashToggle.append(stashIcon(),el('span','','Buried stash search areas'));legend.append(stashToggle);
 const legendEntries=[
 ['Infiltration point','📍','entry','Access and landing areas'],['Exit point','▲','exit','Finale extraction choices'],
 ['Drainage tunnel','⊞','entry','Underwater compound approach'],['Secondary target','●','loot','Possible loot locations; verify in-game'],
@@ -83,7 +93,7 @@ miniBar.append(plus,minus,fit,layers,full);
 mapArea.append(miniBar,overlayTools,focus,info,mapStatus);
 mapFrame.append(mapArea);mapStage.append(mapFrame);
 const bottom=el('div','j180-bottom');
-const daily=el('section','j180-daily');daily.setAttribute('aria-label','Cayo treasure-chest daily locations');
+const daily=el('section','j180-daily');daily.id='j4740-chests';daily.setAttribute('aria-label','Cayo treasure-chest daily locations');
 const dailyHead=el('div','j180-daily-head');
 const dailyCopy=el('div');
 dailyCopy.append(el('h3','','Daily treasure chests'),el('p','','One land, one underwater · 19 possible locations · daily reset 06:00 UTC'));
@@ -108,12 +118,21 @@ manual.append(landLabel,waterLabel);
 const apply=btn('Highlight my two','j180-action',()=>{const now=new Date();const key=dayKey(now);personal={day:key,land:+landSel.value,underwater:+waterSel.value};try{localStorage.setItem('teamjura-cayo-daily-choice-v1',JSON.stringify(personal))}catch(_){ } updateActive();});
 const clear=btn('Clear my picks','j180-action',()=>{personal=null;try{localStorage.removeItem('teamjura-cayo-daily-choice-v1')}catch(_){}updateActive()});
 manual.append(apply,clear);details.append(manual);daily.append(details);bottom.append(daily);
+const stashPanel=el('section','j180-daily j4740-stash-panel');stashPanel.id='j4740-stashes';stashPanel.setAttribute('aria-label','Daily Cayo buried stash search areas');
+stashPanel.append(el('h3','','Daily buried stashes'),el('p','','Find the Metal Detector first. Visit Cayo during Gather Intel; these are approximate search areas, not exact dig points. Two daily selections reset at 06:00 UTC.'));
+const stashStatus=el('p','j4740-stash-status','Waiting for reviewed island data…');stashStatus.setAttribute('role','status');
+const stashList=el('div','j180-chest-list');
+const stashMode=btn('Show today’s selections','j180-action',()=>{stashAll=!stashAll;paintStashes()});stashMode.setAttribute('aria-pressed','true');
+const stashSource=el('a','j180-action','Source map ↗');stashSource.href='https://gtamap.io/gta-online/daily/buried-stashes/';stashSource.target='_blank';stashSource.rel='noopener noreferrer';
+stashPanel.append(stashStatus,stashMode,stashSource,stashList);bottom.append(stashPanel);
 const drawer=el('section','j180-drawer');drawer.id='j180-drawer';drawer.hidden=true;drawer.setAttribute('aria-label','Selected Cayo mission tools');
 const drawerHead=el('div','j180-drawer-head');const drawerTitle=el('h2','','Mission tools');
 const close=btn('Close ×','j180-action',()=>{drawer.hidden=true;shell.scrollIntoView({block:'start',behavior:'smooth'});});
 drawerHead.append(drawerTitle,close);drawer.append(drawerHead);
 const panes=el('div','j180-drawer-content');drawer.append(panes);
 main.insertBefore(shell,layout);shell.append(rail,mapStage);main.insertBefore(bottom,layout);main.insertBefore(drawer,layout);
+ const focusDaily=()=>{const target=location.hash==='#j4740-chests'?daily:location.hash==='#j4740-stashes'?stashPanel:null;if(target)requestAnimationFrame(()=>target.scrollIntoView({block:'start',behavior:'instant'}))};
+ window.addEventListener('hashchange',focusDaily);focusDaily();
 // The content notice can mount before or after the dynamic mission renderer.
  // Keep the advisory accessible below the Cayo map in both timing orders.
  const relocateAdvisory=()=>{
@@ -152,7 +171,8 @@ for(const [kind,symbol,title,group] of [
 }
 const optionalInfo=btn('Sources & credits','j180-sources',()=>openTool('sources'));rail.append(optionalInfo);
 const refLayer=el('div','j180-ref-layer'),chestLayer=el('div','j180-chest-layer');
-const world=focus.querySelector('.j167-world');if(world)world.append(refLayer,chestLayer);
+const stashLayer=el('div','j4740-stash-layer');
+const world=focus.querySelector('.j167-world');if(world)world.append(refLayer,chestLayer,stashLayer);
 const equipmentRef=[
  ['ref-loot','possible gated loot',37,16,'◉'],['ref-loot','possible secondary loot',44,18,'●'],
  ['ref-loot','possible secondary loot',67,47,'●'],['ref-loot','possible gated loot',70,51,'◉'],
@@ -171,8 +191,8 @@ for(const [category,name,x,y,symbol] of equipmentRef){
  const p=btn(symbol,'j180-refpin',()=>showInfo(name,'Screenshot-referenced possible equipment/loot area. This is NOT a verified active spawn or exact coordinate. Use the game’s current Gather Intel results.'));
  p.dataset.cat=category;p.style.left=x+'%';p.style.top=y+'%';p.title=name+' · illustrative reference';p.setAttribute('aria-label',name+' (approximate)');refLayer.append(p);
 }
-let preference=null; // null means automatic current-pair mode when a valid pair arrives
-let chestData=null,dailyData=null,bundledDaily=null,reviewedDaily={schema:1,rotations:{}},dailyPending=false,activeIds=[],todayOnly=true,personal=null,activeLabel='';
+let preference='all'; // All possible locations by default; Today is an explicit choice.
+let chestData=null,dailyData=null,bundledDaily=null,reviewedDaily={schema:1,rotations:{}},dailyPending=false,activeIds=[],todayOnly=false,personal=null,activeLabel='';
 try{const p=JSON.parse(localStorage.getItem('teamjura-cayo-daily-choice-v1')||'null');if(p&&typeof p==='object')personal=p;}catch(_){}
 function dayKey(d){return new Date(d.getTime()-6*3600*1000).toISOString().slice(0,10)}
 function showInfo(title,description,number){
@@ -189,13 +209,28 @@ function project(spawn){
  const y=Math.max(2,Math.min(98, (38+(-4293-spawn.worldY)*.69)/1262*100));
  return [x,y];
 }
+function paintStashes(){
+ const C=window.JuraConditions,now=Date.now(),rows=C?.safeCayoStashCatalog?.(reviewedDaily.islandCatalog)||[],feed=C?.rotationFeed(reviewedDaily,'cayo-stashes',now),active=feed?.active||new Set();
+ stashToggle.setAttribute('aria-pressed',String(stashShown));
+ stashMode.setAttribute('aria-pressed',String(stashAll));stashMode.textContent=stashAll?'Show today’s selections':'Show all known search areas';stashMode.disabled=!feed;
+ stashStatus.textContent=feed?'2 current source-reported search areas highlighted in gold; other known areas dimmed and not active. Not gameplay verified.':'No current dated stash selection. Known areas are reference only; no active pins.';
+ stashLayer.hidden=!stashShown||focus.dataset.mapSource!=='original';stashLayer.replaceChildren();stashList.replaceChildren();
+ for(const row of rows){
+  const selected=active.has(row.id),inactive=!!feed&&!selected,display=!feed||stashAll||selected;
+  const [x,y]=project({worldX:row.x,worldY:row.y});
+  const describe=()=>{showInfo(row.name,(selected?'Current source-reported search area. ':inactive?'Not active this cycle; reference only. ':'Possible search area; current selection unconfirmed. ')+'Approximate projection, not an exact dig point. Metal Detector and Gather Intel required.');const link=el('a','','Source reference ↗');link.href=row.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';info.append(link)};
+  const pin=btn('','j4740-stash-pin'+(selected?' is-current':inactive?' is-inactive':''),describe);pin.dataset.stashId=row.id;pin.style.left=x+'%';pin.style.top=y+'%';pin.hidden=!display;pin.append(stashIcon());pin.setAttribute('aria-label',row.name+' · '+(selected?'current search area':inactive?'not active this cycle':'unconfirmed search area'));stashLayer.append(pin);
+  const item=btn('','j4740-stash-row',()=>{if(!display){stashStatus.textContent=row.name+' is not selected today. Use Show all known search areas for reference.';return}stashShown=true;activate('original');stashLayer.hidden=false;stashToggle.setAttribute('aria-pressed','true');pin.focus({preventScroll:true});describe();mapArea.scrollIntoView({block:'center',behavior:'smooth'})});
+  item.append(stashIcon(),el('span','',row.name),el('small','',selected?'TODAY':feed?'NOT ACTIVE':'UNCONFIRMED'));item.dataset.availability=selected?'active':inactive?'inactive':'unconfirmed';item.classList.toggle('j393-inactive',inactive);stashList.append(item);
+ }
+}
 function paintChests(){
  chestLayer.replaceChildren();if(!chestData)return;
  for(const s of chestData.spawns){
-  const [x,y]=project(s);const active=activeIds.includes(s.id);
-  const b=btn('','j180-chest'+(active?' j180-chest-active':''),()=>showInfo('Treasure chest #'+s.id+(active?' · today’s '+activeLabel:''),s.landmark+' · '+(s.kind==='land'?'Land':'Underwater')+'. Only one chest of this type appears daily.',s.id));
+  const [x,y]=project(s);const active=activeIds.includes(s.id),inactive=activeIds.length===2&&!active;
+  const b=btn('','j180-chest'+(active?' j180-chest-active':inactive?' j4740-chest-inactive':''),()=>showInfo('Treasure chest #'+s.id+(active?' · today’s '+activeLabel:''),s.landmark+' · '+(s.kind==='land'?'Land':'Underwater')+'. '+(inactive?'Not selected this cycle; reference only. ':active?'Current selection. ':'Current selection unconfirmed. ')+'Only one chest of this type appears daily.',s.id));
   b.dataset.chest=String(s.id);b.style.left=x+'%';b.style.top=y+'%';b.textContent=active?'✦':'•';b.title='Chest #'+s.id+' · '+s.kind+(active?' · '+activeLabel:' · possible only');
-  b.setAttribute('aria-label','Treasure chest '+s.id+', '+s.kind+', '+(active?'calculated or personally selected for current day':'possible spawn'));
+  b.setAttribute('aria-label','Treasure chest '+s.id+', '+s.kind+', '+(active?'calculated or personally selected for current day':inactive?'not active this cycle':'possible spawn; current selection unconfirmed'));
   chestLayer.append(b);
  }
  repaintLegend();
@@ -207,15 +242,15 @@ function updateActive(){
   activeIds=[dailyData.land,dailyData.underwater];activeLabel='calculated / unverified';}
  if(personal?.day===key&&Number.isInteger(personal.land)&&Number.isInteger(personal.underwater)&&personal.land>=1&&personal.land<=10&&personal.underwater>=11&&personal.underwater<=19){
   activeIds=[personal.land,personal.underwater];activeLabel='player-selected / not verified';}
- todayOnly=activeIds.length===2&&preference!=='all';
+ todayOnly=activeIds.length===2&&preference==='today';
  allBtn.setAttribute('aria-pressed',String(!todayOnly));todayBtn.setAttribute('aria-pressed',String(todayOnly));
- paintChests();renderDaily();
+ paintChests();renderDaily();paintStashes();
 }
 function renderDaily(){
  const now=new Date();dailyList.replaceChildren();
  if(!chestData){dailyStatus.textContent='Reference locations unavailable. Check the source map for today’s two chests.';return;}
  const current=activeIds.length===2;
- dailyStatus.textContent=current?('Current 06:00 UTC cycle · land #'+activeIds[0]+' + underwater #'+activeIds[1]+' highlighted in cyan · '+activeLabel+'. Other locations are unavailable this cycle; All 19 possible is reference-only. Check gameplay if a location differs.'):
+ dailyStatus.textContent=current?('Current 06:00 UTC cycle · land #'+activeIds[0]+' + underwater #'+activeIds[1]+' highlighted in cyan · '+activeLabel+'. Other locations are dimmed and unavailable this cycle; Today’s two hides reference pins. Check gameplay if a location differs.'):
   'No current dated chest selection available. All 19 possible locations are shown in yellow; none is falsely marked active. Check the live source or enter your own two.';
  todayBtn.disabled=!current;todayBtn.title=current?'Show only the two current selections':'Current daily selection unavailable; all 19 remain visible';
  const list=chestData.spawns; // retain every numbered legend/reference entry
@@ -238,7 +273,7 @@ function renderDaily(){
   dailyList.append(row);
  }
 }
-const sync=()=>{repaintLegend();};
+const sync=()=>{repaintLegend();stashLayer.hidden=!stashShown||focus.dataset.mapSource!=='original';};
 const observer=new MutationObserver(sync);observer.observe(focus,{attributes:true,attributeFilter:['data-map-source']});
 Promise.all([
  fetch('./data/cayo-treasure-spots.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('spots unavailable');return r.json()}),
@@ -246,14 +281,14 @@ Promise.all([
 ]).then(([spots,d])=>{
  if(!Array.isArray(spots?.spawns)||spots.spawns.length!==19||spots.spawns.filter(p=>p.kind==='land').length!==10||spots.spawns.filter(p=>p.kind==='underwater').length!==9)throw Error('invalid Cayo treasure catalog');
  chestData=spots;bundledDaily=d;updateActive();void refreshDaily();
-}).catch(()=>renderDaily());
+}).catch(()=>{renderDaily();paintStashes();void refreshDaily()});
 async function refreshDaily(){
  const C=window.JuraConditions;if(!C||dailyPending)return;
  dailyPending=true;
- try{reviewedDaily=await C.refreshPublishedRotations(fetch,reviewedDaily,{onlyIds:['cayo-chests']});updateActive()}catch{}finally{dailyPending=false}
+ try{reviewedDaily=await C.refreshPublishedRotations(fetch,reviewedDaily,{onlyIds:['cayo-chests','cayo-stashes']});updateActive()}catch{}finally{dailyPending=false}
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){updateActive();void refreshDaily()}});
-setInterval(()=>{if(chestData){updateActive();if(!document.hidden)void refreshDaily()}},window.JuraConditions?.ROTATION_STATUS_MS||60000);
+setInterval(()=>{updateActive();if(!document.hidden)void refreshDaily()},window.JuraConditions?.ROTATION_STATUS_MS||60000);
 const smallMeta=el('p','j180-credit','Research: GTA Wiki, GTALens, GTAMap.io and Rockstar. Original Elario UI and pin styling; underlying in-game artwork © Rockstar Games / Take-Two. Daily predictions are not official confirmation. ');
 const sourceLink=el('a','','Sources & licenses ↗');sourceLink.href='./atlas-credits.html';smallMeta.append(sourceLink);mapStage.append(smallMeta);
 activate('original');

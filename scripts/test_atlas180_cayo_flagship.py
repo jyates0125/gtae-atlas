@@ -30,8 +30,8 @@ for key in ('j180-shell','j180-legend','j180-drawer','j180-map-frame','j180-ches
  assert key in script or key in style,key
 assert 'body.j180-cayo' in style
 assert "jura159-heist-cayo-perico.webp" in style
-assert "atlas180-cayo-flagship.css?v=180" in loader
-assert "atlas180-cayo-flagship.js?v=4722" in loader
+assert "atlas180-cayo-flagship.css?v=4740" in loader
+assert "atlas180-cayo-flagship.js?v=4740" in loader
 assert "if(heistId==='cayo-perico')" in loader
 assert style.count('{')==style.count('}')
 assert style.count('(')>=style.count(')')

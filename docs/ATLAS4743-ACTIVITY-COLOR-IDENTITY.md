@@ -1,0 +1,3 @@
+# Owner review: activity colors
+
+Retain the approved distinct marker geometry. Active and selected activity glyphs keep their category colors across map, legend, results and selected details. Gun Van amber, dealers mint, shipwreck blue, LS tags violet, underwater caches cyan, Smoke products coral, skydives pink. Small gold dot marks current/eligible status; separate gold ring marks selection. No changes to current rotation data, eligibility, route or saved progress. Cayo continues its separate active/inactive convention. JavaScript parsed and isolated draw smoke passed; CI and actual owner preview required. 

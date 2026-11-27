@@ -32,6 +32,8 @@ try:
         # Deterministic independent daily channel fixture: no live data or account dependency.
         page.clock.set_fixed_time(datetime(2026,11,24,10,tzinfo=timezone.utc))
         feed={'schema':1,'rotations':{'cayo-chests':{'activeIds':['cayo-chest-10','cayo-chest-11'],'checkedAtUtc':'2026-11-24T06:00:00Z','validUntilUtc':'2026-11-25T06:00:00Z','source':'QA fixture'}}}
+        feed['islandCatalog']=[{'id':'cayo-stash-'+str(n),'activityId':'cayo-stashes','name':'QA stash '+str(n),'x':x,'y':y,'sourceUrl':'https://gtamap.io/gta-online/daily/buried-stashes/','comparisonSource':'https://www.gtaboss.gg/gta-5-online/dailies','confidence':'source-crosschecked'} for n,x,y in [(18,4348.8,-4311.3),(19,4235.7,-4552.1),(20,4500,-4650)]]
+        feed['rotations']['cayo-stashes']={'activeIds':['cayo-stash-18','cayo-stash-19'],'checkedAtUtc':'2026-11-24T06:00:00Z','validUntilUtc':'2026-11-25T06:00:00Z','source':'QA fixture'}
         page.route('https://raw.githubusercontent.com/jyates0125/gtae-atlas/refs/heads/data/online-rotations/online-rotation-current.json',lambda route:route.fulfill(json=feed,headers={'Access-Control-Allow-Origin':'*'}))
         page.goto(url,wait_until='domcontentloaded',timeout=50000)
         # The modern site header remains usable, but the old global floating
@@ -54,6 +56,20 @@ try:
         page.wait_for_function("Array.from(document.querySelectorAll('.j180-chest-active')).map(n=>n.dataset.chest).join(',')==='10,11'",timeout=20000)
         assert 'calculated / unverified' in page.locator('.j180-daily-status').inner_text()
         assert page.locator('.j180-chest').count()==19, 'Published data must not delete possible spawn references'
+        page.wait_for_function("document.querySelectorAll('.j4740-stash-pin.is-current').length===2",timeout=25000)
+        assert page.locator('.j4740-stash-pin').count()==3
+        assert page.locator('.j4740-stash-pin:not([hidden])').count()==3,'All known areas are visible by default'
+        assert page.locator('.j4740-stash-pin.is-inactive').count()==1
+        assert 'Metal Detector' in page.locator('#j4740-stashes').inner_text()
+        stash_inactive=page.locator('#j4740-stashes .j4740-stash-row[data-availability="inactive"]')
+        assert stash_inactive.count()==1
+        assert stash_inactive.locator('span').evaluate("(e)=>getComputedStyle(e).textDecorationLine.includes('line-through')")
+        page.get_by_role('button',name='Show today’s selections').click()
+        assert page.locator('.j4740-stash-pin:not([hidden])').count()==2
+        stash_inactive.click()
+        assert 'not selected today' in page.locator('.j4740-stash-status').inner_text()
+        page.get_by_role('button',name='Show all known search areas').click()
+        assert page.locator('.j4740-stash-pin:not([hidden])').count()==3
         page.wait_for_function("['gta-wiki','local-trace'].includes(document.querySelector('#j167-heist-map')?.dataset.mapAsset)",timeout=30000)
         # All map sources now use one Elario SVG marker family. The bare
         # game-map raster was previously showing only yellow chest dots.
@@ -72,8 +88,11 @@ try:
         page.wait_for_function("document.querySelector('#j167-heist-map')?.dataset.mapSource==='original'",timeout=30000)
         assert page.locator('.j180-chest').count()==19,'All 19 possible chest references render'
         assert page.locator('.j180-chest-active:visible').count()==2,'Current pair is visible on the Cayo island map'
-        assert page.locator('.j180-chest:visible').count()==2,'Current daily pair is the default map view'
-        assert page.locator('.j180-chest-row.j393-inactive:enabled').count()==17,'Inactive entries remain inspectable without spawning pins'
+        assert page.locator('.j180-chest:visible').count()==19,'All known chests visible by default'
+        assert page.locator('.j180-chest.j4740-chest-inactive:visible').count()==17,'Inactive pins remain visible and distinct'
+        assert page.locator('.j180-chest-row.j393-inactive:enabled').count()==17,'Inactive entries remain inspectable'
+        assert page.locator('.j180-chest-row.j393-inactive>span:nth-child(2)').first.evaluate("(e)=>getComputedStyle(e).textDecorationLine.includes('line-through')")
+        page.get_by_role('button',name='Today’s two',exact=True).click()
         page.locator('.j180-chest-row.j393-inactive').first.click()
         assert 'not selected this cycle' in page.locator('.j180-daily-status').inner_text()
         assert page.locator('.j180-chest:visible').count()==2
