@@ -62,17 +62,38 @@
       "confidence": "calculated_unconfirmed_in_game",
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles",
       "sourceObservation": "Nov 27 dated GTAMap.io XYZ match bundled land #1 and underwater #17; GTA Boss corroborates airstrip and lighthouse. Not gameplay verified."
+    },
+    "hidden-caches": {
+      "activeIds": [
+        "hidden-caches-lago-zancudo-south",
+        "hidden-caches-lago-zancudo-mouth",
+        "hidden-caches-lago-zancudo-north",
+        "hidden-caches-fort-zancudo-west",
+        "hidden-caches-north-chumash",
+        "hidden-caches-raton-canyon-south",
+        "hidden-caches-raton-canyon-north",
+        "hidden-caches-paleto-cove",
+        "hidden-caches-paleto-forest",
+        "hidden-caches-paleto-bay"
+      ],
+      "checkedAtUtc": "2026-11-27T13:23:08.000Z",
+      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "source": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 27 dated GTAMap.io ten exact XY selections; GTAMap.net reports same ten coordinate pairs using different numbering. GTA Boss dated daily set agrees on count and broad west coast. Not gameplay verified."
     }
   },
-  "checkedAtUtc": "2026-11-27T12:33:32.000Z",
+  "checkedAtUtc": "2026-11-27T13:23:08.000Z",
   "status": "partially-populated-calculated-not-gameplay-verified",
-  "notes": "Nov 27: retain four existing current categories and add five LS Tags using GTAMap.io exact locations and GTA Boss dated district corroboration; calculated, not gameplay verified. Remaining categories unconfirmed.",
+  "notes": "Nov 27: retain five current groups and add ten crosschecked Hidden Caches. Calculated, not gameplay verified. Other groups remain unconfirmed.",
   "supportedGroups": [
     "cayo-chests",
     "gun-van",
     "shipwreck",
     "street-dealers",
-    "ls-tags"
+    "ls-tags",
+    "hidden-caches"
   ],
   "catalog": [
     {
@@ -163,6 +184,106 @@
       "y": 487.5,
       "sourceUrl": "https://gtamap.io/gta-online/daily/ls-tags/",
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles/ls-tags",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-lago-zancudo-south",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · lago zancudo south",
+      "x": -3295.6,
+      "y": 2020.8,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-lago-zancudo-mouth",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · lago zancudo mouth",
+      "x": -3020.1,
+      "y": 2527,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-lago-zancudo-north",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · lago zancudo north",
+      "x": -3183.3,
+      "y": 3051.8,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-fort-zancudo-west",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · fort zancudo west",
+      "x": -3270.3,
+      "y": 3670.7,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-north-chumash",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · north chumash",
+      "x": -2860.8,
+      "y": 3912.3,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-raton-canyon-south",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · raton canyon south",
+      "x": -2752.2,
+      "y": 4572.6,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-raton-canyon-north",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · raton canyon north",
+      "x": -2407.7,
+      "y": 4898.8,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-paleto-cove",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · paleto cove",
+      "x": -1408.6,
+      "y": 5734.1,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-paleto-forest",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · paleto forest",
+      "x": -1008.7,
+      "y": 6531.7,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "hidden-caches-paleto-bay",
+      "activityId": "hidden-caches",
+      "name": "Hidden Cache · paleto bay",
+      "x": -811.5,
+      "y": 6667.6,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
       "confidence": "source-crosschecked"
     }
   ]
