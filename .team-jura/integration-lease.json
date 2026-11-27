@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "held",
-  "owner": "manual-shared-workspace",
-  "token": "manual-shared-workspace-90c6a6ac8488",
-  "acquiredAtUtc": "2026-11-27T15:26:49.014Z",
-  "reviewAfterUtc": "2026-11-27T15:41:49.014Z",
+  "state": "free",
+  "owner": null,
+  "token": null,
+  "acquiredAtUtc": null,
+  "reviewAfterUtc": null,
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal.",
-  "previousToken": "manual-icon-visible-0f3be87b6e87",
-  "lastReleaseUtc": "2026-11-27T15:23:43.208Z",
+  "previousToken": "manual-shared-workspace-90c6a6ac8488",
+  "lastReleaseUtc": "2026-11-27T15:26:59.050Z",
   "lastProbe": "competing update rejected"
 }
