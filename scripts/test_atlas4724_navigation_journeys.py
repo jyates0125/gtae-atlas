@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Focused canonical navigation journeys; no unrelated map or Cayo retests."""
+from datetime import datetime, timezone
+import json
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -32,7 +34,7 @@ try:
             assert "atlas97-proposed-loki-scaly-hero.webp" in page.locator(".j130-public-hero").evaluate("(e)=>getComputedStyle(e,'::before').backgroundImage")
             page.locator("a.action.primary").click()
             expect(page).to_have_url(base+"atlas-dashboard.html")
-            for path,scope in [("atlas-dashboard.html",None),("atlas-online.html","online"),("atlas.html","story"),("atlas-vi.html","vi"),("atlas90-vehicles5.html?world=story","story"),("atlas-characters.html?game=vi","vi"),("atlas-sa.html",None),("atlas-forge-collections.html",None)]:
+            for path,scope in [("atlas-dashboard.html",None),("maps.html",None),("atlas-online.html","online"),("atlas.html","story"),("atlas-vi.html","vi"),("atlas90-vehicles5.html?world=story","story"),("atlas-characters.html?game=vi","vi"),("atlas-sa.html",None),("atlas-forge-collections.html",None)]:
                 page_errors.clear()
                 print(f"Checking {width}px {path}",flush=True)
                 response=page.goto(base+path,wait_until="domcontentloaded",timeout=50000)
@@ -60,6 +62,8 @@ try:
                 try:
                     expect(menu).to_have_count(1,timeout=15000)
                     expect(menu).to_be_visible()
+                    if path in ("atlas-dashboard.html","maps.html"):
+                        expect(page.locator("#primaryNav")).to_be_hidden()
                 except AssertionError as error:
                     raise AssertionError((path,width,page.url,page_errors,page.evaluate("({ready:document.readyState,welcome:document.body.dataset.j4728Welcome,scripts:[...document.scripts].map(s=>s.src).filter(s=>s.includes(\x27atlas132-nav\x27))})"))) from error
                 menu.click()
@@ -89,6 +93,13 @@ try:
                     expect(drawer.locator('a[href="./atlas-dashboard.html"]')).to_have_count(1)
                     drawer.locator("#j132-search").fill("legacy archive")
                     expect(drawer.locator('a[href="./atlas97-journey.html"]')).to_have_count(1)
+                for query,event in [("Gun Van","gun-van"),("Shipwreck","shipwreck"),("Street Dealers","street-dealers"),("Smoke on the Water","smoke-products"),("LS Tags","ls-tags"),("Hidden Caches","hidden-caches"),("Junk Energy Skydives","junk-skydives"),("Gun Van inventory","gun-van-stock"),("Simeon","simeon-vehicles")]:
+                    drawer.locator("#j132-search").fill(query)
+                    expect(drawer.locator(f'a[href="./atlas-online.html?event={event}#j393-online-activity-slot"]')).to_have_count(1)
+                drawer.locator("#j132-search").fill("Cayo Treasure Chests")
+                expect(drawer.locator('a[href="./heist-cayo-perico.html"]')).to_have_count(1)
+                drawer.locator("#j132-search").fill("Welcome")
+                expect(drawer.locator('a[href="./index.html"]')).to_have_count(0)
                 drawer.locator("#j132-search").fill("garage")
                 expect(drawer.locator('a[href="./atlas-forge-collections.html"]')).to_have_count(1)
                 drawer.locator("#j132-search").fill("GTA VI")
@@ -97,6 +108,30 @@ try:
                 expect(drawer).to_be_hidden()
                 expect(menu).to_be_focused()
                 assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2"),path
+            ctx.close()
+            # A fresh guest context prevents prior empty-feed cache throttling.
+            ctx=browser.new_context(viewport={"width":width,"height":height})
+            ctx.route("https://**/*",lambda r:r.abort())
+            page=ctx.new_page()
+            # A fixed dated test fixture uses the actual catalog identity, not a live-data claim.
+            page.clock.set_fixed_time(datetime(2026,11,26,18,0,tzinfo=timezone.utc))
+            fixture={"schema":1,"rotations":{"gun-van":{"activeIds":["gun-van-procopio-beach"],"checkedAtUtc":"2026-11-26T15:53:49Z","validUntilUtc":"2026-11-27T06:00:00Z","source":"Synthetic regression fixture"}}}
+            ctx.route("**/online-rotation-current.json*",lambda route:route.fulfill(status=200,content_type="application/json",body=json.dumps(fixture)))
+            page.goto(base+"atlas-dashboard.html",wait_until="domcontentloaded")
+            page.locator("#j132-nav-toggle").click()
+            page.locator("#j132-search").fill("Gun Van")
+            page.locator('#j132-nav-drawer a[href="./atlas-online.html?event=gun-van#j393-online-activity-slot"]').click()
+            expect(page).to_have_url(base+"atlas-online.html?event=gun-van#j393-online-activity-slot")
+            legend=page.locator("#j393-online-activity-slot #j88-events")
+            expect(legend).to_be_visible(timeout=20000)
+            expect(legend.get_by_role("searchbox")).to_have_value("Gun Van location")
+            card=legend.locator('.j88-event-card[data-event-id="gun-van"]')
+            expect(card).to_have_count(1)
+            expect(card.locator(".j4723-current-locations")).to_contain_text("Procopio Beach",timeout=25000)
+            # A search result must focus the real map without a second manual action.
+            page.wait_for_function("window.JuraAtlasEventLocations?.focused() && window.JuraAtlasEventLocations.availableCount(window.JuraConditions.BY_ID['gun-van'])===1",timeout=25000)
+            expect(page.locator("#selectedName")).to_contain_text("Procopio Beach")
+            expect(page.locator('header a.brand')).to_have_attribute("href","./atlas-dashboard.html")
             ctx.close()
             print(f"PASS {width}px canonical menu journeys")
         browser.close()
