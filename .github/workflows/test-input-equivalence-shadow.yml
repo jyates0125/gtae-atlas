@@ -1,0 +1,47 @@
+name: Test input equivalence - shadow review
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'scripts/report_test_input_equivalence.py'
+      - 'scripts/test_report_test_input_equivalence.py'
+      - '.github/workflows/test-input-equivalence-shadow.yml'
+permissions:
+  contents: read
+jobs:
+  evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run source equivalence fixtures and classifier tests
+        run: |
+          python scripts/test_report_test_input_equivalence.py -v
+          python scripts/test_classify_release_scope.py -v
+      - name: Replay exact tested production merge and previous seasonal baseline
+        run: |
+          python scripts/report_test_input_equivalence.py 8221a9ff3ffdd7a05e2b19c056aa296674b77dd1 4de7bcfedb411a88f609402f6065d098e4d059fe > merge-evidence.json
+          python scripts/report_test_input_equivalence.py 6d2b9e6ef13565b90a1fa1d0ccb034f736474529 4de7bcfedb411a88f609402f6065d098e4d059fe > seasonal-evidence.json
+          cat merge-evidence.json seasonal-evidence.json
+          python - <<'PY'
+          import json
+          a=json.load(open("merge-evidence.json"))
+          b=json.load(open("seasonal-evidence.json"))
+          assert a["source_equivalent"] and not a["reuse_authorized"], a
+          assert not b["source_equivalent"] and b["suggested_scope"]=="seasonal" and not b["reuse_authorized"], b
+          assert a["effective_execution"]==b["effective_execution"]=="full"
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-equivalence-shadow
+          path: |
+            merge-evidence.json
+            seasonal-evidence.json
+          if-no-files-found: error
