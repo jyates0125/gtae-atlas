@@ -42,7 +42,7 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  const reset=mk('button','','Reset session conditions');reset.type='button';reset.onclick=()=>{for(const key of Object.keys(session))session[key]=false;for(const check of slasher.querySelectorAll('input'))check.checked=false;render();redrawMap()};slasher.append(reset);
  const evidence=mk('p','j88-note','');const credit=mk('a','','Activity sources & credits');credit.href='./atlas-credits.html#activity-evidence';evidence.append(credit);
  const results=mk('div','j88-results');panel.append(title,intro,utc,row,guide,time,filter,note,slasher,results,evidence);updateUtc();setInterval(updateUtc,60000);
- if(mapPage){const slot=$('j393-online-activity-slot');if(slot)slot.append(panel);else home.prepend(panel);document.querySelector('.j4723-legend-jump')?.addEventListener('click',()=>{const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true;});}else home.append(panel);
+ if(mapPage){const slot=$('j393-online-activity-slot');if(slot){slot.append(panel);const reveal=()=>{if(location.hash!=='#j393-online-activity-slot')return;const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true;const extra=slot.closest('details.j4730-advanced-events');if(extra)extra.open=true;$('sidebar')?.classList.remove('mobile-collapsed');requestAnimationFrame(()=>slot.scrollIntoView({block:'start'}))};window.addEventListener('hashchange',reveal);if(!new URLSearchParams(location.search).has('event'))reveal()}else home.prepend(panel);document.querySelector('.j4723-legend-jump')?.addEventListener('click',()=>{const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true;});}else home.append(panel);
  let category='all';const tabs=mk('div','j88-tabs');for(const [id,label] of [['all','All'],['ghost','👻 Ghosts'],['daily','◷ Daily'],['other','★ Other']]){const b=mk('button','',''+label);b.type='button';b.dataset.type=id;b.setAttribute('aria-pressed',String(id===category));b.onclick=()=>{category=id;for(const x of tabs.children)x.setAttribute('aria-pressed',String(x===b));render()};tabs.append(b)}panel.insertBefore(tabs,guide);
  const focused=mk('p','j88-note','');focused.setAttribute('role','status');panel.insertBefore(focused,results);
  const clear=mk('button','','Clear event focus');clear.type='button';clear.hidden=true;clear.onclick=()=>{window.JuraAtlasEventLocations?.clear();focused.textContent='Event map filter cleared.';clear.hidden=true};panel.insertBefore(clear,results);
@@ -88,14 +88,14 @@ function install(){const home=$('sidebar')||document.querySelector('.j87-daily-m
  const requested=new URLSearchParams(location.search).get('event');
  const requestedRule=mapPage&&groups().find(r=>r.id===requested);
  let reviewedReady=false;
- if(requestedRule){const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true;category='all';search.value=requestedRule.name;openGuideId=requestedRule.id;let attempts=0;
+ if(requestedRule){const drawer=$('atlasFilterDrawer');if(drawer)drawer.open=true;const extra=$('j393-online-activity-slot')?.closest('details.j4730-advanced-events');if(extra)extra.open=true;category='all';search.value=requestedRule.name;openGuideId=requestedRule.id;let attempts=0;
   const guideOnly=requestedRule.kind==='weekly'||['cayo-stashes','cayo-chests','slashers'].includes(requestedRule.id);
   const tryFocus=()=>{
    if(search.value!==requestedRule.name||category!=='all'||document.hidden)return;
    const bridge=window.JuraAtlasEventLocations;
    const dated=statusFor(requestedRule).status==='available-feed';
    const ready=bridge&&bridge.count(requestedRule)>0&&(!dated||bridge.availableCount(requestedRule)>0);
-   if(guideOnly||(++attempts>=40)||(reviewedReady&&ready)){locate(requestedRule);return}
+   if(guideOnly||(++attempts>=40)||(reviewedReady&&ready)){locate(requestedRule);if(extra){extra.open=true;$('sidebar')?.classList.remove('mobile-collapsed')}return}
    setTimeout(tryFocus,500);
   };setTimeout(tryFocus,100);
  }
