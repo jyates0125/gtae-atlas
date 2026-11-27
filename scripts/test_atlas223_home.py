@@ -13,10 +13,10 @@ class Parser(HTMLParser):
  def handle_starttag(self,t,attrs):
   d=dict(attrs)
   if t=='a': self.links.append((d.get('href',''),d.get('class','')))
-  if t=='img': self.images.append(d.get('src',''))
+  if t=='img': self.images.append(d.get('data-j4750-src',d.get('src','')))
   if t in ('form','a','button'):self.anchors.append(d)
 p=Parser();p.feed(page)
-assert 'atlas223-home.css?v=223' in page and 'atlas223-home.js?v=3904' in page
+assert 'atlas223-home.css?v=223' in page and 'atlas223-home.js?v=4750' in page
 assert '<main id="main"' in page and 'id="heroTitle"' in page
 assert len([c for h,c in p.links if 'j223-world-card' in c])==7
 assert len([c for h,c in p.links if h and 'j223-shortcuts' in c])==0 # links belong to nav, not class
@@ -67,3 +67,7 @@ assert 'atlas132-nav.js' in (R/'scripts/build-cloudflare.cjs').read_text(encodin
 print('PASS GTAE 22.3: actual 7 destination and 13 category links, 4 functional panels, original art, source boundaries and welcome flow')
 
 assert js.index('indexCharacters(featuredFallback);') < js.index('loadCharacterIndex();'), 'Featured search must be active before starting the full index request'
+
+assert 'atlas4750-dashboard-budget.js?v=1' in page and 'atlas4750-dashboard-budget.css?v=1' in page
+assert 'href="./atlas-dashboard.html?lite=1"' in welcome
+assert page.count('data-j4750-src=')>=20
