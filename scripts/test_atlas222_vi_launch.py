@@ -85,7 +85,7 @@ assert 'map-hub.html?game=iii' in ch_js and 'atlas-online.html' in ch_js and 'at
 assert 'CHARACTERS · SEARCH ALL WORLDS' in nav and 'x.aliases' not in nav
 assert 'j222-vi-categories' in vi and 'atlas222-vi-release.js?v=222' in vi
 assert 'atlas217-vi-world.js?v=217' in vi, 'The existing map engine must stay in place'
-assert vi.count('atlas.js?v=4722')==1, 'Map engine must use the current cache version; service worker has its own lifecycle'
+assert vi.count('atlas.js?v=4737')==1, 'Map engine must use the current cache version; service worker has its own lifecycle'
 
 # Premium visual and vehicle-class integrity guards: these check source wiring,
 # not actual browser rendering, which remains a separate release requirement.

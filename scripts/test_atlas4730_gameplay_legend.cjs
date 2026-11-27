@@ -28,3 +28,48 @@ assert.equal(dated(marker,{feed:{},now:snapshot.now}),false);
 assert(map.includes('priorityIds.has(r.id)'));
 assert(map.includes('j4730-selected-glyph')&&map.includes('j4730-list-glyph'));
 console.log('Current-day focus eligibility and shared marker contracts passed');
+
+assert(map.includes('let onlineCleanView=true'));assert(map.includes('onlineLayerMatches(r,onlineSelectedLayers)'));assert(read('atlas-online.html').includes('id="j4731-filters-map"'));console.log('Clean default and direct filter contract checks passed');
+
+const layerMatches=vm.runInNewContext(get(map,'function onlineLayerMatches(r,keys)','function setOnlineLayers')+';onlineLayerMatches',{matchesEventResearch:(rule,r)=>r.activityId===rule.id,gameplayCollectionKey:r=>r.collectionKey,NAMED_LAYERS:[['nightclubs-business','Nightclubs',r=>r.kind==='nightclub']],collectionLayerId:n=>'collection:'+n.toLowerCase()});
+const club={category:'business_site',kind:'nightclub'},office={category:'business_site',kind:'office'},dealer={category:'activity',activityId:'street-dealers'},van={category:'activity',activityId:'gun-van'};
+const chosen=new Set();assert.equal(layerMatches(club,chosen),false);chosen.add('named:nightclubs-business');assert.equal(layerMatches(club,chosen),true);assert.equal(layerMatches(office,chosen),false);chosen.add('event:street-dealers');assert.equal(layerMatches(dealer,chosen),true);assert.equal(layerMatches(van,chosen),false);assert.equal(layerMatches(club,chosen),true);chosen.delete('named:nightclubs-business');assert.equal(layerMatches(club,chosen),false);assert.equal(layerMatches(dealer,chosen),true);assert.equal(layerMatches({collectionKey:'playing-cards'},new Set(['collection-type:playing-cards'])),true);console.log('Independent click-to-show layer tests passed');
+
+const prefs=vm.runInNewContext(get(map,'function safeOnlineLayerPrefs(value)','const onlineSelectedLayers')+';safeOnlineLayerPrefs',{});assert.deepEqual(Array.from(prefs(['event:gun-van','event:gun-van','named:ceo-offices','invalid','event:evil<script>'])),['event:gun-van','named:ceo-offices']);assert.equal(prefs(null).length,0);assert(map.includes('store(ONLINE_LAYER_PREF,[...onlineSelectedLayers])'));assert(read('atlas-online.html').includes('id="j4732-back-map"'));assert(read('atlas88-events.js').includes("if(extra)extra.open=true"));console.log('Preference and event deep-link contracts passed');
+
+// Compare the actual canvas path against SVG geometry, not merely function presence.
+const shapeCode=get(map,'const ELARIO_LEGEND_SHAPES=','function gameplayGlyphColor');
+const drawCode=get(map,'function gameplayGlyphColor','function quickLegendRow');
+function fakeElement(){return {attrs:{},children:[],setAttribute(k,v){this.attrs[k]=v},append(n){this.children.push(n)}}}
+let paths=[];const glyphContext={game:'5',mode:'story',window:{},document:{createElementNS:()=>fakeElement()},Path2D:class{constructor(d){this.d=d;paths.push(d)}},ctx:new Proxy({},{get:(o,k)=>o[k]||(()=>{})}),conditionForRecord:()=>null,progress:{},doneKey:r=>r.id,camera:{z:3},CATEGORIES:{}};
+const glyph=vm.runInNewContext(shapeCode+drawCode+';({legend:elarioLegendGlyph,draw:drawGameplayGlyph})',glyphContext);
+for(const key of ['gun-van','street-dealers','shipwreck','ls-tags','hidden-caches','smoke-products','junk-skydives','ufo','ghosts-exposed','spaceship-parts','agencies-business','mc-business','nightclubs-business','letter-scraps']){const d=glyph.legend(key).children.map(p=>p.attrs.d).join(' ');assert(glyph.draw({id:key,category:key},20,20,null),key);assert.equal(paths.at(-1),d,key)}
+const daily=['gun-van','street-dealers','shipwreck','ls-tags','hidden-caches','smoke-products','junk-skydives'].map(k=>glyph.legend(k).children.map(p=>p.attrs.d).join(' '));assert.equal(new Set(daily).size,daily.length,'Mainland daily icons must be distinguishable');
+console.log('Shared SVG / actual canvas geometry and distinct mainland rotation glyphs passed');
+
+// First-visit automatic mainland layers use actual dated eligibility; explicit empty choices persist.
+const auto=vm.runInNewContext(get(map,'function defaultDailyRecord(r,cache)','function todayFocusRows')+';defaultDailyLayerKeys',{datedMainlandMarker:dated,conditionForRecord:r=>r.hidden?{hide:true}:null});
+const activeVan={...marker,rotationMarkerId:'van-active'},oldVan={...marker,rotationMarkerId:'van-old'};
+assert.deepEqual(Array.from(auto([activeVan,activeVan,oldVan,{...activeVan,hidden:true},{...activeVan,scope:'story'},{...activeVan,activityId:'cayo-chests'},{category:'collectible'}],snapshot)),['event:gun-van']);
+assert.equal(auto([activeVan],{feed:{},now:snapshot.now}).length,0);
+assert(map.includes('automaticDailyLayers=!Array.isArray(loadStore(ONLINE_LAYER_PREF,null))'));
+console.log('Fresh daily defaults, expiry and explicit empty preferences contracts passed');
+
+assert(map.includes("if(mode==='online'&&game==='5'){renderLegend();updatePinButton();renderFind();renderRoute();"),'Async feed refresh must update pin-button state as well as list and legend');
+
+const applies=vm.runInNewContext(get(map,'function sourceApplies','function filterSourceOptions')+';sourceApplies',{});
+assert.equal(applies({game:'5',scope:'story'},'5','online'),false);
+assert.equal(applies({game:'5',scope:'story'},'5','story'),true);
+assert.equal(applies({game:'5',scope:'both'},'5','online'),true);
+assert.equal(applies({game:'6',scope:'story'},'5','story'),false);
+assert.equal(applies({game:'6',scope:'story'},'6','story'),true);
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4737'));}
+console.log('Optional source disclosure and world/mode scope contracts passed');
+
+const gameHash=vm.runInNewContext(get(map,'function mapGameHash','function switchGame')+';mapGameHash',{});
+assert.equal(gameHash('online','#j393-online-activity-slot',true),'#j393-online-activity-slot');
+assert.equal(gameHash('5','#sourceToggles',true),'#sourceToggles');
+assert.equal(gameHash('6','#game5',true),'#game6');
+assert.equal(gameHash('online','',true),'#gameonline');
+assert.equal(gameHash('5','#j393-online-activity-slot',false),'#game5');
+console.log('Initial deep-link anchor and explicit game-switch contracts passed');

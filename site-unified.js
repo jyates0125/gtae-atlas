@@ -12,6 +12,20 @@
     if(nav && !nav.querySelector('.jura83-hq-nav')){const a=document.createElement('a');a.className='jura83-hq-nav';a.href='./atlas81-hq.html';a.textContent='⌂ Atlas HQ';nav.prepend(a)}
     const css=document.createElement('link');css.rel='stylesheet';css.href='./atlas83-map.css?v=83';document.head.append(css);
     const js=document.createElement('script');js.src='./atlas83-map.js?v=156';js.defer=true;document.head.append(js);
+    // Map navigation is essential. If its deferred local script failed to
+    // initialize, give it one same-origin retry after all DOM-ready listeners.
+    // The original script's build guard prevents duplicates; legacy links stay
+    // available if recovery also fails. No external or repeated retry.
+    const navScript=[...document.scripts].find(s=>{try{const u=new URL(s.src,location.href);return u.origin===location.origin&&u.pathname.endsWith('/atlas132-nav.js')}catch{return false}});
+    if(navScript){
+      const recover=()=>setTimeout(()=>{
+        if(document.getElementById('j132-nav-toggle')||document.body.dataset.j4728Welcome==='true')return;
+        const retry=document.createElement('script'),url=new URL(navScript.src,location.href);
+        url.searchParams.set('recovery','1');retry.src=url.href;retry.dataset.juraNavRecovery='true';
+        document.head.append(retry);
+      },0);
+      if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',recover,{once:true});else recover();
+    }
     return;
   }
   if(classic)return;
