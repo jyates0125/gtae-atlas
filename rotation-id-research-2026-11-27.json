@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "observedAtUtc": "2026-11-27T14:18:17.990Z",
+  "gameDay": "2026-11-27",
+  "validUntilUtc": "2026-11-28T06:00:00.000Z",
+  "status": "research-only-not-published",
+  "note": "Named candidate matches only; do not treat as active or substitute source numeric IDs. Existing 32 published selections unchanged. GTAWeb.eu page is client-rendered and exact marker payload not accessible in current retrieval. Do not bulk copy its database.",
+  "skydives": {
+    "source": "https://gtamap.io/gta-online/daily/junk-energy-skydives/",
+    "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+    "uniqueNamedCandidates": [
+      {
+        "sourceNumber": 21,
+        "district": "Del Perro Beach",
+        "id": "junk-skydives-del-perro-pier",
+        "x": -1724.4,
+        "y": -1129.8,
+        "status": "candidate-needs-marker-level-confirmation"
+      },
+      {
+        "sourceNumber": 15,
+        "district": "Paleto Bay",
+        "id": "junk-skydives-paleto-bay",
+        "x": -136.6,
+        "y": 6357,
+        "status": "candidate-needs-marker-level-confirmation"
+      },
+      {
+        "sourceNumber": 13,
+        "district": "La Puerta",
+        "id": "junk-skydives-la-puerta",
+        "x": -782.2,
+        "y": -1452.3,
+        "status": "candidate-needs-marker-level-confirmation"
+      },
+      {
+        "sourceNumber": 14,
+        "district": "Little Seoul",
+        "id": "junk-skydives-little-seoul",
+        "x": -559.4,
+        "y": -909,
+        "status": "candidate-needs-marker-level-confirmation"
+      },
+      {
+        "sourceNumber": 8,
+        "district": "Chiliad Mountain State Wilderness",
+        "id": "junk-skydives-cassidy-creek",
+        "x": -860.4,
+        "y": 4729.5,
+        "status": "candidate-needs-marker-level-confirmation"
+      },
+      {
+        "sourceNumber": 19,
+        "district": "Alta",
+        "id": "junk-skydives-alta",
+        "x": 261.6,
+        "y": -209.3,
+        "status": "candidate-needs-marker-level-confirmation"
+      },
+      {
+        "sourceNumber": 11,
+        "district": "Los Santos International Airport",
+        "id": "junk-skydives-lsia",
+        "x": -1167.2,
+        "y": -2494.6,
+        "status": "candidate-needs-marker-level-confirmation"
+      }
+    ],
+    "unresolved": [
+      {
+        "sourceNumber": 7,
+        "district": "Mount Chiliad",
+        "candidates": [
+          {
+            "name": "Procopio Beach",
+            "x": 813.5,
+            "y": 5720.6
+          },
+          {
+            "name": "Alamo Sea",
+            "x": 503.8,
+            "y": 5506.4
+          },
+          {
+            "name": "Mount Chiliad",
+            "x": 426.3,
+            "y": 5612.7
+          }
+        ]
+      },
+      {
+        "sourceNumber": 16,
+        "district": "Grand Senora Desert",
+        "candidates": [
+          {
+            "name": "Sandy Shores Airfield",
+            "x": 1717.7,
+            "y": 3295.5
+          },
+          {
+            "name": "Grand Senora Desert",
+            "x": 743,
+            "y": 2535.9
+          }
+        ]
+      },
+      {
+        "sourceNumber": 23,
+        "district": "Tataviam Mountains",
+        "candidates": [
+          {
+            "name": "Land Act Dam",
+            "x": 2555.3,
+            "y": 301.1
+          },
+          {
+            "name": "Palmer-Taylor Power Station",
+            "x": 2790.4,
+            "y": 1465.6
+          }
+        ]
+      }
+    ]
+  },
+  "cayoStashes": {
+    "source": "https://gtamap.io/gta-online/daily/buried-stashes/",
+    "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+    "status": "two-source-date-and-selection-agreement; island consumer pending",
+    "entries": [
+      {
+        "id": "cayo-stash-18",
+        "sourceNumber": 18,
+        "name": "North airstrip beach",
+        "x": 4348.8,
+        "y": -4311.3,
+        "z": 1.3
+      },
+      {
+        "id": "cayo-stash-19",
+        "sourceNumber": 19,
+        "name": "North airstrip, west of anti-aircraft battery",
+        "x": 4235.7,
+        "y": -4552.1,
+        "z": 4.1
+      }
+    ],
+    "requires": [
+      "metal-detector",
+      "cayo-intel"
+    ],
+    "mapScope": "cayo-perico-only"
+  }
+}
