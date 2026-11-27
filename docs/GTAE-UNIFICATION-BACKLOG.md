@@ -87,3 +87,7 @@ Reconciled #261 with both parent test fixes in 6adca2b without force-push or los
 
 ### Nov 27 player-first follow-up
 See [Atlas 47.3 player UX audit](ATLAS473-PLAYER-UX-AUDIT.md). Owner iPhone screenshots demonstrate redundant header rows and marker clutter. PR #285 merged into staging; #286 implements independent opt-in layers, licensed symbols, compact V/Online mobile header, explicit preferences and deep-link recovery. Keep production gated; next verify mobile/browser and then Story/classic/heist/catalog journeys. Rotation feed remains independently published (12 locations / five categories; calculated, not gameplay verified).
+
+
+### Nov 27 current evidence correction
+See latest handoff: #267/#287 merged, #286 23/24 green at prior head with recurring missing-menu Edge failure; recovery candidate and forced-failure regression saved, exact new checks pending. #288 separately green at prior exact head but draft. Feed six of nine daily groups / 22 selections, not gameplay verified. GTADB exposes separate Today/All controls and direct marker search; GTAMap.io current dated coordinates agree for Gun Van and three Street Dealers. No executed competitor browser timing or superiority claim. Continue source-backed missing groups through designated publisher and map/mobile acceptance through #286, then release gates. No production changes.
