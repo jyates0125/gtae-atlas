@@ -5,6 +5,9 @@ on:
       - 'atlas.js'
       - 'atlas-navigation.js'
       - 'atlas.css'
+      - 'atlas88-events.js'
+      - 'atlas4723-map-flow.css'
+      - 'scripts/test_atlas4732_player_map_browser.py'
       - 'atlas.html'
       - 'atlas-online.html'
       - 'scripts/test_atlas4730_gameplay_legend.cjs'
@@ -19,3 +22,22 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/test_atlas4730_gameplay_legend.cjs
+
+  player-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node scripts/build-cloudflare.cjs
+      - run: python -m pip install playwright==1.58.0
+      - run: python -m playwright install --with-deps chromium
+      - run: python scripts/test_atlas4732_player_map_browser.py
