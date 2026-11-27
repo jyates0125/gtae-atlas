@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "held",
-  "owner": "manual Cayo PR #295",
-  "token": "manual-cayo-295-fce0ae1",
-  "acquiredAtUtc": "2026-11-27T15:32:00Z",
-  "reviewAfterUtc": "2026-11-27T15:42:00Z",
+  "state": "free",
+  "owner": null,
+  "token": null,
+  "acquiredAtUtc": null,
+  "reviewAfterUtc": null,
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal.",
-  "previousToken": "manual-shared-workspace-90c6a6ac8488",
-  "lastReleaseUtc": "2026-11-27T15:26:59.050Z",
+  "previousToken": "manual-cayo-295-fce0ae1",
+  "lastReleaseUtc": "2026-11-27T15:33:00Z",
   "lastProbe": "competing update rejected"
 }
