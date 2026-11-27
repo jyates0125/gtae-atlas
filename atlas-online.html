@@ -6,15 +6,15 @@
 <meta name="theme-color" content="#210f30">
 <meta name="description" content="Independent GTA Online map with locations, marker layers, route tools, activity links and device-local progress.">
 <title>GTA Online Map · GTAE | Elario Studios</title><link rel="canonical" href="https://gtae-online.pages.dev/atlas-online.html"><meta property="og:type" content="website"><meta property="og:site_name" content="GTAE · Elario Studios"><meta property="og:url" content="https://gtae-online.pages.dev/atlas-online.html"><meta property="og:title" content="GTA Online Map · GTAE — GTA Explorer | Elario Studios"><meta property="og:description" content="Independent GTA Online map with locations, marker layers, route tools, activity links and device-local progress."><meta property="og:image" content="https://gtae-online.pages.dev/art/jura155-online.webp"><meta property="og:image:alt" content="Original Elario GTA Online world illustration"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="GTA Online Map · GTAE — GTA Explorer | Elario Studios"><meta name="twitter:description" content="Independent GTA Online map with locations, marker layers, route tools, activity links and device-local progress."><meta name="twitter:image" content="https://gtae-online.pages.dev/art/jura155-online.webp">
-<link rel="stylesheet" href="./atlas.css?v=70">
+<link rel="stylesheet" href="./atlas.css?v=4730">
 <script defer src="./atlas-intelligence.js?v=70"></script>
 <script defer src="./atlas-sources.js?v=70"></script>
 <script defer src="./atlas-route-core.js?v=70"></script>
 <script defer src="./atlas-road-core.js?v=382"></script>
 <script defer src="./atlas-3d.js?v=3721"></script>
-<script defer src="./atlas-navigation.js?v=382"></script>
+<script defer src="./atlas-navigation.js?v=4730"></script>
 <script defer src="./atlas-conditions.js?v=4722"></script>
-<script defer src="./atlas.js?v=4722"></script>
+<script defer src="./atlas.js?v=4730"></script>
 
 <link rel="stylesheet" href="./atlas-layout-71.css?v=71">
 <script defer src="./atlas-layout-71.js?v=71"></script>
@@ -57,7 +57,7 @@
     <div class="atlas-explorer-head"><div class="atlas-eyebrow">ELARIO STUDIOS / TEAM JURA</div><h1>World Explorer</h1><p>Find places. Follow the map. Make your own route.</p></div>
     <div class="dataset"><span class="dot" id="dataDot"></span><span id="dataStatus" role="status">Loading local locations…</span></div>
     <p class="hint"><a id="activityModeLink" href="./atlas-activities.html?mode=online">◷ Activity Tracker · timers, spawns & seasons</a></p>
-    <a class="j4723-legend-jump" href="#j393-online-activity-slot">Today’s activities &amp; map legend ↓</a>
+    <a class="j4723-legend-jump" href="#legend">Today’s activities &amp; map legend ↓</a>
     <label class="field-label" for="search">Search locations</label>
     <input id="search" type="search" placeholder="Find landmarks, vehicles, collections…" autocomplete="off">
     <label class="field-label" for="districtFilter">Area / neighborhood (optional)</label>
@@ -65,9 +65,9 @@
 
     
     <details class="atlas-filter-drawer" id="atlasFilterDrawer" open><summary>⚑ Map legend &amp; filters <span>On / off</span></summary>
-    <div id="j393-online-activity-slot" aria-label="Online events and daily activities"></div>
+    
     <div class="sectionrow"><strong>LOCATION LEGEND · ON / OFF</strong><div><button id="allOn" class="link-btn" type="button">All on</button><button id="allOff" class="link-btn" type="button">All off</button></div></div>
-    <p class="jura-legend-credit">Choose categories to show or hide pins. Provisional locations remain labeled.</p><div class="legend" id="legend" aria-label="Toggle location categories"></div><section id="j87-simeon-map" aria-label="Simeon personal vehicle requests"></section>
+    <p class="jura-legend-credit">Choose categories to show or hide pins. Provisional locations remain labeled.</p><input id="j4730-legend-search" type="search" placeholder="Search legend · Gun Van, nightclub…" aria-label="Search map legend" autocomplete="off"><div class="legend" id="legend" aria-label="Toggle location categories"></div><details class="j4730-advanced-events"><summary>Activity details, requirements &amp; timers</summary><div id="j393-online-activity-slot" aria-label="Online events and daily activities"></div></details><section id="j87-simeon-map" aria-label="Simeon personal vehicle requests"></section>
     <details class="j101-special-layers"><summary>🎯 Special spawn and collection layers</summary>
     <section class="named-layer-section" aria-label="Map layers and visibility"><div class="named-layer-head"><strong>⚑ Mapped location layers</strong><small id="namedLayerCount">Finding layers…</small></div><p>Click any label to switch its mapped pins on or off. Missing or unverified positions are never invented.</p><div class="named-layer-actions"><input type="search" id="namedLayerSearch" placeholder="Find a layer: clovers, Ammu-Nation…" aria-label="Search map layer labels"><button type="button" id="namedLayerShowAll">Show all</button><button type="button" id="namedLayerHideAll">Hide all</button></div><div id="namedLayers" class="named-layers" aria-label="Named map layer visibility"></div></section>
     </details>
@@ -127,12 +127,12 @@
       <input type="file" id="packFile" class="hidden" accept=".json,application/json" aria-label="Import licensed Atlas map pack">
       <a class="small-link" href="./atlas-pack-format.html">Data pack format & source rules</a>
     </details></section>
-    <section class="offline source-panel"><strong>🧭 Open-source map layers · calibrated</strong>
+    <section class="offline source-panel"><details class="j4730-advanced-sources"><summary>Optional world objects &amp; source layers</summary>
       <p class="hint">Optional overlays: Story collectibles, world props and provisional VI research. Heavy layers start off to protect performance; world props are not collectible locations.</p>
       <div id="sourceToggles" aria-label="Enable or disable source overlays"></div>
       <p id="sourceStatus" role="status" class="hint">Checking licensed source feeds…</p>
       <div class="gridbuttons"><button type="button" id="enableSources">Show loaded overlays</button><button type="button" id="refreshSources">Refresh sources</button></div>
-      <p class="hint">Optional overlays can be unavailable without disabling the main map.</p>
+      <p class="hint">Optional overlays can be unavailable without disabling the main map.</p></details>
     </section>
     <section class="offline source-panel"><strong>⌖ Coordinate finder</strong>
       <p class="hint">Enter GTA game-world X and Y coordinates. The crosshair will be placed directly on the current map.</p>
