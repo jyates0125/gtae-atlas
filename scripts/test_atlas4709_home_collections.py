@@ -25,7 +25,9 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
     page.locator('a.action.primary').click()
     expect(page).to_have_url(base+'atlas-dashboard.html')
     for path in ('atlas-dashboard.html',):
-     page.goto(base+path)
+     # Guest navigation already loaded the canonical home. Do not immediately
+     # reload it and abort in-flight local artwork responses.
+     expect(page).to_have_url(base+path)
      panel=page.locator('.j4709-entry')
      expect(panel).to_be_visible()
      assert panel.evaluate("(e)=>{const hero=e.parentElement.querySelector('.j130-public-hero,.j223-hero');return !!hero && Boolean(hero.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)}")
@@ -35,7 +37,12 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
      for img in panel.locator('img').all():
       img.scroll_into_view_if_needed()
       expect(img).to_be_visible()
-      assert img.evaluate('(e)=>e.complete && e.naturalWidth>0') or img.evaluate('(e)=>e.decode().then(()=>true)')
+      # Wait for actual local image decode; a broken/absent image still fails.
+      try:
+       page.wait_for_function('(e)=>e.complete && e.naturalWidth>0',arg=img.element_handle(),timeout=15000)
+       assert img.evaluate('(e)=>e.decode().then(()=>e.naturalWidth>0)')
+      except Exception as error:
+       raise AssertionError(('Collection artwork failed',width,img.get_attribute('src'),img.evaluate('(e)=>({complete:e.complete,width:e.naturalWidth,currentSrc:e.currentSrc})'))) from error
      assert panel.evaluate('(e)=>e.scrollWidth<=e.clientWidth+2')
      panel.screenshot(path=str(OUT/f'{path}-{width}.png'),animations='disabled')
      if path=='atlas-dashboard.html':

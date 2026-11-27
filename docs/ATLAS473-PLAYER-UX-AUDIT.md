@@ -21,3 +21,6 @@ Owner benchmark: GTAWeb.eu and GTAMap.io. Preserve game-specific maps and source
 
 ## Acceptance
 First visit: no unrelated markers, explicit categories add/remove independently, Today temporary, Hide all available without scrolling past long lists. Reload preserves explicit layer choices. Menu remains available after redundant header rows are removed, fallback navigation remains if menu fails. Test actual 390px and desktop interactions, deep links and directions. Existing production unchanged; source/syntax checks are not browser proof. Continue backlog page-by-page, then exact-candidate full release gates and owner iPhone review.
+
+### Nov 27 reconciliation
+Stack parent 24d564c3993ccabb43e21dcafcee83a635e089e5 reconciled into f0a151ab4357feb27b963f5893d6b0101382f7f7. The shared event script is byte-identical; the child HTML already includes the parent cache version. Unique parent tests retained. Added SVG-versus-canvas path geometry assertions for 14 glyphs, seven distinct daily symbols, and real browser Gun Van legend/selected icon parity. No new assets or runtime change. Exact-head CI pending; parent #267 still requires passing activity/artwork checks before integration. Production unchanged.

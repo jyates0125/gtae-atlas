@@ -38,6 +38,8 @@ try:
             van=page.locator('.j4730-quick-row[data-legend-key="gun-van"] .legend-choice')
             expect(van).to_be_visible()
             expect(van).to_have_attribute("aria-pressed","false")
+            van_glyph=van.locator("svg path").get_attribute("d")
+            assert van_glyph, "Gun Van must have a glyph geometry"
             van.click()
             expect(van).to_have_attribute("aria-pressed","true")
             assert page.evaluate("JSON.parse(localStorage.getItem('jura4731-online-selected-layers')).includes('event:gun-van')")
@@ -59,6 +61,7 @@ try:
             page.goto(base+"atlas-online.html?event=gun-van#j393-online-activity-slot",wait_until="domcontentloaded")
             expect(page.locator("#j393-online-activity-slot #j88-events")).to_be_visible(timeout=25000)
             expect(page.locator("#selectedName")).to_contain_text("Procopio Beach",timeout=25000)
+            expect(page.locator("#selectedName .j4730-selected-glyph path")).to_have_attribute("d",van_glyph)
             assert page.locator(".j4730-advanced-events").evaluate("(e)=>e.open")
             print(f"PASS {width}px clean layers, persistence, Today, header and deep link",flush=True)
             ctx.close()
