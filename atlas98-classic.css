@@ -131,3 +131,11 @@ body[data-page="classic"] #classicViewport{touch-action:none;overscroll-behavior
 .j302-recovery-actions button:not(:disabled):hover{background:#674278}
 .j302-recovery-actions button:focus-visible{outline:3px solid #ffe1aa;outline-offset:3px}
 @media(max-width:440px){.j302-recovery-actions{display:grid;grid-template-columns:1fr}.j302-recovery-actions button{width:100%}}
+
+/* Classic notebooks: compact, Cayo-inspired visual consistency without changing source layers. */
+.j4742-map-jump{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:1px solid #c99da6;border-radius:9px;color:#ffe0a8;background:#281a3c;font-size:12px;font-weight:750;text-decoration:none;margin:4px 0}
+#classicNoteCategory{width:100%;min-height:44px;background:#130a22;color:#fff;border:1px solid #a46dbe;border-radius:8px;padding:8px}
+.classic-marker{border-color:var(--note-color,#ffe29e)}
+.classic-marker[data-slot-done="true"]{border-color:#92f2b4}
+.j4742-note-symbol{display:inline-grid;place-items:center;width:24px;height:24px;color:var(--note-color);border:1px solid var(--note-color);border-radius:6px;background:#241531;font-size:13px;vertical-align:middle}
+#classicViewport,#classicSearch{scroll-margin-top:16px}
