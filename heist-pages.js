@@ -160,7 +160,7 @@ if(document.body.classList.contains('j120-heist-page')){
   const cayo=document.createElement('script');cayo.async=false;cayo.src='./atlas171-cayo-board.js?v=171';document.body.append(cayo);
   // Nov 20 owner-approved Cayo flagship: map-first purple/gold layout with dated chests.
   const flagshipStyle=document.createElement('link');flagshipStyle.rel='stylesheet';flagshipStyle.href='./atlas180-cayo-flagship.css?v=4740';document.head.append(flagshipStyle);
-  const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=4740';document.body.append(flagship);
+  const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=4741';document.body.append(flagship);
   const iconsStyle=document.createElement('link');iconsStyle.rel='stylesheet';iconsStyle.href='./atlas181-cayo-hotspots.css?v=202';document.head.append(iconsStyle);
   const icons=document.createElement('script');icons.async=false;icons.src='./atlas181-cayo-hotspots.js?v=191';document.body.append(icons);
   // The Cayo page loads its map geometry before deferred scripts initialize.
@@ -173,10 +173,10 @@ if(document.body.classList.contains('j120-heist-page')){
   }
   const polish=document.createElement('script');polish.async=false;polish.src='./atlas185-cayo-polish.js?v=392';document.body.append(polish);
   const routeStyle=document.createElement('link');routeStyle.rel='stylesheet';routeStyle.href='./atlas186-cayo-route.css?v=187';document.head.append(routeStyle);
-  const routePlanner=document.createElement('script');routePlanner.async=false;routePlanner.src='./atlas186-cayo-route.js?v=191';document.body.append(routePlanner);
+  const routePlanner=document.createElement('script');routePlanner.async=false;routePlanner.src='./atlas186-cayo-route.js?v=4741';document.body.append(routePlanner);
   // Atlas 18.8: one user-facing filter selection shared by Cayo icons + personal route.
   const quickStyle=document.createElement('link');quickStyle.rel='stylesheet';quickStyle.href='./atlas188-cayo-flow.css?v=1882';document.head.append(quickStyle);
-  const quick=document.createElement('script');quick.async=false;quick.src='./atlas188-cayo-flow.js?v=1883';document.body.append(quick);
+  const quick=document.createElement('script');quick.async=false;quick.src='./atlas188-cayo-flow.js?v=4741';document.body.append(quick);
  }
 }
 })();

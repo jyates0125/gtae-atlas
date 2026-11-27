@@ -20,7 +20,7 @@ assert 'j180-mode[data-mode="route"]' in code
 assert "const map=byId()" in code
 assert "Math.hypot" not in code or True
 assert 'route' in style and 'stroke-dasharray' in style and 'pointer-events:none' in style
-assert "atlas186-cayo-route.js?v=191" in loader
+assert "atlas186-cayo-route.js?v=4741" in loader
 assert "atlas186-cayo-route.css?v=187" in loader
 assert "if(heistId==='cayo-perico')" in loader
 assert "if(document.body.dataset.heist!=='cayo-perico'" in code
@@ -40,3 +40,6 @@ assert 'j186-route-badges .j186-last circle' in style
 assert code.count('{')==code.count('}')
 assert style.count('{')==style.count('}')
 print('PASS Cayo 18.6: pin start, category filters, nearest routing, manual order, shareable safe route and offline planning')
+
+for token in ('validStashId','includeStashes:false','state.includeStashes&&n.active','Saved stash start is no longer current','cayo-stash-','stashOption.checked=state.includeStashes'):
+ assert token in code,token

@@ -2,6 +2,7 @@
 """Real Chromium/mobile Cayo 18.6 route behavior, saved state, link rehydration.
 This is complementary to the existing Cayo 18.5 interaction suite."""
 import os, threading, urllib.parse
+from datetime import datetime,timezone
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from functools import partial
 from pathlib import Path
@@ -233,6 +234,39 @@ try:
     assert not bad,'Phone route panel must not overflow horizontally'
    ctx.close();browser.close()
    print('PASS Cayo 18.6 route: '+kind+' start/presets/nearest/line/manual/visited/reload/chest')
+  # Daily stash routes: deterministic synthetic island catalog, default exclusion,
+  # current-only opt-in, real marker popup, saved route after reset.
+  browser=pw.chromium.launch(headless=True,**({'channel':'msedge'} if engine=='msedge' else {}))
+  ctx=browser.new_context(viewport={'width':390,'height':844},reduced_motion='reduce')
+  page=ctx.new_page()
+  page.clock.set_fixed_time(datetime(2026,11,27,18,tzinfo=timezone.utc))
+  fixture={'schema':1,'islandCatalog':[{'id':'cayo-stash-'+str(n),'activityId':'cayo-stashes','name':'QA stash '+str(n),'x':x,'y':y,'sourceUrl':'https://gtamap.io/gta-online/daily/buried-stashes/','comparisonSource':'https://www.gtaboss.gg/gta-5-online/dailies','confidence':'source-crosschecked'} for n,x,y in [(18,4348.8,-4311.3),(19,4235.7,-4552.1),(20,4500,-4650)]],'rotations':{'cayo-stashes':{'activeIds':['cayo-stash-18','cayo-stash-19'],'checkedAtUtc':'2026-11-27T06:00:00Z','validUntilUtc':'2026-11-28T06:00:00Z','source':'Synthetic regression fixture'}}}
+  ctx.route('**/online-rotation-current.json*',lambda r:r.fulfill(json=fixture,headers={'Access-Control-Allow-Origin':'*'}))
+  page.goto(url,wait_until='domcontentloaded',timeout=50000)
+  page.locator('#j186-route').wait_for(state='visible',timeout=30000)
+  page.wait_for_function("document.querySelectorAll('.j4740-stash-pin.is-current').length===2",timeout=25000)
+  assert page.evaluate("window.teamJuraCayoPinRoute.getState().includeStashes") is False
+  page.evaluate("window.teamJuraCayoPinRoute.setCategories([]);window.teamJuraCayoPinRoute.startFrom('entry-0')")
+  assert page.evaluate("window.teamJuraCayoPinRoute.getStops()")==['entry-0']
+  page.locator('#j188-advanced > summary').click()
+  page.get_by_role('checkbox',name='Include today’s buried stashes').check()
+  state=page.evaluate("window.teamJuraCayoPinRoute.getState()")
+  assert state['order'][0]=='entry-0' and set(state['order'][1:])=={'cayo-stash-18','cayo-stash-19'},state
+  assert page.evaluate("window.teamJuraCayoPinRoute.addStop('cayo-stash-20')") is False
+  page.locator('#j4740-stashes .j4740-stash-row[data-availability="active"]').first.click()
+  page.locator('.j180-pin-info .j186-pin-actions').get_by_role('button',name='Start route here').click()
+  saved=page.evaluate("window.teamJuraCayoPinRoute.getState()")
+  assert saved['start']=='cayo-stash-18'
+  page.clock.set_fixed_time(datetime(2026,11,28,7,tzinfo=timezone.utc))
+  page.reload(wait_until='domcontentloaded')
+  page.locator('#j186-route').wait_for(state='visible',timeout=30000)
+  page.wait_for_function("document.querySelectorAll('.j4740-stash-pin').length===3 && !document.querySelector('.j4740-stash-pin.is-current')",timeout=25000)
+  assert page.evaluate("window.teamJuraCayoPinRoute.getState().start")=='cayo-stash-18'
+  assert page.locator('.j186-stop-item[data-availability="unconfirmed"]').count()>=1
+  assert page.locator('.j186-route-badges .j186-stop').count()==0
+  assert page.evaluate("window.teamJuraCayoPinRoute.addStop('cayo-stash-19')") is False
+  print('PASS Cayo opt-in stash routing and saved inactive stop after reset',flush=True)
+  ctx.close();browser.close()
   # Recovery integration: deliberately fail the original Cayo focus module
   # once. The static, Cayo-only loader must rebuild dependencies in order;
   # no manual reload, no duplicate map/route, and no source/guest-save changes.

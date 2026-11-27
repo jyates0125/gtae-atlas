@@ -12,11 +12,11 @@ const ORDER=[
  ['atlas168-heist-guides.js','168','j168-heist-guide'],
  ['atlas169-heist-views.js','169','j169-views'],
  ['atlas171-cayo-board.js','171','j171-cayo-board'],
- ['atlas180-cayo-flagship.js','4740','j180-shell'],
+ ['atlas180-cayo-flagship.js','4741','j180-shell'],
  ['atlas181-cayo-hotspots.js','191','j181-hotspots'],
  ['atlas185-cayo-polish.js','392','j185-polish'],
- ['atlas186-cayo-route.js','191','j186-route'],
- ['atlas188-cayo-flow.js','1883','j188-quickbar']
+ ['atlas186-cayo-route.js','4741','j186-route'],
+ ['atlas188-cayo-flow.js','4741','j188-quickbar']
 ];
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function loadOnce(file,version,attempt){
