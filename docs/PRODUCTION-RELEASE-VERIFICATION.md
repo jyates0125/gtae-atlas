@@ -11,4 +11,9 @@
 
 ## Elario rights and founder protection v1.0 — November 26, 2026 Central
 
-PR #266 exact candidate `b538ea120a981fb88c4baeb14bd2479c114ca0df` passed all five production jobs in run 45930098959; validated ZIP artifact 15168423314. Merged protected main `0f9e1bd092f4373c91bdd264de7379e017802ded`; comparison confirms no tracked-file changes from tested candidate. Rollback baseline `fa3edaa21939fa30cc7d427ef25eccc171fac8a6`. This reconciliation branch requests independent live verification; served SHA not yet confirmed at writing. No seasonal asset or navigation candidate included. Preserve guest entry and private technology.
+PR #266 exact candidate `b538ea120a981fb88c4baeb14bd2479c114ca0df` passed all five production jobs in run 45930098959; validated ZIP artifact 15168423314. Merged protected main `0f9e1bd092f4373c91bdd264de7379e017802ded`; comparison confirms no tracked-file changes from tested candidate. Rollback baseline `fa3edaa21939fa30cc7d427ef25eccc171fac8a6`. Independent live verification run 45931250979, job 140284144412: attempt 3 returned anonymous HTML and deployment identity HTTP 200, exact revision 0f9e1bd092f4373c91bdd264de7379e017802ded, verified true at 2026-11-27T02:57:10Z. Reconciled into development via #269. No seasonal asset or navigation candidate included. Preserve guest entry and private technology.
+
+
+## Thanksgiving welcome and archive — November 26, 2026 Central
+
+PR #271 candidate `e4b0c8793bfcb15d6097af22cebc5fa0d9a0a2dc` passed all seven jobs across production run 45932501668 and seasonal run 45932501671. Validated package artifact 15169332774. Merged protected main `6d2b9e6ef13565b90a1fa1d0ccb034f736474529` with no tracked-file difference from tested candidate. Owner approved artwork and uploaded exact verified WebP; native-device visual review remains separate from CI. Welcome expires December 1 at 00:00 Central; archive retained. Rollback `0f9e1bd092f4373c91bdd264de7379e017802ded`. Request independent exact live SHA probe before claiming deployment verified. Navigation draft #267 excluded.
