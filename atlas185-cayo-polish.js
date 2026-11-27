@@ -84,7 +84,7 @@ syncSource();new MutationObserver(syncSource).observe(focus,{attributes:true,att
 // locations that placed the panel outside the visible phone viewport.
 info.tabIndex=-1;
 function fromMarker(event){
- if(event.target.closest('.j181-hotspot,.j180-chest')){
+ if(event.target.closest('.j181-hotspot,.j180-chest,.j4740-stash-pin')){
   requestAnimationFrame(()=>{
    if(!info.hidden)info.focus({preventScroll:true});
   });

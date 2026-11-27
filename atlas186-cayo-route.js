@@ -251,8 +251,9 @@ function drawLine(){
   text.textContent=String(i+1);mark.append(text);badges.append(mark);
  }
  for(const node of world.querySelectorAll('.j181-hotspot,.j180-chest,.j4740-stash-pin')){
-  node.classList.toggle('j186-start',state.start===node.dataset.markerId||state.start==='chest-'+node.dataset.chest||state.start===node.dataset.stashId);
-  node.classList.toggle('j186-finish',state.finish===node.dataset.markerId||state.finish==='chest-'+node.dataset.chest||state.finish===node.dataset.stashId);
+  const eligible=!node.dataset.stashId||node.classList.contains('is-current');
+  node.classList.toggle('j186-start',eligible&&(state.start===node.dataset.markerId||state.start==='chest-'+node.dataset.chest||state.start===node.dataset.stashId));
+  node.classList.toggle('j186-finish',eligible&&(state.finish===node.dataset.markerId||state.finish==='chest-'+node.dataset.chest||state.finish===node.dataset.stashId));
  }
 }
 function sourceFor(id){return byId().get(id)}
@@ -289,7 +290,7 @@ function appendNearest(){
  if(!state.order.length)state.order=[state.start];
  const lastId=state.order.filter(id=>id!==state.finish).at(-1);
  const last=map.get(lastId)||map.get(state.start);
- if(last.cat==='stash'&&!last.active){render('Last saved stash is not current. Remove that stop or choose a new route start.');return}
+ if(validStashId(lastId)&&!map.get(lastId)?.active||last.cat==='stash'&&!last.active){render('Last saved stash is not current. Remove that stop or choose a new route start.');return}
  const candidates=availableTargets(map).filter(n=>!state.order.includes(n.id));
  if(!candidates.length){render('No more eligible locations for the selected categories.');return}
  candidates.sort((a,b)=>distance(last,a)-distance(last,b)||a.id.localeCompare(b.id));
@@ -359,7 +360,9 @@ function render(message){
  status.textContent=message||(start?
   'Start: '+start.label+(finish?' · Finish: '+finish.label:'')+' · '+Math.max(0,state.order.length-1)+' stops in personal route.':
   'Select a colorful island marker, tap “Start route here”, and choose your destination types.');
- buildBtn.disabled=!start;nextBtn.disabled=!start;
+ const unavailableEndpoint=(validStashId(state.start)&&!start?.active)||(validStashId(state.finish)&&!finish?.active);
+ if(unavailableEndpoint&&!message)status.textContent='Saved stash start or finish is not current. Choose a current marker or remove the finish; saved route retained.';
+ buildBtn.disabled=!start||unavailableEndpoint;nextBtn.disabled=!start||unavailableEndpoint;
  reverseBtn.disabled=state.order.length<3;clearBtn.disabled=!start&&!state.order.length&&!state.finish;
  clearFinishBtn.disabled=!state.finish;
  resumeBtn.disabled=!state.order.some(id=>id!==state.start&&id!==state.finish&&state.completed.includes(id));

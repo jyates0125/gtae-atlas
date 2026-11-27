@@ -254,6 +254,7 @@ try:
   assert state['order'][0]=='entry-0' and set(state['order'][1:])=={'cayo-stash-18','cayo-stash-19'},state
   assert page.evaluate("window.teamJuraCayoPinRoute.addStop('cayo-stash-20')") is False
   page.locator('#j4740-stashes .j4740-stash-row[data-availability="active"]').first.click()
+  page.locator('.j180-pin-info').wait_for(state='visible',timeout=10000)
   page.locator('.j180-pin-info .j186-pin-actions').get_by_role('button',name='Start route here').click()
   saved=page.evaluate("window.teamJuraCayoPinRoute.getState()")
   assert saved['start']=='cayo-stash-18'
@@ -264,6 +265,8 @@ try:
   assert page.evaluate("window.teamJuraCayoPinRoute.getState().start")=='cayo-stash-18'
   assert page.locator('.j186-stop-item[data-availability="unconfirmed"]').count()>=1
   assert page.locator('.j186-route-badges .j186-stop').count()==0
+  assert page.locator('.j4740-stash-pin.j186-start,.j4740-stash-pin.j186-finish').count()==0
+  assert page.get_by_role('button',name='Build nearest route').is_disabled()
   assert page.evaluate("window.teamJuraCayoPinRoute.addStop('cayo-stash-19')") is False
   print('PASS Cayo opt-in stash routing and saved inactive stop after reset',flush=True)
   ctx.close();browser.close()
