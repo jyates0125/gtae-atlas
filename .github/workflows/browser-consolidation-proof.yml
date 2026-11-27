@@ -1,0 +1,25 @@
+name: Browser consolidation proof
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - '.github/workflows/team-jura-release.yml'
+      - '.github/workflows/browser-consolidation-proof.yml'
+      - 'scripts/audit_browser_consolidation.py'
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/audit_browser_consolidation.py
+      - run: python scripts/audit_cayo_validation_inventory.py

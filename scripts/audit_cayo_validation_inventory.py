@@ -10,7 +10,7 @@ scripts = ("scripts/test_atlas171_browser.py", "scripts/test_atlas186_route_brow
 for name in scripts:
     assert (ROOT / name).is_file(), name
     pattern = r"(?m)^\s*(?:run:\s*)?python " + re.escape(name) + r"\s*$"
-    assert len(re.findall(pattern, prod)) == 4, ("production inventory changed", name)
+    assert len(re.findall(pattern, prod)) == 2, ("expected one required Cayo invocation per browser", name)
     assert len(re.findall(pattern, pilot)) == 1, ("pilot inventory changed", name)
 for browser in ("chromium", "msedge"):
     assert f"browser: {browser}" in pilot, browser
@@ -22,5 +22,5 @@ assert "continue-on-error:" not in pilot
 assert "fail-fast: false" in pilot
 assert "branches: [development]" in pilot
 assert "branches: [main]" in prod
-print("PASS: each detailed Cayo entrypoint appears four times in existing production; once per browser in independent pilot.")
-print("PASS: build/audit, pinned browser tooling, read-only permissions, and all existing production invocations preserved.")
+print("PASS: each detailed Cayo entrypoint appears twice in consolidated production; once per browser in independent pilot.")
+print("PASS: build/audit, pinned browser tooling, read-only permissions, and required browser coverage preserved.")
