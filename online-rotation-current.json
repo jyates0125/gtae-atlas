@@ -36,6 +36,21 @@
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles",
       "sourceObservation": "Nov 27 current dated reports agree North Chumash, Chumash, Paleto Bay; GTAMap.io exact XY; use deployed 07 UTC reset. Not gameplay verified."
     },
+    "ls-tags": {
+      "activeIds": [
+        "ls-tags-richman-glen-ltd",
+        "ls-tags-rockford-hills-eugenics",
+        "ls-tags-sandy-shores-ace-liquor",
+        "ls-tags-strawberry-gabrielas-market",
+        "ls-tags-tataviam-bishops-chicken"
+      ],
+      "checkedAtUtc": "2026-11-27T12:33:32.000Z",
+      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "source": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles/ls-tags",
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 27 dated GTAMap.io exact poster landmarks and XY; GTA Boss agrees on all five current districts (different numbering; secondary exact XY not independently retrieved). Not gameplay verified. Spray can prerequisite retained."
+    },
     "cayo-chests": {
       "activeIds": [
         "cayo-chest-1",
@@ -49,14 +64,15 @@
       "sourceObservation": "Nov 27 dated GTAMap.io XYZ match bundled land #1 and underwater #17; GTA Boss corroborates airstrip and lighthouse. Not gameplay verified."
     }
   },
-  "checkedAtUtc": "2026-11-27T12:19:00.000Z",
+  "checkedAtUtc": "2026-11-27T12:33:32.000Z",
   "status": "partially-populated-calculated-not-gameplay-verified",
-  "notes": "Nov 27: four dated categories validated; new mainland reference rows cross-checked by source-reported location, coordinates from GTAMap.io; remaining categories unconfirmed.",
+  "notes": "Nov 27: retain four existing current categories and add five LS Tags using GTAMap.io exact locations and GTA Boss dated district corroboration; calculated, not gameplay verified. Remaining categories unconfirmed.",
   "supportedGroups": [
     "cayo-chests",
     "gun-van",
     "shipwreck",
-    "street-dealers"
+    "street-dealers",
+    "ls-tags"
   ],
   "catalog": [
     {
@@ -97,6 +113,56 @@
       "y": 1115.6,
       "sourceUrl": "https://gtamap.io/gta-online/daily/street-dealers/",
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "ls-tags-richman-glen-ltd",
+      "activityId": "ls-tags",
+      "name": "LS Tags · Richman Glen · LTD",
+      "x": -1834.4,
+      "y": 788.6,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles/ls-tags",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "ls-tags-rockford-hills-eugenics",
+      "activityId": "ls-tags",
+      "name": "LS Tags · Rockford Hills · Eugenics Incorporated",
+      "x": -942.4,
+      "y": -343.5,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles/ls-tags",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "ls-tags-sandy-shores-ace-liquor",
+      "activityId": "ls-tags",
+      "name": "LS Tags · Sandy Shores · Ace Liquor",
+      "x": 1411.1,
+      "y": 3608.8,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles/ls-tags",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "ls-tags-strawberry-gabrielas-market",
+      "activityId": "ls-tags",
+      "name": "LS Tags · Strawberry · Gabriela's Market",
+      "x": 38,
+      "y": -1469.2,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles/ls-tags",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "ls-tags-tataviam-bishops-chicken",
+      "activityId": "ls-tags",
+      "name": "LS Tags · Tataviam Mountains · Bishop's Chicken",
+      "x": 2581,
+      "y": 487.5,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles/ls-tags",
       "confidence": "source-crosschecked"
     }
   ]
