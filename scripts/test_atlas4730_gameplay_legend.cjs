@@ -63,7 +63,7 @@ assert.equal(applies({game:'5',scope:'story'},'5','story'),true);
 assert.equal(applies({game:'5',scope:'both'},'5','online'),true);
 assert.equal(applies({game:'6',scope:'story'},'5','story'),false);
 assert.equal(applies({game:'6',scope:'story'},'6','story'),true);
-for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4744'));}
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4745'));}
 console.log('Optional source disclosure and world/mode scope contracts passed');
 
 const gameHash=vm.runInNewContext(get(map,'function mapGameHash','function switchGame')+';mapGameHash',{});
@@ -83,7 +83,7 @@ glyphContext.ctx=new Proxy(recorder,{get:(o,k)=>k==='stroke'?()=>strokes.push(o.
 glyphContext.conditionForRecord=()=>({status:'active'});
 for(const k of mainland){for(const selected of [false,true]){strokes.length=0;fills.length=0;assert(glyph.draw({id:k,category:k},20,20,null,selected));assert(strokes.includes(activityColors[k])||fills.includes(activityColors[k]),k+' category color must survive active/selected');assert(fills.includes('#ffe48b'),k+' active dot');if(selected)assert(strokes.includes('#ffe48b'),k+' selected ring')}}
 assert(map.includes('focus,gameplayGlyphColor(id)'));
-assert(map.includes('glyph.style.color=displayGlyphColor(selected)'));
+assert(map.includes('paintGlyph(glyph,displayGlyphColor(selected))'));
 assert(map.includes('marker.style.color=displayGlyphColor(r)'));
 console.log('Seven distinct activity colors persist across active canvas, legend, list and selection');
 
@@ -92,3 +92,12 @@ glyphContext.game='6';glyphContext.conditionForRecord=()=>null;
 for(const key of ['vehicle','weapon','fuel','shop','food','marina','property','transport','modshop']){const d=glyph.legend(key).children.map(p=>p.attrs.d).join(' ');assert(glyph.draw({id:key,category:key},20,20,null),key);assert.equal(paths.at(-1),d,key)}
 assert(map.includes("(game==='5'||game==='6')&&drawGameplayGlyph"));assert(map.includes('glyph:displayGlyph,glyphColor:displayGlyphColor'));assert(read('atlas-3d.js').includes('b.replaceChildren(bridge.glyph(r))'));
 console.log('V and VI shared glyph geometry, category color and 3D bridge contracts passed');
+
+// Explicit category paint on SVG paths survives inherited selection styling.
+const paint=vm.runInNewContext(get(map,'function paintGlyph','function displayGlyph(r)')+';paintGlyph');
+const style=()=>({values:{},setProperty(k,v,priority){this.values[k]=[v,priority]}});
+const filled={style:style(),attrs:{fill:'currentColor'},getAttribute(k){return this.attrs[k]},setAttribute(k,v){this.attrs[k]=v}};
+const outline={style:style(),attrs:{fill:'none',stroke:'currentColor'},getAttribute(k){return this.attrs[k]},setAttribute(k,v){this.attrs[k]=v}};
+const svg={style:style(),querySelectorAll:()=>[filled,outline]};
+paint(svg,'#f4b66a');assert.deepEqual(svg.style.values.color,['#f4b66a','important']);assert.deepEqual(filled.style.values.fill,['#f4b66a','important']);assert.deepEqual(outline.style.values.stroke,['#f4b66a','important']);assert.equal(outline.attrs.fill,'none');
+console.log('Explicit glyph paint and outline transparency passed');

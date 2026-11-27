@@ -484,7 +484,8 @@ const GAMEPLAY_TYPE_COLORS=Object.freeze({'ceo-offices':'#91b9ff','nightclubs-bu
 function gameplayGlyphColor(key,r){return GAMEPLAY_EVENT_COLORS[key]||GAMEPLAY_TYPE_COLORS[key]||CATEGORIES[key]?.[1]||CATEGORIES[r?.category]?.[1]||'#e9c789'}
 function displayGlyphKey(r){return isViLandmark(r)?'landmark':gameplayGlyphKey(r)}
 function displayGlyphColor(r){return isViLandmark(r)?'#fff1cf':gameplayGlyphColor(displayGlyphKey(r),r)}
-function displayGlyph(r){if(!isViLandmark(r))return elarioLegendGlyph(displayGlyphKey(r));const span=document.createElement('span');span.className='j4744-compact-landmark';span.setAttribute('aria-hidden','true');span.textContent='◆';return span}
+function paintGlyph(glyph,color){glyph.style.setProperty('color',color,'important');for(const path of glyph.querySelectorAll('path')){for(const property of ['fill','stroke'])if(path.getAttribute(property)==='currentColor'){path.setAttribute(property,color);path.style.setProperty(property,color,'important')}}return glyph}
+function displayGlyph(r){if(!isViLandmark(r))return paintGlyph(elarioLegendGlyph(displayGlyphKey(r)),displayGlyphColor(r));const span=document.createElement('span');span.className='j4744-compact-landmark';span.setAttribute('aria-hidden','true');span.textContent='◆';return span}
 function drawGameplayGlyph(r,x,y,cache,selected=false){
  if(typeof Path2D!=='function')return false;
  const key=gameplayGlyphKey(r),filled=GAMEPLAY_FILLED_ICONS[key],shape=filled?filled.join(' '):ELARIO_LEGEND_SHAPES[key];if(!shape)return false;
@@ -500,7 +501,7 @@ function drawGameplayGlyph(r,x,y,cache,selected=false){
 }
 function quickLegendRow(key,title,detail,on,toggle,focus,color){
  const row=document.createElement('div');row.className='legend-row j4730-quick-row';row.dataset.legendKey=key;
- const b=btn(title,toggle,'legend-choice');b.setAttribute('aria-pressed',String(on));const glyph=document.createElement('i');glyph.className='legend-symbol j4730-flat-symbol';glyph.style.color=color;glyph.append(elarioLegendGlyph(key));b.prepend(glyph);
+ const b=btn(title,toggle,'legend-choice');b.setAttribute('aria-pressed',String(on));const glyph=document.createElement('i');glyph.className='legend-symbol j4730-flat-symbol';glyph.style.color=color;glyph.append(paintGlyph(elarioLegendGlyph(key),color));b.prepend(glyph);
  if(detail){const small=document.createElement('small');small.className='j4730-legend-state';small.textContent=detail;b.append(small)}
  row.append(b);if(focus)row.append(btn('Map',focus,'legend-only'));return row;
 }
@@ -581,7 +582,7 @@ function renderLegend(){
     if(active[filterScope()].has(cat))active[filterScope()].delete(cat);else active[filterScope()].add(cat);
     showPins=true;page=0;render();announce(`${title} ${active[filterScope()].has(cat)?'shown':'hidden'} on map`);
    });toggle.className='legend-choice';toggle.setAttribute('aria-pressed',String(on));toggle.title=`${on?'Hide':'Show'} ${title} pins`;
-   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;dot.style.color=color;if(game==='6'&&cat==='landmark'){dot.classList.add('j371-landmark-legend');dot.textContent='◆';}else dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
+   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;dot.style.color=color;if(game==='6'&&cat==='landmark'){dot.classList.add('j371-landmark-legend');dot.style.color='#fff1cf';dot.textContent='◆';}else dot.append(paintGlyph(elarioLegendGlyph(cat),color));toggle.prepend(dot);
    const only=btn('Only',()=>{if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(['category:'+cat],true,true);return}dropEventFocus();if(game==='5'&&mode==='online')onlineCleanView=false;active[filterScope()]=new Set([cat]);showPins=true;page=0;render();announce('Showing only '+title+' on map');},'legend-only');
    row.append(toggle,only);group.append(row);
   }if(group.childElementCount>1)root.append(group);
@@ -614,7 +615,7 @@ function choosePlace(place){selected=place;showPins=true;$('togglePins').textCon
  if(innerWidth<=700){$('sidebar').classList.add('mobile-collapsed');window.scrollTo({top:0,behavior:'smooth'})}
 }
 function updateSelected(){const card=$('selectedCard');if(!selected||selected.game!==game){card.classList.add('hidden');return}card.classList.remove('hidden');$('selectedName').textContent=selected.name;
- if(game==='5'||game==='6'){const glyph=displayGlyph(selected);glyph.classList.add('j4730-selected-glyph');glyph.style.color=displayGlyphColor(selected);$('selectedName').prepend(glyph);}
+ if(game==='5'||game==='6'){const glyph=displayGlyph(selected);glyph.classList.add('j4730-selected-glyph');paintGlyph(glyph,displayGlyphColor(selected));$('selectedName').prepend(glyph);}
  const photo=$('selectedPhoto'),figure=$('selectedPhotoFigure');if(photo&&figure&&photo.dataset.place!==selected.id){photo.dataset.place=selected.id;figure.hidden=true;photo.removeAttribute('src');const m=/^gtadb-([56])-(L\d+)$/.exec(selected.id);if(m){photo.alt='Source-contributed in-game image for '+selected.name;photo.src=UPSTREAM+'map/photos/'+m[1]+'/'+m[2]+',ig.jpg';}}
 
  $('selectedSource').classList.toggle('hidden',!selected.sourceUrl);if(selected.sourceUrl)$('selectedSource').href=selected.sourceUrl;

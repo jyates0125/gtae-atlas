@@ -98,7 +98,8 @@ try:
             expect(page.locator("#j393-online-activity-slot #j88-events")).to_be_visible(timeout=25000)
             expect(page.locator("#selectedName")).to_contain_text("Procopio Beach",timeout=25000)
             expect(page.locator("#selectedName .j4730-selected-glyph path")).to_have_attribute("d",van_glyph)
-            assert page.locator("#selectedName .j4730-selected-glyph").evaluate("(e)=>getComputedStyle(e).color")==van_color
+            actual=page.locator("#selectedName .j4730-selected-glyph").evaluate("(e)=>({color:getComputedStyle(e).color,fill:getComputedStyle(e.querySelector('path')).fill,inline:e.getAttribute('style')})")
+            assert actual["color"]==van_color and actual["fill"]==van_color, (van_color,actual)
             assert page.locator(".j4730-advanced-events").evaluate("(e)=>e.open")
             # Fresh visitor with an expired feed: no stale or unrelated default pins.
             page.evaluate("localStorage.removeItem('jura4731-online-selected-layers')")
