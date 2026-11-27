@@ -63,7 +63,7 @@ assert.equal(applies({game:'5',scope:'story'},'5','story'),true);
 assert.equal(applies({game:'5',scope:'both'},'5','online'),true);
 assert.equal(applies({game:'6',scope:'story'},'5','story'),false);
 assert.equal(applies({game:'6',scope:'story'},'6','story'),true);
-for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4746'));}
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4748'));}
 console.log('Optional source disclosure and world/mode scope contracts passed');
 
 const gameHash=vm.runInNewContext(get(map,'function mapGameHash','function switchGame')+';mapGameHash',{});
@@ -104,3 +104,11 @@ console.log('Explicit glyph paint and outline transparency passed');
 
 for(const page of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(page);for(const id of ['j4730-legend-search','j4731-filters-map','j4732-back-map'])assert(h.includes('id="'+id+'"'),page+' '+id);assert(h.includes('atlas-navigation.js?v=47301'))}
 assert(map.includes('root.dataset.searching'));assert(map.includes("filterScope()+':'+name"));assert(!map.includes("game==='6'||(!online&&name===ordered[0][0])"));console.log('Shared three-map searchable disclosures and scoped state contracts passed');
+
+// Same-size layout notifications must never clear the canvas; real resizes apply backing dimensions at paint time.
+const resizeCode=get(map,'function mapPixelRatio','function trimTileStore')+get(map,'function resize()','function fallbackTile');
+let writes=0,paints=0;const fakeCanvas={w:600,h:900,get width(){return this.w},set width(v){writes++;this.w=v},get height(){return this.h},set height(v){writes++;this.h=v},getBoundingClientRect:()=>({width:400,height:600})};
+const rc={canvas:fakeCanvas,width:400,height:600,dpr:1.5,window:{devicePixelRatio:3},compactMapDevice:()=>true,fitGame:()=>{},schedulePaint:()=>paints++};
+const stable=vm.runInNewContext(resizeCode+';({resize,syncCanvasBacking,mapPixelRatio})',rc);stable.resize();stable.syncCanvasBacking();assert.equal(writes,0);assert.equal(paints,0);fakeCanvas.getBoundingClientRect=()=>({width:420,height:600});stable.resize();assert.equal(writes,0);assert.equal(paints,1);stable.syncCanvasBacking();assert.equal(writes,1);stable.syncCanvasBacking();assert.equal(writes,1);assert(stable.mapPixelRatio(1200,1200,3,true)<=Math.sqrt(2000000/1440000));
+assert(map.includes('tileRequests>=(compactMapDevice()?12:24)'));assert(map.includes('compactMapDevice()?144:420'));assert(map.includes('tileRequests--;t.img=null'));assert(map.includes("if(paintPending||document.hidden)return"));
+assert(map.includes("['Gameplay & collectibles',VI_GAMEPLAY_CATEGORIES]"));const vi=read('atlas-vi.html');assert(vi.indexOf('id="j449-vi-jobs"')<vi.indexOf('id="legend"'));assert(vi.indexOf('id="legend"')<vi.indexOf('id="j290-vi-ledger"'));console.log('Gameplay-first VI and bounded map painting / tile memory contracts passed');

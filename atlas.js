@@ -126,7 +126,7 @@ let markerDensity='individual'; // Grouping removed in Atlas 6.1; all pins remai
 let coordinateTarget=null;
 let nearbyActive=false,nearbyLast=[],chooseRouteStartMode=false,pendingSourceReveal=new Set();
 let deepLinkOpened=false;
-let pendingPinCategory='user',packRecords=[],camera={x:0,y:0,z:1},canvas=$('atlasCanvas'),ctx=canvas.getContext('2d'),width=0,height=0,dpr=1,paintPending=false,hitRegions=[],tileStore=new Map(),tilesLoaded=0,tilesErrors=0,lastNotice='',offlineStop=false,offlineBusy=false;
+let pendingPinCategory='user',packRecords=[],camera={x:0,y:0,z:1},canvas=$('atlasCanvas'),ctx=canvas.getContext('2d'),width=0,height=0,dpr=1,paintPending=false,hitRegions=[],tileStore=new Map(),tileAccess=0,tileRequests=0,tileUsed=new Set(),tilesLoaded=0,tilesErrors=0,lastNotice='',offlineStop=false,offlineBusy=false;
 const MIN_Z=0,MAX_Z=5.2;
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 function announce(s){lastNotice=s;$('mapStatus').textContent=s}
@@ -355,6 +355,7 @@ function renderNamedLayers(){const root=$('namedLayers');if(!root)return;root.re
  if(!rendered){const note=document.createElement('small');note.textContent=layers.length?'No matching layer names. Clear layer search.':'No named layers have mapped coordinates in this game yet.';root.append(note)}
  const count=$('namedLayerCount');if(count)count.textContent=`${layers.length} mapped layers · ${layers.filter(l=>isOnlineCleanView()?onlineSelectedLayers.has('named:'+l.id):!hidden.has(l.id)).length} enabled`;
 }
+const VI_GAMEPLAY_CATEGORIES=Object.freeze(['collectible','vehicle','weapon','activity','property','user']);
 const LEGEND_GROUPS=[
  ['Explore world',['landmark','nature','transport','government','industry','utility','other']],
  ['Game-related places · verify use',['gunstore','modshop','dealer','fuel','safehouse','marina','garage_site','business_site']],
@@ -573,9 +574,11 @@ function renderLegend(){
  for(const [key,title] of GAMEPLAY_COLLECTIONS){if(query&&!(title+' '+key).toLowerCase().includes(query))continue;const found=rows.filter(r=>gameplayCollectionKey(r)===key);if(!found.length)continue;const on=isOnlineCleanView()?onlineSelectedLayers.has('collection-type:'+key):eventFocusName===title,focus=()=>{if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(['collection-type:'+key],!on);return}if(on){dropEventFocus();page=0;render();return}dropEventFocus();eventFocusIds=new Set(found.map(r=>r.id));eventFocusName=title;showPins=true;page=0;showTab('Find');render()};group.append(quickLegendRow(key,title,found.length+' mapped',on,focus,focus,gameplayGlyphColor(key)));}
  if(group.childElementCount>1)root.append(group);
  }
- const ordered=game==='5'?[LEGEND_GROUPS[1],LEGEND_GROUPS[3],LEGEND_GROUPS[2],LEGEND_GROUPS[0]]:LEGEND_GROUPS;
+ const ordered=game==='5'?[LEGEND_GROUPS[1],LEGEND_GROUPS[3],LEGEND_GROUPS[2],LEGEND_GROUPS[0]]:[['Gameplay & collectibles',VI_GAMEPLAY_CATEGORIES],['Shops & services · verify use',['gunstore','modshop','dealer','fuel','safehouse','marina','garage_site','business_site','shop','food','hotel','leisure']],['Explore world · reference locations',['landmark','nature','transport','government','industry','utility','office','other']]];
+ const firstGroup=ordered.find(([,keys])=>keys.some(k=>counts[k]))?.[0];
+ if(game==='6'&&!query){const pick=btn('Gameplay pins only',()=>{dropEventFocus();active[filterScope()]=new Set(VI_GAMEPLAY_CATEGORIES);showPins=true;page=0;render();announce('Gameplay categories selected. Only available source-reported or saved locations are shown.');},'j4730-today-focus');pick.id='j4748-vi-gameplay';root.append(pick);const note=document.createElement('small');note.className='j4730-today-note';note.textContent='Gameplay first. Reported activities and personal checklists do not imply verified map coordinates. Open world reference categories when needed.';root.append(note);}
  for(const [name,keys] of ordered){if(!keys.some(k=>counts[k]))continue;
-  const group=document.createElement('details');group.className='legend-group';group.dataset.group=name;group.open=!!query||(legendOpenStates.get(legendDisclosureKey(name))??(!online&&name===ordered[0][0]));
+  const group=document.createElement('details');group.className='legend-group';group.dataset.group=name;group.open=!!query||(legendOpenStates.get(legendDisclosureKey(name))??(!online&&name===firstGroup));
   const summary=document.createElement('summary');summary.textContent=name;group.append(summary);
   for(const cat of keys){if(!counts[cat])continue;const [title,color]=CATEGORIES[cat],on=isOnlineCleanView()?onlineSelectedLayers.has('category:'+cat):chosen.has(cat);if(query&&!(title+' '+cat).toLowerCase().includes(query))continue;
    const row=document.createElement('div');row.className='legend-row';row.dataset.legendKey=cat;
@@ -746,9 +749,9 @@ function importPackObject(pack){
 function readPacks(){const packs=loadStore('jura-atlas-v5-packs',{});packRecords=Object.values(packs).flatMap(v=>Array.isArray(v.records)?v.records:[]);if($('packCount'))$('packCount').textContent=packRecords.length.toLocaleString()+' imported locations';render()}
 async function readPack(file){if(!file)return;try{if(file.size>2500000)throw Error('Maximum pack size is 2.5 MB');const payload=JSON.parse(await file.text());const n=importPackObject(payload);toast(`${n} source-attributed records imported. Check the locations on their correct game maps.`)}catch(e){toast('Could not import locations: '+e.message)}finally{$('packFile').value=''}}
 function updatePinButton(){const pinButton=$('togglePins');if(pinButton){const visible=pinsVisible()&&(!!eventFocusIds||(isOnlineCleanView()?(automaticDailyLayers&&todayFocusRows(records(),activityCache()).length>0)||onlineSelectedLayers.size>0||!!$('search').value.trim()||!!$('districtFilter').value.trim():enabled().size>0));pinButton.textContent=visible?'📍 Pins on':'📍 Pins off';pinButton.setAttribute('aria-pressed',String(visible));}}
-function render(){savedCategoryMode();renderLegend();updatePinButton();renderViRegions();renderServices();renderFind();renderRoute();renderPins();renderSpecial('Collections');renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
+function render(){savedCategoryMode();renderLegend();updatePinButton();renderViRegions();if(tab==='Services'||!compactMapDevice())renderServices();renderFind();renderRoute();renderPins();if(tab==='Collections'||!compactMapDevice())renderSpecial('Collections');if(tab==='Vehicles'||!compactMapDevice())renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
 function mapGameHash(g,hash,initial){return initial&&hash&&!/^#game(?:5|6|online)$/.test(hash)?hash:'#game'+g}
-function switchGame(g,initial=false){if(!['5','6','online'].includes(g))return;rememberLegendDisclosure();dropEventFocus();chooseRouteStartMode=false;mode=g==='online'?'online':'story';game=g==='6'?'6':'5';const activeLink=$('activityModeLink');if(activeLink){const which=g==='6'?'vi':g==='online'?'online':'story';activeLink.href='./atlas-activities.html?mode='+which;activeLink.textContent=which==='vi'?'◷ Leonida · Research & verification':which==='online'?'◷ Online events · timers & spawns':'◷ Story Mode challenges · no Online events';}selected=null;coordinateTarget=null;addPinMode=false;$('game5').classList.toggle('active',g==='5');$('game6').classList.toggle('active',g==='6');$('gameOnline').classList.toggle('active',g==='online');$('game5').setAttribute('aria-pressed',String(g==='5'));$('game6').setAttribute('aria-pressed',String(g==='6'));$('gameOnline').setAttribute('aria-pressed',String(g==='online'));$('mapTitle').textContent=g==='6'?'GTA VI · Leonida':g==='online'?'GTA Online · Los Santos':'GTA V · Los Santos';$('mapSubtitle').textContent=g==='6'?'GTADB VI · provisional landmarks, NOT confirmed game locations':g==='online'?'Shared GTA V terrain · separate Online markers and progress':'GTADB GTA V · Story map landmarks';
+function switchGame(g,initial=false){if(!['5','6','online'].includes(g))return;rememberLegendDisclosure();dropEventFocus();chooseRouteStartMode=false;mode=g==='online'?'online':'story';game=g==='6'?'6':'5';const activeLink=$('activityModeLink');if(activeLink){const which=g==='6'?'vi':g==='online'?'online':'story';activeLink.href='./atlas-activities.html?mode='+which;activeLink.textContent=which==='vi'?'◷ Leonida · Gameplay & progress':which==='online'?'◷ Online events · timers & spawns':'◷ Story Mode challenges · no Online events';}selected=null;coordinateTarget=null;addPinMode=false;$('game5').classList.toggle('active',g==='5');$('game6').classList.toggle('active',g==='6');$('gameOnline').classList.toggle('active',g==='online');$('game5').setAttribute('aria-pressed',String(g==='5'));$('game6').setAttribute('aria-pressed',String(g==='6'));$('gameOnline').setAttribute('aria-pressed',String(g==='online'));$('mapTitle').textContent=g==='6'?'GTA VI · Leonida':g==='online'?'GTA Online · Los Santos':'GTA V · Los Santos';$('mapSubtitle').textContent=g==='6'?'Leonida gameplay & mapped places · source status on each record':g==='online'?'Shared GTA V terrain · separate Online markers and progress':'GTADB GTA V · Story map landmarks';
  $('layer').replaceChildren();for(const [key,label] of LAYERS[game])$('layer').add(new Option(label,key));if(!$('layer').querySelector('option[value="'+styles[game]+'"]'))styles[game]=game==='6'?'scaly,view':'radar';$('layer').value=styles[game];$('search').value='';if($('j4730-legend-search'))$('j4730-legend-search').value='';if($('namedLayerSearch'))$('namedLayerSearch').value='';if($('sourceLayerSearch'))$('sourceLayerSearch').value='';onlyUnfound=false;onlyFavorites=false;showUnverified=true;$('showUnverified').checked=true;if($('showCommunityResearch'))$('showCommunityResearch').checked=researchOn();$('hideFound').checked=false;$('favoritesOnly').checked=false;page=0;fitGame();render();renderSources();dataNotice(datasets[game].length?datasets[game].length.toLocaleString()+' landmarks · '+dataOrigins[game]:'Getting GTA '+game+' locations…');tileHealth();
  navPlan=null;navPlanScope=null;if(window.teamJuraNav)window.teamJuraNav.gameChanged();
  try{const url=new URL(location.href);url.hash=mapGameHash(g,url.hash,initial);history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}announce(g==='online'?'Online mode: GTA V base landmarks, with Online markers and progress kept separate.':'GTA '+game+' map and GTA '+game+' landmarks selected.');
@@ -762,13 +765,17 @@ function tileHealth(){const el=$('tileHealth');if(!el)return;const current=style
  el.classList.toggle('atlas-tiles-error',bad>0&&!good);el.title='GTADB CC BY 4.0 sourced map tiles; GTA VI Day uses in-game map imagery © Rockstar, while Scaly/Loki are historic community reconstructions. Atlas markers still require independent verification.';}
 
 function within(style,z,x,y,g=game){const r=BOUNDS[mapView(style,g).base]?.[z];return !!r&&x>=r[0]&&x<=r[2]&&y>=r[1]&&y<=r[3]}
+function compactMapDevice(){return window.innerWidth<=820||window.matchMedia?.('(pointer: coarse)').matches===true}
+function mapPixelRatio(w,h,deviceRatio,compact){return Math.min(compact?1.5:2,deviceRatio||1,Math.sqrt((compact?2000000:6000000)/Math.max(1,w*h)))}
+function trimTileStore(){const limit=compactMapDevice()?144:420;if(tileStore.size>limit){const candidates=[...tileStore].filter(([key,t])=>t.state!=='loading'&&!tileUsed.has(key)).sort((a,b)=>a[1].last-b[1].last);for(const [key] of candidates){if(tileStore.size<=limit)break;tileStore.delete(key)}}tileUsed.clear()}
 function tileImage(style,z,x,y,g=game){
  if(!within(style,z,x,y,g))return null;
  const stylesToTry=sourceTileStyles(style,z,x,y,g);
  for(const path of stylesToTry){
   const u=sourceUrl(g,path,z,x,y);let t=tileStore.get(u);
   if(!t){
-   t={state:'loading',img:null,last:Date.now(),path,game:g,view:style,host:0,corsSafe:true};tileStore.set(u,t);
+   if(tileRequests>=(compactMapDevice()?12:24))return null;
+   tileRequests++;t={state:'loading',img:null,last:++tileAccess,path,game:g,view:style,host:0,corsSafe:true};tileStore.set(u,t);
    // Some image hosts allow ordinary <img> but not CORS-enabled canvas. Try
    // CORS hosts first (usable for WebGL), then display-only image retries.
    const attempts=[...TILE_HOSTS.keys()].map(host=>({host,cors:true}))
@@ -777,28 +784,25 @@ function tileImage(style,z,x,y,g=game){
     const attempt=attempts[index];t.host=attempt.host;t.corsSafe=attempt.cors;
     const img=new Image();t.img=img;img.decoding='async';
     if(attempt.cors)img.crossOrigin='anonymous';
-    img.onload=()=>{if(t.img!==img)return;t.state='ok';tilesLoaded++;schedulePaint();tileHealth();if(tilesLoaded===1)announce('Licensed GTADB artwork loaded.');};
-    img.onerror=()=>{if(t.img!==img)return;if(index+1<attempts.length){loadAttempt(index+1);return;}t.state='error';tilesErrors++;schedulePaint();tileHealth();};
+    img.onload=()=>{if(t.img!==img)return;t.state='ok';tileRequests--;tilesLoaded++;schedulePaint();tileHealth();if(tilesLoaded===1)announce('Licensed GTADB artwork loaded.');};
+    img.onerror=()=>{if(t.img!==img)return;if(index+1<attempts.length){loadAttempt(index+1);return;}t.state='error';tileRequests--;t.img=null;tilesErrors++;schedulePaint();tileHealth();};
     img.src=sourceUrl(g,path,z,x,y,attempt.host);
    };loadAttempt(0);
   }
-  if(t.state==='ok'||t.state==='loading')return t;
+  t.last=++tileAccess;tileUsed.add(u);if(t.state==='ok'||t.state==='loading')return t;
  }
  return null;
 }
-function imageFor(style,z,x,y){
- const image=tileImage(style,z,x,y,game);
- if(tileStore.size>850){for(const [k,v] of tileStore){if(tileStore.size<=680)break;if(v.state!=='loading')tileStore.delete(k)}}
- return image;
-}
+function imageFor(style,z,x,y){return tileImage(style,z,x,y,game)}
 function scale(){return 2**camera.z/32}
 function toScreen(x,y){const s=scale();return{x:width/2+(x-camera.x)*s,y:height/2+(camera.y-y)*s}}
 function fromScreen(x,y){const s=scale();return{x:camera.x+(x-width/2)/s,y:camera.y-(y-height/2)/s}}
 function fitGame(){const area=game==='5'?[-4550,-4750,4800,8150]:[-12800,-10400,7200,8500];const [x0,y0,x1,y1]=area;camera.x=(x0+x1)/2;camera.y=(y0+y1)/2;
  const s=Math.max(.04,Math.min((Math.max(width,350)-90)/(x1-x0),(Math.max(height,420)-140)/(y1-y0)));camera.z=clamp(Math.log2(s*32),0,5);schedulePaint()}
 function zoomBy(delta,x=width/2,y=height/2){const before=fromScreen(x,y);camera.z=clamp(camera.z+delta,MIN_Z,MAX_Z);const after=fromScreen(x,y);camera.x+=before.x-after.x;camera.y+=before.y-after.y;schedulePaint()}
-function schedulePaint(){if(paintPending)return;paintPending=true;requestAnimationFrame(()=>{paintPending=false;draw()})}
-function resize(){const rect=canvas.getBoundingClientRect();if(!rect.width||!rect.height)return;const oldW=width,oldH=height;width=rect.width;height=rect.height;dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);if(!oldW||!oldH)fitGame();schedulePaint()}
+function schedulePaint(){if(paintPending||document.hidden)return;paintPending=true;requestAnimationFrame(()=>{paintPending=false;if(!document.hidden)draw()})}
+function resize(){const rect=canvas.getBoundingClientRect();if(!rect.width||!rect.height)return;const ratio=mapPixelRatio(rect.width,rect.height,window.devicePixelRatio,compactMapDevice());if(width===rect.width&&height===rect.height&&dpr===ratio)return;const oldW=width,oldH=height;width=rect.width;height=rect.height;dpr=ratio;if(!oldW||!oldH)fitGame();schedulePaint()}
+function syncCanvasBacking(){const w=Math.max(1,Math.round(width*dpr)),h=Math.max(1,Math.round(height*dpr));if(canvas.width!==w)canvas.width=w;if(canvas.height!==h)canvas.height=h}
 function fallbackTile(z,x,y,dx,dy,size){for(let p=z-1;p>=0;p--){const factor=2**(z-p),xx=Math.floor(x/factor),yy=Math.floor(y/factor),parent=imageFor(styles[game],p,xx,yy);if(parent?.state!=='ok')continue;
   const src=256/factor,originX=(x-xx*factor)*src,originY=(y-yy*factor)*src;ctx.drawImage(parent.img,originX,originY,src,src,dx,dy,size+.5,size+.5);return true}return false}
 function drawTiles(){const style=styles[game],view=mapView(style),z=Math.min(view.base==='day'?6:5,Math.ceil(camera.z)),s=scale(),tile=256*2**(camera.z-z),offsetX=width/2-(camera.x+16384)*s,offsetY=height/2-(16384-camera.y)*s,range=BOUNDS[view.base][z];
@@ -837,7 +841,7 @@ function drawTerrainTexture(target,box){
   }catch{}
   if(painted)loaded++;else missing++;
  }
- c.restore();return {loaded,missing,complete:loaded>0&&missing===0};
+ c.restore();trimTileStore();return {loaded,missing,complete:loaded>0&&missing===0};
 }
 function drawRoute(){
  if(navPlan&&navPlanScope===routeScope()){
@@ -970,7 +974,7 @@ function drawMarkers(){hitRegions=[];if(!pinsVisible()&&!selected)return;
 }
 function drawCoordinateTarget(){if(!coordinateTarget||coordinateTarget.game!==game)return;const p=toScreen(coordinateTarget.x,coordinateTarget.y);if(p.x<-40||p.x>width+40||p.y<-40||p.y>height+40)return;
  ctx.save();ctx.strokeStyle='#fff9d2';ctx.lineWidth=3;ctx.shadowBlur=7;ctx.shadowColor='#000';ctx.beginPath();ctx.arc(p.x,p.y,16,0,Math.PI*2);ctx.moveTo(p.x-26,p.y);ctx.lineTo(p.x+26,p.y);ctx.moveTo(p.x,p.y-26);ctx.lineTo(p.x,p.y+26);ctx.stroke();ctx.restore();}
-function draw(){if(!width||!height)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#163441';ctx.fillRect(0,0,width,height);ctx.save();ctx.strokeStyle='#294a56';ctx.lineWidth=1;for(let x=0;x<width;x+=96){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke()}for(let y=0;y<height;y+=96){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke()}ctx.restore();drawTiles();drawActivityZones();drawRoute();drawMarkers();drawCoordinateTarget();if(window.teamJuraNav?.getDimension()==="3d")window.teamJuraNav.refresh()}
+function draw(){if(!width||!height)return;syncCanvasBacking();tileUsed.clear();ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#163441';ctx.fillRect(0,0,width,height);ctx.save();ctx.strokeStyle='#294a56';ctx.lineWidth=1;for(let x=0;x<width;x+=96){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke()}for(let y=0;y<height;y+=96){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke()}ctx.restore();drawTiles();drawActivityZones();drawRoute();drawMarkers();drawCoordinateTarget();if(window.teamJuraNav?.getDimension()==="3d")window.teamJuraNav.refresh();trimTileStore()}
 const pointers=new Map();let gesture=null;
 function position(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
 canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{...position(e),start:position(e)});canvas.classList.add('dragging');if(pointers.size===2){const ps=[...pointers.values()];gesture={distance:Math.hypot(ps[0].x-ps[1].x,ps[0].y-ps[1].y),zoom:camera.z};}else gesture=null});
@@ -1324,7 +1328,7 @@ function init(){
    console.warn('Team Jura optional route engine unavailable; keeping Atlas maps active.',error);
   }
  }
- const observer=new ResizeObserver(resize);observer.observe(canvas);window.addEventListener('resize',resize);const start=document.body.dataset.startWorld||new URLSearchParams(location.search).get('world')|| (location.hash==='#game6'?'6':location.hash==='#gameonline'?'online':'5');switchGame(['5','6','online'].includes(start)?start:'5',true);
+ const observer=new ResizeObserver(resize);observer.observe(canvas);window.addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{if(!document.hidden){resize();schedulePaint()}});const start=document.body.dataset.startWorld||new URLSearchParams(location.search).get('world')|| (location.hash==='#game6'?'6':location.hash==='#gameonline'?'online':'5');switchGame(['5','6','online'].includes(start)?start:'5',true);
  const params=new URLSearchParams(location.search);const q=params.get('search'),cat=params.get('category');
  if(!params.has('place')&&params.has('x')&&params.has('y')){const x=Number(params.get('x')),y=Number(params.get('y')),z=Number(params.get('zoom'));if(Number.isFinite(x)&&Number.isFinite(y)&&Math.abs(x)<=16384&&Math.abs(y)<=16384){$('coordinateX').value=String(x);$('coordinateY').value=String(y);goToCoordinates();if(Number.isFinite(z)&&z>=MIN_Z&&z<=MAX_Z){camera.z=z;schedulePaint()}}}
  if(q)$('search').value=q.slice(0,100);
