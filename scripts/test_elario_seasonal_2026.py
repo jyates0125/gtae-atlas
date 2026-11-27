@@ -36,6 +36,11 @@ try:
                     expect(card).to_be_visible()
                     expect(hero).to_have_attribute("data-elario-seasonal","active")
                     assert card.locator("img").evaluate("(img)=>img.naturalWidth===1448&&img.naturalHeight===1086")
+                    # Visibility alone does not detect an opaque positioned hero pseudo-element.
+                    img=card.locator("img")
+                    img.scroll_into_view_if_needed()
+                    assert img.evaluate("""img=>{const r=img.getBoundingClientRect();const x=r.left+r.width/2,y=r.top+r.height/2;return document.elementFromPoint(x,y)===img}"""), "Seasonal artwork covered by another layer"
+                    assert card.evaluate("(e)=>getComputedStyle(e).position==='relative' && Number(getComputedStyle(e).zIndex)>=1"), "Artwork must paint above hero background"
                     expect(card).to_contain_text("Elario Studios™")
                     expect(card).to_contain_text("© 2026")
                 else:
