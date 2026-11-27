@@ -63,5 +63,13 @@ assert.equal(applies({game:'5',scope:'story'},'5','story'),true);
 assert.equal(applies({game:'5',scope:'both'},'5','online'),true);
 assert.equal(applies({game:'6',scope:'story'},'5','story'),false);
 assert.equal(applies({game:'6',scope:'story'},'6','story'),true);
-for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4736'));}
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4737'));}
 console.log('Optional source disclosure and world/mode scope contracts passed');
+
+const gameHash=vm.runInNewContext(get(map,'function mapGameHash','function switchGame')+';mapGameHash',{});
+assert.equal(gameHash('online','#j393-online-activity-slot',true),'#j393-online-activity-slot');
+assert.equal(gameHash('5','#sourceToggles',true),'#sourceToggles');
+assert.equal(gameHash('6','#game5',true),'#game6');
+assert.equal(gameHash('online','',true),'#gameonline');
+assert.equal(gameHash('5','#j393-online-activity-slot',false),'#game5');
+console.log('Initial deep-link anchor and explicit game-switch contracts passed');
