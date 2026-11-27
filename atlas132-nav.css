@@ -109,3 +109,11 @@ body:has(#j132-nav-toggle) #j89-shell{display:none!important}
 .j4724-all-pages{border-top:1px solid #83578c;margin-top:12px;padding-top:6px}
 .j4724-all-pages>summary{cursor:pointer;color:#ffe3ac;font:800 13px/1.4 system-ui;padding:12px 4px;min-height:44px;box-sizing:border-box}
 .j4724-all-pages>summary:focus-visible{outline:3px solid #ffe49c;outline-offset:2px}
+
+/* Atlas 47.2.9: the functional Home and map directory have the complete
+   shared searchable menu. Keep their old header links as a no-JS fallback,
+   but never show two full site navigation systems at the same time. */
+body.j223-home:has(#j132-nav-toggle) > header.topbar > #primaryNav,
+body.j98-maps:has(#j132-nav-toggle) > header.topbar > #primaryNav{
+ display:none!important;
+}
