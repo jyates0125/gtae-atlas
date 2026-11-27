@@ -131,9 +131,10 @@ async def smoke():
                                                 f"{info['scroll']}/{info['width']} offenders={offenders}")
 
                             # Site-wide release candidate: the ONE universal page-directory
-                            # button must actually open, filter, and dismiss on *every*
-                            # published page. This is an interaction, not a source assertion.
-                            if not failures:
+                            # button must open, filter, and dismiss on every functional page.
+                            # The welcome gateway intentionally has no gameplay menu; its
+                            # guest entry and absence of tools are verified below.
+                            if not failures and path!='index.html':
                                 try:
                                     nav=pg.locator('#j132-nav-toggle')
                                     await nav.wait_for(state='visible',timeout=4500)

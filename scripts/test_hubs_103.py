@@ -48,6 +48,8 @@ for page,mode,js_ver,css_ver in [('atlas-cheats.html','cheats','131','131'),('at
 js=read('atlas103-hub.js')
 for text in ('MODERN_PHONE','PS_TO_XBOX','PS3_HD','X360_SWAP','function available','function cheatCard','function newsCard','copyText','syncPlatform','whiteboard'):
  assert text in js
-for page in ('index.html','maps.html','atlas97-journey.html','atlas81-hq.html'):
+assert './atlas-dashboard.html' in read('index.html') and 'Continue as Guest' in read('index.html')
+assert './atlas-cheats.html' not in read('index.html') and './atlas-news.html' not in read('index.html')
+for page in ('atlas-dashboard.html','maps.html','atlas97-journey.html','atlas81-hq.html'):
  h=read(page);assert './atlas-cheats.html' in h and './atlas-news.html' in h
 print('PASS Atlas multi-game cheat guide, edition selectors, verified newsroom and credits')
