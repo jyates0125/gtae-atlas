@@ -12,7 +12,7 @@ const collection=vm.runInNewContext(get(map,'const GAMEPLAY_COLLECTIONS=','const
 assert.equal(collection({category:'collectible',collectionType:'Spaceship parts'}),'spaceship-parts');assert.equal(collection({category:'collectible',name:'Letter scrap'}),'letter-scraps');assert.equal(collection({category:'shop',name:'Letter scraps'}),null);
 for(const id of ['gun-van','street-dealers','shipwreck','ufo','nightclubs-business','spaceship-parts'])assert(map.includes("'"+id+"'")||map.includes('"'+id+'"'),id);
 assert(map.includes('renderGameplayLegend(root,rows,query)'));assert(map.includes('drawGameplayGlyph(selected'));assert(map.includes('eventHidden.delete(rule.id);showPins=true'));assert(nav.includes('aria-activedescendant'));assert(nav.includes('That activity is no longer eligible'));
-for(const f of ['atlas.html','atlas-online.html']){const h=read(f);assert(h.includes('id="j4730-legend-search"'));assert(h.includes('j4730-advanced-sources'));assert(h.includes('atlas-navigation.js?v=47301'))}
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('id="j4730-legend-search"'));assert(h.includes('j4730-advanced-sources'));assert(h.includes('atlas-navigation.js?v=47301'))}
 console.log('Gameplay legend / route search focused behavioral tests passed');
 
 const snapshot={feed:{'gun-van':new Set(['van-active'])},now:Date.parse('2026-11-27T12:00:00Z')};
@@ -63,7 +63,7 @@ assert.equal(applies({game:'5',scope:'story'},'5','story'),true);
 assert.equal(applies({game:'5',scope:'both'},'5','online'),true);
 assert.equal(applies({game:'6',scope:'story'},'5','story'),false);
 assert.equal(applies({game:'6',scope:'story'},'6','story'),true);
-for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4737'));}
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4741'));}
 console.log('Optional source disclosure and world/mode scope contracts passed');
 
 const gameHash=vm.runInNewContext(get(map,'function mapGameHash','function switchGame')+';mapGameHash',{});
@@ -73,3 +73,10 @@ assert.equal(gameHash('6','#game5',true),'#game6');
 assert.equal(gameHash('online','',true),'#gameonline');
 assert.equal(gameHash('5','#j393-online-activity-slot',false),'#game5');
 console.log('Initial deep-link anchor and explicit game-switch contracts passed');
+
+// Leonida uses the shared category glyphs without Online activity interpretation.
+glyphContext.game='6';glyphContext.mode='story';
+for(const key of ['vehicle','weapon','property','nature','food','marina']){const d=glyph.legend(key).children.map(p=>p.attrs.d).join(' ');assert(glyph.draw({id:'vi-'+key,category:key},20,20,null),key);assert.equal(paths.at(-1),d,key)}
+assert(read('atlas-vi.html').includes('id="j4731-filters-map"'));assert(read('atlas-vi.html').includes('id="j4732-back-map"'));
+assert(map.includes("legendRenderedScope+':'+d.dataset.group"));
+console.log('Leonida glyph parity and scoped controls passed');
