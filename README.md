@@ -10,6 +10,8 @@
 
 **Current focus:** Maintain 13 distinct worlds, accurate collections and routes, Cayo and other heist workspaces, original Elario Forge, vehicles/weapons/characters, navigation and iPhone accessibility. GTA VI public release and speculative individual locations are different evidence questions. Public sign-in remains deferred until the completed website receives its own owner signoff. Do not claim full media/map parity or completed One Last Ride film without delivered and reviewed evidence.
 
+**Rights and reuse:** [Reserved rights](LICENSE.md) · [Community reuse](REUSE-POLICY.md) · [Third-party notices](NOTICE.md) · [Elario operating rights policy](docs/ELARIO-RIGHTS-POLICY.md). No blanket open-source license. Existing upstream permissions are preserved.
+
 ## Historical release notes (not current deployment instructions)
 
 ---
