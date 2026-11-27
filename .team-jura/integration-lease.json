@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "held",
-  "owner": "manual Aura PR 298",
-  "token": "manual-release-298-69fead0-20261127T162600Z",
-  "acquiredAtUtc": "2026-11-27T16:26:00Z",
-  "reviewAfterUtc": "2026-11-27T16:36:00Z",
+  "state": "free",
+  "owner": null,
+  "token": null,
+  "acquiredAtUtc": null,
+  "reviewAfterUtc": null,
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal.",
-  "previousToken": "manual-classics-300-6bd00de",
-  "lastReleaseUtc": "2026-11-27T15:43:00Z",
+  "previousToken": "manual-release-298-69fead0-20261127T162600Z",
+  "lastReleaseUtc": "2026-11-27T16:27:00Z",
   "lastProbe": "competing update rejected"
 }
