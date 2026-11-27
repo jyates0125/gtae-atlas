@@ -8,7 +8,7 @@ let active=false,waypoints=[null,null],graph=null,plan=null,ordering='manual',di
 const graphLoader=Core.createGraphLoader(()=>bridge.scope());
 const panel=$('juraNavPanel'),container=$('juraNavFields'),results=$('juraNavResults'),mapCanvas=$('jura3dCanvas'),routeStatus=$('juraNavStatus');
 function status(s){routeStatus.textContent=s;bridge.notice(s)}
-function all(){return bridge.records()}
+function all(){return bridge.routeSearchRecords?bridge.routeSearchRecords():bridge.records()}
 function invalidate(){plan=null;bridge.clearRoutePlan();renderInstructions()}
 function find(s,browse=false){const q=s.trim().toLowerCase(),items=all().filter(v=>Number.isFinite(v.x)&&Number.isFinite(v.y));if(!q)return browse?items.slice().sort((a,b)=>a.name.localeCompare(b.name)).slice(0,12):[];const rank=v=>{const name=v.name.toLowerCase(),id=String(v.id||'').toLowerCase();if(name===q||id===q)return 0;if(name.startsWith(q))return 1;if(name.includes(q))return 2;return 3};return items.filter(v=>[v.name,v.address,v.district,v.category,v.activityId,v.id,...(v.tags||[])].join(' ').toLowerCase().includes(q)).sort((a,b)=>rank(a)-rank(b)||a.name.localeCompare(b.name)).slice(0,12)}
 function closeSuggestions(row){row.suggest.replaceChildren();row.input.setAttribute('aria-expanded','false');row.input.removeAttribute('aria-activedescendant')}
@@ -32,7 +32,7 @@ function setMapCenter(endpoint){
 }
 function open(){active=true;panel.hidden=false;document.body.classList.add('jura-nav-open');$('juraOpenNav').setAttribute('aria-expanded','true');render();}
 function close(){active=false;panel.hidden=true;document.body.classList.remove('jura-nav-open');$('juraOpenNav').setAttribute('aria-expanded','false')}
-function makeRoute(){for(let i=0;i<waypoints.length;i++)if(!waypoints[i]&&!resolve(i)){status('Choose a matching location for stop '+(i+1)+'.');fields[i]?.input.focus();return}
+function makeRoute(){const eligible=new Set(all().map(p=>p.id));for(let i=0;i<waypoints.length;i++)if(waypoints[i]?.activityId&&!eligible.has(waypoints[i].id)){waypoints[i]=null;status('That activity is no longer eligible. Choose a current location.');fields[i]?.input.focus();return}for(let i=0;i<waypoints.length;i++)if(!waypoints[i]&&!resolve(i)){status('Choose a matching location for stop '+(i+1)+'.');fields[i]?.input.focus();return}
  const points=ordering==='nearest'?Core.nearestOrder(waypoints):waypoints;waypoints=points;
  try{plan=Core.route(waypoints,graph);bridge.setRoutePlan(plan,waypoints);bridge.fitPoints(plan.points);render();status(plan.method==='road-graph'?'Unverified graph route and turn preview ready.':plan.method==='mixed'?'Mixed graph and direct-line route. Some stops lack road connectivity.':'Multi-stop route preview ready. Straight lines are not driving directions.')}catch(e){status(e.message)}}
 function supports3d(){return bridge.game()==='6'}

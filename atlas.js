@@ -342,6 +342,20 @@ function renderServices(){
 // Atlas 22.0: original, hand-drawn SVG silhouettes. Icons map only to the
 // existing category keys; no new records, scope changes or source claims.
 const ELARIO_LEGEND_SHAPES=Object.freeze({
+"spaceship-parts":"M7 10a5 5 0 0 1 10 0 M2 12q10-7 20 0v3q-10 7-20 0z M7 16h.1 M12 17h.1 M17 16h.1",
+"letter-scraps":"M4 3h13l3 3v15H4z M17 3v4h3 M7 10h10 M7 13h10 M7 16h6",
+"nuclear-waste":"M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4 M9 9L5 3a10 10 0 0 0-3 11l7-1 M15 9l4-6a10 10 0 0 1 3 11l-7-1 M10 16l-3 6h10l-3-6",
+"submarine-pieces":"M2 13a10 5 0 0 1 20 0 10 5 0 0 1-20 0 M9 8V5h6v3",
+"stunt-jumps":"M2 18h20 M4 18l9-12 7 12 M14 5h6 M17 2v6",
+"under-bridge":"M2 7h20 M3 19v-5a9 9 0 0 1 18 0v5 M2 10h20",
+"knife-flights":"M12 2v20 M2 12l10-6 10 6-10 2z M7 21l5-3 5 3",
+"epsilon-tracts":"M5 3h14v18H5z M9 7h6 M9 11h6 M9 15h6",
+"playing-cards":"M5 2h14v20H5z M12 7l5 5-5 5-5-5z",
+"action-figures":"M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6 M5 10h14 M12 8v7 M12 15l-5 7 M12 15l5 7",
+"signal-jammers":"M12 5v15 M5 20h14 M8 10a5 5 0 0 1 8 0 M4 6a11 11 0 0 1 16 0",
+"media-sticks":"M7 3h10v5H7z M5 8h14v13H5z M10 3v3 M14 3v3",
+"ld-organics":"M20 4C10 4 4 8 4 15a5 5 0 0 0 5 5c7 0 11-6 11-16z M5 19l10-10",
+
  "gun-van":"M2 7h12v10H2z M14 10h4l4 4v3h-8 M5 17a2 2 0 1 0 4 0 M16 17a2 2 0 1 0 4 0 M5 10h6 M7 12h3",
  "street-dealers":"M12 2v20 M17 6H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H7",
  "shipwreck":"M2 13h20l-5 6H7z M6 13V7h7v6 M13 10h4v3 M2 22q3-2 6 0t6 0t6 0",
@@ -413,6 +427,8 @@ window.TeamJuraAtlasGlyph22=Object.freeze({create:elarioLegendGlyph});
 const GAMEPLAY_BUSINESSES=["nightclubs-business","bunkers-business","mc-business","agencies-business","cargo-warehouses","vehicle-warehouses","auto-shops-business","arcades-business","salvage-yards","bail-offices","casino"];
 const GAMEPLAY_EVENTS=['gun-van','street-dealers','shipwreck','ls-tags','hidden-caches','smoke-products','junk-skydives','cayo-chests','cayo-stashes','ufo','ghosts-exposed','slashers','pumpkins','peyote','snowmen'];
 const GAMEPLAY_EVENT_COLORS={'gun-van':'#e9cb88','street-dealers':'#91e3b0','shipwreck':'#82d7ff','ls-tags':'#e3a0ff','hidden-caches':'#8dd8db','smoke-products':'#b3e786','junk-skydives':'#f3b18c','ufo':'#d7e997','ghosts-exposed':'#e6e5ff','slashers':'#ff8f97','pumpkins':'#ffae71','peyote':'#b9e68d','snowmen':'#c7ecff','cayo-chests':'#efd08a','cayo-stashes':'#e2b886'};
+const GAMEPLAY_COLLECTIONS=[["spaceship-parts","Spaceship parts",/spaceship parts?/i],["letter-scraps","Letter scraps",/letter scraps?/i],["nuclear-waste","Nuclear waste",/nuclear waste/i],["submarine-pieces","Submarine pieces",/submarine pieces?/i],["stunt-jumps","Stunt jumps",/stunt jumps?/i],["under-bridge","Under the bridge",/under the bridge|bridge challenges?/i],["knife-flights","Knife flights",/knife flights?/i],["epsilon-tracts","Epsilon tracts",/epsilon tracts?/i],["playing-cards","Playing cards",/playing cards?/i],["action-figures","Action figures",/action figures?/i],["signal-jammers","Signal jammers",/signal jammers?/i],["media-sticks","Media sticks",/media sticks?/i],["ld-organics","LD Organics",/ld organics/i]];
+function gameplayCollectionKey(r){if(r.category!=='collectible'&&r.sourceId!=='story')return null;return GAMEPLAY_COLLECTIONS.find(v=>v[2].test([r.collectionType,r.name].filter(Boolean).join(' ')))?.[0]||null}
 const gameplayPathCache=new Map();
 function gameplayGlyphKey(r){
  if(game!=='5'||!r)return r?.category||'other';
@@ -422,9 +438,9 @@ function gameplayGlyphKey(r){
   for(const id of GAMEPLAY_EVENTS)if(matchesEventResearch({id},r))return id;
   for(const id of GAMEPLAY_BUSINESSES){const layer=NAMED_LAYERS.find(l=>l[0]===id);if(layer?.[2](r))return id;}
  }
- return r.category||'other';
+ return gameplayCollectionKey(r)||r.category||'other';
 }
-function gameplayGlyphColor(key,r){return GAMEPLAY_EVENT_COLORS[key]||CATEGORIES[r?.category||key]?.[1]||'#e9c789'}
+function gameplayGlyphColor(key,r){return GAMEPLAY_EVENT_COLORS[key]||(GAMEPLAY_BUSINESSES.includes(key)?'#e5bd86':GAMEPLAY_COLLECTIONS.some(v=>v[0]===key)?'#dce7ab':CATEGORIES[r?.category||key]?.[1]||'#e9c789')}
 function drawGameplayGlyph(r,x,y,cache,selected=false){
  if(typeof Path2D!=='function')return false;
  const key=gameplayGlyphKey(r),shape=ELARIO_LEGEND_SHAPES[key];if(!shape)return false;
@@ -433,6 +449,7 @@ function drawGameplayGlyph(r,x,y,cache,selected=false){
  ctx.save();ctx.translate(x,y);const size=selected?27:21;ctx.scale(size/24,size/24);ctx.translate(-12,-12);
  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#1b112b';ctx.lineWidth=4.8;ctx.stroke(path);
  ctx.strokeStyle=selected||condition?.status==='active'?'#ffe48b':gameplayGlyphColor(key,r);ctx.lineWidth=2.15;ctx.globalAlpha=done?.65:1;ctx.stroke(path);
+ if(done){ctx.globalAlpha=1;ctx.beginPath();ctx.moveTo(15,19);ctx.lineTo(18,22);ctx.lineTo(24,15);ctx.lineWidth=4;ctx.strokeStyle='#1b112b';ctx.stroke();ctx.lineWidth=2;ctx.strokeStyle='#91e3b0';ctx.stroke();}
  ctx.restore();return true;
 }
 function quickLegendRow(key,title,detail,on,toggle,focus,color){
@@ -447,7 +464,7 @@ function renderGameplayLegend(root,rows,query){
  const cache=activityCache();const bridge=window.JuraAtlasEventLocations;
  const matchesQuery=(label,id)=>!query||(label+' '+id).toLowerCase().includes(query);
  for(const [name,ids] of groups){
-  const group=document.createElement('details');group.className='legend-group j4730-gameplay-group';group.dataset.group=name;group.open=!!query||legendOpenStates.get(name)!==false&&name!=='Seasonal events'||legendOpenStates.get(name)===true;
+  const group=document.createElement('details');group.className='legend-group j4730-gameplay-group';group.dataset.group=name;group.open=!!query||(legendOpenStates.get(name)??(name==='Daily activities'));
   const summary=document.createElement('summary');summary.textContent=name;group.append(summary);
   for(const id of ids){
    if(name==='Businesses'){
@@ -459,10 +476,10 @@ function renderGameplayLegend(root,rows,query){
    }
    const rule=C.BY_ID[id];if(!rule||!matchesQuery(rule.name,id))continue;
    const island=id==='cayo-chests'||id==='cayo-stashes',feed=C.rotationFeed(cache?.feed,id,cache?.now),found=rows.filter(r=>matchesEventResearch(rule,r));
-   const eligible=found.filter(r=>activityPinVisible(r,cache)),status=C.evaluate(id,{mode:'online',state:cache?.save||{},snapshot:cache?.feed,now:cache?.now});
-   const detail=feed?(island?feed.active.size+' dated · island map':eligible.length+'/'+rule.today+' visible · calculated'):status.status==='closed'?'Inactive':rule.kind==='rotation'?'Unconfirmed · '+rule.today+' expected':found.length?'Not confirmed active':'No current mapped evidence';
+   const eligible=found.filter(r=>!conditionForRecord(r,cache)?.hide),status=C.evaluate(id,{mode:'online',state:cache?.save||{},snapshot:cache?.feed,now:cache?.now});
+   const detail=feed?(island?feed.active.size+' dated · island map':eligible.length+'/'+rule.today+' mapped · calculated'):status.status==='closed'?'Inactive':rule.kind==='rotation'?'Unconfirmed · '+rule.today+' expected':found.length?'Not confirmed active':'No current mapped evidence';
    const on=!eventHidden.has(id)&&found.some(r=>enabled().has(r.category));
-   const focus=island?()=>{location.href='./heist-cayo-perico.html'}:()=>{eventHidden.delete(id);showPins=true;bridge?.focus(rule,{center:true});};
+   const focus=island?()=>{location.href='./heist-cayo-perico.html'}:()=>{eventHidden.delete(id);showPins=true;const result=bridge?.focus(rule,{center:true});if(!result?.available)toast('No current eligible map pins. See activity details for evidence.');};
    group.append(quickLegendRow(id,rule.name,detail,on,()=>{if(island){focus();return}dropEventFocus();if(on)eventHidden.add(id);else{eventHidden.delete(id);showPins=true;const cats=active[filterScope()];if(cats)for(const r of found)cats.add(r.category);const hidden=namedHidden();for(const r of found)for(const [key,,pred] of NAMED_LAYERS)if(pred(r))hidden.delete(key);hiddenNamed[namedScope()]=[...hidden];store('jura62-named-layers',hiddenNamed)}page=0;render()},focus,GAMEPLAY_EVENT_COLORS[id]||'#e9c789'));
   }
   if(group.childElementCount>1)root.append(group);
@@ -475,6 +492,11 @@ function renderLegend(){
  const root=$('legend');for(const d of root.querySelectorAll('details[data-group]'))legendOpenStates.set(d.dataset.group,d.open);root.replaceChildren();const chosen=enabled();
  const query=($('j4730-legend-search')?.value||'').trim().toLowerCase(),online=game==='5'&&mode==='online';
  if(online)renderGameplayLegend(root,rows,query);
+ if(game==='5'){
+ const group=document.createElement('details');group.className='legend-group j4730-gameplay-group';group.dataset.group='Collectible types';group.open=!!query||(legendOpenStates.get('Collectible types')??false);const summary=document.createElement('summary');summary.textContent='Collectible types';group.append(summary);
+ for(const [key,title] of GAMEPLAY_COLLECTIONS){if(query&&!(title+' '+key).toLowerCase().includes(query))continue;const found=rows.filter(r=>gameplayCollectionKey(r)===key);if(!found.length)continue;const on=eventFocusName===title,focus=()=>{if(on){dropEventFocus();page=0;render();return}dropEventFocus();eventFocusIds=new Set(found.map(r=>r.id));eventFocusName=title;showPins=true;page=0;showTab('Find');render()};group.append(quickLegendRow(key,title,found.length+' mapped',on,focus,focus,'#dce7ab'));}
+ if(group.childElementCount>1)root.append(group);
+ }
  const ordered=game==='5'?[LEGEND_GROUPS[1],LEGEND_GROUPS[3],LEGEND_GROUPS[2],LEGEND_GROUPS[0]]:LEGEND_GROUPS;
  for(const [name,keys] of ordered){if(!keys.some(k=>counts[k]))continue;
   const group=document.createElement('details');group.className='legend-group';group.dataset.group=name;group.open=!!query||(legendOpenStates.get(name)??(game==='6'||(!online&&name===ordered[0][0])));
@@ -486,7 +508,7 @@ function renderLegend(){
     if(active[filterScope()].has(cat))active[filterScope()].delete(cat);else active[filterScope()].add(cat);
     showPins=true;page=0;render();announce(`${title} ${active[filterScope()].has(cat)?'shown':'hidden'} on map`);
    });toggle.className='legend-choice';toggle.setAttribute('aria-pressed',String(on));toggle.title=`${on?'Hide':'Show'} ${title} pins`;
-   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;if(game==='6'&&cat==='landmark'){dot.classList.add('j371-landmark-legend');dot.textContent='◆';}else dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
+   const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;if(game==='5')dot.style.color=color;if(game==='6'&&cat==='landmark'){dot.classList.add('j371-landmark-legend');dot.textContent='◆';}else dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
    const only=btn('Only',()=>{dropEventFocus();active[filterScope()]=new Set([cat]);showPins=true;page=0;render();announce('Showing only '+title+' on map');},'legend-only');
    row.append(toggle,only);group.append(row);
   }if(group.childElementCount>1)root.append(group);
@@ -1052,7 +1074,7 @@ function optimizeRoute(){const r=routeRecords();if(r.length<2)return toast('Add 
 function fitRoute(){const r=routeReadyRecords();if(!r.length)return toast('No currently available saved stops to show. Your saved route is unchanged.');if(r.length===1)return choosePlace(r[0]);
  const plotted=currentRouteStart()?[currentRouteStart(),...r]:r;const xs=plotted.map(p=>p.x),ys=plotted.map(p=>p.y),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys),dx=Math.max(180,xmax-xmin),dy=Math.max(180,ymax-ymin);camera.x=(xmin+xmax)/2;camera.y=(ymin+ymax)/2;camera.z=clamp(Math.log2(Math.min((width-120)/dx,(height-170)/dy)*32),0,5);schedulePaint();toast('Showing route on GTA '+game+' map.')}
 const juraBridge={
- game:()=>game,scope:()=>routeScope(),camera:()=>({...camera}),records:()=>records(),places:()=>{const cache=activityCache();return pinsVisible()?matches().filter(r=>activityPinVisible(r,cache)).slice(0,12000):[]},
+ game:()=>game,scope:()=>routeScope(),camera:()=>({...camera}),records:()=>records(),routeSearchRecords:()=>{const cache=activityCache();return records().filter(r=>!conditionForRecord(r,cache)?.hide&&!(game==='5'&&mode==='online'&&['cayo-chests','cayo-stashes'].some(id=>matchesEventResearch({id},r))))},places:()=>{const cache=activityCache();return pinsVisible()?matches().filter(r=>activityPinVisible(r,cache)).slice(0,12000):[]},
  route:()=>navPlan&&navPlanScope===routeScope()?navPlan.points:[...(currentRouteStart()?[currentRouteStart()]:[]),...routeReadyRecords()],
  color:(cat,record)=>isViLandmark(record)?'#49315e':record?conditionPinColor(record):CATEGORIES[cat]?.[1]||'#e8c998',symbol:cat=>CATEGORY_SYMBOLS[cat]||'✦',compactLandmark:isViLandmark,
  select:place=>{choosePlace(place);window.teamJuraNav?.terrain()?.rebase()},notice:msg=>announce(msg),textureDraw:(target,box)=>drawTerrainTexture(target,box),textureRevision:()=>tilesLoaded,
