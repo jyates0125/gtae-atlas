@@ -105,8 +105,8 @@ const chestEligibility=details.querySelector('select[aria-label="Treasure chest 
 document.body.classList.add('j188-cayo-smooth');
 
 function getShown(){
- return [...focus.querySelectorAll('.j181-hotspot[data-marker-id],.j180-chest[data-chest]')]
-   .filter(node=>!node.hidden&&getComputedStyle(node).display!=='none').length;
+ return [...focus.querySelectorAll('.j181-hotspot[data-marker-id],.j180-chest[data-chest],.j4740-stash-pin[data-stash-id]')]
+   .filter(node=>!node.hidden&&!node.closest('.j4740-stash-layer[hidden]')&&getComputedStyle(node).display!=='none').length;
 }
 function updateStatus(){
  const selected=rows().filter(row=>row.getAttribute('aria-pressed')==='true').map(row=>row.dataset.cat);
@@ -158,6 +158,7 @@ picker.addEventListener('click',()=>queueMicrotask(updateStatus));
 focus.querySelector('.j167-search')?.addEventListener('input',()=>queueMicrotask(updateStatus));
 new MutationObserver(updateStatus).observe(focus,{attributes:true,attributeFilter:['data-map-source']});
 new MutationObserver(updateStatus).observe(focus.querySelector('.j180-chest-layer'),{childList:true});
+new MutationObserver(updateStatus).observe(focus.querySelector('.j4740-stash-layer'),{childList:true,attributes:true,attributeFilter:['hidden']});
 mirrorRouteToLegend();
 window.teamJuraCayoQuickFlow={version:'18.8',selectPreset:id=>{
  const p=presets.find(x=>x.id===id);if(!p)return false;if(id==='chests'&&chestEligibility){chestEligibility.value='all';chestEligibility.dispatchEvent(new Event('change',{bubbles:true}));}selectMapCategories(p.categories);return true;

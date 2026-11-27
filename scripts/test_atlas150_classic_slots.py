@@ -14,7 +14,7 @@ for text in ('j150-place-pin','team-jura:classic-place-slot','team-jura:classic-
              'team-jura:classic-change','team-jura-atlas98-classic-','mapped.has(n)'):
  assert text in p,text
 for text in ('collectionSlot','collectionSet','pendingSlot','team-jura:classic-place-slot',
-             'team-jura:classic-checklist-change','personal-image-percent','iconFor',
+             'team-jura:classic-checklist-change','personal-image-percent','classicNoteStyle',
              'dataset.mapImage','team-jura-atlas98b-items-'):
  assert text in c,text
 assert "source:'personal-image-percent',...(link?{collectionSet:link.set,collectionSlot:link.slot}:{})" in c

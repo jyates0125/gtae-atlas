@@ -9,8 +9,8 @@ js=(r/'atlas302-cayo-legacy-rescue.js').read_text(encoding='utf-8')
 css=(r/'atlas302-cayo-legacy-rescue.css').read_text(encoding='utf-8')
 assert html.count('atlas302-cayo-legacy-rescue.js?v=302')==1
 assert html.count('atlas302-cayo-legacy-rescue.css?v=302')==1
-assert 'heist-pages.js?v=4740' in html
-assert 'atlas220-cayo-recovery.js?v=4740' in html
+assert 'heist-pages.js?v=4742' in html
+assert 'atlas220-cayo-recovery.js?v=4742' in html
 assert page.count("phases.src='./atlas298-heist-map-kit.js?v=298'")==1
 assert page.count("phasesStyle.href='./atlas298-heist-map-kit.css?v=298'")==1
 assert "heistId!=='cayo-perico'" in page

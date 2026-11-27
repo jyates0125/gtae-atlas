@@ -1,3 +1,12 @@
+## November 27 — owner mobile stability and gameplay-first VI review
+
+Owner reports VI legend is confusing compared with Online, intermittent map flicker and phone/app closing; prioritize a single combined review before returning to charter/art. Candidate follows frozen fbe0cd4 (#302/#303) without altering those branches: put VI gameplay checklists and mapped gameplay categories ahead of reference locations; move ledger/guide/reference blocks below player tools; add opt-in gameplay-only pins, preserve existing filter/progress keys and all views. Shared map avoids identical canvas backing resets, applies actual resizing at paint time, caps compact-device DPR/pixels and concurrent tile requests, trims decoded tile cache without evicting in-flight/current-frame tiles, suppresses background paint, and defers hidden heavy service/collection DOM on compact devices. These are code-level mitigations, not proof of native iPhone crash cause. New focused Chromium/Edge tests and real device review required; no main, rotations, auth, private engine or schedule change. Do not replay #299 or release #303 independently if superseded by this combined candidate.
+
+## November 27 — verified production and next reconciliation
+
+- Production #298 merged at `7d9964bb4eec9262318701190c97d28ab4e71f2c`; exact validated candidate 69fead0, 7/7 production jobs and owner iPhone acceptance. Independent live verification [46033640933](https://github.com/jyates0125/gtae-atlas/actions/runs/46033640933) passed including anonymous exact revision check. Do not replay #291 or #298.
+- This isolated reconciliation combines production and development `4b8f2cfa499654f5c6589e76b7c833342c4a48c4` (newer Cayo stash routes, map return, classic improvements). Three-way compare found 30 main-only paths, 23 development-only paths, one overlapping Cayo controller; retain both deep-link anchors and stash-route focus changes. Combined exact-head CI is required before development merge. No new production release, feed or private changes. Compare #299 against current main/shared workspace before replay; later production work may supersede its earlier changes. Publisher may now verify the deployed island consumer before publishing any source-qualified stash data.
+
 # GTAE continuation checkpoint — November 25, 2026
 
 ## November 27 — merged Cayo and nonblocking integration checkpoint

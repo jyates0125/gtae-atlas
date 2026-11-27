@@ -52,3 +52,9 @@ body.j120-heist-page .j167-focus{margin:18px 0 24px;padding:clamp(12px,2.5vw,24p
 .j227-route-button{min-height:44px;min-width:44px;padding:5px 9px;border:1px solid #c69ac0;border-radius:8px;background:#382244;color:#fff;font-weight:750;cursor:pointer}
 .j227-route-button:disabled,.j227-route-tools button:disabled{opacity:.5;cursor:default}
 .j227-route-status:empty{display:none}
+
+/* Non-Cayo mission workspaces: one category palette for legend, map and results. */
+.j167-chip[style*="--pin-color"]{border-color:var(--pin-color)!important;min-height:44px}
+.j167-item[data-cat]{display:grid;grid-template-columns:26px minmax(0,1fr);align-items:center;min-height:44px;overflow-wrap:anywhere}
+.j167-item[data-cat] small{grid-column:2}
+.j4743-poi-symbol{grid-row:1 / span 2;display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--pin-color);border-radius:7px;background:#21152f;color:var(--pin-color);font-weight:850;font-size:16px}

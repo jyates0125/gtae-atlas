@@ -15,9 +15,10 @@ function tryBuild(){
  if(document.getElementById('j186-route'))return true;
 const focus=document.getElementById('j167-heist-map');
 const world=focus?.querySelector('.j167-world'),hotspots=world?.querySelector('#j181-hotspots');
+const stashes=world?.querySelector('.j4740-stash-layer');
 const chests=world?.querySelector('.j180-chest-layer'),stage=document.querySelector('.j180-stage');
 const frame=document.querySelector('.j180-map-frame');
-if(!focus||!world||!hotspots||!chests||!stage||!frame)return false;
+if(!focus||!world||!hotspots||!chests||!stashes||!stage||!frame)return false;
 document.body.classList.add('j186-cayo-routing');
 const SVG_NS='http://www.w3.org/2000/svg';
 const ns=(tag,attrs={})=>{const n=document.createElementNS(SVG_NS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));return n};
@@ -34,12 +35,13 @@ const presets={
  'Island intel':['control','power','water'],
  'Chests':['chest']
 };
-const defaultState=()=>({start:null,finish:null,order:[],categories:[...DEFAULT],limit:10,mode:'nearest',chestMode:'active',completed:[]});
+const validStashId=id=>typeof id==='string'&&/^cayo-stash-(?:[1-9]|1[0-9]|20)$/.test(id);
+const defaultState=()=>({start:null,finish:null,order:[],categories:[...DEFAULT],limit:10,mode:'nearest',chestMode:'active',includeStashes:false,completed:[]});
 let state=defaultState();
 try{
  const v=JSON.parse(localStorage.getItem(storage)||'null');
  if(v&&typeof v==='object'){
-  const safeId=x=>typeof x==='string'&&/^(?:entry|exit|drainage|secondary|gated|bolts|grapple|clothes|truck|control|power|powder|water)-\d+$|^chest-(?:[1-9]|1[0-9])$/.test(x);
+  const safeId=x=>validStashId(x)||typeof x==='string'&&/^(?:entry|exit|drainage|secondary|gated|bolts|grapple|clothes|truck|control|power|powder|water)-\d+$|^chest-(?:[1-9]|1[0-9])$/.test(x);
   state.start=safeId(v.start)?v.start:null;
   state.finish=safeId(v.finish)&&v.finish!==v.start?v.finish:null;
   state.order=Array.isArray(v.order)?[...new Set(v.order.filter(safeId))].slice(0,110):[];
@@ -47,6 +49,7 @@ try{
   state.limit=[5,10,20,50,100].includes(v.limit)?v.limit:10;
   state.mode=v.mode==='manual'?'manual':'nearest';
   state.chestMode=v.chestMode==='all'?'all':'active';
+  state.includeStashes=v.includeStashes===true;
   state.completed=Array.isArray(v.completed)?[...new Set(v.completed.filter(safeId))].slice(0,110):[];
  }
 }catch(_){}
@@ -55,14 +58,14 @@ const shared=new URLSearchParams(location.search).get('cayoRoute');
 if(shared&&shared.length<3500){
  try{
   const v=JSON.parse(shared);
-  const safe=id=>typeof id==='string'&&/^(?:entry|exit|drainage|secondary|gated|bolts|grapple|clothes|truck|control|power|powder|water)-\d+$|^chest-(?:[1-9]|1[0-9])$/.test(id);
+  const safe=id=>validStashId(id)||typeof id==='string'&&/^(?:entry|exit|drainage|secondary|gated|bolts|grapple|clothes|truck|control|power|powder|water)-\d+$|^chest-(?:[1-9]|1[0-9])$/.test(id);
   if(v?.version===1&&safe(v.start)){
    state.start=v.start;
    state.finish=safe(v.finish)&&v.finish!==v.start?v.finish:null;
    state.order=Array.isArray(v.order)?[...new Set(v.order.filter(safe))].slice(0,100):[v.start];
    if(state.order[0]!==v.start)state.order=[v.start,...state.order.filter(x=>x!==v.start)];
    state.categories=Array.isArray(v.categories)?[...new Set(v.categories.filter(x=>ALL_CATS.includes(x)))]:[...DEFAULT];
-   state.mode='manual';state.chestMode=v.chestMode==='all'?'all':'active';
+   state.mode='manual';state.chestMode=v.chestMode==='all'?'all':'active';state.includeStashes=v.includeStashes===true;
    state.limit=[5,10,20,50,100].includes(v.limit)?v.limit:10;
    persist();
   }
@@ -82,6 +85,11 @@ function nodes(){
   const n=+b.dataset.chest;if(!Number.isFinite(x)||!Number.isFinite(y)||n<1||n>19)continue;
   out.push({id:'chest-'+n,cat:'chest',label:'Treasure chest #'+n+(n<=10?' · land':' · underwater'),x,y,
     active:b.classList.contains('j180-chest-active'),element:b,shown:!b.hidden&&getComputedStyle(b).display!=='none'});
+ }
+ for(const b of stashes.querySelectorAll('.j4740-stash-pin[data-stash-id]')){
+  const x=parseFloat(b.style.left),y=parseFloat(b.style.top),id=b.dataset.stashId;
+  if(!validStashId(id)||!Number.isFinite(x)||!Number.isFinite(y))continue;
+  out.push({id,cat:'stash',label:b.dataset.stashName||id,x,y,active:b.classList.contains('is-current'),element:b,shown:!stashes.hidden&&!b.hidden&&getComputedStyle(b).display!=='none'});
  }
  return out;
 }
@@ -166,6 +174,10 @@ for(const [value,text] of [['active','Highlighted daily two only'],['all','All 1
 chestMode.value=state.chestMode;chestMode.addEventListener('change',()=>{
  state.chestMode=chestMode.value;persist();if(state.start&&state.mode==='nearest')autoRoute();else render();
 });chestLabel.append(chestMode);controls.append(chestLabel);
+const stashLabel=el('label','j186-select-label','Daily buried stash search areas');
+const stashOption=el('input');stashOption.type='checkbox';stashOption.checked=state.includeStashes;stashOption.setAttribute('aria-label','Include today’s buried stashes');
+stashOption.addEventListener('change',()=>{state.includeStashes=stashOption.checked;persist();if(state.start&&state.mode==='nearest')autoRoute();else render()});
+stashLabel.append(stashOption,el('span','','Include current visible search areas (Gather Intel / Metal Detector)'));controls.append(stashLabel);
 panel.append(controls);
 const destination=el('p','j186-destination','Optional: tap a marker and choose “Finish route here” to set your final stop.');
 panel.append(destination);
@@ -203,7 +215,7 @@ const clearFinishBtn=button('Remove finish','j186-action',()=>{
 const shareBtn=button('Share this route','j186-action',async()=>{
  if(!state.start||!state.order.length){render('Choose a starting pin before sharing a route.');return;}
  const url=new URL(location.href);
- url.searchParams.set('cayoRoute',JSON.stringify({version:1,start:state.start,finish:state.finish,order:state.order.slice(0,100),categories:state.categories,mode:'manual',chestMode:state.chestMode,limit:state.limit}));
+ url.searchParams.set('cayoRoute',JSON.stringify({version:1,start:state.start,finish:state.finish,order:state.order.slice(0,100),categories:state.categories,mode:'manual',chestMode:state.chestMode,includeStashes:state.includeStashes,limit:state.limit}));
  url.hash='j186-route';
  try{await navigator.clipboard.writeText(url.href);status.textContent='Personal route link copied. The link shares only map stops and chosen categories—never notes or saved progress.';}
  catch(_){if(navigator.share){try{await navigator.share({title:'Team Jura Cayo route',url:url.href});}catch(__){status.textContent='Sharing was canceled. Your personal route is still saved on this device.';}}
@@ -211,7 +223,7 @@ const shareBtn=button('Share this route','j186-action',async()=>{
 });
 actions.append(pickStart,buildBtn,nextBtn,resumeBtn,reverseBtn,clearFinishBtn,clearBtn,shareBtn);panel.append(actions);
 const list=el('ol','j186-stops');panel.append(list);
-const caveat=el('p','j186-caveat','Source map and equipment positions are reference-aligned, not exact Rockstar world coordinates. Nearest means shortest straight-line separation between map symbols, not fastest or safely traversable travel. Hidden or unavailable daily chests are excluded in daily-only mode.');
+const caveat=el('p','j186-caveat','Source map and equipment positions are reference-aligned, not exact Rockstar world coordinates. Nearest means shortest straight-line separation between map symbols, not fastest or safely traversable travel. Hidden or unavailable daily chests are excluded in daily-only mode. Buried stashes are opt-in current search areas, not exact dig points; expired stash stops remain saved but are not drawn.');
 panel.append(caveat);
 const credit=stage.querySelector('.j180-credit');
 stage.insertBefore(panel,credit||null);
@@ -223,12 +235,12 @@ function clearLayer(){svg.replaceChildren();badges.replaceChildren()}
 function drawLine(){
  clearLayer();
  const map=byId();
- const route=state.order.map(x=>map.get(x)).filter(Boolean);
+ const route=state.order.map((id,i)=>({node:map.get(id),i})).filter(({node})=>node&&(node.cat!=='stash'||node.active));
  if(route.length>1){
-  const line=ns('polyline',{points:route.map(n=>n.x.toFixed(3)+','+n.y.toFixed(3)).join(' '),class:'j186-route-line'});
+  const line=ns('polyline',{points:route.map(({node:n})=>n.x.toFixed(3)+','+n.y.toFixed(3)).join(' '),class:'j186-route-line'});
   svg.append(line);
  }
- for(const [i,n] of route.entries()){
+ for(const {node:n,i} of route){
   // Route number badges are offset from the actual colored marker. They
   // float ABOVE its icon while the gold line stays BELOW the icon layer.
   // A badge identifies the visit order, never a second location pin.
@@ -238,25 +250,30 @@ function drawLine(){
   const text=ns('text',{x,y:y+.52,'text-anchor':'middle','font-size':'2.1'});
   text.textContent=String(i+1);mark.append(text);badges.append(mark);
  }
- for(const node of world.querySelectorAll('.j181-hotspot,.j180-chest')){
-  node.classList.toggle('j186-start',state.start===node.dataset.markerId||state.start==='chest-'+node.dataset.chest);
-  node.classList.toggle('j186-finish',state.finish===node.dataset.markerId||state.finish==='chest-'+node.dataset.chest);
+ for(const node of world.querySelectorAll('.j181-hotspot,.j180-chest,.j4740-stash-pin')){
+  const eligible=!node.dataset.stashId||node.classList.contains('is-current');
+  node.classList.toggle('j186-start',eligible&&(state.start===node.dataset.markerId||state.start==='chest-'+node.dataset.chest||state.start===node.dataset.stashId));
+  node.classList.toggle('j186-finish',eligible&&(state.finish===node.dataset.markerId||state.finish==='chest-'+node.dataset.chest||state.finish===node.dataset.stashId));
  }
 }
 function sourceFor(id){return byId().get(id)}
 function availableTargets(map=byId()){
  return [...map.values()].filter(n=>{
-  if(n.id===state.start||n.id===state.finish||state.completed.includes(n.id)||!state.categories.includes(n.cat)||!n.shown)return false;
+  if(n.id===state.start||n.id===state.finish||state.completed.includes(n.id)||!n.shown)return false;
+  if(n.cat==='stash')return state.includeStashes&&n.active;
+  if(!state.categories.includes(n.cat))return false;
   return n.cat!=='chest'||state.chestMode==='all'||n.active;
  });
 }
 function autoRoute(){
  const map=byId(),start=map.get(state.start);
+ if(validStashId(state.start)&&(!start||!start.active)){render('Saved stash start is no longer current. Choose a current marker to rebuild; saved stops retained.');return}
  if(!start){state.order=[];render('Choose a starting marker on the map first.');return}
  state.mode='nearest';mode.value='nearest';
  const remaining=availableTargets(map);let here=start;
  const order=[state.start];
  const finish=state.finish&&state.finish!==state.start?map.get(state.finish):null;
+ if(validStashId(state.finish)&&(!finish||!finish.active)){render('Saved stash finish is not current. Remove or replace it before rebuilding; route retained.');return}
  const routeBudget=finish?Math.max(1,state.limit-1):state.limit;
  while(remaining.length&&order.length<routeBudget){
   remaining.sort((a,b)=>distance(here,a)-distance(here,b)||(a.id.localeCompare(b.id)));
@@ -268,10 +285,12 @@ function autoRoute(){
  render(count?'Built a map-reference route from '+start.label+' with '+count+' stops'+(finish?' ending at '+finish.label:'')+'.':'Starting at '+start.label+'. Select matching target categories or display more map pins.');
 }
 function appendNearest(){
- const map=byId();if(!map.has(state.start)){render('Tap a starting pin first.');return}
+ const map=byId();if(validStashId(state.start)&&!map.get(state.start)?.active||validStashId(state.finish)&&!map.get(state.finish)?.active){render('Replace the unavailable stash start or finish before adding nearest stops.');return}
+ if(!map.has(state.start)){render('Tap a starting pin first.');return}
  if(!state.order.length)state.order=[state.start];
  const lastId=state.order.filter(id=>id!==state.finish).at(-1);
  const last=map.get(lastId)||map.get(state.start);
+ if(validStashId(lastId)&&!map.get(lastId)?.active||last.cat==='stash'&&!last.active){render('Last saved stash is not current. Remove that stop or choose a new route start.');return}
  const candidates=availableTargets(map).filter(n=>!state.order.includes(n.id));
  if(!candidates.length){render('No more eligible locations for the selected categories.');return}
  candidates.sort((a,b)=>distance(last,a)-distance(last,b)||a.id.localeCompare(b.id));
@@ -282,7 +301,7 @@ function appendNearest(){
 }
 function setFinish(id){
  const target=sourceFor(id);
- if(!target||id===state.start)return false;
+ if(!target||id===state.start||target.cat==='stash'&&!target.active)return false;
  state.finish=id;state.order=state.order.filter(x=>x!==id);
  if(state.start){
   if(state.mode==='nearest')autoRoute();
@@ -291,7 +310,7 @@ function setFinish(id){
  return true;
 }
 function startFrom(id){
- const marker=sourceFor(id);if(!marker)return false;
+ const marker=sourceFor(id);if(!marker||marker.cat==='stash'&&!marker.active)return false;
  choosingStart=false;pickStart.textContent='Pick starting pin';pickStart.setAttribute('aria-pressed','false');
  state.start=id;if(state.finish===id)state.finish=null;state.order=[id];persist();
  if(state.mode==='nearest')autoRoute();
@@ -299,7 +318,7 @@ function startFrom(id){
  return true;
 }
 function addStop(id){
- const target=sourceFor(id);if(!target)return false;
+ const target=sourceFor(id);if(!target||target.cat==='stash'&&!target.active)return false;
  if(!state.start)return startFrom(id);
  if(id===state.finish){render('This is already your last stop.');return true}
  if(state.order.includes(id)){render('This location is already in your route.');return true}
@@ -324,7 +343,7 @@ function render(message){
  // Chests arrive via a separate async data request. Preserve saved or
  // shared chest starts while the 19 references have not loaded.
  const chestReady=chests.querySelectorAll('.j180-chest[data-chest]').length===19;
- const pending=id=>!chestReady&&id.startsWith('chest-');
+ const pending=id=>validStashId(id)||!chestReady&&id.startsWith('chest-');
  state.order=[...new Set(state.order)].filter(id=>map.has(id)||pending(id));
  if(state.start&&!map.has(state.start)&&!pending(state.start)){state.start=null;state.order=[]}
  if(state.start&&state.order[0]!==state.start){
@@ -341,19 +360,22 @@ function render(message){
  status.textContent=message||(start?
   'Start: '+start.label+(finish?' · Finish: '+finish.label:'')+' · '+Math.max(0,state.order.length-1)+' stops in personal route.':
   'Select a colorful island marker, tap “Start route here”, and choose your destination types.');
- buildBtn.disabled=!start;nextBtn.disabled=!start;
+ const unavailableEndpoint=(validStashId(state.start)&&!start?.active)||(validStashId(state.finish)&&!finish?.active);
+ if(unavailableEndpoint&&!message)status.textContent='Saved stash start or finish is not current. Choose a current marker or remove the finish; saved route retained.';
+ buildBtn.disabled=!start||unavailableEndpoint;nextBtn.disabled=!start||unavailableEndpoint;
  reverseBtn.disabled=state.order.length<3;clearBtn.disabled=!start&&!state.order.length&&!state.finish;
  clearFinishBtn.disabled=!state.finish;
  resumeBtn.disabled=!state.order.some(id=>id!==state.start&&id!==state.finish&&state.completed.includes(id));
  list.replaceChildren();
  if(!state.order.length)list.append(el('li','j186-empty','Tap any island marker to select your starting point.'));
  else for(const [i,id] of state.order.entries()){
-  const node=map.get(id);if(!node)continue;
+  const node=map.get(id)||(validStashId(id)?{id,cat:'stash',label:'Saved stash '+id.slice('cayo-stash-'.length),active:false}:null);if(!node)continue;
   const row=el('li','j186-stop-item');
   const ordinal=el('span','j186-ordinal',!i?'START':id===state.finish?'FINISH':'Stop '+i);
   row.classList.toggle('j186-final-stop',id===state.finish);
   const show=button(node.label,'j186-stop-name',()=>selectStop(id));
-  const category=el('span','j186-stop-category',node.cat==='chest'?'Treasure chest':node.cat);
+  const category=el('span','j186-stop-category',node.cat==='chest'?'Treasure chest':node.cat==='stash'?(node.active?'Current stash search area':'Stash · not current / unconfirmed'):node.cat);
+  if(node.cat==='stash'&&!node.active){row.dataset.availability='unconfirmed';show.disabled=!node.element;}
   const controls=el('div','j186-stop-controls');
   if(i>0){
    const done=button(state.completed.includes(id)?'✓':'○','j186-mini j186-done',()=>{
@@ -363,6 +385,7 @@ function render(message){
    });
    done.setAttribute('aria-label',(state.completed.includes(id)?'Mark not visited: ':'Mark visited: ')+node.label);
    done.title=state.completed.includes(id)?'Unmark visited':'Mark as visited';
+   if(node.cat==='stash'&&!node.active)done.disabled=true;
    controls.append(done);
    row.classList.toggle('j186-visited',state.completed.includes(id));
   }
@@ -381,6 +404,7 @@ const watcher=new MutationObserver(()=>{
  if(state.order.some(id=>id.startsWith('chest-'))||state.start?.startsWith('chest-')||state.finish?.startsWith('chest-'))render();
 });
 watcher.observe(chests,{childList:true});
+new MutationObserver(()=>{if(state.includeStashes||state.order.some(validStashId))render()}).observe(stashes,{childList:true,attributes:true,attributeFilter:['hidden']});
 const manualStart=()=>{panel.scrollIntoView({block:'nearest',behavior:'smooth'})};
 const jump=button('Build a route','j186-map-jump',manualStart);
 // Keep the tested DOM hook for compatibility, but remove duplicated header route buttons.
@@ -404,9 +428,10 @@ if(oldRouteMode){
 // In crowded areas, the 18.5 chooser invokes the chosen marker's click, so
 // the same controls appear for each individual, close-together reference.
 world.addEventListener('click',event=>{
- const marker=event.target.closest?.('.j181-hotspot[data-marker-id],.j180-chest[data-chest]');
+ const marker=event.target.closest?.('.j181-hotspot[data-marker-id],.j180-chest[data-chest],.j4740-stash-pin[data-stash-id]');
  if(!marker)return;
- const id=marker.dataset.markerId||('chest-'+marker.dataset.chest);
+ const id=marker.dataset.markerId||marker.dataset.stashId||('chest-'+marker.dataset.chest);
+ if(validStashId(id)&&!sourceFor(id)?.active)return;
  if(choosingStart){
   startFrom(id);
   const details=document.querySelector('.j180-pin-info');
@@ -437,7 +462,7 @@ window.teamJuraCayoPinRoute={startFrom,setFinish,addStop,autoRoute,appendNearest
  getState:()=>JSON.parse(JSON.stringify(state)),
  getStops:()=>state.order.slice(),
  getNodes:()=>nodes().map(n=>({id:n.id,cat:n.cat,label:n.label,x:n.x,y:n.y,active:n.active})),
- reset:()=>{state=defaultState();choosingStart=false;pickStart.textContent='Pick starting pin';pickStart.setAttribute('aria-pressed','false');refreshFilters();mode.value=state.mode;limitSelect.value=String(state.limit);chestMode.value=state.chestMode;persist();render()},
+ reset:()=>{state=defaultState();choosingStart=false;pickStart.textContent='Pick starting pin';pickStart.setAttribute('aria-pressed','false');refreshFilters();mode.value=state.mode;limitSelect.value=String(state.limit);chestMode.value=state.chestMode;stashOption.checked=state.includeStashes;persist();render()},
  selectCategory:(cat)=>{if(!ALL_CATS.includes(cat))return false;state.categories=[cat];refreshFilters();persist();if(state.start)autoRoute();else render();return true}};
 refreshFilters();render();
  return true;

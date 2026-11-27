@@ -31,9 +31,9 @@ for phrase in ("function setCategories(values)","render,setCategories","const DE
                "window.dispatchEvent(new CustomEvent('teamjura:cayo:route-updated'",
                "jump.hidden=true","oldRouteMode.textContent='Route details'"):
  assert phrase in route,phrase
-for phrase in ("atlas188-cayo-flow.js?v=1883","atlas188-cayo-flow.css?v=1882"):
+for phrase in ("atlas188-cayo-flow.js?v=4741","atlas188-cayo-flow.css?v=1882"):
  assert phrase in loader,phrase
-assert loader.index('atlas186-cayo-route.js?v=191')<loader.index('atlas188-cayo-flow.js?v=1883')
+assert loader.index('atlas186-cayo-route.js?v=4742')<loader.index('atlas188-cayo-flow.js?v=4741')
 assert ".j188-quickbar" in style and "overflow-x:auto" in style
 assert "j188-cayo-smooth" in style
 assert quick.count("{")==quick.count("}")
