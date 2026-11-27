@@ -1,0 +1,17 @@
+const assert=require('node:assert/strict');
+const C=require('../atlas140-crew.js');
+const store=(entries={})=>{const m=new Map(Object.entries(entries));return {getItem:k=>m.has(k)?m.get(k):null,setItem:(k,v)=>m.set(k,v)}};
+const legacy={schema:1,game:'story',name:'Legacy Story',tag:'ST',motto:'',bio:'saved',tasks:[{text:'Keep this',done:true}]};
+const raw=JSON.stringify(legacy),s=store({[C.OLD]:raw});
+let base=C.read(s);assert.equal(base.state.world,'story');assert.equal(C.current(base.state).name,'Legacy Story');assert.equal(s.getItem(C.KEY),null);
+let next=C.normalize(base.state);next.world='online';next.crews[0].name='Crew A';next.crews[0].tasks.push({text:'Heist A',done:true});next.crews.push({...C.blank(),name:'Crew B',members:['Member B']});next.activeCrew=1;
+base=C.write(s,base,next);assert.equal(s.getItem(C.OLD),raw);assert.equal(C.current(C.read(s).state).name,'Crew B');assert.equal(C.read(s).state.story.tasks[0].done,true);
+const incoming={schema:1,game:'vi',name:'VI HQ',tag:'',motto:'',bio:'',tasks:[{text:'VI goal',done:false}]};
+let result=C.merge(base.state,incoming);assert.equal(result.state.vi.name,'VI HQ');assert.equal(result.state.crews.length,2);assert.equal(result.state.story.name,'Legacy Story');assert.equal(result.state.crews[0].tasks[0].done,true);
+const conflict=C.merge(result.state,{...legacy,name:'Different',tasks:[{text:'Keep this',done:false},{text:'Another goal',done:false}]});assert.equal(conflict.state.story.name,'Legacy Story');assert.equal(conflict.state.story.tasks[0].done,true);assert.equal(conflict.state.story.tasks.length,2);assert.equal(conflict.conflicts,2);
+const duplicate=C.merge(base.state,base.state);assert.equal(duplicate.added,0);assert.equal(duplicate.state.crews.length,2);
+const other=C.migrate({...legacy,game:'other'});assert.equal(other.other.name,'Legacy Story');assert.equal(other.crews[0].name,'');
+const damaged=store({[C.KEY]:'bad JSON',[C.OLD]:raw});assert(C.read(damaged).blocked);assert.throws(()=>C.write(damaged,C.read(damaged),C.fresh()));assert.equal(damaged.getItem(C.KEY),'bad JSON');
+const old=base;s.setItem(C.KEY,JSON.stringify(C.fresh()));assert.throws(()=>C.write(s,old,old.state),/another tab/);
+const full=C.fresh();full.crews=Array.from({length:20},(_,i)=>({...C.blank(),name:'Crew '+i}));assert.throws(()=>C.merge(full,{...legacy,game:'online',name:'Imported crew'}),/limit/);assert.equal(full.crews.length,20);
+console.log('Crew profile migration, world isolation, merge safety, damaged storage and concurrent save PASS');
