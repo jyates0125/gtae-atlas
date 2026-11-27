@@ -58,13 +58,18 @@ try:
         assert page.locator('.j180-chest').count()==19, 'Published data must not delete possible spawn references'
         page.wait_for_function("document.querySelectorAll('.j4740-stash-pin.is-current').length===2",timeout=25000)
         assert page.locator('.j4740-stash-pin').count()==3
-        assert page.locator('.j4740-stash-pin:not([hidden])').count()==2
+        assert page.locator('.j4740-stash-pin:not([hidden])').count()==3,'All known areas are visible by default'
+        assert page.locator('.j4740-stash-pin.is-inactive').count()==1
         assert 'Metal Detector' in page.locator('#j4740-stashes').inner_text()
-        assert page.locator('#j4740-stashes [data-availability="inactive"]').count()==1
-        page.get_by_role('button',name='Show all known search areas').click()
-        assert page.locator('.j4740-stash-pin:not([hidden])').count()==3
+        stash_inactive=page.locator('#j4740-stashes .j4740-stash-row[data-availability="inactive"]')
+        assert stash_inactive.count()==1
+        assert stash_inactive.locator('span').evaluate("(e)=>getComputedStyle(e).textDecorationLine.includes('line-through')")
         page.get_by_role('button',name='Show today’s selections').click()
         assert page.locator('.j4740-stash-pin:not([hidden])').count()==2
+        stash_inactive.click()
+        assert 'not selected today' in page.locator('.j4740-stash-status').inner_text()
+        page.get_by_role('button',name='Show all known search areas').click()
+        assert page.locator('.j4740-stash-pin:not([hidden])').count()==3
         page.wait_for_function("['gta-wiki','local-trace'].includes(document.querySelector('#j167-heist-map')?.dataset.mapAsset)",timeout=30000)
         # All map sources now use one Elario SVG marker family. The bare
         # game-map raster was previously showing only yellow chest dots.
@@ -83,8 +88,11 @@ try:
         page.wait_for_function("document.querySelector('#j167-heist-map')?.dataset.mapSource==='original'",timeout=30000)
         assert page.locator('.j180-chest').count()==19,'All 19 possible chest references render'
         assert page.locator('.j180-chest-active:visible').count()==2,'Current pair is visible on the Cayo island map'
-        assert page.locator('.j180-chest:visible').count()==2,'Current daily pair is the default map view'
-        assert page.locator('.j180-chest-row.j393-inactive:enabled').count()==17,'Inactive entries remain inspectable without spawning pins'
+        assert page.locator('.j180-chest:visible').count()==19,'All known chests visible by default'
+        assert page.locator('.j180-chest.j4740-chest-inactive:visible').count()==17,'Inactive pins remain visible and distinct'
+        assert page.locator('.j180-chest-row.j393-inactive:enabled').count()==17,'Inactive entries remain inspectable'
+        assert page.locator('.j180-chest-row.j393-inactive>span:nth-child(2)').first.evaluate("(e)=>getComputedStyle(e).textDecorationLine.includes('line-through')")
+        page.get_by_role('button',name='Today’s two',exact=True).click()
         page.locator('.j180-chest-row.j393-inactive').first.click()
         assert 'not selected this cycle' in page.locator('.j180-daily-status').inner_text()
         assert page.locator('.j180-chest:visible').count()==2
