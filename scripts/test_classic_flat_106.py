@@ -57,3 +57,10 @@ print('PASS Atlas 10.8: seven accurate reference links plus browser-local 2D map
 # Classic source and personal pin layers must be independently hideable.
 assert 'id="classicTogglePins"' in (ROOT/'map-hub.html').read_text(encoding='utf-8')
 assert 'updateNotebookToggle' in (ROOT/'atlas98-classic.js').read_text(encoding='utf-8')
+
+# Personal-note category filter never modifies shared source collections or saved data.
+assert 'id="classicNoteCategory"' in page
+assert "category&&m.category!==category" in js
+assert "classicNoteStyle(m.category)" in js and "--note-color" in js
+assert 'href="#classicViewport"' in page and 'href="#classicSearch"' in page
+assert 'atlas98-classic.js?v=4742' in page
