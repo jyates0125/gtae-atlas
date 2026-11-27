@@ -1,0 +1,21 @@
+name: Atlas 47.3 — Gameplay legend and directions
+on:
+  pull_request:
+    paths:
+      - 'atlas.js'
+      - 'atlas-navigation.js'
+      - 'atlas.css'
+      - 'atlas.html'
+      - 'atlas-online.html'
+      - 'scripts/test_atlas4730_gameplay_legend.cjs'
+      - '.github/workflows/atlas4730-gameplay-legend.yml'
+  workflow_dispatch:
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/test_atlas4730_gameplay_legend.cjs
