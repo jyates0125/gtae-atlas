@@ -42,6 +42,14 @@ try:
     pins=page.locator('#j167-heist-map .j167-pin')
     all_count=pins.count()
     assert all_count>=4,(width,id,'missing distinct mission POIs',all_count)
+    # Verify actual rendered legend/map/list glyphs and category colors, not only source strings.
+    parity=page.locator('#j167-heist-map').evaluate("""root => [...root.querySelectorAll('.j167-pin')].map(pin=>{
+      const chip=root.querySelector('.j167-chip[data-cat="'+pin.dataset.cat+'"]');
+      const row=root.querySelector('.j167-item[data-point="'+pin.dataset.point+'"] .j4743-poi-symbol');
+      const color=e=>e?.style.getPropertyValue('--pin-color');
+      return !!chip&&!!row&&chip.textContent.startsWith(pin.textContent+' ')&&row.textContent===pin.textContent&&color(pin)===color(chip)&&color(pin)===color(row);
+    })""")
+    assert len(parity)==all_count and all(parity),(width,id,'legend, pin and row mismatch')
     save_key='teamjura-heist-focus-v1:'+id
     before=page.evaluate("key=>localStorage.getItem(key)",save_key)
     kit.locator('[data-j298-phase=recon]').click()
