@@ -48,6 +48,31 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    expect(page.get_by_role('checkbox',name='Completed: Old goal')).to_be_checked()
    assert page.evaluate("JSON.parse(localStorage.getItem('team-jura-my-crew-v1')).name")=='Legacy Story'
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
+   # Whole-site export and restore must use the same non-destructive crew semantics.
+   page.goto(url.replace('my-crew.html','atlas-account.html'))
+   expect(page.locator('#j131Export')).to_be_visible()
+   with page.expect_download() as download:
+    page.locator('#j131Export').click()
+   backup=json.loads(Path(download.value.path()).read_text(encoding='utf-8'))
+   assert 'team-jura-world-profiles-v2' in backup['saves']
+   assert 'team-jura-my-crew-v1' in backup['saves']
+   initial=page.evaluate("localStorage.getItem('team-jura-my-crew-v1')")
+   incoming={'schema':1,'game':'story','name':'Do not replace','tag':'','motto':'','bio':'','tasks':[{'text':'Account goal','done':False}]}
+   restore={'app':'Elario Studios Team Jura Atlas','version':1,'saves':{'team-jura-my-crew-v1':json.dumps(incoming),'jura3-progress':'{}'}}
+   page.on('dialog',lambda dialog:dialog.accept())
+   page.locator('#j131Import').set_input_files({'name':'account.json','mimeType':'application/json','buffer':json.dumps(restore).encode()})
+   expect(page.locator('#j131ProgressStatus')).to_contain_text('Crew profiles merged')
+   assert page.evaluate("localStorage.getItem('team-jura-my-crew-v1')")==initial
+   before=page.evaluate("localStorage.getItem('team-jura-world-profiles-v2')")
+   invalid={'app':'Elario Studios Team Jura Atlas','version':1,'saves':{'team-jura-world-profiles-v2':'broken','jura3-progress':'must not write'}}
+   page.locator('#j131Import').set_input_files({'name':'invalid.json','mimeType':'application/json','buffer':json.dumps(invalid).encode()})
+   expect(page.locator('#j131ProgressStatus')).not_to_contain_text('records restored')
+   assert page.evaluate("localStorage.getItem('team-jura-world-profiles-v2')")==before
+   assert page.evaluate("localStorage.getItem('jura3-progress')")=='{}'
+   page.goto(url)
+   expect(page.locator('#crewName')).to_have_value('Legacy Story')
+   expect(page.locator('#taskList')).to_contain_text('Account goal')
+   expect(page.get_by_role('checkbox',name='Completed: Old goal')).to_be_checked()
    ctx.close()
   browser.close()
  server.shutdown()
