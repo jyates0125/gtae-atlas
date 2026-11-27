@@ -98,8 +98,15 @@ try:
             expect(page.locator("#j393-online-activity-slot #j88-events")).to_be_visible(timeout=25000)
             expect(page.locator("#selectedName")).to_contain_text("Procopio Beach",timeout=25000)
             expect(page.locator("#selectedName .j4730-selected-glyph path")).to_have_attribute("d",van_glyph)
-            actual=page.locator("#selectedName .j4730-selected-glyph").evaluate("(e)=>({color:getComputedStyle(e).color,fill:getComputedStyle(e.querySelector('path')).fill,inline:e.getAttribute('style')})")
-            assert actual["color"]==van_color and actual["fill"]==van_color, (van_color,actual)
+            # Feed refresh can replace the selected SVG between locator resolution
+            # and evaluation. Assert the visible, currently connected glyph's paint.
+            page.wait_for_function("""(color)=>{
+              const e=document.querySelector('#selectedName .j4730-selected-glyph'),p=e?.querySelector('path');
+              return !!(e?.isConnected&&p?.isConnected&&e.getClientRects().length&&
+                getComputedStyle(e).color===color&&getComputedStyle(p).fill===color);
+            }""",arg=van_color,timeout=15000)
+            expect(page.locator("#selectedName .j4730-selected-glyph")).to_be_visible()
+            expect(page.locator("#selectedName .j4730-selected-glyph path")).to_have_css("fill",van_color)
             assert page.locator(".j4730-advanced-events").evaluate("(e)=>e.open")
             # Fresh visitor with an expired feed: no stale or unrelated default pins.
             page.evaluate("localStorage.removeItem('jura4731-online-selected-layers')")
