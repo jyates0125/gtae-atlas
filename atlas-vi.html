@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#210f30">
 <meta name="description" content="Explore the interactive GTA VI Leonida map with Scaly and Loki community layers, a separate Rockstar official poster view, and connected VI characters, vehicles, weapons and research. Community pins remain provisional.">
 <title>GTA VI Leonida Interactive World Map · GTAE | Elario Studios</title><link rel="canonical" href="https://gtae-online.pages.dev/atlas-vi.html"><meta property="og:type" content="website"><meta property="og:site_name" content="GTAE · Elario Studios"><meta property="og:url" content="https://gtae-online.pages.dev/atlas-vi.html"><meta property="og:title" content="GTA VI Leonida Interactive World Map · GTAE — GTA Explorer | Elario Studios"><meta property="og:description" content="Explore the interactive GTA VI Leonida map with Scaly and Loki community layers, a separate Rockstar official poster view, and connected VI characters, vehicles, weapons and research. Community pins remain provisional."><meta property="og:image" content="https://gtae-online.pages.dev/art/jura155-vi.webp"><meta property="og:image:alt" content="Original Elario Leonida research world illustration"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="GTA VI Leonida Interactive World Map · GTAE — GTA Explorer | Elario Studios"><meta name="twitter:description" content="Explore the interactive GTA VI Leonida map with Scaly and Loki community layers, a separate Rockstar official poster view, and connected VI characters, vehicles, weapons and research. Community pins remain provisional."><meta name="twitter:image" content="https://gtae-online.pages.dev/art/jura155-vi.webp">
-<link rel="stylesheet" href="./atlas.css?v=70">
+<link rel="stylesheet" href="./atlas.css?v=4736">
 <script defer src="./atlas-intelligence.js?v=70"></script>
 <script defer src="./atlas-sources.js?v=70"></script>
 <script defer src="./atlas-route-core.js?v=70"></script>
@@ -17,7 +17,7 @@
 <script defer src="./atlas363-elevation-probe.js?v=363"></script>
 <script defer src="./atlas-navigation.js?v=382"></script>
 <script defer src="./atlas-conditions.js?v=4722"></script>
-<script defer src="./atlas.js?v=4722"></script>
+<script defer src="./atlas.js?v=4736"></script>
 <script defer src="./atlas290-vi-source-ledger.js?v=290"></script>
 
 <link rel="stylesheet" href="./atlas290-vi-source-ledger.css?v=290">
@@ -144,12 +144,13 @@
       <input type="file" id="packFile" class="hidden" accept=".json,application/json" aria-label="Import licensed Atlas map pack">
       <a class="small-link" href="./atlas-pack-format.html">Data pack format & source rules</a>
     </details></section>
-    <section class="offline source-panel"><strong>🧭 Open-source map layers · calibrated</strong>
-      <p class="hint">Optional overlays: Story collectibles, world props and provisional VI research. Heavy layers start off to protect performance; world props are not collectible locations.</p>
+    <section class="offline source-panel"><details class="j4730-advanced-sources"><summary>Optional world objects &amp; source layers <small id="sourceLayerSummary">Checking layers…</small></summary>
+      <p class="hint">Optional layers for this game and mode. Choose only what you need. World objects are not collectible locations.</p>
+      <input type="search" id="sourceLayerSearch" aria-label="Search optional map layers" placeholder="Find ATMs, fuel pumps, research…" autocomplete="off"><p id="sourceLayerCount" class="hint" role="status"></p>
       <div id="sourceToggles" aria-label="Enable or disable source overlays"></div>
       <p id="sourceStatus" role="status" class="hint">Checking licensed source feeds…</p>
       <div class="gridbuttons"><button type="button" id="enableSources">Show loaded overlays</button><button type="button" id="refreshSources">Refresh sources</button></div>
-      <p class="hint">Optional overlays can be unavailable without disabling the main map.</p>
+      <p class="hint">Optional overlays can be unavailable without disabling the main map.</p></details>
     </section>
     <section class="offline source-panel"><strong>⌖ Coordinate finder</strong>
       <p class="hint">Enter GTA game-world X and Y coordinates. The crosshair will be placed directly on the current map.</p>
