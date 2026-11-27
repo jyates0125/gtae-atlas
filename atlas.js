@@ -215,6 +215,8 @@ let onlineCleanView=true;
 const ONLINE_LAYER_PREF='jura4731-online-selected-layers';
 function safeOnlineLayerPrefs(value){return Array.isArray(value)?[...new Set(value.filter(key=>typeof key==='string'&&/^(category:|event:|collection-type:|named:)[a-z0-9 :._-]{1,100}$/i.test(key)))].slice(0,180):[]}
 const onlineSelectedLayers=new Set(safeOnlineLayerPrefs(loadStore(ONLINE_LAYER_PREF,[])));
+// An explicitly saved empty set means Hide all, not a fresh visitor.
+let automaticDailyLayers=!Array.isArray(loadStore(ONLINE_LAYER_PREF,null));
 function isOnlineCleanView(){return game==='5'&&mode==='online'&&onlineCleanView&&!eventFocusIds;}
 function onlineLayerMatches(r,keys){
  for(const key of keys){
@@ -230,7 +232,9 @@ function onlineLayerMatches(r,keys){
  return false;
 }
 function setOnlineLayers(keys,show=true,only=false){
- dropEventFocus();onlineCleanView=true;if(only)onlineSelectedLayers.clear();
+ dropEventFocus();onlineCleanView=true;
+ if(automaticDailyLayers&&!only)for(const key of defaultDailyLayerKeys(records(),activityCache()))onlineSelectedLayers.add(key);
+ automaticDailyLayers=false;if(only)onlineSelectedLayers.clear();
  for(const key of keys){if(show)onlineSelectedLayers.add(key);else onlineSelectedLayers.delete(key)}
  store(ONLINE_LAYER_PREF,[...onlineSelectedLayers]);eventHidden.clear();showPins=true;selected=null;page=0;render();
 }
@@ -238,7 +242,7 @@ function exitOnlineCleanForEdit(){if(isOnlineCleanView())onlineCleanView=false;}
 function matches(){
  // An explicit event focus is temporary. Never mutate stored category or named-layer choices.
  if(eventFocusIds)return records().filter(r=>eventFocusIds.has(r.id));
- const query=$('search').value.trim().toLowerCase(),district=$('districtFilter').value.trim().toLowerCase(),categories=enabled(),hidden=namedHidden(),clean=isOnlineCleanView();return records().filter(r=>(clean?(!!query||!!district||onlineLayerMatches(r,onlineSelectedLayers)):categories.has(r.category)&&passesNamedLayers(r,hidden))&&(showUnverified||!r.uncertain)&&(!onlyUnfound||!progress[doneKey(r)])&&(!onlyFavorites||favorites[r.id])&&(!query||[r.name,r.address||'',r.id,r.category,r.source||'',r.collectionType||'',...(r.tags||[])].join(' ').toLowerCase().includes(query))&&(!district||[r.name,r.district||'',...(r.tags||[])].join(' ').toLowerCase().includes(district)))}
+ const query=$('search').value.trim().toLowerCase(),district=$('districtFilter').value.trim().toLowerCase(),categories=enabled(),hidden=namedHidden(),clean=isOnlineCleanView(),dailyCache=clean&&automaticDailyLayers?activityCache():null;return records().filter(r=>(clean?(!!query||!!district||(automaticDailyLayers&&defaultDailyRecord(r,dailyCache))||onlineLayerMatches(r,onlineSelectedLayers)):categories.has(r.category)&&passesNamedLayers(r,hidden))&&(showUnverified||!r.uncertain)&&(!onlyUnfound||!progress[doneKey(r)])&&(!onlyFavorites||favorites[r.id])&&(!query||[r.name,r.address||'',r.id,r.category,r.source||'',r.collectionType||'',...(r.tags||[])].join(' ').toLowerCase().includes(query))&&(!district||[r.name,r.district||'',...(r.tags||[])].join(' ').toLowerCase().includes(district)))}
 function orderedMatches(){const list=matches();switch(listOrder){
  case 'category':list.sort((a,b)=>(CATEGORIES[a.category]?.[0]||a.category).localeCompare(CATEGORIES[b.category]?.[0]||b.category)||a.name.localeCompare(b.name));break;
  case 'nearest':list.sort((a,b)=>Math.hypot(a.x-camera.x,a.y-camera.y)-Math.hypot(b.x-camera.x,b.y-camera.y));break;
@@ -349,7 +353,7 @@ function renderNamedLayers(){const root=$('namedLayers');if(!root)return;root.re
   root.append(b);
  }
  if(!rendered){const note=document.createElement('small');note.textContent=layers.length?'No matching layer names. Clear layer search.':'No named layers have mapped coordinates in this game yet.';root.append(note)}
- const count=$('namedLayerCount');if(count)count.textContent=`${layers.length} mapped layers · ${layers.filter(l=>!hidden.has(l.id)).length} enabled`;
+ const count=$('namedLayerCount');if(count)count.textContent=`${layers.length} mapped layers · ${layers.filter(l=>isOnlineCleanView()?onlineSelectedLayers.has('named:'+l.id):!hidden.has(l.id)).length} enabled`;
 }
 const LEGEND_GROUPS=[
  ['Explore world',['landmark','nature','transport','government','industry','utility','other']],
@@ -514,7 +518,7 @@ function renderGameplayLegend(root,rows,query){
    const island=id==='cayo-chests'||id==='cayo-stashes',feed=C.rotationFeed(cache?.feed,id,cache?.now),found=rows.filter(r=>matchesEventResearch(rule,r));
    const eligible=found.filter(r=>!conditionForRecord(r,cache)?.hide),status=C.evaluate(id,{mode:'online',state:cache?.save||{},snapshot:cache?.feed,now:cache?.now});
    const detail=feed?(island?feed.active.size+' dated · island map':eligible.length+'/'+rule.today+' mapped · calculated'):status.status==='closed'?'Inactive':rule.kind==='rotation'?'Unconfirmed · '+rule.today+' expected':found.length?'Not confirmed active':'No current mapped evidence';
-   const on=isOnlineCleanView()?onlineSelectedLayers.has('event:'+id):!eventHidden.has(id)&&found.some(r=>enabled().has(r.category));
+   const on=isOnlineCleanView()?(onlineSelectedLayers.has('event:'+id)||(automaticDailyLayers&&found.some(r=>defaultDailyRecord(r,cache)))):!eventHidden.has(id)&&found.some(r=>enabled().has(r.category));
    const focus=island?()=>{location.href='./heist-cayo-perico.html'}:()=>{eventHidden.delete(id);showPins=true;const result=bridge?.focus(rule,{center:true});if(!result?.available)toast('No current eligible map pins. See activity details for evidence.');};
    group.append(quickLegendRow(id,rule.name,detail,on,()=>{if(island){focus();return}if(onlineCleanView){setOnlineLayers(['event:'+id],!on);return}dropEventFocus();if(on)eventHidden.add(id);else{eventHidden.delete(id);showPins=true;const cats=active[filterScope()];if(cats)for(const r of found)cats.add(r.category);const hidden=namedHidden();for(const r of found)for(const [key,,pred] of NAMED_LAYERS)if(pred(r))hidden.delete(key);hiddenNamed[namedScope()]=[...hidden];store('jura62-named-layers',hiddenNamed)}page=0;render()},focus,feed&&eligible.length?'#ffe48b':GAMEPLAY_EVENT_COLORS[id]||'#e9c789'));
   }
@@ -530,6 +534,8 @@ function datedMainlandMarker(r,cache){
  const feed=engine.rotationFeed(cache?.feed,r.activityId,cache?.now);
  return !!feed&&feed.active.has(r.rotationMarkerId);
 }
+function defaultDailyRecord(r,cache){return datedMainlandMarker(r,cache)&&!conditionForRecord(r,cache)?.hide;}
+function defaultDailyLayerKeys(rows,cache){return [...new Set(rows.filter(r=>defaultDailyRecord(r,cache)).map(r=>'event:'+r.activityId))];}
 function todayFocusRows(rows,cache){
  return rows.filter(r=>datedMainlandMarker(r,cache)&&!conditionForRecord(r,cache)?.hide&&(!onlyUnfound||!progress[doneKey(r)]));
 }
@@ -543,7 +549,7 @@ function renderTodayFocusControl(root,rows){
   render();
  },'j4730-today-focus');
  toggle.setAttribute('aria-pressed',String(on));root.append(toggle);const top=$('j4731-today-map');if(top){top.hidden=false;top.textContent='Today · '+available.length;top.setAttribute('aria-pressed',String(on));}
- const hint=document.createElement('small');hint.className='j4730-today-note';hint.textContent='Tap any category to show or hide just its markers. Today is a temporary view; Cayo has its own map.';root.append(hint);const saved=btn(onlineCleanView?'Use previous filters':'Use click-to-show layers',()=>{dropEventFocus();onlineCleanView=!onlineCleanView;selected=null;page=0;render()},'legend-only');root.append(saved);
+ const hint=document.createElement('small');hint.className='j4730-today-note';hint.textContent=(automaticDailyLayers&&onlineCleanView?'First visit: current dated mainland pins only. Your first layer edit saves your choices. ':'')+'Tap any category to show or hide its markers. Today is a temporary view; Cayo has its own map.';root.append(hint);const saved=btn(onlineCleanView?'Use previous filters':'Use click-to-show layers',()=>{dropEventFocus();onlineCleanView=!onlineCleanView;selected=null;page=0;render()},'legend-only');root.append(saved);
 }
 const legendOpenStates=new Map();
 function renderLegend(){
@@ -730,7 +736,7 @@ function importPackObject(pack){
 }
 function readPacks(){const packs=loadStore('jura-atlas-v5-packs',{});packRecords=Object.values(packs).flatMap(v=>Array.isArray(v.records)?v.records:[]);if($('packCount'))$('packCount').textContent=packRecords.length.toLocaleString()+' imported locations';render()}
 async function readPack(file){if(!file)return;try{if(file.size>2500000)throw Error('Maximum pack size is 2.5 MB');const payload=JSON.parse(await file.text());const n=importPackObject(payload);toast(`${n} source-attributed records imported. Check the locations on their correct game maps.`)}catch(e){toast('Could not import locations: '+e.message)}finally{$('packFile').value=''}}
-function render(){savedCategoryMode();const pinButton=$('togglePins');if(pinButton){const visible=pinsVisible()&&(!!eventFocusIds||(isOnlineCleanView()?onlineSelectedLayers.size>0||!!$('search').value.trim()||!!$('districtFilter').value.trim():enabled().size>0));pinButton.textContent=visible?'📍 Pins on':'📍 Pins off';pinButton.setAttribute('aria-pressed',String(visible));}renderLegend();renderViRegions();renderServices();renderFind();renderRoute();renderPins();renderSpecial('Collections');renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
+function render(){savedCategoryMode();const pinButton=$('togglePins');if(pinButton){const visible=pinsVisible()&&(!!eventFocusIds||(isOnlineCleanView()?(automaticDailyLayers&&todayFocusRows(records(),activityCache()).length>0)||onlineSelectedLayers.size>0||!!$('search').value.trim()||!!$('districtFilter').value.trim():enabled().size>0));pinButton.textContent=visible?'📍 Pins on':'📍 Pins off';pinButton.setAttribute('aria-pressed',String(visible));}renderLegend();renderViRegions();renderServices();renderFind();renderRoute();renderPins();renderSpecial('Collections');renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
 function switchGame(g){if(!['5','6','online'].includes(g))return;dropEventFocus();chooseRouteStartMode=false;mode=g==='online'?'online':'story';game=g==='6'?'6':'5';const activeLink=$('activityModeLink');if(activeLink){const which=g==='6'?'vi':g==='online'?'online':'story';activeLink.href='./atlas-activities.html?mode='+which;activeLink.textContent=which==='vi'?'◷ Leonida · Research & verification':which==='online'?'◷ Online events · timers & spawns':'◷ Story Mode challenges · no Online events';}selected=null;coordinateTarget=null;addPinMode=false;$('game5').classList.toggle('active',g==='5');$('game6').classList.toggle('active',g==='6');$('gameOnline').classList.toggle('active',g==='online');$('game5').setAttribute('aria-pressed',String(g==='5'));$('game6').setAttribute('aria-pressed',String(g==='6'));$('gameOnline').setAttribute('aria-pressed',String(g==='online'));$('mapTitle').textContent=g==='6'?'GTA VI · Leonida':g==='online'?'GTA Online · Los Santos':'GTA V · Los Santos';$('mapSubtitle').textContent=g==='6'?'GTADB VI · provisional landmarks, NOT confirmed game locations':g==='online'?'Shared GTA V terrain · separate Online markers and progress':'GTADB GTA V · Story map landmarks';
  $('layer').replaceChildren();for(const [key,label] of LAYERS[game])$('layer').add(new Option(label,key));if(!$('layer').querySelector('option[value="'+styles[game]+'"]'))styles[game]=game==='6'?'scaly,view':'radar';$('layer').value=styles[game];$('search').value='';if($('namedLayerSearch'))$('namedLayerSearch').value='';onlyUnfound=false;onlyFavorites=false;showUnverified=true;$('showUnverified').checked=true;if($('showCommunityResearch'))$('showCommunityResearch').checked=researchOn();$('hideFound').checked=false;$('favoritesOnly').checked=false;page=0;fitGame();render();renderSources();dataNotice(datasets[game].length?datasets[game].length.toLocaleString()+' landmarks · '+dataOrigins[game]:'Getting GTA '+game+' locations…');tileHealth();
  navPlan=null;navPlanScope=null;if(window.teamJuraNav)window.teamJuraNav.gameChanged();

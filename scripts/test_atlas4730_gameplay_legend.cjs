@@ -46,3 +46,11 @@ const glyph=vm.runInNewContext(shapeCode+drawCode+';({legend:elarioLegendGlyph,d
 for(const key of ['gun-van','street-dealers','shipwreck','ls-tags','hidden-caches','smoke-products','junk-skydives','ufo','ghosts-exposed','spaceship-parts','agencies-business','mc-business','nightclubs-business','letter-scraps']){const d=glyph.legend(key).children.map(p=>p.attrs.d).join(' ');assert(glyph.draw({id:key,category:key},20,20,null),key);assert.equal(paths.at(-1),d,key)}
 const daily=['gun-van','street-dealers','shipwreck','ls-tags','hidden-caches','smoke-products','junk-skydives'].map(k=>glyph.legend(k).children.map(p=>p.attrs.d).join(' '));assert.equal(new Set(daily).size,daily.length,'Mainland daily icons must be distinguishable');
 console.log('Shared SVG / actual canvas geometry and distinct mainland rotation glyphs passed');
+
+// First-visit automatic mainland layers use actual dated eligibility; explicit empty choices persist.
+const auto=vm.runInNewContext(get(map,'function defaultDailyRecord(r,cache)','function todayFocusRows')+';defaultDailyLayerKeys',{datedMainlandMarker:dated,conditionForRecord:r=>r.hidden?{hide:true}:null});
+const activeVan={...marker,rotationMarkerId:'van-active'},oldVan={...marker,rotationMarkerId:'van-old'};
+assert.deepEqual(Array.from(auto([activeVan,activeVan,oldVan,{...activeVan,hidden:true},{...activeVan,scope:'story'},{...activeVan,activityId:'cayo-chests'},{category:'collectible'}],snapshot)),['event:gun-van']);
+assert.equal(auto([activeVan],{feed:{},now:snapshot.now}).length,0);
+assert(map.includes('automaticDailyLayers=!Array.isArray(loadStore(ONLINE_LAYER_PREF,null))'));
+console.log('Fresh daily defaults, expiry and explicit empty preferences contracts passed');
