@@ -170,6 +170,15 @@ try:
             search=page.locator("#j4730-legend-search")
             expect(search).to_be_visible()
             assert legend.locator("details[open]").count()<=1
+            expect(page.locator("#j4748-vi-gameplay")).to_be_visible()
+            assert page.locator("#j449-vi-jobs").evaluate("(e)=>!!(e.compareDocumentPosition(document.getElementById(\"j290-vi-ledger\")) & Node.DOCUMENT_POSITION_FOLLOWING)")
+            page.locator("#j4748-vi-gameplay").click()
+            assert page.evaluate("window.JuraDualLegendAPI.categories().filter(c=>c.enabled).every(c=>[\"collectible\",\"vehicle\",\"weapon\",\"activity\",\"property\",\"user\"].includes(c.id))")
+            if width==390:
+                assert page.locator("#atlasCanvas").evaluate("(c)=>c.width*c.height<=2002000")
+                page.evaluate("() => {const c=document.getElementById(\"atlasCanvas\"); window.__j4748CanvasMutations=0; new MutationObserver(rs=>window.__j4748CanvasMutations+=rs.length).observe(c,{attributes:true,attributeFilter:[\"width\",\"height\"]}); for(let i=0;i<12;i++)window.dispatchEvent(new Event(\"resize\"));}")
+                page.wait_for_timeout(250)
+                assert page.evaluate("window.__j4748CanvasMutations")==0
             search.fill("Hotels & homes")
             row=legend.locator('[data-legend-key="hotel"]')
             expect(row).to_be_visible()

@@ -1044,23 +1044,32 @@ async def smoke():
                                                     await pg.locator('#mobileTools').click()
                                                 await drawer.scroll_into_view_if_needed(timeout=6000)
                                             await drawer.evaluate('(el)=>{el.open=true}')
-                                            first=pg.locator('#legend button.legend-choice').first
+                                            # Gameplay groups now precede world references. Test the actual
+                                            # first-visit default, not the first DOM row in the legend.
+                                            search=pg.locator('#j4730-legend-search')
+                                            await search.fill('Landmarks')
+                                            first=pg.locator('#legend [data-legend-key="landmark"] button.legend-choice')
                                             await first.wait_for(state='visible',timeout=6500)
                                             await first.scroll_into_view_if_needed(timeout=6500)
-                                            # Keep owner-approved first-visit visible map categories.
-                                            # Toggle off and on; saved preferences must still work.
+                                            if not await pg.evaluate("window.JuraDualLegendAPI.categories().find(c=>c.id==='landmark').enabled"):
+                                                failures.append('VI first-visit landmark preference missing')
                                             initial=await first.get_attribute('aria-pressed')
                                             if initial!='true':
                                                 failures.append('New visitor is missing the default visible map category')
                                             else:
                                                 await first.click(timeout=5000)
-                                                if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='false':
+                                                if await first.get_attribute('aria-pressed')!='false':
                                                     failures.append('One-click category off did not disable selected category')
-                                                await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
-                                                if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='true':
+                                                await first.click(timeout=5000)
+                                                if await first.get_attribute('aria-pressed')!='true':
                                                     failures.append('One-click category on did not restore selected category')
                                                 if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
                                                     failures.append('Restored category did not activate map pins')
+                                                if not await pg.evaluate("window.JuraDualLegendAPI.categories().find(c=>c.id==='landmark').enabled"):
+                                                    failures.append('Restored VI landmark control and state disagree')
+                                            await search.fill('')
+                                            if width<=700:
+                                                await pg.locator('#j4732-back-map').click()
                                     except Exception as exc:
                                         failures.append('Map legend could not be toggled: '+str(exc)[:700])
                                 toggle=pg.locator('#juraToggle3d')
