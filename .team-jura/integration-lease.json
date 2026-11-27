@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "held",
-  "owner": "manual classic #300",
-  "token": "manual-classics-300-6bd00de",
-  "acquiredAtUtc": "2026-11-27T15:42:00Z",
-  "reviewAfterUtc": "2026-11-27T15:52:00Z",
+  "state": "free",
+  "owner": null,
+  "token": null,
+  "acquiredAtUtc": null,
+  "reviewAfterUtc": null,
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal.",
-  "previousToken": "manual-heist-301-86c79fa",
-  "lastReleaseUtc": "2026-11-27T15:41:00Z",
+  "previousToken": "manual-classics-300-6bd00de",
+  "lastReleaseUtc": "2026-11-27T15:43:00Z",
   "lastProbe": "competing update rejected"
 }
