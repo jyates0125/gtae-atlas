@@ -21,6 +21,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
+      - name: Preserve committed bytes across platforms
+        shell: bash
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -36,15 +39,19 @@ jobs:
       - name: Build and validate standard CI payload
         shell: bash
         env:
-          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          node scripts/build-cloudflare.cjs
+          actual=$(git rev-parse HEAD)
+          test "$actual" = "$EXPECTED_SHA"
+          CF_PAGES_COMMIT_SHA="$actual" node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
-          python scripts/fingerprint_public_payload.py public "$GITHUB_SHA" --output fingerprint.json
+          python scripts/fingerprint_public_payload.py public "$actual" --output fingerprint.json
       - uses: actions/upload-artifact@v4
         with:
           name: payload-fingerprint-${{ matrix.label }}
-          path: fingerprint.json
+          path: |
+            fingerprint.json
+            public/release-manifest.json
           if-no-files-found: error
   compare:
     needs: fingerprint
@@ -64,6 +71,11 @@ jobs:
           results = [json.loads((Path("fingerprints") / ("payload-fingerprint-" + label) / "fingerprint.json").read_text()) for label in ("linux", "windows")]
           for result in results:
               assert result["revision"] == os.environ["EXPECTED_SHA"], result
+          manifests = [json.loads((Path("fingerprints") / ("payload-fingerprint-" + label) / "public" / "release-manifest.json").read_text()) for label in ("linux", "windows")]
+          inventories = [{f["path"]: f for f in m["files"] if f["path"] != "atlas-build-identity.json"} for m in manifests]
+          differences = [p for p in sorted(set(inventories[0]) | set(inventories[1])) if inventories[0].get(p) != inventories[1].get(p)]
+          print("Different public files:", len(differences), differences[:50])
+          assert not differences, "Public payload byte differences remain"
           for key in ("schema", "revision", "payload_sha256", "payload_files", "payload_bytes"):
               assert results[0][key] == results[1][key], (key, results)
           print("PASS: exact normalized public payload equivalent across Linux and Windows", results[0])
