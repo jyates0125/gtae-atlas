@@ -57,10 +57,21 @@ function merge(base,imported){
  for(const world of ['story','vi','other'])mergeProfile(out[world],incoming[world],stats);
  return {state:out,...stats};
 }
-const API=Object.freeze({KEY,OLD,worlds,blank,fresh,normalize,migrate,parse,current,read,write,merge});
+// Plan a whole-site guest restore without mutating storage. A v2 backup is
+// authoritative over its archived v1 copy; never resurrect a deleted crew.
+function planBackupRestore(storage,saves){
+ const hasV2=Object.hasOwn(saves,KEY),hasV1=Object.hasOwn(saves,OLD);
+ if(!hasV2&&!hasV1)return null;
+ const incoming=hasV2?normalize(JSON.parse(saves[KEY])):migrate(JSON.parse(saves[OLD]));
+ const base=read(storage);
+ if(base.blocked)throw Error('Existing crew profiles are unreadable. Export recovery data from My Crew before restoring.');
+ const result=base.raw===null&&base.legacy===null?{state:incoming,added:0,conflicts:0}:merge(base.state,incoming);
+ return {key:KEY,value:JSON.stringify(result.state),added:result.added,conflicts:result.conflicts};
+}
+const API=Object.freeze({KEY,OLD,worlds,blank,fresh,normalize,migrate,parse,current,read,write,merge,planBackupRestore});
 if(typeof module==='object'&&module.exports)module.exports=API;
 if(root)root.JuraCrewProfiles=API;
-if(typeof document==='undefined')return;
+if(typeof document==='undefined'||!document.getElementById('crewForm'))return;
 const $=id=>document.getElementById(id);
 const ids={name:'crewName',tag:'crewTag',motto:'crewMotto',bio:'crewBio'};
 let base;try{base=read(localStorage)}catch{base={state:fresh(),raw:null,legacy:null,blocked:true,error:'Storage unavailable'}}
