@@ -37,7 +37,7 @@ for page,expected_title in (
         assert 'j117-map-world' in data,page
         for name in ('layer','atlasCanvas','legend','sidebar'):
             assert name in p.ids,(page,name)
-        revision = "4736"
+        revision = "4737"
         assert data.count(f'./atlas.js?v={revision}')==1, 'Keep the reviewed core map revision; worker cache version is independent'
     if page=='atlas-cayo.html':
         assert 'j117-cayo' in data and 'Illustrative schematic:' in data
