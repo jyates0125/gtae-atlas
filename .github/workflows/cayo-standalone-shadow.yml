@@ -1,0 +1,72 @@
+name: Cayo standalone validation - shadow pilot
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - '.github/workflows/cayo-standalone-shadow.yml'
+      - 'scripts/audit_cayo_validation_inventory.py'
+      - 'docs/CAYO-VALIDATION-INVENTORY.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/audit_cayo_validation_inventory.py
+  cayo:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and audit exact public payload
+        shell: bash
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - name: Install pinned browser test tooling
+        shell: bash
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install ${{ matrix.browser }}
+      - name: Cayo mission board and marker interactions
+        env:
+          ATLAS_BROWSER: ${{ matrix.browser }}
+        run: python scripts/test_atlas171_browser.py
+      - name: Cayo routing and delayed initialization recovery
+        env:
+          ATLAS_BROWSER: ${{ matrix.browser }}
+        run: python scripts/test_atlas186_route_browser.py
+      - name: Save independently scoped Cayo evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cayo-shadow-${{ matrix.browser }}
+          path: qa-evidence/${{ matrix.browser }}/
+          if-no-files-found: warn
+          retention-days: 21
