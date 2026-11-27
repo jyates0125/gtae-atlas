@@ -8,6 +8,7 @@ on:
       - 'scripts/verify_live_deployment.py'
       - 'scripts/test_verify_live_deployment.py'
       - '.github/workflows/atlas-live-deployment.yml'
+      - 'docs/PRODUCTION-RELEASE-VERIFICATION.md'
   workflow_dispatch:
 permissions:
   contents: read
