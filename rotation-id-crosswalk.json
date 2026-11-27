@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "updatedAtUtc": "2026-11-27T14:16:17.211Z",
+  "notes": "Reviewed per-marker aliases, not interchangeable source numbers. Preserve canonical IDs across resets; do not map by list order or ambiguous district alone. Smoke selected positions crossmatched Nov 27; #23 tennis and #26 Cockingend have different broad zone labels on GTAMap.io. Third landmark reference https://techwiser.com/gta-online-smoke-on-the-water-product-locations-and-rewards/. Source-reported selections, not gameplay verified. Skydives require independent disambiguation of Mount Chiliad and source numbering; Cayo stashes need island-specific map support.",
+  "entries": [
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-procopio-truck-stop",
+      "name": "Smoke on the Water · Procopio Truck Stop",
+      "x": 1734.1,
+      "y": 6409.9,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-03",
+        "gtaBoss": "Smoke On The Water 03 Mount Chiliad"
+      }
+    },
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-kortz-center",
+      "name": "Smoke on the Water · Kortz Center",
+      "x": -2256.6,
+      "y": 242,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-07",
+        "gtaBoss": "Smoke On The Water 07 Pacific Bluffs"
+      }
+    },
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-vinewood-bowl",
+      "name": "Smoke on the Water · Vinewood Bowl",
+      "x": 834.3,
+      "y": 506.6,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-14",
+        "gtaBoss": "Smoke On The Water 14 Vinewood Hills"
+      }
+    },
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-west-mirror-drive",
+      "name": "Smoke on the Water · West Mirror Drive",
+      "x": 977.3,
+      "y": -739.3,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-18",
+        "gtaBoss": "Smoke On The Water 18 Mirror Park"
+      }
+    },
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-gentry-manor",
+      "name": "Smoke on the Water · Gentry Manor",
+      "x": -39.9,
+      "y": 345.2,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-20",
+        "gtaBoss": "Smoke On The Water 20 West Vinewood"
+      }
+    },
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-rockford-tennis",
+      "name": "Smoke on the Water · Rockford Hills tennis court",
+      "x": -1291.3,
+      "y": -114.8,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-23",
+        "gtaBoss": "Smoke On The Water 23 Rockford Hills"
+      }
+    },
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-cockingend-drive",
+      "name": "Smoke on the Water · Cockingend Drive",
+      "x": -963.8,
+      "y": 449,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-26",
+        "gtaBoss": "Smoke On The Water 26 Vinewood Hills"
+      }
+    },
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-elysian-security-booth",
+      "name": "Smoke on the Water · Elysian Island security booth",
+      "x": 243.3,
+      "y": -2939.2,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-27",
+        "gtaBoss": "Smoke On The Water 27 Elysian Island"
+      }
+    },
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-fudge-lane",
+      "name": "Smoke on the Water · Fudge Lane",
+      "x": 1429.2,
+      "y": -1494.4,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-28",
+        "gtaBoss": "Smoke On The Water 28 El Burro Heights"
+      }
+    },
+    {
+      "activityId": "smoke-products",
+      "id": "smoke-products-sandy-shores-senora",
+      "name": "Smoke on the Water · Grand Senora Desert",
+      "x": 2051.7,
+      "y": 3409.9,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked",
+      "aliases": {
+        "gtamapIo": "sotw-product-30",
+        "gtaBoss": "Smoke On The Water 30 Grand Senora Desert"
+      }
+    }
+  ]
+}
