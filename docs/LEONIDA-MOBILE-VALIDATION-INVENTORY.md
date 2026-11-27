@@ -1,0 +1,6 @@
+# Leonida mobile duplicate validation — shadow pilot
+Baseline development 6872bf4b0fa0ab91cb2dbc588a9b4451fc69d0d2. Full production command inventory is in RELEASE-VALIDATION-INVENTORY.csv and its accompanying document.
+
+The existing production workflow invokes scripts/test_atlas220_vi_mobile_browser.py in both broad and focus jobs per browser, four total invocations. This pilot runs the original script once per browser, with unchanged assertions and built/audited public files. Three viewport sizes (1440, 390, 375) exercise guest pin creation, details, touch-sized and physically unobstructed Close, category glyphs, navigation layout, reselect and Escape. It is not a replacement for the distinct VI Day, poster, map jump, navigation hub or character tests.
+
+Known dependencies include atlas-vi.html, atlas220-vi-mobile.js/css, shared atlas.js map/selection/save logic, navigation and layout resources, map assets, generated public payload and browser tooling. Transitive inventory is incomplete; unknown changes require full validation. No production gate is changed. On successful pilot, propose deduplicating only the exact repeated script per engine while retaining mandatory packaging dependencies. Future affected-only execution requires trusted dependency equivalence.
