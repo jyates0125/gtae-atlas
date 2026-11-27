@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "held",
-  "owner": "manual Aura VI smoke repair",
-  "token": "manual-smoke-4748-20261127T164841Z",
-  "acquiredAtUtc": "2026-11-27T16:48:41Z",
-  "reviewAfterUtc": "2026-11-27T16:58:41Z",
+  "state": "free",
+  "owner": null,
+  "token": null,
+  "acquiredAtUtc": null,
+  "reviewAfterUtc": null,
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal.",
-  "previousToken": "manual-release-static-4748-20261127T164027Z",
-  "lastReleaseUtc": "2026-11-27T16:40:27Z",
+  "previousToken": "manual-smoke-4748-20261127T164841Z",
+  "lastReleaseUtc": "2026-11-27T16:49:00Z",
   "lastProbe": "competing update rejected"
 }
