@@ -41,7 +41,7 @@ jobs:
         run: python scripts/test_atlas313_private_forge_browser.py
       - name: Save 390px phone visual proof
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas313-private-forge
           path: qa-evidence/chromium/atlas313-private-*.png

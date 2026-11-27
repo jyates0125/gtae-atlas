@@ -58,7 +58,7 @@ jobs:
         run: python scripts/test_atlas302_cayo_rescue_browser.py
       - name: Save evidence for the affected Cayo page only
         if: always() && steps.scope.outputs.run == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas302-cayo-legacy-recovery-phone-desktop
           path: qa-evidence/chromium/atlas302-cayo-emergency-*.png

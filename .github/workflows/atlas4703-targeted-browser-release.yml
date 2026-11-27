@@ -48,7 +48,7 @@ jobs:
           test "$failures" -eq 0
       - name: Preserve browser evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas4703-browser-review-${{ matrix.browser }}
           path: |
@@ -72,7 +72,7 @@ jobs:
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
           python scripts/test_atlas151_visual_release.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: atlas4703-validated-public
           path: public/

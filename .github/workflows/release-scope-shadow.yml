@@ -29,7 +29,7 @@ jobs:
           cat scope-shadow.json
           python -c "import json; r=json.load(open('scope-shadow.json')); assert r['suggested_scope']=='seasonal',r; assert r['effective_execution']=='full' and not r['reuse_authorized'],r"
       - name: Save shadow decision
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-scope-shadow
           path: scope-shadow.json

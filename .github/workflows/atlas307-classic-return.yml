@@ -38,7 +38,7 @@ jobs:
         run: python scripts/test_atlas307_classic_return_browser.py
       - name: Capture representative device evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas307-classic-return
           path: qa-evidence/chromium/atlas307-classic-*.png

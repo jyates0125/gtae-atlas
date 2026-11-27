@@ -29,7 +29,7 @@ jobs:
           done
           mkdir -p qa-evidence/forge-source
           python3 scripts/audit_durtyfree_vehicle_sources.py "$dir" qa-evidence/forge-source/schema-report.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: forge-vehicle-source-schema-audit
           path: qa-evidence/forge-source/schema-report.json

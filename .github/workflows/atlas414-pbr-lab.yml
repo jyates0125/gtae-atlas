@@ -55,7 +55,7 @@ jobs:
           python -m pip install 'playwright==1.58.0'
           python -m playwright install --with-deps chromium
           python scripts/test_atlas414_pbr_lab.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: atlas414-pbr-lab-evidence

@@ -43,7 +43,7 @@ jobs:
           python -m playwright install chromium
       - name: Owner phone/laptop paths and real pinned GTADB texture
         run: python scripts/test_atlas369_owner_map_browser.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: atlas369-owner-map-device-screenshots

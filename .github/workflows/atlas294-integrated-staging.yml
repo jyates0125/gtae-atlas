@@ -83,7 +83,7 @@ jobs:
         run: python scripts/capture_design_review.py
       - name: Upload owner-review screenshots and image/overflow manifest
         if: always() && steps.scope.outputs.run == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas294-owner-review-desktop-phone
           path: qa-evidence/chromium/

@@ -42,7 +42,7 @@ jobs:
           python -m playwright install chromium
       - name: Audit public navigation and candidate control overlaps
         run: python scripts/test_atlas391_responsive_navigation.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: atlas391-layout-${{ matrix.width }}

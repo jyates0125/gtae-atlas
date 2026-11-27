@@ -64,7 +64,7 @@ jobs:
           pathlib.Path('atlas4714-candidate.sha256').write_text(digest+'  atlas4714-candidate.zip\n')
           print('Exact candidate',expected,len(files),'files',digest)
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: atlas4714-candidate-package-not-production
           path: |
@@ -108,7 +108,7 @@ jobs:
         run: python scripts/test_atlas408_gallery_continuity.py
       - name: Owner visual review captures
         run: python scripts/capture_design_review.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: atlas4714-review-${{ matrix.browser }}

@@ -216,7 +216,7 @@ jobs:
           python scripts/test_atlas191_first_visit_browser.py
       - name: Save functional QA and targeted visual evidence (Chromium)
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: team-jura-atlas-design-review-chromium
           path: |
@@ -282,7 +282,7 @@ jobs:
           python scripts/test_atlas191_first_visit_browser.py
       - name: Save functional QA and targeted visual evidence (Edge)
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: team-jura-atlas-design-review-edge
           path: |
@@ -341,7 +341,7 @@ jobs:
         run: python scripts/test_atlas220_salvage_art_browser.py
       - name: Save Atlas 22.0 focus screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas22-vi-focus-chromium
           path: qa-evidence/chromium/
@@ -396,7 +396,7 @@ jobs:
         run: python scripts/test_atlas220_salvage_art_browser.py
       - name: Save Atlas 22.0 focus screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas22-vi-focus-edge
           path: qa-evidence/msedge/
@@ -468,7 +468,7 @@ jobs:
         run: |
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: team-jura-atlas-cloudflare-validated-after-chromium-and-edge
           path: public/

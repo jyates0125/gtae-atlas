@@ -57,7 +57,7 @@ jobs:
         run: |
           python scripts/render_one_last_ride_animatic.py --output qa-evidence/film/one-last-ride-415-animatic.mp4
       - name: Keep private review film in GitHub Actions
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas324-olr-415-animatic-review-not-final-film
           path: |
@@ -67,7 +67,7 @@ jobs:
           retention-days: 30
       - name: Retain smoke evidence on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas324-film-smoke-failure
           path: qa-evidence/film/*

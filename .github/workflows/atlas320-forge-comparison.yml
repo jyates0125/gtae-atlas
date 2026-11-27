@@ -47,7 +47,7 @@ jobs:
         run: python scripts/test_atlas320_forge_comparison_browser.py
       - name: Retain visual viewport evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas320-forge-compare-phone-desktop
           path: qa-evidence/chromium/atlas320-forge-compare-*.png

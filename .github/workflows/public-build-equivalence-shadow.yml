@@ -46,7 +46,7 @@ jobs:
           CF_PAGES_COMMIT_SHA="$actual" node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
           python scripts/fingerprint_public_payload.py public "$actual" --output fingerprint.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: payload-fingerprint-${{ matrix.label }}
           path: |

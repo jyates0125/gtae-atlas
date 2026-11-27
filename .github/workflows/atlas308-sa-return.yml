@@ -38,7 +38,7 @@ jobs:
         run: python scripts/test_atlas308_sa_return_browser.py
       - name: Save screenshot evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas308-sa-map-return
           path: qa-evidence/chromium/atlas308-sa-*.png

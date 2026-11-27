@@ -48,7 +48,7 @@ jobs:
       - run: python scripts/browser_smoke.py
         env:
           ATLAS_SMOKE_ONLY: atlas-dashboard.html,guides.html,atlas-news.html,atlas-cheats.html,atlas-activities.html,atlas-account.html,atlas-toolkit.html,atlas-checklist.html,atlas8-preview.html,elario.html
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: atlas3904-header-browser-evidence

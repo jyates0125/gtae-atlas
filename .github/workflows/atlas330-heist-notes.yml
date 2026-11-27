@@ -47,7 +47,7 @@ jobs:
         run: python scripts/test_atlas330_heist_notes_browser.py
       - name: Retain phone landscape and desktop screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas330-heist-guest-notes-visuals
           path: qa-evidence/chromium/atlas330-heist-note-recovery-*.png
