@@ -402,9 +402,54 @@ jobs:
           path: qa-evidence/msedge/
           if-no-files-found: warn
           retention-days: 14
+  # Validate recent player journeys on the combined release tree, not only
+  # the earlier feature PRs. This is a required dependency of packaging.
+  player-workspaces:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'release/')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 18
+    env:
+      ATLAS_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify player and crew logic, and build exact release
+        shell: bash
+        run: |
+          node scripts/test_atlas4730_gameplay_legend.cjs
+          node scripts/test_atlas140_crew_profiles.cjs
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+      - run: python -m pip install playwright==1.58.0
+      - if: matrix.browser == 'chromium'
+        run: python -m playwright install --with-deps chromium
+      - if: matrix.browser == 'msedge'
+        run: python -m playwright install msedge
+      - name: Verify canonical navigation and current activity links
+        run: python scripts/test_atlas4724_navigation_journeys.py
+      - name: Verify filters, layer search and directions
+        run: python scripts/test_atlas4732_player_map_browser.py
+      - name: Verify local profiles and guest backup recovery
+        run: python scripts/test_atlas140_crew_profiles_browser.py
   validated-zip:
     if: github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'release/')
-    needs: [chromium-and-static, microsoft-edge, atlas22-focus-chromium, atlas22-focus-edge]
+    needs: [chromium-and-static, microsoft-edge, atlas22-focus-chromium, atlas22-focus-edge, player-workspaces]
     runs-on: ubuntu-latest
     permissions:
       contents: read
