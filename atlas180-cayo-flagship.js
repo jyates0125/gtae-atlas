@@ -93,7 +93,7 @@ miniBar.append(plus,minus,fit,layers,full);
 mapArea.append(miniBar,overlayTools,focus,info,mapStatus);
 mapFrame.append(mapArea);mapStage.append(mapFrame);
 const bottom=el('div','j180-bottom');
-const daily=el('section','j180-daily');daily.setAttribute('aria-label','Cayo treasure-chest daily locations');
+const daily=el('section','j180-daily');daily.id='j4740-chests';daily.setAttribute('aria-label','Cayo treasure-chest daily locations');
 const dailyHead=el('div','j180-daily-head');
 const dailyCopy=el('div');
 dailyCopy.append(el('h3','','Daily treasure chests'),el('p','','One land, one underwater · 19 possible locations · daily reset 06:00 UTC'));
@@ -131,6 +131,8 @@ const close=btn('Close ×','j180-action',()=>{drawer.hidden=true;shell.scrollInt
 drawerHead.append(drawerTitle,close);drawer.append(drawerHead);
 const panes=el('div','j180-drawer-content');drawer.append(panes);
 main.insertBefore(shell,layout);shell.append(rail,mapStage);main.insertBefore(bottom,layout);main.insertBefore(drawer,layout);
+ const focusDaily=()=>{const target=location.hash==='#j4740-chests'?daily:location.hash==='#j4740-stashes'?stashPanel:null;if(target)requestAnimationFrame(()=>target.scrollIntoView({block:'start',behavior:'instant'}))};
+ window.addEventListener('hashchange',focusDaily);focusDaily();
 // The content notice can mount before or after the dynamic mission renderer.
  // Keep the advisory accessible below the Cayo map in both timing orders.
  const relocateAdvisory=()=>{

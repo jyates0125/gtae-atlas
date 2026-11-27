@@ -147,6 +147,12 @@ try:
    dre=page.locator('#j223-search-results a').filter(has_text="Dre'Quan Priest")
    expect(dre).to_have_count(1,timeout=15000)
    assert '%27' in dre.get_attribute('href') and 'profile=character%3Adre-quan-priest' in dre.get_attribute('href')
+   for term,anchor in [('Cayo Treasure Chests','j4740-chests'),('Cayo buried treasure','j4740-stashes')]:
+    page.locator('#j223-search-input').fill(term)
+    expect(page.locator('#j223-search-results a[href="./heist-cayo-perico.html#'+anchor+'"]')).to_have_count(1)
+    expect(page.locator('#j223-search-results a[href*="atlas-online.html?event=cayo-stashes"]')).to_have_count(0)
+   page.locator('#j223-search-input').fill('Hidden Caches')
+   expect(page.locator('#j223-search-results a[href*="event=hidden-caches"]')).to_contain_text('Los Santos underwater')
    page.locator('#j223-search-input').fill('Gun Van')
    expect(page.locator('#j223-search-results a[href="./atlas-online.html?event=gun-van#j393-online-activity-slot"]')).to_have_count(1)
    page.locator('#j223-search-input').fill('online')

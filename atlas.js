@@ -398,7 +398,7 @@ const ELARIO_LEGEND_SHAPES=Object.freeze({
  "shipwreck":"M2 13h20l-5 6H7z M6 13V7h7v6 M13 10h4v3 M2 22q3-2 6 0t6 0t6 0",
  "smoke-products":"M4 8l8-4 8 4v12H4z M4 8l8 4 8-4 M12 12v8 M8 6l8 4",
  "ls-tags":"M8 7h8l2 4v10H6V11z M9 7V3h6v4 M18 4l3-1 M19 7h3 M9 12h6",
- "hidden-caches":"M4 8h16v12H4z M4 13h16 M10 11h4v4h-4z M7 4h10v4",
+ "hidden-caches":"M3 9h18v9H3z M3 13h18 M10 11h4v4h-4z M2 5q3-3 6 0t6 0t8 0 M2 21q3-3 6 0t6 0t8 0",
  "junk-skydives":"M2 11a10 10 0 0 1 20 0H2z M2 11l10 10 10-10 M7 11l5 10 5-10 M12 11V2",
  "cayo-chests":"M3 10a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v10H3z M3 11h18 M10 9h4v6h-4z",
  "cayo-stashes":"M13 3l5 5 M15 5l-7 8 M8 13l-5-1 1 5 4 4 5-1-1-5z",
@@ -517,10 +517,10 @@ function renderGameplayLegend(root,rows,query){
    const rule=C.BY_ID[id];if(!rule||!matchesQuery(rule.name,id))continue;
    const island=id==='cayo-chests'||id==='cayo-stashes',feed=C.rotationFeed(cache?.feed,id,cache?.now),found=rows.filter(r=>matchesEventResearch(rule,r));
    const eligible=found.filter(r=>!conditionForRecord(r,cache)?.hide),status=C.evaluate(id,{mode:'online',state:cache?.save||{},snapshot:cache?.feed,now:cache?.now});
-   const detail=feed?(island?feed.active.size+' dated · island map':eligible.length+'/'+rule.today+' mapped · calculated'):status.status==='closed'?'Inactive':rule.kind==='rotation'?'Unconfirmed · '+rule.today+' expected':found.length?'Not confirmed active':'No current mapped evidence';
+   const detail=feed?(island?feed.active.size+' dated · Cayo island map':eligible.length+'/'+rule.today+' mapped · calculated'):status.status==='closed'?'Inactive':rule.kind==='rotation'?'Unconfirmed · '+rule.today+' expected':found.length?'Not confirmed active':'No current mapped evidence';
    const on=isOnlineCleanView()?(onlineSelectedLayers.has('event:'+id)||(automaticDailyLayers&&found.some(r=>defaultDailyRecord(r,cache)))):!eventHidden.has(id)&&found.some(r=>enabled().has(r.category));
-   const focus=island?()=>{location.href='./heist-cayo-perico.html'}:()=>{eventHidden.delete(id);showPins=true;const result=bridge?.focus(rule,{center:true});if(!result?.available)toast('No current eligible map pins. See activity details for evidence.');};
-   group.append(quickLegendRow(id,rule.name,detail,on,()=>{if(island){focus();return}if(onlineCleanView){setOnlineLayers(['event:'+id],!on);return}dropEventFocus();if(on)eventHidden.add(id);else{eventHidden.delete(id);showPins=true;const cats=active[filterScope()];if(cats)for(const r of found)cats.add(r.category);const hidden=namedHidden();for(const r of found)for(const [key,,pred] of NAMED_LAYERS)if(pred(r))hidden.delete(key);hiddenNamed[namedScope()]=[...hidden];store('jura62-named-layers',hiddenNamed)}page=0;render()},focus,feed&&eligible.length?'#ffe48b':GAMEPLAY_EVENT_COLORS[id]||'#e9c789'));
+   const focus=island?()=>{location.href=id==='cayo-chests'?'./heist-cayo-perico.html#j4740-chests':'./heist-cayo-perico.html#j4740-stashes'}:()=>{eventHidden.delete(id);showPins=true;const result=bridge?.focus(rule,{center:true});if(!result?.available)toast('No current eligible map pins. See activity details for evidence.');};
+   group.append(quickLegendRow(id,id==='hidden-caches'?'Hidden Caches · Los Santos underwater':rule.name,detail,on,()=>{if(island){focus();return}if(onlineCleanView){setOnlineLayers(['event:'+id],!on);return}dropEventFocus();if(on)eventHidden.add(id);else{eventHidden.delete(id);showPins=true;const cats=active[filterScope()];if(cats)for(const r of found)cats.add(r.category);const hidden=namedHidden();for(const r of found)for(const [key,,pred] of NAMED_LAYERS)if(pred(r))hidden.delete(key);hiddenNamed[namedScope()]=[...hidden];store('jura62-named-layers',hiddenNamed)}page=0;render()},focus,feed&&eligible.length?'#ffe48b':GAMEPLAY_EVENT_COLORS[id]||'#e9c789'));
   }
   if(group.childElementCount>1)root.append(group);
  }
