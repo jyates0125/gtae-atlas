@@ -1,0 +1,37 @@
+name: Elario seasonal artwork - integrity and calendar
+on:
+  pull_request:
+    branches: [development, main]
+    paths:
+      - 'art/elario-thanksgiving-2026.webp'
+      - 'elario-seasonal-2026.*'
+      - 'index.html'
+      - 'elario.html'
+      - 'scripts/test_elario_seasonal_2026.py'
+      - '.github/workflows/elario-seasonal-artwork.yml'
+permissions:
+  contents: read
+jobs:
+  seasonal:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            browser: chromium
+          - os: windows-latest
+            browser: msedge
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright
+      - run: python -m playwright install ${{ matrix.browser }}
+      - run: python scripts/test_elario_seasonal_2026.py
+        env:
+          ATLAS_BROWSER: ${{ matrix.browser }}
