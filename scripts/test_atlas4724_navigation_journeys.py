@@ -146,6 +146,9 @@ try:
             page.locator("#j132-search").fill("Gun Van")
             page.locator('#j132-nav-drawer a[href="./atlas-online.html?event=gun-van#j393-online-activity-slot"]').click()
             expect(page).to_have_url(base+"atlas-online.html?event=gun-van#j393-online-activity-slot")
+            # Initialization must finish before verifying the fragment; a transient URL is not enough.
+            page.wait_for_function("document.querySelector('#gameOnline')?.getAttribute('aria-pressed') === 'true' && window.JuraDualLegendAPI",timeout=25000)
+            expect(page).to_have_url(base+"atlas-online.html?event=gun-van#j393-online-activity-slot")
             legend=page.locator("#j393-online-activity-slot #j88-events")
             expect(legend).to_be_visible(timeout=20000)
             expect(legend.get_by_role("searchbox")).to_have_value("Gun Van location")
