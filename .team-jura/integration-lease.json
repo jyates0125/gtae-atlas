@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "free",
-  "owner": null,
-  "token": null,
-  "acquiredAtUtc": null,
-  "reviewAfterUtc": null,
+  "state": "held",
+  "owner": "manual-concurrency-probe",
+  "token": "probe-c5e1276fc24e",
+  "acquiredAtUtc": "2026-11-27T14:34:14.271Z",
+  "reviewAfterUtc": "2026-11-27T14:49:14.271Z",
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal."
 }
