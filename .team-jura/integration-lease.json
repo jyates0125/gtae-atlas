@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "held",
-  "owner": "manual Aura integrate CI correction #307",
-  "token": "manual-ci307-20261127T181925Z",
-  "acquiredAtUtc": "2026-11-27T18:19:25Z",
-  "reviewAfterUtc": "2026-11-27T18:29:25Z",
+  "state": "free",
+  "owner": null,
+  "token": null,
+  "acquiredAtUtc": null,
+  "reviewAfterUtc": null,
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal.",
-  "previousToken": "manual-charter306-20261127T181540Z",
-  "lastReleaseUtc": "2026-11-27T18:15:40Z",
+  "previousToken": "manual-ci307-20261127T181925Z",
+  "lastReleaseUtc": "2026-11-27T18:19:25Z",
   "lastProbe": "competing update rejected"
 }
