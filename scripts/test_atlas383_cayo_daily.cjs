@@ -7,8 +7,8 @@ assert.equal(current.land,8);assert.equal(current.underwater,14);assert.equal(cu
 assert.equal(current.windowEndUTC,'2026-11-24T06:00:00.000Z');assert.equal(current.confidence,'calculated_unconfirmed_in_game');
 for(const ids of [['cayo-chest-1','cayo-chest-2'],['cayo-chest-11','cayo-chest-12'],['cayo-chest-0','cayo-chest-14'],['cayo-chest-1','cayo-chest-20'],['cayo-chest-1'],['8','14']]){assert.equal(C.cayoChestSelection(pack(ids),now),null);assert.deepEqual(C.mergePublishedRotations([pack(ids)],now),{schema:1,rotations:{}})}
 assert.equal(C.cayoChestSelection(s,end),null);assert.deepEqual(C.mergePublishedRotations([s],end),{schema:1,rotations:{}});
-const f=fs.readFileSync('atlas180-cayo-flagship.js','utf8');assert.match(f,/C\.refreshPublishedRotations/);assert.match(f,/personal\?\.day===key/);assert.match(f,/onlyIds:\['cayo-chests'\]/);assert.match(f,/teamjura-cayo-daily-choice-v1/);
-assert.match(fs.readFileSync('heist-cayo-perico.html','utf8'),/atlas-conditions\.js\?v=4722/);
+const f=fs.readFileSync('atlas180-cayo-flagship.js','utf8');assert.match(f,/C\.refreshPublishedRotations/);assert.match(f,/personal\?\.day===key/);assert.match(f,/onlyIds:\['cayo-chests','cayo-stashes'\]/);assert.match(f,/teamjura-cayo-daily-choice-v1/);
+assert.match(fs.readFileSync('heist-cayo-perico.html','utf8'),/atlas-conditions\.js\?v=4740/);
 console.log('PASS Cayo published rotation, exact island IDs, one land/one underwater, expiry and guest override');
 
 // Availability must not convert missing evidence into a false inactive claim.
@@ -46,3 +46,20 @@ assert.equal(C.activityGuidance('slashers',slasher).length,6);
 assert.ok(C.activityGuidance('slashers',slasher).every(step=>step.met));
 assert.ok(C.activityGuidance('ls-tags',{}).some(step=>step.label==='Collected a spray can'&&!step.met));
 assert.ok(C.activityGuidance('story-nuclear',{}).some(step=>!step.met));
+
+// Cayo stash feed is separate from mainland, with strict ID/catalog/expiry validation.
+const stashRows=[18,19].map((n,i)=>({id:'cayo-stash-'+n,activityId:'cayo-stashes',name:'QA search area '+n,x:4348-i*113,y:-4311-i*241,sourceUrl:'https://gtamap.io/gta-online/daily/buried-stashes/',comparisonSource:'https://www.gtaboss.gg/gta-5-online/dailies',confidence:'source-crosschecked'}));
+const stashPack={schema:1,islandCatalog:stashRows,rotations:{'cayo-stashes':{activeIds:stashRows.map(r=>r.id),checkedAtUtc:new Date(now-1000).toISOString(),validUntilUtc:new Date(end).toISOString()}}};
+assert.equal(C.safeCayoStashCatalog(stashRows).length,2);
+assert.equal(C.rotationFeed(stashPack,'cayo-stashes',now).active.size,2);
+assert.equal(C.rotationFeed(stashPack,'cayo-stashes',end),null);
+assert.equal(C.rotationFeed({...stashPack,islandCatalog:stashRows.slice(0,1)},'cayo-stashes',now),null);
+assert.equal(C.safeCayoStashCatalog([{...stashRows[0],x:0}]).length,0);
+assert.equal(C.safeCayoStashCatalog([{...stashRows[0],comparisonSource:'https://www.gtamap.io/test'}]).length,0);
+assert.equal(C.safeCayoStashCatalog([{...stashRows[0],id:'cayo-stash-21'}]).length,0);
+assert.equal(C.mainlandRotationReferences('online',stashPack).some(r=>r.activityId==='cayo-stashes'),false);
+assert.equal(C.mergePublishedRotations([stashPack,s],now).islandCatalog.length,2);
+assert.equal(C.mergePublishedRotations([stashPack,s],now).rotations['cayo-chests'].activeIds.length,2);
+assert.equal(C.mergePublishedRotations([stashPack],end).islandCatalog.length,2);
+assert.equal(C.mergePublishedRotations([stashPack],end).rotations['cayo-stashes'],undefined);
+console.log('PASS Cayo stash catalog, scope, source validation, current/expired selection and chest preservation');

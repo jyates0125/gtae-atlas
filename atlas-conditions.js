@@ -106,6 +106,18 @@ function safeMainlandCatalog(raw){
  }
  return out;
 }
+// Cayo search areas have a separate catalog, never mainland marker records.
+function safeCayoStashCatalog(raw){
+ if(!Array.isArray(raw)||raw.length>20)return [];
+ const out=[],seen=new Set();
+ for(const row of raw){
+  if(!row||row.activityId!=='cayo-stashes'||typeof row.id!=='string'||!/^cayo-stash-(?:[1-9]|1[0-9]|20)$/.test(row.id)||seen.has(row.id)||typeof row.name!=='string'||!row.name.trim()||row.name.length>120||!Number.isFinite(row.x)||!Number.isFinite(row.y)||row.x<3803||row.x>5640||row.y< -6066||row.y> -4240||row.confidence!=='source-crosschecked')continue;
+  const sourceUrl=safeCatalogSource(row.sourceUrl),comparisonSource=safeCatalogSource(row.comparisonSource);
+  if(!sourceUrl||!comparisonSource||new URL(sourceUrl).hostname.replace(/^www\./,'')===new URL(comparisonSource).hostname.replace(/^www\./,''))continue;
+  seen.add(row.id);out.push({id:row.id,activityId:'cayo-stashes',name:row.name.trim(),x:row.x,y:row.y,sourceUrl,comparisonSource,confidence:'source-crosschecked'});
+ }
+ return out;
+}
 function mainlandRotationReferences(mode,snapshot){
  if(mode!=='online')return [];
  const byId=new Map(MAINLAND_ROTATION_REFERENCES.map(r=>[r.rotationMarkerId,r]));
@@ -181,6 +193,10 @@ function rotationFeed(snapshot,id,now=Date.now()){
  if(checked>now+5*60e3||end<=now||end<=checked||checked<now-48*3600e3||s.activeIds.length>200||s.activeIds.some(v=>!/^[-a-z0-9_:]{1,80}$/i.test(String(v))))return null;
  const rule=BY_ID[id];if(!rule||rule.kind!=='rotation'||(rule.today&&s.activeIds.length!==rule.today))return null;
  if(id==='cayo-chests'&&!validCayoIds(s.activeIds))return null;
+ if(id==='cayo-stashes'){
+  const known=new Set(safeCayoStashCatalog(snapshot?.islandCatalog).map(r=>r.id));
+  if(s.activeIds.some(id=>typeof id!=='string'||!known.has(id)))return null;
+ }
  // Daily selections cannot survive the activity's next UTC reset, even when an imported file says otherwise.
  if(end>nextReset(checked,rule.reset??6)||now>=nextReset(checked,rule.reset??6)||nextReset(checked,rule.reset??6)!==nextReset(now,rule.reset??6))return null;
  if(!s.activeIds.length||new Set(s.activeIds.map(String)).size!==s.activeIds.length)return null;
@@ -194,7 +210,8 @@ function selectRotationSnapshot(personal,reviewed,now=Date.now()){
   const choice=rotationFeed(personal,id,now)?personal.rotations[id]:rotationFeed(reviewed,id,now)?reviewed.rotations[id]:personal?.rotations?.[id]||reviewed?.rotations?.[id];
   if(choice)rotations[id]=choice;
  }
- return {schema:1,rotations};
+ const islandCatalog=safeCayoStashCatalog(reviewed?.islandCatalog);
+ return {schema:1,rotations,...(islandCatalog.length?{islandCatalog}:{})};
 }
 function evaluate(id,ctx={}){
  const r=BY_ID[id];if(!r)return{status:'unknown',reason:'Rule not recognized'};if(ctx.mode&&ctx.mode!==r.mode)return{status:'excluded',reason:'This activity belongs to '+r.mode+', not '+ctx.mode};
@@ -301,6 +318,11 @@ function mergePublishedRotations(snapshots,now=Date.now()){
  // corrections take precedence over cached and bundled records.
  const catalog=[],catalogCounts={};for(const snapshot of snapshots)for(const row of safeMainlandCatalog(snapshot?.catalog)){if(catalog.some(r=>r.id===row.id)||(catalogCounts[row.activityId]||0)>=(BY_ID[row.activityId].pool||100))continue;catalog.push(row);catalogCounts[row.activityId]=(catalogCounts[row.activityId]||0)+1;}
  const accepted=safeMainlandCatalog(catalog);if(accepted.length)out.catalog=accepted;
+ const islandById=new Map();
+ for(const snapshot of snapshots)for(const row of safeCayoStashCatalog(snapshot?.islandCatalog))if(!islandById.has(row.id))islandById.set(row.id,row);
+ if(islandById.size)out.islandCatalog=safeCayoStashCatalog([...islandById.values()]);
+ // A chosen island rotation must resolve every ID in the merged catalog.
+ if(out.rotations['cayo-stashes']&&!rotationFeed(out,'cayo-stashes',now))delete out.rotations['cayo-stashes'];
  const supported=[...new Set(snapshots.flatMap(s=>Array.isArray(s?.supportedGroups)?s.supportedGroups:[]).filter(id=>BY_ID[id]?.kind==='rotation'))];if(supported.length)out.supportedGroups=supported;
  return out;
 }
@@ -311,6 +333,7 @@ function safePublishedSnapshot(s){
  if(!s||s.schema!==1||!s.rotations||typeof s.rotations!=='object'||Array.isArray(s.rotations))throw Error('Expected schema 1 with a rotations object.');
  const result={schema:1,rotations:{}};
  const catalog=safeMainlandCatalog(s.catalog);if(catalog.length)result.catalog=catalog;
+ const islandCatalog=safeCayoStashCatalog(s.islandCatalog);if(islandCatalog.length)result.islandCatalog=islandCatalog;
  if(Array.isArray(s.supportedGroups)){const ids=[...new Set(s.supportedGroups.filter(id=>typeof id==='string'&&BY_ID[id]?.kind==='rotation'))];if(ids.length)result.supportedGroups=ids;}
  for(const [id,value] of Object.entries(s.rotations)){
   if(BY_ID[id]?.kind!=='rotation')continue;
@@ -335,5 +358,5 @@ async function loadPublishedRotations(fetcher,localURL='./data/online-rotation-c
  // snapshot or last successful fetch. Newer observation timestamps still win.
  return mergePublishedRotations([responses[1].status==='fulfilled'?responses[1].value:null,previous,responses[0].status==='fulfilled'?responses[0].value:null],now);
 }
-return{ROTATION_PERIOD_MS,ROTATION_REFRESH_MS,ROTATION_STATUS_MS,ROTATION_CACHE_KEY,rotationRefreshDue,expectedRotationGroups,refreshPublishedRotations,mainlandRotationReferences,safeMainlandCatalog,activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
+return{ROTATION_PERIOD_MS,ROTATION_REFRESH_MS,ROTATION_STATUS_MS,ROTATION_CACHE_KEY,rotationRefreshDue,expectedRotationGroups,refreshPublishedRotations,mainlandRotationReferences,safeMainlandCatalog,safeCayoStashCatalog,activityGuidance,SLASHER_ZONES,markerAvailability,cayoChestSelection,loadPublishedRotations,mergePublishedRotations,PUBLISHED_ROTATIONS_URL,RULES,STORY_RULES,VI_RULES,BY_ID,rulesForMode,PREREQS,EVENT_NAMES,GH,evaluate,rotationFeed,selectRotationSnapshot,nextReset,safeState,emptyState,safeSnapshot,markerColor,statusText};
 });

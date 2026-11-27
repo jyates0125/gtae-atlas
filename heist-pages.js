@@ -159,8 +159,8 @@ if(document.body.classList.contains('j120-heist-page')){
   const cayoStyle=document.createElement('link');cayoStyle.rel='stylesheet';cayoStyle.href='./atlas171-cayo-board.css?v=171';document.head.append(cayoStyle);
   const cayo=document.createElement('script');cayo.async=false;cayo.src='./atlas171-cayo-board.js?v=171';document.body.append(cayo);
   // Nov 20 owner-approved Cayo flagship: map-first purple/gold layout with dated chests.
-  const flagshipStyle=document.createElement('link');flagshipStyle.rel='stylesheet';flagshipStyle.href='./atlas180-cayo-flagship.css?v=180';document.head.append(flagshipStyle);
-  const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=4722';document.body.append(flagship);
+  const flagshipStyle=document.createElement('link');flagshipStyle.rel='stylesheet';flagshipStyle.href='./atlas180-cayo-flagship.css?v=4740';document.head.append(flagshipStyle);
+  const flagship=document.createElement('script');flagship.async=false;flagship.src='./atlas180-cayo-flagship.js?v=4740';document.body.append(flagship);
   const iconsStyle=document.createElement('link');iconsStyle.rel='stylesheet';iconsStyle.href='./atlas181-cayo-hotspots.css?v=202';document.head.append(iconsStyle);
   const icons=document.createElement('script');icons.async=false;icons.src='./atlas181-cayo-hotspots.js?v=191';document.body.append(icons);
   // The Cayo page loads its map geometry before deferred scripts initialize.
