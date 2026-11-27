@@ -1,6 +1,6 @@
 /* The full artwork is shown only after successful loading. Archive stays after season. */
 (()=>{'use strict';
- const expires=Date.parse('2026-12-26T06:00:00Z');
+ const expires=Date.parse('2026-12-01T06:00:00Z');
  const starts=Date.parse('2026-11-26T06:00:00Z');
  const now=Date.now();
  for(const figure of document.querySelectorAll('[data-elario-seasonal-card]')){
