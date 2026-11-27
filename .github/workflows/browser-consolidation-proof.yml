@@ -22,3 +22,4 @@ jobs:
         with:
           python-version: '3.12'
       - run: python scripts/audit_browser_consolidation.py
+      - run: python scripts/audit_cayo_validation_inventory.py
