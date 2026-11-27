@@ -167,7 +167,7 @@ function renderFeaturedCast(){
   });
   if(typeof c.conceptPortrait==='string'&&/^art\/[a-z0-9-]+\.(?:webp|png|jpe?g)$/i.test(c.conceptPortrait)){
    img.dataset.art='concept';img.alt='Elario fan concept of '+c.name;credit.textContent='Fan concept';
-   a.title=c.name+' · Elario illustrated fan concept';img.src='./'+c.conceptPortrait;
+   a.title=c.name+' · Elario illustrated fan concept';if(window.JuraDashboardArt?.lite)img.dataset.j4750Src='./'+c.conceptPortrait;else img.src='./'+c.conceptPortrait;
   }else if(typeof c.image==='string'&&/^https:\/\/[a-z0-9.-]+\//i.test(c.image)){
    img.dataset.art='reference';img.alt='Sourced reference portrait of '+c.name;credit.textContent='Reference';img.src=c.image;
   }else scene();
@@ -197,5 +197,5 @@ document.querySelectorAll('.j223-evidence-card').forEach(card=>{
 });
 indexCharacters(featuredFallback);
 renderFeaturedCast();
-loadCharacterIndex();
+if(window.JuraDashboardArt?.lite)input?.addEventListener('focus',loadCharacterIndex,{once:true});else loadCharacterIndex();
 })();

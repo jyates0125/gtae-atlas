@@ -188,6 +188,22 @@ try:
    page.screenshot(path=str(out/('atlas223-home-'+str(width)+'.png')),full_page=False,animations='disabled',timeout=20000)
    print('PASS GTAE 22.3 '+engine+' '+str(width)+': seven worlds, thirteen shortcuts, searchable characters, source links and no overflow',flush=True)
    ctx.close()
+  # Real low-graphics entry on a narrow viewport: no cinematic WebP downloads,
+  # static links and full search remain functional, no guest data cleared.
+  ctx=browser.new_context(viewport={'width':390,'height':844},reduced_motion='reduce')
+  page=ctx.new_page();art=[]
+  page.on('request',lambda req:art.append(req.url) if '/art/' in req.url and '.webp' in req.url else None)
+  page.goto(base+'atlas-dashboard.html?lite=1',wait_until='domcontentloaded',timeout=60000)
+  expect(page.locator('html')).to_have_attribute('data-j4750-mode','lite')
+  expect(page.locator('.j223-world-card')).to_have_count(7)
+  expect(page.locator('#j132-nav-toggle')).to_be_visible()
+  assert page.locator('img[data-j4750-src][src]').count()==0
+  assert 'url(' not in page.locator('.j223-hero').evaluate('(el)=>getComputedStyle(el).backgroundImage')
+  assert not art,art
+  page.locator('#j223-search-input').fill('Gun Van')
+  expect(page.locator('#j223-search-results a[href="./atlas-online.html?event=gun-van#j393-online-activity-slot"]')).to_have_count(1)
+  expect(page.locator('#j4750-mode-link')).to_have_attribute('href','./atlas-dashboard.html')
+  ctx.close()
   browser.close()
 finally:
  server.shutdown()
