@@ -210,13 +210,33 @@ function records(){
 function specialized(kind){return records().filter(p=>kind==='collections'?p.category==='collectible':kind==='vehicles'?p.category==='vehicle':kind==='properties'?p.category==='property':false)}
 const filterScope=()=>game==='6'?'6':mode==='online'?'5-online':'5-story';
 const enabled=()=>active[filterScope()]||new Set(Object.keys(CATEGORIES));
-let onlineCleanView=true; // Start Online with today's eligible markers, not optional layers.
+// Opt-in gameplay layers are independent of the older broad category preferences.
+let onlineCleanView=true;
+const onlineSelectedLayers=new Set();
 function isOnlineCleanView(){return game==='5'&&mode==='online'&&onlineCleanView&&!eventFocusIds;}
-function exitOnlineCleanForEdit(){if(isOnlineCleanView()){onlineCleanView=false;active[filterScope()]=new Set();}}
+function onlineLayerMatches(r,keys){
+ for(const key of keys){
+  if(key.startsWith('category:')&&r.category===key.slice(9))return true;
+  if(key.startsWith('event:')&&matchesEventResearch({id:key.slice(6)},r))return true;
+  if(key.startsWith('collection-type:')&&gameplayCollectionKey(r)===key.slice(16))return true;
+  if(key.startsWith('named:')){
+   const id=key.slice(6);
+   if(id.startsWith('collection:')&&r.collectionType&&collectionLayerId(r.collectionType)===id)return true;
+   const layer=NAMED_LAYERS.find(l=>l[0]===id);if(layer?.[2](r))return true;
+  }
+ }
+ return false;
+}
+function setOnlineLayers(keys,show=true,only=false){
+ dropEventFocus();onlineCleanView=true;if(only)onlineSelectedLayers.clear();
+ for(const key of keys){if(show)onlineSelectedLayers.add(key);else onlineSelectedLayers.delete(key)}
+ eventHidden.clear();showPins=true;selected=null;page=0;render();
+}
+function exitOnlineCleanForEdit(){if(isOnlineCleanView())onlineCleanView=false;}
 function matches(){
  // An explicit event focus is temporary. Never mutate stored category or named-layer choices.
  if(eventFocusIds)return records().filter(r=>eventFocusIds.has(r.id));
- const query=$('search').value.trim().toLowerCase(),district=$('districtFilter').value.trim().toLowerCase(),categories=enabled(),hidden=namedHidden(),clean=isOnlineCleanView()&&!query&&!district,cache=clean?activityCache():null;return records().filter(r=>(clean?datedMainlandMarker(r,cache):categories.has(r.category)&&passesNamedLayers(r,hidden))&&(showUnverified||!r.uncertain)&&(!onlyUnfound||!progress[doneKey(r)])&&(!onlyFavorites||favorites[r.id])&&(!query||[r.name,r.address||'',r.id,r.category,r.source||'',r.collectionType||'',...(r.tags||[])].join(' ').toLowerCase().includes(query))&&(!district||[r.name,r.district||'',...(r.tags||[])].join(' ').toLowerCase().includes(district)))}
+ const query=$('search').value.trim().toLowerCase(),district=$('districtFilter').value.trim().toLowerCase(),categories=enabled(),hidden=namedHidden(),clean=isOnlineCleanView();return records().filter(r=>(clean?(!!query||!!district||onlineLayerMatches(r,onlineSelectedLayers)):categories.has(r.category)&&passesNamedLayers(r,hidden))&&(showUnverified||!r.uncertain)&&(!onlyUnfound||!progress[doneKey(r)])&&(!onlyFavorites||favorites[r.id])&&(!query||[r.name,r.address||'',r.id,r.category,r.source||'',r.collectionType||'',...(r.tags||[])].join(' ').toLowerCase().includes(query))&&(!district||[r.name,r.district||'',...(r.tags||[])].join(' ').toLowerCase().includes(district)))}
 function orderedMatches(){const list=matches();switch(listOrder){
  case 'category':list.sort((a,b)=>(CATEGORIES[a.category]?.[0]||a.category).localeCompare(CATEGORIES[b.category]?.[0]||b.category)||a.name.localeCompare(b.name));break;
  case 'nearest':list.sort((a,b)=>Math.hypot(a.x-camera.x,a.y-camera.y)-Math.hypot(b.x-camera.x,b.y-camera.y));break;
@@ -298,7 +318,7 @@ function layersForRows(rows){
 }
 function passesNamedLayers(r,hidden=namedHidden()){if(!hidden.size)return true;if(r.collectionType&&hidden.has(collectionLayerId(r.collectionType)))return false;
  return !NAMED_LAYERS.some(([id,,predicate])=>hidden.has(id)&&predicate(r))}
-function updateNamedLayerVisibility(ids,show){dropEventFocus();exitOnlineCleanForEdit();const hidden=namedHidden();const rows=records();
+function updateNamedLayerVisibility(ids,show){if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(ids.map(id=>'named:'+id),show);return}dropEventFocus();exitOnlineCleanForEdit();const hidden=namedHidden();const rows=records();
  if(show){
   showPins=true;
   // A switched-on layer must ACTUALLY display pins, including after All off.
@@ -317,8 +337,8 @@ function renderNamedLayers(){const root=$('namedLayers');if(!root)return;root.re
  const cache=activityCache();
  for(const {id,title,count,predicate}of layers){if(q&&!title.toLowerCase().includes(q))continue;rendered++;
   const states=rows.filter(predicate).map(r=>conditionForRecord(r,cache)),off=states.filter(v=>v?.hide).length,closed=states.filter(v=>v?.availability==='inactive').length;
-  const b=btn(`${title} · ${count.toLocaleString()}`,()=>{updateNamedLayerVisibility([id],hidden.has(id));},'named-layer-choice');
-  b.setAttribute('aria-pressed',String(!hidden.has(id)));b.setAttribute('aria-label',(hidden.has(id)?'Show ':'Hide ')+title+' pins');
+  const on=isOnlineCleanView()?onlineSelectedLayers.has('named:'+id):!hidden.has(id);const b=btn(`${title} · ${count.toLocaleString()}`,()=>{updateNamedLayerVisibility([id],!on);},'named-layer-choice');
+  b.setAttribute('aria-pressed',String(on));b.setAttribute('aria-label',(on?'Hide ':'Show ')+title+' pins');
   if(off){b.dataset.availability=closed===count?'inactive':off===count?'unconfirmed':'partial';const status=document.createElement('small');status.className='j393-layer-status';status.textContent=closed===count?'Not active · 0 available':off===count?'No current confirmed pins':`${count-off} eligible candidates · ${off} unavailable/unconfirmed`;b.append(status);b.title=status.textContent;}
   root.append(b);
  }
@@ -476,7 +496,7 @@ function renderGameplayLegend(root,rows,query){
    if(name==='Businesses'){
     const layer=NAMED_LAYERS.find(l=>l[0]===id);if(!layer)continue;
     const label=layer[1].replace(/^\S+\s+/,'');if(!matchesQuery(label,id))continue;
-    const found=rows.filter(layer[2]);const on=!isOnlineCleanView()&&found.length>0&&!namedHidden().has(id)&&found.some(r=>enabled().has(r.category));
+    const found=rows.filter(layer[2]);const on=isOnlineCleanView()?onlineSelectedLayers.has('named:'+id):found.length>0&&!namedHidden().has(id)&&found.some(r=>enabled().has(r.category));
     const focus=found.length?()=>{dropEventFocus();eventFocusIds=new Set(found.map(r=>r.id));eventFocusName=label;showPins=true;page=0;showTab('Find');render()}:null;
     group.append(quickLegendRow(id,label,found.length?found.length+' mapped references':'No mapped references',on,()=>{if(found.length)updateNamedLayerVisibility([id],!on);else toast('No mapped references yet.')},focus,'#e5bd86'));continue;
    }
@@ -484,9 +504,9 @@ function renderGameplayLegend(root,rows,query){
    const island=id==='cayo-chests'||id==='cayo-stashes',feed=C.rotationFeed(cache?.feed,id,cache?.now),found=rows.filter(r=>matchesEventResearch(rule,r));
    const eligible=found.filter(r=>!conditionForRecord(r,cache)?.hide),status=C.evaluate(id,{mode:'online',state:cache?.save||{},snapshot:cache?.feed,now:cache?.now});
    const detail=feed?(island?feed.active.size+' dated · island map':eligible.length+'/'+rule.today+' mapped · calculated'):status.status==='closed'?'Inactive':rule.kind==='rotation'?'Unconfirmed · '+rule.today+' expected':found.length?'Not confirmed active':'No current mapped evidence';
-   const on=!eventHidden.has(id)&&(isOnlineCleanView()?eligible.length>0:found.some(r=>enabled().has(r.category)));
+   const on=isOnlineCleanView()?onlineSelectedLayers.has('event:'+id):!eventHidden.has(id)&&found.some(r=>enabled().has(r.category));
    const focus=island?()=>{location.href='./heist-cayo-perico.html'}:()=>{eventHidden.delete(id);showPins=true;const result=bridge?.focus(rule,{center:true});if(!result?.available)toast('No current eligible map pins. See activity details for evidence.');};
-   group.append(quickLegendRow(id,rule.name,detail,on,()=>{if(island){focus();return}dropEventFocus();if(on)eventHidden.add(id);else{eventHidden.delete(id);showPins=true;const cats=active[filterScope()];if(cats)for(const r of found)cats.add(r.category);const hidden=namedHidden();for(const r of found)for(const [key,,pred] of NAMED_LAYERS)if(pred(r))hidden.delete(key);hiddenNamed[namedScope()]=[...hidden];store('jura62-named-layers',hiddenNamed)}page=0;render()},focus,feed&&eligible.length?'#ffe48b':GAMEPLAY_EVENT_COLORS[id]||'#e9c789'));
+   group.append(quickLegendRow(id,rule.name,detail,on,()=>{if(island){focus();return}if(onlineCleanView){setOnlineLayers(['event:'+id],!on);return}dropEventFocus();if(on)eventHidden.add(id);else{eventHidden.delete(id);showPins=true;const cats=active[filterScope()];if(cats)for(const r of found)cats.add(r.category);const hidden=namedHidden();for(const r of found)for(const [key,,pred] of NAMED_LAYERS)if(pred(r))hidden.delete(key);hiddenNamed[namedScope()]=[...hidden];store('jura62-named-layers',hiddenNamed)}page=0;render()},focus,feed&&eligible.length?'#ffe48b':GAMEPLAY_EVENT_COLORS[id]||'#e9c789'));
   }
   if(group.childElementCount>1)root.append(group);
  }
@@ -504,16 +524,16 @@ function todayFocusRows(rows,cache){
  return rows.filter(r=>datedMainlandMarker(r,cache)&&!conditionForRecord(r,cache)?.hide&&(!onlyUnfound||!progress[doneKey(r)]));
 }
 function renderTodayFocusControl(root,rows){
- const cache=activityCache(),available=todayFocusRows(rows,cache),on=eventFocusName===TODAY_FOCUS_NAME||isOnlineCleanView();
+ const cache=activityCache(),available=todayFocusRows(rows,cache),on=eventFocusName===TODAY_FOCUS_NAME;
  if(eventFocusName===TODAY_FOCUS_NAME)eventFocusIds=new Set(available.map(r=>r.id));
- const toggle=btn(on?'My saved filters':"Today's pins only · "+available.length,()=>{
-  if(on){dropEventFocus();onlineCleanView=false;page=0;render();return}
+ const toggle=btn(on?'Return to selected layers':"Today's pins only · "+available.length,()=>{
+  if(on){dropEventFocus();page=0;render();return}
   dropEventFocus();eventFocusName=TODAY_FOCUS_NAME;eventFocusIds=new Set(available.map(r=>r.id));showPins=true;page=0;showTab('Find');
   if(selected&&!eventFocusIds.has(selected.id))selected=null;
   render();
  },'j4730-today-focus');
  toggle.setAttribute('aria-pressed',String(on));root.append(toggle);const top=$('j4731-today-map');if(top){top.hidden=false;top.textContent='Today · '+available.length;top.setAttribute('aria-pressed',String(on));}
- const hint=document.createElement('small');hint.className='j4730-today-note';hint.textContent='Temporary view · current mapped mainland selections only. Cayo has its own map.';root.append(hint);
+ const hint=document.createElement('small');hint.className='j4730-today-note';hint.textContent='Tap any category to show or hide just its markers. Today is a temporary view; Cayo has its own map.';root.append(hint);const saved=btn(onlineCleanView?'Use previous filters':'Use click-to-show layers',()=>{dropEventFocus();onlineCleanView=!onlineCleanView;selected=null;page=0;render()},'legend-only');root.append(saved);
 }
 const legendOpenStates=new Map();
 function renderLegend(){
@@ -525,22 +545,22 @@ function renderLegend(){
  if(online){renderTodayFocusControl(root,rows);renderGameplayLegend(root,rows,query);}
  if(game==='5'){
  const group=document.createElement('details');group.className='legend-group j4730-gameplay-group';group.dataset.group='Collectible types';group.open=!!query||(legendOpenStates.get('Collectible types')??false);const summary=document.createElement('summary');summary.textContent='Collectible types';group.append(summary);
- for(const [key,title] of GAMEPLAY_COLLECTIONS){if(query&&!(title+' '+key).toLowerCase().includes(query))continue;const found=rows.filter(r=>gameplayCollectionKey(r)===key);if(!found.length)continue;const on=eventFocusName===title,focus=()=>{if(on){dropEventFocus();page=0;render();return}dropEventFocus();eventFocusIds=new Set(found.map(r=>r.id));eventFocusName=title;showPins=true;page=0;showTab('Find');render()};group.append(quickLegendRow(key,title,found.length+' mapped',on,focus,focus,'#dce7ab'));}
+ for(const [key,title] of GAMEPLAY_COLLECTIONS){if(query&&!(title+' '+key).toLowerCase().includes(query))continue;const found=rows.filter(r=>gameplayCollectionKey(r)===key);if(!found.length)continue;const on=isOnlineCleanView()?onlineSelectedLayers.has('collection-type:'+key):eventFocusName===title,focus=()=>{if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(['collection-type:'+key],!on);return}if(on){dropEventFocus();page=0;render();return}dropEventFocus();eventFocusIds=new Set(found.map(r=>r.id));eventFocusName=title;showPins=true;page=0;showTab('Find');render()};group.append(quickLegendRow(key,title,found.length+' mapped',on,focus,focus,'#dce7ab'));}
  if(group.childElementCount>1)root.append(group);
  }
  const ordered=game==='5'?[LEGEND_GROUPS[1],LEGEND_GROUPS[3],LEGEND_GROUPS[2],LEGEND_GROUPS[0]]:LEGEND_GROUPS;
  for(const [name,keys] of ordered){if(!keys.some(k=>counts[k]))continue;
   const group=document.createElement('details');group.className='legend-group';group.dataset.group=name;group.open=!!query||(legendOpenStates.get(name)??(game==='6'||(!online&&name===ordered[0][0])));
   const summary=document.createElement('summary');summary.textContent=name;group.append(summary);
-  for(const cat of keys){if(!counts[cat])continue;const [title,color]=CATEGORIES[cat],on=!isOnlineCleanView()&&chosen.has(cat);if(query&&!(title+' '+cat).toLowerCase().includes(query))continue;
+  for(const cat of keys){if(!counts[cat])continue;const [title,color]=CATEGORIES[cat],on=isOnlineCleanView()?onlineSelectedLayers.has('category:'+cat):chosen.has(cat);if(query&&!(title+' '+cat).toLowerCase().includes(query))continue;
    const row=document.createElement('div');row.className='legend-row';
    const toggle=btn(`${title} · ${counts[cat].toLocaleString()}`,()=>{
-    dropEventFocus();exitOnlineCleanForEdit();if(!active[filterScope()])active[filterScope()]=new Set(Object.keys(CATEGORIES));
+    if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(['category:'+cat],!on);return}dropEventFocus();exitOnlineCleanForEdit();if(!active[filterScope()])active[filterScope()]=new Set(Object.keys(CATEGORIES));
     if(active[filterScope()].has(cat))active[filterScope()].delete(cat);else active[filterScope()].add(cat);
     showPins=true;page=0;render();announce(`${title} ${active[filterScope()].has(cat)?'shown':'hidden'} on map`);
    });toggle.className='legend-choice';toggle.setAttribute('aria-pressed',String(on));toggle.title=`${on?'Hide':'Show'} ${title} pins`;
    const dot=document.createElement('i');dot.className='legend-symbol';dot.style.borderColor=color;if(game==='5')dot.style.color=color;if(game==='6'&&cat==='landmark'){dot.classList.add('j371-landmark-legend');dot.textContent='◆';}else dot.append(elarioLegendGlyph(cat));toggle.prepend(dot);
-   const only=btn('Only',()=>{dropEventFocus();if(game==='5'&&mode==='online')onlineCleanView=false;active[filterScope()]=new Set([cat]);showPins=true;page=0;render();announce('Showing only '+title+' on map');},'legend-only');
+   const only=btn('Only',()=>{if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(['category:'+cat],true,true);return}dropEventFocus();if(game==='5'&&mode==='online')onlineCleanView=false;active[filterScope()]=new Set([cat]);showPins=true;page=0;render();announce('Showing only '+title+' on map');},'legend-only');
    row.append(toggle,only);group.append(row);
   }if(group.childElementCount>1)root.append(group);
  }
@@ -700,7 +720,7 @@ function importPackObject(pack){
 }
 function readPacks(){const packs=loadStore('jura-atlas-v5-packs',{});packRecords=Object.values(packs).flatMap(v=>Array.isArray(v.records)?v.records:[]);if($('packCount'))$('packCount').textContent=packRecords.length.toLocaleString()+' imported locations';render()}
 async function readPack(file){if(!file)return;try{if(file.size>2500000)throw Error('Maximum pack size is 2.5 MB');const payload=JSON.parse(await file.text());const n=importPackObject(payload);toast(`${n} source-attributed records imported. Check the locations on their correct game maps.`)}catch(e){toast('Could not import locations: '+e.message)}finally{$('packFile').value=''}}
-function render(){savedCategoryMode();const pinButton=$('togglePins');if(pinButton){const visible=pinsVisible()&&(!!eventFocusIds||isOnlineCleanView()||enabled().size>0);pinButton.textContent=visible?'📍 Pins on':'📍 Pins off';pinButton.setAttribute('aria-pressed',String(visible));}renderLegend();renderViRegions();renderServices();renderFind();renderRoute();renderPins();renderSpecial('Collections');renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
+function render(){savedCategoryMode();const pinButton=$('togglePins');if(pinButton){const visible=pinsVisible()&&(!!eventFocusIds||(isOnlineCleanView()?onlineSelectedLayers.size>0||!!$('search').value.trim()||!!$('districtFilter').value.trim():enabled().size>0));pinButton.textContent=visible?'📍 Pins on':'📍 Pins off';pinButton.setAttribute('aria-pressed',String(visible));}renderLegend();renderViRegions();renderServices();renderFind();renderRoute();renderPins();renderSpecial('Collections');renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
 function switchGame(g){if(!['5','6','online'].includes(g))return;dropEventFocus();chooseRouteStartMode=false;mode=g==='online'?'online':'story';game=g==='6'?'6':'5';const activeLink=$('activityModeLink');if(activeLink){const which=g==='6'?'vi':g==='online'?'online':'story';activeLink.href='./atlas-activities.html?mode='+which;activeLink.textContent=which==='vi'?'◷ Leonida · Research & verification':which==='online'?'◷ Online events · timers & spawns':'◷ Story Mode challenges · no Online events';}selected=null;coordinateTarget=null;addPinMode=false;$('game5').classList.toggle('active',g==='5');$('game6').classList.toggle('active',g==='6');$('gameOnline').classList.toggle('active',g==='online');$('game5').setAttribute('aria-pressed',String(g==='5'));$('game6').setAttribute('aria-pressed',String(g==='6'));$('gameOnline').setAttribute('aria-pressed',String(g==='online'));$('mapTitle').textContent=g==='6'?'GTA VI · Leonida':g==='online'?'GTA Online · Los Santos':'GTA V · Los Santos';$('mapSubtitle').textContent=g==='6'?'GTADB VI · provisional landmarks, NOT confirmed game locations':g==='online'?'Shared GTA V terrain · separate Online markers and progress':'GTADB GTA V · Story map landmarks';
  $('layer').replaceChildren();for(const [key,label] of LAYERS[game])$('layer').add(new Option(label,key));if(!$('layer').querySelector('option[value="'+styles[game]+'"]'))styles[game]=game==='6'?'scaly,view':'radar';$('layer').value=styles[game];$('search').value='';if($('namedLayerSearch'))$('namedLayerSearch').value='';onlyUnfound=false;onlyFavorites=false;showUnverified=true;$('showUnverified').checked=true;if($('showCommunityResearch'))$('showCommunityResearch').checked=researchOn();$('hideFound').checked=false;$('favoritesOnly').checked=false;page=0;fitGame();render();renderSources();dataNotice(datasets[game].length?datasets[game].length.toLocaleString()+' landmarks · '+dataOrigins[game]:'Getting GTA '+game+' locations…');tileHealth();
  navPlan=null;navPlanScope=null;if(window.teamJuraNav)window.teamJuraNav.gameChanged();
@@ -1173,14 +1193,14 @@ window.JuraAtlasEventLocations=Object.freeze({
 
 window.JuraDualLegendAPI=Object.freeze({
  state:()=>({game,style:styles[game],mode}),
- categories:()=>Object.entries(CATEGORIES).map(([id,[label,color]])=>({id,label,color,enabled:enabled().has(id),count:records().filter(r=>r.category===id).length})),
- namedLayers:()=>layersForRows(records()).map(l=>({id:l.id,label:l.title,count:l.count,enabled:!namedHidden().has(l.id)})),
- toggleLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(l)updateNamedLayerVisibility([id],namedHidden().has(id))},
- onlyLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(!l)return;dropEventFocus();active[filterScope()]=null;hiddenNamed[namedScope()]=layersForRows(records()).filter(v=>v.id!==id).map(v=>v.id);store('jura62-named-layers',hiddenNamed);page=0;render()},
+ categories:()=>Object.entries(CATEGORIES).map(([id,[label,color]])=>({id,label,color,enabled:isOnlineCleanView()?onlineSelectedLayers.has('category:'+id):enabled().has(id),count:records().filter(r=>r.category===id).length})),
+ namedLayers:()=>layersForRows(records()).map(l=>({id:l.id,label:l.title,count:l.count,enabled:isOnlineCleanView()?onlineSelectedLayers.has('named:'+l.id):!namedHidden().has(l.id)})),
+ toggleLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(l)updateNamedLayerVisibility([id],isOnlineCleanView()?!onlineSelectedLayers.has('named:'+id):namedHidden().has(id))},
+ onlyLayer:id=>{const l=layersForRows(records()).find(v=>v.id===id);if(!l)return;if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(['named:'+id],true,true);return}dropEventFocus();active[filterScope()]=null;hiddenNamed[namedScope()]=layersForRows(records()).filter(v=>v.id!==id).map(v=>v.id);store('jura62-named-layers',hiddenNamed);page=0;render()},
  trailerRecords:()=>game==='6'?records().filter(r=>/\btrailer\b|\bfootage\b|\bscene\b/i.test([r.name,r.district||'',r.collectionType||'',r.source||'',r.evidence||'',...(r.tags||[])].join(' '))).slice(0,750):[],
- toggleCategory:id=>{if(!CATEGORIES[id])return;dropEventFocus();showPins=true;const chosen=new Set(enabled());if(chosen.has(id))chosen.delete(id);else chosen.add(id);active[filterScope()]=chosen;page=0;render()},
- onlyCategory:id=>{if(!CATEGORIES[id])return;dropEventFocus();showPins=true;active[filterScope()]=new Set([id]);page=0;render()},
- allCategories:on=>{dropEventFocus();if(on){showPins=true;eventHidden.clear();}active[filterScope()]=on?null:new Set();page=0;render()},
+ toggleCategory:id=>{if(!CATEGORIES[id])return;if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(['category:'+id],!onlineSelectedLayers.has('category:'+id));return}dropEventFocus();showPins=true;const chosen=new Set(enabled());if(chosen.has(id))chosen.delete(id);else chosen.add(id);active[filterScope()]=chosen;page=0;render()},
+ onlyCategory:id=>{if(!CATEGORIES[id])return;if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(['category:'+id],true,true);return}dropEventFocus();showPins=true;active[filterScope()]=new Set([id]);page=0;render()},
+ allCategories:on=>{if(game==='5'&&mode==='online'){setOnlineLayers(on?Object.keys(CATEGORIES).map(id=>'category:'+id):[],on,true);return}dropEventFocus();if(on){showPins=true;eventHidden.clear();}active[filterScope()]=on?null:new Set();page=0;render()},
  selectPlace:id=>{const place=records().find(r=>r.id===id);if(place)choosePlace(place)},
  addRouteStop:id=>{const place=records().find(r=>r.id===id);if(place)window.teamJuraNav?.setRoutePoint(place)},
  openNavigation:()=>window.teamJuraNav?.open(),
@@ -1220,7 +1240,7 @@ function init(){
  const photo=$('selectedPhoto'),figure=$('selectedPhotoFigure');if(photo&&figure){photo.onload=()=>{figure.hidden=false};photo.onerror=()=>{figure.hidden=true}};
 
  $('districtFilter').oninput=()=>{dropEventFocus();page=0;render()};$('findNearby').onclick=()=>{nearbyActive=true;renderNearby()};$('nearbyToRoute').onclick=addNearbyToRoute;$('nearbyRadius').onchange=()=>{if(nearbyActive)renderNearby()};$('nearbyOrigin').onchange=()=>{if(nearbyActive)renderNearby()};$('shareCoords').onclick=shareCoordinateLocation;$('useMapCenter').onclick=centerToCoordinates;
- $('game5').onclick=()=>switchGame('5');$('game6').onclick=()=>switchGame('6');$('gameOnline').onclick=()=>switchGame('online');$('search').oninput=()=>{dropEventFocus();page=0;render()};$('allOn').onclick=()=>{dropEventFocus();if(game==='5'&&mode==='online')onlineCleanView=false;eventHidden.clear();showPins=true;active[filterScope()]=null;hiddenNamed[namedScope()]=[];store('jura62-named-layers',hiddenNamed);page=0;render();toast('All available categories and named layers on.')};$('allOff').onclick=()=>{dropEventFocus();if(game==='5'&&mode==='online')onlineCleanView=false;active[filterScope()]=new Set();page=0;render();toast('All categories off. Select one to show it.')};
+ $('game5').onclick=()=>switchGame('5');$('game6').onclick=()=>switchGame('6');$('gameOnline').onclick=()=>switchGame('online');$('search').oninput=()=>{dropEventFocus();page=0;render()};$('allOn').onclick=()=>{if(game==='5'&&mode==='online'&&onlineCleanView){setOnlineLayers(Object.keys(CATEGORIES).map(id=>'category:'+id),true,true);return}dropEventFocus();if(game==='5'&&mode==='online')onlineCleanView=false;eventHidden.clear();showPins=true;active[filterScope()]=null;hiddenNamed[namedScope()]=[];store('jura62-named-layers',hiddenNamed);page=0;render();toast('All available categories and named layers on.')};$('allOff').onclick=()=>{if(game==='5'&&mode==='online'){setOnlineLayers([],false,true);return}dropEventFocus();active[filterScope()]=new Set();page=0;render();toast('All categories off. Select one to show it.')};
  if($('j4730-legend-search'))$('j4730-legend-search').oninput=renderLegend;
  if($('namedLayerSearch'))$('namedLayerSearch').oninput=renderNamedLayers;
  if($('namedLayerShowAll'))$('namedLayerShowAll').onclick=()=>updateNamedLayerVisibility(layersForRows(records()).map(l=>l.id),true);
@@ -1237,7 +1257,7 @@ function init(){
  if($('overlayOpacity')){$('overlayOpacity').value=String(overlayOpacity);$('opacityValue').textContent=overlayOpacity+'%';$('overlayOpacity').oninput=()=>{overlayOpacity=Number($('overlayOpacity').value);$('opacityValue').textContent=overlayOpacity+'%';store('jura60-overlay-opacity',overlayOpacity);schedulePaint()};}
  if($('atlasListSort'))$('atlasListSort').onchange=e=>{listOrder=e.target.value;page=0;renderFind();schedulePaint()};if($('atlasExportVisible'))$('atlasExportVisible').onclick=exportVisibleCSV;
  $('layer').onchange=()=>{styles[game]=$('layer').value;document.dispatchEvent(new Event('jura:legend-updated'));tilesErrors=0;tilesLoaded=0;tileHealth();schedulePaint();window.teamJuraNav?.terrain()?.refreshTexture();announce('Loading GTA '+game+' '+$('layer').selectedOptions[0].textContent+' map view…')};$('resetView').onclick=()=>{fitGame();const t=window.teamJuraNav?.terrain();if(t?.isActive())t.fit();announce('Showing the whole GTA '+game+' map.')};$('zoomIn').onclick=()=>{const t=window.teamJuraNav?.terrain();if(t?.isActive())t.zoom(.8);else zoomBy(.5)};$('zoomOut').onclick=()=>{const t=window.teamJuraNav?.terrain();if(t?.isActive())t.zoom(1.25);else zoomBy(-.5)};if($('j371-compass'))$('j371-compass').onclick=()=>window.teamJuraNav?.terrain()?.resetNorth();
- $('togglePins').onclick=()=>{const wasVisible=pinsVisible();dropEventFocus();showPins=!wasVisible;$('togglePins').textContent=showPins?'📍 Pins on':'📍 Pins off';$('togglePins').setAttribute('aria-pressed',String(showPins));schedulePaint()};if($('j4731-today-map'))$('j4731-today-map').onclick=()=>{if(game!=='5'||mode!=='online')return;dropEventFocus();onlineCleanView=true;eventHidden.clear();showPins=true;selected=null;page=0;render();};
+ $('togglePins').onclick=()=>{const wasVisible=pinsVisible();dropEventFocus();showPins=!wasVisible;$('togglePins').textContent=showPins?'📍 Pins on':'📍 Pins off';$('togglePins').setAttribute('aria-pressed',String(showPins));schedulePaint()};if($('j4731-today-map'))$('j4731-today-map').onclick=()=>{if(game!=='5'||mode!=='online')return;if(eventFocusName===TODAY_FOCUS_NAME){dropEventFocus();selected=null;page=0;render();return}dropEventFocus();eventFocusName=TODAY_FOCUS_NAME;eventFocusIds=new Set(todayFocusRows(records(),activityCache()).map(r=>r.id));showPins=true;selected=null;page=0;render();};
  if($('j4731-filters-map'))$('j4731-filters-map').onclick=()=>{const side=$('sidebar'),drawer=$('atlasFilterDrawer');side.classList.remove('mobile-collapsed');if(drawer)drawer.open=true;requestAnimationFrame(()=>$('legend').scrollIntoView({block:'start',behavior:'smooth'}));};
  $('mobileTools').onclick=()=>{$('sidebar').classList.toggle('mobile-collapsed');if(!$('sidebar').classList.contains('mobile-collapsed'))$('sidebar').scrollIntoView({behavior:'smooth',block:'start'})};$('original').onclick=()=>window.open('https://map.gtadb.org/','_blank','noopener,noreferrer');
  $('selectedStart').onclick=()=>{if(selected){setRouteStart(selected);window.teamJuraNav?.setStart(selected);showTab('Route')}};if($('selectedNavigate'))$('selectedNavigate').onclick=()=>{if(selected)window.teamJuraNav?.setRoutePoint(selected)};$('closeSelected').onclick=()=>{selected=null;updateSelected();schedulePaint()};$('selectedFound').onclick=()=>{if(selected)toggleFound(selected)};$('selectedRoute').onclick=()=>{if(selected)toggleRoute(selected)};$('shareSelected').onclick=async()=>{

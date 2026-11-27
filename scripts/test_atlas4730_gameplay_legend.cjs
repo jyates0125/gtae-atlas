@@ -29,4 +29,8 @@ assert(map.includes('priorityIds.has(r.id)'));
 assert(map.includes('j4730-selected-glyph')&&map.includes('j4730-list-glyph'));
 console.log('Current-day focus eligibility and shared marker contracts passed');
 
-assert(map.includes('let onlineCleanView=true'));assert(map.includes('clean?datedMainlandMarker(r,cache)'));assert(read('atlas-online.html').includes('id="j4731-filters-map"'));console.log('Clean default and direct filter contract checks passed');
+assert(map.includes('let onlineCleanView=true'));assert(map.includes('onlineLayerMatches(r,onlineSelectedLayers)'));assert(read('atlas-online.html').includes('id="j4731-filters-map"'));console.log('Clean default and direct filter contract checks passed');
+
+const layerMatches=vm.runInNewContext(get(map,'function onlineLayerMatches(r,keys)','function setOnlineLayers')+';onlineLayerMatches',{matchesEventResearch:(rule,r)=>r.activityId===rule.id,gameplayCollectionKey:r=>r.collectionKey,NAMED_LAYERS:[['nightclubs-business','Nightclubs',r=>r.kind==='nightclub']],collectionLayerId:n=>'collection:'+n.toLowerCase()});
+const club={category:'business_site',kind:'nightclub'},office={category:'business_site',kind:'office'},dealer={category:'activity',activityId:'street-dealers'},van={category:'activity',activityId:'gun-van'};
+const chosen=new Set();assert.equal(layerMatches(club,chosen),false);chosen.add('named:nightclubs-business');assert.equal(layerMatches(club,chosen),true);assert.equal(layerMatches(office,chosen),false);chosen.add('event:street-dealers');assert.equal(layerMatches(dealer,chosen),true);assert.equal(layerMatches(van,chosen),false);assert.equal(layerMatches(club,chosen),true);chosen.delete('named:nightclubs-business');assert.equal(layerMatches(club,chosen),false);assert.equal(layerMatches(dealer,chosen),true);assert.equal(layerMatches({collectionKey:'playing-cards'},new Set(['collection-type:playing-cards'])),true);console.log('Independent click-to-show layer tests passed');
