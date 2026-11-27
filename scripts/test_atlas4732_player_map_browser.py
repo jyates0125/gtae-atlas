@@ -144,7 +144,26 @@ try:
             planner.locator("#juraNavClear").click()
             expect(start).to_have_value("")
             expect(dest).to_have_value("")
-            print(f"PASS {engine} {width}px clean layers, persistence, Today, deep link, keyboard/browse and multi-stop route",flush=True)
+            # Same world-map controls, independent Leonida content. Do not import Online events.
+            online_prefs=page.evaluate("localStorage.getItem('jura4731-online-selected-layers')")
+            page.goto(base+"atlas-vi.html",wait_until="domcontentloaded")
+            page.wait_for_function("window.JuraDualLegendAPI && document.querySelector('#legend .legend-choice')",timeout=25000)
+            page.locator("#j4731-filters-map").click()
+            vi_search=page.locator("#j4730-legend-search")
+            expect(vi_search).to_be_visible()
+            assert page.locator("#legend details[open]").count()<=1
+            vi_search.fill("Gun Van")
+            expect(page.locator("#legend .legend-choice")).to_have_count(0)
+            expect(page.locator("#legend")).to_contain_text("No matching legend categories")
+            vi_search.fill("")
+            assert page.locator("#legend details[open]").count()<=1
+            assert page.locator("#legend .legend-choice svg path").count()>0
+            assert page.evaluate("localStorage.getItem('jura4731-online-selected-layers')")==online_prefs
+            if width==390:
+                page.locator("#j4732-back-map").click()
+                expect(page.locator("#sidebar")).to_have_class(__import__('re').compile("mobile-collapsed"))
+            assert page.evaluate("document.documentElement.scrollWidth<=innerWidth+2")
+            print(f"PASS {engine} {width}px clean layers, persistence, Today, deep link, keyboard/browse, multi-stop route and separate Leonida controls",flush=True)
             ctx.close()
         browser.close()
 finally:
