@@ -56,3 +56,12 @@ assert(map.includes('automaticDailyLayers=!Array.isArray(loadStore(ONLINE_LAYER_
 console.log('Fresh daily defaults, expiry and explicit empty preferences contracts passed');
 
 assert(map.includes("if(mode==='online'&&game==='5'){renderLegend();updatePinButton();renderFind();renderRoute();"),'Async feed refresh must update pin-button state as well as list and legend');
+
+const applies=vm.runInNewContext(get(map,'function sourceApplies','function filterSourceOptions')+';sourceApplies',{});
+assert.equal(applies({game:'5',scope:'story'},'5','online'),false);
+assert.equal(applies({game:'5',scope:'story'},'5','story'),true);
+assert.equal(applies({game:'5',scope:'both'},'5','online'),true);
+assert.equal(applies({game:'6',scope:'story'},'5','story'),false);
+assert.equal(applies({game:'6',scope:'story'},'6','story'),true);
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4736'));}
+console.log('Optional source disclosure and world/mode scope contracts passed');
