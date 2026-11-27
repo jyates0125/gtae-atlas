@@ -18,7 +18,7 @@ assert 'Rockstar/Take-Two intellectual property' in credits
 assert "LICENSE-DATA" in credits and 'creativecommons.org/licenses/by/4.0/' in credits
 for page in ('atlas.html','atlas-online.html','atlas-vi.html'):
     html=(R/page).read_text(encoding='utf-8')
-    revision = "4722" if page == "atlas-vi.html" else "4734"
+    revision = "4736"
     assert f'atlas.js?v={revision}' in html, (page,'stale map engine')
     assert html.count(f'atlas.js?v={revision}')==1,page
 assert 'atlas-sw.js?v=290' in engine
