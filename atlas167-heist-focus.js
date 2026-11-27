@@ -92,7 +92,7 @@ bar.append(move);
 sec.append(bar);
 const chips=el('div','j167-chips');chips.setAttribute('aria-label','Toggle point categories');
 const enabled=new Set(Object.keys(kinds));
-for(const [key,val] of Object.entries(kinds)){const c=btn(val.symbol+' '+val.label,'j167-chip',()=>{enabled.has(key)?enabled.delete(key):enabled.add(key);c.setAttribute('aria-pressed',String(enabled.has(key)));paint()});c.dataset.cat=key;c.setAttribute('aria-pressed','true');chips.append(c)}
+for(const [key,val] of Object.entries(kinds)){const c=btn(val.symbol+' '+val.label,'j167-chip',()=>{enabled.has(key)?enabled.delete(key):enabled.add(key);c.setAttribute('aria-pressed',String(enabled.has(key)));paint()});c.dataset.cat=key;if(advancedRoutes)c.style.setProperty('--pin-color',val.color);c.setAttribute('aria-pressed','true');chips.append(c)}
 sec.append(chips);
 let moveMode=false,drag=null;
 const zone=el('div','j167-viewport');zone.setAttribute('aria-label','Illustrative mission-area map with selectable points of interest');
@@ -264,10 +264,11 @@ function paint(){
  for(const p of visible){
   const marker=btn(kinds[p.cat].symbol,'j167-pin',()=>{current=p.id;detailFor(p);pinLayer.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.point===p.id)))});
   const pos=juraCoord(p);marker.style.left=pos[0]+'%';marker.style.top=pos[1]+'%';marker.style.setProperty('--pin-color',kinds[p.cat].color);
-  marker.dataset.point=p.id;marker.setAttribute('aria-label',p.name+' ('+kinds[p.cat].label+')');
+  marker.dataset.point=p.id;if(advancedRoutes)marker.dataset.cat=p.cat;marker.setAttribute('aria-label',p.name+' ('+kinds[p.cat].label+')');
   marker.setAttribute('aria-pressed',String(current===p.id));marker.title=p.name+' · illustrative';
   if(saved.scoped.includes(p.id))marker.classList.add('j167-scoped');pinLayer.append(marker);
   const row=btn(p.name,'j167-item',()=>{current=p.id;detailFor(p);pinLayer.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.point===p.id)))});
+  if(advancedRoutes){row.dataset.point=p.id;row.dataset.cat=p.cat;const symbol=el('span','j4743-poi-symbol',kinds[p.cat].symbol);symbol.style.setProperty('--pin-color',kinds[p.cat].color);symbol.setAttribute('aria-hidden','true');row.prepend(symbol,' ');}
   const c=el('small','',kinds[p.cat].label+(saved.scoped.includes(p.id)?' · ✓ scoped':''));row.append(c);itemList.append(row);
  }
  if(!visible.length)itemList.append(el('p','j167-note','No points match those filters.'));

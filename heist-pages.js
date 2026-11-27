@@ -143,8 +143,8 @@ if(document.body.classList.contains('j120-heist-page')){
  const style=document.createElement('link');style.rel='stylesheet';style.href='./atlas164-heist-workspace.css?v=164';document.head.append(style);
  const planner=document.createElement('script');planner.async=false;planner.src='./atlas164-heist-workspace.js?v=164';document.body.append(planner);
  // Mission-specific mapped POIs and challenges appear ABOVE the optional regional map.
- const focusStyle=document.createElement('link');focusStyle.rel='stylesheet';focusStyle.href='./atlas167-heist-focus.css?v=167';document.head.append(focusStyle);
- const focus=document.createElement('script');focus.async=false;focus.src='./atlas167-heist-focus.js?v=191';document.body.append(focus);
+ const focusStyle=document.createElement('link');focusStyle.rel='stylesheet';focusStyle.href='./atlas167-heist-focus.css?v=4743';document.head.append(focusStyle);
+ const focus=document.createElement('script');focus.async=false;focus.src='./atlas167-heist-focus.js?v=4743';document.body.append(focus);
  const guideStyle=document.createElement('link');guideStyle.rel='stylesheet';guideStyle.href='./atlas168-heist-guides.css?v=168';document.head.append(guideStyle);
  const guide=document.createElement('script');guide.async=false;guide.src='./atlas168-heist-guides.js?v=168';document.body.append(guide);
  const viewsStyle=document.createElement('link');viewsStyle.rel='stylesheet';viewsStyle.href='./atlas169-heist-views.css?v=169';document.head.append(viewsStyle);

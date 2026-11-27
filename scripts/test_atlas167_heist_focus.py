@@ -30,8 +30,8 @@ assert kortz.is_file() and kortz.stat().st_size>100000
 assert kortz.read_bytes()[:4]==b'RIFF' and kortz.read_bytes()[8:12]==b'WEBP'
 assert "Regional support map · optional" in src and "Original Cayo island map · source reference" in src
 
-assert 'jura159-heist-' in loader and 'atlas167-heist-focus.js?v=191' in loader
-assert 'atlas167-heist-focus.css?v=167' in loader
+assert 'jura159-heist-' in loader and 'atlas167-heist-focus.js?v=4743' in loader
+assert 'atlas167-heist-focus.css?v=4743' in loader
 assert 'teamjura-heist-plan-v1:' in old and "const map='./atlas-online.html'" in old
 assert 'Wider GTA route-planning map' in old
 assert css.count('{')==css.count('}')
