@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "held",
-  "owner": "manual heist #301",
-  "token": "manual-heist-301-86c79fa",
-  "acquiredAtUtc": "2026-11-27T15:40:00Z",
-  "reviewAfterUtc": "2026-11-27T15:50:00Z",
+  "state": "free",
+  "owner": null,
+  "token": null,
+  "acquiredAtUtc": null,
+  "reviewAfterUtc": null,
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal.",
-  "previousToken": "manual-cayo-295-ready",
-  "lastReleaseUtc": "2026-11-27T15:35:00Z",
+  "previousToken": "manual-heist-301-86c79fa",
+  "lastReleaseUtc": "2026-11-27T15:41:00Z",
   "lastProbe": "competing update rejected"
 }
