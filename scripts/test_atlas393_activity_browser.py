@@ -27,7 +27,7 @@ try:
             expect(panel).to_have_count(1)
             advanced=page.locator("details.j4730-advanced-events")
             assert not advanced.evaluate("(el)=>el.open")
-            advanced.locator("summary").click()
+            advanced.locator(":scope > summary").click()
             expect(panel).to_be_visible()
             expect(page.locator('#atlasFilterDrawer #j393-online-activity-slot #j88-events')).to_have_count(1)
             if width <= 820:
@@ -64,7 +64,7 @@ try:
             assert zones()==0
             page.clock.set_fixed_time(datetime(2026,11,24,12,tzinfo=timezone.utc))
             page.reload(wait_until="domcontentloaded")
-            advanced.locator("summary").click()
+            advanced.locator(":scope > summary").click()
             expect(card.locator(".j88-status")).to_have_text("NOT ACTIVE")
             expect(card).to_have_class("j88-event-card j393-closed")
             switch.click()
