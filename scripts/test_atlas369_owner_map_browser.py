@@ -77,8 +77,11 @@ try:
      expect(drawer).to_be_visible()
      drawer.locator('#j132-search').fill('Home')
      expect(drawer.locator('a[href="./atlas-dashboard.html"]')).to_be_visible()
-     page.keyboard.press('Escape')
+     drawer.locator('#j132-search').fill('Tracker & HQ')
+     expect(drawer.locator('a[href="./atlas81-hq.html"]')).to_be_visible()
+     drawer.locator('.j132-close').click()
      expect(drawer).to_be_hidden()
+     expect(menu).to_be_focused()
     else:
      expect(hq).to_be_visible()
      a,b=hq.bounding_box(),menu.bounding_box()
