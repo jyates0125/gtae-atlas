@@ -1,0 +1,7 @@
+# Atlas 47.4.1 — World-map and heist design boundary
+
+Owner direction, November 27: use the improved GTA V/Online world-map system for all large world maps, with each world's own data, colors, saved state and feature eligibility. GTA VI is a Story workspace, not an Online workspace. Keep Cayo Perico as the dedicated heist layout benchmark for other local heist workspaces, not as a replacement for the world-map shell.
+
+Candidate: shared Leonida legend search, compact disclosure groups, direct Filters and mobile Back to map; shared 2D category glyphs and per-category colors across V/Online/VI, preserving the compact VI landmark pin and explicit source colors. Distinct business/collection/event palettes preserve gold emphasis for selected/current map markers rather than making every active symbol gold. Legend disclosure preferences are isolated by world/mode; temporary search expansion is not persisted. VI retains its own approved map views, 3D, source/verification rules and data. No heist or rotation feed changes. No production or shared development writes. 3D rendering and classic-map families are outside this candidate's scope.
+
+Validation: extended existing focused geometry and Chromium/Edge player-map tests for VI controls, search isolation and no Online preference changes. Exact-head CI and native phone review required; no pass claim before evidence. Keep #298 release validation separate; do not merge this candidate until release coordination and relevant integration lease are satisfied.
