@@ -29,7 +29,7 @@ body.j128-map-chrome #j393-online-activity-slot .j4723-current-locations{color:#
  body.j128-map-chrome:not([data-start-world="6"]):has(#j132-nav-toggle) .topbar>.brand .emblem{flex:0 0 34px}
  body.j128-map-chrome:not([data-start-world="6"]):has(#j132-nav-toggle) :is(.topbar>nav,#j369-site-tools>a,.j83-worldnav,#atlas90-catalog-shortcuts,.studio-quickbar,#j98-flow){display:none!important}
  body.j128-map-chrome:not([data-start-world="6"]):has(#j132-nav-toggle) #j369-site-tools{margin:0!important;flex:0 0 auto}
- body.j128-map-chrome:not([data-start-world="6"]) .j4732-back-map{display:block;width:100%;min-height:44px;margin:8px 0;border:1px solid #d7af79;border-radius:8px;background:#39264b;color:#ffe4ad;font-weight:750}
- body.j128-map-chrome:not([data-start-world="6"]) #atlasFilterDrawer{scroll-margin-top:8px}
+ body.j128-map-chrome .j4732-back-map{display:block;width:100%;min-height:44px;margin:8px 0;border:1px solid #d7af79;border-radius:8px;background:#39264b;color:#ffe4ad;font-weight:750}
+ body.j128-map-chrome #atlasFilterDrawer{scroll-margin-top:8px}
  body.j128-map-chrome:not([data-start-world="6"]) .map-actions{bottom:44px!important}
 }

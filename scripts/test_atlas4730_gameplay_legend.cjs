@@ -63,7 +63,7 @@ assert.equal(applies({game:'5',scope:'story'},'5','story'),true);
 assert.equal(applies({game:'5',scope:'both'},'5','online'),true);
 assert.equal(applies({game:'6',scope:'story'},'5','story'),false);
 assert.equal(applies({game:'6',scope:'story'},'6','story'),true);
-for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4745'));}
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4746'));}
 console.log('Optional source disclosure and world/mode scope contracts passed');
 
 const gameHash=vm.runInNewContext(get(map,'function mapGameHash','function switchGame')+';mapGameHash',{});
@@ -101,3 +101,6 @@ const outline={style:style(),attrs:{fill:'none',stroke:'currentColor'},getAttrib
 const svg={style:style(),querySelectorAll:()=>[filled,outline]};
 paint(svg,'#f4b66a');assert.deepEqual(svg.style.values.color,['#f4b66a','important']);assert.deepEqual(filled.style.values.fill,['#f4b66a','important']);assert.deepEqual(outline.style.values.stroke,['#f4b66a','important']);assert.equal(outline.attrs.fill,'none');
 console.log('Explicit glyph paint and outline transparency passed');
+
+for(const page of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(page);for(const id of ['j4730-legend-search','j4731-filters-map','j4732-back-map'])assert(h.includes('id="'+id+'"'),page+' '+id);assert(h.includes('atlas-navigation.js?v=47301'))}
+assert(map.includes('root.dataset.searching'));assert(map.includes("filterScope()+':'+name"));assert(!map.includes("game==='6'||(!online&&name===ordered[0][0])"));console.log('Shared three-map searchable disclosures and scoped state contracts passed');

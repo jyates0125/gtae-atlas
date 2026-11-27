@@ -243,24 +243,24 @@ body.j128-map-chrome #juraMapLegend .j220-dual-symbol svg{
 .j393-record-status{display:block;margin:4px 0;color:#e0cde5}
 
 /* Atlas 47.3.0: GTA V / Online gameplay legend and route search. */
-body.j128-map-chrome:not([data-start-world="6"]) #j4730-legend-search{width:100%;min-width:0;min-height:42px;margin:0 0 8px}
-body.j128-map-chrome:not([data-start-world="6"]) #legend{max-height:none!important;overflow:visible!important;min-width:0;padding:4px!important}
-body.j128-map-chrome:not([data-start-world="6"]) #legend .legend-group>summary{min-height:40px;padding:9px;overflow-wrap:anywhere}
-body.j128-map-chrome:not([data-start-world="6"]) #legend .legend-choice{display:flex;align-items:center;flex-wrap:wrap;min-height:42px;min-width:0;padding:6px 8px;gap:6px;font-size:12px;overflow-wrap:anywhere}
+body.j128-map-chrome #j4730-legend-search{width:100%;min-width:0;min-height:42px;margin:0 0 8px}
+body.j128-map-chrome #legend{max-height:none!important;overflow:visible!important;min-width:0;padding:4px!important}
+body.j128-map-chrome #legend .legend-group>summary{min-height:40px;padding:9px;overflow-wrap:anywhere}
+body.j128-map-chrome #legend .legend-choice{display:flex;align-items:center;flex-wrap:wrap;min-height:42px;min-width:0;padding:6px 8px;gap:6px;font-size:12px;overflow-wrap:anywhere}
 body.j128-map-chrome:not([data-start-world="6"]) #legend i.legend-symbol{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;width:27px;height:27px;flex:0 0 27px}
 body.j128-map-chrome:not([data-start-world="6"]) #legend .elario-legend-glyph{width:23px;height:23px;filter:drop-shadow(0 1px 1px #130c20)}
-body.j128-map-chrome:not([data-start-world="6"]) #legend .legend-only{min-width:45px;min-height:42px}
+body.j128-map-chrome #legend .legend-only{min-width:45px;min-height:42px}
 .j4730-legend-state{flex:1 0 calc(100% - 35px);margin-left:33px;font-size:10px;line-height:1.3;color:#e2c7d9;text-align:left;font-weight:500}
 .j4730-advanced-events>summary,.j4730-advanced-sources>summary{cursor:pointer;padding:10px 3px;color:#ffdda5;font-weight:700;min-height:42px}
-body.j128-map-chrome:not([data-start-world="6"]) .jura-nav-stop{display:grid!important;grid-template-columns:24px minmax(0,1fr) 32px 30px 30px 30px;gap:3px;min-width:0}
-body.j128-map-chrome:not([data-start-world="6"]) .jura-nav-stop input{min-width:0;font-size:14px}
-body.j128-map-chrome:not([data-start-world="6"]) .jura-nav-stop button{min-width:0;padding:3px;min-height:38px}
-body.j128-map-chrome:not([data-start-world="6"]) .jura-suggestions{position:relative;grid-column:2/-1;inset:auto;max-height:170px;overflow:auto;z-index:2}
-body.j128-map-chrome:not([data-start-world="6"]) .jura-suggestions:empty{display:none}
-body.j128-map-chrome:not([data-start-world="6"]) .jura-place-suggest[aria-selected=true]{background:#d6b3e7;outline:2px solid #80539c}
-@media(max-width:700px){body.j128-map-chrome:not([data-start-world="6"]) .sidebar,body.j128-map-chrome:not([data-start-world="6"]) .atlas-filter-drawer{min-width:0;max-width:100%;box-sizing:border-box}body.j128-map-chrome:not([data-start-world="6"]) .atlas-filter-drawer .sectionrow{flex-wrap:wrap}body.j128-map-chrome:not([data-start-world="6"]) .jura-nav-stop{grid-template-columns:22px minmax(0,1fr) 31px 27px 27px 27px}body.j128-map-chrome:not([data-start-world="6"]) .jura-nav-panel{box-sizing:border-box;max-width:calc(100% - 16px)}}
+body.j128-map-chrome .jura-nav-stop{display:grid!important;grid-template-columns:24px minmax(0,1fr) 32px 30px 30px 30px;gap:3px;min-width:0}
+body.j128-map-chrome .jura-nav-stop input{min-width:0;font-size:14px}
+body.j128-map-chrome .jura-nav-stop button{min-width:0;padding:3px;min-height:38px}
+body.j128-map-chrome .jura-suggestions{position:relative;grid-column:2/-1;inset:auto;max-height:170px;overflow:auto;z-index:2}
+body.j128-map-chrome .jura-suggestions:empty{display:none}
+body.j128-map-chrome .jura-place-suggest[aria-selected=true]{background:#d6b3e7;outline:2px solid #80539c}
+@media(max-width:700px){body.j128-map-chrome:not([data-start-world="6"]) .sidebar,body.j128-map-chrome:not([data-start-world="6"]) .atlas-filter-drawer{min-width:0;max-width:100%;box-sizing:border-box}body.j128-map-chrome:not([data-start-world="6"]) .atlas-filter-drawer .sectionrow{flex-wrap:wrap}body.j128-map-chrome .jura-nav-stop{grid-template-columns:22px minmax(0,1fr) 31px 27px 27px 27px}body.j128-map-chrome:not([data-start-world="6"]) .jura-nav-panel{box-sizing:border-box;max-width:calc(100% - 16px)}}
 
-@media(max-width:700px){body.j128-map-chrome:not([data-start-world="6"]) .shell>.sidebar{width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box}body.j128-map-chrome:not([data-start-world="6"]) #legend .legend-row{margin-inline:0}body.j128-map-chrome:not([data-start-world="6"]) #legend .legend-choice{font-size:12px;min-width:0;word-break:normal}}
+@media(max-width:700px){body.j128-map-chrome:not([data-start-world="6"]) .shell>.sidebar{width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box}body.j128-map-chrome #legend .legend-row{margin-inline:0}body.j128-map-chrome #legend .legend-choice{font-size:12px;min-width:0;word-break:normal}}
 
 /* Gameplay readability: a temporary current-day focus and the same symbol in details. */
 .j4730-today-focus{display:block;width:100%;min-height:42px;margin:4px 0;background:#462e57;color:#ffe48b;border:1px solid #d9b579;border-radius:8px;font-weight:750}
@@ -270,7 +270,7 @@ body.j128-map-chrome:not([data-start-world="6"]) .jura-place-suggest[aria-select
 .atlas-list-marker.j4730-list-glyph{width:24px;height:24px;flex:0 0 24px;border:0;box-shadow:none;transform:none;display:inline-flex;align-items:center;justify-content:center}
 .j4730-list-glyph svg{width:24px;height:24px}
 
-#j4731-today-map[hidden]{display:none!important}#j4731-today-map[aria-pressed=true]{color:#ffe48b;border-color:#d9b579}#legend{scroll-margin-top:12px}body.j128-map-chrome:not([data-start-world="6"]) .map-actions{flex-wrap:wrap;justify-content:center;max-width:calc(100% - 20px)}body.j128-map-chrome:not([data-start-world="6"]) .map-actions button{font-size:11px;min-height:36px;padding:7px 9px}
+#j4731-today-map[hidden]{display:none!important}#j4731-today-map[aria-pressed=true]{color:#ffe48b;border-color:#d9b579}#legend{scroll-margin-top:12px}body.j128-map-chrome .map-actions{flex-wrap:wrap;justify-content:center;max-width:calc(100% - 20px)}body.j128-map-chrome .map-actions button{font-size:11px;min-height:36px;padding:7px 9px}
 
 /* Compact optional overlays: native disclosure, bounded searchable rows. */
 .j4730-advanced-sources>summary{line-height:1.4;padding:10px 3px;min-height:44px;cursor:pointer;color:#ffdda5;font-weight:700}
@@ -290,3 +290,10 @@ body.j128-map-chrome #legend .legend-symbol:not(.j371-landmark-legend) .elario-l
 .jura-3d-pin.j4744-glyph-pin.j4744-selected{border-color:#ffe48b;z-index:3}
 .jura-3d-pin.j4744-glyph-pin.j4744-current::after{content:'';position:absolute;right:0;top:0;width:4px;height:4px;background:#ffe48b;border:1px solid #1b112b;border-radius:50%}
 .jura-3d-pin.j4744-glyph-pin.j4744-done svg{opacity:.65}.jura-3d-pin.j4744-glyph-pin.j4744-done::after{content:'✓';position:absolute;right:-2px;bottom:-3px;color:#91e3b0;text-shadow:0 1px #1b112b;font-size:12px}
+
+/* Shared searchable controls; VI retains its measured independent terrain toolbar. */
+body.j128-map-chrome #legend .legend-group:not([open])>.legend-row{display:none}
+body.j128-map-chrome #legend .legend-group>summary{cursor:pointer}
+body.j128-map-chrome #j4730-legend-search{box-sizing:border-box;max-width:100%}
+body.j128-map-chrome .jura-suggestions{overscroll-behavior:contain}
+@media(max-width:700px){body[data-start-world="6"] .jura-nav-panel{box-sizing:border-box;max-width:calc(100% - 16px)}body[data-start-world="6"] #atlasFilterDrawer{min-width:0;max-width:100%;box-sizing:border-box}}

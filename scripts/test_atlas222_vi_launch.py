@@ -85,7 +85,7 @@ assert 'map-hub.html?game=iii' in ch_js and 'atlas-online.html' in ch_js and 'at
 assert 'CHARACTERS · SEARCH ALL WORLDS' in nav and 'x.aliases' not in nav
 assert 'j222-vi-categories' in vi and 'atlas222-vi-release.js?v=222' in vi
 assert 'atlas217-vi-world.js?v=217' in vi, 'The existing map engine must stay in place'
-assert vi.count('atlas.js?v=4745')==1, 'Map engine must use the current cache version; service worker has its own lifecycle'
+assert vi.count('atlas.js?v=4746')==1, 'Map engine must use the current cache version; service worker has its own lifecycle'
 
 # Premium visual and vehicle-class integrity guards: these check source wiring,
 # not actual browser rendering, which remains a separate release requirement.
@@ -102,12 +102,15 @@ assert 'body[data-atlas-kind="all"] .u-hero-art' in dbcss
 assert "url('./art/jura155-map.webp')" in dbcss
 assert (R/'art/jura155-map.webp').is_file()
 
-# Preserve the original category-colored Yanis/Scaly map markers.
+# Preserve the approved compact landmark glyph across VI sources; ordinary categories share the V marker renderer.
 mapjs=(R/'atlas.js').read_text(encoding='utf-8')
-assert "function isViLandmark(r){return game==='6'&&r?.category==='landmark'&&!r.markerColor&&!r.activityId}" in mapjs
+assert "function isViLandmark(r){return game==='6'&&r?.category==='landmark'&&!r.activityId}" in mapjs
 assert "if(isViLandmark(r))drawViLandmark(p.x,p.y)" in mapjs
 assert "!!r.markerColor&&!r.activityId" in mapjs and "compactLandmark:isViLandmark" in mapjs
 assert "if(game==='6'&&!atlas85Icon&&typeof Path2D==='function')" not in mapjs
 assert "r.category==='collectible'&&!r.activityId" in mapjs
 
 print('PASS Atlas 22.2: 8 official VI profile groups plus community references, 6 official regions, 11 source-labeled categories, global character search and isolated world routes')
+
+assert "(game==='5'||game==='6')&&drawGameplayGlyph" in mapjs
+assert 'glyph:displayGlyph,glyphColor:displayGlyphColor' in mapjs
