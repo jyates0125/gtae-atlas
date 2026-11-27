@@ -23,6 +23,9 @@ try:
             page=ctx.new_page()
             page_errors=[]
             page.on("pageerror",lambda error:page_errors.append(str(error)))
+            # Exercise the unchanged regular welcome even during the seasonal display window.
+            # The dedicated seasonal suite verifies the full artwork, expiration and archive.
+            ctx.route("**/art/elario-thanksgiving-2026.webp",lambda route:route.abort())
             page.goto(base+"index.html",wait_until="domcontentloaded")
             expect(page.locator("#j132-nav-toggle")).to_have_count(0)
             expect(page.locator(".j4728-signin")).to_be_disabled()

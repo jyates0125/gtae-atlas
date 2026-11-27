@@ -1,0 +1,36 @@
+name: Release scope shadow validation
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'scripts/classify_release_scope.py'
+      - 'scripts/test_classify_release_scope.py'
+      - '.github/workflows/release-scope-shadow.yml'
+permissions:
+  contents: read
+jobs:
+  shadow:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run fail-closed classifier tests
+        run: python scripts/test_classify_release_scope.py -v
+      - name: Replay actual seasonal visibility correction
+        run: |
+          python scripts/classify_release_scope.py 6d2b9e6ef13565b90a1fa1d0ccb034f736474529 4de7bcfedb411a88f609402f6065d098e4d059fe > scope-shadow.json
+          cat scope-shadow.json
+          python -c "import json; r=json.load(open('scope-shadow.json')); assert r['suggested_scope']=='seasonal',r; assert r['effective_execution']=='full' and not r['reuse_authorized'],r"
+      - name: Save shadow decision
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-scope-shadow
+          path: scope-shadow.json
+          if-no-files-found: error
