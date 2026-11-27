@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "held",
-  "owner": "manual Aura combined release freeze",
-  "token": "manual-freeze-304-20261127T163857Z",
-  "acquiredAtUtc": "2026-11-27T16:38:57Z",
-  "reviewAfterUtc": "2026-11-27T16:48:57Z",
+  "state": "free",
+  "owner": null,
+  "token": null,
+  "acquiredAtUtc": null,
+  "reviewAfterUtc": null,
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal.",
-  "previousToken": "manual-integrate-302-20261127T163806Z",
-  "lastReleaseUtc": "2026-11-27T16:38:06Z",
+  "previousToken": "manual-freeze-304-20261127T163857Z",
+  "lastReleaseUtc": "2026-11-27T16:39:20Z",
   "lastProbe": "competing update rejected"
 }
