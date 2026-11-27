@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Atlas 19.1: visible starter POIs on all three 2D maps, with saved choices preserved."""
+"""Atlas 19.1: visible Story/VI starter POIs, dated-only Online pins, with saved choices preserved."""
 import os,threading
+from datetime import datetime, timezone
 from functools import partial
 from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
 from pathlib import Path
@@ -14,7 +15,7 @@ server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(PUBLIC)))
 threading.Thread(target=server.serve_forever,daemon=True).start()
 base='http://127.0.0.1:%s/'%server.server_port
 options={'atlas.html':('5-story',['landmark','transport','nature','collectible']),
- 'atlas-online.html':('5-online',['landmark','transport','activity','collectible','shop']),
+ 'atlas-online.html':('5-online',[]),
  'atlas-vi.html':('6',['landmark','transport','food'])}
 engine=os.environ.get('ATLAS_BROWSER','chromium')
 try:
@@ -25,17 +26,32 @@ try:
     context=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
     pg=context.new_page();errors=[]
     pg.on('pageerror',lambda e:errors.append(str(e)[:250]))
+    if scope=='5-online':
+     # Deterministic public-feed fixture: never depend on today's external feed.
+     pg.clock.set_fixed_time(datetime(2026,11,26,18,tzinfo=timezone.utc))
+     context.route("**/online-rotation-current.json*",lambda r:r.fulfill(json={'schema':1,'rotations':{'gun-van':{'activeIds':['gun-van-procopio-beach'],'checkedAtUtc':'2026-11-26T15:53:49Z','validUntilUtc':'2026-11-27T06:00:00Z','source':'QA fixture'}}},headers={'Access-Control-Allow-Origin':'*'}))
     pg.goto(base+pageName,wait_until='domcontentloaded',timeout=40000)
-    pg.wait_for_function("() => window.JuraDualLegendAPI?.categories().some(c=>c.enabled && c.count>0)",timeout=25000)
+    if scope=='5-online':
+     pg.wait_for_function("window.JuraDualLegendAPI && window.JuraAtlasEventLocations?.availableCount(window.JuraConditions.BY_ID['gun-van'])===1",timeout=25000)
+     pg.locator('#resultCount').wait_for(state='attached')
+     pg.wait_for_function("document.querySelector('#resultCount')?.textContent==='1 locations'",timeout=15000)
+     assert pg.locator('#togglePins').get_attribute('aria-pressed')=='true'
+    else:
+     pg.wait_for_function("() => window.JuraDualLegendAPI?.categories().some(c=>c.enabled && c.count>0)",timeout=25000)
     actual=pg.evaluate("""() => window.JuraDualLegendAPI.categories().filter(c=>c.enabled).map(c=>c.id)""")
     assert set(actual)==set(desired),(pageName,'unexpected default pin types',actual)
     count=pg.evaluate("""() => window.JuraDualLegendAPI.categories().filter(c=>c.enabled).reduce((sum,c)=>sum+c.count,0)""")
-    assert count>0,(pageName,'default map falsely empty')
+    if scope=='5-online':
+     assert count==0 and pg.evaluate("localStorage.getItem('jura4731-online-selected-layers')") is None
+    else:
+     assert count>0,(pageName,'default map falsely empty')
     # Explicitly hidden categories persist and are not silently reactivated.
     pg.evaluate("document.querySelector('#allOff').click()")
     pg.reload(wait_until='domcontentloaded')
     pg.wait_for_function("() => Boolean(window.JuraDualLegendAPI?.categories())")
     assert pg.evaluate("window.JuraDualLegendAPI.categories().filter(c=>c.enabled).length")==0,'All Off must survive reload'
+    if scope=='5-online':
+     pg.wait_for_function("document.querySelector('#resultCount')?.textContent==='0 locations'",timeout=15000)
     # Explicit All must survive reload too; never override stored preferences.
     pg.evaluate("document.querySelector('#allOn').click()")
     pg.reload(wait_until='domcontentloaded')

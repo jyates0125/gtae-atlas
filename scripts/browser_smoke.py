@@ -973,7 +973,24 @@ async def smoke():
                                     failures.append('Old Cayo URL did not redirect to native island workspace')
                             if not failures and path in ('atlas.html','atlas-online.html','atlas-vi.html'):
                                 header_hq=pg.locator('header.topbar nav a[href="./atlas81-hq.html"]')
-                                if await header_hq.count()!=1 or not await header_hq.first.is_visible():
+                                if width<=700 and path in ('atlas.html','atlas-online.html'):
+                                    # The approved compact mobile header uses the unified menu, not the old raw link row.
+                                    if await header_hq.count()!=1 or await header_hq.first.is_visible():
+                                        failures.append('Legacy Atlas HQ header link must remain available but hidden on compact mobile maps')
+                                    try:
+                                        nav=pg.locator('#j132-nav-toggle')
+                                        await nav.wait_for(state='visible',timeout=15000)
+                                        if await nav.count()!=1:failures.append('Compact mobile map has duplicate menus')
+                                        await nav.click()
+                                        await pg.locator('#j132-search').fill('Tracker & HQ')
+                                        hq=pg.locator('#j132-groups a[href="./atlas81-hq.html"]')
+                                        await hq.wait_for(state='visible',timeout=6500)
+                                        if await hq.count()!=1:failures.append('Unified menu must expose one Atlas HQ destination')
+                                        await pg.keyboard.press('Escape')
+                                        await pg.locator('#j132-nav-drawer').wait_for(state='hidden',timeout=6500)
+                                    except Exception as exc:
+                                        failures.append('Compact mobile HQ navigation failed: '+str(exc)[:500])
+                                elif await header_hq.count()!=1 or not await header_hq.first.is_visible():
                                     failures.append('Map header must show exactly one Atlas HQ link')
                                 if not await pg.locator('body.j117-map-world').count():
                                     failures.append('Current Elario flagship map brand missing')
@@ -994,30 +1011,56 @@ async def smoke():
                                     failures.append('Left legend missing')
                                 else:
                                     try:
-                                        drawer=pg.locator('#atlasFilterDrawer')
-                                        if width<=700:
-                                            side=pg.locator('#sidebar')
-                                            if await side.evaluate("(el)=>el.classList.contains('mobile-collapsed')"):
-                                                await pg.locator('#mobileTools').click()
-                                            await drawer.scroll_into_view_if_needed(timeout=6000)
-                                        await drawer.evaluate('(el)=>{el.open=true}')
-                                        first=pg.locator('#legend button.legend-choice').first
-                                        await first.wait_for(state='visible',timeout=6500)
-                                        await first.scroll_into_view_if_needed(timeout=6500)
-                                        # Keep owner-approved first-visit visible map categories.
-                                        # Toggle off and on; saved preferences must still work.
-                                        initial=await first.get_attribute('aria-pressed')
-                                        if initial!='true':
-                                            failures.append('New visitor is missing the default visible map category')
+                                        if path in ('atlas.html','atlas-online.html'):
+                                            # Exercise the visible Filters button and searchable generic layer,
+                                            # not the first (possibly collapsed or unrelated) quick-row button.
+                                            await pg.wait_for_function("window.JuraDualLegendAPI?.categories().some(c=>c.id==='landmark'&&c.count>0)",timeout=25000)
+                                            await pg.locator('#j4731-filters-map').click()
+                                            search=pg.locator('#j4730-legend-search')
+                                            await search.wait_for(state='visible',timeout=6500)
+                                            await search.fill('Landmarks')
+                                            layer=pg.locator('#legend .legend-row:not(.j4730-quick-row) button.legend-choice').filter(has_text='Landmarks')
+                                            await layer.wait_for(state='visible',timeout=6500)
+                                            if await layer.count()!=1:failures.append('Search must expose exactly one Landmarks category')
+                                            initial='false' if path=='atlas-online.html' else 'true'
+                                            if await layer.get_attribute('aria-pressed')!=initial:
+                                                failures.append('Incorrect clean Online / Story default Landmarks state')
+                                            if path=='atlas-online.html' and not await pg.evaluate("window.JuraDualLegendAPI.categories().every(c=>!c.enabled)"):
+                                                failures.append('Online first visit enabled unrelated generic categories')
+                                            for expected in ('true','false') if initial=='false' else ('false','true'):
+                                                await layer.click(timeout=6500)
+                                                await pg.wait_for_function("(v)=>window.JuraDualLegendAPI.categories().find(c=>c.id==='landmark').enabled===v",arg=expected=='true',timeout=6500)
+                                                if await layer.get_attribute('aria-pressed')!=expected:failures.append('Landmarks control and state disagree')
+                                                if expected=='true' and await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
+                                                    failures.append('Enabled category did not activate map pins')
+                                            await search.fill('')
+                                            if width<=700:
+                                                await pg.locator('#j4732-back-map').click()
                                         else:
-                                            await first.click(timeout=5000)
-                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='false':
-                                                failures.append('One-click category off did not disable selected category')
-                                            await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
-                                            if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='true':
-                                                failures.append('One-click category on did not restore selected category')
-                                            if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
-                                                failures.append('Restored category did not activate map pins')
+                                            drawer=pg.locator('#atlasFilterDrawer')
+                                            if width<=700:
+                                                side=pg.locator('#sidebar')
+                                                if await side.evaluate("(el)=>el.classList.contains('mobile-collapsed')"):
+                                                    await pg.locator('#mobileTools').click()
+                                                await drawer.scroll_into_view_if_needed(timeout=6000)
+                                            await drawer.evaluate('(el)=>{el.open=true}')
+                                            first=pg.locator('#legend button.legend-choice').first
+                                            await first.wait_for(state='visible',timeout=6500)
+                                            await first.scroll_into_view_if_needed(timeout=6500)
+                                            # Keep owner-approved first-visit visible map categories.
+                                            # Toggle off and on; saved preferences must still work.
+                                            initial=await first.get_attribute('aria-pressed')
+                                            if initial!='true':
+                                                failures.append('New visitor is missing the default visible map category')
+                                            else:
+                                                await first.click(timeout=5000)
+                                                if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='false':
+                                                    failures.append('One-click category off did not disable selected category')
+                                                await pg.locator('#legend button.legend-choice').first.click(timeout=5000)
+                                                if await pg.locator('#legend button.legend-choice').first.get_attribute('aria-pressed')!='true':
+                                                    failures.append('One-click category on did not restore selected category')
+                                                if await pg.locator('#togglePins').get_attribute('aria-pressed')!='true':
+                                                    failures.append('Restored category did not activate map pins')
                                     except Exception as exc:
                                         failures.append('Map legend could not be toggled: '+str(exc)[:700])
                                 toggle=pg.locator('#juraToggle3d')

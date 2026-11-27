@@ -73,6 +73,8 @@ try:
             expect(van).to_be_visible()
             expect(van).to_have_attribute("aria-pressed","false")
             van_glyph=van.locator("svg path").get_attribute("d")
+            van_color=van.locator(".legend-symbol").evaluate("(e)=>getComputedStyle(e).color")
+            assert van_color=="rgb(244, 182, 106)",van_color
             assert van_glyph, "Gun Van must have a glyph geometry"
             van.click()
             expect(van).to_have_attribute("aria-pressed","true")
@@ -96,6 +98,15 @@ try:
             expect(page.locator("#j393-online-activity-slot #j88-events")).to_be_visible(timeout=25000)
             expect(page.locator("#selectedName")).to_contain_text("Procopio Beach",timeout=25000)
             expect(page.locator("#selectedName .j4730-selected-glyph path")).to_have_attribute("d",van_glyph)
+            # Feed refresh can replace the selected SVG between locator resolution
+            # and evaluation. Assert the visible, currently connected glyph's paint.
+            page.wait_for_function("""(color)=>{
+              const e=document.querySelector('#selectedName .j4730-selected-glyph'),p=e?.querySelector('path');
+              return !!(e?.isConnected&&p?.isConnected&&e.getClientRects().length&&
+                getComputedStyle(e).color===color&&getComputedStyle(p).fill===color);
+            }""",arg=van_color,timeout=15000)
+            expect(page.locator("#selectedName .j4730-selected-glyph")).to_be_visible()
+            expect(page.locator("#selectedName .j4730-selected-glyph path")).to_have_css("fill",van_color)
             assert page.locator(".j4730-advanced-events").evaluate("(e)=>e.open")
             # Fresh visitor with an expired feed: no stale or unrelated default pins.
             page.evaluate("localStorage.removeItem('jura4731-online-selected-layers')")
@@ -145,6 +156,44 @@ try:
             expect(start).to_have_value("")
             expect(dest).to_have_value("")
             print(f"PASS {engine} {width}px clean layers, persistence, Today, deep link, keyboard/browse and multi-stop route",flush=True)
+            ctx.close()
+        # Exercise the same filters and searchable route dropdown on actual VI data,
+        # not a GTA V fixture or an assertion about source strings alone.
+        for width,height in [(390,844),(1440,900)]:
+            ctx=browser.new_context(viewport={"width":width,"height":height})
+            ctx.route("https://**/*",lambda r:r.abort())
+            page=ctx.new_page()
+            page.goto(base+"atlas-vi.html",wait_until="domcontentloaded")
+            page.wait_for_function("document.querySelector('#legend [data-legend-key=hotel]')!==null",timeout=30000)
+            page.locator("#j4731-filters-map").click()
+            legend=page.locator("#legend")
+            search=page.locator("#j4730-legend-search")
+            expect(search).to_be_visible()
+            assert legend.locator("details[open]").count()<=1
+            search.fill("Hotels & homes")
+            row=legend.locator('[data-legend-key="hotel"]')
+            expect(row).to_be_visible()
+            expect(legend.locator(".legend-row")).to_have_count(1)
+            expect(row.locator("svg path")).to_have_css("stroke","rgb(234, 165, 202)")
+            search.fill("Gun Van")
+            expect(legend.locator(".legend-row")).to_have_count(0)
+            search.fill("")
+            assert legend.locator("details[open]").count()<=1
+            page.locator("#allOff").click()
+            search.fill("Hotels & homes")
+            expect(row.locator(".legend-choice")).to_have_attribute("aria-pressed","false")
+            row.locator(".legend-choice").click()
+            expect(row.locator(".legend-choice")).to_have_attribute("aria-pressed","true")
+            if width==390:
+                page.locator("#j4732-back-map").click()
+            page.locator("#juraOpenNav").click()
+            planner=page.locator("#juraNavPanel")
+            expect(planner).to_be_visible()
+            start=planner.get_by_role("combobox",name="Starting location")
+            start.fill("Vice Regal")
+            expect(planner.get_by_role("option",name=__import__('re').compile("Vice Regal"))).to_be_visible(timeout=15000)
+            assert page.evaluate("document.documentElement.scrollWidth<=innerWidth+2")
+            print(f"PASS {engine} {width}px VI searchable categories, collapsed defaults, matching color and VI-only route search",flush=True)
             ctx.close()
         browser.close()
 finally:

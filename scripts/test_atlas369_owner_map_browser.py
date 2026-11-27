@@ -107,6 +107,10 @@ try:
    assert labels==['In-game Map','Scaly · YANIS V18','Loki · DUPZOR V51'], labels
    page.locator('#layer').select_option('scaly,view')
    expect(page.locator('#legend .j371-landmark-legend')).to_have_count(1)
+   # Every ordinary VI category in the legend keeps its explicit category color.
+   ordinary=page.locator('#legend .legend-symbol:not(.j371-landmark-legend) svg')
+   assert ordinary.count()>0
+   assert ordinary.evaluate_all('(nodes)=>nodes.every(n=>n.closest(".legend-symbol").style.color!=="")')
    page.locator('#jura3d').click()
    page.wait_for_function('teamJuraNav.terrain().isActive()||teamJuraNav.terrain().getFrameReport()!==null',timeout=30000)
    assert page.evaluate('teamJuraNav.terrain().isActive()'),page.evaluate('teamJuraNav.terrain().getFrameReport()')
