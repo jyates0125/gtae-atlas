@@ -54,3 +54,5 @@ assert.deepEqual(Array.from(auto([activeVan,activeVan,oldVan,{...activeVan,hidde
 assert.equal(auto([activeVan],{feed:{},now:snapshot.now}).length,0);
 assert(map.includes('automaticDailyLayers=!Array.isArray(loadStore(ONLINE_LAYER_PREF,null))'));
 console.log('Fresh daily defaults, expiry and explicit empty preferences contracts passed');
+
+assert(map.includes("if(mode==='online'&&game==='5'){renderLegend();updatePinButton();renderFind();renderRoute();"),'Async feed refresh must update pin-button state as well as list and legend');
