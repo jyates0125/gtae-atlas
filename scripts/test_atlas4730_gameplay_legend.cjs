@@ -63,7 +63,7 @@ assert.equal(applies({game:'5',scope:'story'},'5','story'),true);
 assert.equal(applies({game:'5',scope:'both'},'5','online'),true);
 assert.equal(applies({game:'6',scope:'story'},'5','story'),false);
 assert.equal(applies({game:'6',scope:'story'},'6','story'),true);
-for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4737'));}
+for(const f of ['atlas.html','atlas-online.html','atlas-vi.html']){const h=read(f);assert(h.includes('<details class="j4730-advanced-sources"><summary>'));assert(h.includes('id="sourceLayerSearch"'));assert(h.includes('id="sourceLayerSummary"'));assert(h.includes('atlas.js?v=4743'));}
 console.log('Optional source disclosure and world/mode scope contracts passed');
 
 const gameHash=vm.runInNewContext(get(map,'function mapGameHash','function switchGame')+';mapGameHash',{});
@@ -73,3 +73,16 @@ assert.equal(gameHash('6','#game5',true),'#game6');
 assert.equal(gameHash('online','',true),'#gameonline');
 assert.equal(gameHash('5','#j393-online-activity-slot',false),'#game5');
 console.log('Initial deep-link anchor and explicit game-switch contracts passed');
+
+// Active and selected icons must retain category color on the actual canvas.
+const activityColors=vm.runInNewContext(get(map,'const GAMEPLAY_EVENT_COLORS=','const GAMEPLAY_COLLECTIONS=')+';GAMEPLAY_EVENT_COLORS');
+const mainland=['gun-van','street-dealers','shipwreck','ls-tags','hidden-caches','smoke-products','junk-skydives'];
+assert.equal(new Set(mainland.map(k=>activityColors[k])).size,mainland.length);
+const strokes=[],fills=[],recorder={};
+glyphContext.ctx=new Proxy(recorder,{get:(o,k)=>k==='stroke'?()=>strokes.push(o.strokeStyle):k==='fill'?()=>fills.push(o.fillStyle):o[k]||(()=>{})});
+glyphContext.conditionForRecord=()=>({status:'active'});
+for(const k of mainland){for(const selected of [false,true]){strokes.length=0;fills.length=0;assert(glyph.draw({id:k,category:k},20,20,null,selected));assert(strokes.includes(activityColors[k])||fills.includes(activityColors[k]),k+' category color must survive active/selected');assert(fills.includes('#ffe48b'),k+' active dot');if(selected)assert(strokes.includes('#ffe48b'),k+' selected ring')}}
+assert(map.includes('focus,gameplayGlyphColor(id)'));
+assert(map.includes('glyph.style.color=gameplayGlyphColor(key,selected)'));
+assert(map.includes('marker.style.color=gameplayGlyphColor(key,r)'));
+console.log('Seven distinct activity colors persist across active canvas, legend, list and selection');

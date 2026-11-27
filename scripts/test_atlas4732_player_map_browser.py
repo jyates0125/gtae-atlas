@@ -73,6 +73,8 @@ try:
             expect(van).to_be_visible()
             expect(van).to_have_attribute("aria-pressed","false")
             van_glyph=van.locator("svg path").get_attribute("d")
+            van_color=van.locator(".legend-symbol").evaluate("(e)=>getComputedStyle(e).color")
+            assert van_color=="rgb(244, 182, 106)",van_color
             assert van_glyph, "Gun Van must have a glyph geometry"
             van.click()
             expect(van).to_have_attribute("aria-pressed","true")
@@ -96,6 +98,7 @@ try:
             expect(page.locator("#j393-online-activity-slot #j88-events")).to_be_visible(timeout=25000)
             expect(page.locator("#selectedName")).to_contain_text("Procopio Beach",timeout=25000)
             expect(page.locator("#selectedName .j4730-selected-glyph path")).to_have_attribute("d",van_glyph)
+            assert page.locator("#selectedName .j4730-selected-glyph").evaluate("(e)=>getComputedStyle(e).color")==van_color
             assert page.locator(".j4730-advanced-events").evaluate("(e)=>e.open")
             # Fresh visitor with an expired feed: no stale or unrelated default pins.
             page.evaluate("localStorage.removeItem('jura4731-online-selected-layers')")

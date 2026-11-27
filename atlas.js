@@ -466,7 +466,7 @@ window.TeamJuraAtlasGlyph22=Object.freeze({create:elarioLegendGlyph});
 
 const GAMEPLAY_BUSINESSES=['ceo-offices','nightclubs-business','bunkers-business','clubhouses-business','mc-business','cargo-warehouses','vehicle-warehouses','hangars-business','facilities-business','agencies-business','auto-shops-business','arcades-business','salvage-yards','bail-offices','casino'];
 const GAMEPLAY_EVENTS=['gun-van','street-dealers','shipwreck','ls-tags','hidden-caches','smoke-products','junk-skydives','cayo-chests','cayo-stashes','ufo','ghosts-exposed','slashers','pumpkins','peyote','snowmen'];
-const GAMEPLAY_EVENT_COLORS={'gun-van':'#e9cb88','street-dealers':'#91e3b0','shipwreck':'#82d7ff','ls-tags':'#e3a0ff','hidden-caches':'#8dd8db','smoke-products':'#b3e786','junk-skydives':'#f3b18c','ufo':'#d7e997','ghosts-exposed':'#e6e5ff','slashers':'#ff8f97','pumpkins':'#ffae71','peyote':'#b9e68d','snowmen':'#c7ecff','cayo-chests':'#efd08a','cayo-stashes':'#e2b886'};
+const GAMEPLAY_EVENT_COLORS={'gun-van':'#f4b66a','street-dealers':'#83e5ac','shipwreck':'#75baff','ls-tags':'#df9aff','hidden-caches':'#70e4e5','smoke-products':'#ff8b77','junk-skydives':'#f4a7cf','ufo':'#d7e997','ghosts-exposed':'#e6e5ff','slashers':'#ff8f97','pumpkins':'#ffae71','peyote':'#b9e68d','snowmen':'#c7ecff','cayo-chests':'#efd08a','cayo-stashes':'#e2b886'};
 const GAMEPLAY_COLLECTIONS=[["spaceship-parts","Spaceship parts",/spaceship parts?/i],["letter-scraps","Letter scraps",/letter scraps?/i],["nuclear-waste","Nuclear waste",/nuclear waste/i],["submarine-pieces","Submarine pieces",/submarine pieces?/i],["stunt-jumps","Stunt jumps",/stunt jumps?/i],["under-bridge","Under the bridge",/under the bridge|bridge challenges?/i],["knife-flights","Knife flights",/knife flights?/i],["epsilon-tracts","Epsilon tracts",/epsilon tracts?/i],["playing-cards","Playing cards",/playing cards?/i],["action-figures","Action figures",/action figures?/i],["signal-jammers","Signal jammers",/signal jammers?/i],["media-sticks","Media sticks",/media sticks?/i],["ld-organics","LD Organics",/ld organics/i]];
 function gameplayCollectionKey(r){if(r.category!=='collectible'&&r.sourceId!=='story')return null;return GAMEPLAY_COLLECTIONS.find(v=>v[2].test([r.collectionType,r.name].filter(Boolean).join(' ')))?.[0]||null}
 const gameplayPathCache=new Map();
@@ -487,8 +487,10 @@ function drawGameplayGlyph(r,x,y,cache,selected=false){
  let path=gameplayPathCache.get(key);if(!path){path=new Path2D(shape);gameplayPathCache.set(key,path)}
  const condition=conditionForRecord(r,cache),done=!!progress[doneKey(r)];
  ctx.save();ctx.translate(x,y);const size=selected?28:condition?.status==='active'?24:camera.z<2.5?13:17;ctx.scale(size/24,size/24);ctx.translate(-12,-12);
+ if(selected){ctx.beginPath();ctx.arc(12,12,14,0,Math.PI*2);ctx.strokeStyle='#1b112b';ctx.lineWidth=4;ctx.stroke();ctx.strokeStyle='#ffe48b';ctx.lineWidth=1.7;ctx.stroke()}
  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#1b112b';ctx.lineWidth=4.8;ctx.stroke(path);
- ctx.strokeStyle=selected||condition?.status==='active'?'#ffe48b':gameplayGlyphColor(key,r);ctx.lineWidth=2.15;ctx.globalAlpha=done?.65:1;if(filled){ctx.fillStyle=ctx.strokeStyle;ctx.fill(path)}else ctx.stroke(path);
+ ctx.strokeStyle=gameplayGlyphColor(key,r);ctx.lineWidth=2.15;ctx.globalAlpha=done?.65:1;if(filled){ctx.fillStyle=ctx.strokeStyle;ctx.fill(path)}else ctx.stroke(path);
+ if(condition?.status==='active'&&!done){ctx.globalAlpha=1;ctx.beginPath();ctx.arc(23,1,2.7,0,Math.PI*2);ctx.fillStyle='#1b112b';ctx.fill();ctx.beginPath();ctx.arc(23,1,1.65,0,Math.PI*2);ctx.fillStyle='#ffe48b';ctx.fill()}
  if(done){ctx.globalAlpha=1;ctx.beginPath();ctx.moveTo(15,19);ctx.lineTo(18,22);ctx.lineTo(24,15);ctx.lineWidth=4;ctx.strokeStyle='#1b112b';ctx.stroke();ctx.lineWidth=2;ctx.strokeStyle='#91e3b0';ctx.stroke();}
  ctx.restore();return true;
 }
@@ -520,7 +522,7 @@ function renderGameplayLegend(root,rows,query){
    const detail=feed?(island?feed.active.size+' dated · Cayo island map':eligible.length+'/'+rule.today+' mapped · calculated'):status.status==='closed'?'Inactive':rule.kind==='rotation'?'Unconfirmed · '+rule.today+' expected':found.length?'Not confirmed active':'No current mapped evidence';
    const on=isOnlineCleanView()?(onlineSelectedLayers.has('event:'+id)||(automaticDailyLayers&&found.some(r=>defaultDailyRecord(r,cache)))):!eventHidden.has(id)&&found.some(r=>enabled().has(r.category));
    const focus=island?()=>{location.href=id==='cayo-chests'?'./heist-cayo-perico.html#j4740-chests':'./heist-cayo-perico.html#j4740-stashes'}:()=>{eventHidden.delete(id);showPins=true;const result=bridge?.focus(rule,{center:true});if(!result?.available)toast('No current eligible map pins. See activity details for evidence.');};
-   group.append(quickLegendRow(id,id==='hidden-caches'?'Hidden Caches · Los Santos underwater':rule.name,detail,on,()=>{if(island){focus();return}if(onlineCleanView){setOnlineLayers(['event:'+id],!on);return}dropEventFocus();if(on)eventHidden.add(id);else{eventHidden.delete(id);showPins=true;const cats=active[filterScope()];if(cats)for(const r of found)cats.add(r.category);const hidden=namedHidden();for(const r of found)for(const [key,,pred] of NAMED_LAYERS)if(pred(r))hidden.delete(key);hiddenNamed[namedScope()]=[...hidden];store('jura62-named-layers',hiddenNamed)}page=0;render()},focus,feed&&eligible.length?'#ffe48b':GAMEPLAY_EVENT_COLORS[id]||'#e9c789'));
+   group.append(quickLegendRow(id,id==='hidden-caches'?'Hidden Caches · Los Santos underwater':rule.name,detail,on,()=>{if(island){focus();return}if(onlineCleanView){setOnlineLayers(['event:'+id],!on);return}dropEventFocus();if(on)eventHidden.add(id);else{eventHidden.delete(id);showPins=true;const cats=active[filterScope()];if(cats)for(const r of found)cats.add(r.category);const hidden=namedHidden();for(const r of found)for(const [key,,pred] of NAMED_LAYERS)if(pred(r))hidden.delete(key);hiddenNamed[namedScope()]=[...hidden];store('jura62-named-layers',hiddenNamed)}page=0;render()},focus,gameplayGlyphColor(id)));
   }
   if(group.childElementCount>1)root.append(group);
  }
@@ -608,7 +610,7 @@ function choosePlace(place){selected=place;showPins=true;$('togglePins').textCon
  if(innerWidth<=700){$('sidebar').classList.add('mobile-collapsed');window.scrollTo({top:0,behavior:'smooth'})}
 }
 function updateSelected(){const card=$('selectedCard');if(!selected||selected.game!==game){card.classList.add('hidden');return}card.classList.remove('hidden');$('selectedName').textContent=selected.name;
- if(game==='5'){const key=gameplayGlyphKey(selected),glyph=elarioLegendGlyph(key);glyph.classList.add('j4730-selected-glyph');glyph.style.color=conditionForRecord(selected)?.status==='active'?'#ffe48b':gameplayGlyphColor(key,selected);$('selectedName').prepend(glyph);}
+ if(game==='5'){const key=gameplayGlyphKey(selected),glyph=elarioLegendGlyph(key);glyph.classList.add('j4730-selected-glyph');glyph.style.color=gameplayGlyphColor(key,selected);$('selectedName').prepend(glyph);}
  const photo=$('selectedPhoto'),figure=$('selectedPhotoFigure');if(photo&&figure&&photo.dataset.place!==selected.id){photo.dataset.place=selected.id;figure.hidden=true;photo.removeAttribute('src');const m=/^gtadb-([56])-(L\d+)$/.exec(selected.id);if(m){photo.alt='Source-contributed in-game image for '+selected.name;photo.src=UPSTREAM+'map/photos/'+m[1]+'/'+m[2]+',ig.jpg';}}
 
  $('selectedSource').classList.toggle('hidden',!selected.sourceUrl);if(selected.sourceUrl)$('selectedSource').href=selected.sourceUrl;
@@ -686,7 +688,7 @@ function toggleFound(r){
 }
 function card(r){const d=document.createElement('article');d.className='result'+(selected?.id===r.id?' selected':'');
  const head=document.createElement('div');head.className='result-head';
- const status=conditionForRecord(r);const marker=document.createElement('span');marker.className='atlas-list-marker';marker.style.background=conditionPinColor(r);marker.setAttribute('aria-hidden','true');if(game==='5'){const key=gameplayGlyphKey(r);marker.classList.add('j4730-list-glyph');marker.style.background='transparent';marker.style.color=status?.status==='active'?'#ffe48b':gameplayGlyphColor(key,r);marker.append(elarioLegendGlyph(key));}
+ const status=conditionForRecord(r);const marker=document.createElement('span');marker.className='atlas-list-marker';marker.style.background=conditionPinColor(r);marker.setAttribute('aria-hidden','true');if(game==='5'){const key=gameplayGlyphKey(r);marker.classList.add('j4730-list-glyph');marker.style.background='transparent';marker.style.color=gameplayGlyphColor(key,r);marker.append(elarioLegendGlyph(key));}
  const title=btn((progress[doneKey(r)]?'✓ ':'')+r.name,()=>{choosePlace(r);renderFind()},'atlas-list-title');title.title='Find '+r.name+' on the map';
  const f=btn(favorites[r.id]?'★':'☆',()=>{favorites[r.id]=!favorites[r.id];persist();render()},'fav');f.title='Favorite';f.setAttribute('aria-label','Favorite '+r.name);head.append(marker,title,f);
  const desc=document.createElement('small');desc.textContent=(r.address&&r.address!=='?'?r.address+' · ':'')+(CATEGORIES[r.category]?.[0]||'Other')+' · '+(r.uncertain?'Provisional':'Mapped source');
