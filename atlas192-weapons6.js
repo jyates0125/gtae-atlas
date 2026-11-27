@@ -6,7 +6,7 @@
 const $=id=>document.getElementById(id);
 const KEY='teamjura-vi-weapon-notes-v1';
 const make=(tag,cls,value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=value;return n};
-const state={seen:Object.create(null),notes:Object.create(null)};const COLLECTION='team-jura-vi-weapon-collected-v1';let collected=Object.create(null),collectionBlocked=false;let rows=[],query='',group='all',onlySeen=false,onlyCollected=false,variantFilter='all',visualFilter='all';
+const state={seen:Object.create(null),notes:Object.create(null)};const COLLECTION='team-jura-vi-weapon-collected-v1';let collected=Object.create(null),collectionBlocked=false;let rows=[],query='',group='all',onlySeen=false,onlyCollected=false,notCollected=false,variantFilter='all',visualFilter='all';
 function readCollected(){const raw=localStorage.getItem(COLLECTION);if(raw===null)return Object.create(null);const v=JSON.parse(raw);if(!v||v.schema!==1||!v.collected||typeof v.collected!=='object'||Array.isArray(v.collected)||Object.values(v.collected).some(x=>x!==true))throw Error('Invalid collection save');return Object.assign(Object.create(null),v.collected)}
 function refreshCollected(){try{collected=readCollected();collectionBlocked=false}catch{collectionBlocked=true}}
 function writeCollected(next){localStorage.setItem(COLLECTION,JSON.stringify({schema:1,collected:next}));collected=next;collectionBlocked=false}
@@ -63,17 +63,17 @@ function visualCard(r){
  next();return f;
 }
 function render(){
- const found=rows.filter(r=>(group==='all'||r.group===group)&&(variantFilter==='all'||(variantFilter==='variants'?!!r.variantOf:!r.variantOf))&&(visualFilter==='all'||(visualFilter==='linked'?mediaChoices(r).length>0:mediaChoices(r).length===0))&&(!onlySeen||state.seen[r.id])&&(!onlyCollected||collected[r.id])&&(!query||[r.name,r.group,r.evidence,r.description].join(' ').toLowerCase().includes(query)));
+ const found=rows.filter(r=>(group==='all'||r.group===group)&&(variantFilter==='all'||(variantFilter==='variants'?!!r.variantOf:!r.variantOf))&&(visualFilter==='all'||(visualFilter==='linked'?mediaChoices(r).length>0:mediaChoices(r).length===0))&&(!onlySeen||state.seen[r.id])&&(!(onlyCollected||notCollected)||(!collectionBlocked&&(onlyCollected?!!collected[r.id]:!collected[r.id])))&&(!query||[r.name,r.group,r.evidence,r.description].join(' ').toLowerCase().includes(query)));
  $('viWeaponCount').textContent=found.length+' of '+rows.length+' referenced items';
  $('viWeaponNoted').textContent=rows.filter(r=>state.seen[r.id]).length+' noted on this device';$('viWeaponCollected').textContent=collectionBlocked?'Collection unavailable':rows.filter(r=>collected[r.id]).length+' collected';
  const root=$('viWeaponCards');root.replaceChildren();
- if(!found.length)root.append(make('p','viweapon-empty','No matching evidence records. Try All classes or remove the search filter.'));
+ if(!found.length)root.append(make('p','viweapon-empty',collectionBlocked&&(onlyCollected||notCollected)?'Collection status unavailable. Clear the collection filter to browse references.':'No matching evidence records. Try All classes or remove a filter.'));
  for(const r of found){
   const card=make('article','viweapon-card');card.dataset.weaponId=r.id;
   const top=make('div','viweapon-card-top');
   const mark=make('span','viweapon-type',r.group);
   const evidence=make('span','viweapon-grade '+(r.grade.includes('Named')?'viweapon-official':'viweapon-observed'),r.grade);
-  card.dataset.collected=String(!!collected[r.id]);const ownership=make('span','viweapon-ownership',collectionBlocked?'Collection unavailable':collected[r.id]?'✓ Collected':'Not collected');ownership.dataset.collected=String(!!collected[r.id]);top.append(mark,evidence,ownership);card.append(top);
+  card.dataset.collected=collectionBlocked?'unknown':String(!!collected[r.id]);const ownership=make('span','viweapon-ownership',collectionBlocked?'Collection unavailable':collected[r.id]?'✓ Collected':'Not collected');ownership.dataset.collected=card.dataset.collected;top.append(mark,evidence,ownership);card.append(top);
   const h=make('h3','',r.name);card.append(h);if(r.variantOf){const base=rows.find(x=>x.id===r.variantOf);if(base)card.append(make('p','viweapon-evidence','Named variant · '+base.name));}card.append(visualCard(r));card.append(make('p','viweapon-copy',r.description));
   const disclosure=make('p','viweapon-evidence',r.evidence);card.append(disclosure);
   const actions=make('div','viweapon-actions');
@@ -153,8 +153,8 @@ async function start(){
  $('viWeaponClass').addEventListener('change',e=>{group=e.target.value;render()});
  $('viWeaponVisual').addEventListener('change',e=>{visualFilter=e.target.value;render()});
  $('viWeaponVariant').addEventListener('change',e=>{variantFilter=e.target.value;render()});
- $('viWeaponMine').addEventListener('change',e=>{onlySeen=e.target.checked;render()});$('viWeaponOnlyCollected').addEventListener('change',e=>{onlyCollected=e.target.checked;render()});window.addEventListener('storage',e=>{if(e.key===COLLECTION||e.key===null){refreshCollected();render()}});
- $('viWeaponClear').addEventListener('click',()=>{$('viWeaponSearch').value='';$('viWeaponClass').value='all';$('viWeaponMine').checked=false;$('viWeaponOnlyCollected').checked=false;$('viWeaponVariant').value='all';$('viWeaponVisual').value='all';query='';group='all';onlySeen=false;onlyCollected=false;variantFilter='all';visualFilter='all';render();});
+ $('viWeaponMine').addEventListener('change',e=>{onlySeen=e.target.checked;render()});$('viWeaponOnlyCollected').addEventListener('change',e=>{onlyCollected=e.target.checked;if(onlyCollected){notCollected=false;$('viWeaponNotCollected').checked=false}render()});$('viWeaponNotCollected').addEventListener('change',e=>{notCollected=e.target.checked;if(notCollected){onlyCollected=false;$('viWeaponOnlyCollected').checked=false}render()});window.addEventListener('storage',e=>{if(e.key===COLLECTION||e.key===null){refreshCollected();render()}});
+ $('viWeaponClear').addEventListener('click',()=>{$('viWeaponSearch').value='';$('viWeaponClass').value='all';$('viWeaponMine').checked=false;$('viWeaponOnlyCollected').checked=false;$('viWeaponNotCollected').checked=false;$('viWeaponVariant').value='all';$('viWeaponVisual').value='all';query='';group='all';onlySeen=false;onlyCollected=false;notCollected=false;variantFilter='all';visualFilter='all';render();});
  $('viWeaponExport').addEventListener('click',exportNotes);
  $('viWeaponImport').addEventListener('change',importNotes);
 }
