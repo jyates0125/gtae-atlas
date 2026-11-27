@@ -261,3 +261,11 @@ body.j128-map-chrome:not([data-start-world="6"]) .jura-place-suggest[aria-select
 @media(max-width:700px){body.j128-map-chrome:not([data-start-world="6"]) .sidebar,body.j128-map-chrome:not([data-start-world="6"]) .atlas-filter-drawer{min-width:0;max-width:100%;box-sizing:border-box}body.j128-map-chrome:not([data-start-world="6"]) .atlas-filter-drawer .sectionrow{flex-wrap:wrap}body.j128-map-chrome:not([data-start-world="6"]) .jura-nav-stop{grid-template-columns:22px minmax(0,1fr) 31px 27px 27px 27px}body.j128-map-chrome:not([data-start-world="6"]) .jura-nav-panel{box-sizing:border-box;max-width:calc(100% - 16px)}}
 
 @media(max-width:700px){body.j128-map-chrome:not([data-start-world="6"]) .shell>.sidebar{width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box}body.j128-map-chrome:not([data-start-world="6"]) #legend .legend-row{margin-inline:0}body.j128-map-chrome:not([data-start-world="6"]) #legend .legend-choice{font-size:12px;min-width:0;word-break:normal}}
+
+/* Gameplay readability: a temporary current-day focus and the same symbol in details. */
+.j4730-today-focus{display:block;width:100%;min-height:42px;margin:4px 0;background:#462e57;color:#ffe48b;border:1px solid #d9b579;border-radius:8px;font-weight:750}
+.j4730-today-focus[aria-pressed=true]{background:#e7c27f;color:#201329}
+.j4730-today-note{display:block;color:#d4c3dc;font-size:11px;line-height:1.4;margin:4px 6px 10px}
+.j4730-selected-glyph{display:inline-block;vertical-align:-.18em;width:1.35em;height:1.35em;margin-right:.4em}
+.atlas-list-marker.j4730-list-glyph{width:24px;height:24px;flex:0 0 24px;border:0;box-shadow:none}
+.j4730-list-glyph svg{width:24px;height:24px}

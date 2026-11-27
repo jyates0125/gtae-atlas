@@ -14,3 +14,17 @@ for(const id of ['gun-van','street-dealers','shipwreck','ufo','nightclubs-busine
 assert(map.includes('renderGameplayLegend(root,rows,query)'));assert(map.includes('drawGameplayGlyph(selected'));assert(map.includes('eventHidden.delete(rule.id);showPins=true'));assert(nav.includes('aria-activedescendant'));assert(nav.includes('That activity is no longer eligible'));
 for(const f of ['atlas.html','atlas-online.html']){const h=read(f);assert(h.includes('id="j4730-legend-search"'));assert(h.includes('j4730-advanced-sources'));assert(h.includes('atlas-navigation.js?v=47301'))}
 console.log('Gameplay legend / route search focused behavioral tests passed');
+
+const snapshot={feed:{'gun-van':new Set(['van-active'])},now:Date.parse('2026-11-27T12:00:00Z')};
+const conditionEngine={BY_ID:{'gun-van':{kind:'rotation'},'cayo-chests':{kind:'rotation'}},rotationFeed:(s,id)=>s[id]?{active:s[id]}:null};
+const dated=vm.runInNewContext(get(map,'function datedMainlandMarker(r,cache)','function todayFocusRows')+';datedMainlandMarker',{window:{JuraConditions:conditionEngine}});
+const marker={scope:'online',activityId:'gun-van',rotationMarkerId:'van-active'};
+assert.equal(dated(marker,snapshot),true);
+assert.equal(dated({...marker,rotationMarkerId:'van-old'},snapshot),false);
+assert.equal(dated({...marker,scope:'story'},snapshot),false);
+assert.equal(dated({...marker,uncertain:true},snapshot),false);
+assert.equal(dated({...marker,activityId:'cayo-chests'},snapshot),false);
+assert.equal(dated(marker,{feed:{},now:snapshot.now}),false);
+assert(map.includes('priorityIds.has(r.id)'));
+assert(map.includes('j4730-selected-glyph')&&map.includes('j4730-list-glyph'));
+console.log('Current-day focus eligibility and shared marker contracts passed');
