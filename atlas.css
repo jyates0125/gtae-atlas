@@ -269,3 +269,5 @@ body.j128-map-chrome:not([data-start-world="6"]) .jura-place-suggest[aria-select
 .j4730-selected-glyph{display:inline-block;vertical-align:-.18em;width:1.35em;height:1.35em;margin-right:.4em}
 .atlas-list-marker.j4730-list-glyph{width:24px;height:24px;flex:0 0 24px;border:0;box-shadow:none}
 .j4730-list-glyph svg{width:24px;height:24px}
+
+#j4731-today-map[hidden]{display:none!important}#j4731-today-map[aria-pressed=true]{color:#ffe48b;border-color:#d9b579}#legend{scroll-margin-top:12px}body.j128-map-chrome:not([data-start-world="6"]) .map-actions{flex-wrap:wrap;justify-content:center;max-width:calc(100% - 20px)}body.j128-map-chrome:not([data-start-world="6"]) .map-actions button{font-size:11px;min-height:36px;padding:7px 9px}

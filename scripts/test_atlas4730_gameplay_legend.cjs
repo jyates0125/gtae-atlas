@@ -28,3 +28,5 @@ assert.equal(dated(marker,{feed:{},now:snapshot.now}),false);
 assert(map.includes('priorityIds.has(r.id)'));
 assert(map.includes('j4730-selected-glyph')&&map.includes('j4730-list-glyph'));
 console.log('Current-day focus eligibility and shared marker contracts passed');
+
+assert(map.includes('let onlineCleanView=true'));assert(map.includes('clean?datedMainlandMarker(r,cache)'));assert(read('atlas-online.html').includes('id="j4731-filters-map"'));console.log('Clean default and direct filter contract checks passed');

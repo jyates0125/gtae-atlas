@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#210f30">
 <meta name="description" content="Independent GTA Online map with locations, marker layers, route tools, activity links and device-local progress.">
 <title>GTA Online Map · GTAE | Elario Studios</title><link rel="canonical" href="https://gtae-online.pages.dev/atlas-online.html"><meta property="og:type" content="website"><meta property="og:site_name" content="GTAE · Elario Studios"><meta property="og:url" content="https://gtae-online.pages.dev/atlas-online.html"><meta property="og:title" content="GTA Online Map · GTAE — GTA Explorer | Elario Studios"><meta property="og:description" content="Independent GTA Online map with locations, marker layers, route tools, activity links and device-local progress."><meta property="og:image" content="https://gtae-online.pages.dev/art/jura155-online.webp"><meta property="og:image:alt" content="Original Elario GTA Online world illustration"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="GTA Online Map · GTAE — GTA Explorer | Elario Studios"><meta name="twitter:description" content="Independent GTA Online map with locations, marker layers, route tools, activity links and device-local progress."><meta name="twitter:image" content="https://gtae-online.pages.dev/art/jura155-online.webp">
-<link rel="stylesheet" href="./atlas.css?v=47302">
+<link rel="stylesheet" href="./atlas.css?v=4731">
 <script defer src="./atlas-intelligence.js?v=70"></script>
 <script defer src="./atlas-sources.js?v=70"></script>
 <script defer src="./atlas-route-core.js?v=70"></script>
@@ -14,7 +14,7 @@
 <script defer src="./atlas-3d.js?v=3721"></script>
 <script defer src="./atlas-navigation.js?v=47301"></script>
 <script defer src="./atlas-conditions.js?v=4722"></script>
-<script defer src="./atlas.js?v=47302"></script>
+<script defer src="./atlas.js?v=4731"></script>
 
 <link rel="stylesheet" href="./atlas-layout-71.css?v=71">
 <script defer src="./atlas-layout-71.js?v=71"></script>
@@ -177,7 +177,7 @@
     <div class="maptop"><div class="maptitle"><strong id="mapTitle">GTA Online · Los Santos</strong><small id="mapSubtitle">GTADB map and pins, all together</small></div><div class="mapcontrols"><label for="layer">Map view</label><select id="layer" title="GTADB CC BY 4.0 licensed map tiles. Scaly and Loki are Team Jura view names; original artwork is credited to its artists."><option>Loading views…</option></select><input type="range" min="0" max="100" step="5" id="overlayOpacity" aria-label="Unused legacy overlay opacity control" hidden><span id="opacityValue" hidden>100%</span><span class="jura-pin-mode" title="One marker per source location">📍 Individual pins</span><select id="density" aria-label="Individual markers only" disabled hidden><option value="individual">Individual</option></select><button id="resetView" type="button" title="Show whole map">⌖ Fit</button></div></div>
     <div class="zoom" aria-label="Map zoom controls"><button id="zoomIn" type="button" aria-label="Zoom in">+</button><button id="zoomOut" type="button" aria-label="Zoom out">−</button></div>
     <div class="jura-quick-nav" role="group" aria-label="Map and navigation shortcuts"><button type="button" id="quickDirections">↗ Directions</button><button type="button" id="quickPhotos">▣ Source photos</button><button type="button" id="quickMap">▧ 2D overview</button><button type="button" id="threeDReference" title="Interactive WebGL terrain view (elevation availability depends on source)">▨ 3D terrain</button></div>
-    <div class="map-actions"><button id="togglePins" type="button" aria-pressed="false">📍 Pins off</button><button id="mobileTools" type="button">☰ Find places</button><button id="original" type="button" hidden>Source ↗</button></div>
+    <div class="map-actions"><button id="togglePins" type="button" aria-pressed="false">📍 Pins off</button><button id="mobileTools" type="button">☰ Find places</button><button id="j4731-filters-map" type="button">Filters</button><button id="j4731-today-map" type="button" hidden>Today</button><button id="original" type="button" hidden>Source ↗</button></div>
     <div class="selected-card hidden" id="selectedCard" role="region" aria-label="Selected map location"><button class="close" id="closeSelected" type="button" aria-label="Close marker detail">×</button><b id="selectedName"></b><small id="selectedInfo"></small><p id="selectedAddress" class="atlas-selected-address"></p><figure id="selectedPhotoFigure" class="selected-photo" hidden><img id="selectedPhoto" loading="eager" decoding="async" alt=""><figcaption>In-game reference photo</figcaption></figure><div class="selected-actions"><button type="button" id="selectedFound">Mark found</button><button type="button" id="selectedRoute">+ Route</button><button type="button" id="selectedStart">◎ Start here</button><button type="button" id="selectedNavigate">↗ Navigate</button><a id="selectedSource" class="hidden" target="_blank" rel="noopener noreferrer" href="#">Source ↗</a><button type="button" id="shareSelected" title="Copy link to this GTADB landmark">Share</button></div></div>
     <div class="atlas-tile-health" id="tileHealth" role="status">Preparing artwork…</div>
     <div class="map-status" id="mapStatus" role="status">Preparing licensed map…</div>
