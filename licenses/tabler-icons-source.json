@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/tabler/tabler-icons",
+  "commit": "a1422751964ae9c7d9acb5c8d9a7a9c1ff0f8192",
+  "license": "MIT",
+  "icons": {
+    "gun-van": "truck",
+    "street-dealers": "cash-banknote",
+    "ufo": "ufo",
+    "ghosts-exposed": "ghost",
+    "spaceship-parts": "ufo",
+    "agencies-business": "briefcase",
+    "mc-business": "motorbike"
+  }
+}
