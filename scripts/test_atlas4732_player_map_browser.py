@@ -36,6 +36,29 @@ try:
             if width==390:
                 expect(page.locator("header.topbar>nav")).to_be_hidden()
                 assert page.locator("main.map-wrap").evaluate("(e)=>e.getBoundingClientRect().top+scrollY")<230
+            # Optional source layers are discoverable but never an expanded wall of rows.
+            sources=page.locator(".j4730-advanced-sources")
+            expect(sources).to_have_count(1)
+            assert not sources.evaluate("(e)=>e.open")
+            expect(page.locator("#sourceToggles")).to_be_hidden()
+            summary=sources.locator("summary")
+            expect(summary).to_contain_text("layers")
+            summary.click()
+            source_search=page.locator("#sourceLayerSearch")
+            expect(source_search).to_be_visible()
+            expect(page.locator("#sourceToggles input[aria-label^='GTA V Story']")).to_have_count(0)
+            before=page.evaluate("localStorage.getItem('jura55-source-visible')")
+            source_search.fill("ATMs")
+            expect(page.locator("#sourceToggles .source-option:visible")).to_have_count(1)
+            expect(page.locator("#sourceToggles .source-option:visible")).to_contain_text("ATMs")
+            source_search.fill("no matching fixture")
+            expect(page.locator("#sourceLayerCount")).to_contain_text("No matching layers")
+            source_search.fill("")
+            assert page.locator("#sourceToggles .source-option:visible").count()>10
+            assert page.locator("#sourceToggles").evaluate("(e)=>e.clientHeight<=320 && e.scrollHeight>e.clientHeight")
+            summary.click()
+            expect(page.locator("#sourceToggles")).to_be_hidden()
+            assert page.evaluate("localStorage.getItem('jura55-source-visible')")==before
             page.locator("#j4731-filters-map").click()
             expect(page.locator("#allOff")).to_be_visible()
             page.locator("#j4730-legend-search").fill("Gun Van")
