@@ -1,5 +1,12 @@
 # GTAE continuation checkpoint — November 25, 2026
 
+## November 27 — merged Cayo and nonblocking integration checkpoint
+
+- Development now `e1c8c6b33a1253a4e6ebb7a8bb0e996d7087282c`: #292 exact 99f81b036ca8473fc43308f4afb694bfa08df525 passed 34/34 and merged. #293 charter reconciliation merged at fd8abc75b62ad28b2921529802c8151d980d65c5. Do not replay either. Cayo defaults to all known locations with current pair distinct, muted inactive pins and struck-through rows. Stash routing and source-supported full catalog remain outstanding; do not publish island feed before deployed consumer verified.
+- Frozen #291 exact 9976a2568fb3add573b3f551ca73897e46ba9057: Cloudflare PR comment 7220840273 reports successful preview https://3afdddc2.gtae-online.pages.dev (not live production and not owner approval). Full Chromium and both focused jobs plus Chromium player-workspaces passed. Two Windows jobs failed on local-server connection refusals during navigation and hidden Official poster control during initialization, respectively. Failed-jobs-only retry requested on same SHA, run 46016336087; collect exact retry results. Prior failure evidence remains. No new release product changes or live deployment. Protected main still 4de7bcfedb411a88f609402f6065d098e4d059fe.
+- Owner requests nonblocking writes: all four existing automations remain enabled with unchanged schedules. Public builder is sole scheduled shared integration writer; Leonida prepares independent VI PRs; publisher and private FORGE independent. Public manual and automated shared writes honor ops/integration-lease, .team-jura/integration-lease.json, exact-head CAS acquisition, token readback and release immediately after write, not during CI. Two-contender probe rejected stale competing update; manual Cayo merge released lease. Busy lock means continue isolated work, recheck between batches, save ready PR and resume next invocation if still occupied. No instant-start guarantee. See charter for protocol.
+
+
 ## November 27 — current coordinated checkpoint (supersedes older status entries)
 
 - Protected main remains `4de7bcfedb411a88f609402f6065d098e4d059fe`; development `515c9b0f815c7fa9e6da31e9092a56b46d76a33b`. #267 and #287 already integrated; #286 map/navigation 32/32, #288 local crew 2/2, #289 guest backup 4/4, #290 combined release gates 2/2 integrated. Do not replay these batches.
