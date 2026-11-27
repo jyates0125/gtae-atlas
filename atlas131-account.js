@@ -7,6 +7,7 @@ const VERSION=1;
 const MAX_BYTES=5_000_000;
 const EXACT=new Set([
 'jura3-progress','team-jura-passport-v74',
+ 'team-jura-my-crew-v1','team-jura-world-profiles-v2',
 'team-jura-atlas81-hq-v1','team-jura-checklist-v54',
 'team-jura-atlas90-collection-v1','team-jura-atlas96-parking-v1',
 'team-jura-atlas97-last-workspace-v1','team-jura-atlas98-style-bookmarks-v1'
@@ -31,17 +32,26 @@ async function restore(file){
   if(file.size>MAX_BYTES)throw Error('Backup exceeds the 5 MB safety limit.');
   const parsed=JSON.parse(await file.text());
   if(!parsed||parsed.app!==APP||parsed.version!==VERSION||!parsed.saves||typeof parsed.saves!=='object'||Array.isArray(parsed.saves))throw Error('Not a compatible Team Jura Atlas backup.');
-  const entries=Object.entries(parsed.saves);
+  let entries=Object.entries(parsed.saves);
   if(entries.length>300)throw Error('This backup contains too many entries.');
   if(entries.some(([k,v])=>!validKey(k)||typeof v!=='string'||v.length>1_500_000))throw Error('Backup contains an unsupported storage entry.');
   if(!entries.length){msg('The backup has no saved Atlas progress. Nothing was changed.');return}
-  if(!confirm('Restore '+entries.length+' Atlas progress records? Matching local records on this device will be overwritten. Continue?')){msg('Restore cancelled. Nothing was changed.');return}
-  // Validate quota before committing. Roll back if storage fails.
+  const crewKeys=new Set(['team-jura-my-crew-v1','team-jura-world-profiles-v2']);
+  const hasCrew=entries.some(([key])=>crewKeys.has(key));
+  if(!confirm('Restore '+entries.length+' Atlas progress records? Matching non-crew records will be overwritten. Crew profiles will be merged without replacing existing profiles. Continue?')){msg('Restore cancelled. Nothing was changed.');return}
+  let crewPlan=null;
+  if(hasCrew){
+   if(!window.JuraCrewProfiles?.planBackupRestore)throw Error('Crew backup support is unavailable. No records were changed.');
+   crewPlan=window.JuraCrewProfiles.planBackupRestore(localStorage,parsed.saves);
+   entries=entries.filter(([key])=>!crewKeys.has(key));
+   entries.push([crewPlan.key,crewPlan.value]);
+  }
+  // Validate all crew input before committing any records. Roll back if storage fails.
   const original=new Map(entries.map(([k])=>[k,localStorage.getItem(k)]));
   const written=[];
   try{for(const [k,v] of entries){localStorage.setItem(k,v);written.push(k)}}
   catch(err){for(const k of written){const old=original.get(k);try{if(old===null)localStorage.removeItem(k);else localStorage.setItem(k,old)}catch(_){}}throw Error('Device storage is full or unavailable. Existing progress was restored where possible.')}
-  msg(entries.length+' Atlas records restored. Reload the dashboard and maps to see your saved progress.');
+  msg(entries.length+' Atlas records restored.'+(crewPlan?' Crew profiles merged; '+crewPlan.conflicts+' existing conflicts kept.':'')+' Reload the dashboard and maps to see your saved progress.');
  }catch(err){msg(err?.message||'Unable to read this backup.')}
 }
 function init(){
