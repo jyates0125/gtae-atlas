@@ -20,11 +20,16 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    for width in (390,1440):
     ctx=browser.new_context(viewport={'width':width,'height':844})
     page=ctx.new_page()
-    for path in ('index.html','atlas-dashboard.html'):
+    page.goto(base+'index.html')
+    expect(page.locator('.j4709-entry')).to_have_count(0)
+    page.locator('a.action.primary').click()
+    expect(page).to_have_url(base+'atlas-dashboard.html')
+    for path in ('atlas-dashboard.html',):
      page.goto(base+path)
      panel=page.locator('.j4709-entry')
      expect(panel).to_be_visible()
-     assert panel.evaluate("(e)=>{const hero=e.parentElement.querySelector('.j130-public-hero,.j223-hero');return !!hero && Boolean(hero.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING) && !e.previousElementSibling?.matches('.j223-worlds,.j130-worlds')}")
+     assert panel.evaluate("(e)=>{const hero=e.parentElement.querySelector('.j130-public-hero,.j223-hero');return !!hero && Boolean(hero.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)}")
+     assert panel.evaluate("(e)=>{const worlds=e.parentElement.querySelector('.j223-worlds');return !!worlds && Boolean(worlds.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)}"), 'Game selection must precede collections on current home'
      for target in ('atlas-forge-collections.html','atlas90-vehicles5.html?world=story','atlas90-vehicles5.html?world=online','atlas90-vehicles6.html','atlas90-weapons.html?world=story','atlas90-weapons.html?world=online','atlas90-weapons6.html'):
       expect(panel.locator(f'a[href="./{target}"]')).to_have_count(1)
      for img in panel.locator('img').all():
@@ -33,7 +38,7 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
       assert img.evaluate('(e)=>e.complete && e.naturalWidth>0') or img.evaluate('(e)=>e.decode().then(()=>true)')
      assert panel.evaluate('(e)=>e.scrollWidth<=e.clientWidth+2')
      panel.screenshot(path=str(OUT/f'{path}-{width}.png'),animations='disabled')
-     if path=='index.html':
+     if path=='atlas-dashboard.html':
       cards=page.locator('#featuredGrid>.world-card')
       expect(cards).to_have_count(4,timeout=15000)
       for world in cards.all():

@@ -12,11 +12,11 @@ for rel,digest in expected.items():
     assert hashlib.sha256((R/rel).read_bytes()).hexdigest()==digest,rel
     if (R/'public').is_dir():
         assert hashlib.sha256((R/'public'/rel).read_bytes()).hexdigest()==digest,rel
-page=(R/'one-last-ride.html').read_text()
+page=(R/'one-last-ride.html').read_text(encoding='utf-8')
 assert '<source src="./film/assets/one-last-ride-action-cut-3906.mp4?v=290a1f34"' in page
 assert 'poster="./film/assets/one-last-ride-action-opening-3906.jpg"' in page
 assert 'Original music-only master (archive)' in page
 assert '00:39 · 720p · Action cut' in page
 assert '132 BPM' in page
-assert json.loads((R/'docs/ATLAS3906-ACTION-CUT-MANIFEST.json').read_text())['reviewOnly'] is True
+assert json.loads((R/'docs/ATLAS3906-ACTION-CUT-MANIFEST.json').read_text(encoding='utf-8'))['reviewOnly'] is True
 print('PASS exact action media, published bytes and archived master')

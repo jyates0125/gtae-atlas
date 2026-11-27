@@ -70,9 +70,15 @@ with http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Quiet,dir
                                     assert layout['center']['right']<=layout['right']['x']+1,(key,layout)
                                     assert layout['hero']['w']>=layout['center']['w']*.95,(key,layout)
                                     result['studioGrid']=layout
-                                image_response=page.request.get(base+rel,timeout=15000)
-                                assert image_response.ok,(key,'image request')
-                                assert hashlib.sha256(image_response.body()).digest()==hashlib.sha256((ROOT/rel).read_bytes()).digest(),key
+                                # Check the exact served bytes in the same browser context
+                                # as the decoded artwork, avoiding a separate API client.
+                                served=page.evaluate('''async (url) => {
+                                  const r=await fetch(url,{cache:'no-store',signal:AbortSignal.timeout(15000)});
+                                  if(!r.ok)throw Error('Image HTTP '+r.status);
+                                  const digest=await crypto.subtle.digest('SHA-256',await r.arrayBuffer());
+                                  return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+                                }''',base+rel)
+                                assert served==hashlib.sha256((ROOT/rel).read_bytes()).hexdigest(),key
                                 page.screenshot(path=str(OUT/f'{key}-{width}.png'),animations='disabled',timeout=15000)
                                 report.append({'key':key,'page':entry['page'],'viewport':width,'asset':rel,**result})
                                 print(f"PASS {key} {width}px: {rel} ({result['width']}x{result['height']})",flush=True)

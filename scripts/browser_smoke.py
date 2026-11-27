@@ -131,9 +131,10 @@ async def smoke():
                                                 f"{info['scroll']}/{info['width']} offenders={offenders}")
 
                             # Site-wide release candidate: the ONE universal page-directory
-                            # button must actually open, filter, and dismiss on *every*
-                            # published page. This is an interaction, not a source assertion.
-                            if not failures:
+                            # button must open, filter, and dismiss on every functional page.
+                            # The welcome gateway intentionally has no gameplay menu; its
+                            # guest entry and absence of tools are verified below.
+                            if not failures and path!='index.html':
                                 try:
                                     nav=pg.locator('#j132-nav-toggle')
                                     await nav.wait_for(state='visible',timeout=4500)
@@ -881,7 +882,7 @@ async def smoke():
                                         if not focus:failures.append('Drawer focus did not cycle to Close on shift-tab')
                                         await pg.keyboard.press('Escape')
                                         if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Escape did not close map page drawer')
-                            if not failures and path in ('index.html','atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','one-last-ride.html'):
+                            if not failures and path in ('atlas-dashboard.html','atlas-share.html','atlas-account.html','maps.html','one-last-ride.html'):
                                 global_nav=pg.locator('#j132-nav-toggle')
                                 if await global_nav.count()!=1:failures.append('Universal public page menu missing')
                                 else:
@@ -891,15 +892,14 @@ async def smoke():
                                     if await pg.locator('#j132-groups a[href="./atlas-forge-collections.html"]').count()!=1:failures.append('Universal page search did not find My Garage collection hub')
                                     await pg.locator('.j132-close').click()
                                     if await pg.locator('#j132-nav-drawer').is_visible():failures.append('Universal page menu cannot close')
-                            if not failures and path in ('index.html','maps.html'):
-                                dest='./atlas-dashboard.html' if path=='index.html' else './atlas97-journey.html'
+                            if not failures and path=='maps.html':
+                                dest='./atlas97-journey.html'
                                 start=pg.locator('a.j99-start-link[href="'+dest+'"]')
                                 if await start.count()!=1 or not await start.is_visible():failures.append('Start Here must be visible without opening the navigation menu')
                             if not failures and path=='index.html':
-                                if await pg.locator('a[href="./atlas-dashboard.html"]').count()==0:failures.append('Guest dashboard entry missing')
-                                if await pg.locator('[data-j130-action="share-page"]').count()==0:failures.append('Launch share action missing')
-                                if await pg.locator('#featuredGrid a').count()<4:failures.append('Fewer than four flagship world cards')
-                                if await pg.locator('a[href="./one-last-ride.html"]').count()==0:failures.append('Film link missing')
+                                if await pg.locator('a.action.primary[href="./atlas-dashboard.html"]').count()!=1:failures.append('Guest home entry missing')
+                                if not await pg.locator('.j4728-signin').is_disabled():failures.append('Deferred sign-in must remain disabled')
+                                if await pg.locator('#j132-nav-toggle,#featuredGrid,.j4709-entry').count()!=0:failures.append('Welcome must remain separate from player tools')
                             if not failures and path=='atlas-account.html':
                                 if await pg.locator('button[disabled]').count()<1:failures.append('Unconfigured sign-in must not collect credentials')
                                 if await pg.locator('#j131Export').count()!=1:failures.append('Atlas backup export missing')

@@ -24,5 +24,7 @@ assert p.links["canonical"]==base
 assert p.links["icon"]=="./art/elario-crest.svg"
 assert (ROOT/"art/atlas97-proposed-loki-scaly-hero.webp").is_file()
 assert (ROOT/"art/elario-crest.svg").is_file()
-assert 'data-page="home"' in html and 'id="featuredGrid"' in html
+assert 'data-page="home"' in html and 'data-j4728-welcome="true"' in html
+assert 'id="featuredGrid"' not in html
+assert 'id="featuredGrid"' in (ROOT/'atlas-dashboard.html').read_text(encoding='utf-8')
 print("PASS Atlas 12.9: social cards use correct absolute image, active project name and preview language")

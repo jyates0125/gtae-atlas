@@ -3,7 +3,7 @@
  * searchable page index. No game engines or stored player data altered. */
 (()=>{'use strict';
 const CATEGORIES=[
- {title:'START & COMMUNITY',prefix:'start',items:[['Welcome','index.html'],['Enter Atlas dashboard','atlas-dashboard.html'],['Choose a world','atlas97-journey.html'],['All 13 maps','maps.html'],['Guest progress & backup','atlas-account.html'],['Share the Atlas','atlas-share.html'],['One Last Ride','one-last-ride.html'],['Team Jura','team-jura.html'],['Elario Studios','elario.html']]},
+ {title:'START & COMMUNITY',prefix:'start',items:[['Welcome','index.html'],['Home','atlas-dashboard.html'],['Choose a world','atlas97-journey.html'],['All 13 maps','maps.html'],['Guest progress & backup','atlas-account.html'],['Share the Atlas','atlas-share.html'],['One Last Ride','one-last-ride.html'],['Team Jura','team-jura.html'],['Elario Studios','elario.html']]},
  {title:'GAME MAPS & EXPLORERS',prefix:'maps',items:[['GTA V Story','atlas.html'],['GTA Online','atlas-online.html'],['GTA VI Story · Leonida','atlas-vi.html'],['GTA VI Story · Official map','atlas-vi.html?view=rockstar'],['Cayo Perico','heist-cayo-perico.html'],['GTA IV','atlas-iv.html'],['San Andreas','atlas-sa.html'],['Vice City','map-hub.html?game=vc'],['GTA III','map-hub.html?game=iii'],['Vice City Stories','map-hub.html?game=vcs'],['Liberty City Stories','map-hub.html?game=lcs'],['Chinatown Wars','map-hub.html?game=ctw'],['The Lost and Damned (TLAD)','atlas-iv.html?scope=tlad'],['The Ballad of Gay Tony (TBOGT)','atlas-iv.html?scope=tbogt'],['Map directory','maps.html']]},
  {title:'COLLECTIONS & PLAYER TOOLS',prefix:'tools',items:[['Universe database','atlas-database.html'],['GTA V vehicles','atlas90-vehicles5.html'],['GTA VI Vehicles','atlas90-vehicles6.html'],['GTA V Story Weapons','atlas90-weapons.html?world=story'],['GTA Online Weapons','atlas90-weapons.html'],['GTA VI Weapons','atlas90-weapons6.html'],['All searchable characters','atlas-characters.html'],['Animals','atlas-animals.html'],['Collectibles','atlas-collectibles.html'],['My Garage','atlas-forge-collections.html'],['My Crew','my-crew.html'],['Garage workshop','atlas-vehicle-configurator.html'],['Atlas Passport','atlas-passport.html'],['Tracker & HQ','atlas81-hq.html'],['Cheat sheets','atlas-cheats.html'],['Guides','guides.html'],['Activities','atlas-activities.html'],['Your toolkit','atlas-toolkit.html']]},
  {title:'HEISTS & MISSIONS',prefix:'heists',items:[['Heists HQ','heists.html'],['Cayo Perico heist','heist-cayo-perico.html'],['Diamond Casino','heist-diamond-casino.html'],['Doomsday Act I','heist-doomsday-act-1.html'],['Doomsday Act II','heist-doomsday-act-2.html'],['Doomsday Act III','heist-doomsday-act-3.html'],['Pacific Standard','heist-pacific-standard.html'],['Fleeca Job','heist-fleeca.html'],['Prison Break','heist-prison-break.html'],['Humane Labs','heist-humane-labs.html'],['Auto Shop','heist-auto-shop.html'],['Cluckin Bell','heist-cluckin-bell.html'],['Series A Funding','heist-series-a.html'],['Agency VIP Contract','heist-agency-vip.html'],['Salvage Yard','heist-salvage-yard.html'],['Kortz Center research','heist-kortz-center.html']]},
@@ -13,7 +13,7 @@ const CATEGORIES=[
 const CORE=[
  {title:'CHOOSE YOUR GAME',prefix:'choose',items:[['GTA Online','atlas-online.html'],['GTA V Story','atlas.html'],['GTA VI Story','atlas-vi.html'],['Classic GTA & all 13 maps','maps.html']]},
  {title:'MY STUFF',prefix:'personal',items:[['My Garage','atlas-forge-collections.html'],['My Crew','my-crew.html'],['My Progress & backup','atlas-account.html']]},
- {title:'EXPLORE',prefix:'explore',items:[['Home','index.html'],['Universe database','atlas-database.html'],['Heists & missions','heists.html'],['Guides','guides.html']]}
+ {title:'EXPLORE',prefix:'explore',items:[['Home','atlas-dashboard.html'],['Universe database','atlas-database.html'],['Heists & missions','heists.html'],['Guides','guides.html']]}
 ];
 function currentWorld(){
  const page=location.pathname.split('/').pop(),args=new URLSearchParams(location.search);
@@ -38,6 +38,10 @@ function worldTasks(){
  if(scope==='vi')items.push(['Community research','atlas-research.html']);
  return {title:{online:'GTA ONLINE',story:'GTA V STORY',vi:'GTA VI STORY'}[scope]+' · YOUR GAME',prefix:'world',items};
 }
+// Retained URLs are intentionally excluded from ordinary navigation and search.
+const LEGACY_ROUTES=new Set(['atlas97-journey.html','atlas93-dispatch.html','atlas-catalog.html','atlas8-preview.html','command-center.html','directory.html','discovery.html','explorer.html','legacy-explorer.html','leonida-hq.html','online-explorer.html']);
+const isLegacy=url=>LEGACY_ROUTES.has(url.split(/[?#]/)[0]);
+const CURRENT_ALIASES={title:'CURRENT PLAYER WORKSPACES',prefix:'current-alias',items:[['Home','atlas-dashboard.html','dashboard'],['All 13 maps','maps.html','start here choose a world discovery directory command center'],['Today’s activities','atlas-online.html#j393-online-activity-slot','dispatch daily intel online explorer'],['Universe database','atlas-database.html','vehicle location catalog'],['GTA VI Story','atlas-vi.html','leonida hq leonida explorer']]};
 const ALL=new Set(CATEGORIES.flatMap(x=>x.items.map(y=>y[1].split(/[?#]/)[0])));
 const safeHref=x=>/^[a-z0-9-]+\.html$/i.test(x);
 const searchText=value=>String(value??'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/['’]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
@@ -58,10 +62,10 @@ function pageLink(a){const l=document.createElement('a');l.href='./'+a[1];l.text
  if(pathnameMatch&&scopedQuery&&armoryMatches)l.setAttribute('aria-current','page');
  return l}
 function build(){
- if(document.querySelector('#j132-nav-toggle'))return;
+ if(document.body.dataset.j4728Welcome==='true'||document.querySelector('#j132-nav-toggle'))return;
  const wrap=document.createElement('div');wrap.className='j132-nav';
  if(/^atlas(?:-online|-vi)?\.html$/i.test(location.pathname.split('/').pop()||''))wrap.classList.add('j132-map-nav');
- wrap.innerHTML='<button id="j132-nav-toggle" type="button" aria-controls="j132-nav-drawer" aria-expanded="false" aria-label="Open GTAE menu">☰ <span>MENU</span></button><aside id="j132-nav-drawer" aria-label="All GTAE navigation" hidden><div class="j132-nav-head"><img src="./art/elario-crest.svg" width="35" height="35" alt=""><div><strong>ELARIO STUDIOS · GTAE</strong><small>GTA EXPLORER · BY TEAM JURA</small></div><button type="button" class="j132-close" aria-label="Close site navigation">✕</button></div><label class="j132-search">Search every page<input type="search" id="j132-search" placeholder="Maps, garages, collectibles, heists..." autocomplete="off"></label><div class="j132-groups" id="j132-groups"></div><p class="j132-nav-tail">Many Crews. One Vision. · Independent GTA fan companion</p></aside>';
+ wrap.innerHTML='<button id="j132-nav-toggle" type="button" aria-controls="j132-nav-drawer" aria-expanded="false" aria-label="Open GTAE menu">☰ <span>MENU</span></button><aside id="j132-nav-drawer" aria-label="All GTAE navigation" hidden><div class="j132-nav-head"><img src="./art/elario-crest.svg" width="35" height="35" alt=""><div><strong>ELARIO STUDIOS · GTAE</strong><small>GTA EXPLORER · BY TEAM JURA</small></div><button type="button" class="j132-close" aria-label="Close site navigation">✕</button></div><label class="j132-search">Search GTAE<input type="search" id="j132-search" placeholder="Maps, garages, collectibles, heists..." autocomplete="off"></label><div class="j132-groups" id="j132-groups"></div><p class="j132-nav-tail">Many Crews. One Vision. · Independent GTA fan companion</p></aside>';
  const button=wrap.querySelector('#j132-nav-toggle'),drawer=wrap.querySelector('#j132-nav-drawer'),input=wrap.querySelector('#j132-search'),list=wrap.querySelector('#j132-groups');
  let allCategories=CATEGORIES.slice(),characterCategories=[],otherPages=[],directoryOpen=false;
  function rebuildCategories(){allCategories=[...CATEGORIES,...characterCategories,...otherPages];render(input.value)}
@@ -71,11 +75,13 @@ function build(){
   const contextual=worldTasks();
   if(!q){for(const group of [...(contextual?[contextual]:[]),...CORE]){const section=document.createElement('section');section.className='j132-group j4724-primary';const title=document.createElement('h3');title.textContent=group.title;section.append(title);for(const data of group.items){if(list.querySelectorAll('a').length&&[...list.querySelectorAll('a')].some(a=>a.getAttribute('href')==='./'+data[1]))continue;section.append(pageLink(data));}list.append(section);}const details=document.createElement('details');details.className='j4724-all-pages';details.open=directoryOpen;const summary=document.createElement('summary');summary.textContent='All pages & advanced tools';details.append(summary);details.addEventListener('toggle',()=>{directoryOpen=details.open});list.append(details);}
   const destination=q?list:list.querySelector('.j4724-all-pages');
-  const groups=q?[...(contextual?[contextual]:[]),...CORE,...allCategories]:allCategories;
+  const groups=q?[...(contextual?[contextual]:[]),...CORE,CURRENT_ALIASES,...allCategories]:allCategories;
+  const explicitArchive=q==='legacy archive';
   const seen=new Set(q?[]:[...list.querySelectorAll('.j4724-primary a')].map(a=>a.getAttribute('href').slice(2)));
   for(const group of groups){
     if(!q&&group.prefix==='characters')continue; // Search-only results, not an extra 36-item navigation dump.
     const matches=group.items.filter(([label,url,keywords,record])=>{
+      if(isLegacy(url))return explicitArchive;
       if(group.prefix!=='characters')return (label+' '+url+' '+(keywords||'')).toLocaleLowerCase().includes(q);
       const s=searchText(q);
       if(!s||!record)return false;
@@ -86,10 +92,10 @@ function build(){
     const distinct=matches.filter(item=>{if(seen.has(item[1]))return false;seen.add(item[1]);return true});
     if(!distinct.length)continue;
     const section=document.createElement('section');section.className='j132-group';
-    const title=document.createElement('h3');title.textContent=group.title;section.append(title);
+    const title=document.createElement('h3');title.textContent=explicitArchive?'LEGACY ARCHIVE · RETAINED LINKS':group.title;section.append(title);
     for(const data of distinct){section.append(pageLink(data));shown++}destination.append(section);
   }
-  if(q&&!shown){const msg=document.createElement('p');msg.textContent='No pages matched. Try a game or feature name.';list.append(msg)}
+  if(q&&!shown){const msg=document.createElement('p');msg.textContent='No current pages matched. Try a game or feature name.';list.append(msg)}
  }
  const fullMenu=document.getElementById('j369-full-map-menu');
  let returnFocus=button;

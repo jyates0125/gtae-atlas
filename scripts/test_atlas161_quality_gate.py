@@ -73,7 +73,8 @@ assert len(mission_hashes)==15 and len(set(mission_hashes))==15
 
 # Guest entry and account phase must remain honest. No dead CTA to a not-yet-enabled login.
 welcome=(root/'index.html').read_text(encoding='utf-8')
-assert 'atlas-dashboard.html' in welcome
+assert 'href="./atlas-dashboard.html">Continue as Guest' in welcome
+assert 'class="action outline j4728-signin" disabled' in welcome
 assert 'Sign in · Deferred' in account
 assert 'disabled aria-describedby="accountNotice"' in account
 assert 'Social launch kit' not in welcome

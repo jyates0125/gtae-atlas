@@ -60,6 +60,16 @@ try:
                 response=page.goto(base+route,wait_until="domcontentloaded",timeout=20000)
                 assert response and response.ok, "page HTTP error"
                 menu=page.locator("#j132-nav-toggle")
+                if route=="index.html":
+                    expect(menu).to_have_count(0)
+                    expect(page.locator(".j4728-signin")).to_be_disabled()
+                    expect(page.locator("a.action.primary[href='./atlas-dashboard.html']")).to_be_visible()
+                    assert page.evaluate("document.documentElement.scrollWidth<=innerWidth+2")
+                    record["menu"]="intentionally absent on welcome"
+                    record["topCandidates"]=page.evaluate(probe)
+                    record["horizontalOverflow"]=page.evaluate("Math.max(0,document.documentElement.scrollWidth-innerWidth)")
+                    page.screenshot(path=str(out/f"{width}-welcome.png"),animations="disabled")
+                    continue
                 expect(menu).to_have_count(1)
                 expect(menu).to_be_visible()
                 record["topCandidates"]=page.evaluate(probe)

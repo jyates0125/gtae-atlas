@@ -42,7 +42,8 @@ assert len(shortcuts.hrefs)==13, ('dashboard shortcut count',shortcuts.hrefs)
 assert len(set(shortcuts.hrefs))==len(shortcuts.hrefs), 'duplicate shortcut destinations'
 assert all(h.startswith('./') for h in shortcuts.hrefs), 'shortcuts must remain local Atlas links'
 assert 'j223-search-results' in page and 'role="search"' in page
-assert 'No account required' in welcome and 'atlas-dashboard.html' in welcome
+assert 'No download or account is required' in welcome and 'href="./atlas-dashboard.html">Continue as Guest' in welcome
+assert 'id="featuredGrid"' not in welcome and 'class="j223-worlds"' in page
 assert 'jura155-vi.webp' in css and 'j223-hero' in css
 assert 'j223-cast-rail' in js and 'atlas-universe-profiles.json' in js
 assert page.count('class="j223-evidence-card"')==3

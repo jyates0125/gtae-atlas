@@ -31,7 +31,7 @@ assert 'id="forgeOwned"' in page and 'ownershipKey' in script
 assert 'Legacy body setting' in page and '<label hidden' in page
 assert 'presets and Garage ownership stay untouched' not in page or 'importBuilds' in page
 assert 'NOT a GTA vehicle model' in viewer, 'Viewer disclaimer must remain'
-for nav in ('index.html','atlas97-journey.html','atlas93-garage.html','atlas-database.html','atlas100-showroom.js'):
+for nav in ('atlas-dashboard.html','atlas97-journey.html','atlas93-garage.html','atlas-database.html','atlas100-showroom.js'):
  assert 'atlas-vehicle-configurator.html' in (ROOT/nav).read_text(encoding='utf8'),nav
 print('PASS Atlas 10.1 original 3D concept builder: source references, inputs, storage isolation, navigation and rights disclosures')
 
