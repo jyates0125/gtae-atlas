@@ -1,0 +1,70 @@
+name: Public build equivalence - shadow pilot
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'scripts/fingerprint_public_payload.py'
+      - 'scripts/test_fingerprint_public_payload.py'
+      - '.github/workflows/public-build-equivalence-shadow.yml'
+permissions:
+  contents: read
+jobs:
+  fingerprint:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            label: linux
+          - os: windows-latest
+            label: windows
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify fingerprint fixtures
+        run: python scripts/test_fingerprint_public_payload.py -v
+      - name: Build and validate standard CI payload
+        shell: bash
+        env:
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          node scripts/build-cloudflare.cjs
+          python scripts/audit_published.py
+          python scripts/fingerprint_public_payload.py public "$GITHUB_SHA" --output fingerprint.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: payload-fingerprint-${{ matrix.label }}
+          path: fingerprint.json
+          if-no-files-found: error
+  compare:
+    needs: fingerprint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: payload-fingerprint-*
+          path: fingerprints
+      - name: Compare normalized exact payload
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          results = [json.loads((Path("fingerprints") / ("payload-fingerprint-" + label) / "fingerprint.json").read_text()) for label in ("linux", "windows")]
+          for result in results:
+              assert result["revision"] == os.environ["EXPECTED_SHA"], result
+          for key in ("schema", "revision", "payload_sha256", "payload_files", "payload_bytes"):
+              assert results[0][key] == results[1][key], (key, results)
+          print("PASS: exact normalized public payload equivalent across Linux and Windows", results[0])
+          PY
