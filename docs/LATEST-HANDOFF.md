@@ -133,3 +133,7 @@ Protected main 4de7bcfedb411a88f609402f6065d098e4d059fe is the exact tested seas
 - Product queue: #267 activity/navigation staging remains unresolved Edge mobile canonical-navigation failure and needs reconciliation; no release of that candidate. Resume the product backlog after bounded engineering validation work; do not let infrastructure research indefinitely displace player-facing improvements.
 
 PR #267 reconciliation, November 26 Central. Candidate 4838b8cd350e756ba8560f3065eed90c45a72856 regained passing Edge on unchanged source in run 45930312457, job 140326270035. Initial failure at atlas.html#game5, 390px, missing #j132-nav-toggle, job 140283432970; cause unconfirmed. Integrate development b05f7b7f63dc7b0cef1fecdce6fa6c01de9bffa3 to retain seasonal artwork coverage and both handoffs. Scope unchanged. Run affected journeys on reconciled head and obtain owner native-device review before integration. No production deployment from this candidate.
+
+
+### Nov 27 — player-first map pass
+Owner prefers GTAWeb.eu and GTAMap.io. #285 integrated staging; #286 current work starts from exact 4bbe63c (focused CI and preview successful before this refinement). Follow docs/ATLAS473-PLAYER-UX-AUDIT.md and the unification backlog. New mobile compaction, persistent explicit opt-in selection and event deep-link recovery require exact-head focused checks and native review. No release, VI map, data feed or private Forge writes.
