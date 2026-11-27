@@ -22,7 +22,10 @@ try:
             ctx.route("https://**/*",lambda r:r.abort())
             page=ctx.new_page()
             page_errors=[]
+            local_failures=[]
             page.on("pageerror",lambda error:page_errors.append(str(error)))
+            page.on("requestfailed",lambda request:local_failures.append((request.url,request.failure)) if request.url.startswith(base) else None)
+            page.on("response",lambda response:local_failures.append((response.url,response.status)) if response.url.startswith(base) and response.status>=400 else None)
             # Exercise the unchanged regular welcome even during the seasonal display window.
             # The dedicated seasonal suite verifies the full artwork, expiration and archive.
             ctx.route("**/art/elario-thanksgiving-2026.webp",lambda route:route.abort())
@@ -36,6 +39,7 @@ try:
             expect(page).to_have_url(base+"atlas-dashboard.html")
             for path,scope in [("atlas-dashboard.html",None),("maps.html",None),("atlas-online.html","online"),("atlas.html","story"),("atlas-vi.html","vi"),("atlas90-vehicles5.html?world=story","story"),("atlas-characters.html?game=vi","vi"),("atlas-sa.html",None),("atlas-forge-collections.html",None)]:
                 page_errors.clear()
+                local_failures.clear()
                 print(f"Checking {width}px {path}",flush=True)
                 response=page.goto(base+path,wait_until="domcontentloaded",timeout=50000)
                 assert response and response.ok,(path,response.status if response else None)
@@ -65,7 +69,7 @@ try:
                     if path in ("atlas-dashboard.html","maps.html"):
                         expect(page.locator("#primaryNav")).to_be_hidden()
                 except AssertionError as error:
-                    raise AssertionError((path,width,page.url,page_errors,page.evaluate("({ready:document.readyState,welcome:document.body.dataset.j4728Welcome,scripts:[...document.scripts].map(s=>s.src).filter(s=>s.includes(\x27atlas132-nav\x27))})"))) from error
+                    raise AssertionError((path,width,page.url,page_errors,local_failures,page.evaluate("({ready:document.readyState,welcome:document.body.dataset.j4728Welcome,scripts:[...document.scripts].map(s=>s.src).filter(s=>s.includes(\x27atlas132-nav\x27))})"))) from error
                 menu.click()
                 drawer=page.locator("#j132-nav-drawer")
                 expect(drawer).to_be_visible()
@@ -109,6 +113,26 @@ try:
                 expect(menu).to_be_focused()
                 assert page.evaluate("document.documentElement.scrollWidth <= innerWidth+2"),path
             ctx.close()
+            # Deliberately fail the initial local menu script, not the retry.
+            # Require the actual recovered menu to open, search and close.
+            recovery_ctx=browser.new_context(viewport={"width":width,"height":height})
+            recovery_ctx.route("https://**/*",lambda r:r.abort())
+            recovery_ctx.route("**/atlas132-nav.js?*",lambda route:route.continue_() if "recovery=1" in route.request.url else route.abort())
+            recovery_page=recovery_ctx.new_page()
+            recovery_page.goto(base+"atlas.html",wait_until="domcontentloaded",timeout=50000)
+            recovery_menu=recovery_page.locator("#j132-nav-toggle")
+            expect(recovery_menu).to_have_count(1,timeout=20000)
+            expect(recovery_menu).to_be_visible()
+            expect(recovery_page.locator('script[data-jura-nav-recovery="true"]')).to_have_count(1)
+            recovery_menu.click()
+            recovery_drawer=recovery_page.locator("#j132-nav-drawer")
+            expect(recovery_drawer).to_be_visible()
+            recovery_drawer.locator("#j132-search").fill("garage")
+            expect(recovery_drawer.locator('a[href="./atlas-forge-collections.html"]')).to_have_count(1)
+            recovery_drawer.locator(".j132-close").click()
+            expect(recovery_menu).to_be_focused()
+            expect(recovery_menu).to_have_count(1)
+            recovery_ctx.close()
             # A fresh guest context prevents prior empty-feed cache throttling.
             ctx=browser.new_context(viewport={"width":width,"height":height})
             ctx.route("https://**/*",lambda r:r.abort())
