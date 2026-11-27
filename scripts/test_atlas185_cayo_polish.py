@@ -11,7 +11,7 @@ for token in ('j185-polish','j185-cayo-polished','j185-pan','j185-legend-toggle'
               'aria-pressed','aria-expanded','matchMedia','jura','syncPan','syncLegend'):
     if token=='jura':continue
     assert token in (js+css),token
-assert "atlas185-cayo-polish.js?v=392" in loader
+assert "atlas185-cayo-polish.js?v=4742" in loader
 assert "atlas185-cayo-polish.css?v=185" in loader
 assert "if(heistId==='cayo-perico')" in loader
 assert "moveNative.click();syncPan();" in js
