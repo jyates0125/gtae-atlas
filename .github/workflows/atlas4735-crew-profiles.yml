@@ -4,6 +4,8 @@ on:
     branches: [development]
     paths:
       - 'atlas140-crew.js'
+      - 'atlas131-account.js'
+      - 'atlas-account.html'
       - 'atlas140-crew.css'
       - 'my-crew.html'
       - 'scripts/test_atlas140_crew_profiles.cjs'

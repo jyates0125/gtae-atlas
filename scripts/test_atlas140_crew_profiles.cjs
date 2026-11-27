@@ -15,3 +15,15 @@ const damaged=store({[C.KEY]:'bad JSON',[C.OLD]:raw});assert(C.read(damaged).blo
 const old=base;s.setItem(C.KEY,JSON.stringify(C.fresh()));assert.throws(()=>C.write(s,old,old.state),/another tab/);
 const full=C.fresh();full.crews=Array.from({length:20},(_,i)=>({...C.blank(),name:'Crew '+i}));assert.throws(()=>C.merge(full,{...legacy,game:'online',name:'Imported crew'}),/limit/);assert.equal(full.crews.length,20);
 console.log('Crew profile migration, world isolation, merge safety, damaged storage and concurrent save PASS');
+
+// Whole-site backup uses the same schema and merge safety as the crew-only tool.
+const local=C.fresh();local.crews[0].name='Existing';local.story.name='Keep Story';
+const imported=C.fresh();imported.world='vi';imported.vi.name='New VI';imported.story.name='Conflict';imported.crews[0].name='Imported';
+const currentRaw=JSON.stringify(local), incomingRaw=JSON.stringify(imported);
+const dest=store({[C.KEY]:currentRaw,[C.OLD]:raw});
+const plan=C.planBackupRestore(dest,{[C.KEY]:incomingRaw,[C.OLD]:raw});
+const combined=JSON.parse(plan.value);assert.equal(plan.key,C.KEY);assert.equal(plan.conflicts,1);assert.equal(combined.story.name,'Keep Story');assert.equal(combined.vi.name,'New VI');assert.deepEqual(combined.crews.map(x=>x.name),['Existing','Imported']);assert.equal(dest.getItem(C.KEY),currentRaw);assert.equal(dest.getItem(C.OLD),raw);
+const newDevice=C.planBackupRestore(store(),{[C.KEY]:incomingRaw,[C.OLD]:raw});assert.deepEqual(JSON.parse(newDevice.value),imported);
+assert.equal(JSON.parse(C.planBackupRestore(store(),{[C.OLD]:raw}).value).story.name,'Legacy Story');
+assert.throws(()=>C.planBackupRestore(dest,{[C.KEY]:'bad',[C.OLD]:raw}));assert.throws(()=>C.planBackupRestore(damaged,{[C.KEY]:incomingRaw}));assert.equal(C.planBackupRestore(dest,{}),null);
+console.log('Account backup crew merge, fresh restore, stale legacy suppression and corrupt-input rejection PASS');
