@@ -27,3 +27,6 @@ All classes keep required production packaging, applicable security and rights c
 
 ## Next implementation
 Inventory current production workflow steps and dependency owners; write conservative selector and unit tests in shadow mode; compare with full runs. Review before changing required workflow execution. Record measured rather than predicted savings.
+
+## Owner clarification: completed feature suites
+Retain detailed Cayo mission-board, route, interaction and screenshot tests as regression coverage, not mandatory repetitions on every unrelated release. Apply the same rule to other completed features. Execute the full feature suite on direct changes, relevant shared dependencies, periodic major-release validation or missing trustworthy evidence. Keep a minimal applicable integration smoke check and core security/build/deployment gates. Separate Cayo from unrelated VI and homepage jobs. Do not remove unique coverage or claim tests ran when evidence was reused. Current shadow classifier makes recommendations only; Cayo dependency mapping and trusted evidence validation are not yet implemented.
