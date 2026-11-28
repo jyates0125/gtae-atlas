@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "feedBlob": "729b64afd602fb54d58bdf2873b182cee6a1d520",
+  "cayoCatalogBlob": "d4d7923c16fc155f3feab5f63c930f97083b3fe2",
+  "notes": "Remote catalog coverage only except Cayo bundled catalog. Targets are research estimates, not validated pool sizes. Reconcile bundled mainland markers before adding records.",
+  "groups": {
+    "gun-van": {
+      "targetEstimate": 30,
+      "known": 2,
+      "validUntilUtc": "2026-11-29T06:00:00.000Z"
+    },
+    "shipwreck": {
+      "targetEstimate": 30,
+      "known": 2,
+      "validUntilUtc": "2026-11-29T06:00:00.000Z"
+    },
+    "street-dealers": {
+      "targetEstimate": 50,
+      "known": 4,
+      "validUntilUtc": "2026-11-29T07:00:00.000Z"
+    },
+    "ls-tags": {
+      "targetEstimate": 30,
+      "known": 5,
+      "validUntilUtc": "2026-11-28T06:00:00.000Z"
+    },
+    "hidden-caches": {
+      "targetEstimate": 100,
+      "known": 10,
+      "validUntilUtc": "2026-11-28T06:00:00.000Z"
+    },
+    "smoke-products": {
+      "targetEstimate": 30,
+      "known": 10,
+      "validUntilUtc": "2026-11-28T06:00:00.000Z"
+    },
+    "cayo-chests": {
+      "targetEstimate": 19,
+      "known": 19,
+      "validUntilUtc": "2026-11-29T06:00:00.000Z"
+    }
+  }
+}
