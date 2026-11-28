@@ -1,3 +1,9 @@
+## November 28 — Leonida in-game map and attributed data refresh candidate
+
+- Owner requested current GTA VI in-game map as primary. GTADB Day is existing approved in-game artwork; source tile family last changed Nov 19, not a new image. Make Day the initial view; retain Scaly/YANIS, Loki/DUPZOR, Rockstar official poster, 2D/3D and personal progress. No artwork replaced.
+- GTADB pinned revision 8aa82a1001ad137a524586a41bac85d0b791dc2f, Nov 28 14:49 UTC, blob e9b46e8f5248adfcad76714494cae9c635aae9ec. CC BY 4.0 source license read. Raw 4,796; 197 invalid/unnamed; 846 new eligible IDs; 4,600 retained records, 4,501 provisional mapped and 99 search-only. All prior IDs retained. 12 existing IDs held as search-only (large coordinate changes >=500 upstream units or invalid source record). Threshold is conservative manual decision, not measured gameplay distance/calibration. See docs/LEONIDA-NOV28-SOURCE-REVIEW.json. Other coordinate/name updates are provisional, not certified gameplay.
+- Prefer same-origin reviewed VI dataset over larger cached versions; no unreviewed remote VI refresh fallback. Existing offline cache may be stale and is labeled accordingly. Never reset personal progress or other world data. Tests updated for exact new counts, held IDs, map views, and source hash. Native review and production release gates outstanding. Coordinate alignment still requires independent evidence.
+
 ## November 28 — PR #311 production verified; Cayo mobile candidate #312
 
 - Protected main `86506d0b7e1d4722d3abfcc326a396ae461bd36e` confirmed live by exact-revision anonymous [run 46159747134](https://github.com/jyates0125/gtae-atlas/actions/runs/46159747134); [baseline guard 46159747144](https://github.com/jyates0125/gtae-atlas/actions/runs/46159747144) passed. #311 exact head 98bd5acdd920133492c7ec2c7092897dd8797653 had eight successful applicable checks and Supabase skipped. Do not replay #311.
