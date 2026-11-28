@@ -14,27 +14,27 @@
     },
     "shipwreck": {
       "activeIds": [
-        "shipwreck-tataviam-2780-1107"
+        "shipwreck-tataviam-truckstop-2784-83"
       ],
-      "checkedAtUtc": "2026-11-27T12:19:00.000Z",
-      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "checkedAtUtc": "2026-11-28T13:30:00.000Z",
+      "validUntilUtc": "2026-11-29T06:00:00.000Z",
       "source": "https://gtamap.io/gta-online/daily/shipwreck/",
-      "confidence": "calculated_unconfirmed_in_game",
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/shipwreck",
-      "sourceObservation": "Nov 27 both sources agree Tataviam Mountains #25; GTAMap.io XY. Not gameplay verified."
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 28 Both sources #26 Tataviam Mountains South; GTAMap.io XY. Not gameplay verified."
     },
     "street-dealers": {
       "activeIds": [
-        "street-dealers-north-chumash-2177-4276",
-        "street-dealers-chumash-3163-1116",
-        "street-dealer-paleto-bay-156-6657"
+        "street-dealers-del-perro-pier-1667-1080",
+        "street-dealers-rockford-hills-760-208",
+        "street-dealers-north-chumash-2177-4276"
       ],
-      "checkedAtUtc": "2026-11-27T12:19:00.000Z",
-      "validUntilUtc": "2026-11-28T07:00:00.000Z",
+      "checkedAtUtc": "2026-11-28T13:30:00.000Z",
+      "validUntilUtc": "2026-11-29T07:00:00.000Z",
       "source": "https://gtamap.io/gta-online/daily/street-dealers/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
       "confidence": "calculated_unconfirmed_in_game",
-      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles",
-      "sourceObservation": "Nov 27 current dated reports agree North Chumash, Chumash, Paleto Bay; GTAMap.io exact XY; use deployed 07 UTC reset. Not gameplay verified."
+      "sourceObservation": "Nov 28 GTAMap.io #19/#15/#44 and GTA Boss #05/#40/#24 agree Pleasure Pier/Del Perro Beach, Rockford Hills and North Chumash. GTAMap.io exact XY. Not gameplay verified."
     },
     "ls-tags": {
       "activeIds": [
@@ -106,7 +106,7 @@
   },
   "checkedAtUtc": "2026-11-28T13:30:00.000Z",
   "status": "partially-populated-calculated-not-gameplay-verified",
-  "notes": "Nov 28: Gun Van refreshed; other groups retained with original expiry pending dated reconciliation. Calculated, not gameplay verified.",
+  "notes": "Nov 28: Gun Van, Shipwreck and Street Dealers refreshed (5 selections). Remaining groups retained with original expiry pending exact matching. Calculated, not gameplay verified.",
   "supportedGroups": [
     "cayo-chests",
     "gun-van",
@@ -415,6 +415,36 @@
       "y": 3054.2,
       "sourceUrl": "https://gtamap.io/gta-online/daily/gun-van/",
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/gun-van",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "shipwreck-tataviam-truckstop-2784-83",
+      "activityId": "shipwreck",
+      "name": "Shipwreck · Tataviam Truckstop coast",
+      "x": 2783.5,
+      "y": 82.6,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/shipwreck/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/shipwreck",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "street-dealers-del-perro-pier-1667-1080",
+      "activityId": "street-dealers",
+      "name": "Street Dealer · Pleasure Pier",
+      "x": -1666.6,
+      "y": -1080,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/street-dealers/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "street-dealers-rockford-hills-760-208",
+      "activityId": "street-dealers",
+      "name": "Street Dealer · Rockford Hills",
+      "x": -759.7,
+      "y": -208.4,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/street-dealers/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
       "confidence": "source-crosschecked"
     }
   ]
