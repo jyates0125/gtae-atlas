@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
       - run: node --check atlas-navigation.js && node scripts/test_atlas377_map_center.cjs && node scripts/test_atlas373_gps.cjs
