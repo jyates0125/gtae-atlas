@@ -8,3 +8,5 @@ Pause all journal editing, switching, new profiles, reload and further import be
 
 ## Playthrough navigation and Discovery backup protection — Nov 28
 An explicit link opens the saved active journey in Discovery using a local-only URL fragment (opaque profile ID, no names/notes). Plain Discovery still begins unassigned. Switching a Discovery profile updates the fragment for reload; malformed or unavailable profile links block writes until an explicit selection. The journey link is hidden while edits are dirty or storage is blocked/busy. Discovery import refuses unsaved notes before reading the file. No storage migration, map/rotation changes, or inferred gameplay. Phone/desktop regressions cover actual link navigation, reload, unknown/malformed scopes and blocked import.
+
+- First candidate CI caught an initialization mismatch on unknown linked profiles. The in-memory empty journal now starts in the requested scope and is reset to that scope if reading fails; blocked totals are unknown, not zero. Saved bytes remain untouched. The original fail-closed browser assertion is retained.

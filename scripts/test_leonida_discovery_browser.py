@@ -117,6 +117,8 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    p.goto(base+'atlas-collectibles.html?game=vi#playthrough='+unknown)
    p.reload()
    expect(p.locator('#jo-profile')).to_have_value(unknown,timeout=20000)
+   expect(p.locator('#jo-message')).to_contain_text('Editing paused')
+   expect(p.locator('#jo-done')).to_have_text('—')
    expect(p.locator('.jo-card [data-action=mark]').first).to_be_disabled()
    assert p.evaluate('([k,id])=>localStorage.getItem(k+\':\'+id)',[KEY,unknown]) is None
    p.goto(base+'atlas-collectibles.html?game=vi#playthrough=malformed');p.reload()
