@@ -1063,11 +1063,20 @@ function goToCoordinates(){const x=Number($('coordinateX').value),y=Number($('co
  coordinateTarget={game,x,y};selected=null;camera.x=x;camera.y=y;camera.z=Math.max(4,camera.z);updateSelected();schedulePaint();announce('Coordinate target: '+game+' · X '+x.toFixed(1)+' Y '+y.toFixed(1)+' (crosshair)');
  if(innerWidth<=700)$('sidebar').classList.add('mobile-collapsed');
 }
-async function cacheData(g,raw){try{const c=await caches.open(APP+'-data');const url=UPSTREAM+'map/data/'+g+'/landmarks.json';await c.put(url,new Response(JSON.stringify(raw),{headers:{'Content-Type':'application/json'}}))}catch{}}
-async function getCachedData(g){try{const c=await caches.open(APP+'-data');const r=await c.match(UPSTREAM+'map/data/'+g+'/landmarks.json');if(r)return await r.json()}catch{}return null}
+// VI uses a review-specific cache; never fall back to pre-review raw upstream data.
+const VI_REVIEW=Object.freeze({revision:'8aa82a1001ad137a524586a41bac85d0b791dc2f',hash:'205fe683cea89d9579ffb8410fb869c81097a61bd7febf568224f5d31b8a4c60',count:4600,mapped:4501,held:Object.freeze(["L1553","L270","L3260","L3261","L3262","L3263","L3265","L3440","L3444","L510","L829","L835"])});
+function validReviewedVI(data){
+ if(!data||data.schema!==2||data.game!=='6'||data.license!=='CC BY 4.0'||data.upstreamRevision!==VI_REVIEW.revision||data.sourceHash!==VI_REVIEW.hash||data.count!==VI_REVIEW.count||data.mappedCount!==VI_REVIEW.mapped||data.searchOnlyCount!==VI_REVIEW.count-VI_REVIEW.mapped||!data.records||Array.isArray(data.records)||Object.keys(data.records).length!==VI_REVIEW.count||!Array.isArray(data.heldForReviewIds)||data.heldForReviewIds.length!==VI_REVIEW.held.length)return false;
+ if(!VI_REVIEW.held.every(id=>data.heldForReviewIds.includes(id)&&Array.isArray(data.records[id]?.[1])&&data.records[id][1].length===0))return false;
+ let mapped=0;for(const row of Object.values(data.records)){if(!Array.isArray(row)||typeof row[0]!=='string')return false;const xy=row[1];if(!Array.isArray(xy)||!(xy.length===0||xy.length===2&&xy.every(n=>Number.isFinite(n)&&Math.abs(n)<=16384)))return false;if(xy.length===2)mapped++}
+ return mapped===VI_REVIEW.mapped;
+}
+function reviewedVICacheUrl(){return new URL('./data/gtadb-6.json?review='+VI_REVIEW.revision,location.href).href}
+async function cacheData(g,raw){try{if(g==='6'){if(!validReviewedVI(raw))return;const c=await caches.open(APP+'-vi-reviewed-data');await c.put(reviewedVICacheUrl(),new Response(JSON.stringify(raw),{headers:{'Content-Type':'application/json'}}));return}const c=await caches.open(APP+'-data');const url=UPSTREAM+'map/data/'+g+'/landmarks.json';await c.put(url,new Response(JSON.stringify(raw),{headers:{'Content-Type':'application/json'}}))}catch{}}
+async function getCachedData(g){try{if(g==='6'){const c=await caches.open(APP+'-vi-reviewed-data');const r=await c.match(reviewedVICacheUrl());if(!r)return null;const data=await r.json();return validReviewedVI(data)?data.records:null}const c=await caches.open(APP+'-data');const r=await c.match(UPSTREAM+'map/data/'+g+'/landmarks.json');if(r)return await r.json()}catch{}return null}
 async function loadDataset(g,refresh=false){
  const localUrl='./gtadb-v'+g+'.json';
- if(!refresh){try{const r=await fetch(localUrl);if(r.ok){const v=normalize(await r.json(),g);if(v.length&&datasets[g].length<v.length){datasets[g]=v;dataOrigins[g]='Offline starter';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length+' starter locations · checking licensed database…')}}}}catch{}
+ if(!refresh&&g!=='6'){try{const r=await fetch(localUrl);if(r.ok){const v=normalize(await r.json(),g);if(v.length&&datasets[g].length<v.length){datasets[g]=v;dataOrigins[g]='Offline starter';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length+' starter locations · checking licensed database…')}}}}catch{}
  const cached=g==='6'?null:await getCachedData(g);if(cached){const v=normalize(cached,g);if(v.length>datasets[g].length){datasets[g]=v;dataOrigins[g]='Cached licensed GTADB database';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' cached locations')}}}
  }
  // Prefer our same-origin, rights-attributed GitHub-mirrored landmark datasets.
@@ -1076,15 +1085,17 @@ async function loadDataset(g,refresh=false){
  if(g==='5'||g==='6'){
   try{const r=await fetch('./data/gtadb-'+g+'.json'+(refresh?'?update='+Date.now():''),{cache:refresh?'reload':'no-cache'});
    if(r.ok){const data=await r.json();if(data?.game!==g||data?.license!=='CC BY 4.0'||!data.records||typeof data.records!=='object')throw Error('Invalid attributed snapshot');
+    if(g==='6'&&!validReviewedVI(data))throw Error('VI snapshot is not the reviewed revision');
     const v=normalize(data.records,g);if(v.length<500)throw Error('Snapshot has too few mapped landmarks');
-    if(g==='6'||v.length>=datasets[g].length||refresh){datasets[g]=v;dataOrigins[g]='Local GTADB '+(g==='6'?'VI research':'GTA V landmark')+' snapshot '+String(data.sourceUpdated||'').slice(0,10);await cacheData(g,data.records);if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' attributed '+(g==='6'?'provisional':'GTA V')+' landmarks · '+String(data.sourceUpdated||'').slice(0,10));}}return;}
+    if(g==='6'||v.length>=datasets[g].length||refresh){datasets[g]=v;dataOrigins[g]='Local GTADB '+(g==='6'?'VI research':'GTA V landmark')+' snapshot '+String(data.sourceUpdated||'').slice(0,10);await cacheData(g,g==='6'?data:data.records);if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' attributed '+(g==='6'?'provisional':'GTA V')+' landmarks · '+String(data.sourceUpdated||'').slice(0,10));}}return;}
   }catch(e){/* Keep starter/cached/remote repository fallbacks if a snapshot is absent. */}
  }
  // VI uses the reviewed local snapshot first. Do not bypass held IDs by
  // refreshing directly from an unreviewed upstream database.
  if(g==='6'){
   const cached=await getCachedData(g);
-  if(cached){const v=normalize(cached,g);if(v.length>=500){datasets[g]=v;dataOrigins[g]='Offline cached VI source · possibly stale';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' cached provisional locations · possibly stale')}}}
+  if(cached){const v=normalize(cached,g);if(v.length>=500){datasets[g]=v;dataOrigins[g]='Offline reviewed VI snapshot';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' cached reviewed provisional locations')}}}
+  if(!datasets[g].length&&g===game)dataNotice('Reviewed VI landmarks unavailable offline. Map and personal saves remain available.');
   return;
  }
  const checked=Number(loadStore('jura58-gtadb-check-'+g,0))||0;

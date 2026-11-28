@@ -11,6 +11,8 @@ on:
       - 'scripts/test_atlas290_vi_day_browser.py'
       - 'scripts/test_atlas291_dual_leonida.py'
       - 'scripts/test_vi_research_manifest.py'
+      - 'tests/vi-reviewed-cache.test.cjs'
+      - 'scripts/test_vi_reviewed_cache_browser.py'
       - '.github/workflows/leonida-source-refresh-review.yml'
 permissions:
   contents: read
@@ -32,6 +34,7 @@ jobs:
       - name: Exact snapshot and map contracts
         run: |
           node --check atlas.js
+          node --test tests/vi-reviewed-cache.test.cjs
           python scripts/test_vi_research_manifest.py
           python scripts/test_atlas290_vi_day.py
           python scripts/test_atlas291_dual_leonida.py
@@ -46,6 +49,7 @@ jobs:
           python -m playwright install chromium
       - name: Day default, source index, view switching and poster isolation
         run: |
+          python scripts/test_vi_reviewed_cache_browser.py
           python scripts/test_atlas290_vi_day_browser.py
           python scripts/test_atlas290_poster_browser.py
           python scripts/test_atlas191_first_visit_browser.py

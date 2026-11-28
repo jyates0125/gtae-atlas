@@ -6,15 +6,22 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
+from urllib.request import urlopen
 from playwright.sync_api import sync_playwright, expect
 import os
 ROOT=Path(__file__).resolve().parents[1]
 class Quiet(SimpleHTTPRequestHandler):
     def log_message(self,*args): pass
-server=ThreadingHTTPServer(("127.0.0.1",0),partial(Quiet,directory=str(ROOT/"public")))
+# Avoid the platform default listen backlog during asset-heavy map navigation.
+class JourneyServer(ThreadingHTTPServer):
+    request_queue_size=128
+    daemon_threads=True
+server=JourneyServer(("127.0.0.1",0),partial(Quiet,directory=str(ROOT/"public")))
 Thread(target=server.serve_forever,daemon=True).start()
 base=f"http://127.0.0.1:{server.server_port}/"
 try:
+    with urlopen(base+"index.html",timeout=10) as ready:
+        assert ready.status==200, "Local public build server is not ready"
     with sync_playwright() as p:
         browser=p.chromium.launch(channel="msedge" if os.getenv("ATLAS_BROWSER")=="msedge" else None)
         for width,height in [(390,844),(1440,900)]:
@@ -41,7 +48,7 @@ try:
                 page_errors.clear()
                 local_failures.clear()
                 print(f"Checking {width}px {path}",flush=True)
-                response=page.goto(base+path,wait_until="domcontentloaded",timeout=50000)
+                response=page.goto(base+path,wait_until="load",timeout=50000)
                 assert response and response.ok,(path,response.status if response else None)
                 # Public labels use the collection hub, not the management child.
                 wrong=page.locator('a[href="./atlas93-garage.html"]').filter(has_text="My Garage")
@@ -167,3 +174,4 @@ try:
         browser.close()
 finally:
     server.shutdown()
+    server.server_close()
