@@ -14,7 +14,7 @@ const EXACT=new Set([
 ]);
 const PREFIXES=['team-jura-atlas','team-jura-passport','team-jura-checklist','team-jura-garage','jura3-'];
 const BLOCK=/(?:auth|session|token|secret|password|credential|private|api[-_]?key|oauth|access[-_]?key|refresh)/i;
-const viKey=(key)=>typeof key==='string' && (key==='team-jura-vi-journeys-v1'||/^team-jura-objective-progress-v1:vi-story(?::vj-[a-f0-9]{32})?$/.test(key));
+const viKey=(key)=>typeof key==='string' && (key==='team-jura-vi-journeys-v1'||/^team-jura-objective-progress-v1:vi-story(?::vj-[a-f0-9]{32})?$/.test(key)||/^team-jura-vi-activity-counts-v1(?::vj-[a-f0-9]{32})?$/.test(key));
 const validKey=(key)=>typeof key==='string' && key.length<150 && !BLOCK.test(key) && (EXACT.has(key)||PREFIXES.some(x=>key.startsWith(x))||viKey(key));
 const msg=(s)=>{const el=document.getElementById('j131ProgressStatus');if(el)el.textContent=s};
 function collect(){
@@ -40,7 +40,7 @@ async function restore(file){
   if(!entries.length){msg('The backup has no saved Atlas progress. Nothing was changed.');return}
   const crewKeys=new Set(['team-jura-my-crew-v1','team-jura-world-profiles-v2']);
   const hasCrew=entries.some(([key])=>crewKeys.has(key));
-  if(!confirm('Restore '+entries.length+' Atlas progress records? Matching older records will be overwritten. Crew, Leonida journeys and Discovery records merge without replacing existing notes or profiles. Continue?')){msg('Restore cancelled. Nothing was changed.');return}
+  if(!confirm('Restore '+entries.length+' Atlas progress records? Matching older records will be overwritten. Crew, Leonida journeys, Discovery and activity counts preserve existing conflicting local records. Continue?')){msg('Restore cancelled. Nothing was changed.');return}
   const vi=window.JuraVIBackup;
   if(entries.some(([key])=>viKey(key))&&(!vi?.plan||!vi?.locks))throw Error('Leonida backup support unavailable; no data was restored.');
   const viKeys=vi?.locks(parsed.saves)||[];
@@ -60,7 +60,7 @@ async function restore(file){
   const written=[];
   try{for(const [k,v] of entries){localStorage.setItem(k,v);written.push(k)}}
   catch(err){for(const k of written){const old=original.get(k);try{if(old===null)localStorage.removeItem(k);else localStorage.setItem(k,old)}catch(_){}}throw Error('Device storage is full or unavailable. Existing progress was restored where possible.')}
-  msg(entries.length+' Atlas records restored.'+(crewPlan?' Crew profiles merged; '+crewPlan.conflicts+' existing conflicts kept.':'')+(viPlan?' Leonida profiles and Discovery merged; '+(viPlan.journeyConflicts+viPlan.discoveryConflicts)+' existing conflicts kept.':'')+' Reload the dashboard and maps to see your saved progress.');
+  msg(entries.length+' Atlas records restored.'+(crewPlan?' Crew profiles merged; '+crewPlan.conflicts+' existing conflicts kept.':'')+(viPlan?' Leonida profiles, Discovery and activity counts restored; '+(viPlan.journeyConflicts+viPlan.discoveryConflicts+viPlan.activityConflicts)+' existing conflicts kept.':'')+' Reload the dashboard and maps to see your saved progress.');
   });
  }catch(err){msg(err?.message||'Unable to read this backup.')}
 }

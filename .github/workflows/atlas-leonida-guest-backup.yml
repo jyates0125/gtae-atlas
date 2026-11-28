@@ -7,6 +7,11 @@ on:
       - 'atlas131-account.js'
       - 'atlas-vi-backup-plan.js'
       - 'atlas-vi-journey.js'
+      - 'atlas450-vi-progress.js'
+      - 'atlas450-vi-progress.css'
+      - 'atlas-activities.html'
+      - 'atlas-vi.html'
+      - 'tests/atlas450-vi-progress.test.cjs'
       - 'atlas-objective-core.js'
       - 'tests/atlas-vi-backup-plan.test.cjs'
       - 'scripts/test_leonida_guest_backup_browser.py'
@@ -25,7 +30,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --check atlas131-account.js && node --test tests/atlas-vi-backup-plan.test.cjs
+      - run: node --check atlas131-account.js && node --test tests/atlas-vi-backup-plan.test.cjs tests/atlas450-vi-progress.test.cjs
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
