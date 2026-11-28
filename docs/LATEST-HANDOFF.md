@@ -1,3 +1,8 @@
+## Nov 28 — #323 verified development and explicit Discovery navigation candidate
+
+- #323 exact `86a50d830662915031fde5a132fe35bce5f15cf8`: six successful workflows; real journey browser regression [46176325854](https://github.com/jyates0125/gtae-atlas/actions/runs/46176325854), source/package [46176325866](https://github.com/jyates0125/gtae-atlas/actions/runs/46176325866). Integrated under lease as `9c17f23d9b342da40f1d4ad201194f9f458c9386`; comparison reported zero file differences with tested head. Lease released; recheck before next shared write.
+- New isolated candidate: explicit local playthrough-to-Discovery link, reload continuity and fail-closed unknown/malformed scope, refusal to import with unsaved Discovery notes, corrected outdated profile guidance. Browser/source checks pending. No map, feed, auth or production write. Native visual/release gates unchanged.
+
 ## November 28 — verified live #315; reconcile non-Cayo briefing
 
 - Owner accepted release #315; production main `993fed84ef19678b8c5f419693c8cedf4c6a8254` verified live by exact anonymous workflow [46166938591](https://github.com/jyates0125/gtae-atlas/actions/runs/46166938591). Candidate c3fc9fae passed 12 applicable checks. Development baseline sync #317 merged `42ebf083615737a9cde2b7251500e5e7096528a3`; no production write in this batch.
