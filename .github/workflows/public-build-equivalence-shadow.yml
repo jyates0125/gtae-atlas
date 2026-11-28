@@ -24,7 +24,7 @@ jobs:
       - name: Preserve committed bytes across platforms
         shell: bash
         run: git config --global core.autocrlf false
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
