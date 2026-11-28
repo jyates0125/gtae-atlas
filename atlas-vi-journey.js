@@ -13,11 +13,11 @@ function read(store){const raw=store.getItem(KEY);return {raw,state:clean(raw===
 function change(store,fn){const {raw,state}=read(store),next=clean(fn(state));if(store.getItem(KEY)!==raw)throw Error('Concurrent edit; retry');store.setItem(KEY,JSON.stringify(next));return next}
 function add(store,id,name){return change(store,s=>{s.profiles.push({id,name:name.trim(),chapter:'',character:'',goal:'',notes:''});s.active=id;return s})}
 function select(store,id){return change(store,s=>{if(!s.profiles.some(p=>p.id===id))throw Error('Unknown profile');s.active=id;return s})}
-function update(store,id,fields){return change(store,s=>{const p=s.profiles.find(p=>p.id===id);if(!p||Object.keys(fields).some(k=>!Object.hasOwn(FIELDS,k)))throw Error('Invalid profile edit');Object.assign(p,fields);return s})}
+function update(store,id,fields,expected){return change(store,s=>{const p=s.profiles.find(p=>p.id===id);if(!p||Object.keys(fields).some(k=>!Object.hasOwn(FIELDS,k)))throw Error('Invalid profile edit');if(expected&&Object.keys(FIELDS).some(k=>p[k]!==expected[k]))throw Error('This playthrough changed in another tab; copy your unsaved edits, then reload saved version');Object.assign(p,fields);return s})}
 function merge(store,backup){const incoming=clean(backup);let conflicts=0,added=0;const state=change(store,s=>{for(const p of incoming.profiles){const old=s.profiles.find(x=>x.id===p.id);if(old){if(JSON.stringify(old)!==JSON.stringify(p))conflicts++;continue}s.profiles.push(p);added++}if(!s.active&&s.profiles.length)s.active=incoming.active||s.profiles[0].id;return s});return {state,added,conflicts}}
 function start(w){
  const d=w.document,$=id=>d.getElementById(id),root=$('viJourney');if(!root||new URLSearchParams(w.location.search).get('mode')!=='vi')return;root.hidden=false;
- const controls=['vj-select','vj-new','vj-add','vj-save','vj-export','vj-import','vj-spoilers',...Object.keys(FIELDS).map(k=>'vj-'+k)];
+ const controls=['vj-select','vj-new','vj-add','vj-save','vj-export','vj-import','vj-spoilers','vj-reload',...Object.keys(FIELDS).map(k=>'vj-'+k)];
  let state=clean(null),blocked=false,busy=false,dirty=false,rawRecovery=null;
  const status=s=>{$('vj-status').textContent=s};
  function hideNotes(){$('vj-spoilers').checked=false;$('vj-notes').closest('label').hidden=true}
@@ -31,11 +31,12 @@ function start(w){
  $('vj-select').onchange=()=>{const id=$('vj-select').value;if(canSwitch())mutate(()=>select(w.localStorage,id),'Playthrough selected. Story notes hidden.')};
  for(const k of Object.keys(FIELDS))$('vj-'+k).oninput=()=>{dirty=true;status('Unsaved journey edits.')};
  $('vj-spoilers').onchange=()=>{$('vj-notes').closest('label').hidden=!$('vj-spoilers').checked};
- $('vj-form').onsubmit=e=>{e.preventDefault();const id=state.active,fields=Object.fromEntries(Object.keys(FIELDS).map(k=>[k,$('vj-'+k).value]));mutate(()=>update(w.localStorage,id,fields),'Journey saved on this device.')};
+ $('vj-form').onsubmit=e=>{e.preventDefault();const id=state.active,fields=Object.fromEntries(Object.keys(FIELDS).map(k=>[k,$('vj-'+k).value]));const expected=state.profiles.find(p=>p.id===id);mutate(()=>update(w.localStorage,id,fields,expected),'Journey saved on this device.')};
+ $('vj-reload').onclick=()=>{if(dirty&&!w.confirm('Discard unsaved form edits and load the latest saved version?'))return;if(reload())status('Latest saved journeys loaded. Story notes hidden.')};
  $('vj-export').onclick=()=>{try{const latest=read(w.localStorage).state;download(JSON.stringify(latest,null,2),'gtae-leonida-journeys.json','application/json');status('Saved profiles exported; unsaved form edits are not included.')}catch(e){status('Export unavailable: '+e.message)}};
  $('vj-recover').onclick=()=>{if(rawRecovery!==null)download(rawRecovery,'gtae-leonida-journeys-original.txt','text/plain')};
  $('vj-import').onchange=async()=>{const file=$('vj-import').files?.[0];$('vj-import').value='';if(!file||!canSwitch())return;try{if(file.size>2000000)throw Error('Backup too large');const backup=JSON.parse(await file.text());await mutate(()=>merge(w.localStorage,backup),r=>r.added+' profile(s) added; '+r.conflicts+' conflict(s) kept local.')}catch(e){status('Restore refused: '+e.message)}};
- w.addEventListener('storage',e=>{if(e.key!==KEY&&e.key!==null)return;if(dirty||busy){status('Another tab changed saved journeys. Save carefully or reload; current form retained.');return}if(reload())status('Saved journeys refreshed.')});
+ w.addEventListener('storage',e=>{if(e.key!==KEY&&e.key!==null)return;if(dirty||busy){status('Another tab changed saved journeys. Your current form is retained; conflicting edits will not overwrite the saved version.');return}if(reload())status('Saved journeys refreshed.')});
  hideNotes();if(reload())status(state.active?'Choose or update your playthrough.':'Create a named playthrough to begin.');
 }
 return Object.freeze({KEY,SCHEMA,clean,read,add,select,update,merge,start});
