@@ -25,3 +25,10 @@
 .j298-rescue .j298-rescue-status{color:#ffdcad}
 .j298-rescue .j298-action:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:540px){.j298-rescue{padding:11px}.j298-rescue .j298-action{flex:1 1 100%}}
+
+/* Player-first mission map: optional transfer is accessible but collapsed by default. */
+.j298-backup-panel{min-width:0;border-top:1px solid #735679;margin-top:8px}
+.j298-backup-summary{cursor:pointer;min-height:44px;box-sizing:border-box;padding:12px 4px;color:#ffe1ad;font:750 13px/1.45 system-ui}
+.j298-backup-summary:focus-visible{outline:3px solid #ffe2a8;outline-offset:2px;border-radius:6px}
+.j298-backup-panel .j298-transfer{border-top:0;padding-top:6px}
+.j298-backup-panel .j298-message{margin-bottom:4px}

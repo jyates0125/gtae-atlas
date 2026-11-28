@@ -194,7 +194,12 @@
     finally{file.value=''}
    });
    transfer.append(download,restore);
-   section.append(heading,help);if(damagedRaw!==null)section.append(recover);section.append(tabs,status,transfer,message);
+   // Keep gameplay filters visible; optional file actions should not dominate
+   // the mission map on a phone. Damaged-save recovery remains outside.
+   const backupPanel=make('details','j298-backup-panel');
+   const backupSummary=make('summary','j298-backup-summary','Map backup & restore');
+   backupPanel.append(backupSummary,transfer,message);
+   section.append(heading,help);if(damagedRaw!==null)section.append(recover);section.append(tabs,status,backupPanel);
    chipBar.before(section);
    chipBar.addEventListener('click',()=>w.queueMicrotask(update));
    search.addEventListener('input',()=>w.queueMicrotask(update));

@@ -1,3 +1,10 @@
+## November 28 — Cayo accepted into development; next player-first heist batch
+
+- #312 exact head 7e7d5c590f5539d05e607facd127c9a2ff842ab3: 12/12 applicable checks passed, Supabase skipped; actual Cayo phone/desktop Chromium and offline fallback [run 46160196722](https://github.com/jyates0125/gtae-atlas/actions/runs/46160196722) all steps passed. Merged into development `bd9bf23c68285fc52d11804a77e41e5be11fd0ad` under shared lease, verified release to free. Main unchanged at 86506d0b7e1d4722d3abfcc326a396ae461bd36e. Do not replay #312. Native Safari review and specific release approval remain required.
+- Owner direction: forward-only approved Cayo artwork and geometry, map-specific solutions, welcome/guest entry separate from functional home, preserve approved violet/gold/amber artwork, private FORGE and attributed community contributions. Do not substitute older layouts or enable unfinished auth.
+- Next candidate: non-Cayo phase map briefing keeps gameplay controls visible, collapses optional backup/restore into native disclosure; recovery remains visible if save is damaged. All 14 non-Cayo mission workspaces receive this change; Cayo, map art/POIs, storage contracts and other lanes untouched. Browser tests extended for every mission at 390/1440, existing import/export and corruption coverage preserved. CI pending, no release claim.
+- Remaining: source-qualified mission artwork/POI coverage, player navigation, seven additional classic workspaces and character media. Keep evidence distinctions. Rotation and Leonida/Forge separate.
+
 ## November 28 — PR #311 production verified; Cayo mobile candidate #312
 
 - Protected main `86506d0b7e1d4722d3abfcc326a396ae461bd36e` confirmed live by exact-revision anonymous [run 46159747134](https://github.com/jyates0125/gtae-atlas/actions/runs/46159747134); [baseline guard 46159747144](https://github.com/jyates0125/gtae-atlas/actions/runs/46159747144) passed. #311 exact head 98bd5acdd920133492c7ec2c7092897dd8797653 had eight successful applicable checks and Supabase skipped. Do not replay #311.
