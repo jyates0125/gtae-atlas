@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: Read Pages API and verify public identity
         env:
+          GH_TOKEN: ${{ github.token }}
           CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
@@ -51,10 +52,19 @@ jobs:
               raise SystemExit('No production deployment records')
           for d in deployments:
               print(json.dumps({'deployment_id':d.get('id'),'environment':d.get('environment'),'stage':d.get('latest_stage',{}).get('status'),'commit':d.get('deployment_trigger',{}).get('metadata',{}).get('commit_hash')}))
-          with urllib.request.urlopen('https://api.github.com/repos/jyates0125/gtae-atlas/git/ref/heads/main',timeout=25) as res:
-              expected=json.load(res)['object']['sha']
-          with urllib.request.urlopen('https://gtae-online.pages.dev/atlas-build-identity.json?diagnostic='+expected,timeout=25) as res:
-              identity=json.load(res)
+          print('Resolving GitHub main SHA',flush=True)
+          req=urllib.request.Request('https://api.github.com/repos/jyates0125/gtae-atlas/git/ref/heads/main',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','User-Agent':'GTAE-diagnostic'})
+          try:
+              with urllib.request.urlopen(req,timeout=25) as res:
+                  expected=json.load(res)['object']['sha']
+          except urllib.error.HTTPError as e:
+              raise SystemExit('GitHub main lookup HTTP '+str(e.code))
+          print('Checking anonymous public identity',flush=True)
+          try:
+              with urllib.request.urlopen('https://gtae-online.pages.dev/atlas-build-identity.json?diagnostic='+expected,timeout=25) as res:
+                  identity=json.load(res)
+          except urllib.error.HTTPError as e:
+              raise SystemExit('Public identity HTTP '+str(e.code))
           print('Expected main SHA:',expected)
           print('Public identity matches expected:',expected in identity.values())
           if expected not in identity.values():
