@@ -10,7 +10,7 @@ jobs:
   inspect:
     if: github.repository == 'jyates0125/gtae-atlas' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/ops/cloudflare-api-diagnostic-20261128')
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,7 +23,7 @@ jobs:
           CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           python - <<'PY'
-          import os, json, urllib.request, urllib.error, re
+          import os, json, urllib.request, urllib.error, re, time
           token, account = os.environ['CF_TOKEN'].strip(), os.environ['CF_ACCOUNT'].strip()
           if not token or not re.fullmatch(r'[a-fA-F0-9]{32}', account):
               raise SystemExit('Missing token or invalid account ID')
@@ -64,11 +64,19 @@ jobs:
           except urllib.error.HTTPError as e:
               raise SystemExit('GitHub main lookup HTTP '+str(e.code))
           print('Expected main SHA:',expected)
-          canonical=p.get('canonical_deployment') or {}
-          deployed=canonical.get('deployment_trigger',{}).get('metadata',{}).get('commit_hash')
-          print('Canonical deployment SHA:',deployed)
-          if deployed != expected or canonical.get('latest_stage',{}).get('status')!='success':
-              raise SystemExit('Canonical production deployment not verified against main')
+          for attempt in range(8):
+              canonical=p.get('canonical_deployment') or {}
+              deployed=canonical.get('deployment_trigger',{}).get('metadata',{}).get('commit_hash')
+              status=canonical.get('latest_stage',{}).get('status')
+              print('Canonical deployment attempt:',attempt+1,'SHA:',deployed,'status:',status,flush=True)
+              if deployed == expected and status == 'success':
+                  break
+              if attempt == 7:
+                  raise SystemExit('Canonical production deployment not verified against main')
+              time.sleep(15)
+              p=get('/pages/projects/gtae-online')['result']
+              if p.get('subdomain')!='gtae-online.pages.dev' or p.get('production_branch')!='main':
+                  raise SystemExit('Pages project identity changed during verification')
           with open(os.environ['GITHUB_OUTPUT'],'a') as out:
               out.write('expected='+expected+'\n')
           PY
