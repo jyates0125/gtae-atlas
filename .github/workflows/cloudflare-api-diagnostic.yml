@@ -12,7 +12,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Read Pages API and verify public identity
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Read Pages API and resolve production revision
+        id: api
         env:
           GH_TOKEN: ${{ github.token }}
           CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -59,14 +63,16 @@ jobs:
                   expected=json.load(res)['object']['sha']
           except urllib.error.HTTPError as e:
               raise SystemExit('GitHub main lookup HTTP '+str(e.code))
-          print('Checking anonymous public identity',flush=True)
-          try:
-              with urllib.request.urlopen('https://gtae-online.pages.dev/atlas-build-identity.json?diagnostic='+expected,timeout=25) as res:
-                  identity=json.load(res)
-          except urllib.error.HTTPError as e:
-              raise SystemExit('Public identity HTTP '+str(e.code))
           print('Expected main SHA:',expected)
-          print('Public identity matches expected:',expected in identity.values())
-          if expected not in identity.values():
-              raise SystemExit('Public identity does not match main or schema needs review')
+          canonical=p.get('canonical_deployment') or {}
+          deployed=canonical.get('deployment_trigger',{}).get('metadata',{}).get('commit_hash')
+          print('Canonical deployment SHA:',deployed)
+          if deployed != expected or canonical.get('latest_stage',{}).get('status')!='success':
+              raise SystemExit('Canonical production deployment not verified against main')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write('expected='+expected+'\n')
           PY
+      - name: Verify anonymous public delivery using existing release gate
+        env:
+          EXPECTED: ${{ steps.api.outputs.expected }}
+        run: python scripts/verify_live_deployment.py "$EXPECTED" --attempts 3
