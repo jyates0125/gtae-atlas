@@ -47,6 +47,58 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    with p.expect_download() as download:p.locator('#jo-export').click()
    backup=json.loads(Path(download.value.path()).read_text())
    assert backup['items']['vi-o-7d4b983e21a6']['done']
+   # Explicit separate profile scope, never implicitly move the unassigned mark.
+   journey='vj-'+'a'*32
+   journey2='vj-'+'b'*32
+   p.evaluate("""([a,b])=>localStorage.setItem('team-jura-vi-journeys-v1',JSON.stringify({schema:'team-jura-vi-journeys-v1',scope:'vi-story',active:a,profiles:[a,b].map((id,i)=>({id,name:'Run '+(i+1),chapter:'',character:'',goal:'',notes:''}))}))""",[journey,journey2])
+   p.reload();expect(p.locator('#jo-done')).to_have_text('1',timeout=20000)
+   p.locator('#jo-profile').select_option(journey)
+   expect(p.locator('#jo-done')).to_have_text('0')
+   p.locator('#jo-search').fill('King Gator')
+   p.locator('.jo-card').get_by_role('button',name='Mark visited').click()
+   expect(p.locator('#jo-done')).to_have_text('1')
+   p.locator('#jo-profile').select_option(journey2)
+   expect(p.locator('#jo-done')).to_have_text('0')
+   p.locator('.jo-card summary').click();p.locator('.jo-card textarea').fill('Unsaved second run')
+   p.locator('#jo-profile').select_option(journey)
+   expect(p.locator('#jo-profile')).to_have_value(journey2)
+   expect(p.locator('#jo-message')).to_contain_text('Save or discard')
+   p.once('dialog',lambda dialog:dialog.accept())
+   p.locator('#jo-discard').click()
+   p.locator('#jo-profile').select_option(journey)
+   expect(p.locator('#jo-done')).to_have_text('1')
+   p.locator('#jo-profile').select_option('')
+   expect(p.locator('#jo-done')).to_have_text('1')
+   assert p.evaluate("([k,a,b])=>JSON.parse(localStorage.getItem(k)).items['vi-o-7d4b983e21a6'].done&&JSON.parse(localStorage.getItem(k+':'+a)).profile===a&&localStorage.getItem(k+':'+b)===null",[KEY,journey,journey2])
+   # Hold the asynchronous file read; all scope and note controls must freeze.
+   p.locator('#jo-profile').select_option(journey)
+   p.locator('#jo-filter').select_option('all')
+   p.locator('#jo-search').fill('King Gator')
+   if p.locator('.jo-backup').get_attribute('open') is None:
+    p.locator('.jo-backup summary').click()
+   p.evaluate("""()=>{window.originalFileText=File.prototype.text;File.prototype.text=function(){const file=this;return new Promise(resolve=>{window.finishFileRead=()=>resolve(window.originalFileText.call(file))})}}""")
+   profile_backup={'schema':backup['schema'],'scope':'vi-story','profile':journey,'items':{'vi-o-7d4b983e21a6':{'done':True,'queued':True,'note':'Imported run one'}}}
+   p.locator('#jo-import').set_input_files({'name':'profile.json','mimeType':'application/json','buffer':json.dumps(profile_backup).encode()})
+   expect(p.locator('#jo-profile')).to_be_disabled()
+   expect(p.locator('.jo-card [data-action=mark]')).to_be_disabled()
+   p.evaluate("()=>window.finishFileRead()")
+   expect(p.locator('#jo-profile')).to_be_enabled()
+   expect(p.locator('#jo-profile')).to_have_value(journey)
+   assert p.evaluate("([k,a])=>JSON.parse(localStorage.getItem(k+':'+a)).items['vi-o-7d4b983e21a6'].note",[KEY,journey])=='Imported run one'
+   assert p.evaluate("([k,b])=>localStorage.getItem(k+':'+b)",[KEY,journey2]) is None
+   p.evaluate("()=>{File.prototype.text=window.originalFileText}")
+   # A later save must not overwrite a note changed in another tab.
+   p.locator('.jo-card summary').click()
+   p.locator('.jo-card textarea').fill('My unsaved edit')
+   second=ctx.new_page();second.goto(base+'atlas-collectibles.html?game=vi')
+   second.evaluate("([k,a])=>{const key=k+':'+a,v=JSON.parse(localStorage.getItem(key));v.items['vi-o-7d4b983e21a6'].note='Other tab edit';localStorage.setItem(key,JSON.stringify(v))}",[KEY,journey])
+   p.locator('.jo-card [data-action=note]').click()
+   expect(p.locator('#jo-message')).to_contain_text('Note changed in another tab')
+   expect(p.locator('.jo-card textarea')).to_have_value('My unsaved edit')
+   assert p.evaluate("([k,a])=>JSON.parse(localStorage.getItem(k+':'+a)).items['vi-o-7d4b983e21a6'].note",[KEY,journey])=='Other tab edit'
+   p.once('dialog',lambda dialog:dialog.accept());p.locator('#jo-discard').click()
+   second.close()
+   p.locator('#jo-profile').select_option('')
    p.evaluate("(k)=>localStorage.setItem(k,'broken')",KEY);p.reload()
    expect(p.locator('#jo-message')).to_contain_text('Editing paused',timeout=20000)
    expect(p.locator('.jo-card [data-action=mark]').first).to_be_disabled()
