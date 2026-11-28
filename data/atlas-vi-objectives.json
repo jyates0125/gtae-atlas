@@ -1,0 +1,672 @@
+{
+  "schema": "team-jura-objectives-v1",
+  "scope": "vi-story",
+  "revision": 2,
+  "notice": "Starter discovery directory: 12 venues, four games and 24 named Vice City Flamingos trading cards. Card identities cross-checked against two published guides; broad areas reported by PowerPyx, Charlie Spears location disputed. No exact pins, gameplay verification, or full 100% tracker. Cards are distinct from Cocaine Flamingos. Internal aliases, not publisher IDs.",
+  "rows": [
+    {
+      "id": "vi-o-7d4b983e21a6",
+      "action": "visit",
+      "name": "King Gator Adventure Golf",
+      "area": "Buckskin Swamp",
+      "category": "mini-golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-king-gator"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-2fcb6d830a14",
+      "action": "visit",
+      "name": "Frontier Adventure Golf",
+      "area": "Waning Sands",
+      "category": "mini-golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-frontier-golf"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-83a1f6e9b472",
+      "action": "visit",
+      "name": "Dino Golf Challenge",
+      "area": "Frogswater",
+      "category": "mini-golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-dino-golf"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-c492e8b7160d",
+      "action": "visit",
+      "name": "Leaf Links Golf Challenge",
+      "area": "Leaf Links",
+      "category": "golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-leaf-links"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-1b9e35d7c624",
+      "action": "visit",
+      "name": "Mount Hailes Golf Challenge",
+      "area": "Mount Hailes Club, Waning Sands",
+      "category": "golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-mount-hailes"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-6a8c02f9d137",
+      "action": "visit",
+      "name": "The Rusty Anchor",
+      "area": "Key Lento",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-rusty-anchor"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-e147b6c9038d",
+      "action": "visit",
+      "name": "Skeeter’s",
+      "area": "Hamlet",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-skeeters"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-4bcf7e201ad9",
+      "action": "visit",
+      "name": "Zotico’s",
+      "area": "Baslero",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-zoticos"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-950a6d1ecb38",
+      "action": "visit",
+      "name": "The Thirsty Wolf",
+      "area": "Belville",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-thirsty-wolf"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-b382d9f1056c",
+      "action": "visit",
+      "name": "Jacob’s Tavern",
+      "area": "Milport",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-jacobs-tavern"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-39e6a4c8b102",
+      "action": "visit",
+      "name": "Delights Cabaret",
+      "area": "Port Gellhorn",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-delights-cabaret"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-f0185c7ab263",
+      "action": "visit",
+      "name": "Kowaachobee Cafe & Bar",
+      "area": "Buckskin Swamp",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-kowaachobee-cafe"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-a7b380d5e629",
+      "action": "play",
+      "name": "Tenebrae Lux",
+      "area": "Home JoySystem",
+      "category": "video-games",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-tenebrae-lux"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-d8a1c490b573",
+      "action": "play",
+      "name": "Street Trash III",
+      "area": "Home JoySystem",
+      "category": "video-games",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-street-trash-iii"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-0e6b291f8c45",
+      "action": "play",
+      "name": "Time Jackers Rewind",
+      "area": "Home JoySystem",
+      "category": "video-games",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-time-jackers-rewind"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-52c9a17e6b30",
+      "action": "play",
+      "name": "Bang For Your Buck",
+      "area": "Arcade cabinets; reported example: Bargain World, Port Gellhorn",
+      "category": "video-games",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-bang-for-your-buck"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-f91c82a4d730",
+      "action": "collect",
+      "name": "Angel Cienfuegos · Light blue",
+      "area": "Buckskin Swamp",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-angel-cienfuegos-light-blue"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-a45f89d312ce",
+      "action": "collect",
+      "name": "Angel Cienfuegos · Pink",
+      "area": "Abismo Key",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-angel-cienfuegos-pink"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-b3c70d4ea591",
+      "action": "collect",
+      "name": "Angel Cienfuegos · Silver",
+      "area": "Belville",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-angel-cienfuegos-silver"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-e318c4a72d09",
+      "action": "collect",
+      "name": "Bill Norton · Standard",
+      "area": "Southside",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-bill-norton-standard"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-c81d72b49a06",
+      "action": "collect",
+      "name": "Charlie Spears · Standard",
+      "area": "Little Cuba or Key Lento (conflicting reports)",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-charlie-spears-standard"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "conflicting-location-reports",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-17e6a03f8b4d",
+      "action": "collect",
+      "name": "Elias Delgado · Light blue",
+      "area": "Emerald Springs",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-elias-delgado-light-blue"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-d46c9a21b805",
+      "action": "collect",
+      "name": "Elias Delgado · Pink",
+      "area": "Ocean Beach",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-elias-delgado-pink"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-f0a6c482ed19",
+      "action": "collect",
+      "name": "Elias Delgado · Silver",
+      "area": "Watson Bay",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-elias-delgado-silver"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-2a1c9f8d6e73",
+      "action": "collect",
+      "name": "Harold Toye · Light blue",
+      "area": "Peacock Bay",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-harold-toye-light-blue"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-b96c7d2e401a",
+      "action": "collect",
+      "name": "Harold Toye · Pink",
+      "area": "Vinewood Beach",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-harold-toye-pink"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-3f7b1c90a6d2",
+      "action": "collect",
+      "name": "Harold Toye · Silver",
+      "area": "Grayson",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-harold-toye-silver"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-e702b3fa9c14",
+      "action": "collect",
+      "name": "Jude Flores · Standard",
+      "area": "Key Lento",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-jude-flores-standard"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-a2d906c7f13e",
+      "action": "collect",
+      "name": "Julian Cruz · Bronze",
+      "area": "Port Gellhorn",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-julian-cruz-bronze"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-4c9a02e8f631",
+      "action": "collect",
+      "name": "Julian Cruz · Gold",
+      "area": "Little Cuba",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-julian-cruz-gold"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-d85e7a3c0b92",
+      "action": "collect",
+      "name": "Julian Cruz · Silver",
+      "area": "Watson Bay",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-julian-cruz-silver"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-f7230a9c6d18",
+      "action": "collect",
+      "name": "Julian Hall · Standard",
+      "area": "Balsero",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-julian-hall-standard"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-90e1c6a4b72f",
+      "action": "collect",
+      "name": "Mateo Caballero · Bronze",
+      "area": "Frogswater",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-mateo-caballero-bronze"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-5a7d02b9e1c4",
+      "action": "collect",
+      "name": "Mateo Caballero · Gold",
+      "area": "Watson Bay",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-mateo-caballero-gold"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-b4e2f819c763",
+      "action": "collect",
+      "name": "Mateo Caballero · Silver",
+      "area": "La Perle",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-mateo-caballero-silver"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-6d0a4f7c2b91",
+      "action": "collect",
+      "name": "Sammy Woodsworth · Standard",
+      "area": "Port Gellhorn",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-sammy-woodsworth-standard"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-cf72a9d0e613",
+      "action": "collect",
+      "name": "Thunder Lee · Standard",
+      "area": "Belville",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-thunder-lee-standard"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-1e8b7c0a4d95",
+      "action": "collect",
+      "name": "Ulysses Whitlock · Bronze",
+      "area": "Capri",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-ulysses-whitlock-bronze"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-38b9d1c0f762",
+      "action": "collect",
+      "name": "Ulysses Whitlock · Gold",
+      "area": "Ambrosia",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-ulysses-whitlock-gold"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-a0e5c27b9d14",
+      "action": "collect",
+      "name": "Ulysses Whitlock · Silver",
+      "area": "Tequesta",
+      "category": "flamingos-cards",
+      "status": "active",
+      "aliases": [
+        "atlas-card-vcf-ulysses-whitlock-silver"
+      ],
+      "sources": [
+        "https://gtadb.net/articles/gta-6-vice-city-flamingos-trading-card-locations/",
+        "https://www.powerpyx.com/gta-6-vice-city-flamingos-collectible-card-set-locations"
+      ],
+      "evidence": "cross-checked-card-identity-area-guide-reported",
+      "mapPosition": null
+    }
+  ]
+}
