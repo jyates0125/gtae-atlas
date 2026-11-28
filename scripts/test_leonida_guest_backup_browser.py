@@ -51,7 +51,7 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    p.goto(base+'atlas-activities.html?mode=vi')
    expect(p.locator('#vj-select')).to_have_value(A)
    expect(p.locator('#j450-scope')).to_have_value('')
-   p.get_by_text('Sports & challenges',exact=True).click()
+   p.locator('.j450-progress summary').filter(has_text='Sports & challenges').click()
    race=p.locator('[data-progress-id=races]')
    expect(race).to_have_value('3')
    p.locator('#j450-scope').select_option(A);expect(race).to_have_value('4')

@@ -108,6 +108,11 @@ function start(w){
    const url=new URL(w.location.href);if(profile)url.hash='activity-playthrough='+profile;else if(url.hash.startsWith(fragment))url.hash='';
    w.history.replaceState(w.history.state,'',url);status.textContent=profile?'Independent playthrough counts selected.':'Existing unassigned counts selected.';refresh();
   };
+  if(profileEnabled)w.addEventListener('hashchange',()=>{
+   const next=w.location.hash.startsWith(fragment)?w.location.hash.slice(fragment.length):null;
+   if(busy||drafts.size){const url=new URL(w.location.href);url.hash=invalid?fragment.slice(1)+'invalid':profile?fragment.slice(1)+profile:'';w.history.replaceState(w.history.state,'',url);status.textContent='Save or discard unsaved count edits before switching playthroughs.';return;}
+   invalid=next!==null&&!PROFILE.test(next);profile=invalid?null:next;status.textContent='Activity scope changed.';refresh();
+  });
   discard.onclick=()=>{if(drafts.size&&w.confirm('Discard unsaved count edits? Saved progress is unchanged.')){drafts.clear();status.textContent='Unsaved counts discarded.';refresh()}};
   recover.onclick=()=>{if(rawRecovery===null)return;const a=E('a'),url=w.URL.createObjectURL(new w.Blob([rawRecovery],{type:'text/plain'}));a.href=url;a.download='gtae-leonida-original-counts.txt';d.body.append(a);a.click();a.remove();w.setTimeout(()=>w.URL.revokeObjectURL(url),2000)};
   const places=E('details');places.append(E('summary','Golf and pool location directory · 12 references'),E('p','Use the named area to search our map. Exact activity coordinates are not yet verified.'));
