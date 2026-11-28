@@ -1,0 +1,179 @@
+{
+  "upstreamRevision": "8aa82a1001ad137a524586a41bac85d0b791dc2f",
+  "upstreamBlob": "e9b46e8f5248adfcad76714494cae9c635aae9ec",
+  "baselineRevision": "bd9bf23c68285fc52d11804a77e41e5be11fd0ad",
+  "policy": ">=500 source units held as search-only; not gameplay calibration; names of retained old IDs preserved; no saved IDs rewritten",
+  "rawCount": 4796,
+  "added": 846,
+  "rejected": 197,
+  "held": [
+    {
+      "id": "L270",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "?, Mariana County",
+      "sourceName": "?, Mariana County",
+      "previousPosition": [
+        -3004,
+        -7257
+      ],
+      "sourcePosition": [
+        -2270.5839422305735,
+        -8325.014961405832
+      ]
+    },
+    {
+      "id": "L510",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "?, Kelly County",
+      "sourceName": "Hog House, Kelly County",
+      "previousPosition": [
+        -3612.409835408488,
+        734.1606304380084
+      ],
+      "sourcePosition": [
+        -5403.477951989794,
+        1158.0111453897284
+      ]
+    },
+    {
+      "id": "L829",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "Hangar, Mariana County",
+      "sourceName": "Hangar, Mariana County",
+      "previousPosition": [
+        -6623.120250136363,
+        -6346.591488075081
+      ],
+      "sourcePosition": [
+        -7145.449170941009,
+        -6245.0274941884845
+      ]
+    },
+    {
+      "id": "L835",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "Giant Fish Building, Leonida",
+      "sourceName": "Finns Diner, Lummox County",
+      "previousPosition": [
+        -1839.264,
+        7501.165
+      ],
+      "sourcePosition": [
+        -1236.7905,
+        7073.1140000000005
+      ]
+    },
+    {
+      "id": "L1553",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "Emerald Springs",
+      "sourceName": "Emerald River, Kelly County",
+      "previousPosition": [
+        -4019.4843842963273,
+        1582.7995502113981
+      ],
+      "sourcePosition": [
+        -4435.11599179901,
+        1967.1459438703444
+      ]
+    },
+    {
+      "id": "L3261",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "?, Yorktown",
+      "sourceName": "?, La Perle, Vice City",
+      "previousPosition": [
+        -5601.184,
+        6912.26
+      ],
+      "sourcePosition": [
+        -1133.078,
+        1171.297
+      ]
+    },
+    {
+      "id": "L3262",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "?, Yorktown",
+      "sourceName": "Auto Shop, La Perle, Vice City",
+      "previousPosition": [
+        -5571.607687672173,
+        6929.250829040408
+      ],
+      "sourcePosition": [
+        -1129.578,
+        1199.297
+      ]
+    },
+    {
+      "id": "L3263",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "?, Yorktown",
+      "sourceName": "Sunrise, Rockridge, Vice City",
+      "previousPosition": [
+        -5613.3305,
+        6886.709
+      ],
+      "sourcePosition": [
+        -1276.828,
+        1119.797
+      ]
+    },
+    {
+      "id": "L3265",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "?, Yorktown",
+      "sourceName": "Blessed Food Market, La Perle, Vice City",
+      "previousPosition": [
+        -5765.058,
+        6736.38
+      ],
+      "sourcePosition": [
+        -1097.578,
+        1202.797
+      ]
+    },
+    {
+      "id": "L3440",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "Tola Bay, Mariana County",
+      "sourceName": "Tola Bay, Mariana County",
+      "previousPosition": [
+        -6258.391565356564,
+        -1255.1384346434354
+      ],
+      "sourcePosition": [
+        -5841.240584207699,
+        -2023.0791373645056
+      ]
+    },
+    {
+      "id": "L3444",
+      "reason": "large coordinate change; identity/calibration review",
+      "previousName": "Capri Sound, Leonida",
+      "sourceName": "Capri Sound, Leonida",
+      "previousPosition": [
+        -7367.093840595175,
+        966.1847970241308
+      ],
+      "sourcePosition": [
+        -8048.455484963928,
+        890.4591222784311
+      ]
+    },
+    {
+      "id": "L3260",
+      "reason": "existing ID absent or invalid in new source; preserve search identity",
+      "previousName": "?, Yorktown",
+      "sourceName": "",
+      "previousPosition": [
+        -5717.856,
+        6818.057
+      ],
+      "sourcePosition": [
+        -1070.861,
+        795.328
+      ]
+    }
+  ]
+}

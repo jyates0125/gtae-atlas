@@ -58,14 +58,12 @@ try:
             page.goto(base + "atlas-vi.html", wait_until="domcontentloaded", timeout=45000)
             layer = page.locator("#layer")
             expect(layer.locator('option[value="day"]')).to_have_count(1, timeout=25000)
-            assert layer.input_value() == "scaly,view", "Existing Scaly view must remain the first-visit default"
+            assert layer.input_value() == "day", "Owner-approved in-game map is the first-visit default"
             expect(layer.locator('option[value="scaly,view"]')).to_have_count(1)
             expect(layer.locator('option')).to_have_count(3)
             expect(layer.locator('option[value="yanis,18"]')).to_have_count(0)
             expect(layer.locator('option[value="dupzor,51"]')).to_have_count(1)
-            with page.expect_request(lambda req: "/tiles/6/day/" in req.url, timeout=25000):
-                layer.select_option("day")
-            assert layer.input_value() == "day", "Opt-in Day map must be selectable"
+            assert layer.input_value() == "day", "In-game Day map must load first"
             page.wait_for_function(
                 "() => /Illustration: [1-9][0-9]* tiles/.test(document.querySelector('#tileHealth')?.textContent || '')",
                 timeout=25000,
@@ -89,19 +87,19 @@ try:
             # without calibrated coordinates. Never invent pins for these.
             page.locator("#j290-vi-ledger").evaluate("(el) => el.open = true")
             expect(page.locator("#j290-count")).to_contain_text(
-                "3,754 records", timeout=25000
+                "4,600 records", timeout=25000
             )
-            expect(page.locator("#j290-count")).to_contain_text("3,663 provisional X/Y")
-            expect(page.locator("#j290-count")).to_contain_text("91 unpositioned")
+            expect(page.locator("#j290-count")).to_contain_text("4,501 provisional X/Y")
+            expect(page.locator("#j290-count")).to_contain_text("99 unpositioned")
             page.locator("#j290-kind").select_option("search-only")
-            expect(page.locator("#j290-pages")).to_contain_text("91 matching")
+            expect(page.locator("#j290-pages")).to_contain_text("99 matching")
             assert page.locator(".j290-entry").count()==24
             assert page.locator(".j290-entry .j290-not-positioned").count()==24
             assert page.locator(".j290-entry a[href^='./atlas-vi.html?place=']").count()==0
             page.locator("#j290-next").click()
-            expect(page.locator("#j290-pages")).to_contain_text("page 2 of 4")
+            expect(page.locator("#j290-pages")).to_contain_text("page 2 of 5")
             page.locator("#j290-kind").select_option("mapped")
-            expect(page.locator("#j290-pages")).to_contain_text("3,663 matching")
+            expect(page.locator("#j290-pages")).to_contain_text("4,501 matching")
             assert page.locator(".j290-entry a[href^='./atlas-vi.html?place=']").count()==24
             page.locator("#j290-vi-ledger").evaluate("(el) => el.open = false")
             # Switching the embedded world must not expose VI-only records
@@ -122,7 +120,7 @@ try:
                     0, timeout=25000
                 )
             print(
-                f"PASS Atlas 29.0 {engine} {width}: Scaly default, opt-in Day map,"
+                f"PASS Atlas 29.0 {engine} {width}: Day default, retained Scaly and Loki,"
                 " distinct historic views, tile load, zoom, toggle,"
                 " no GTA V/Online day leak",
                 flush=True,
