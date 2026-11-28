@@ -21,7 +21,7 @@ function start(w){
  let state=clean(null),blocked=false,busy=false,dirty=false,rawRecovery=null;
  const status=s=>{$('vj-status').textContent=s};
  function hideNotes(){$('vj-spoilers').checked=false;$('vj-notes').closest('label').hidden=true}
- function buttons(){const has=!!state.active;for(const id of controls)$(id).disabled=blocked||busy;for(const id of ['vj-select','vj-save','vj-spoilers',...Object.keys(FIELDS).map(k=>'vj-'+k)])$(id).disabled=blocked||busy||!has;$('vj-recover').hidden=rawRecovery===null}
+ function buttons(){const has=!!state.active;for(const id of controls)$(id).disabled=blocked||busy;for(const id of ['vj-select','vj-save','vj-spoilers',...Object.keys(FIELDS).map(k=>'vj-'+k)])$(id).disabled=blocked||busy||!has;$('vj-recover').hidden=rawRecovery===null;const link=$('vj-discovery-profile');link.hidden=blocked||busy||dirty||!has;if(has)link.href='./atlas-collectibles.html?game=vi#playthrough='+encodeURIComponent(state.active);else link.removeAttribute('href')}
  function render(){const select=$('vj-select');select.replaceChildren();for(const p of state.profiles){const o=d.createElement('option');o.value=p.id;o.textContent=p.name;select.append(o)}select.value=state.active||'';const p=state.profiles.find(p=>p.id===state.active);for(const k of Object.keys(FIELDS))$('vj-'+k).value=p?.[k]||'';dirty=false;hideNotes();buttons()}
  function reload(){try{state=read(w.localStorage).state;blocked=false;rawRecovery=null;render();return true}catch{blocked=true;try{rawRecovery=w.localStorage.getItem(KEY)}catch{rawRecovery=null}buttons();status('Saved journey unreadable or unavailable. Editing paused; original bytes preserved.');return false}}
  function download(content,name,type){const a=d.createElement('a'),url=w.URL.createObjectURL(new w.Blob([content],{type}));a.href=url;a.download=name;d.body.append(a);a.click();a.remove();w.setTimeout(()=>w.URL.revokeObjectURL(url),2000)}
@@ -42,7 +42,7 @@ function start(w){
  function canSwitch(){if(busy||blocked)return false;if(!dirty)return true;status('Save your current edits before switching, adding or importing a playthrough.');$('vj-select').value=state.active||'';return false}
  $('vj-add').onclick=()=>{if(!canSwitch())return;const name=$('vj-new').value.trim();if(!name){status('Enter a playthrough name.');return}const id='vj-'+w.crypto.randomUUID().replace(/-/g,'');mutate(()=>add(w.localStorage,id,name),()=>{$('vj-new').value='';return 'New independent journey created.'})};
  $('vj-select').onchange=()=>{const id=$('vj-select').value;if(canSwitch())mutate(()=>select(w.localStorage,id),'Playthrough selected. Story notes hidden.')};
- for(const k of Object.keys(FIELDS))$('vj-'+k).oninput=()=>{dirty=true;status('Unsaved journey edits.')};
+ for(const k of Object.keys(FIELDS))$('vj-'+k).oninput=()=>{dirty=true;buttons();status('Unsaved journey edits.')};
  $('vj-spoilers').onchange=()=>{$('vj-notes').closest('label').hidden=!$('vj-spoilers').checked};
  $('vj-form').onsubmit=e=>{e.preventDefault();const id=state.active,fields=Object.fromEntries(Object.keys(FIELDS).map(k=>[k,$('vj-'+k).value]));const expected=state.profiles.find(p=>p.id===id);mutate(()=>update(w.localStorage,id,fields,expected),'Journey saved on this device.')};
  $('vj-reload').onclick=()=>{if(busy)return;if(dirty&&!w.confirm('Discard unsaved form edits and load the latest saved version?'))return;if(reload())status('Latest saved journeys loaded. Story notes hidden.')};

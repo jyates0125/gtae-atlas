@@ -52,6 +52,13 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    journey2='vj-'+'b'*32
    p.evaluate("""([a,b])=>localStorage.setItem('team-jura-vi-journeys-v1',JSON.stringify({schema:'team-jura-vi-journeys-v1',scope:'vi-story',active:a,profiles:[a,b].map((id,i)=>({id,name:'Run '+(i+1),chapter:'',character:'',goal:'',notes:''}))}))""",[journey,journey2])
    p.reload();expect(p.locator('#jo-done')).to_have_text('1',timeout=20000)
+   # Follow the actual journey link rather than silently migrating unassigned marks.
+   p.goto(base+'atlas-activities.html?mode=vi')
+   expect(p.locator('#vj-select')).to_have_value(journey)
+   p.locator('#vj-discovery-profile').click()
+   expect(p.locator('#jo-profile')).to_have_value(journey,timeout=20000)
+   expect(p.locator('#jo-done')).to_have_text('0')
+   p.reload();expect(p.locator('#jo-profile')).to_have_value(journey,timeout=20000)
    p.locator('#jo-profile').select_option(journey)
    expect(p.locator('#jo-done')).to_have_text('0')
    p.locator('#jo-search').fill('King Gator')
@@ -63,6 +70,12 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    p.locator('#jo-profile').select_option(journey)
    expect(p.locator('#jo-profile')).to_have_value(journey2)
    expect(p.locator('#jo-message')).to_contain_text('Save or discard')
+   if p.locator('.jo-backup').get_attribute('open') is None:p.locator('.jo-backup summary').click()
+   scoped=dict(backup,profile=journey2)
+   p.locator('#jo-import').set_input_files({'name':'draft-conflict.json','mimeType':'application/json','buffer':json.dumps(scoped).encode()})
+   expect(p.locator('#jo-message')).to_contain_text('Save or discard unsaved notes before importing')
+   expect(p.locator('.jo-card textarea')).to_have_value('Unsaved second run')
+   assert p.evaluate('([k,b])=>localStorage.getItem(k+\':\'+b)',[KEY,journey2]) is None
    p.once('dialog',lambda dialog:dialog.accept())
    p.locator('#jo-discard').click()
    p.locator('#jo-profile').select_option(journey)
@@ -99,6 +112,18 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    p.once('dialog',lambda dialog:dialog.accept());p.locator('#jo-discard').click()
    second.close()
    p.locator('#jo-profile').select_option('')
+   # Unknown and malformed explicit links fail closed, never fall through to unassigned writes.
+   unknown='vj-'+'d'*32
+   p.goto(base+'atlas-collectibles.html?game=vi#playthrough='+unknown)
+   p.reload()
+   expect(p.locator('#jo-profile')).to_have_value(unknown,timeout=20000)
+   expect(p.locator('.jo-card [data-action=mark]').first).to_be_disabled()
+   assert p.evaluate('([k,id])=>localStorage.getItem(k+\':\'+id)',[KEY,unknown]) is None
+   p.goto(base+'atlas-collectibles.html?game=vi#playthrough=malformed');p.reload()
+   expect(p.locator('#jo-profile')).to_have_value('invalid',timeout=20000)
+   expect(p.locator('#jo-export')).to_be_disabled()
+   p.locator('#jo-profile').select_option('')
+   expect(p.locator('#jo-done')).to_have_text('1')
    p.evaluate("(k)=>localStorage.setItem(k,'broken')",KEY);p.reload()
    expect(p.locator('#jo-message')).to_contain_text('Editing paused',timeout=20000)
    expect(p.locator('.jo-card [data-action=mark]').first).to_be_disabled()
