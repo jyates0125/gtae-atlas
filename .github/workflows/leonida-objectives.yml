@@ -1,0 +1,24 @@
+name: Leonida objective identity foundation
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-objective-core.js'
+      - 'data/atlas-vi-objectives.json'
+      - 'tests/atlas-objective-core.test.cjs'
+      - '.github/workflows/leonida-objectives.yml'
+permissions:
+  contents: read
+jobs:
+  identities:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check atlas-objective-core.js
+      - run: node --test tests/atlas-objective-core.test.cjs tests/atlas450-vi-progress.test.cjs
