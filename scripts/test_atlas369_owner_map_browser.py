@@ -123,7 +123,10 @@ try:
    expect(page.locator('#jura3dCanvas')).to_be_visible()
    pins=page.locator('.jura-3d-pin.j371-landmark-pin')
    if pins.count():
-    style=pins.first.evaluate('(p)=>({width:p.offsetWidth,color:getComputedStyle(p).backgroundColor,border:getComputedStyle(p).borderTopColor,symbol:p.textContent})')
+    # Overlay nodes are replaced on render. Read the current connected
+    # element atomically rather than measuring a stale detached button.
+    page.wait_for_function("""()=>[...document.querySelectorAll('.jura-3d-pin.j371-landmark-pin')].some(p=>p.isConnected&&p.offsetWidth>0)""",timeout=15000)
+    style=page.evaluate("""()=>{const p=[...document.querySelectorAll('.jura-3d-pin.j371-landmark-pin')].find(p=>p.isConnected&&p.offsetWidth>0);if(!p)return null;const c=getComputedStyle(p);return {width:p.offsetWidth,color:c.backgroundColor,border:c.borderTopColor,symbol:p.textContent}}""")
     assert style=={'width':16,'color':'rgb(73, 49, 94)','border':'rgb(233, 189, 121)','symbol':'◆'},style
    page.screenshot(path=str(out/f'actual-gtadb-textured-{width}.png'),animations='disabled')
    # The orbit gesture must change the camera, not pan the hidden 2D canvas.

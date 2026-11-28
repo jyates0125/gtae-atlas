@@ -1,3 +1,7 @@
+## November 28 — Leonida refresh CI repair
+
+- #314 initial head 1e845fd1 failed three actual jobs: manifest hash test incorrectly included trailing metadata fields (141035475293); older sidebar test expected Scaly first (141035475410); 3D marker measurement returned detached-node-like zero width (141035475599, cause not established). Correct raw JSON extraction, test owner-requested Day-first toggle in both directions, read current connected 3D marker while retaining the exact width, color, border and symbol checks. No change to map artwork, coordinates, or saved IDs in this correction. Main in-game map clarified in VI Story UI. Recheck exact successor before merge and release.
+
 ## November 28 — Leonida in-game map and attributed data refresh candidate
 
 - Owner requested current GTA VI in-game map as primary. GTADB Day is existing approved in-game artwork; source tile family last changed Nov 19, not a new image. Make Day the initial view; retain Scaly/YANIS, Loki/DUPZOR, Rockstar official poster, 2D/3D and personal progress. No artwork replaced.

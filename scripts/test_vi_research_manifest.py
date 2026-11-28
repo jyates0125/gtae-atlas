@@ -26,7 +26,10 @@ print("GTA VI research manifest consistency PASS:", manifest["count"], "records"
 if snapshot.get("sourceHashAlgorithm") == "SHA-256 of exact compact records JSON as stored":
     import hashlib
     raw=(root/"data/gtadb-6.json").read_text(encoding="utf-8").rstrip("\n")
-    records_raw=raw.split(',"records":',1)[1][:-1]
+    tail=raw.split(',"records":',1)[1]
+    parsed,end=json.JSONDecoder().raw_decode(tail)
+    records_raw=tail[:end]
+    assert parsed==snapshot["records"]
     assert hashlib.sha256(records_raw.encode("utf-8")).hexdigest()==snapshot["sourceHash"]
     assert json.loads(records_raw)==snapshot["records"]
     assert snapshot["heldForReviewIds"]==manifest["heldForReviewIds"]
