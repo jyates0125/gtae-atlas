@@ -46,7 +46,7 @@ jobs:
           python -m playwright install chromium
       - name: Actual approximate 3D browser interaction
         run: python scripts/test_atlas368_approx_terrain_browser.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: atlas368-approximate-terrain-visual-evidence

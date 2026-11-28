@@ -55,7 +55,7 @@ jobs:
         run: python scripts/test_atlas302_classic_browser.py
       - name: Retain original mobile and desktop recovery UI
         if: always() && steps.scope.outputs.run == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas302-classic-notebook-390-1440
           path: qa-evidence/chromium/atlas302-classic-recovery-*.png

@@ -34,7 +34,7 @@ jobs:
           python -m playwright install chromium
       - name: Test map clarity at 390px, 430px and desktop, including footer
         run: python scripts/test_atlas362_vi_map_clarity_browser.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: atlas362-vi-map-clarity-chromium

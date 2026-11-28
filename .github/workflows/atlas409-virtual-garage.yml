@@ -57,7 +57,7 @@ jobs:
           python scripts/test_atlas409_virtual_garage.py
       - name: Save rendered model evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas409-vehicle-study-browser-evidence
           path: |

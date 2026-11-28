@@ -64,7 +64,7 @@ jobs:
         run: python scripts/test_atlas186_route_browser.py
       - name: Save independently scoped Cayo evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cayo-shadow-${{ matrix.browser }}
           path: qa-evidence/${{ matrix.browser }}/

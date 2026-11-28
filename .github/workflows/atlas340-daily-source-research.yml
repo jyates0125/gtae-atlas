@@ -18,7 +18,7 @@ jobs:
           python-version: '3.12'
       - name: Check official GTA VI, GTA Online, media and licensed source entry points
         run: python scripts/monitor_gta_sources.py > source-snapshot.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gta-source-snapshot
           path: source-snapshot.json

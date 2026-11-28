@@ -57,7 +57,7 @@ jobs:
         run: python scripts/test_atlas296_forge_collections_browser.py
       - name: Save actual Forge collection viewport evidence
         if: always() && steps.scope.outputs.run == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas296-forge-collection-phone-desktop
           path: qa-evidence/chromium/atlas296-forge-collections-*.png

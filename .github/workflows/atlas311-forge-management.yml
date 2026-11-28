@@ -41,7 +41,7 @@ jobs:
         run: python scripts/test_atlas311_forge_management_browser.py
       - name: Save phone Forge management evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas311-forge-named-version-manager
           path: qa-evidence/chromium/atlas311-forge-*-phone.png

@@ -48,7 +48,7 @@ jobs:
         env:
           ATLAS_SMOKE_ONLY: atlas90-weapons6.html
         run: python scripts/browser_smoke.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: atlas4712-armory-png-${{ matrix.browser }}

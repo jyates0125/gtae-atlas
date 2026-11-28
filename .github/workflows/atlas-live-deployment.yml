@@ -41,7 +41,7 @@ jobs:
           python scripts/verify_live_deployment.py "$expected" --attempts 6 | tee live-deployment-evidence.jsonl
       - name: Save exact production verification evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gtae-live-deployment-evidence-${{ github.sha }}
           path: live-deployment-evidence.jsonl
