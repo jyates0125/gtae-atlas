@@ -14,7 +14,8 @@ const EXACT=new Set([
 ]);
 const PREFIXES=['team-jura-atlas','team-jura-passport','team-jura-checklist','team-jura-garage','jura3-'];
 const BLOCK=/(?:auth|session|token|secret|password|credential|private|api[-_]?key|oauth|access[-_]?key|refresh)/i;
-const validKey=(key)=>typeof key==='string' && key.length<150 && !BLOCK.test(key) && (EXACT.has(key)||PREFIXES.some(x=>key.startsWith(x))||window.JuraVIBackup?.isKey(key)===true);
+const viKey=(key)=>typeof key==='string' && (key==='team-jura-vi-journeys-v1'||/^team-jura-objective-progress-v1:vi-story(?::vj-[0-9a-f-]{36})?$/.test(key));
+const validKey=(key)=>typeof key==='string' && key.length<150 && !BLOCK.test(key) && (EXACT.has(key)||PREFIXES.some(x=>key.startsWith(x))||viKey(key));
 const msg=(s)=>{const el=document.getElementById('j131ProgressStatus');if(el)el.textContent=s};
 function collect(){
  const saves={};for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!validKey(key))continue;const value=localStorage.getItem(key);if(typeof value!=='string')continue;if(value.length>1_500_000)continue;saves[key]=value}
@@ -40,7 +41,9 @@ async function restore(file){
   const crewKeys=new Set(['team-jura-my-crew-v1','team-jura-world-profiles-v2']);
   const hasCrew=entries.some(([key])=>crewKeys.has(key));
   if(!confirm('Restore '+entries.length+' Atlas progress records? Matching older records will be overwritten. Crew, Leonida journeys and Discovery records merge without replacing existing notes or profiles. Continue?')){msg('Restore cancelled. Nothing was changed.');return}
-  const vi=window.JuraVIBackup,viKeys=vi?.locks(parsed.saves)||[];
+  const vi=window.JuraVIBackup;
+  if(entries.some(([key])=>viKey(key))&&(!vi?.plan||!vi?.locks))throw Error('Leonida backup support unavailable; no data was restored.');
+  const viKeys=vi?.locks(parsed.saves)||[];
   await withLocks(viKeys,()=>{
   const viPlan=viKeys.length?vi.plan(localStorage,parsed.saves):null;
   if(viPlan){entries=entries.filter(([key])=>!vi.isKey(key));entries.push(...viPlan.entries)}
