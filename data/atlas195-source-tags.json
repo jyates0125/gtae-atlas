@@ -268,82 +268,82 @@
       "source": "GTADB.ORG and contributors",
       "sourceUrl": "https://github.com/rolux/gtadb.org/tree/main/map/data/6",
       "license": "CC BY 4.0",
-      "sourceUpdated": "2026-11-21T07:45:07.666Z",
-      "sourceCommit": null,
-      "records": 3754,
-      "mapped": 3663,
-      "searchOnly": 91,
+      "sourceUpdated": "2026-11-28T14:49:07Z",
+      "sourceCommit": "8aa82a1001ad137a524586a41bac85d0b791dc2f",
+      "records": 4600,
+      "mapped": 4501,
+      "searchOnly": 99,
       "tags": [
         {
           "label": "unclassified",
-          "tagged": 1336,
-          "mapped": 1314,
-          "searchOnly": 22
+          "tagged": 2189,
+          "mapped": 2163,
+          "searchOnly": 26
         },
         {
           "label": "l4",
-          "tagged": 716,
-          "mapped": 715,
-          "searchOnly": 1
+          "tagged": 704,
+          "mapped": 702,
+          "searchOnly": 2
         },
         {
           "label": "enterable",
-          "tagged": 385,
-          "mapped": 384,
+          "tagged": 387,
+          "mapped": 386,
           "searchOnly": 1
         },
         {
           "label": "residential",
           "tagged": 351,
-          "mapped": 344,
-          "searchOnly": 7
+          "mapped": 345,
+          "searchOnly": 6
         },
         {
           "label": "unconfirmed",
-          "tagged": 344,
-          "mapped": 326,
-          "searchOnly": 18
+          "tagged": 328,
+          "mapped": 304,
+          "searchOnly": 24
         },
         {
           "label": "l1",
-          "tagged": 188,
-          "mapped": 186,
-          "searchOnly": 2
+          "tagged": 181,
+          "mapped": 175,
+          "searchOnly": 6
         },
         {
           "label": "retail",
           "tagged": 178,
-          "mapped": 172,
-          "searchOnly": 6
+          "mapped": 171,
+          "searchOnly": 7
         },
         {
           "label": "transportation",
-          "tagged": 157,
+          "tagged": 158,
           "mapped": 156,
-          "searchOnly": 1
+          "searchOnly": 2
         },
         {
           "label": "l6",
-          "tagged": 124,
-          "mapped": 124,
-          "searchOnly": 0
-        },
-        {
-          "label": "natural",
-          "tagged": 100,
-          "mapped": 100,
+          "tagged": 105,
+          "mapped": 105,
           "searchOnly": 0
         },
         {
           "label": "demolished",
-          "tagged": 99,
-          "mapped": 97,
+          "tagged": 100,
+          "mapped": 98,
           "searchOnly": 2
         },
         {
+          "label": "natural",
+          "tagged": 100,
+          "mapped": 99,
+          "searchOnly": 1
+        },
+        {
           "label": "//pink",
-          "tagged": 95,
-          "mapped": 95,
+          "tagged": 94,
+          "mapped": 94,
           "searchOnly": 0
         },
         {
@@ -366,15 +366,21 @@
         },
         {
           "label": "leisure",
-          "tagged": 74,
-          "mapped": 71,
+          "tagged": 73,
+          "mapped": 70,
           "searchOnly": 3
         },
         {
           "label": "government",
           "tagged": 56,
-          "mapped": 56,
-          "searchOnly": 0
+          "mapped": 55,
+          "searchOnly": 1
+        },
+        {
+          "label": "events",
+          "tagged": 51,
+          "mapped": 21,
+          "searchOnly": 30
         },
         {
           "label": "l8",
@@ -383,34 +389,22 @@
           "searchOnly": 0
         },
         {
-          "label": "events",
-          "tagged": 50,
-          "mapped": 16,
-          "searchOnly": 34
-        },
-        {
           "label": "closed",
           "tagged": 47,
           "mapped": 47,
           "searchOnly": 0
         },
         {
-          "label": "utilities",
-          "tagged": 45,
-          "mapped": 44,
-          "searchOnly": 1
-        },
-        {
           "label": "reused",
-          "tagged": 44,
-          "mapped": 44,
+          "tagged": 47,
+          "mapped": 47,
           "searchOnly": 0
         },
         {
-          "label": "landmark",
-          "tagged": 35,
-          "mapped": 30,
-          "searchOnly": 5
+          "label": "utilities",
+          "tagged": 46,
+          "mapped": 45,
+          "searchOnly": 1
         },
         {
           "label": "#bus",
@@ -419,25 +413,31 @@
           "searchOnly": 0
         },
         {
+          "label": "landmark",
+          "tagged": 34,
+          "mapped": 30,
+          "searchOnly": 4
+        },
+        {
           "label": "public",
           "tagged": 34,
-          "mapped": 32,
-          "searchOnly": 2
+          "mapped": 31,
+          "searchOnly": 3
         },
         {
           "label": "restaurant",
-          "tagged": 29,
-          "mapped": 28,
+          "tagged": 30,
+          "mapped": 29,
           "searchOnly": 1
         },
         {
-          "label": "construction",
-          "tagged": 20,
-          "mapped": 20,
+          "label": "#gas",
+          "tagged": 19,
+          "mapped": 19,
           "searchOnly": 0
         },
         {
-          "label": "#gas",
+          "label": "construction",
           "tagged": 19,
           "mapped": 19,
           "searchOnly": 0
@@ -447,6 +447,12 @@
           "tagged": 17,
           "mapped": 17,
           "searchOnly": 0
+        },
+        {
+          "label": "mirrored",
+          "tagged": 13,
+          "mapped": 11,
+          "searchOnly": 2
         },
         {
           "label": "//may-not-exist",
@@ -459,12 +465,6 @@
           "tagged": 12,
           "mapped": 9,
           "searchOnly": 3
-        },
-        {
-          "label": "mirrored",
-          "tagged": 12,
-          "mapped": 11,
-          "searchOnly": 1
         },
         {
           "label": "#train",
@@ -480,6 +480,12 @@
         },
         {
           "label": "#airport",
+          "tagged": 10,
+          "mapped": 10,
+          "searchOnly": 0
+        },
+        {
+          "label": "#hair",
           "tagged": 10,
           "mapped": 10,
           "searchOnly": 0
@@ -503,13 +509,19 @@
           "searchOnly": 0
         },
         {
-          "label": "#hair",
-          "tagged": 9,
-          "mapped": 9,
+          "label": "#fence",
+          "tagged": 7,
+          "mapped": 7,
           "searchOnly": 0
         },
         {
-          "label": "//blue",
+          "label": "#food",
+          "tagged": 7,
+          "mapped": 7,
+          "searchOnly": 0
+        },
+        {
+          "label": "#guns",
           "tagged": 7,
           "mapped": 7,
           "searchOnly": 0
@@ -521,19 +533,7 @@
           "searchOnly": 0
         },
         {
-          "label": "#fence",
-          "tagged": 6,
-          "mapped": 6,
-          "searchOnly": 0
-        },
-        {
-          "label": "#food",
-          "tagged": 6,
-          "mapped": 6,
-          "searchOnly": 0
-        },
-        {
-          "label": "#guns",
+          "label": "//blue",
           "tagged": 6,
           "mapped": 6,
           "searchOnly": 0
@@ -545,7 +545,19 @@
           "searchOnly": 0
         },
         {
+          "label": "#bar",
+          "tagged": 5,
+          "mapped": 5,
+          "searchOnly": 0
+        },
+        {
           "label": "#metro",
+          "tagged": 5,
+          "mapped": 5,
+          "searchOnly": 0
+        },
+        {
+          "label": "#modshop",
           "tagged": 5,
           "mapped": 5,
           "searchOnly": 0
@@ -557,7 +569,7 @@
           "searchOnly": 0
         },
         {
-          "label": "#modshop",
+          "label": "#landmark",
           "tagged": 4,
           "mapped": 4,
           "searchOnly": 0
@@ -581,6 +593,12 @@
           "searchOnly": 0
         },
         {
+          "label": "gtav",
+          "tagged": 4,
+          "mapped": 4,
+          "searchOnly": 0
+        },
+        {
           "label": "l2",
           "tagged": 4,
           "mapped": 4,
@@ -593,7 +611,7 @@
           "searchOnly": 0
         },
         {
-          "label": "#bar",
+          "label": "#curiosity",
           "tagged": 3,
           "mapped": 3,
           "searchOnly": 0
@@ -611,13 +629,19 @@
           "searchOnly": 0
         },
         {
+          "label": "#pay'n'spray",
+          "tagged": 3,
+          "mapped": 2,
+          "searchOnly": 1
+        },
+        {
           "label": "#shoes",
           "tagged": 3,
           "mapped": 3,
           "searchOnly": 0
         },
         {
-          "label": "gtav",
+          "label": "#tattoos",
           "tagged": 3,
           "mapped": 3,
           "searchOnly": 0
@@ -653,25 +677,19 @@
           "searchOnly": 0
         },
         {
+          "label": "#liquor",
+          "tagged": 2,
+          "mapped": 2,
+          "searchOnly": 0
+        },
+        {
           "label": "#nightclub",
           "tagged": 2,
           "mapped": 2,
           "searchOnly": 0
         },
         {
-          "label": "#pay'n'spray",
-          "tagged": 2,
-          "mapped": 2,
-          "searchOnly": 0
-        },
-        {
           "label": "#stripclub",
-          "tagged": 2,
-          "mapped": 2,
-          "searchOnly": 0
-        },
-        {
-          "label": "#tattoos",
           "tagged": 2,
           "mapped": 2,
           "searchOnly": 0
@@ -695,6 +713,12 @@
           "searchOnly": 0
         },
         {
+          "label": "@andrea",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
           "label": "@billy",
           "tagged": 1,
           "mapped": 1,
@@ -702,6 +726,30 @@
         },
         {
           "label": "@brian",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "@karim",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "@moses",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "@randy",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "@raul",
           "tagged": 1,
           "mapped": 1,
           "searchOnly": 0
@@ -827,7 +875,7 @@
           "searchOnly": 0
         },
         {
-          "label": "#cinema",
+          "label": "#diamonds",
           "tagged": 1,
           "mapped": 1,
           "searchOnly": 0
@@ -845,6 +893,12 @@
           "searchOnly": 0
         },
         {
+          "label": "#garage",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
           "label": "#golf",
           "tagged": 1,
           "mapped": 1,
@@ -857,13 +911,19 @@
           "searchOnly": 0
         },
         {
-          "label": "#liquor",
+          "label": "#jewelry",
           "tagged": 1,
           "mapped": 1,
           "searchOnly": 0
         },
         {
           "label": "#pharmacy",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "#sculpture",
           "tagged": 1,
           "mapped": 1,
           "searchOnly": 0
@@ -882,6 +942,12 @@
         },
         {
           "label": "cancelled",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
+        },
+        {
+          "label": "church",
           "tagged": 1,
           "mapped": 1,
           "searchOnly": 0
@@ -915,6 +981,12 @@
           "tagged": 1,
           "mapped": 0,
           "searchOnly": 1
+        },
+        {
+          "label": "l9",
+          "tagged": 1,
+          "mapped": 1,
+          "searchOnly": 0
         },
         {
           "label": "recreation",

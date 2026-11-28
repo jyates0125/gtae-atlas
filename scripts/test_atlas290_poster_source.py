@@ -15,7 +15,11 @@ assert pack['schema']==2 and pack['game']=='6' and pack['status']=='community-pr
 assert pack['count']==len(pack['records'])==manifest['count']
 assert pack['mappedCount']+pack['searchOnlyCount']==pack['count']
 assert manifest['sourceHash']==pack['sourceHash']
-assert manifest['upstreamRevision']=='d406fea099e1df2bce42fd6b87eed04bce646629'
+assert manifest['upstreamRevision']=='8aa82a1001ad137a524586a41bac85d0b791dc2f'
+assert manifest['upstreamRevision']==pack['upstreamRevision']
+assert manifest['upstreamBlob']==pack['upstreamBlob']=='e9b46e8f5248adfcad76714494cae9c635aae9ec'
+assert len(pack['heldForReviewIds'])==12
+assert all(pack['records'][k][1]==[] for k in pack['heldForReviewIds'])
 assert all(re.fullmatch(r'L[1-9][0-9]*',key) for key in pack['records'])
 assert len(pack['records'])==len(set(pack['records']))
 assert 'atlas290-official-landmarks.js?v=291' in html and 'atlas290-official-landmarks.css?v=291' in html

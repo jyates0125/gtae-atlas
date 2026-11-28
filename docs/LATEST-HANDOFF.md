@@ -1,3 +1,7 @@
+## November 28 — release #315 test-contract correction only
+
+Development 1d6c633871b0e05defa2b046ea62c880ca5b60ca integrated #314 (34/34) and #312. Frozen release #315 initial Chromium/static job 141038977471 failed two obsolete expectations: Scaly-first and November 21 upstream revision. Update exact assertions to owner-approved Day-first, preserved alternate views, provisional VI records and pinned November 28 source identity/held IDs. No public runtime, data or artwork change. Revalidate full release on new exact head; require device acceptance and owner approval. Sync test-only correction back to development after release under integration lease.
+
 ## November 28 — Leonida refresh CI repair
 
 - #314 initial head 1e845fd1 failed three actual jobs: manifest hash test incorrectly included trailing metadata fields (141035475293); older sidebar test expected Scaly first (141035475410); 3D marker measurement returned detached-node-like zero width (141035475599, cause not established). Correct raw JSON extraction, test owner-requested Day-first toggle in both directions, read current connected 3D marker while retaining the exact width, color, border and symbol checks. No change to map artwork, coordinates, or saved IDs in this correction. Main in-game map clarified in VI Story UI. Recheck exact successor before merge and release.
