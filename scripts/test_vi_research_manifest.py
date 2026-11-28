@@ -21,3 +21,17 @@ assert snapshot["mappedCount"] == manifest["mappedCount"]
 assert snapshot["searchOnlyCount"] == manifest["searchOnlyCount"]
 assert manifest["status"].startswith("provisional"), "Research must remain unverified"
 print("GTA VI research manifest consistency PASS:", manifest["count"], "records")
+
+# November 28 pinned candidate: verify exact stored records bytes and held ID behavior.
+if snapshot.get("sourceHashAlgorithm") == "SHA-256 of exact compact records JSON as stored":
+    import hashlib
+    raw=(root/"data/gtadb-6.json").read_text(encoding="utf-8").rstrip("\n")
+    tail=raw.split(',"records":',1)[1]
+    parsed,end=json.JSONDecoder().raw_decode(tail)
+    records_raw=tail[:end]
+    assert parsed==snapshot["records"]
+    assert hashlib.sha256(records_raw.encode("utf-8")).hexdigest()==snapshot["sourceHash"]
+    assert json.loads(records_raw)==snapshot["records"]
+    assert snapshot["heldForReviewIds"]==manifest["heldForReviewIds"]
+    assert all(snapshot["records"][key][1]==[] for key in snapshot["heldForReviewIds"])
+    assert snapshot["upstreamRevision"]==manifest["upstreamRevision"]

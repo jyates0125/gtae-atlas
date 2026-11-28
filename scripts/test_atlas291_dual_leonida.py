@@ -11,9 +11,9 @@ official=(R/'atlas143-official-map-view.js').read_text(encoding='utf-8')
 worker=(R/'atlas-sw.js').read_text(encoding='utf-8')
 workflow=(R/'.github/workflows/team-jura-release.yml').read_text(encoding='utf-8')
 pack=json.loads((R/'data/gtadb-6.json').read_text(encoding='utf-8'))
-assert len(pack['records'])==pack['count']==3754
-assert pack['mappedCount']==3663 and pack['searchOnlyCount']==91
-assert "styles={'5':'radar','6':'scaly,view'}" in mapjs, 'Do not replace known Scaly default without pin calibration'
+assert len(pack['records'])==pack['count']==4600
+assert pack['mappedCount']==4501 and pack['searchOnlyCount']==99
+assert "styles={'5':'radar','6':'day'}" in mapjs, 'Owner-approved Day artwork default; all VI coordinates remain provisional'
 assert "['day','In-game Map']" in mapjs
 for name in ('atlas290-vi-source-ledger.js','atlas290-vi-source-ledger.css', 'atlas290-official-landmarks.js','atlas290-official-landmarks.css'):
  assert name in vi and '"./'+name+'"' in worker, ('missing VI link/offline support',name)
@@ -35,4 +35,4 @@ assert workflow.count('python scripts/test_atlas290_vi_day_browser.py')==2
 for name in ('atlas290-official-landmarks.js','atlas290-vi-source-ledger.js','atlas143-official-map-view.js'):
  check=subprocess.run(['node','--check',str(R/name)],capture_output=True,text=True)
  assert check.returncode==0,(name,check.stderr)
-print('PASS Atlas 29.1: Day opt-in, existing map fallback, 3754 sources, manual poster deep links, private saves, offline and game isolation')
+print('PASS Atlas 29.1: Day default, existing map fallback, 4600 sources, manual poster deep links, private saves, offline and game isolation')
