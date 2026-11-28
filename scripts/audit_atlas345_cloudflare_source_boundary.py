@@ -5,6 +5,7 @@ Fetches only known nonsensitive repository file paths and a tiny bounded sample
 of each public response. Never prints response bodies, credentials or cookies.
 The approved Cloudflare 'public/' build excludes docs/ and scripts/.
 """
+import argparse
 import json
 import re
 import sys
@@ -89,7 +90,11 @@ def inspect(origin):
 def main():
     assert looks_like_raw_source(b"prefix known-source fingerprint suffix", b"known-source fingerprint")
     assert not looks_like_raw_source(b"<!doctype html>Fallback", b"known-source fingerprint")
-    results = [inspect(origin) for origin in ORIGINS]
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--primary-only', action='store_true', help='Audit canonical public production only; default retains dual-origin diagnostic')
+    args = parser.parse_args()
+    origins = ORIGINS[:1] if args.primary_only else ORIGINS
+    results = [inspect(origin) for origin in origins]
     # No remote response body is emitted or saved.
     print(json.dumps({"schema": 1, "results": results,
                       "verified": all(not r["errors"] for r in results)}, indent=2))

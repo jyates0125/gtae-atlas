@@ -118,7 +118,7 @@ function savedCategoryMode(){
  const serial=JSON.stringify(next);
  if(serial!==savedCategoryMode.previous){savedCategoryMode.previous=serial;store(PIN_PREF_KEY,next)}
 }
-let listOrder='name';let mode='story',game='5',showUnverified=true,datasets={'5':[],'6':[]},dataOrigins={'5':'Loading…','6':'Loading…'},active={'5-story':restoredCategories('5-story'),'5-online':restoredCategories('5-online'),'6':restoredCategories('6')},styles={'5':'radar','6':'scaly,view'},page=0,tab='Find',onlyUnfound=false,onlyFavorites=false,showPins=true,selected=null,addPinMode=false;
+let listOrder='name';let mode='story',game='5',showUnverified=true,datasets={'5':[],'6':[]},dataOrigins={'5':'Loading…','6':'Loading…'},active={'5-story':restoredCategories('5-story'),'5-online':restoredCategories('5-online'),'6':restoredCategories('6')},styles={'5':'radar','6':'day'},page=0,tab='Find',onlyUnfound=false,onlyFavorites=false,showPins=true,selected=null,addPinMode=false;
 // Atlas 5.5 source feeds: only source-published JSON; source scopes keep Story/Online separate.
 let sourceRecords={},sourceStates={},sourceEnabled=loadStore('jura55-source-visible',{story:true,vi:true,atms:false,pumps:false,buses:false,towers:false});
 if(!sourceEnabled||typeof sourceEnabled!=='object'||Array.isArray(sourceEnabled))sourceEnabled={story:true,vi:true};
@@ -752,7 +752,7 @@ function updatePinButton(){const pinButton=$('togglePins');if(pinButton){const v
 function render(){savedCategoryMode();renderLegend();updatePinButton();renderViRegions();if(tab==='Services'||!compactMapDevice())renderServices();renderFind();renderRoute();renderPins();if(tab==='Collections'||!compactMapDevice())renderSpecial('Collections');if(tab==='Vehicles'||!compactMapDevice())renderSpecial('Vehicles');updateSelected();if(nearbyActive)renderNearby();schedulePaint();document.dispatchEvent(new Event('jura:legend-updated'))}
 function mapGameHash(g,hash,initial){return initial&&hash&&!/^#game(?:5|6|online)$/.test(hash)?hash:'#game'+g}
 function switchGame(g,initial=false){if(!['5','6','online'].includes(g))return;rememberLegendDisclosure();dropEventFocus();chooseRouteStartMode=false;mode=g==='online'?'online':'story';game=g==='6'?'6':'5';const activeLink=$('activityModeLink');if(activeLink){const which=g==='6'?'vi':g==='online'?'online':'story';activeLink.href='./atlas-activities.html?mode='+which;activeLink.textContent=which==='vi'?'◷ Leonida · Gameplay & progress':which==='online'?'◷ Online events · timers & spawns':'◷ Story Mode challenges · no Online events';}selected=null;coordinateTarget=null;addPinMode=false;$('game5').classList.toggle('active',g==='5');$('game6').classList.toggle('active',g==='6');$('gameOnline').classList.toggle('active',g==='online');$('game5').setAttribute('aria-pressed',String(g==='5'));$('game6').setAttribute('aria-pressed',String(g==='6'));$('gameOnline').setAttribute('aria-pressed',String(g==='online'));$('mapTitle').textContent=g==='6'?'GTA VI · Leonida':g==='online'?'GTA Online · Los Santos':'GTA V · Los Santos';$('mapSubtitle').textContent=g==='6'?'Leonida gameplay & mapped places · source status on each record':g==='online'?'Shared GTA V terrain · separate Online markers and progress':'GTADB GTA V · Story map landmarks';
- $('layer').replaceChildren();for(const [key,label] of LAYERS[game])$('layer').add(new Option(label,key));if(!$('layer').querySelector('option[value="'+styles[game]+'"]'))styles[game]=game==='6'?'scaly,view':'radar';$('layer').value=styles[game];$('search').value='';if($('j4730-legend-search'))$('j4730-legend-search').value='';if($('namedLayerSearch'))$('namedLayerSearch').value='';if($('sourceLayerSearch'))$('sourceLayerSearch').value='';onlyUnfound=false;onlyFavorites=false;showUnverified=true;$('showUnverified').checked=true;if($('showCommunityResearch'))$('showCommunityResearch').checked=researchOn();$('hideFound').checked=false;$('favoritesOnly').checked=false;page=0;fitGame();render();renderSources();dataNotice(datasets[game].length?datasets[game].length.toLocaleString()+' landmarks · '+dataOrigins[game]:'Getting GTA '+game+' locations…');tileHealth();
+ $('layer').replaceChildren();for(const [key,label] of LAYERS[game])$('layer').add(new Option(label,key));if(!$('layer').querySelector('option[value="'+styles[game]+'"]'))styles[game]=game==='6'?'day':'radar';$('layer').value=styles[game];$('search').value='';if($('j4730-legend-search'))$('j4730-legend-search').value='';if($('namedLayerSearch'))$('namedLayerSearch').value='';if($('sourceLayerSearch'))$('sourceLayerSearch').value='';onlyUnfound=false;onlyFavorites=false;showUnverified=true;$('showUnverified').checked=true;if($('showCommunityResearch'))$('showCommunityResearch').checked=researchOn();$('hideFound').checked=false;$('favoritesOnly').checked=false;page=0;fitGame();render();renderSources();dataNotice(datasets[game].length?datasets[game].length.toLocaleString()+' landmarks · '+dataOrigins[game]:'Getting GTA '+game+' locations…');tileHealth();
  navPlan=null;navPlanScope=null;if(window.teamJuraNav)window.teamJuraNav.gameChanged();
  try{const url=new URL(location.href);url.hash=mapGameHash(g,url.hash,initial);history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}announce(g==='online'?'Online mode: GTA V base landmarks, with Online markers and progress kept separate.':'GTA '+game+' map and GTA '+game+' landmarks selected.');
 }
@@ -1068,7 +1068,7 @@ async function getCachedData(g){try{const c=await caches.open(APP+'-data');const
 async function loadDataset(g,refresh=false){
  const localUrl='./gtadb-v'+g+'.json';
  if(!refresh){try{const r=await fetch(localUrl);if(r.ok){const v=normalize(await r.json(),g);if(v.length&&datasets[g].length<v.length){datasets[g]=v;dataOrigins[g]='Offline starter';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length+' starter locations · checking licensed database…')}}}}catch{}
- const cached=await getCachedData(g);if(cached){const v=normalize(cached,g);if(v.length>datasets[g].length){datasets[g]=v;dataOrigins[g]='Cached licensed GTADB database';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' cached locations')}}}
+ const cached=g==='6'?null:await getCachedData(g);if(cached){const v=normalize(cached,g);if(v.length>datasets[g].length){datasets[g]=v;dataOrigins[g]='Cached licensed GTADB database';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' cached locations')}}}
  }
  // Prefer our same-origin, rights-attributed GitHub-mirrored landmark datasets.
  // These are landmark research, not certified item spawns or live session state.
@@ -1077,8 +1077,15 @@ async function loadDataset(g,refresh=false){
   try{const r=await fetch('./data/gtadb-'+g+'.json'+(refresh?'?update='+Date.now():''),{cache:refresh?'reload':'no-cache'});
    if(r.ok){const data=await r.json();if(data?.game!==g||data?.license!=='CC BY 4.0'||!data.records||typeof data.records!=='object')throw Error('Invalid attributed snapshot');
     const v=normalize(data.records,g);if(v.length<500)throw Error('Snapshot has too few mapped landmarks');
-    if(v.length>=datasets[g].length||refresh){datasets[g]=v;dataOrigins[g]='Local GTADB '+(g==='6'?'VI research':'GTA V landmark')+' snapshot '+String(data.sourceUpdated||'').slice(0,10);await cacheData(g,data.records);if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' attributed '+(g==='6'?'provisional':'GTA V')+' landmarks · '+String(data.sourceUpdated||'').slice(0,10));}}return;}
+    if(g==='6'||v.length>=datasets[g].length||refresh){datasets[g]=v;dataOrigins[g]='Local GTADB '+(g==='6'?'VI research':'GTA V landmark')+' snapshot '+String(data.sourceUpdated||'').slice(0,10);await cacheData(g,data.records);if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' attributed '+(g==='6'?'provisional':'GTA V')+' landmarks · '+String(data.sourceUpdated||'').slice(0,10));}}return;}
   }catch(e){/* Keep starter/cached/remote repository fallbacks if a snapshot is absent. */}
+ }
+ // VI uses the reviewed local snapshot first. Do not bypass held IDs by
+ // refreshing directly from an unreviewed upstream database.
+ if(g==='6'){
+  const cached=await getCachedData(g);
+  if(cached){const v=normalize(cached,g);if(v.length>=500){datasets[g]=v;dataOrigins[g]='Offline cached VI source · possibly stale';if(g===game){render();maybeOpenDeepLink();dataNotice(v.length.toLocaleString()+' cached provisional locations · possibly stale')}}}
+  return;
  }
  const checked=Number(loadStore('jura58-gtadb-check-'+g,0))||0;
  const age=g==='5'?90*24*60*60*1000:24*60*60*1000;

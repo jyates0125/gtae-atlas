@@ -168,7 +168,7 @@ if(document.body.classList.contains('j120-heist-page')){
   const sheet=document.querySelector('link[href*="atlas185-cayo-polish.css"]');
   if(!sheet?.sheet){
    const polishCSS=document.createElement('link');
-   polishCSS.rel='stylesheet';polishCSS.href='./atlas185-cayo-polish.css?v=185';
+   polishCSS.rel='stylesheet';polishCSS.href='./atlas185-cayo-polish.css?v=185-mobilefit1';
    document.head.append(polishCSS);
   }
   const polish=document.createElement('script');polish.async=false;polish.src='./atlas185-cayo-polish.js?v=4742';document.body.append(polish);

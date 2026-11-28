@@ -45,7 +45,7 @@ try:
    expect(page.locator('.j290-ui')).to_be_visible(timeout=30000)
    page.wait_for_function("document.querySelector('#j143-official-layer')?.dataset?.j290Hash?.length===64",timeout=30000)
    page.locator('.j290-open').click()
-   expect(page.locator('.j290-meta')).to_contain_text('3754',timeout=20000)
+   expect(page.locator('.j290-meta')).to_contain_text('4600',timeout=20000)
    if width==1440:
     map_box=page.locator('.j143-stage').bounding_box()
     panel_box=page.locator('.j290-ui').bounding_box()
@@ -102,7 +102,7 @@ try:
      page.locator('#mobileTools').click()
     expect(page.locator('#sidebar')).to_be_visible()
    page.locator('#j290-vi-ledger').evaluate('(el)=>el.open=true')
-   expect(page.locator('#j290-count')).to_contain_text('3,754',timeout=20000)
+   expect(page.locator('#j290-count')).to_contain_text('4,600',timeout=20000)
    page.locator('#j290-search').fill('Vice Regal, Washington Beach, Vice Beach')
    poster_link=page.locator('.j290-entry a[href*="view=rockstar&landmark=L1"]')
    expect(poster_link).to_have_count(1,timeout=10000)

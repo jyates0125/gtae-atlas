@@ -25,17 +25,17 @@ try:
             page.goto(base+'atlas-vi.html',wait_until='domcontentloaded')
             layer=page.locator('#layer')
             expect(layer.locator('option[value="day"]')).to_have_count(1,timeout=25000)
-            assert layer.input_value()=='scaly,view','Do not silently change calibrated baseline'
+            assert layer.input_value()=='day','Owner-approved in-game Day map is primary'
             day=page.locator('#j294-day-map')
             expect(day).to_be_visible()
             expect(day).to_be_enabled()
-            expect(day).to_have_attribute('aria-pressed','false')
-            day.click()
-            expect(layer).to_have_value('day')
             expect(day).to_have_attribute('aria-pressed','true')
             day.click()
             expect(layer).to_have_value('scaly,view')
             expect(day).to_have_attribute('aria-pressed','false')
+            day.click()
+            expect(layer).to_have_value('day')
+            expect(day).to_have_attribute('aria-pressed','true')
             assert not page.locator('#j290-vi-ledger').evaluate('(el)=>el.hidden')
             if width==390:
                 assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'Day shortcut caused mobile overflow'

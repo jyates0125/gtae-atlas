@@ -131,3 +131,30 @@ body.j180-cayo.j185-cayo-polished .j132-nav #j132-nav-drawer{
  width:auto!important;max-width:min(560px,calc(100vw - 24px))!important;
  margin:0 0 0 auto!important;max-height:min(80dvh,670px)!important
 }
+
+/* Mobile fit: reserve toolbar space above the map, never over offshore pins.
+   Preserve the calibrated raster aspect ratio and common marker transform. */
+@media(max-width:590px){
+ body.j180-cayo.j185-cayo-polished main.wrap{padding-inline:4px!important}
+ body.j180-cayo.j185-cayo-polished .j180-map-frame{
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ body.j180-cayo.j185-cayo-polished .j180-map-area .j180-map-controls{
+  position:relative!important;inset:auto!important;max-width:none!important;
+  width:100%!important;box-sizing:border-box;flex-wrap:wrap;
+  justify-content:center!important;gap:4px!important;
+  padding:5px;background:#1b152c;border-bottom:1px solid #b987a3;
+  z-index:auto!important;
+ }
+ body.j180-cayo.j185-cayo-polished .j180-map-area .j180-tool{
+  min-width:44px!important;min-height:44px!important;
+ }
+ body.j180-cayo.j185-cayo-polished .j180-map-area .j167-focus{height:auto!important}
+ body.j180-cayo.j185-cayo-polished .j180-map-area .j167-toolbar{
+  padding-right:10px!important;
+ }
+ body.j180-cayo.j185-cayo-polished .j180-map-frame.j180-expanded{
+  grid-template-columns:minmax(0,1fr)!important;
+  height:100dvh;
+ }
+}
