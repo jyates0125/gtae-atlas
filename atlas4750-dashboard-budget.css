@@ -1,0 +1,21 @@
+/* Full-art desktop appearance remains unchanged. Narrow viewports avoid expensive blurred duplication. */
+@media(max-width:820px){
+ body.j223-home .world-art-blur{display:none!important}
+ body.j223-home .topbar,body.j223-home .j132-nav,body.j223-home .j158-map-hud span{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+ body.j223-home .j223-world-card,body.j223-home .j223-shortcuts a{transition:none}
+ body.j223-home .j223-world-card:hover,body.j223-home .j223-shortcuts a:hover{transform:none}
+}
+html[data-j4750-mode="lite"] body.j223-home,
+html[data-j4750-mode="lite"] body.j223-home *,
+html[data-j4750-mode="lite"] body.j223-home *::before,
+html[data-j4750-mode="lite"] body.j223-home *::after{background-image:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-j4750-mode="lite"] body.j223-home[data-j130-surface="dashboard"] .hero.j223-hero[data-gtae-header="dashboard"]{background-image:none!important;background-color:#241331!important;min-height:0!important}
+html[data-j4750-mode="lite"] body.j223-home .j158-map-preview .map-preview-art{background-image:none!important}
+html[data-j4750-mode="lite"] body.j223-home img[data-j4750-src],
+html[data-j4750-mode="lite"] body.j223-home .world-art-frame,
+html[data-j4750-mode="lite"] body.j223-home .world-art-chip{display:none!important}
+html[data-j4750-mode="lite"] body.j223-home .j223-world-card,
+html[data-j4750-mode="lite"] body.j223-home .j223-cast-rail>a{min-height:44px}
+html[data-j4750-mode="lite"] body.j223-home .j223-media-image,
+html[data-j4750-mode="lite"] body.j223-home .j223-map-art{min-height:70px}
+.j4750-lite-link{font-size:13px;color:#ffdaa7;display:inline-block;padding:8px 0}

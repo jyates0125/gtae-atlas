@@ -1,3 +1,4 @@
+import re
 #!/usr/bin/env python3
 """GTAE 22.3 browser QA: real desktop/phone navigation, search and mobile overflow."""
 import os,threading
@@ -194,6 +195,40 @@ try:
    page.screenshot(path=str(out/('atlas223-home-'+str(width)+'.png')),full_page=False,animations='disabled',timeout=20000)
    print('PASS GTAE 22.3 '+engine+' '+str(width)+': seven worlds, thirteen shortcuts, searchable characters, source links and no overflow',flush=True)
    ctx.close()
+  # Explicit recovery path: all essential navigation, search, and progress survive with no cinematic downloads.
+  ctx=browser.new_context(viewport={'width':390,'height':844},reduced_motion='reduce')
+  page=ctx.new_page();art=[]
+  page.on('request',lambda req:art.append(req.url) if '/art/' in req.url and '.webp' in req.url else None)
+  page.goto(base+'atlas-dashboard.html?lite=1',wait_until='domcontentloaded',timeout=60000)
+  expect(page.locator('html')).to_have_attribute('data-j4750-mode','lite')
+  expect(page.locator('.j223-world-card')).to_have_count(7)
+  expect(page.locator('#featuredGrid .world-card')).to_have_count(4)
+  expect(page.locator('#j223-cast-rail a')).to_have_count(5)
+  expect(page.locator('#j132-nav-toggle')).to_be_visible()
+  assert page.locator('img[data-j4750-src][src]').count()==0
+  assert page.locator('#featuredGrid img,#j223-cast-rail img').count()==0
+  assert 'url(' not in page.locator('.j223-hero').evaluate('(el)=>getComputedStyle(el).backgroundImage')
+  page.locator('#j223-search-input').fill('Gun Van')
+  expect(page.locator('#j223-search-results a[href="./atlas-online.html?event=gun-van#j393-online-activity-slot"]')).to_have_count(1)
+  page.locator('#j223-search-input').fill('Lucia')
+  expect(page.locator('#j223-search-results a').first).to_be_visible()
+  page.evaluate("localStorage.setItem('team-jura-atlas81-hq-v1',JSON.stringify({items:{test:{done:true}}}))")
+  page.reload(wait_until='domcontentloaded')
+  expect(page.locator('#progressCollections')).to_have_text('1')
+  assert page.evaluate("JSON.parse(localStorage.getItem('team-jura-atlas81-hq-v1')).items.test.done")
+  for card in page.locator('.j223-world-card,#featuredGrid .world-card,.j158-nine-card').all():
+   card.scroll_into_view_if_needed()
+  page.wait_for_load_state('networkidle')
+  assert not art,art
+  assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+  expect(page.locator('#j4750-mode-link')).to_have_attribute('href','./atlas-dashboard.html')
+  page.locator('#j4750-mode-link').click()
+  expect(page.locator('html')).to_have_attribute('data-j4750-mode','full')
+  expect(page.locator('.j223-world-card img').first).to_have_attribute('src',re.compile(r'\.webp
+finally:
+ server.shutdown()
+))
+  ctx.close()
   browser.close()
 finally:
  server.shutdown()
