@@ -151,6 +151,7 @@ function renderFeaturedCast(){
  for(const c of chosen){
   const a=make('a','');a.href='./'+characterHref(c);
   a.title='Search '+c.name+' · '+c.game;
+  if(window.JuraDashboardArt?.lite){a.append(make('strong','',c.name),make('small','j223-cast-credit','Character profile'));host.append(a);continue}
   const img=make('img'),credit=make('small','j223-cast-credit');
   img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
   const scene=()=>{img.dataset.art='world';img.alt='Original Elario world scene; not a likeness of '+c.name;
