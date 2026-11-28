@@ -1,0 +1,9 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),test=require('node:test');
+const source=fs.readFileSync('atlas.js','utf8'),start=source.indexOf('const VI_REVIEW='),end=source.indexOf('function reviewedVICacheUrl',start);
+assert.ok(start>=0&&end>start);
+const context=vm.createContext({});vm.runInContext(source.slice(start,end)+';globalThis.valid=validReviewedVI;globalThis.review=VI_REVIEW;',context);
+const data=JSON.parse(fs.readFileSync('data/gtadb-6.json','utf8')),manifest=JSON.parse(fs.readFileSync('data/gtadb-6-manifest.json','utf8'));
+test('reviewed metadata matches bundled manifest and source',()=>{assert.equal(context.review.revision,manifest.upstreamRevision);assert.equal(context.review.hash,manifest.sourceHash);assert.equal(context.valid(data),true)});
+test('old raw cache, old metadata and held-pin resurrection rejected',()=>{assert.equal(context.valid(data.records),false);assert.equal(context.valid({...data,upstreamRevision:'older'}),false);const key=data.heldForReviewIds[0];const changed={...data,records:{...data.records,[key]:[data.records[key][0],[123,456]]}};assert.equal(context.valid(changed),false);assert.equal(context.valid({...data,heldForReviewIds:[]}),false)});
+test('missing records and invalid coordinates rejected',()=>{const rows={...data.records};delete rows.L1;assert.equal(context.valid({...data,records:rows}),false);assert.equal(context.valid({...data,records:{...data.records,L1:['Test',[Infinity,5]]}}),false)});
+test('VI skips legacy starter and raw cache path; V still uses old namespace',()=>{assert.ok(source.includes("if(!refresh&&g!=='6')"));assert.ok(source.includes("APP+'-vi-reviewed-data'"));assert.ok(source.includes("APP+'-data'"));assert.ok(source.includes("await cacheData(g,g==='6'?data:data.records)"));assert.ok(source.includes("validReviewedVI(data))throw Error"));});
