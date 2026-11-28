@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "resource": "public GTAE shared integration",
-  "state": "held",
-  "owner": "manual-Aura-317-316",
-  "token": "manual-317-316-integration",
-  "acquiredAtUtc": "2026-11-28T16:51:39.995Z",
-  "reviewAfterUtc": "2026-11-28T16:56:39.995Z",
+  "state": "free",
+  "owner": null,
+  "token": null,
+  "acquiredAtUtc": null,
+  "reviewAfterUtc": null,
   "notes": "Coordination ref only. Never merge into product branches. Acquire with a non-forced expected-head update to a direct child; reread token. Release only own token. Review-after is a stale-warning, not permission to steal.",
-  "previousToken": "manual-sync-315-316-993fed84",
-  "lastReleaseUtc": "2026-11-28T16:48:48.875Z",
+  "previousToken": "manual-317-316-integration",
+  "lastReleaseUtc": "2026-11-28T16:52:09.159Z",
   "lastProbe": "competing update rejected"
 }
