@@ -14,7 +14,7 @@ const EXACT=new Set([
 ]);
 const PREFIXES=['team-jura-atlas','team-jura-passport','team-jura-checklist','team-jura-garage','jura3-'];
 const BLOCK=/(?:auth|session|token|secret|password|credential|private|api[-_]?key|oauth|access[-_]?key|refresh)/i;
-const viKey=(key)=>typeof key==='string' && (key==='team-jura-vi-journeys-v1'||/^team-jura-objective-progress-v1:vi-story(?::vj-[0-9a-f-]{36})?$/.test(key));
+const viKey=(key)=>typeof key==='string' && (key==='team-jura-vi-journeys-v1'||/^team-jura-objective-progress-v1:vi-story(?::vj-[a-f0-9]{32})?$/.test(key));
 const validKey=(key)=>typeof key==='string' && key.length<150 && !BLOCK.test(key) && (EXACT.has(key)||PREFIXES.some(x=>key.startsWith(x))||viKey(key));
 const msg=(s)=>{const el=document.getElementById('j131ProgressStatus');if(el)el.textContent=s};
 function collect(){
