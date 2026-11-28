@@ -1,5 +1,5 @@
 /* Player-declared context, no inferred story paths or completion. */
-(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else if(root)api.start(root)})(typeof window==='undefined'?null:window,function(){'use strict';
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else if(root){root.JuraVIJourney=api;api.start(root)}})(typeof window==='undefined'?null:window,function(){'use strict';
 const KEY='team-jura-vi-journeys-v1',SCHEMA='team-jura-vi-journeys-v1',ID=/^vj-[a-f0-9]{32}$/,FIELDS={name:60,chapter:80,character:80,goal:200,notes:4000};
 const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 function clean(raw){

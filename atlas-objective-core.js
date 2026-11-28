@@ -21,35 +21,37 @@ function registry(raw,previous){
  }
  return {ids,aliases};
 }
-function empty(){return {schema:SAVE,scope:'vi-story',items:{}}}
-function clean(raw){
- if(raw===null)return empty();
- if(!object(raw)||raw.schema!==SAVE||raw.scope!=='vi-story'||!object(raw.items))fail('Invalid saved progress');
- const result=empty();
+const PROFILE=/^vj-[a-f0-9]{32}$/;
+function key(profile=null){if(profile===null)return KEY;if(typeof profile!=='string'||!PROFILE.test(profile))fail('Invalid playthrough identity');return KEY+':'+profile}
+function empty(profile=null){key(profile);return {schema:SAVE,scope:'vi-story',...(profile===null?{}:{profile}),items:{}}}
+function clean(raw,profile=null){
+ key(profile);if(raw===null)return empty(profile);
+ if(!object(raw)||raw.schema!==SAVE||raw.scope!=='vi-story'||(profile===null?Object.hasOwn(raw,'profile'):raw.profile!==profile)||!object(raw.items))fail('Invalid saved progress');
+ const result=empty(profile);
  for(const [id,v] of Object.entries(raw.items)){
   if(!ID.test(id)||!object(v)||typeof v.done!=='boolean'||typeof v.queued!=='boolean'||typeof v.note!=='string'||v.note.length>1000)fail('Invalid saved objective');
   result.items[id]={done:v.done,queued:v.queued,note:v.note};
  }
  return result;
 }
-function read(store){const raw=store.getItem(KEY);return {raw,state:clean(raw===null?null:JSON.parse(raw))}}
-function write(store,before,state){if(store.getItem(KEY)!==before)fail('Concurrent change; reload and retry');store.setItem(KEY,JSON.stringify(clean(state)));return state}
-function update(store,index,id,patch){
+function read(store,profile=null){const raw=store.getItem(key(profile));return {raw,state:clean(raw===null?null:JSON.parse(raw),profile)}}
+function write(store,before,state,profile=null){const k=key(profile);if(store.getItem(k)!==before)fail('Concurrent change; reload and retry');store.setItem(k,JSON.stringify(clean(state,profile)));return state}
+function update(store,index,id,patch,profile=null){
  if(index.ids.get(id)?.status!=='active'||!object(patch)||Object.keys(patch).some(k=>!['done','queued','note'].includes(k)))fail('Unknown, retired or invalid objective');
- const {raw,state}=read(store);const old=state.items[id]||{done:false,queued:false,note:''};
- state.items[id]={...old,...patch};return write(store,raw,state);
+ const {raw,state}=read(store,profile);const old=state.items[id]||{done:false,queued:false,note:''};
+ state.items[id]={...old,...patch};return write(store,raw,state,profile);
 }
-function merge(store,incoming){
- const source=clean(incoming),{raw,state}=read(store);let conflicts=0;
+function merge(store,incoming,profile=null){
+ const source=clean(incoming,profile),{raw,state}=read(store,profile);let conflicts=0;
  for(const [id,v] of Object.entries(source.items)){
   const prior=state.items[id]||{done:false,queued:false,note:''};
   if(prior.note&&v.note&&prior.note!==v.note)conflicts++;
   state.items[id]={done:prior.done||v.done,queued:prior.queued||v.queued,note:prior.note||v.note};
  }
- return {state:write(store,raw,state),conflicts};
+ return {state:write(store,raw,state,profile),conflicts};
 }
-function stats(index,state){
- state=clean(state);const categories={},result={active:0,done:0,queued:0,retained:0,categories};
+function stats(index,state,profile=null){
+ state=clean(state,profile);const categories=Object.create(null),result={active:0,done:0,queued:0,retained:0,categories};
  for(const [id,row] of index.ids){
   if(row.status!=='active')continue;
   const c=categories[row.category]||(categories[row.category]={total:0,done:0,queued:0}),v=state.items[id];result.active++;c.total++;
@@ -58,5 +60,5 @@ function stats(index,state){
  for(const id of Object.keys(state.items))if(index.ids.get(id)?.status!=='active')result.retained++;
  return result;
 }
-return Object.freeze({SCHEMA,SAVE,KEY,registry,empty,clean,read,update,merge,stats});
+return Object.freeze({SCHEMA,SAVE,KEY,key,registry,empty,clean,read,update,merge,stats});
 });
