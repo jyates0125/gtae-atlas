@@ -38,18 +38,17 @@
     },
     "ls-tags": {
       "activeIds": [
-        "ls-tags-richman-glen-ltd",
-        "ls-tags-rockford-hills-eugenics",
+        "ls-tags-gtamap-6",
         "ls-tags-sandy-shores-ace-liquor",
         "ls-tags-strawberry-gabrielas-market",
-        "ls-tags-tataviam-bishops-chicken"
+        "ls-tags-gtamap-28",
+        "ls-tags-gtamap-29"
       ],
-      "checkedAtUtc": "2026-11-27T12:33:32.000Z",
-      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "checkedAtUtc": "2026-11-28T06:00:00.000Z",
+      "validUntilUtc": "2026-11-29T06:00:00.000Z",
       "source": "https://gtamap.io/gta-online/daily/ls-tags/",
-      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles/ls-tags",
       "confidence": "calculated_unconfirmed_in_game",
-      "sourceObservation": "Nov 27 dated GTAMap.io exact poster landmarks and XY; GTA Boss agrees on all five current districts (different numbering; secondary exact XY not independently retrieved). Not gameplay verified. Spray can prerequisite retained."
+      "sourceObservation": "Dated November 28 GTAMap.io selection; new coordinates approximate pending independent confirmation."
     },
     "cayo-chests": {
       "activeIds": [
@@ -64,23 +63,22 @@
     },
     "hidden-caches": {
       "activeIds": [
-        "hidden-caches-lago-zancudo-south",
-        "hidden-caches-lago-zancudo-mouth",
-        "hidden-caches-lago-zancudo-north",
-        "hidden-caches-fort-zancudo-west",
-        "hidden-caches-north-chumash",
-        "hidden-caches-raton-canyon-south",
-        "hidden-caches-raton-canyon-north",
-        "hidden-caches-paleto-cove",
-        "hidden-caches-paleto-forest",
-        "hidden-caches-paleto-bay"
+        "hidden-caches-gtamap-51",
+        "hidden-caches-gtamap-53",
+        "hidden-caches-gtamap-54",
+        "hidden-caches-gtamap-57",
+        "hidden-caches-gtamap-58",
+        "hidden-caches-gtamap-59",
+        "hidden-caches-gtamap-60",
+        "hidden-caches-gtamap-61",
+        "hidden-caches-gtamap-62",
+        "hidden-caches-gtamap-63"
       ],
-      "checkedAtUtc": "2026-11-27T13:23:08.000Z",
-      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "checkedAtUtc": "2026-11-28T06:00:00.000Z",
+      "validUntilUtc": "2026-11-29T06:00:00.000Z",
       "source": "https://gtamap.io/gta-online/daily/hidden-caches/",
-      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
       "confidence": "calculated_unconfirmed_in_game",
-      "sourceObservation": "Nov 27 dated GTAMap.io ten exact XY selections; GTAMap.net reports same ten coordinate pairs using different numbering. GTA Boss dated daily set agrees on count and broad west coast. Not gameplay verified."
+      "sourceObservation": "Dated November 28 GTAMap.io selection; new coordinates approximate pending independent confirmation."
     },
     "smoke-products": {
       "activeIds": [
@@ -445,6 +443,123 @@
       "sourceUrl": "https://gtamap.io/gta-online/daily/street-dealers/",
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
       "confidence": "source-crosschecked"
+    },
+    {
+      "id": "ls-tags-gtamap-6",
+      "activityId": "ls-tags",
+      "name": "El Burro Heights fire station #6",
+      "x": 1209.1,
+      "y": -1505.6,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "ls-tags-gtamap-28",
+      "activityId": "ls-tags",
+      "name": "Galileo Observatory #28",
+      "x": -481.1,
+      "y": 1112.6,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "ls-tags-gtamap-29",
+      "activityId": "ls-tags",
+      "name": "Vinewood Bowl #29",
+      "x": 760.2,
+      "y": 584,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-51",
+      "activityId": "hidden-caches",
+      "name": "Paleto Bay #51",
+      "x": -420.1,
+      "y": 7224.1,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-53",
+      "activityId": "hidden-caches",
+      "name": "Paleto Bay #53",
+      "x": 425.8,
+      "y": 7385.2,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-54",
+      "activityId": "hidden-caches",
+      "name": "Paleto Bay #54",
+      "x": 556.1,
+      "y": 7158.9,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-57",
+      "activityId": "hidden-caches",
+      "name": "Mount Chiliad #57",
+      "x": 1441.5,
+      "y": 6828.5,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-58",
+      "activityId": "hidden-caches",
+      "name": "Mount Chiliad #58",
+      "x": 1820.3,
+      "y": 7017.1,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-59",
+      "activityId": "hidden-caches",
+      "name": "Mount Chiliad #59",
+      "x": 2396,
+      "y": 6939.9,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-60",
+      "activityId": "hidden-caches",
+      "name": "Heart Attacks Beach #60",
+      "x": 2475.2,
+      "y": 6704.7,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-61",
+      "activityId": "hidden-caches",
+      "name": "Heart Attacks Beach #61",
+      "x": 2696.6,
+      "y": 6655.2,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-62",
+      "activityId": "hidden-caches",
+      "name": "Mount Gordo #62",
+      "x": 3049.3,
+      "y": 6549.2,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "hidden-caches-gtamap-63",
+      "activityId": "hidden-caches",
+      "name": "Mount Gordo #63",
+      "x": 3411.3,
+      "y": 6308.5,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
     }
   ]
 }
