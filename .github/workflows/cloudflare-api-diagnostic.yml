@@ -1,0 +1,86 @@
+name: Cloudflare API diagnostic
+on:
+  push:
+    branches: [ops/cloudflare-api-diagnostic-20261128]
+    paths: ['.github/workflows/cloudflare-api-diagnostic.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    if: github.repository == 'jyates0125/gtae-atlas' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/ops/cloudflare-api-diagnostic-20261128')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Read Pages API and resolve production revision
+        id: api
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          python - <<'PY'
+          import os, json, urllib.request, urllib.error, re, time
+          token, account = os.environ['CF_TOKEN'].strip(), os.environ['CF_ACCOUNT'].strip()
+          if not token or not re.fullmatch(r'[a-fA-F0-9]{32}', account):
+              raise SystemExit('Missing token or invalid account ID')
+          def get(path):
+              print('Request:',path.split('?')[0],flush=True)
+              req = urllib.request.Request('https://api.cloudflare.com/client/v4/accounts/'+account+path, headers={'Authorization':'Bearer '+token})
+              try:
+                  with urllib.request.urlopen(req, timeout=25) as res:
+                      body=json.load(res)
+              except urllib.error.HTTPError as e:
+                  try:
+                      errors=json.load(e).get('errors',[])
+                      codes=[x.get('code') for x in errors if isinstance(x,dict) and isinstance(x.get('code'),int)]
+                  except (ValueError,TypeError,AttributeError):
+                      codes=[]
+                  raise SystemExit('Cloudflare API HTTP '+str(e.code)+'; error codes: '+str(codes))
+              if not body.get('success'):
+                  raise SystemExit('Cloudflare API returned unsuccessful response')
+              return body
+          p=get('/pages/projects/gtae-online')['result']
+          print('Authenticated Pages API',flush=True)
+          if p.get('subdomain')!='gtae-online.pages.dev':
+              raise SystemExit('Unexpected Pages project subdomain')
+          print('Project:',p['name'],'production branch:',p.get('production_branch'))
+          if p.get('production_branch')!='main':
+              raise SystemExit('Unexpected production branch')
+          from urllib.parse import quote
+          deployments=get('/pages/projects/'+quote(p['name'],safe='')+'/deployments?env=production')['result']
+          if not deployments:
+              raise SystemExit('No production deployment records')
+          for d in deployments:
+              print(json.dumps({'deployment_id':d.get('id'),'environment':d.get('environment'),'stage':d.get('latest_stage',{}).get('status'),'commit':d.get('deployment_trigger',{}).get('metadata',{}).get('commit_hash')}))
+          print('Resolving GitHub main SHA',flush=True)
+          req=urllib.request.Request('https://api.github.com/repos/jyates0125/gtae-atlas/git/ref/heads/main',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','User-Agent':'GTAE-diagnostic'})
+          try:
+              with urllib.request.urlopen(req,timeout=25) as res:
+                  expected=json.load(res)['object']['sha']
+          except urllib.error.HTTPError as e:
+              raise SystemExit('GitHub main lookup HTTP '+str(e.code))
+          print('Expected main SHA:',expected)
+          for attempt in range(8):
+              canonical=p.get('canonical_deployment') or {}
+              deployed=canonical.get('deployment_trigger',{}).get('metadata',{}).get('commit_hash')
+              status=canonical.get('latest_stage',{}).get('status')
+              print('Canonical deployment attempt:',attempt+1,'SHA:',deployed,'status:',status,flush=True)
+              if deployed == expected and status == 'success':
+                  break
+              if attempt == 7:
+                  raise SystemExit('Canonical production deployment not verified against main')
+              time.sleep(15)
+              p=get('/pages/projects/gtae-online')['result']
+              if p.get('subdomain')!='gtae-online.pages.dev' or p.get('production_branch')!='main':
+                  raise SystemExit('Pages project identity changed during verification')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write('expected='+expected+'\n')
+          PY
+      - name: Verify anonymous public delivery using existing release gate
+        env:
+          EXPECTED: ${{ steps.api.outputs.expected }}
+        run: python scripts/verify_live_deployment.py "$EXPECTED" --attempts 3
