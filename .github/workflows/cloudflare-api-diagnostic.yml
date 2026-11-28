@@ -1,0 +1,64 @@
+name: Cloudflare API diagnostic
+on:
+  push:
+    branches: [ops/cloudflare-api-diagnostic-20261128]
+    paths: ['.github/workflows/cloudflare-api-diagnostic.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    if: github.repository == 'jyates0125/gtae-atlas' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/ops/cloudflare-api-diagnostic-20261128')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Read Pages API and verify public identity
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          python - <<'PY'
+          import os, json, urllib.request, urllib.error, re
+          token, account = os.environ['CF_TOKEN'], os.environ['CF_ACCOUNT']
+          if not token or not re.fullmatch(r'[a-fA-F0-9]{32}', account):
+              raise SystemExit('Missing token or invalid account ID')
+          def get(path):
+              req = urllib.request.Request('https://api.cloudflare.com/client/v4/accounts/'+account+path, headers={'Authorization':'Bearer '+token})
+              try:
+                  with urllib.request.urlopen(req, timeout=25) as res:
+                      body=json.load(res)
+              except urllib.error.HTTPError as e:
+                  raise SystemExit('Cloudflare API HTTP '+str(e.code))
+              if not body.get('success'):
+                  raise SystemExit('Cloudflare API returned unsuccessful response')
+              return body
+          projects=[]
+          for page in range(1,101):
+              body=get('/pages/projects?per_page=25&page='+str(page))
+              rows=body['result']
+              projects.extend(rows)
+              if len(rows)<25 or page>=body.get('result_info',{}).get('total_pages',101):
+                  break
+          matches=[p for p in projects if p.get('subdomain')=='gtae-online.pages.dev']
+          print('Authenticated Pages API; project count:',len(projects))
+          if len(matches)!=1:
+              raise SystemExit('Expected exactly one production Pages project')
+          p=matches[0]
+          print('Project:',p['name'],'production branch:',p.get('production_branch'))
+          if p.get('production_branch')!='main':
+              raise SystemExit('Unexpected production branch')
+          from urllib.parse import quote
+          deployments=get('/pages/projects/'+quote(p['name'],safe='')+'/deployments?env=production&per_page=10')['result']
+          if not deployments:
+              raise SystemExit('No production deployment records')
+          for d in deployments:
+              print(json.dumps({'deployment_id':d.get('id'),'environment':d.get('environment'),'stage':d.get('latest_stage',{}).get('status'),'commit':d.get('deployment_trigger',{}).get('metadata',{}).get('commit_hash')}))
+          with urllib.request.urlopen('https://api.github.com/repos/jyates0125/gtae-atlas/git/ref/heads/main',timeout=25) as res:
+              expected=json.load(res)['object']['sha']
+          with urllib.request.urlopen('https://gtae-online.pages.dev/atlas-build-identity.json?diagnostic='+expected,timeout=25) as res:
+              identity=json.load(res)
+          print('Expected main SHA:',expected)
+          print('Public identity matches expected:',expected in identity.values())
+          if expected not in identity.values():
+              raise SystemExit('Public identity does not match main or schema needs review')
+          PY
