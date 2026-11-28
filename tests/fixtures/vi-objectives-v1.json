@@ -1,0 +1,264 @@
+{
+  "schema": "team-jura-objectives-v1",
+  "scope": "vi-story",
+  "revision": 1,
+  "notice": "Initial identity registry, not complete collectible or achievement coverage. Existing Atlas launch-week venue and video-game references; no fresh gameplay verification, no coordinates. Visit marks are personal and do not establish wins, completion or official totals. Aliases are internal curated labels, not publisher IDs.",
+  "rows": [
+    {
+      "id": "vi-o-7d4b983e21a6",
+      "action": "visit",
+      "name": "King Gator Adventure Golf",
+      "area": "Buckskin Swamp",
+      "category": "mini-golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-king-gator"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-2fcb6d830a14",
+      "action": "visit",
+      "name": "Frontier Adventure Golf",
+      "area": "Waning Sands",
+      "category": "mini-golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-frontier-golf"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-83a1f6e9b472",
+      "action": "visit",
+      "name": "Dino Golf Challenge",
+      "area": "Frogswater",
+      "category": "mini-golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-dino-golf"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-c492e8b7160d",
+      "action": "visit",
+      "name": "Leaf Links Golf Challenge",
+      "area": "Leaf Links",
+      "category": "golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-leaf-links"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-1b9e35d7c624",
+      "action": "visit",
+      "name": "Mount Hailes Golf Challenge",
+      "area": "Mount Hailes Club, Waning Sands",
+      "category": "golf",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-mount-hailes"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-golf-course-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-6a8c02f9d137",
+      "action": "visit",
+      "name": "The Rusty Anchor",
+      "area": "Key Lento",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-rusty-anchor"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-e147b6c9038d",
+      "action": "visit",
+      "name": "Skeeter’s",
+      "area": "Hamlet",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-skeeters"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-4bcf7e201ad9",
+      "action": "visit",
+      "name": "Zotico’s",
+      "area": "Baslero",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-zoticos"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-950a6d1ecb38",
+      "action": "visit",
+      "name": "The Thirsty Wolf",
+      "area": "Belville",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-thirsty-wolf"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-b382d9f1056c",
+      "action": "visit",
+      "name": "Jacob’s Tavern",
+      "area": "Milport",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-jacobs-tavern"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-39e6a4c8b102",
+      "action": "visit",
+      "name": "Delights Cabaret",
+      "area": "Port Gellhorn",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-delights-cabaret"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-f0185c7ab263",
+      "action": "visit",
+      "name": "Kowaachobee Cafe & Bar",
+      "area": "Buckskin Swamp",
+      "category": "pool",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-kowaachobee-cafe"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-all-pool-opponent-locations/"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-a7b380d5e629",
+      "action": "play",
+      "name": "Tenebrae Lux",
+      "area": "Home JoySystem",
+      "category": "video-games",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-tenebrae-lux"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-d8a1c490b573",
+      "action": "play",
+      "name": "Street Trash III",
+      "area": "Home JoySystem",
+      "category": "video-games",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-street-trash-iii"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-0e6b291f8c45",
+      "action": "play",
+      "name": "Time Jackers Rewind",
+      "area": "Home JoySystem",
+      "category": "video-games",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-time-jackers-rewind"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    },
+    {
+      "id": "vi-o-52c9a17e6b30",
+      "action": "play",
+      "name": "Bang For Your Buck",
+      "area": "Arcade cabinets; reported example: Bargain World, Port Gellhorn",
+      "category": "video-games",
+      "status": "active",
+      "aliases": [
+        "atlas-curated-bang-for-your-buck"
+      ],
+      "sources": [
+        "https://www.powerpyx.com/gta-6-collectible-guide-progress-database"
+      ],
+      "evidence": "existing-curated-community-reference",
+      "mapPosition": null
+    }
+  ]
+}
