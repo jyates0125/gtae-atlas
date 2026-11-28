@@ -83,22 +83,22 @@
     "smoke-products": {
       "activeIds": [
         "smoke-products-procopio-truck-stop",
-        "smoke-products-kortz-center",
+        "smoke-products-gtamap-6",
+        "smoke-products-gtamap-10",
         "smoke-products-vinewood-bowl",
-        "smoke-products-west-mirror-drive",
-        "smoke-products-gentry-manor",
-        "smoke-products-rockford-tennis",
+        "smoke-products-gtamap-19",
+        "smoke-products-gtamap-21",
+        "smoke-products-gtamap-25",
         "smoke-products-cockingend-drive",
         "smoke-products-elysian-security-booth",
-        "smoke-products-fudge-lane",
-        "smoke-products-sandy-shores-senora"
+        "smoke-products-gtamap-29"
       ],
-      "checkedAtUtc": "2026-11-27T14:16:17.211Z",
-      "validUntilUtc": "2026-11-28T06:00:00.000Z",
-      "source": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
-      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "checkedAtUtc": "2026-11-28T06:00:00.000Z",
+      "validUntilUtc": "2026-11-29T06:00:00.000Z",
+      "source": "https://www.gtaboss.gg/gta-5-online/collectibles",
+      "comparisonSource": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
       "confidence": "calculated_unconfirmed_in_game",
-      "sourceObservation": "Nov 27 GTA Boss ten selected product IDs; GTAMap.io explicit same numbered marker links and individual XY; districts and landmarks checked, including differing zone labels for #23 and #26. Not independent XY or gameplay confirmation."
+      "sourceObservation": "GTA Boss dated Nov 28 active numbers; GTAMap.io permanent pool matched by number sequence and district, approximate crosswalk, not independent confirmation of daily selection."
     }
   },
   "checkedAtUtc": "2026-11-28T13:30:00.000Z",
@@ -559,6 +559,60 @@
       "x": 3411.3,
       "y": 6308.5,
       "sourceUrl": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "smoke-products-gtamap-6",
+      "activityId": "smoke-products",
+      "name": "Fort Zancudo #6",
+      "x": -2226.6,
+      "y": 3409.3,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "smoke-products-gtamap-10",
+      "activityId": "smoke-products",
+      "name": "Tongva Valley #10",
+      "x": -1502.7,
+      "y": 1530.2,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "smoke-products-gtamap-19",
+      "activityId": "smoke-products",
+      "name": "Davis #19",
+      "x": 59,
+      "y": -1936.6,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "smoke-products-gtamap-21",
+      "activityId": "smoke-products",
+      "name": "LSIA #21",
+      "x": -1049.7,
+      "y": -2732.2,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "smoke-products-gtamap-25",
+      "activityId": "smoke-products",
+      "name": "Burton Station #25",
+      "x": -248.4,
+      "y": -335.1,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "confidence": "approximate"
+    },
+    {
+      "id": "smoke-products-gtamap-29",
+      "activityId": "smoke-products",
+      "name": "La Mesa #29",
+      "x": 835.4,
+      "y": -1224.9,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
       "confidence": "approximate"
     }
   ]
