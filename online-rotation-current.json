@@ -3,14 +3,14 @@
   "rotations": {
     "gun-van": {
       "activeIds": [
-        "gun-van-downtown-vinewood-276-67"
+        "gun-van-thomson-scrapyard-2340-3054"
       ],
-      "checkedAtUtc": "2026-11-27T12:19:00.000Z",
-      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "checkedAtUtc": "2026-11-28T13:30:00.000Z",
+      "validUntilUtc": "2026-11-29T06:00:00.000Z",
       "source": "https://gtamap.io/gta-online/daily/gun-van/",
-      "confidence": "calculated_unconfirmed_in_game",
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/gun-van",
-      "sourceObservation": "Nov 27 GTAMap.io #20 and GTA Boss #23 agree Downtown Vinewood; GTAMap.io XY. Not gameplay verified."
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 28 GTAMap.io #4 and GTA Boss #11 agree Thomson Scrapyard; GTAMap.io exact XY. Not gameplay verified."
     },
     "shipwreck": {
       "activeIds": [
@@ -104,9 +104,9 @@
       "sourceObservation": "Nov 27 GTA Boss ten selected product IDs; GTAMap.io explicit same numbered marker links and individual XY; districts and landmarks checked, including differing zone labels for #23 and #26. Not independent XY or gameplay confirmation."
     }
   },
-  "checkedAtUtc": "2026-11-27T14:16:17.211Z",
+  "checkedAtUtc": "2026-11-28T13:30:00.000Z",
   "status": "partially-populated-calculated-not-gameplay-verified",
-  "notes": "Nov 27: seven groups / 32 dated selections. Smoke product IDs crosswalked by explicit marker link and named landmark; Skydives and Cayo buried stashes remain unconfirmed in canonical consumer. Calculated, not gameplay verified.",
+  "notes": "Nov 28: Gun Van refreshed; other groups retained with original expiry pending dated reconciliation. Calculated, not gameplay verified.",
   "supportedGroups": [
     "cayo-chests",
     "gun-van",
@@ -405,6 +405,16 @@
       "y": 3409.9,
       "sourceUrl": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
       "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "source-crosschecked"
+    },
+    {
+      "id": "gun-van-thomson-scrapyard-2340-3054",
+      "activityId": "gun-van",
+      "name": "Gun Van · Thomson Scrapyard",
+      "x": 2340.4,
+      "y": 3054.2,
+      "sourceUrl": "https://gtamap.io/gta-online/daily/gun-van/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/gun-van",
       "confidence": "source-crosschecked"
     }
   ]
