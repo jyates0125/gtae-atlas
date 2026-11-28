@@ -10,3 +10,6 @@ Discovery starts in existing unassigned progress on each page load. A player may
 
 ## Integration follow-up
 Preserve merged #319 on the new base. Windows navigation job 141055557790 lost localhost assets (ERR_CONNECTION_REFUSED) before its existing menu assertion; no JavaScript error was recorded. Increase the test-only HTTP listener backlog, probe readiness, wait for page load before navigation assertions, and close the server. All previous user-facing assertions remain. These are transport mitigations, not proof of root cause; require fresh checks. GTADB and PowerPyx guides were retrieved on Nov 28, including the conflicting Charlie Spears reports. No new location claims.
+
+## Save/restore race hardening — Nov 28 sprint
+Discovery locks the selected scope before asynchronous file reads, disables profile and edit controls throughout pending mutations, validates the selected profile again under its write lock, and refreshes directory and saved progress after writes. Note drafts retain the original note value; a conflicting later edit in another tab is refused while the local draft remains available. Existing save schema, keys, map data and original 40 objective IDs are unchanged. Added browser regressions for delayed file reads and conflicting notes on phone/desktop. New exact-head CI required before integration.
