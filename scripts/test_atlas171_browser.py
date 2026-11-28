@@ -128,6 +128,25 @@ try:
         }""",timeout=12000)
         assert page.locator('.j167-viewport').evaluate("(e)=>Math.abs(e.getBoundingClientRect().width/e.getBoundingClientRect().height-1284/1262)<0.025"),'Island aspect ratio is preserved'
         if kind=='mobile':
+            # Fit must expose the whole calibrated map without covering offshore markers.
+            page.locator('.j180-map-controls button').filter(has_text='Fit').click()
+            page.wait_for_function("getComputedStyle(document.querySelector('.j167-world')).transform === 'matrix(1, 0, 0, 1, 0, 0)' || getComputedStyle(document.querySelector('.j167-world')).transform === 'none'")
+            assert page.locator('.j180-map-controls').evaluate("""(bar)=>{
+              const map=document.querySelector('.j167-viewport');
+              const b=bar.getBoundingClientRect(),m=map.getBoundingClientRect();
+              return b.bottom<=m.top+1 && m.width>=innerWidth-16 &&
+                [...bar.querySelectorAll('button')].every(n=>{
+                  const r=n.getBoundingClientRect();
+                  return r.width>=44 && r.height>=44 && r.left>=0 && r.right<=innerWidth+1;
+                });
+            }"""),'Mobile toolbar must not cover the map; use available phone width'
+            assert page.locator('.j180-chest-active').evaluate_all("""pins=>{
+              const m=document.querySelector('.j167-viewport').getBoundingClientRect();
+              return pins.length===2 && pins.every(p=>{
+                const r=p.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;
+                return x>=m.left && x<=m.right && y>=m.top && y<=m.bottom;
+              });
+            }"""),'Both active daily chest centers must fit within the map'
             toggle=page.get_by_role('button',name='Show marker filters')
             assert toggle.count()==1 and toggle.is_visible(),'Compact filter control visible on phone'
             assert page.locator('.j180-legend-rows').is_hidden(),'Phone map starts before expanded filter list'
