@@ -4,6 +4,10 @@ on:
     branches: [development]
     paths:
       - 'atlas-objective-core.js'
+      - 'atlas-objective-hub.js'
+      - 'atlas-objective-hub.css'
+      - 'atlas-collectibles.html'
+      - 'scripts/test_leonida_discovery_browser.py'
       - 'data/atlas-vi-objectives.json'
       - 'tests/atlas-objective-core.test.cjs'
       - '.github/workflows/leonida-objectives.yml'
@@ -20,5 +24,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --check atlas-objective-core.js
+      - run: node --check atlas-objective-core.js && node --check atlas-objective-hub.js
       - run: node --test tests/atlas-objective-core.test.cjs tests/atlas450-vi-progress.test.cjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node scripts/build-cloudflare.cjs
+      - run: pip install playwright && python -m playwright install --with-deps chromium
+      - run: python scripts/test_leonida_discovery_browser.py
