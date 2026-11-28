@@ -1,0 +1,31 @@
+name: Leonida personal journeys
+on:
+  pull_request:
+    branches: [development]
+    paths:
+      - 'atlas-activities.html'
+      - 'atlas-vi-journey.js'
+      - 'atlas-vi-journey.css'
+      - 'tests/atlas-vi-journey.test.cjs'
+      - 'scripts/test_vi_journey_browser.py'
+      - '.github/workflows/leonida-personal-journeys.yml'
+permissions:
+  contents: read
+jobs:
+  journeys:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: node --check atlas-vi-journey.js && node --test tests/atlas-vi-journey.test.cjs
+      - run: node scripts/build-cloudflare.cjs
+      - run: pip install playwright && python -m playwright install --with-deps chromium
+      - run: python scripts/test_vi_journey_browser.py
