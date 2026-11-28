@@ -1,7 +1,6 @@
-import re
 #!/usr/bin/env python3
 """GTAE 22.3 browser QA: real desktop/phone navigation, search and mobile overflow."""
-import os,threading
+import os,threading,re
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
@@ -224,10 +223,7 @@ try:
   expect(page.locator('#j4750-mode-link')).to_have_attribute('href','./atlas-dashboard.html')
   page.locator('#j4750-mode-link').click()
   expect(page.locator('html')).to_have_attribute('data-j4750-mode','full')
-  expect(page.locator('.j223-world-card img').first).to_have_attribute('src',re.compile(r'\.webp
-finally:
- server.shutdown()
-))
+  expect(page.locator('.j223-world-card img').first).to_have_attribute('src',re.compile(r'\.webp$'))
   ctx.close()
   browser.close()
 finally:
