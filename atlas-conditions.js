@@ -98,7 +98,8 @@ function safeMainlandCatalog(raw){
   if(seed&&(seed.activityId!==row.activityId||Math.hypot(seed.x-row.x,seed.y-row.y)>2))continue;
   if(!seed&&!row.id.startsWith(row.activityId+'-'))continue;
   const sourceUrl=safeCatalogSource(row.sourceUrl),comparisonSource=safeCatalogSource(row.comparisonSource);
-  if(!sourceUrl||!comparisonSource||new URL(sourceUrl).hostname===new URL(comparisonSource).hostname||row.confidence!=='source-crosschecked'||seen.has(row.id))continue;
+  const independent=sourceUrl&&comparisonSource&&new URL(sourceUrl).hostname.replace(/^www\./,'')!==new URL(comparisonSource).hostname.replace(/^www\./,'');
+  if(!sourceUrl||seen.has(row.id)||!(row.confidence==='source-crosschecked'?independent:row.confidence==='approximate'&&(!row.comparisonSource||independent)))continue;
   const count=(counts[row.activityId]||0)+1;
   if(count>(BY_ID[row.activityId].pool||100))continue;
   counts[row.activityId]=count;seen.add(row.id);
@@ -123,7 +124,7 @@ function mainlandRotationReferences(mode,snapshot){
  const byId=new Map(MAINLAND_ROTATION_REFERENCES.map(r=>[r.rotationMarkerId,r]));
  for(const row of safeMainlandCatalog(snapshot?.catalog)){
   if(byId.has(row.id))continue;
-  byId.set(row.id,{id:'jura-online-'+row.id,rotationMarkerId:row.id,activityId:row.activityId,name:row.name,x:row.x,y:row.y,game:'5',scope:'online',category:row.activityId==='shipwreck'||row.activityId==='hidden-caches'?'collectible':'activity',source:'Public rotation catalog · source-crosschecked',sourceUrl:row.sourceUrl,comparisonSource:row.comparisonSource,uncertain:false,confidence:'source-crosschecked · not gameplay verified',detail:'Possible location; a complete dated selection is required for active availability.'});
+  byId.set(row.id,{id:'jura-online-'+row.id,rotationMarkerId:row.id,activityId:row.activityId,name:row.name+(row.confidence==='approximate'?' · Approximate location':''),x:row.x,y:row.y,game:'5',scope:'online',category:row.activityId==='shipwreck'||row.activityId==='hidden-caches'?'collectible':'activity',source:'Public rotation catalog · '+row.confidence,sourceUrl:row.sourceUrl,comparisonSource:row.comparisonSource,uncertain:row.confidence==='approximate',confidence:row.confidence+' · not gameplay verified',detail:'Possible location; a complete dated selection is required for active availability.'});
  }
  return [...byId.values()];
 }

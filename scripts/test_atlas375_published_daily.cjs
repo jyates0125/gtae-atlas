@@ -49,6 +49,11 @@ const fetcher=(a,b)=>async(url,options)=>{assert.equal(options.credentials,'omit
  const expired=C.mergePublishedRotations([loaded],C.nextReset(now,6));
  assert.deepEqual(expired.rotations,{});assert.equal(expired.catalog.length,1);
  assert.deepEqual(C.safeMainlandCatalog([{...nextRow,x:99999}]),[]);
+ const approx={...nextRow,confidence:'approximate',comparisonSource:undefined};
+ assert.equal(C.safeMainlandCatalog([approx]).length,1);
+ assert.equal(C.safeMainlandCatalog([{...approx,x:99999}]).length,0);
+ assert.equal(C.safeMainlandCatalog([{...approx,sourceUrl:'https://example.com/fake'}]).length,0);
+ assert.ok(C.mainlandRotationReferences('online',{catalog:[approx]}).some(r=>r.uncertain&&r.name.includes('Approximate location')));
  assert.deepEqual(C.safeMainlandCatalog([{...nextRow,comparisonSource:nextRow.sourceUrl}]),[]);
  assert.deepEqual(C.safeMainlandCatalog([{...nextRow,id:'cayo-stashes-forged',activityId:'cayo-stashes'}]),[]);
  assert.deepEqual(C.safeMainlandCatalog([{...nextRow,sourceUrl:'https://example.com/fake'}]),[]);
