@@ -50,7 +50,7 @@ jobs:
         if: steps.scope.outputs.run == 'true'
         with:
           node-version: '22'
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: steps.scope.outputs.run == 'true'
         with:
           python-version: '3.12'
