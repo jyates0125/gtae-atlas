@@ -14,7 +14,7 @@ const EXACT=new Set([
 ]);
 const PREFIXES=['team-jura-atlas','team-jura-passport','team-jura-checklist','team-jura-garage','jura3-'];
 const BLOCK=/(?:auth|session|token|secret|password|credential|private|api[-_]?key|oauth|access[-_]?key|refresh)/i;
-const validKey=(key)=>typeof key==='string' && key.length<150 && !BLOCK.test(key) && (EXACT.has(key)||PREFIXES.some(x=>key.startsWith(x)));
+const validKey=(key)=>typeof key==='string' && key.length<150 && !BLOCK.test(key) && (EXACT.has(key)||PREFIXES.some(x=>key.startsWith(x))||window.JuraVIBackup?.isKey(key)===true);
 const msg=(s)=>{const el=document.getElementById('j131ProgressStatus');if(el)el.textContent=s};
 function collect(){
  const saves={};for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!validKey(key))continue;const value=localStorage.getItem(key);if(typeof value!=='string')continue;if(value.length>1_500_000)continue;saves[key]=value}
@@ -27,6 +27,7 @@ function download(obj){
  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
  msg('Backup exported. Save the JSON in iCloud Drive or another location you control before clearing the device.');
 }
+function withLocks(keys,task){return navigator.locks?.request?keys.reduceRight((next,key)=>()=>navigator.locks.request(key,next),task)():task()}
 async function restore(file){
  if(!file)return;try{
   if(file.size>MAX_BYTES)throw Error('Backup exceeds the 5 MB safety limit.');
@@ -38,7 +39,11 @@ async function restore(file){
   if(!entries.length){msg('The backup has no saved Atlas progress. Nothing was changed.');return}
   const crewKeys=new Set(['team-jura-my-crew-v1','team-jura-world-profiles-v2']);
   const hasCrew=entries.some(([key])=>crewKeys.has(key));
-  if(!confirm('Restore '+entries.length+' Atlas progress records? Matching non-crew records will be overwritten. Crew profiles will be merged without replacing existing profiles. Continue?')){msg('Restore cancelled. Nothing was changed.');return}
+  if(!confirm('Restore '+entries.length+' Atlas progress records? Matching older records will be overwritten. Crew, Leonida journeys and Discovery records merge without replacing existing notes or profiles. Continue?')){msg('Restore cancelled. Nothing was changed.');return}
+  const vi=window.JuraVIBackup,viKeys=vi?.locks(parsed.saves)||[];
+  await withLocks(viKeys,()=>{
+  const viPlan=viKeys.length?vi.plan(localStorage,parsed.saves):null;
+  if(viPlan){entries=entries.filter(([key])=>!vi.isKey(key));entries.push(...viPlan.entries)}
   let crewPlan=null;
   if(hasCrew){
    if(!window.JuraCrewProfiles?.planBackupRestore)throw Error('Crew backup support is unavailable. No records were changed.');
@@ -47,17 +52,19 @@ async function restore(file){
    entries.push([crewPlan.key,crewPlan.value]);
   }
   // Validate all crew input before committing any records. Roll back if storage fails.
+  if(viPlan&&[...viPlan.before].some(([key,value])=>localStorage.getItem(key)!==value))throw Error('Leonida progress changed while preparing the restore. No records changed.');
   const original=new Map(entries.map(([k])=>[k,localStorage.getItem(k)]));
   const written=[];
   try{for(const [k,v] of entries){localStorage.setItem(k,v);written.push(k)}}
   catch(err){for(const k of written){const old=original.get(k);try{if(old===null)localStorage.removeItem(k);else localStorage.setItem(k,old)}catch(_){}}throw Error('Device storage is full or unavailable. Existing progress was restored where possible.')}
-  msg(entries.length+' Atlas records restored.'+(crewPlan?' Crew profiles merged; '+crewPlan.conflicts+' existing conflicts kept.':'')+' Reload the dashboard and maps to see your saved progress.');
+  msg(entries.length+' Atlas records restored.'+(crewPlan?' Crew profiles merged; '+crewPlan.conflicts+' existing conflicts kept.':'')+(viPlan?' Leonida profiles and Discovery merged; '+(viPlan.journeyConflicts+viPlan.discoveryConflicts)+' existing conflicts kept.':'')+' Reload the dashboard and maps to see your saved progress.');
+  });
  }catch(err){msg(err?.message||'Unable to read this backup.')}
 }
 function init(){
  const backup=document.getElementById('j131Export');
  backup?.addEventListener('click',()=>{try{const saves=collect();download({app:APP,version:VERSION,exportedAt:new Date().toISOString(),saves});if(!Object.keys(saves).length)msg('Backup exported, but no Atlas game progress was found in this browser yet.')}catch(_){msg('Could not read game progress from this browser.')}});
- document.getElementById('j131Import')?.addEventListener('change',async e=>{const file=e.target.files?.[0];await restore(file);e.target.value=''});
+ document.getElementById('j131Import')?.addEventListener('change',async e=>{const input=e.target,file=input.files?.[0];input.disabled=true;try{await restore(file)}finally{input.value='';input.disabled=false}});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
