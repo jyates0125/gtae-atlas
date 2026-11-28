@@ -25,17 +25,30 @@ function start(w){
  function render(){const select=$('vj-select');select.replaceChildren();for(const p of state.profiles){const o=d.createElement('option');o.value=p.id;o.textContent=p.name;select.append(o)}select.value=state.active||'';const p=state.profiles.find(p=>p.id===state.active);for(const k of Object.keys(FIELDS))$('vj-'+k).value=p?.[k]||'';dirty=false;hideNotes();buttons()}
  function reload(){try{state=read(w.localStorage).state;blocked=false;rawRecovery=null;render();return true}catch{blocked=true;try{rawRecovery=w.localStorage.getItem(KEY)}catch{rawRecovery=null}buttons();status('Saved journey unreadable or unavailable. Editing paused; original bytes preserved.');return false}}
  function download(content,name,type){const a=d.createElement('a'),url=w.URL.createObjectURL(new w.Blob([content],{type}));a.href=url;a.download=name;d.body.append(a);a.click();a.remove();w.setTimeout(()=>w.URL.revokeObjectURL(url),2000)}
- async function mutate(fn,success){if(blocked||busy)return;busy=true;buttons();try{const result=w.navigator.locks?.request?await w.navigator.locks.request(KEY,fn):fn();state=result.state||result;render();status(typeof success==='function'?success(result):success)}catch(e){status('Could not save: '+e.message+'. Existing data and current form retained.')}finally{busy=false;buttons()}}
- function canSwitch(){if(!dirty)return true;status('Save your current edits before switching or adding a playthrough.');$('vj-select').value=state.active||'';return false}
+ async function mutate(fn,success,prepare){
+  if(blocked||busy)return;
+  busy=true;buttons();
+  try{
+   if(prepare)status('Reading backup; editing temporarily paused.');
+   const prepared=prepare?await prepare():undefined;
+   const task=()=>fn(prepared);
+   const result=w.navigator.locks?.request?await w.navigator.locks.request(KEY,task):task();
+   state=result.state||result;render();status(typeof success==='function'?success(result):success);
+  }catch(e){
+   $('vj-select').value=state.active||'';
+   status((prepare?'Restore refused: ':'Could not save: ')+e.message+'. Existing data and current form retained.');
+  }finally{busy=false;buttons()}
+ }
+ function canSwitch(){if(busy||blocked)return false;if(!dirty)return true;status('Save your current edits before switching, adding or importing a playthrough.');$('vj-select').value=state.active||'';return false}
  $('vj-add').onclick=()=>{if(!canSwitch())return;const name=$('vj-new').value.trim();if(!name){status('Enter a playthrough name.');return}const id='vj-'+w.crypto.randomUUID().replace(/-/g,'');mutate(()=>add(w.localStorage,id,name),()=>{$('vj-new').value='';return 'New independent journey created.'})};
  $('vj-select').onchange=()=>{const id=$('vj-select').value;if(canSwitch())mutate(()=>select(w.localStorage,id),'Playthrough selected. Story notes hidden.')};
  for(const k of Object.keys(FIELDS))$('vj-'+k).oninput=()=>{dirty=true;status('Unsaved journey edits.')};
  $('vj-spoilers').onchange=()=>{$('vj-notes').closest('label').hidden=!$('vj-spoilers').checked};
  $('vj-form').onsubmit=e=>{e.preventDefault();const id=state.active,fields=Object.fromEntries(Object.keys(FIELDS).map(k=>[k,$('vj-'+k).value]));const expected=state.profiles.find(p=>p.id===id);mutate(()=>update(w.localStorage,id,fields,expected),'Journey saved on this device.')};
- $('vj-reload').onclick=()=>{if(dirty&&!w.confirm('Discard unsaved form edits and load the latest saved version?'))return;if(reload())status('Latest saved journeys loaded. Story notes hidden.')};
+ $('vj-reload').onclick=()=>{if(busy)return;if(dirty&&!w.confirm('Discard unsaved form edits and load the latest saved version?'))return;if(reload())status('Latest saved journeys loaded. Story notes hidden.')};
  $('vj-export').onclick=()=>{try{const latest=read(w.localStorage).state;download(JSON.stringify(latest,null,2),'gtae-leonida-journeys.json','application/json');status('Saved profiles exported; unsaved form edits are not included.')}catch(e){status('Export unavailable: '+e.message)}};
  $('vj-recover').onclick=()=>{if(rawRecovery!==null)download(rawRecovery,'gtae-leonida-journeys-original.txt','text/plain')};
- $('vj-import').onchange=async()=>{const file=$('vj-import').files?.[0];$('vj-import').value='';if(!file||!canSwitch())return;try{if(file.size>2000000)throw Error('Backup too large');const backup=JSON.parse(await file.text());await mutate(()=>merge(w.localStorage,backup),r=>r.added+' profile(s) added; '+r.conflicts+' conflict(s) kept local.')}catch(e){status('Restore refused: '+e.message)}};
+ $('vj-import').onchange=()=>{const file=$('vj-import').files?.[0];$('vj-import').value='';if(!file||!canSwitch())return;mutate(backup=>merge(w.localStorage,backup),r=>r.added+' profile(s) added; '+r.conflicts+' conflict(s) kept local.',async()=>{if(file.size>2000000)throw Error('Backup too large');return JSON.parse(await file.text())})};
  w.addEventListener('storage',e=>{if(e.key!==KEY&&e.key!==null)return;if(dirty||busy){status('Another tab changed saved journeys. Your current form is retained; conflicting edits will not overwrite the saved version.');return}if(reload())status('Saved journeys refreshed.')});
  hideNotes();if(reload())status(state.active?'Choose or update your playthrough.':'Create a named playthrough to begin.');
 }

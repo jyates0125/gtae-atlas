@@ -1,4 +1,4 @@
-import threading
+import threading,json
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -52,6 +52,37 @@ with ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT/'publi
    p.locator('#vj-reload').click()
    expect(p.locator('#vj-goal')).to_have_value('New saved goal')
    expect(p.locator('#vj-notes')).to_be_hidden()
+   # Delay real file read: editing, switching and reload stay disabled until merge.
+   backup=p.evaluate("(k)=>JSON.parse(localStorage.getItem(k))",KEY)
+   backup['profiles'][0]['goal']='Old backup goal'
+   imported={'id':'vj-'+'c'*32,'name':'Imported','chapter':'','character':'','goal':'','notes':''}
+   backup['profiles'].append(imported);backup['active']=imported['id']
+   payload={'name':'journey.json','mimeType':'application/json','buffer':json.dumps(backup).encode()}
+   p.evaluate("""()=>{window.originalJourneyFileText=File.prototype.text;File.prototype.text=function(){const file=this;return new Promise(resolve=>{window.finishJourneyRead=()=>resolve(window.originalJourneyFileText.call(file))})}}""")
+   p.locator('#vj-import').set_input_files(payload)
+   expect(p.locator('#vj-status')).to_contain_text('Reading backup')
+   for control in ('vj-select','vj-add','vj-new','vj-save','vj-goal','vj-import','vj-reload'):
+    expect(p.locator('#'+control)).to_be_disabled()
+   # Another tab may commit while the file is reading; merge must retain that latest local version.
+   other.locator('#vj-goal').fill('Newer while reading')
+   other.locator('#vj-save').click()
+   expect(other.locator('#vj-status')).to_have_text('Journey saved on this device.')
+   p.evaluate("()=>window.finishJourneyRead()")
+   expect(p.locator('#vj-status')).to_have_text('1 profile(s) added; 1 conflict(s) kept local.')
+   expect(p.locator('#vj-goal')).to_have_value('Newer while reading')
+   expect(p.locator('#vj-select')).to_have_value(first)
+   expect(p.locator('#vj-select option')).to_have_count(3)
+   p.evaluate("()=>{File.prototype.text=window.originalJourneyFileText}")
+   # Unsaved edits refuse a new import before reading or mutating anything.
+   p.locator('#vj-goal').fill('Keep my draft')
+   before=p.evaluate('(k)=>localStorage.getItem(k)',KEY)
+   p.locator('#vj-import').set_input_files(payload)
+   expect(p.locator('#vj-status')).to_contain_text('Save your current edits')
+   expect(p.locator('#vj-goal')).to_have_value('Keep my draft')
+   assert p.evaluate('(k)=>localStorage.getItem(k)',KEY)==before
+   p.once('dialog',lambda dialog:dialog.accept())
+   p.locator('#vj-reload').click()
+   expect(p.locator('#vj-goal')).to_have_value('Newer while reading')
    other.close()
    assert p.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
    p.goto(base+'atlas-activities.html?mode=online');expect(p.locator('#viJourney')).to_be_hidden()
