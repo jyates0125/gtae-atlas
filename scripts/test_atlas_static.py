@@ -20,7 +20,9 @@ assert actual==expected,(actual,expected)
 assert "let markerDensity='individual'" in js
 assert 'function cluster(' not in js
 assert 'markerColor:Array.isArray(v)' in js
-assert "styles={'5':'radar','6':'scaly,view'}" in js, "Existing Scaly default must stay until source XY is calibrated"
+assert "styles={'5':'radar','6':'day'}" in js, "Owner-approved current Day artwork first; VI positions remain provisional"
+assert "uncertain:!!analysis?.uncertain||g==='6'" in js
+assert "'scaly,view','Scaly · YANIS V18'" in js and "'dupzor,51','Loki · DUPZOR V51'" in js
 assert 'jura3-progress' in js and 'jura-atlas-routes' in js
 # The GTA VI JSON feed is used by research adapters, not hard-wired into the map canvas.
 assert 'data/gtadb-6.json' in (D/'atlas-research.js').read_text() or "'./data/gtadb-'" in (D/'atlas98-landmarks.js').read_text()
