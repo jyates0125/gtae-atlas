@@ -1,3 +1,9 @@
+## November 28 — verified live #315; reconcile non-Cayo briefing
+
+- Owner accepted release #315; production main `993fed84ef19678b8c5f419693c8cedf4c6a8254` verified live by exact anonymous workflow [46166938591](https://github.com/jyates0125/gtae-atlas/actions/runs/46166938591). Candidate c3fc9fae passed 12 applicable checks. Development baseline sync #317 merged `42ebf083615737a9cde2b7251500e5e7096528a3`; no production write in this batch.
+- #313 prior head 49c928ac1 passed 8 applicable checks; reconcile the 17-path baseline delta and overlapping handoff only, preserving all 14 non-Cayo player-first map briefing improvements, backup/recovery tests, original map artwork and Cayo changes. Fresh exact successor validation required; no new geographic accuracy claim.
+- #316 Discovery has 40 named objectives, prior head passed 19 applicable checks, and #318 local VI playthrough journals has prior baseline-ancestry failure. Both rebased by explicit two-parent merge commits onto synchronized development; verify fresh checks before integrating. No analytics or sign-ins; rotation publisher independent. One integration writer, release lease before CI. Prior notes below are historical, not current schedule or deployment instructions.
+
 ## November 28 — release #315 test-contract correction only
 
 Development 1d6c633871b0e05defa2b046ea62c880ca5b60ca integrated #314 (34/34) and #312. Frozen release #315 initial Chromium/static job 141038977471 failed two obsolete expectations: Scaly-first and November 21 upstream revision. Update exact assertions to owner-approved Day-first, preserved alternate views, provisional VI records and pinned November 28 source identity/held IDs. No public runtime, data or artwork change. Revalidate full release on new exact head; require device acceptance and owner approval. Sync test-only correction back to development after release under integration lease.

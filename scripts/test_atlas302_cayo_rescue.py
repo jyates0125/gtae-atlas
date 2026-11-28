@@ -2,6 +2,7 @@
 """Atlas 30.2: emergency-only visible Cayo recovery and single heist map loader."""
 from pathlib import Path
 import subprocess
+import re
 r=Path(__file__).resolve().parents[1]
 html=(r/'heist-cayo-perico.html').read_text(encoding='utf-8')
 page=(r/'heist-pages.js').read_text(encoding='utf-8')
@@ -11,8 +12,12 @@ assert html.count('atlas302-cayo-legacy-rescue.js?v=302')==1
 assert html.count('atlas302-cayo-legacy-rescue.css?v=302')==1
 assert 'heist-pages.js?v=4742' in html
 assert 'atlas220-cayo-recovery.js?v=4742' in html
-assert page.count("phases.src='./atlas298-heist-map-kit.js?v=298'")==1
-assert page.count("phasesStyle.href='./atlas298-heist-map-kit.css?v=298'")==1
+# Verify exactly one versioned loader for each asset, independently of its
+# cache revision. Both assets must use the same compatible revision.
+phase_js=re.findall(r"phases\.src='\./atlas298-heist-map-kit\.js\?v=(298(?:-[a-z0-9]+)?)'",page)
+phase_css=re.findall(r"phasesStyle\.href='\./atlas298-heist-map-kit\.css\?v=(298(?:-[a-z0-9]+)?)'",page)
+assert len(phase_js)==len(phase_css)==1 and phase_js==phase_css
+assert page.count("atlas298-heist-map-kit.js")==page.count("atlas298-heist-map-kit.css")==1
 assert "heistId!=='cayo-perico'" in page
 assert "atlas299-heist-backup.js" in page
 assert "refreshChecklist(); // read only" in page

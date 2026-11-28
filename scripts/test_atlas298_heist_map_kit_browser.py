@@ -38,6 +38,17 @@ try:
     kit=page.locator('#j298-mission-map-kit')
     expect(kit).to_be_visible(timeout=30000)
     expect(kit.locator('[data-j298-phase]')).to_have_count(3)
+    backup_panel=kit.locator('.j298-backup-panel')
+    expect(backup_panel).to_have_count(1)
+    expect(backup_panel.locator('summary')).to_be_visible()
+    assert not backup_panel.evaluate('(e)=>e.open'),(width,id,'Optional backup must start collapsed')
+    expect(backup_panel.get_by_role('button',name='Export mission map')).to_be_hidden()
+    before_open=page.evaluate("key=>localStorage.getItem(key)",'teamjura-heist-focus-v1:'+id)
+    backup_panel.locator('summary').click()
+    expect(backup_panel.get_by_role('button',name='Export mission map')).to_be_visible()
+    backup_panel.locator('summary').click()
+    expect(backup_panel.get_by_role('button',name='Export mission map')).to_be_hidden()
+    assert page.evaluate("key=>localStorage.getItem(key)",'teamjura-heist-focus-v1:'+id)==before_open
     expect(kit.locator('[data-j298-phase=all]')).to_have_attribute('aria-pressed','true')
     pins=page.locator('#j167-heist-map .j167-pin')
     all_count=pins.count()
@@ -90,6 +101,7 @@ try:
    kit=page.locator('#j298-mission-map-kit')
    expect(kit).to_be_visible(timeout=20000)
    expect(page.locator('#j167-heist-map .j167-route [data-route-point]')).to_have_count(1)
+   kit.locator('.j298-backup-summary').click()
    with page.expect_download() as download:
     kit.get_by_role('button',name='Export mission map').click()
    backup=json.loads(Path(download.value.path()).read_text(encoding='utf-8'))
@@ -141,6 +153,7 @@ try:
     page.reload(wait_until='domcontentloaded')
     rescue=page.locator('#j298-map-rescue')
     expect(rescue).to_be_visible(timeout=20000)
+    assert not page.locator('.j298-backup-panel').evaluate('(e)=>e.open'),'Recovery must stay visible even while optional backups are collapsed'
     reset=rescue.get_by_role('button',name='Reset this mission map only')
     expect(reset).to_be_disabled()
     page.locator('#j167-heist-map .j167-pin').first.click()
