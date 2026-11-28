@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "sourceBlob": "729b64afd602fb54d58bdf2873b182cee6a1d520",
+  "notes": "Historical snapshot of publisher records, including expired groups. Not gameplay verification.",
+  "rotations": {
+    "gun-van": {
+      "activeIds": [
+        "gun-van-thomson-scrapyard-2340-3054"
+      ],
+      "checkedAtUtc": "2026-11-28T13:30:00.000Z",
+      "validUntilUtc": "2026-11-29T06:00:00.000Z",
+      "source": "https://gtamap.io/gta-online/daily/gun-van/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/gun-van",
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 28 GTAMap.io #4 and GTA Boss #11 agree Thomson Scrapyard; GTAMap.io exact XY. Not gameplay verified."
+    },
+    "shipwreck": {
+      "activeIds": [
+        "shipwreck-tataviam-truckstop-2784-83"
+      ],
+      "checkedAtUtc": "2026-11-28T13:30:00.000Z",
+      "validUntilUtc": "2026-11-29T06:00:00.000Z",
+      "source": "https://gtamap.io/gta-online/daily/shipwreck/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/shipwreck",
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 28 Both sources #26 Tataviam Mountains South; GTAMap.io XY. Not gameplay verified."
+    },
+    "street-dealers": {
+      "activeIds": [
+        "street-dealers-del-perro-pier-1667-1080",
+        "street-dealers-rockford-hills-760-208",
+        "street-dealers-north-chumash-2177-4276"
+      ],
+      "checkedAtUtc": "2026-11-28T13:30:00.000Z",
+      "validUntilUtc": "2026-11-29T07:00:00.000Z",
+      "source": "https://gtamap.io/gta-online/daily/street-dealers/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 28 GTAMap.io #19/#15/#44 and GTA Boss #05/#40/#24 agree Pleasure Pier/Del Perro Beach, Rockford Hills and North Chumash. GTAMap.io exact XY. Not gameplay verified."
+    },
+    "ls-tags": {
+      "activeIds": [
+        "ls-tags-richman-glen-ltd",
+        "ls-tags-rockford-hills-eugenics",
+        "ls-tags-sandy-shores-ace-liquor",
+        "ls-tags-strawberry-gabrielas-market",
+        "ls-tags-tataviam-bishops-chicken"
+      ],
+      "checkedAtUtc": "2026-11-27T12:33:32.000Z",
+      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "source": "https://gtamap.io/gta-online/daily/ls-tags/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles/ls-tags",
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 27 dated GTAMap.io exact poster landmarks and XY; GTA Boss agrees on all five current districts (different numbering; secondary exact XY not independently retrieved). Not gameplay verified. Spray can prerequisite retained."
+    },
+    "cayo-chests": {
+      "activeIds": [
+        "cayo-chest-4",
+        "cayo-chest-16"
+      ],
+      "checkedAtUtc": "2026-11-28T06:00:00.000Z",
+      "validUntilUtc": "2026-11-29T06:00:00.000Z",
+      "source": "https://gtamap.io/gta-online/daily/treasure-chests/",
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 28 dated GTAMap.io exact XYZ match existing Atlas land 4 and underwater 16. Source-reported, not gameplay verified."
+    },
+    "hidden-caches": {
+      "activeIds": [
+        "hidden-caches-lago-zancudo-south",
+        "hidden-caches-lago-zancudo-mouth",
+        "hidden-caches-lago-zancudo-north",
+        "hidden-caches-fort-zancudo-west",
+        "hidden-caches-north-chumash",
+        "hidden-caches-raton-canyon-south",
+        "hidden-caches-raton-canyon-north",
+        "hidden-caches-paleto-cove",
+        "hidden-caches-paleto-forest",
+        "hidden-caches-paleto-bay"
+      ],
+      "checkedAtUtc": "2026-11-27T13:23:08.000Z",
+      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "source": "https://gtamap.io/gta-online/daily/hidden-caches/",
+      "comparisonSource": "https://gtamap.net/gta-online/daily/hidden-caches",
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 27 dated GTAMap.io ten exact XY selections; GTAMap.net reports same ten coordinate pairs using different numbering. GTA Boss dated daily set agrees on count and broad west coast. Not gameplay verified."
+    },
+    "smoke-products": {
+      "activeIds": [
+        "smoke-products-procopio-truck-stop",
+        "smoke-products-kortz-center",
+        "smoke-products-vinewood-bowl",
+        "smoke-products-west-mirror-drive",
+        "smoke-products-gentry-manor",
+        "smoke-products-rockford-tennis",
+        "smoke-products-cockingend-drive",
+        "smoke-products-elysian-security-booth",
+        "smoke-products-fudge-lane",
+        "smoke-products-sandy-shores-senora"
+      ],
+      "checkedAtUtc": "2026-11-27T14:16:17.211Z",
+      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "source": "https://gtamap.io/gta-online/daily/smoke-on-the-water/",
+      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/dailies",
+      "confidence": "calculated_unconfirmed_in_game",
+      "sourceObservation": "Nov 27 GTA Boss ten selected product IDs; GTAMap.io explicit same numbered marker links and individual XY; districts and landmarks checked, including differing zone labels for #23 and #26. Not independent XY or gameplay confirmation."
+    }
+  }
+}
