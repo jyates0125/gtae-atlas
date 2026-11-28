@@ -53,15 +53,14 @@
     },
     "cayo-chests": {
       "activeIds": [
-        "cayo-chest-1",
-        "cayo-chest-17"
+        "cayo-chest-4",
+        "cayo-chest-16"
       ],
-      "checkedAtUtc": "2026-11-27T12:19:00.000Z",
-      "validUntilUtc": "2026-11-28T06:00:00.000Z",
+      "checkedAtUtc": "2026-11-28T06:00:00.000Z",
+      "validUntilUtc": "2026-11-29T06:00:00.000Z",
       "source": "https://gtamap.io/gta-online/daily/treasure-chests/",
       "confidence": "calculated_unconfirmed_in_game",
-      "comparisonSource": "https://www.gtaboss.gg/gta-5-online/collectibles",
-      "sourceObservation": "Nov 27 dated GTAMap.io XYZ match bundled land #1 and underwater #17; GTA Boss corroborates airstrip and lighthouse. Not gameplay verified."
+      "sourceObservation": "Nov 28 dated GTAMap.io exact XYZ match existing Atlas land 4 and underwater 16. Source-reported, not gameplay verified."
     },
     "hidden-caches": {
       "activeIds": [
@@ -106,7 +105,7 @@
   },
   "checkedAtUtc": "2026-11-28T13:30:00.000Z",
   "status": "partially-populated-calculated-not-gameplay-verified",
-  "notes": "Nov 28: Gun Van, Shipwreck and Street Dealers refreshed (5 selections). Remaining groups retained with original expiry pending exact matching. Calculated, not gameplay verified.",
+  "notes": "Nov 28: Gun Van, Shipwreck, Street Dealers and Cayo refreshed. Other groups retain original expiry pending exact matching. Calculated, not gameplay verified.",
   "supportedGroups": [
     "cayo-chests",
     "gun-van",
